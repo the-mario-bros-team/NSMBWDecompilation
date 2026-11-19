@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c33e0,fn_801c33e0,translated,high,"work/ghidra/main-gb/export/801c33e0_FUN_801c33e0.c; returns the byte at r13-0x4DC7",src/runtime/dvd.rs
+runtime::dvd,801c33f0,fn_801c33f0,translated,medium,"work/ghidra/main-gb/export/801c33f0_FUN_801c33f0.c; mirrors the first half-word of the r13-0x4DEC block into state+0xC and returns bits 0-4 through five byte out-pointers",src/runtime/dvd.rs
+runtime::dvd,801c3440,fn_801c3440,translated,high,"work/ghidra/main-gb/export/801c3440_FUN_801c3440.c; tests r13-0x4DC8, calls 0x801C32E0 and copies the nine-word 0x80390224 block out",src/runtime/dvd.rs
+runtime::dvd,801c34d0,fn_801c34d0,translated,high,"work/ghidra/main-gb/export/801c34d0_FUN_801c34d0.c; returns the word at this+0x1C",src/runtime/dvd.rs
+runtime::dvd,801c34e0,fn_801c34e0,translated,high,"work/ghidra/main-gb/export/801c34e0_FUN_801c34e0.c; returns the byte at this+0x20",src/runtime/dvd.rs
+runtime::dvd,801c34f0,fn_801c34f0,translated,high,"work/ghidra/main-gb/export/801c34f0_FUN_801c34f0.c; interrupt-guarded swap of the r13-0x4DBC completion callback; returns the previous value",src/runtime/dvd.rs
+runtime::dvd,801c3540,fn_801c3540,translated,medium,"work/ghidra/main-gb/export/801c3540_FUN_801c3540.c; installs IRQ 0x11 handler 0x801C2B80, enables mask 0x4000, snapshots the tick and memsets both 0x24-byte token blocks",src/runtime/dvd.rs
+runtime::dvd,801c3760,fn_801c3760,translated,high,"work/ghidra/main-gb/export/801c3760_FUN_801c3760.c; interrupt-guarded tick swap at r13-0x4DB4; returns the previous tick",src/runtime/dvd.rs
+runtime::dvd,801c37b0,fn_801c37b0,translated,high,"work/ghidra/main-gb/export/801c37b0_FUN_801c37b0.c; returns the r13-0x4DB4 saved tick word",src/runtime/dvd.rs
+runtime::dvd,801c47c0,fn_801c47c0,translated,high,"work/ghidra/main-gb/export/801c47c0_FUN_801c47c0.c; emits 0x48 to 0xCC008000 and nothing else",src/runtime/dvd.rs
+runtime::dvd,801c4a20,fn_801c4a20,translated,high,"work/ghidra/main-gb/export/801c4a20_FUN_801c4a20.c; writes bits 0-3 of state+0x254 and ORs 0x02000004 into +0x5FC",src/runtime/dvd.rs
+runtime::dvd,801c4ad0,fn_801c4ad0,translated,medium,"work/ghidra/main-gb/export/801c4ad0_FUN_801c4ad0.c; pushes the +0x5FC state block via 0x801C52F0 when dirty, emits a zero word and drains through 0x801A9B90",src/runtime/dvd.rs
+runtime::dvd,801c4b30,fn_801c4b30,translated,medium,"work/ghidra/main-gb/export/801c4b30_FUN_801c4b30.c; polls 0x801A9C90 bit 0 then sets the FIFO base to the physical 0x0C008000 via 0x801A9CA0",src/runtime/dvd.rs
+runtime::dvd,801c4f70,fn_801c4f70,translated,high,"work/ghidra/main-gb/export/801c4f70_FUN_801c4f70.c; emits state+0x22C and clears state+2",src/runtime/dvd.rs
+runtime::dvd,801c51b0,fn_801c51b0,translated,high,"work/ghidra/main-gb/export/801c51b0_FUN_801c51b0.c; interrupt-guarded swap of the r13-0x4D9C retrace callback; returns the previous value",src/runtime/dvd.rs
+runtime::dvd,801c5280,fn_801c5280,translated,medium,"work/ghidra/main-gb/export/801c5280_FUN_801c5280.c; installs handlers 0x12/0x13 (0x801C5120/0x801C5200), inits the r13-0x4DA8 queue, enables masks 0x2000/0x1000 and ORs 0xF into the r13-0x4DE8 block at +0xA",src/runtime/dvd.rs
+runtime::dvd,801c59d0,fn_801c59d0,translated,medium,"work/ghidra/main-gb/export/801c59d0_FUN_801c59d0.c; programs state+0x248/+0x24C/+0x250 from a texture format and calls 0x801C6CD0 for the block counts",src/runtime/dvd.rs
+runtime::dvd,801c5ec0,fn_801c5ec0,translated,high,"work/ghidra/main-gb/export/801c5ec0_FUN_801c5ec0.c; emits (offset & 0xFFFFFF) | 0x51000000 and clears state+2",src/runtime/dvd.rs
+runtime::dvd,801c6900,fn_801c6900,translated,high,"work/ghidra/main-gb/export/801c6900_FUN_801c6900.c; six-way selector writes state+0xA8/+0xAC and ORs 0x100<<index into +0x5FC",src/runtime/dvd.rs
+runtime::dvd,801c6ac0,fn_801c6ac0,translated,high,"work/ghidra/main-gb/export/801c6ac0_FUN_801c6ac0.c; writes bits 4-6 of state+0x254 and ORs 0x01000004 into +0x5FC",src/runtime/dvd.rs
+runtime::dvd,801c6af0,fn_801c6af0,translated,medium,"work/ghidra/main-gb/export/801c6af0_FUN_801c6af0.c; packs one TEV stage word into state+0xB8+stage*4 and handles the 4/5 aliases at +0xC0/+0xC4",src/runtime/dvd.rs
+runtime::dvd,801c6cd0,fn_801c6cd0,translated,high,"work/ghidra/main-gb/export/801c6cd0_FUN_801c6cd0.c; texture-format block-size table with shift pairs 3/3, 3/2, 2/2 and the two-tile formats 6/0x16",src/runtime/dvd.rs
+runtime::dvd,801c7520,fn_801c7520,translated,high,"work/ghidra/main-gb/export/801c7520_FUN_801c7520.c; writes a three-word 0x64 command header with the tag half-word at +8",src/runtime/dvd.rs
+runtime::dvd,801c76c0,fn_801c76c0,translated,high,"work/ghidra/main-gb/export/801c76c0_FUN_801c76c0.c; calls fn_801c8220, emits 0x66001100 and calls fn_801c8220 again",src/runtime/dvd.rs
+runtime::dvd,801c7750,fn_801c7750,translated,high,"work/ghidra/main-gb/export/801c7750_FUN_801c7750.c; updates the state+0x5E4 enable mask, writes size-1 fields at stage*4+0x108/+0x128 and emits +0x128",src/runtime/dvd.rs
+runtime::dvd,801c77d0,fn_801c77d0,translated,high,"work/ghidra/main-gb/export/801c77d0_FUN_801c77d0.c; writes bit 16 of stage*4+0x108/+0x128 and emits +0x128 only when the +0x5E4 enable bit is set",src/runtime/dvd.rs
+runtime::dvd,801c8dc0,fn_801c8dc0,translated,medium,"work/ghidra/main-gb/export/801c8dc0_FUN_801c8dc0.c; packs and emits the 0x61 indirect word, caches it at state+0x220 and keeps the countLeadingZeros stage tests",src/runtime/dvd.rs

@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80632650,fn_80632650,translated,high,"work/ghidra/rel-d_basesNP/export/80632650_FUN_80632650.c; loads characterChange_70.brlyt; binds ten N_pos1P panes at +0x5DC, title +0x604, yes/button groups +0x614/+0x644",src/game/bases.rs
+game::bases,80632950,fn_80632950,translated,medium,"work/ghidra/rel-d_basesNP/export/80632950_FUN_80632950.c; guards the four +0xB4/+0x188/+0x25C/+0x330 sub-objects then queries layout +0x404",src/game/bases.rs
+game::bases,80632af0,fn_80632af0,translated,medium,"work/ghidra/rel-d_basesNP/export/80632af0_FUN_80632af0.c; three-record loop writes +0x264/+0x244/+0x208 panes; lifts y by DAT_807C7CA4",src/game/bases.rs
+game::bases,80633140,fn_80633140,translated,high,"work/ghidra/rel-d_basesNP/export/80633140_FUN_80633140.c; publishes status==3 as +0x54 byte and mode word 3 in 0x80429F7C",src/game/bases.rs
+game::bases,806331f0,fn_806331f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806331f0_FUN_806331f0.c; refreshes four +0x628 pane flags via player vtable +0x10 and mode words 0x900",src/game/bases.rs
+game::bases,80633330,fn_80633330,translated,high,"work/ghidra/rel-d_basesNP/export/80633330_FUN_80633330.c; reads 0x807C7CB0 + row*0x10 + column*4",src/game/bases.rs
+game::bases,80633350,fn_80633350,translated,high,"work/ghidra/rel-d_basesNP/export/80633350_FUN_80633350.c; four-column loop writes +0x6B4 and +0x6A4 from the permutation row count-1",src/game/bases.rs
+game::bases,80633570,fn_80633570,translated,medium,"work/ghidra/rel-d_basesNP/export/80633570_FUN_80633570.c; builds taken bitmap and fills 0x80354E60 seat array with first free seat clamped to 3",src/game/bases.rs
+game::bases,806336a0,fn_806336a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806336a0_FUN_806336a0.c; tests pad mask 0x900 in mode 3 or 0x800B53A0 otherwise",src/game/bases.rs
+game::bases,80633730,fn_80633730,translated,medium,"work/ghidra/rel-d_basesNP/export/80633730_FUN_80633730.c; initialises seat arrays, four player records and panes, then starts clips 2 and 3",src/game/bases.rs
+game::bases,80633b20,fn_80633b20,translated,medium,"work/ghidra/rel-d_basesNP/export/80633b20_FUN_80633b20.c; starts clips 1/0 and resets player panes; four virtual +0xAC calls reconstructed from the +0x128 holder",src/game/bases.rs
+game::bases,80633c50,fn_80633c50,translated,high,"work/ghidra/rel-d_basesNP/export/80633c50_FUN_80633c50.c; dispatches 0x80826648 after clips 1 and 0 finish",src/game/bases.rs
+game::bases,80633d00,fn_80633d00,translated,medium,"work/ghidra/rel-d_basesNP/export/80633d00_FUN_80633d00.c; scans free players then dispatches 0x80826688/0x808266C8/0x80826748; GQR body 0x806333D0 kept as address",src/game/bases.rs
+game::bases,80633e90,fn_80633e90,translated,medium,"work/ghidra/rel-d_basesNP/export/80633e90_FUN_80633e90.c; scans +0x296/+0x29A pane gates, plays cue 0x79/0x7A and dispatches 0x80826708/0x80826848",src/game/bases.rs
+game::bases,80634090,fn_80634090,translated,medium,"work/ghidra/rel-d_basesNP/export/80634090_FUN_80634090.c; confirms when the +0x296 gates open, plays cue 0x79/0x7A and dispatches 0x80826848",src/game/bases.rs
+game::bases,806341e0,fn_806341e0,translated,high,"work/ghidra/rel-d_basesNP/export/806341e0_FUN_806341e0.c; starts clips 4/2/5/3, sets four +0x266 flags and clears +0x21C/+0x220 panes",src/game/bases.rs
+game::bases,80634310,fn_80634310,translated,high,"work/ghidra/rel-d_basesNP/export/80634310_FUN_80634310.c; dispatches 0x80826788 after clips 4/2/5/3 and writes +0x6CC = -1",src/game/bases.rs
+game::bases,806343d0,fn_806343d0,translated,high,"work/ghidra/rel-d_basesNP/export/806343d0_FUN_806343d0.c; starts previous clip +0x6CC+0xC then current clip +0x6C8+6",src/game/bases.rs
+game::bases,80634430,fn_80634430,translated,high,"work/ghidra/rel-d_basesNP/export/80634430_FUN_80634430.c; dispatches 0x808267C8 when the previous and current cursor clips finish",src/game/bases.rs
+game::bases,806344e0,fn_806344e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806344e0_FUN_806344e0.c; pad masks 8/4 swap +0x6C8; cues 0x78/0x79/0x7A/0x323/0x324; states 0x80826788/0x80826808",src/game/bases.rs
+game::bases,806346b0,fn_806346b0,translated,high,"work/ghidra/rel-d_basesNP/export/806346b0_FUN_806346b0.c; dispatches 0x80826848 when animation 0xFFFFFFFF finishes",src/game/bases.rs
+game::bases,80634720,fn_80634720,translated,high,"work/ghidra/rel-d_basesNP/export/80634720_FUN_80634720.c; selects clips 0x11/0x10 or 0xF/0xE by mode and +0x6C8",src/game/bases.rs
+game::bases,80634800,fn_80634800,translated,medium,"work/ghidra/rel-d_basesNP/export/80634800_FUN_80634800.c; closes the screen, restores seat/status words, calls fn_80633570/fn_80633140 and flushes board 0x80429F7C+8",src/game/bases.rs
+game::bases,80636cb0,fn_80636cb0,translated,high,"work/ghidra/rel-d_basesNP/export/80636cb0_FUN_80636cb0.c; loads pointResultDateFile_29.brlyt; binds +0x6E4 handle, +0x6E8 array and score panes +0x70C..+0x73C",src/game/bases.rs
+game::bases,80637050,fn_80637050,translated,medium,"work/ghidra/rel-d_basesNP/export/80637050_FUN_80637050.c; clamps +0x7C0/+0x7C8 to 999 and writes four 0x3C-byte panels via 0x800B3BE0",src/game/bases.rs

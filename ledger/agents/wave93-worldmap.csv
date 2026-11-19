@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80137590,fn_80137590,translated,high,"work/ghidra/main-gb/export/80137590_FUN_80137590.c; gate + record test + countdown store",src/game/worldmap.rs
+game::worldmap,801378b0,fn_801378b0,translated,medium,"work/ghidra/main-gb/export/801378b0_FUN_801378b0.c; 24-byte frame + colour table + r13-0x6300 cue",src/game/worldmap.rs
+game::worldmap,80137950,fn_80137950,translated,high,"work/ghidra/main-gb/export/80137950_FUN_80137950.c; four 0.0f stores + input mode 6",src/game/worldmap.rs
+game::worldmap,80137b60,fn_80137b60,translated,medium,"work/ghidra/main-gb/export/80137b60_FUN_80137b60.c; 24-byte frame + model colour + r13-0x62F8 cue",src/game/worldmap.rs
+game::worldmap,80137c10,fn_80137c10,translated,medium,"work/ghidra/main-gb/export/80137c10_FUN_80137c10.c; mode 4 move + side/delta tests + 0x294 post",src/game/worldmap.rs
+game::worldmap,80138140,fn_80138140,translated,medium,"work/ghidra/main-gb/export/80138140_FUN_80138140.c; five-state +0x14A4 ladder and 17.0f distance test",src/game/worldmap.rs
+game::worldmap,801386b0,fn_801386b0,translated,medium,"work/ghidra/main-gb/export/801386b0_FUN_801386b0.c; input 0x53/0x54 and position copy with per-player Y offset",src/game/worldmap.rs
+game::worldmap,80138750,fn_80138750,translated,high,"work/ghidra/main-gb/export/80138750_FUN_80138750.c; G_80354E60/G_80354E90 countLeadingZeros boolean",src/game/worldmap.rs
+game::worldmap,80138790,fn_80138790,translated,medium,"work/ghidra/main-gb/export/80138790_FUN_80138790.c; status 0x40 + eight inputs + state-0/3 entry",src/game/worldmap.rs
+game::worldmap,80138990,fn_80138990,translated,high,"work/ghidra/main-gb/export/80138990_FUN_80138990.c; clears 0x40/0x4 + nine inputs + 1.0f + player bit",src/game/worldmap.rs
+game::worldmap,80138a90,fn_80138a90,translated,medium,"work/ghidra/main-gb/export/80138a90_FUN_80138a90.c; +0x2790/+0x2794 timers + states 0..4",src/game/worldmap.rs
+game::worldmap,80138d40,fn_80138d40,translated,high,"work/ghidra/main-gb/export/80138d40_FUN_80138d40.c; four guards + action 0x26 + 0x78 halfword",src/game/worldmap.rs
+game::worldmap,80138dd0,fn_80138dd0,translated,high,"work/ghidra/main-gb/export/80138dd0_FUN_80138dd0.c; 0x8005FFB0 gate + input 0x53 + result 2",src/game/worldmap.rs
+game::worldmap,80138e60,fn_80138e60,translated,medium,"work/ghidra/main-gb/export/80138e60_FUN_80138e60.c; r13-0x59E0 gate + 0x80141580 + result 0",src/game/worldmap.rs
+game::worldmap,80138f40,fn_80138f40,translated,medium,"work/ghidra/main-gb/export/80138f40_FUN_80138f40.c; long input/global gate chain + result 3",src/game/worldmap.rs
+game::worldmap,801391f0,fn_801391f0,translated,medium,"work/ghidra/main-gb/export/801391f0_FUN_801391f0.c; mode branch + partner 0x11C hand-off",src/game/worldmap.rs
+game::worldmap,80139420,fn_80139420,translated,high,"work/ghidra/main-gb/export/80139420_FUN_80139420.c; five loads then out[2]/[1]/[0] stores",src/game/worldmap.rs
+game::worldmap,80139460,fn_80139460,translated,high,"work/ghidra/main-gb/export/80139460_FUN_80139460.c; input 3 + 3.628/0.0 call to 0x801396C0",src/game/worldmap.rs
+game::worldmap,801394a0,fn_801394a0,translated,medium,"work/ghidra/main-gb/export/801394a0_FUN_801394a0.c; zero motion + 0x19F record + five model resets",src/game/worldmap.rs
+game::worldmap,801395c0,fn_801395c0,translated,high,"work/ghidra/main-gb/export/801395c0_FUN_801395c0.c; +0x2A6C store + six inputs + 0x7F",src/game/worldmap.rs
+game::worldmap,80139640,fn_80139640,translated,high,"work/ghidra/main-gb/export/80139640_FUN_80139640.c; record test + input 3 or 0x8014AEF0",src/game/worldmap.rs
+game::worldmap,801397d0,fn_801397d0,translated,medium,"work/ghidra/main-gb/export/801397d0_FUN_801397d0.c; four guards + +0x3FC/+0x434 virtuals + 0x80375F30",src/game/worldmap.rs
+game::worldmap,80139950,fn_80139950,translated,high,"work/ghidra/main-gb/export/80139950_FUN_80139950.c; input 0x4B then 0x80162D00(+0x1008)",src/game/worldmap.rs
+game::worldmap,801399a0,fn_801399a0,translated,high,"work/ghidra/main-gb/export/801399a0_FUN_801399a0.c; null test + handle store + 0x803762B0 post",src/game/worldmap.rs
+game::worldmap,80139a90,fn_80139a90,translated,medium,"work/ghidra/main-gb/export/80139a90_FUN_80139a90.c; detach +0x1008 + five inputs + 0x80060860",src/game/worldmap.rs
+game::worldmap,80139b80,fn_80139b80,translated,medium,"work/ghidra/main-gb/export/80139b80_FUN_80139b80.c; partner branch + 0x448 virtual + 0x801397D0",src/game/worldmap.rs
+game::worldmap,80139d00,fn_80139d00,translated,medium,"work/ghidra/main-gb/export/80139d00_FUN_80139d00.c; 0x44-stride four-word record + 0x8005DC20/40",src/game/worldmap.rs
+game::worldmap,80139d80,fn_80139d80,translated,medium,"work/ghidra/main-gb/export/80139d80_FUN_80139d80.c; +0x5C float triple + state 1",src/game/worldmap.rs

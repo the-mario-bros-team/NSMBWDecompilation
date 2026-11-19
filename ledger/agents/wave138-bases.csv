@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806b7cd0,fn_806b7cd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806b7cd0_FUN_806b7cd0.c; 0x1048-byte wendy_ring initialiser; five slot remainders; 120 pose slots; two qr3 ring-direction loads",src/game/bases.rs
+game::bases,806dd730,fn_806dd730,translated,medium,"work/ghidra/rel-d_basesNP/export/806dd730_FUN_806dd730.c; 348-step pose select over eight zero-fill descriptors; two qr3 angle cases",src/game/bases.rs
+game::bases,80680720,fn_80680720,translated,medium,"work/ghidra/rel-d_basesNP/export/80680720_FUN_80680720.c; two mount-transform groups; four qr3 angle loads; dead 336.0/328.0 trig groups",src/game/bases.rs
+game::bases,806369d0,fn_806369d0,translated,high,"work/ghidra/rel-d_basesNP/export/806369d0_FUN_806369d0.c; guard + release via 0x802B9280; registered at 0x807DF540",src/game/bases.rs
+game::bases,80636a10,fn_80636a10,translated,high,"work/ghidra/rel-d_basesNP/export/80636a10_FUN_80636a10.c; same release stub; registered at 0x807DF528",src/game/bases.rs
+game::bases,80636a50,fn_80636a50,translated,high,"work/ghidra/rel-d_basesNP/export/80636a50_FUN_80636a50.c; clears +0x18 via 0x8015F9F0 then releases; registered at 0x807DF4F8",src/game/bases.rs
+game::bases,80636ab0,fn_80636ab0,translated,high,"work/ghidra/rel-d_basesNP/export/80636ab0_FUN_80636ab0.c; +0x18 clear variant with one redundant duplicate beq; registered at 0x807DF4C8",src/game/bases.rs
+game::bases,8063a1d0,fn_8063a1d0,translated,high,"work/ghidra/rel-d_basesNP/export/8063a1d0_FUN_8063a1d0.c; guard + release via 0x802B9280; registered at 0x807E0030 and 0x807B7970",src/game/bases.rs
+game::bases,8063a210,fn_8063a210,translated,high,"work/ghidra/rel-d_basesNP/export/8063a210_FUN_8063a210.c; same release stub; registered at 0x807E0018",src/game/bases.rs
+game::bases,8063a250,fn_8063a250,translated,high,"work/ghidra/rel-d_basesNP/export/8063a250_FUN_8063a250.c; clears +0x18 via 0x8015F9F0 then releases; registered at 0x807DFFE8",src/game/bases.rs
+game::bases,8063a2b0,fn_8063a2b0,translated,high,"work/ghidra/rel-d_basesNP/export/8063a2b0_FUN_8063a2b0.c; +0x18 clear variant with one redundant duplicate beq; registered at 0x807DFFB8",src/game/bases.rs
+game::bases,8063b420,fn_8063b420,translated,high,"work/ghidra/rel-d_basesNP/export/8063b420_FUN_8063b420.c; guard + release via 0x802B9280; registered at 0x807E0650",src/game/bases.rs
+game::bases,8063b460,fn_8063b460,translated,high,"work/ghidra/rel-d_basesNP/export/8063b460_FUN_8063b460.c; same release stub; registered at 0x807E0638",src/game/bases.rs
+game::bases,8063b4a0,fn_8063b4a0,translated,high,"work/ghidra/rel-d_basesNP/export/8063b4a0_FUN_8063b4a0.c; clears +0x18 via 0x8015F9F0 then releases; registered at 0x807E0608",src/game/bases.rs
+game::bases,8063b500,fn_8063b500,translated,high,"work/ghidra/rel-d_basesNP/export/8063b500_FUN_8063b500.c; +0x18 clear variant with one redundant duplicate beq; registered at 0x807E05D8",src/game/bases.rs
+game::bases,8063e870,fn_8063e870,translated,high,"work/ghidra/rel-d_basesNP/export/8063e870_FUN_8063e870.c; guard + release via 0x802B9280; registered at 0x807E1268",src/game/bases.rs
+game::bases,8063e8b0,fn_8063e8b0,translated,high,"work/ghidra/rel-d_basesNP/export/8063e8b0_FUN_8063e8b0.c; same release stub; registered at 0x807E1250",src/game/bases.rs
+game::bases,8063e8f0,fn_8063e8f0,translated,high,"work/ghidra/rel-d_basesNP/export/8063e8f0_FUN_8063e8f0.c; clears +0x18 via 0x8015F9F0 then releases; registered at 0x807E1220",src/game/bases.rs
+game::bases,8063e950,fn_8063e950,translated,high,"work/ghidra/rel-d_basesNP/export/8063e950_FUN_8063e950.c; +0x18 clear variant with one redundant duplicate beq; registered at 0x807E11F0",src/game/bases.rs
+game::bases,80638000,fn_80638000,translated,high,"work/ghidra/rel-d_basesNP/export/80638000_FUN_80638000.c; four 0x800C93D0 calls for animation slots 12..15; registered at 0x807DF638",src/game/bases.rs
+game::bases,80638050,fn_80638050,translated,medium,"work/ghidra/rel-d_basesNP/export/80638050_FUN_80638050.c; 0x800C9610 test then +0x18 virtual with descriptor 0x80826B60; registered at 0x807DF62C",src/game/bases.rs
+game::bases,8063ee20,fn_8063ee20,translated,high,"work/ghidra/rel-d_basesNP/export/8063ee20_FUN_8063ee20.c; 0x800C9500 reset then slots 1..8 and 0x800C92F0; registered at 0x807E133C",src/game/bases.rs
+game::bases,8063ee90,fn_8063ee90,translated,medium,"work/ghidra/rel-d_basesNP/export/8063ee90_FUN_8063ee90.c; 0x800C9610 test then +0x70 +0x18 virtual with descriptor 0x80827520; registered at 0x807E1330",src/game/bases.rs
+game::bases,8063ef10,fn_8063ef10,translated,medium,"work/ghidra/rel-d_basesNP/export/8063ef10_FUN_8063ef10.c; 0x800C9610 test with tag 1 then +0x70 +0x18 virtual with descriptor 0x80827560; registered at 0x807E1354",src/game/bases.rs
+game::bases,8063f4e0,fn_8063f4e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8063f4e0_FUN_8063f4e0.c; 0x800C9610 test then +0x70 +0x18 virtual with descriptor 0x80827660; registered at 0x807E13E4",src/game/bases.rs
+game::bases,8063d3b0,fn_8063d3b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8063d3b0_FUN_8063d3b0.c; 0x800E0470 and 0x800E0C20 on the 0x8042A040 global; registered at 0x807E0964",src/game/bases.rs

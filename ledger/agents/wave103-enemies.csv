@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80afa2e0,fn_80afa2e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afa2e0_FUN_80afa2e0.c; slot ladder spawner; 16.0 steps; tag (side << 4) | index",src/game/enemies.rs
+game::enemies,80afa3f0,fn_80afa3f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afa3f0_FUN_80afa3f0.c; live-slot bitmask refresh over kind-0x93 children",src/game/enemies.rs
+game::enemies,80afa480,fn_80afa480,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afa480_FUN_80afa480.c; popcount of the low +0x524 mask bits",src/game/enemies.rs
+game::enemies,80afa4c0,fn_80afa4c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afa4c0_FUN_80afa4c0.c; per-child +0x608 live-slots-above count",src/game/enemies.rs
+game::enemies,80afa570,fn_80afa570,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afa570_FUN_80afa570.c; three i16 slot words 0xF800 0 0xFC00",src/game/enemies.rs
+game::enemies,80afa680,fn_80afa680,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afa680_FUN_80afa680.c; contact callback; pair position; child +0x3E8 code",src/game/enemies.rs
+game::enemies,80afa720,fn_80afa720,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afa720_FUN_80afa720.c; contact callback; +0x18 branch; effect 0x800E20A0; slot ladder",src/game/enemies.rs
+game::enemies,80afad80,fn_80afad80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afad80_FUN_80afad80.c; set-bit count below a slot index",src/game/enemies.rs
+game::enemies,80afadd0,fn_80afadd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afadd0_FUN_80afadd0.c; set-bit count above a slot index",src/game/enemies.rs
+game::enemies,80afae30,fn_80afae30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afae30_FUN_80afae30.c; set-bit count between two slot indices; abs span",src/game/enemies.rs
+game::enemies,80afb3d0,fn_80afb3d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb3d0_FUN_80afb3d0.c; default +0x414 contact record; manager bind; kind byte 0x32",src/game/enemies.rs
+game::enemies,80afb560,fn_80afb560,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb560_FUN_80afb560.c; shared +0x414 contact record; 0x80064A30 side byte",src/game/enemies.rs
+game::enemies,80afb670,fn_80afb670,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb670_FUN_80afb670.c; slot redistribution; rate 1.25 + 0.25 * n; 0x80AFD500/0x80AFD550",src/game/enemies.rs
+game::enemies,80afb7f0,fn_80afb7f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb7f0_FUN_80afb7f0.c; kind-0x93 name test through +0x394 and 0x80B78048",src/game/enemies.rs
+game::enemies,80afb8a0,fn_80afb8a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb8a0_FUN_80afb8a0.c; any kind-0x93 actor test",src/game/enemies.rs
+game::enemies,80afb8f0,fn_80afb8f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb8f0_FUN_80afb8f0.c; sets +0x5C4 on every kind-0x93 actor",src/game/enemies.rs
+game::enemies,80afb940,fn_80afb940,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb940_FUN_80afb940.c; sets +0x60C/+0x610 = 0x18 and +0x614 = 0",src/game/enemies.rs
+game::enemies,80afb9a0,fn_80afb9a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afb9a0_FUN_80afb9a0.c; byte-identical twin of 0x80AFB940",src/game/enemies.rs
+game::enemies,80afba00,fn_80afba00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afba00_FUN_80afba00.c; runs child class slot +0x98 on every live kind-0x93 actor",src/game/enemies.rs
+game::enemies,80afba70,fn_80afba70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afba70_FUN_80afba70.c; runs child class slot +0x9C on every live kind-0x93 actor",src/game/enemies.rs
+game::enemies,80afbae0,fn_80afbae0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afbae0_FUN_80afbae0.c; Wm_en_sanbospillsand column; 0x80B316D8 scale table",src/game/enemies.rs
+game::enemies,80afbbe0,fn_80afbbe0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afbbe0_FUN_80afbbe0.c; speed pair table 0x80B315E0; +0x590 clamp; 0x8006D090",src/game/enemies.rs
+game::enemies,80afbd00,fn_80afbd00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afbd00_FUN_80afbd00.c; Move frame step; side flip; +0x534 damage latch; smoke",src/game/enemies.rs
+game::enemies,80afbeb0,fn_80afbeb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afbeb0_FUN_80afbeb0.c; Damage/Vacume frame step; states 0x80B77DB8/0x80B77F88",src/game/enemies.rs
+game::enemies,80afbff0,fn_80afbff0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afbff0_FUN_80afbff0.c; contact kind effect 0x800E20A0/0x800E23C0; slot recount",src/game/enemies.rs
+game::enemies,80afc110,fn_80afc110,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afc110_FUN_80afc110.c; retire when no kind-0x93 child is alive",src/game/enemies.rs
+game::enemies,80afc190,fn_80afc190,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afc190_FUN_80afc190.c; snap to slot-0 child then retire",src/game/enemies.rs

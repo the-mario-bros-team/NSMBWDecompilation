@@ -1,0 +1,15 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b3000,fn_800b3000,translated,medium,"work/ghidra/main-gb/export/800b3000_FUN_800b3000.c; sin/cos rotation of a two-float vector by the s16 angle, scaled by r2-0x6B0C",src/game/stage.rs
+game::stage,800b33d0,fn_800b33d0,translated,medium,"work/ghidra/main-gb/export/800b33d0_FUN_800b33d0.c; subtracts the two camera offsets and divides by the owner/display scale pair; 0x801DD1D0 picks the y divisor",src/game/stage.rs
+game::stage,800b39c0,fn_800b39c0,translated,high,"work/ghidra/main-gb/export/800b39c0_FUN_800b39c0.c; reads sample table[index] through fn_800b5c50 and forwards its sign to fn_800b38d0",src/game/stage.rs
+game::stage,800b8cf0,fn_800b8cf0,translated,medium,"work/ghidra/main-gb/export/800b8cf0_FUN_800b8cf0.c; two-stage slope probe (0x80075270 grid + 0x800757B0 ray) over +0xAC..+0xB4 with the r2-0x6A14 tolerance",src/game/stage.rs
+game::stage,800bbe10,fn_800bbe10,translated,medium,"work/ghidra/main-gb/export/800bbe10_FUN_800bbe10.c; three projected columns of six floats at +0xD4 built from the s16 angle at +0x11C",src/game/stage.rs
+game::stage,800bc6b0,fn_800bc6b0,translated,medium,"work/ghidra/main-gb/export/800bc6b0_FUN_800bc6b0.c; copies one matrix into three +0x40 sub-objects at yaw, zero and -yaw then runs vtable +0x14",src/game/stage.rs
+game::stage,800bd7a0,fn_800bd7a0,translated,medium,"work/ghidra/main-gb/export/800bd7a0_FUN_800bd7a0.c; one lift row of four xyz triples with the +0x6020 matrix, 0x80239F20 name bind and 0x8000AA70/0x8000AE50 pair",src/game/stage.rs
+game::stage,800be000,fn_800be000,translated,medium,"work/ghidra/main-gb/export/800be000_FUN_800be000.c; clears +0x9028/+0x9228, loads the variant model with 0x800DF180 and emits the rows through 0x800BD7A0/0x800BD970",src/game/stage.rs
+game::stage,800be390,fn_800be390,translated,medium,"work/ghidra/main-gb/export/800be390_FUN_800be390.c; 16x16 cell matrix rebuild around the input point (translate, scale, rotate, translate back)",src/game/stage.rs
+game::stage,800be690,fn_800be690,translated,medium,"work/ghidra/main-gb/export/800be690_FUN_800be690.c; builds one J3D node from one model word and binds the optional clip pair at node+0x40",src/game/stage.rs
+game::stage,800be950,fn_800be950,translated,medium,"work/ghidra/main-gb/export/800be950_FUN_800be950.c; fills the columns x rows cell block at +0x4A4 with fn_800be690 at a 0x84 stride",src/game/stage.rs
+game::stage,800bea00,fn_800bea00,translated,medium,"work/ghidra/main-gb/export/800bea00_FUN_800bea00.c; 3x3 sprite block for one lift variant, gated by the two count words and followed by +0x228C/fn_800be950",src/game/stage.rs
+game::stage,800beb50,fn_800beb50,translated,medium,"work/ghidra/main-gb/export/800beb50_FUN_800beb50.c; one lift_toge sprite per set mask bit over +0x207C..+0x228C",src/game/stage.rs
+game::stage,800bf3f0,fn_800bf3f0,translated,medium,"work/ghidra/main-gb/export/800bf3f0_FUN_800bf3f0.c; four flag-gated travel cells at +0x20E8/+0x216C/+0x21F0/+0x2274 with the 0x80358DF0 triple",src/game/stage.rs

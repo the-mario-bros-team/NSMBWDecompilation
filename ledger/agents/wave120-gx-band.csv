@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80299840,fn_80299840,partial,medium,"work/ghidra/main-gb/export/80299840_FUN_80299840.c; cloud mode reconstructed; grid mode (flags & 0x00020000) left out",src/render/gx_band.rs

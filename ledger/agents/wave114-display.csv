@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d43e0,fn_800d43e0,translated,medium,"work/ghidra/main-gb/export/800d43e0_FUN_800d43e0.c; element bind/attach pass; BRRES lookup on +0x20C; 0x801651F0/0x801680E0/0x80168FE0/0x80169F80 on the 0x38-byte element at +0x18",src/engine/display.rs

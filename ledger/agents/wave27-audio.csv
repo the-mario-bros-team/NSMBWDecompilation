@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,8019df80,fn_8019df80,translated,high,"work/ghidra/main-gb/export/8019df80_FUN_8019df80.c; index below 0x1C returns the word at 0x802F6530 + index*8, otherwise 0; receiver unused.",src/audio/ax.rs
+audio::ax,8019dfb0,fn_8019dfb0,translated,high,"work/ghidra/main-gb/export/8019dfb0_FUN_8019dfb0.c; index below 0x1C returns the word at 0x802F6610 + index*8, otherwise 0; receiver unused.",src/audio/ax.rs
+audio::ax,8019eca0,fn_8019eca0,translated,high,"work/ghidra/main-gb/export/8019eca0_FUN_8019eca0.c; when object is non-null and count is positive calls 0x802B9280(object); always returns object.",src/audio/ax.rs
+audio::ax,801a00b0,fn_801a00b0,translated,high,"work/ghidra/main-gb/export/801a00b0_FUN_801a00b0.c; returns the word at r13-0x5188, the JAS one-shot initialisation latch set by fn_801a0050.",src/audio/ax.rs
+audio::ax,801a0730,fn_801a0730,translated,high,"work/ghidra/main-gb/export/801a0730_FUN_801a0730.c; writes 0x803791A0 + (r13-0x5170)*0x600 to the output word; no enable gate.",src/audio/ax.rs
+audio::ax,801a0750,fn_801a0750,translated,high,"work/ghidra/main-gb/export/801a0750_FUN_801a0750.c; writes 0x80378EA0 + (r13-0x5174)*0x600 to the output word.",src/audio/ax.rs
+audio::ax,801a0770,fn_801a0770,translated,high,"work/ghidra/main-gb/export/801a0770_FUN_801a0770.c; writes 0x80379020 + (r13-0x5174)*0x600 to the output word.",src/audio/ax.rs
+audio::ax,801a0790,fn_801a0790,translated,high,"work/ghidra/main-gb/export/801a0790_FUN_801a0790.c; writes 0x803791A0 + (r13-0x5174)*0x600 to the output word.",src/audio/ax.rs
+audio::ax,801a0810,fn_801a0810,translated,high,"work/ghidra/main-gb/export/801a0810_FUN_801a0810.c; writes 0x8037A3A0 + (r13-0x5170)*0x600 to the output word; no enable gate.",src/audio/ax.rs
+audio::ax,801a0830,fn_801a0830,translated,high,"work/ghidra/main-gb/export/801a0830_FUN_801a0830.c; writes 0x8037A0A0 + (r13-0x5174)*0x600 to the output word.",src/audio/ax.rs
+audio::ax,801a0850,fn_801a0850,translated,high,"work/ghidra/main-gb/export/801a0850_FUN_801a0850.c; writes 0x8037A220 + (r13-0x5174)*0x600 to the output word.",src/audio/ax.rs
+audio::ax,801a0870,fn_801a0870,translated,high,"work/ghidra/main-gb/export/801a0870_FUN_801a0870.c; writes 0x8037A3A0 + (r13-0x5174)*0x600 to the output word.",src/audio/ax.rs
+audio::ax,801a18c0,fn_801a18c0,translated,high,"work/ghidra/main-gb/export/801a18c0_FUN_801a18c0.c; returns the 16-bit word at r13-0x512C (JAS level 1).",src/audio/ax.rs
+audio::ax,801a18d0,fn_801a18d0,translated,high,"work/ghidra/main-gb/export/801a18d0_FUN_801a18d0.c; returns the 16-bit word at r13-0x512E (JAS level 2).",src/audio/ax.rs
+audio::ax,801a18e0,fn_801a18e0,translated,high,"work/ghidra/main-gb/export/801a18e0_FUN_801a18e0.c; returns the 16-bit word at r13-0x5130 (JAS level 3).",src/audio/ax.rs
+audio::ax,801a1910,fn_801a1910,translated,high,"work/ghidra/main-gb/export/801a1910_FUN_801a1910.c; stores the argument halfword at r13-0x512C (JAS level 1).",src/audio/ax.rs
+audio::ax,801a1920,fn_801a1920,translated,high,"work/ghidra/main-gb/export/801a1920_FUN_801a1920.c; stores the argument halfword at r13-0x512E (JAS level 2).",src/audio/ax.rs
+audio::ax,801a1930,fn_801a1930,translated,high,"work/ghidra/main-gb/export/801a1930_FUN_801a1930.c; stores the argument halfword at r13-0x5130 (JAS level 3).",src/audio/ax.rs
+audio::ax,801a2180,fn_801a2180,translated,high,"work/ghidra/main-gb/export/801a2180_FUN_801a2180.c; returns the constant address 0x8037CDA0, the JAS 20-pair parameter block.",src/audio/ax.rs
+audio::ax,801a25b0,fn_801a25b0,translated,high,"work/ghidra/main-gb/export/801a25b0_FUN_801a25b0.c; returns the word at r13-0x5068, the per-frame voice generation counter.",src/audio/ax.rs
+audio::ax,801a2e20,fn_801a2e20,translated,high,"work/ghidra/main-gb/export/801a2e20_FUN_801a2e20.c; returns the word at r13-0x5078, the base of the 0x140-byte voice parameter table.",src/audio/ax.rs
+audio::ax,801a3350,fn_801a3350,translated,high,"work/ghidra/main-gb/export/801a3350_FUN_801a3350.c; stores the argument word at r13-0x5060, the voice-cost ceiling used by fn_801a2b10.",src/audio/ax.rs
+audio::ax,801a3360,fn_801a3360,translated,high,"work/ghidra/main-gb/export/801a3360_FUN_801a3360.c; returns the word at r13-0x506C, the voice parameter-block count.",src/audio/ax.rs
+audio::ax,801ab020,fn_801ab020,translated,high,"work/ghidra/main-gb/export/801ab020_FUN_801ab020.c; reads the table pointer at r13-0x5038, swaps table[(index&0xFF)*4] with the argument and returns the previous word.",src/audio/ax.rs
+audio::ax,801ab5b0,fn_801ab5b0,translated,medium,"work/ghidra/main-gb/export/801ab5b0_FUN_801ab5b0.c; 0x802DCD70 save thunk yields the timer in r3; stores period at +0x1C and zero at +0x18; 0x801B6020(base_hi,base_lo) is stored at +0x20; 0x801AB2F0(timer,deadline_low,0,0,handler); restores interrupts through 0x801B1180.",src/audio/ax.rs

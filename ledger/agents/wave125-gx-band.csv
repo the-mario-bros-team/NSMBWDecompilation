@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802a71d0,fn_802a71d0,partial,medium,"work/ghidra/main-gb/export/802a71d0_FUN_802a71d0.c; raw 0x802A71D0..0x802A7C8C (2748 bytes); one GXBegin(GX_TRIANGLESTRIP,0,2n+2) and 2(n+1) FIFO vertices per outer sample; quadratic weights 0.5*(t-1)^2 / 0.5+t-t^2 / 0.5*t^2 literal; the two edge offsets ride in ps5[0]/ps6[0], which neither the body nor its nine call sites write",src/render/gx_band.rs

@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80295c20,fn_80295c20,translated,medium,"work/ghidra/main-gb/export/80295c20_FUN_80295c20.c; 1,232 bytes; Gram-Schmidt over the three basis columns of a row-major 4x4, writing out[0..2] = |col0|, |col1 - n0*(n0.col1)|, |col2 - n1*(n1.col2) - n0*(n0.res2)|, 0.0 below FLT_EPSILON, negated when n0.cross(n1,res2) < 0; matrix never written; 66 dropped GQR type arms plus a mis-modelled bl 0x802DCD74, so the body is transcribed from work/dol/main.elf 0x80295C20..0x802960F0",src/render/gx_band.rs

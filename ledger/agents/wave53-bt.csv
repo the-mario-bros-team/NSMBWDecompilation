@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,8020b91c,fn_8020b91c,translated,high,"work/ghidra/main-gb/export/8020b91c_FUN_8020b91c.c; four-call subsystem init chain",src/runtime/bt.rs
+runtime::bt,8020b948,fn_8020b948,translated,high,"work/ghidra/main-gb/export/8020b948_FUN_8020b948.c; clears 0x84-byte HID block and writes 0x2A4 and 1",src/runtime/bt.rs
+runtime::bt,8020b994,fn_8020b994,translated,medium,"work/ghidra/main-gb/export/8020b994_FUN_8020b994.c; channel open via 0x8021F5C0/0x8021F260/0x802202D0/0x8021FF38; stack offsets inferred",src/runtime/bt.rs
+runtime::bt,8020ba74,fn_8020ba74,translated,high,"work/ghidra/main-gb/export/8020ba74_FUN_8020ba74.c; clears 0x3AC-byte block and installs two pointers plus count 5",src/runtime/bt.rs
+runtime::bt,8020bad4,fn_8020bad4,translated,high,"work/ghidra/main-gb/export/8020bad4_FUN_8020bad4.c; writes ten callback words at 0x803D43C4",src/runtime/bt.rs
+runtime::bt,8020cc2c,fn_8020cc2c,translated,high,"work/ghidra/main-gb/export/8020cc2c_FUN_8020cc2c.c; command 0x0401 with reversed 3-byte id",src/runtime/bt.rs
+runtime::bt,8020ccd4,fn_8020ccd4,translated,high,"work/ghidra/main-gb/export/8020ccd4_FUN_8020ccd4.c; parameterless command 0x0402",src/runtime/bt.rs
+runtime::bt,8020ced4,fn_8020ced4,translated,high,"work/ghidra/main-gb/export/8020ced4_FUN_8020ced4.c; command 0x0406 with handle and byte",src/runtime/bt.rs
+runtime::bt,8020cf5c,fn_8020cf5c,translated,high,"work/ghidra/main-gb/export/8020cf5c_FUN_8020cf5c.c; command 0x0407 with two little-endian u16",src/runtime/bt.rs
+runtime::bt,8020cfe8,fn_8020cfe8,translated,high,"work/ghidra/main-gb/export/8020cfe8_FUN_8020cfe8.c; fills caller buffer with command 0x0409",src/runtime/bt.rs
+runtime::bt,8020d048,fn_8020d048,translated,high,"work/ghidra/main-gb/export/8020d048_FUN_8020d048.c; fills caller buffer with command 0x040A",src/runtime/bt.rs
+runtime::bt,8020d4c8,fn_8020d4c8,translated,high,"work/ghidra/main-gb/export/8020d4c8_FUN_8020d4c8.c; command 0x040E with reversed 6-byte address",src/runtime/bt.rs
+runtime::bt,8020d568,fn_8020d568,translated,high,"work/ghidra/main-gb/export/8020d568_FUN_8020d568.c; command 0x040F with two little-endian u16",src/runtime/bt.rs
+runtime::bt,8020d5f8,fn_8020d5f8,translated,high,"work/ghidra/main-gb/export/8020d5f8_FUN_8020d5f8.c; command 0x0411 with one u16",src/runtime/bt.rs
+runtime::bt,8020d674,fn_8020d674,translated,high,"work/ghidra/main-gb/export/8020d674_FUN_8020d674.c; command 0x0413 with handle and byte",src/runtime/bt.rs
+runtime::bt,8020d700,fn_8020d700,translated,high,"work/ghidra/main-gb/export/8020d700_FUN_8020d700.c; command 0x0419 with address plus two bytes and u16",src/runtime/bt.rs
+runtime::bt,8020d7d8,fn_8020d7d8,translated,high,"work/ghidra/main-gb/export/8020d7d8_FUN_8020d7d8.c; command 0x041A with reversed 6-byte address",src/runtime/bt.rs
+runtime::bt,8020d878,fn_8020d878,translated,high,"work/ghidra/main-gb/export/8020d878_FUN_8020d878.c; command 0x041B with one u16",src/runtime/bt.rs
+runtime::bt,8020d8f4,fn_8020d8f4,translated,high,"work/ghidra/main-gb/export/8020d8f4_FUN_8020d8f4.c; command 0x041D with one u16",src/runtime/bt.rs
+runtime::bt,8020d970,fn_8020d970,translated,high,"work/ghidra/main-gb/export/8020d970_FUN_8020d970.c; command 0x041F with one u16",src/runtime/bt.rs
+runtime::bt,8020f348,fn_8020f348,translated,high,"work/ghidra/main-gb/export/8020f348_FUN_8020f348.c; clears 0x144-byte repage block and installs 0x8020F470",src/runtime/bt.rs
+runtime::bt,8020f3b0,fn_8020f3b0,translated,high,"work/ghidra/main-gb/export/8020f3b0_FUN_8020f3b0.c; originate on PSM 0x11 via 0x802128A0 with two log strings",src/runtime/bt.rs
+runtime::bt,8020f470,fn_8020f470,translated,high,"work/ghidra/main-gb/export/8020f470_FUN_8020f470.c; repage retry counter timer re-arm and callback",src/runtime/bt.rs
+runtime::bt,8020f868,fn_8020f868,translated,high,"work/ghidra/main-gb/export/8020f868_FUN_8020f868.c; copies ten bytes and calls 0x8020F538",src/runtime/bt.rs
+runtime::bt,8020f8b4,fn_8020f8b4,translated,medium,"work/ghidra/main-gb/export/8020f8b4_FUN_8020f8b4.c; one-shot SDP registration via 0x8021EC2C and 0x8021EFA4; payload roles opaque",src/runtime/bt.rs

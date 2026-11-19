@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8065dca0,fn_8065dca0,translated,high,"work/ghidra/rel-d_basesNP/export/8065dca0_FUN_8065dca0.c; li r3,7 then tail b 800FFF50",src/game/bases.rs
+game::bases,806e0e20,fn_806e0e20,translated,high,"work/ghidra/rel-d_basesNP/export/806e0e20_FUN_806e0e20.c; copy lwz *(r4) to stw +0x700, blr",src/game/bases.rs
+game::bases,80761670,fn_80761670,translated,high,"work/ghidra/rel-d_basesNP/export/80761670_FUN_80761670.c; li r4,0; r3 = this+0x20C; tail b 801662E0 (f32)",src/game/bases.rs
+game::bases,80765180,fn_80765180,translated,high,"work/ghidra/rel-d_basesNP/export/80765180_FUN_80765180.c; store +0x47C = 1 then tail b 800F6CB0(this)",src/game/bases.rs
+game::bases,8078e900,fn_8078e900,translated,high,"work/ghidra/rel-d_basesNP/export/8078e900_FUN_8078e900.c; load 8042A4A8 (-0x5B58 wrap) then tail b 8019BC30",src/game/bases.rs
+game::bases,8079b1c0,fn_8079b1c0,translated,high,"work/ghidra/rel-d_basesNP/export/8079b1c0_FUN_8079b1c0.c; load +0x1D0, add 0x28, tail b 80169020",src/game/bases.rs
+game::bases,8079bd40,fn_8079bd40,translated,high,"work/ghidra/rel-d_basesNP/export/8079bd40_FUN_8079bd40.c; load 8042A1A0 (-0x5E60 wrap) then 8079B1C0",src/game/bases.rs
+game::bases,806e8990,fn_806e8990,translated,high,"work/ghidra/rel-d_basesNP/export/806e8990_FUN_806e8990.c; lfs 1.0 at 807CBDFC, r4 = this+0xAC, tail b 80097170",src/game/bases.rs
+game::bases,80727180,fn_80727180,translated,high,"work/ghidra/rel-d_basesNP/export/80727180_FUN_80727180.c; lfs 1.0 at 807CD278, r4 = this+0xAC, tail b 80097170",src/game/bases.rs
+game::bases,80762b20,fn_80762b20,translated,high,"work/ghidra/rel-d_basesNP/export/80762b20_FUN_80762b20.c; lwzu +0x1AC then slot +0x1C bctr tail",src/game/bases.rs
+game::bases,8078a270,fn_8078a270,translated,high,"work/ghidra/rel-d_basesNP/export/8078a270_FUN_8078a270.c; r4 = 807CFAF0, r5 = 3, tail b 800F6D60",src/game/bases.rs
+game::bases,8079b110,fn_8079b110,translated,high,"work/ghidra/rel-d_basesNP/export/8079b110_FUN_8079b110.c; r4 = 807D00A0, r5 = 6, tail b 800F6D60",src/game/bases.rs
+game::bases,8065e440,fn_8065e440,translated,high,"work/ghidra/rel-d_basesNP/export/8065e440_FUN_8065e440.c; exchange *(r3) and *(r4), blr",src/game/bases.rs
+game::bases,8068ab10,fn_8068ab10,translated,high,"work/ghidra/rel-d_basesNP/export/8068ab10_FUN_8068ab10.c; clear bit 0x2 at +0x55C, tail 800B8250(this+0x55C,4)",src/game/bases.rs
+game::bases,80693060,fn_80693060,translated,high,"work/ghidra/rel-d_basesNP/export/80693060_FUN_80693060.c; clear bit 0x2 at +0x554, tail 800B8250(this+0x554,4)",src/game/bases.rs
+game::bases,807422d0,fn_807422d0,translated,high,"work/ghidra/rel-d_basesNP/export/807422d0_FUN_807422d0.c; return +0x3E8 when non-zero else RNG 800B2EE0(4)",src/game/bases.rs
+game::bases,80743920,fn_80743920,translated,high,"work/ghidra/rel-d_basesNP/export/80743920_FUN_80743920.c; lwzu +0x5D0 then slot +0x8 with r4 and r5=2, bctr",src/game/bases.rs
+game::bases,807c1470,fn_807c1470,translated,high,"work/ghidra/rel-d_basesNP/export/807c1470_FUN_807c1470.c; cntlzw(value-3)>>5 i.e. return value == 3",src/game/bases.rs
+game::bases,80667cf0,fn_80667cf0,translated,high,"work/ghidra/rel-d_basesNP/export/80667cf0_FUN_80667cf0.c; addi r3,+0xAC then tail b 80094560",src/game/bases.rs
+game::bases,806b4ec0,fn_806b4ec0,translated,high,"work/ghidra/rel-d_basesNP/export/806b4ec0_FUN_806b4ec0.c; li r3,0; blr",src/game/bases.rs
+game::bases,8077d670,fn_8077d670,translated,high,"work/ghidra/rel-d_basesNP/export/8077d670_FUN_8077d670.c; li r3,1; blr",src/game/bases.rs
+game::bases,807c5b00,fn_807c5b00,translated,high,"work/ghidra/rel-d_basesNP/export/807c5b00_FUN_807c5b00.c; li r3,1; blr",src/game/bases.rs
+game::bases,807abf40,fn_807abf40,translated,high,"work/ghidra/rel-d_basesNP/export/807abf40_FUN_807abf40.c; mr r3,r4 then tail b 801648B0",src/game/bases.rs
+game::bases,807adbf0,fn_807adbf0,translated,high,"work/ghidra/rel-d_basesNP/export/807adbf0_FUN_807adbf0.c; mr r3,r4 then tail b 801648B0",src/game/bases.rs
+game::bases,807aee90,fn_807aee90,translated,high,"work/ghidra/rel-d_basesNP/export/807aee90_FUN_807aee90.c; mr r3,r4 then tail b 801648B0",src/game/bases.rs
+game::bases,807b08a0,fn_807b08a0,translated,high,"work/ghidra/rel-d_basesNP/export/807b08a0_FUN_807b08a0.c; mr r3,r4 then tail b 801648B0",src/game/bases.rs
+game::bases,807b5c50,fn_807b5c50,translated,high,"work/ghidra/rel-d_basesNP/export/807b5c50_FUN_807b5c50.c; mr r3,r4 then tail b 801648B0",src/game/bases.rs
+game::bases,807b8ec0,fn_807b8ec0,translated,high,"work/ghidra/rel-d_basesNP/export/807b8ec0_FUN_807b8ec0.c; mr r3,r4 then tail b 801648B0",src/game/bases.rs
+game::bases,807ba740,fn_807ba740,translated,high,"work/ghidra/rel-d_basesNP/export/807ba740_FUN_807ba740.c; mr r3,r4 then tail b 801648B0",src/game/bases.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80606ec0,fn_80606ec0,translated,high,"work/ghidra/rel-d_basesNP/export/80606ec0_FUN_80606ec0.c; worldCollectionCoin_21.brlyt loader, five N_coinbar_01 and two T_world_00 pane handles",src/game/bases.rs
+game::bases,80606fb0,fn_80606fb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80606fb0_FUN_80606fb0.c; 8006C5C0 gate then countLeadingZeros(800B3B50(-1)) >> 5",src/game/bases.rs
+game::bases,80606ff0,fn_80606ff0,translated,medium,"work/ghidra/rel-d_basesNP/export/80606ff0_FUN_80606ff0.c; two visibility gates, +0x420/+0xE8 virtual calls, re-runs 80607120",src/game/bases.rs
+game::bases,806070c0,fn_806070c0,translated,high,"work/ghidra/rel-d_basesNP/export/806070c0_FUN_806070c0.c; two ready gates then 800C9930 on +0xE0",src/game/bases.rs
+game::bases,80607120,fn_80607120,translated,medium,"work/ghidra/rel-d_basesNP/export/80607120_FUN_80607120.c; matrix copy for the +0x460/+0x464 records and the +0x470 record",src/game/bases.rs
+game::bases,806072e0,fn_806072e0,translated,high,"work/ghidra/rel-d_basesNP/export/806072e0_FUN_806072e0.c; nine availability bytes at +0xB51 and count at +0xB48",src/game/bases.rs
+game::bases,80607380,fn_80607380,translated,high,"work/ghidra/rel-d_basesNP/export/80607380_FUN_80607380.c; previous unlocked column, animations 1/2, descriptor 80823130",src/game/bases.rs
+game::bases,80607430,fn_80607430,translated,high,"work/ghidra/rel-d_basesNP/export/80607430_FUN_80607430.c; next unlocked column, animations 3/4, descriptor 80823130",src/game/bases.rs
+game::bases,806074e0,fn_806074e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806074e0_FUN_806074e0.c; open animation for both +0x474 panes through 800C9A60",src/game/bases.rs
+game::bases,80607590,fn_80607590,translated,medium,"work/ghidra/rel-d_basesNP/export/80607590_FUN_80607590.c; the same open animation indexed by slot",src/game/bases.rs
+game::bases,80607620,fn_80607620,translated,medium,"work/ghidra/rel-d_basesNP/export/80607620_FUN_80607620.c; writes +0x27C..+0x284 from the 0xC0/0x10 column block",src/game/bases.rs
+game::bases,80607680,fn_80607680,translated,high,"work/ghidra/rel-d_basesNP/export/80607680_FUN_80607680.c; rebuilds all 24 column records from column +0xB44",src/game/bases.rs
+game::bases,8060a350,fn_8060a350,translated,high,"work/ghidra/rel-d_basesNP/export/8060a350_FUN_8060a350.c; continue.arc plus continue_05.brlyt with six pane bindings",src/game/bases.rs
+game::bases,8060a5a0,fn_8060a5a0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060a5a0_FUN_8060a5a0.c; word getter 0x807C6880 + (count-1)*0x10 + slot*4 with 32-bit wrap",src/game/bases.rs
+game::bases,8060a720,fn_8060a720,translated,medium,"work/ghidra/rel-d_basesNP/export/8060a720_FUN_8060a720.c; binds the +0x2A8 handlers from table 807C68D8",src/game/bases.rs
+game::bases,8060a7b0,fn_8060a7b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060a7b0_FUN_8060a7b0.c; binds the +0x2B8 handlers from table 807C68E8",src/game/bases.rs
+game::bases,8060a840,fn_8060a840,translated,medium,"work/ghidra/rel-d_basesNP/export/8060a840_FUN_8060a840.c; four availability records via main.dol tables 80354E60/80354E90",src/game/bases.rs
+game::bases,8060aae0,fn_8060aae0,translated,high,"work/ghidra/rel-d_basesNP/export/8060aae0_FUN_8060aae0.c; clears +0x2D6/+0x2D7 and dispatches 80823300 or 80823340",src/game/bases.rs
+game::bases,8060abc0,fn_8060abc0,translated,high,"work/ghidra/rel-d_basesNP/export/8060abc0_FUN_8060abc0.c; animation gate then descriptor 80823340",src/game/bases.rs
+game::bases,8060ac30,fn_8060ac30,translated,medium,"work/ghidra/rel-d_basesNP/export/8060ac30_FUN_8060ac30.c; rebinds count panes, restarts animation 0, plays cue 0x7F",src/game/bases.rs
+game::bases,8060ac90,fn_8060ac90,translated,high,"work/ghidra/rel-d_basesNP/export/8060ac90_FUN_8060ac90.c; animation gate then descriptor 80823380",src/game/bases.rs
+game::bases,8060ad60,fn_8060ad60,translated,high,"work/ghidra/rel-d_basesNP/export/8060ad60_FUN_8060ad60.c; clamps counts at 99, digit loop, calls 8060A950, cue 0xA5",src/game/bases.rs
+game::bases,8060ae40,fn_8060ae40,translated,high,"work/ghidra/rel-d_basesNP/export/8060ae40_FUN_8060ae40.c; animation gate then descriptor 80823400",src/game/bases.rs
+game::bases,8060af20,fn_8060af20,translated,high,"work/ghidra/rel-d_basesNP/export/8060af20_FUN_8060af20.c; five-step count-up, cue 0xA4, descriptor 80823480",src/game/bases.rs
+game::bases,8060b020,fn_8060b020,translated,medium,"work/ghidra/rel-d_basesNP/export/8060b020_FUN_8060b020.c; resets four save records, cues 0x331/0x378/0x405/0x3BF",src/game/bases.rs
+game::bases,8060b150,fn_8060b150,translated,high,"work/ghidra/rel-d_basesNP/export/8060b150_FUN_8060b150.c; animation gate then descriptor 808234C0",src/game/bases.rs
+game::bases,8060b1e0,fn_8060b1e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060b1e0_FUN_8060b1e0.c; +0x2D0/+0x2CC timers, input bit 0x900, four-cue chain",src/game/bases.rs
+game::bases,8060b330,fn_8060b330,translated,medium,"work/ghidra/rel-d_basesNP/export/8060b330_FUN_8060b330.c; publishes the signed low byte of the four counts via 800CE310",src/game/bases.rs
+game::bases,8060b3c0,fn_8060b3c0,translated,high,"work/ghidra/rel-d_basesNP/export/8060b3c0_FUN_8060b3c0.c; animation gate then descriptor 80823540",src/game/bases.rs
+game::bases,8060b440,fn_8060b440,translated,high,"work/ghidra/rel-d_basesNP/export/8060b440_FUN_8060b440.c; sets +0x2D7 and dispatches descriptor 808232C0",src/game/bases.rs

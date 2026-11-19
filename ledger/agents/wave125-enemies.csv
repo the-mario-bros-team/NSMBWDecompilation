@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80aacc00,fn_80aacc00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aacc00_FUN_80aacc00.c; +0x58C matrix rebuild and node 2 translation cache",src/game/enemies.rs
+game::enemies,80aacd20,fn_80aacd20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aacd20_FUN_80aacd20.c; +0xDCC/+0xDD8 snapshot with the 32.0 and 0.0625 factors",src/game/enemies.rs
+game::enemies,80aacd50,fn_80aacd50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aacd50_FUN_80aacd50.c; scene band test on +0xE18/+0xE10 modes",src/game/enemies.rs
+game::enemies,80aace90,fn_80aace90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aace90_FUN_80aace90.c; twenty-word +0xB44 free-slot search",src/game/enemies.rs
+game::enemies,80aacfa0,fn_80aacfa0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aacfa0_FUN_80aacfa0.c; release unresolvable +0xB44 child handles",src/game/enemies.rs
+game::enemies,80aad010,fn_80aad010,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aad010_FUN_80aad010.c; shot spawner into a free slot with mgkillershot effects",src/game/enemies.rs
+game::enemies,80aad680,fn_80aad680,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aad680_FUN_80aad680.c; zero-threshold predicate selected in sense by +0xE3E",src/game/enemies.rs
+game::enemies,80aad6d0,fn_80aad6d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aad6d0_FUN_80aad6d0.c; +0xE34 latch and +0x58C holder tick",src/game/enemies.rs
+game::enemies,80aad770,fn_80aad770,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aad770_FUN_80aad770.c; spawner wrapper arming +0x500",src/game/enemies.rs
+game::enemies,80aad7c0,fn_80aad7c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aad7c0_FUN_80aad7c0.c; six-word transform snapshot and +0xE2C = 2",src/game/enemies.rs
+game::enemies,80aad840,fn_80aad840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aad840_FUN_80aad840.c; four-phase cable slide over +0xE38/+0xE2C/+0x500",src/game/enemies.rs
+game::enemies,80aae240,fn_80aae240,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aae240_FUN_80aae240.c; record teardown 0x8015F800 plus optional 0x802B9280",src/game/enemies.rs
+game::enemies,80aae3c0,fn_80aae3c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aae3c0_FUN_80aae3c0.c; 0x1818-byte daEnKild_c constructor",src/game/enemies.rs
+game::enemies,80aaea50,fn_80aaea50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaea50_FUN_80aaea50.c; +0x1815 frame hook ticking the +0x54C holder",src/game/enemies.rs
+game::enemies,80aaeb30,fn_80aaeb30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaeb30_FUN_80aaeb30.c; node-matrix rebuild and six attachment offsets",src/game/enemies.rs
+game::enemies,80aaf050,fn_80aaf050,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf050_FUN_80aaf050.c; g3d/killer_king.brres binder with node and animation",src/game/enemies.rs
+game::enemies,80aaf1c0,fn_80aaf1c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aaf1c0_FUN_80aaf1c0.c; two-angle aim solver with 0x4000 bias and 0xE38 clamp",src/game/enemies.rs
+game::enemies,80aaf320,fn_80aaf320,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf320_FUN_80aaf320.c; clear sixteen +0x994 + n*0xF0 segment words",src/game/enemies.rs
+game::enemies,80aaf370,fn_80aaf370,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf370_FUN_80aaf370.c; +0x1812 roll ramp stepped by 8 with 0 and 0x80 clamps",src/game/enemies.rs
+game::enemies,80aaf3f0,fn_80aaf3f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf3f0_FUN_80aaf3f0.c; apply the ramp to +0x104 and flip +0x1814",src/game/enemies.rs
+game::enemies,80aaf470,fn_80aaf470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf470_FUN_80aaf470.c; left or left-plus-width scene band predicate",src/game/enemies.rs
+game::enemies,80aaf500,fn_80aaf500,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf500_FUN_80aaf500.c; sound 0x1C2 and +0xD4 switch to the 0x80B74F90 record",src/game/enemies.rs
+game::enemies,80aaf5a0,fn_80aaf5a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf5a0_FUN_80aaf5a0.c; four-plane spawn placement from the 0x80B2F9D8 attitude rows",src/game/enemies.rs
+game::enemies,80aaf6f0,fn_80aaf6f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaf6f0_FUN_80aaf6f0.c; fifteen-segment broadcaster plus Wm_en_kingkiller and sound 0x1C3",src/game/enemies.rs
+game::enemies,80aafb90,fn_80aafb90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aafb90_FUN_80aafb90.c; 0x638-byte descriptor teardown",src/game/enemies.rs
+game::enemies,80aafd10,fn_80aafd10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aafd10_FUN_80aafd10.c; 0x638-byte constructor with two owner interfaces",src/game/enemies.rs
+game::enemies,80aafe00,fn_80aafe00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aafe00_FUN_80aafe00.c; release the +0x394/+0x60C/+0x5E0 holders and the body",src/game/enemies.rs

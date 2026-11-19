@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801a9ce0,fn_801a9ce0,translated,high,"work/ghidra/main-gb/export/801a9ce0_FUN_801a9ce0.c; Ghidra prints an empty body; the eight bytes are 0xFFA0004C 4E800020 = mtfsb1 29 (sets FPSCR bit 29, NI non-IEEE mode) + blr",src/audio/ax.rs

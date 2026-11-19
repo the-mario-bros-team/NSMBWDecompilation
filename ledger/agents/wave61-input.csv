@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801f62c0,fn_801f62c0,translated,high,"work/ghidra/main-gb/export/801f62c0_FUN_801f62c0.c; returns the default HID device record address 0x803A3978",src/runtime/input.rs
+runtime::input,801f6a40,fn_801f6a40,translated,high,"work/ghidra/main-gb/export/801f6a40_FUN_801f6a40.c; prints ""bta_hh_co_open()"" through the no-op printer 0x801F6A70",src/runtime/input.rs
+runtime::input,801f6a50,fn_801f6a50,translated,high,"work/ghidra/main-gb/export/801f6a50_FUN_801f6a50.c; prints ""bta_hh_co_close()"" through the no-op printer 0x801F6A70",src/runtime/input.rs
+runtime::input,801f6a60,fn_801f6a60,translated,medium,"work/ghidra/main-gb/export/801f6a60_FUN_801f6a60.c; constant 0 return; callers pass three arguments the body ignores",src/runtime/input.rs
+runtime::input,801f7a60,fn_801f7a60,translated,high,"work/ghidra/main-gb/export/801f7a60_FUN_801f7a60.c; single load of the first word of a GKI buffer",src/runtime/input.rs
+runtime::input,801f7a70,fn_801f7a70,translated,medium,"work/ghidra/main-gb/export/801f7a70_FUN_801f7a70.c; returns next-block payload (word at -8)+8 or 0",src/runtime/input.rs
+runtime::input,801f7a90,fn_801f7a90,translated,high,"work/ghidra/main-gb/export/801f7a90_FUN_801f7a90.c; CLZ(u16 at +8)>>5 is an exact zero test",src/runtime/input.rs
+runtime::input,801f8020,fn_801f8020,translated,high,"work/ghidra/main-gb/export/801f8020_FUN_801f8020.c; returns the HID-host word 0x803CDAF0 copied into HCI packets by 0x80205570",src/runtime/input.rs
+runtime::input,801f8720,fn_801f8720,translated,high,"work/ghidra/main-gb/export/801f8720_FUN_801f8720.c; constant 2 = GKI current task id (already called by address as GKI_CURRENT_TASK)",src/runtime/input.rs
+runtime::input,801f8ec0,fn_801f8ec0,translated,medium,"work/ghidra/main-gb/export/801f8ec0_FUN_801f8ec0.c; constant 0x14A78 return; no caller names the value",src/runtime/input.rs
+runtime::input,801f8ed0,fn_801f8ed0,translated,medium,"work/ghidra/main-gb/export/801f8ed0_FUN_801f8ed0.c; resets the 0x803CDDE0 HID state block and reports event 4; block word width inferred",src/runtime/input.rs
+runtime::input,801f9a50,fn_801f9a50,translated,medium,"work/ghidra/main-gb/export/801f9a50_FUN_801f9a50.c; drains the two 0x803CDE0C/0x803CDE1C GKI lists then calls 0x801EEF00 with the reset handler",src/runtime/input.rs
+runtime::input,801f9b00,fn_801f9b00,translated,high,"work/ghidra/main-gb/export/801f9b00_FUN_801f9b00.c; restart, state byte 5, flag clears under the GKI lock",src/runtime/input.rs
+runtime::input,801f9b50,fn_801f9b50,translated,medium,"work/ghidra/main-gb/export/801f9b50_FUN_801f9b50.c; u16 store then method-table slot +0xC or free; callback args inferred from the ABI",src/runtime/input.rs
+runtime::input,801f9b70,fn_801f9b70,translated,medium,"work/ghidra/main-gb/export/801f9b70_FUN_801f9b70.c; calls method-table slots +0 (2,1,0x800) and +4 (context at r13-0x4AFC)",src/runtime/input.rs
+runtime::input,801f9be0,fn_801f9be0,translated,medium,"work/ghidra/main-gb/export/801f9be0_FUN_801f9be0.c; calls method-table slot +8 with no arguments",src/runtime/input.rs
+runtime::input,801f9c20,fn_801f9c20,translated,medium,"work/ghidra/main-gb/export/801f9c20_FUN_801f9c20.c; four no-argument sub-module resets 0x8021879C/0x8020BA74/0x8020F348/0x8020FDCC",src/runtime/input.rs
+runtime::input,801f9e10,fn_801f9e10,translated,medium,"work/ghidra/main-gb/export/801f9e10_FUN_801f9e10.c; HID-host bring-up: installs the 0x802F6D30 method table, arms the 0x803D1620 alarm, waits on 0x801FCF30",src/runtime/input.rs
+runtime::input,801f9ef0,fn_801f9ef0,translated,high,"work/ghidra/main-gb/export/801f9ef0_FUN_801f9ef0.c; stores the mode word, stops the alarm, closes the transport, flushes the queues",src/runtime/input.rs
+runtime::input,801f9f60,fn_801f9f60,translated,high,"work/ghidra/main-gb/export/801f9f60_FUN_801f9f60.c; four stores plus 0x8020B91C, 0x801F9C20 and 0x801FA6CC",src/runtime/input.rs
+runtime::input,801fa908,fn_801fa908,translated,high,"work/ghidra/main-gb/export/801fa908_FUN_801fa908.c; writes the Bluetooth trace level byte r13-0x4AE8",src/runtime/input.rs
+runtime::input,801ff5a0,fn_801ff5a0,translated,high,"work/ghidra/main-gb/export/801ff5a0_FUN_801ff5a0.c; posts event 0x170C with byte +8 and word +0x30 on a 0x34-byte buffer",src/runtime/input.rs
+runtime::input,801ff628,fn_801ff628,translated,high,"work/ghidra/main-gb/export/801ff628_FUN_801ff628.c; posts event 0x170D on an 8-byte buffer",src/runtime/input.rs
+runtime::input,801ff660,fn_801ff660,translated,high,"work/ghidra/main-gb/export/801ff660_FUN_801ff660.c; posts event 0x1701 with the handle at +6",src/runtime/input.rs
+runtime::input,801ff6c4,fn_801ff6c4,translated,high,"work/ghidra/main-gb/export/801ff6c4_FUN_801ff6c4.c; posts event 0x1700 with six-byte address at +8 and two bytes at +0x0E/+0x0F",src/runtime/input.rs
+runtime::input,801ff778,fn_801ff778,translated,high,"work/ghidra/main-gb/export/801ff778_FUN_801ff778.c; posts event 0x1708 with handle +6 and word +0x10 on a 0x14-byte buffer",src/runtime/input.rs
+runtime::input,801ff8b0,fn_801ff8b0,translated,high,"work/ghidra/main-gb/export/801ff8b0_FUN_801ff8b0.c; posts event 0x170A with operation 0x0C at +0x10 and handle +6",src/runtime/input.rs
+runtime::input,801ff91c,fn_801ff91c,translated,high,"work/ghidra/main-gb/export/801ff91c_FUN_801ff91c.c; posts event 0x170E on an 8-byte buffer",src/runtime/input.rs
+runtime::input,801ffcc4,fn_801ffcc4,translated,medium,"work/ghidra/main-gb/export/801ffcc4_FUN_801ffcc4.c; event demultiplexer for 0x1700-0x170F; 0x801FFEC4 result and argument recovered from its split prologue",src/runtime/input.rs
+runtime::input,801ffe10,fn_801ffe10,translated,high,"work/ghidra/main-gb/export/801ffe10_FUN_801ffe10.c; switch over 0x1700-0x170F returning the 0x80347Dxx name strings",src/runtime/input.rs

@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,8025fe30,fn_8025fe30,translated,medium,"work/ghidra/main-gb/export/8025fe30_FUN_8025fe30.c; 1940 bytes; per-instance morph blender; three weighted passes over 12-byte vertices and 4-byte 8-bit channels; slot feeds 0x8023B460, tree record via vtable +0x38; GQR0 f32, GQR2 u8 0x00040004 set at 0x8025EEE8; instruction stream work/dol/main.elf 0x8025FE30..0x802605C4",src/runtime/os.rs

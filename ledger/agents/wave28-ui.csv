@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,800182d0,fn_800182d0,translated,medium,"work/ghidra/main-gb/export/800182d0_FUN_800182d0.c; forwards (b, b, a) to the unresolved stub 0x802DCBFC; twin of 0x80018300/0x80019500/0x80019530.",src/ui/hud.rs
+ui::hud,80018300,fn_80018300,translated,medium,"work/ghidra/main-gb/export/80018300_FUN_80018300.c; byte-identical twin of 0x800182D0 immediately before the errorInfo state-table builder 0x80018330.",src/ui/hud.rs
+ui::hud,80019500,fn_80019500,translated,medium,"work/ghidra/main-gb/export/80019500_FUN_80019500.c; byte-identical twin of 0x800182D0 in the nunchuk cluster.",src/ui/hud.rs
+ui::hud,80019530,fn_80019530,translated,medium,"work/ghidra/main-gb/export/80019530_FUN_80019530.c; byte-identical twin immediately before the nunchuk state-table builder 0x80019560.",src/ui/hud.rs
+ui::hud,8001a010,fn_8001a010,translated,medium,"work/ghidra/main-gb/export/8001a010_FUN_8001a010.c; layout query 0x800C9610(this+4; -1); when it returns 0 call vtable +0x19C slot +0x18 with this+0x19C and 0x803523F8.",src/ui/hud.rs
+ui::hud,8001a080,fn_8001a080,translated,high,"work/ghidra/main-gb/export/8001a080_FUN_8001a080.c; stores value at +0x1E8; sets +0x1E5 and +0x1E6 to 1.",src/ui/hud.rs
+ui::hud,8001a0a0,fn_8001a0a0,translated,high,"work/ghidra/main-gb/export/8001a0a0_FUN_8001a0a0.c; sets +0x1E6 and +0x1E7 to 1.",src/ui/hud.rs
+ui::hud,8001a0b0,fn_8001a0b0,translated,medium,"work/ghidra/main-gb/export/8001a0b0_FUN_8001a0b0.c; calls vtable slot +0xC with the object; on 0 stores it at this+0xC and returns this+4; otherwise returns 0.",src/ui/hud.rs
+ui::menu,801705e0,fn_801705e0,translated,high,"work/ghidra/main-gb/export/801705e0_FUN_801705e0.c; unlinks this+8 through 0x80228F80 and releases the word at +0 through 0x801D4710; twin of 0x8016FE40.",src/ui/menu.rs
+ui::menu,80171c30,fn_80171c30,translated,high,"work/ghidra/main-gb/export/80171c30_FUN_80171c30.c; clears byte +0x18 and bytes +4..+0xB.",src/ui/menu.rs
+ui::menu,80172330,fn_80172330,translated,high,"work/ghidra/main-gb/export/80172330_FUN_80172330.c; non-null and flag>0 guard; free through 0x802B9280; returns this.",src/ui/menu.rs
+ui::menu,80172be0,fn_80172be0,translated,medium,"work/ghidra/main-gb/export/80172be0_FUN_80172be0.c; four unrolled +0xCF enabled / +0xC chain hops then 0x80172CE0/0x80172CF0 and recursion on the next pointer.",src/ui/menu.rs
+ui::menu,80173620,fn_80173620,translated,medium,"work/ghidra/main-gb/export/80173620_FUN_80173620.c; press/hold state machine; 64-bit stamp at +0x38; 1000 ms and 480000 ms checks; arms 0x80377EC8 timer; sets +0x41.",src/ui/menu.rs
+ui::menu,80173a30,fn_80173a30,translated,medium,"work/ghidra/main-gb/export/80173a30_FUN_80173a30.c; four 0x68-byte text records; scales 40 samples by +0x5D/10; submits through 0x80227EF0/0x801E3680; advances +0x50 by 0x50.",src/ui/menu.rs
+ui::menu,80173cd0,fn_80173cd0,translated,medium,"work/ghidra/main-gb/export/80173cd0_FUN_80173cd0.c; stores 0x80329F38 at +0x1F0; publishes 0x80377F98; archive block +0x1D0; resets four 0x68-byte records.",src/ui/menu.rs
+ui::menu,80173e40,fn_80173e40,translated,medium,"work/ghidra/main-gb/export/80173e40_FUN_80173e40.c; +0x1EC gate; arms +0x1A0 timer with 64-bit time and period (bus/500000)*0x65B9AB/8000; callback 0x80173A30.",src/ui/menu.rs
+ui::menu,80174df0,fn_80174df0,translated,high,"work/ghidra/main-gb/export/80174df0_FUN_80174df0.c; 0x801D5540(viewport@0x8032A304, size).",src/ui/menu.rs
+ui::menu,80174fa0,fn_80174fa0,translated,medium,"work/ghidra/main-gb/export/80174fa0_FUN_80174fa0.c; fetches the live menu through 0x80175500 then calls 0x801788C0 with the retained pointer.",src/ui/menu.rs
+ui::menu,80175010,fn_80175010,translated,medium,"work/ghidra/main-gb/export/80175010_FUN_80175010.c; fetches the live menu through 0x80175500 then calls 0x8017D1D0 with the retained pointer.",src/ui/menu.rs
+ui::menu,80175140,fn_80175140,translated,medium,"work/ghidra/main-gb/export/80175140_FUN_80175140.c; fetches the live menu through 0x80175500 then calls 0x8017D3E0 with the retained pointer.",src/ui/menu.rs
+ui::menu,80175170,fn_80175170,translated,high,"work/ghidra/main-gb/export/80175170_FUN_80175170.c; straight 25-call GX state reset with a 56-byte stack block for 0x801C04D0/0x801C9940.",src/ui/menu.rs
+ui::menu,80178a20,fn_80178a20,translated,medium,"work/ghidra/main-gb/export/80178a20_FUN_80178a20.c; splits 0x801ABA80 into channel/high and value/low; feeds 0x80173510 or arms menu+0x528+channel*0x30 for (bus/4000)*50 ticks.",src/ui/menu.rs
+ui::menu,80178b40,fn_80178b40,translated,medium,"work/ghidra/main-gb/export/80178b40_FUN_80178b40.c; immediate/deferred release query; sets menu+0x91 or rearms menu+0x5E8 for (bus/4000)*100 ticks.",src/ui/menu.rs
+ui::menu,8017e490,fn_8017e490,translated,high,"work/ghidra/main-gb/export/8017e490_FUN_8017e490.c; dialog-record element destructor installed with 0x802DC9A0/0x802DCA98; non-null and flag>0 guard.",src/ui/menu.rs
+ui::menu,8017f0b0,fn_8017f0b0,translated,high,"work/ghidra/main-gb/export/8017f0b0_FUN_8017f0b0.c; 19-call GX text state; loads param_3 into 0x801C69E0(4; ...); writes param_1+4 to 0xCC008000.",src/ui/menu.rs

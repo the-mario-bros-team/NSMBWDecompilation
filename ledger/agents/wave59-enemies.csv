@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a447d0,fn_80a447d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a447d0_FUN_80a447d0.c; 48-byte forwarder; literal (second, second, first) call to 0x802DCBFC; target role unknown",src/game/enemies.rs
+game::enemies,80a44800,fn_80a44800,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a44800_FUN_80a44800.c; 48-byte twin of 80a447d0; same argument reshuffle",src/game/enemies.rs
+game::enemies,80a44830,fn_80a44830,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a44830_FUN_80a44830.c; allocates 0x8E8; temporary vtables 0x80301EA8/0x80B3A828/0x80302D78; class vtable 0x80B40DCC; holder 0x534 matrix 0x698 model 0x74C",src/game/enemies.rs
+game::enemies,80a44a40,fn_80a44a40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a44a40_FUN_80a44a40.c; +0x8D8 countdown; virtual +0x10 on +0x394; mode setter 0x80064F50(this 0); returns 1",src/game/enemies.rs
+game::enemies,80a44ad0,fn_80a44ad0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a44ad0_FUN_80a44ad0.c; single 0x8007F950 step on holder +0x534; returns 1",src/game/enemies.rs
+game::enemies,80a44ba0,fn_80a44ba0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a44ba0_FUN_80a44ba0.c; +0x8DC mode indexes tables 0x80B2C768/0x80B2C748 and 0x80B2C778; 0x80075270 probe; status 1..2 arms +0x45D",src/game/enemies.rs
+game::enemies,80a44ca0,fn_80a44ca0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a44ca0_FUN_80a44ca0.c; 0x80027B00 flag bits 3 and 2 reflect +0x8D0; frame tail 0x80027A60/0x800276B0/0x80027D70/0x8007FDA0",src/game/enemies.rs
+game::enemies,80a44f80,fn_80a44f80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a44f80_FUN_80a44f80.c; null guard; 0x8015F800(this 0); positive flag frees via 0x802B9280",src/game/enemies.rs
+game::enemies,80a450a0,fn_80a450a0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a450a0_FUN_80a450a0.c; 48-byte forwarder; literal (second, second, first) call to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a450d0,fn_80a450d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a450d0_FUN_80a450d0.c; 48-byte twin of 80a450a0",src/game/enemies.rs
+game::enemies,80a45100,fn_80a45100,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a45100_FUN_80a45100.c; allocates 0xAE8; class vtable 0x80B41444; second model 0x8D0 and animation bank 0x8F0..0xA2C",src/game/enemies.rs
+game::enemies,80a45280,fn_80a45280,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a45280_FUN_80a45280.c; spawn word +0x04 decoded into +0xAD0/+0xAD8/+0xADC; grid probe 0x80077810; heights 500 and -3000; state 0x80B70CA8 or 0x80353930",src/game/enemies.rs
+game::enemies,80a45650,fn_80a45650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a45650_FUN_80a45650.c; enumerate class 0x23C via 0x80162D50 and match byte +0x438 against +0xADC",src/game/enemies.rs
+game::enemies,80a456b0,fn_80a456b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a456b0_FUN_80a456b0.c; one word from source into +0xACC",src/game/enemies.rs
+game::enemies,80a456c0,fn_80a456c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a456c0_FUN_80a456c0.c; resolve +0xACC via 0x80162D00; lane 0..3 applies width*+0xAD8 along x or z around +0xAD4",src/game/enemies.rs
+game::enemies,80a45780,fn_80a45780,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a45780_FUN_80a45780.c; rescans class 0x23C then fn_80a456b0/fn_80a456c0 and class +0xD4 state 0x80353930",src/game/enemies.rs
+game::enemies,80a45ab0,fn_80a45ab0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a45ab0_FUN_80a45ab0.c; null guard; base destructor 0x8015F800 then 0x802B9280 when flag positive",src/game/enemies.rs
+game::enemies,80a45bd0,fn_80a45bd0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a45bd0_FUN_80a45bd0.c; 48-byte forwarder; literal (second, second, first) call to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a45c00,fn_80a45c00,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a45c00_FUN_80a45c00.c; 48-byte twin of 80a45bd0",src/game/enemies.rs
+game::enemies,80a45c30,fn_80a45c30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a45c30_FUN_80a45c30.c; allocates 0xAE0; class vtable 0x80B41AC4; same sub-object chain as 0x80A45100",src/game/enemies.rs
+game::enemies,80a46090,fn_80a46090,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46090_FUN_80a46090.c; 0x800146B0(x-8 -(8+z) y) and 0x800146F0(+0xDC block -pitch); 0x80B2C7B0 is 8.0",src/game/enemies.rs
+game::enemies,80a46100,fn_80a46100,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46100_FUN_80a46100.c; pitch beyond +0x3FF or -0x3FF ramps +0xAD0 down by 0x10 else up by 0x10 with 0 and 0x100 clamps",src/game/enemies.rs
+game::enemies,80a46180,fn_80a46180,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46180_FUN_80a46180.c; apply ramp to +0x104 by direction +0xAD2; flip direction when ramp is zero",src/game/enemies.rs
+game::enemies,80a466f0,fn_80a466f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a466f0_FUN_80a466f0.c; null guard; base destructor 0x8015F800 then 0x802B9280 when flag positive",src/game/enemies.rs
+game::enemies,80a46810,fn_80a46810,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a46810_FUN_80a46810.c; 48-byte forwarder; literal (second, second, first) call to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a46840,fn_80a46840,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a46840_FUN_80a46840.c; 48-byte twin of 80a46810",src/game/enemies.rs
+game::enemies,80a46870,fn_80a46870,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46870_FUN_80a46870.c; allocates 0xAE8; class vtable 0x80B4213C; identical chain to 0x80A45100",src/game/enemies.rs
+game::enemies,80a46b30,fn_80a46b30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46b30_FUN_80a46b30.c; single 0x8007F950 step on holder +0x534; returns 1",src/game/enemies.rs
+game::enemies,80a46cc0,fn_80a46cc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a46cc0_FUN_80a46cc0.c; 0x8007F950 0x80036A70 0x80A46BF0 0x8007FDA0; spin step 0x80A46BF0 is not translated",src/game/enemies.rs

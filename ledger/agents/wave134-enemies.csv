@@ -1,0 +1,25 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a360d0,fn_80a360d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a360d0_FUN_80a360d0.c; Choropoo holder reset + g3d/choropoo.brres + walk clip; bind mode 0x20",src/game/enemies.rs
+game::enemies,80a37460,fn_80a37460,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a37460_FUN_80a37460.c; Wm_en_comattack puff at y + D4 + 2.0 with z 5500.0; cue 0x21C at the actor",src/game/enemies.rs
+game::enemies,80b18f20,fn_80b18f20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b18f20_FUN_80b18f20.c; type-0x19B box scan; r4 reloaded by or r4,r3,r3 at 0x80B18F58 (spec r4 value corrected)",src/game/enemies.rs
+game::enemies,80a2ea60,fn_80a2ea60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2ea60_FUN_80a2ea60.c; 8 slots of 0x88 bytes; vtable +0x14; 0.06 countdown; floor 0.0",src/game/enemies.rs
+game::enemies,80a2f830,fn_80a2f830,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2f830_FUN_80a2f830.c; five inlined +0x30 child levels plus one recursion; slot +0xC returns the parent",src/game/enemies.rs
+game::enemies,80afedd0,fn_80afedd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afedd0_FUN_80afedd0.c; all 56 words identical to 80a2f830 apart from the relative branch encodings",src/game/enemies.rs
+game::enemies,80aeaff0,fn_80aeaff0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aeaff0_FUN_80aeaff0.c; n = +0x818 plus 1 vertical samples; 2^52+2^31 conversion; 0x80AEAC20 takes f1 only",src/game/enemies.rs
+game::enemies,80a7e640,fn_80a7e640,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7e640_FUN_80a7e640.c; 4 player slots over the 0x80429CA8 mask; |dx| <= 64.0",src/game/enemies.rs
+game::enemies,80a442d0,fn_80a442d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a442d0_FUN_80a442d0.c; bit 0 of 0x80027B00 gates Wm_ob_coin at y + 8.0; four-stage teardown",src/game/enemies.rs
+game::enemies,80ad3c10,fn_80ad3c10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad3c10_FUN_80ad3c10.c; value track on +0x728; keys 4.0 and -4.0 from amp 16.0",src/game/enemies.rs
+game::enemies,80aedac0,fn_80aedac0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aedac0_FUN_80aedac0.c; deleting destructor; two +0x6B0/+0x6EC members; flag > 0 deletes",src/game/enemies.rs
+game::enemies,80b28710,fn_80b28710,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b28710_FUN_80b28710.c; deleting destructor; 0x802DCA98 registers 0x80A00200 on +0x658 (6) and +0x5F8 (8)",src/game/enemies.rs
+game::enemies,80acb0c0,fn_80acb0c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acb0c0_FUN_80acb0c0.c; walks the +0x5C4 chain of one side and returns the node before the first free slot",src/game/enemies.rs
+game::enemies,80acb200,fn_80acb200,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acb200_FUN_80acb200.c; +0x5CC chain head re-spliced with side ^ 1",src/game/enemies.rs
+game::enemies,80acb280,fn_80acb280,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acb280_FUN_80acb280.c; claims one of two +0x5C4 slots; writes the index and +0x5C0 word",src/game/enemies.rs
+game::enemies,80acea40,fn_80acea40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acea40_FUN_80acea40.c; net_walk1 side flip on ground contact; BSS name records at 0x80B76250/0x80B76258",src/game/enemies.rs
+game::enemies,80aceb70,fn_80aceb70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aceb70_FUN_80aceb70.c; three +0x14 record probes gate the net_turn_st bind and the two xori flips",src/game/enemies.rs
+game::enemies,80aced20,fn_80aced20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aced20_FUN_80aced20.c; three probes gate net_turn_ed; +0xEC = 2.2 and clip rate 0.0",src/game/enemies.rs
+game::enemies,80ace000,fn_80ace000,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ace000_FUN_80ace000.c; +0x600 countdown and +0x604 yaw step; midpoint flip reads 0x8042C1A0 and 0x8042B540 at run time",src/game/enemies.rs
+game::enemies,80acf800,fn_80acf800,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acf800_FUN_80acf800.c; 0xA18-byte constructor; class word 0x80B5B10C; +0x8D8 sub-object slot +0x98",src/game/enemies.rs
+game::enemies,80acf910,fn_80acf910,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acf910_FUN_80acf910.c; release when this != 0 and flag > 0; returns this",src/game/enemies.rs
+game::enemies,80acf950,fn_80acf950,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acf950_FUN_80acf950.c; nokonokoA spawn initialiser; shell variant bit 0; 0x8042BB18/0x8042BB20 read at run time",src/game/enemies.rs
+game::enemies,80acfc20,fn_80acfc20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acfc20_FUN_80acfc20.c; nokonokoA binder with walkA; record size 0x23; 0x80166830 and 0x80166BD0 pair",src/game/enemies.rs
+game::enemies,80acfe60,fn_80acfe60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acfe60_FUN_80acfe60.c; class slots +0x314 and +0x318; three-way mode ladder over keys 2/4/8",src/game/enemies.rs

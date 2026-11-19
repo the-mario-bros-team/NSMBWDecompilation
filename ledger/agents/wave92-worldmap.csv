@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,8010c780,fn_8010c780,translated,medium,"work/ghidra/main-gb/export/8010c780_FUN_8010c780.c; closes one 0x224-byte record: clears +0x304, calls 0x802E1938(record+0x305, r13-0x6460) and clears bit 0 of child+0xBB",src/game/worldmap.rs
+game::worldmap,8010c9a0,fn_8010c9a0,translated,high,"work/ghidra/main-gb/export/8010c9a0_FUN_8010c9a0.c; copies source+0xB9 into +0xB8 of the four children at record+0x2E0..0x2EC",src/game/worldmap.rs
+game::worldmap,8010c9d0,fn_8010c9d0,translated,high,"work/ghidra/main-gb/export/8010c9d0_FUN_8010c9d0.c; allocates 0x4A18 bytes via 0x801628C0 and dispatches 0x8010CA00 with the result",src/game/worldmap.rs
+game::worldmap,8010ca00,fn_8010ca00,translated,high,"work/ghidra/main-gb/export/8010ca00_FUN_8010ca00.c; installs vtable 0x80322830 at +0x60, builds arrays at +0x148 (30) and +0x4180 (4), stores the object at r13-0x53B0",src/game/worldmap.rs
+game::worldmap,8010ca90,fn_8010ca90,translated,high,"work/ghidra/main-gb/export/8010ca90_FUN_8010ca90.c; destroys the +0x4180 and +0x148 arrays, destroys +0x74 and frees when free_base > 0",src/game/worldmap.rs
+game::worldmap,8010cef0,fn_8010cef0,translated,medium,"work/ghidra/main-gb/export/8010cef0_FUN_8010cef0.c; advances cursor +0x4A10 and writes 0.8f or 1.0f to +0x304/+0x308 of one record",src/game/worldmap.rs
+game::worldmap,8010cfa0,fn_8010cfa0,translated,medium,"work/ghidra/main-gb/export/8010cfa0_FUN_8010cfa0.c; scans the four-entry +0x4180 array for a clear +0x439C byte and writes 0.8f or 1.1f to +0x433C/+0x4340",src/game/worldmap.rs
+game::worldmap,8010d160,fn_8010d160,translated,high,"work/ghidra/main-gb/export/8010d160_FUN_8010d160.c; allocates 0xB94 bytes via 0x801628C0 and dispatches 0x8010D1A0 with the result",src/game/worldmap.rs
+game::worldmap,8010d190,fn_8010d190,translated,high,"work/ghidra/main-gb/export/8010d190_FUN_8010d190.c; calls 0x80162B20(0x2D0, 0, 0)",src/game/worldmap.rs
+game::worldmap,8010d1a0,fn_8010d1a0,translated,high,"work/ghidra/main-gb/export/8010d1a0_FUN_8010d1a0.c; builds +0x74/+0x260/+0x44C/+0x638/+0x8DC and the +0xB0C state object, stores itself at r13-0x53A8",src/game/worldmap.rs
+game::worldmap,8010d2d0,fn_8010d2d0,translated,high,"work/ghidra/main-gb/export/8010d2d0_FUN_8010d2d0.c; frees the object with 0x802B9280 when it is non-zero and free_base > 0",src/game/worldmap.rs
+game::worldmap,8010d310,fn_8010d310,translated,high,"work/ghidra/main-gb/export/8010d310_FUN_8010d310.c; runs 0x8015F9F0(+0x18, 0) then frees when free_base > 0",src/game/worldmap.rs
+game::worldmap,8010d370,fn_8010d370,translated,high,"work/ghidra/main-gb/export/8010d370_FUN_8010d370.c; same destructor/free flow as 0x8010D310",src/game/worldmap.rs
+game::worldmap,8010d6d0,fn_8010d6d0,translated,high,"work/ghidra/main-gb/export/8010d6d0_FUN_8010d6d0.c; short-circuits the readiness tests of +0x74, +0x260, +0x44C and +0x638 and returns the non-zero result",src/game/worldmap.rs
+game::worldmap,8010d760,fn_8010d760,translated,medium,"work/ghidra/main-gb/export/8010d760_FUN_8010d760.c; accepts controller records with id 0/1 into a bit mask, stores state 3 and posts 0x80375008",src/game/worldmap.rs
+game::worldmap,8010d8c0,fn_8010d8c0,translated,medium,"work/ghidra/main-gb/export/8010d8c0_FUN_8010d8c0.c; releases the four 0x80377C88 entries, selects +0x260 and posts 0x80374F48",src/game/worldmap.rs
+game::worldmap,8010d970,fn_8010d970,translated,medium,"work/ghidra/main-gb/export/8010d970_FUN_8010d970.c; releases the four 0x80377C88 entries, selects +0x44C and posts 0x80374F88",src/game/worldmap.rs
+game::worldmap,8010da20,fn_8010da20,translated,medium,"work/ghidra/main-gb/export/8010da20_FUN_8010da20.c; releases the four 0x80377C88 entries, selects +0x74 and posts 0x80374F08",src/game/worldmap.rs
+game::worldmap,8010dad0,fn_8010dad0,translated,medium,"work/ghidra/main-gb/export/8010dad0_FUN_8010dad0.c; tests record+0x1C against 0x7F1F and plays sound 0x81 when busy",src/game/worldmap.rs
+game::worldmap,8010db50,fn_8010db50,translated,high,"work/ghidra/main-gb/export/8010db50_FUN_8010db50.c; returns r13-0x53A0 != 0 and calls 0x8010E490(this, 1) when set",src/game/worldmap.rs
+game::worldmap,8010db90,fn_8010db90,translated,medium,"work/ghidra/main-gb/export/8010db90_FUN_8010db90.c; maps +0xB50 through the nine-case table into +0xAFC, stores state 4 and posts 0x80375088",src/game/worldmap.rs
+game::worldmap,8010dfe0,fn_8010dfe0,translated,medium,"work/ghidra/main-gb/export/8010dfe0_FUN_8010dfe0.c; updates +0x74 and requests the next state when the selected record+0x10 word is not 2",src/game/worldmap.rs
+game::worldmap,8010e0a0,fn_8010e0a0,translated,medium,"work/ghidra/main-gb/export/8010e0a0_FUN_8010e0a0.c; updates +0x260 and requests the next state when 0x8010DAD0 is busy",src/game/worldmap.rs
+game::worldmap,8010e130,fn_8010e130,translated,medium,"work/ghidra/main-gb/export/8010e130_FUN_8010e130.c; updates +0x44C and requests the next state when 0x8010DAD0 is busy",src/game/worldmap.rs
+game::worldmap,8010e1c0,fn_8010e1c0,translated,medium,"work/ghidra/main-gb/export/8010e1c0_FUN_8010e1c0.c; updates the first active of +0x74/+0x260/+0x44C or stores state 5 and posts 0x80374EC8",src/game/worldmap.rs
+game::worldmap,8010e280,fn_8010e280,translated,high,"work/ghidra/main-gb/export/8010e280_FUN_8010e280.c; when +0x8BD is clear restores +0xB6C into +0xB68 and posts +0xB48",src/game/worldmap.rs
+game::worldmap,8010e310,fn_8010e310,translated,medium,"work/ghidra/main-gb/export/8010e310_FUN_8010e310.c; shifts +0xB70 into +0xB6C into +0xB68, commits with 0x800B45A0 and clears +0xB8E when the four player words are 4",src/game/worldmap.rs
+game::worldmap,8010e400,fn_8010e400,translated,high,"work/ghidra/main-gb/export/8010e400_FUN_8010e400.c; clears +0xB8F, stores state 5 and posts 0x80374EC8 after the +0x8DC update",src/game/worldmap.rs
+game::worldmap,8010e490,fn_8010e490,translated,high,"work/ghidra/main-gb/export/8010e490_FUN_8010e490.c; resets the five state words and four player words, closes the three optional sub-objects and posts 0x80374EC8",src/game/worldmap.rs

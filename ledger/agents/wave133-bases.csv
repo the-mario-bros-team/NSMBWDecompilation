@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80761510,fn_80761510,translated,high,work/ghidra/rel-d_basesNP/export/80761510_FUN_80761510.c; 192-slot scan then +0x20C scale pass,src/game/bases.rs
+game::bases,8078b1d0,fn_8078b1d0,translated,medium,work/ghidra/rel-d_basesNP/export/8078b1d0_FUN_8078b1d0.c; two 0xA8-spaced emitter groups plus broom spawn and 0x80776C80 tail,src/game/bases.rs
+game::bases,806b7890,fn_806b7890,translated,medium,work/ghidra/rel-d_basesNP/export/806b7890_FUN_806b7890.c; four slots with retrying probe and virtual +0xB0 submit,src/game/bases.rs
+game::bases,806b7690,fn_806b7690,translated,medium,work/ghidra/rel-d_basesNP/export/806b7690_FUN_806b7690.c; Wm_we_ringburst per slot plus message 1359 and retire,src/game/bases.rs
+game::bases,806a23b0,fn_806a23b0,translated,high,work/ghidra/rel-d_basesNP/export/806a23b0_FUN_806a23b0.c; one-axis push-apart with 6.0 clamp and sign select,src/game/bases.rs
+game::bases,806df630,fn_806df630,translated,medium,work/ghidra/rel-d_basesNP/export/806df630_FUN_806df630.c; three 0x800DB180 beam panels at y-8 and 2y-8,src/game/bases.rs
+game::bases,80722180,fn_80722180,translated,medium,work/ghidra/rel-d_basesNP/export/80722180_FUN_80722180.c; face_1/hair_1 probe and yaw offset on +0x10,src/game/bases.rs
+game::bases,80780bd0,fn_80780bd0,translated,medium,work/ghidra/rel-d_basesNP/export/80780bd0_FUN_80780bd0.c; pass-through or rotated offset from 0x8016ED10 basis,src/game/bases.rs
+game::bases,80780e20,fn_80780e20,translated,medium,work/ghidra/rel-d_basesNP/export/80780e20_FUN_80780e20.c; pane lookup plus 1.0/0.95 scale plus facing inherit,src/game/bases.rs
+game::bases,80702aa0,fn_80702aa0,translated,high,work/ghidra/rel-d_basesNP/export/80702aa0_FUN_80702aa0.c; five 0x90-stride entries through 0x80701C10,src/game/bases.rs
+game::bases,80702bc0,fn_80702bc0,translated,high,work/ghidra/rel-d_basesNP/export/80702bc0_FUN_80702bc0.c; twin five-entry initialiser through 0x80088E80,src/game/bases.rs
+game::bases,80724460,fn_80724460,translated,medium,work/ghidra/rel-d_basesNP/export/80724460_FUN_80724460.c; attached-player position or placement matrix extract,src/game/bases.rs
+game::bases,80780d00,fn_80780d00,translated,medium,work/ghidra/rel-d_basesNP/export/80780d00_FUN_80780d00.c; path type table plus 35.0 bucket and 0x800F69F0 placement,src/game/bases.rs
+game::bases,80711590,fn_80711590,translated,medium,work/ghidra/rel-d_basesNP/export/80711590_FUN_80711590.c; x-crossing message through vtable +0xD4,src/game/bases.rs
+game::bases,80643d40,fn_80643d40,translated,high,work/ghidra/rel-d_basesNP/export/80643d40_FUN_80643d40.c; four pane contact bytes plus seven slot clears,src/game/bases.rs
+game::bases,806b39b0,fn_806b39b0,translated,high,work/ghidra/rel-d_basesNP/export/806b39b0_FUN_806b39b0.c; three-bucket seat mask through virtual +0x6C,src/game/bases.rs
+game::bases,807b0280,fn_807b0280,translated,medium,work/ghidra/rel-d_basesNP/export/807b0280_FUN_807b0280.c; three calls on the 0x8042A040 object,src/game/bases.rs
+game::bases,807b02d0,fn_807b02d0,translated,medium,work/ghidra/rel-d_basesNP/export/807b02d0_FUN_807b02d0.c; 0x80833BA0/0x80833C20 layout selection on pane +0x74,src/game/bases.rs
+game::bases,807b03b0,fn_807b03b0,translated,medium,work/ghidra/rel-d_basesNP/export/807b03b0_FUN_807b03b0.c; clears state bit 0x20 and shows 0x80833BE0 prompt,src/game/bases.rs
+game::bases,807b0840,fn_807b0840,translated,medium,work/ghidra/rel-d_basesNP/export/807b0840_FUN_807b0840.c; 0x80007610 setup then 0x807B0780 layout load,src/game/bases.rs
+game::bases,807b15d0,fn_807b15d0,translated,medium,work/ghidra/rel-d_basesNP/export/807b15d0_FUN_807b15d0.c; Object/Mario registration then return 1,src/game/bases.rs
+game::bases,807b83b0,fn_807b83b0,translated,high,work/ghidra/rel-d_basesNP/export/807b83b0_FUN_807b83b0.c; negate/or/shift widen of 0x800E1BE0,src/game/bases.rs
+game::bases,807ba810,fn_807ba810,translated,high,work/ghidra/rel-d_basesNP/export/807ba810_FUN_807ba810.c; sets door-manager +0x380,src/game/bases.rs
+game::bases,807ba830,fn_807ba830,translated,high,work/ghidra/rel-d_basesNP/export/807ba830_FUN_807ba830.c; clears door-manager +0x380,src/game/bases.rs
+game::bases,807ba850,fn_807ba850,translated,high,work/ghidra/rel-d_basesNP/export/807ba850_FUN_807ba850.c; reads door-manager +0x380,src/game/bases.rs
+game::bases,807bfbe0,fn_807bfbe0,translated,medium,work/ghidra/rel-d_basesNP/export/807bfbe0_FUN_807bfbe0.c; lazy 0x807BF560 then 0x807BF5A0 update,src/game/bases.rs

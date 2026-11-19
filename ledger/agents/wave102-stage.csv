@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c1c80,fn_800c1c80,translated,medium,"work/ghidra/main-gb/export/800c1c80_FUN_800c1c80.c; re-bases both endpoints; intercept window -0x6814..(-0x6810+limit)",src/game/stage.rs
+game::stage,800c1f20,fn_800c1f20,translated,medium,"work/ghidra/main-gb/export/800c1f20_FUN_800c1f20.c; half-extent query pair; calls fn_800c1c80; writes +0x40/+0x44/+0x50/+0x54",src/game/stage.rs
+game::stage,800c20f0,fn_800c20f0,translated,medium,"work/ghidra/main-gb/export/800c20f0_FUN_800c20f0.c; line test -0x6808/-0x6818; transition 0x80358ED0",src/game/stage.rs
+game::stage,800c21c0,fn_800c21c0,translated,medium,"work/ghidra/main-gb/export/800c21c0_FUN_800c21c0.c; forwards to fn_800c1f20; transition 0x80358F90",src/game/stage.rs
+game::stage,800c2280,fn_800c2280,translated,medium,"work/ghidra/main-gb/export/800c2280_FUN_800c2280.c; forwards to fn_800c1f20; transition 0x80358F50",src/game/stage.rs
+game::stage,800c2360,fn_800c2360,translated,medium,"work/ghidra/main-gb/export/800c2360_FUN_800c2360.c; line test -0x6804/-0x6818; transition 0x80359050",src/game/stage.rs
+game::stage,800c23f0,fn_800c23f0,translated,medium,"work/ghidra/main-gb/export/800c23f0_FUN_800c23f0.c; line test -0x67FC/-0x6818; transition 0x80359090",src/game/stage.rs
+game::stage,800c2460,fn_800c2460,translated,medium,"work/ghidra/main-gb/export/800c2460_FUN_800c2460.c; line test -0x67FC/-0x6818; transition 0x803590D0",src/game/stage.rs
+game::stage,800c2580,fn_800c2580,translated,medium,"work/ghidra/main-gb/export/800c2580_FUN_800c2580.c; line test -0x67F8/-0x6800; transition 0x80359150",src/game/stage.rs
+game::stage,800c2690,fn_800c2690,translated,medium,"work/ghidra/main-gb/export/800c2690_FUN_800c2690.c; line test -0x67F4/-0x6800; transition 0x803591D0",src/game/stage.rs
+game::stage,800c75b0,fn_800c75b0,translated,high,"work/ghidra/main-gb/export/800c75b0_FUN_800c75b0.c; 25 dLineMng_c state records; vtable 0x80317404; destructor 0x800C8860",src/game/stage.rs
+game::stage,800c9680,fn_800c9680,translated,medium,"work/ghidra/main-gb/export/800c9680_FUN_800c9680.c; span clamps; screen u16 via r13-0x5200; 0x801C9CD0 view matrix; five-float out",src/game/stage.rs
+game::stage,800cab30,fn_800cab30,translated,medium,"work/ghidra/main-gb/export/800cab30_FUN_800cab30.c; 0x801C5570 attribute 0xA0; FIFO sine ribbon; 5 dead GQR prologue blocks",src/game/stage.rs
+game::stage,800cb5b0,fn_800cb5b0,translated,medium,"work/ghidra/main-gb/export/800cb5b0_FUN_800cb5b0.c; tail dispatch this+0x04 -> +0x0C -> slot +0x08",src/game/stage.rs
+game::stage,800cddb0,fn_800cddb0,translated,medium,"work/ghidra/main-gb/export/800cddb0_FUN_800cddb0.c; fn_800cdc70 format then fn_800cddf0 full-width conversion",src/game/stage.rs

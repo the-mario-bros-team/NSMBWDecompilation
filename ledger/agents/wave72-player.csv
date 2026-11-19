@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,800414a0,fn_800414a0,translated,high,"work/ghidra/main-gb/export/800414a0_FUN_800414a0.c; release helper: if this != 0 and destroy > 0 call 0x802B9280(this); return this",src/game/player.rs
+game::player,800418c0,fn_800418c0,translated,high,"work/ghidra/main-gb/export/800418c0_FUN_800418c0.c; 0x8015F800(this,0) on every non-null call then optional free; comma-expression in the guard",src/game/player.rs
+game::player,80041a00,fn_80041a00,translated,medium,"work/ghidra/main-gb/export/80041a00_FUN_80041a00.c; five unrolled +0x30 child probes through vtable+0x0C then one recursive level; receiver inferred",src/game/player.rs
+game::player,80041ae0,fn_80041ae0,translated,high,"work/ghidra/main-gb/export/80041ae0_FUN_80041ae0.c; strrchr of ':' on both strings then strcmp of the suffixes via 0x802E1C40/0x802E1AB4",src/game/player.rs
+game::player,80043430,fn_80043430,translated,high,"work/ghidra/main-gb/export/80043430_FUN_80043430.c; same shape as 800418c0; four bytes shorter",src/game/player.rs
+game::player,80043490,fn_80043490,translated,medium,"work/ghidra/main-gb/export/80043490_FUN_80043490.c; export body identical to 80043430 but four bytes larger; extra instruction not visible",src/game/player.rs
+game::player,80043cd0,fn_80043cd0,translated,high,"work/ghidra/main-gb/export/80043cd0_FUN_80043cd0.c; eight unrolled byte compares of id against +0x442..+0x449 folded into one loop",src/game/player.rs
+game::player,80043da0,fn_80043da0,translated,high,"work/ghidra/main-gb/export/80043da0_FUN_80043da0.c; stores id in the first 0xFF entry of the eight-byte attachment table",src/game/player.rs
+game::player,80043e60,fn_80043e60,translated,high,"work/ghidra/main-gb/export/80043e60_FUN_80043e60.c; shifts +0x443.. down one place 7-from times leaving 0xFF behind; early out on an empty successor",src/game/player.rs
+game::player,80043eb0,fn_80043eb0,translated,high,"work/ghidra/main-gb/export/80043eb0_FUN_80043eb0.c; clears the matching attachment id and compacts through 80043E60 when the next entry is occupied",src/game/player.rs
+game::player,800440c0,fn_800440c0,translated,medium,"work/ghidra/main-gb/export/800440c0_FUN_800440c0.c; four-slot mask sync: 0x8005FB90 lookup plus actor slot +0xE0 on player and owner then writes +0x440; 0x802DCD70 prologue supplies (mask,owner)",src/game/player.rs
+game::player,80044390,fn_80044390,translated,high,"work/ghidra/main-gb/export/80044390_FUN_80044390.c; member stop at +0x3D0 then 0x800671B0(this,0) then optional 0x80162920 free",src/game/player.rs
+game::player,800448a0,fn_800448a0,translated,high,"work/ghidra/main-gb/export/800448a0_FUN_800448a0.c; scene member +0x3C8; animation member +0x3A8; model destroy; optional 0x80162920 free",src/game/player.rs
+game::player,80046670,fn_80046670,translated,high,"work/ghidra/main-gb/export/80046670_FUN_80046670.c; release helper identical to 800414a0",src/game/player.rs
+game::player,800466b0,fn_800466b0,translated,high,"work/ghidra/main-gb/export/800466b0_FUN_800466b0.c; second identical copy of the 80046670 release helper",src/game/player.rs
+game::player,800466f0,fn_800466f0,translated,high,"work/ghidra/main-gb/export/800466f0_FUN_800466f0.c; member release 0x8015F9F0(this+0x18,0) then optional 0x802B9280 free",src/game/player.rs
+game::player,80046750,fn_80046750,translated,medium,"work/ghidra/main-gb/export/80046750_FUN_80046750.c; export body identical to 800466F0 but four bytes larger",src/game/player.rs
+game::player,80047490,fn_80047490,translated,high,"work/ghidra/main-gb/export/80047490_FUN_80047490.c; actor slot +0x444 with the +0x348 facing byte then 0x8015F340(+0x102,target,0x2000)",src/game/player.rs
+game::player,800474e0,fn_800474e0,translated,medium,"work/ghidra/main-gb/export/800474e0_FUN_800474e0.c; 0x8015F200(+0x102,target,divisor,0x2000,0x400) and the short truncation of its result",src/game/player.rs
+game::player,80047520,fn_80047520,translated,medium,"work/ghidra/main-gb/export/80047520_FUN_80047520.c; reads the i16 at 0x8042B884 + 2*(index&0xFF); element type inferred from the stride",src/game/player.rs
+game::player,80047530,fn_80047530,translated,high,"work/ghidra/main-gb/export/80047530_FUN_80047530.c; table lookup by the +0x348 byte then 0x8015F340(+0x102,entry,0x2000)",src/game/player.rs
+game::player,80047580,fn_80047580,translated,medium,"work/ghidra/main-gb/export/80047580_FUN_80047580.c; symmetric partner test a[+0x1008]==b[+0] or b[+0x1008]==a[+0]; field roles inferred",src/game/player.rs
+game::player,800477a0,fn_800477a0,translated,high,"work/ghidra/main-gb/export/800477a0_FUN_800477a0.c; single tail call clearing event flag 0x52",src/game/player.rs
+game::player,800477b0,fn_800477b0,translated,high,"work/ghidra/main-gb/export/800477b0_FUN_800477b0.c; test event flag 0x52 then clear it",src/game/player.rs
+game::player,800479a0,fn_800479a0,translated,high,"work/ghidra/main-gb/export/800479a0_FUN_800479a0.c; sets flags 0xA0 and 0xA5, clears 0x88, sets 0x4D when +0x6EC is latched",src/game/player.rs
+game::player,80047a00,fn_80047a00,translated,high,"work/ghidra/main-gb/export/80047a00_FUN_80047a00.c; clears +0x100, stops +0xDEC through 0x8019ABB0, clears six flags, zeroes +0x6EC, clears movement bits 3/4/1",src/game/player.rs
+game::player,80047ac0,fn_80047ac0,translated,high,"work/ghidra/main-gb/export/80047ac0_FUN_80047ac0.c; keeps flag 0xA5 while +0xEA4 mode and +0xEC distance allow it and re-raises flag 0x0A",src/game/player.rs
+game::player,80047b70,fn_80047b70,translated,medium,"work/ghidra/main-gb/export/80047b70_FUN_80047b70.c; 8005E6F0(+0xEA4) predicate then actor slot +0x294 with 0x803542DC; string role inferred",src/game/player.rs
+game::player,80047d10,fn_80047d10,translated,high,"work/ghidra/main-gb/export/80047d10_FUN_80047d10.c; clears flags 0xA0/0x88/0x4D and zeroes +0x6EC",src/game/player.rs
+game::player,80047d60,fn_80047d60,translated,high,"work/ghidra/main-gb/export/80047d60_FUN_80047d60.c; clears flag 0x4D only when +0x6EC is zero",src/game/player.rs

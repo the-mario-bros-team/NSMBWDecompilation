@@ -1,0 +1,23 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,80260af0,fn_80260af0,translated,medium,work/ghidra/main-gb/export/80260af0_FUN_80260af0.c; three channel ramps plus the master ramp; dead GQR prologue omitted,src/resource/archive.rs
+resource::archive,80260fa0,fn_80260fa0,translated,medium,work/ghidra/main-gb/export/80260fa0_FUN_80260fa0.c; mode change drain over three 0xC-byte channel slots,src/resource/archive.rs
+resource::archive,802612f0,fn_802612f0,translated,medium,work/ghidra/main-gb/export/802612f0_FUN_802612f0.c; channel ramp reset plus callback registration and list insert,src/resource/archive.rs
+resource::archive,802614e0,fn_802614e0,translated,high,work/ghidra/main-gb/export/802614e0_FUN_802614e0.c; ramp stop and (mode + 2) / 3 step,src/resource/archive.rs
+resource::archive,80261740,fn_80261740,translated,low,work/ghidra/main-gb/export/80261740_FUN_80261740.c; per-channel callback; listener arguments and save-pair order inferred,src/resource/archive.rs
+resource::archive,80261fb0,fn_80261fb0,translated,medium,work/ghidra/main-gb/export/80261fb0_FUN_80261fb0.c; note window at +0x9A with flag 0x1000,src/resource/archive.rs
+resource::archive,802620d0,fn_802620d0,translated,medium,work/ghidra/main-gb/export/802620d0_FUN_802620d0.c; one-based twin of fn_80261fb0 at +0x9E with flag 0x2000,src/resource/archive.rs
+resource::archive,802622a0,fn_802622a0,translated,medium,work/ghidra/main-gb/export/802622a0_FUN_802622a0.c; both note windows plus the +0x96 clear,src/resource/archive.rs
+resource::archive,802629f0,fn_802629f0,translated,medium,work/ghidra/main-gb/export/802629f0_FUN_802629f0.c; eight-halfword window published through 0x801A31A0,src/resource/archive.rs
+resource::archive,80262db0,fn_80262db0,translated,medium,work/ghidra/main-gb/export/80262db0_FUN_80262db0.c; mode 5 resolved through two thresholds then forwarded to fn_80264680,src/resource/archive.rs
+resource::archive,802631f0,fn_802631f0,translated,medium,work/ghidra/main-gb/export/802631f0_FUN_802631f0.c; twelve-field window advance with the reordered 24-halfword pair block,src/resource/archive.rs
+resource::archive,802638a0,fn_802638a0,translated,medium,work/ghidra/main-gb/export/802638a0_FUN_802638a0.c; frequency conversion stored at +0xCE with a two-way flag update,src/resource/archive.rs
+resource::archive,80263a70,fn_80263a70,translated,medium,work/ghidra/main-gb/export/80263a70_FUN_80263a70.c; two clamped halfwords at +0x08 and +0x0E,src/resource/archive.rs
+resource::archive,80263d20,fn_80263d20,translated,medium,work/ghidra/main-gb/export/80263d20_FUN_80263d20.c; track table read with the extraout_f1 argument recovered,src/resource/archive.rs
+resource::archive,80263f50,fn_80263f50,translated,medium,work/ghidra/main-gb/export/80263f50_FUN_80263f50.c; track window at +0x13C plus the varargs store call,src/resource/archive.rs
+resource::archive,80264cd0,fn_80264cd0,translated,medium,work/ghidra/main-gb/export/80264cd0_FUN_80264cd0.c; resident list drain and 0x801A0380 bind mirroring fn_80265100,src/resource/archive.rs
+resource::archive,802654f0,fn_802654f0,translated,medium,work/ghidra/main-gb/export/802654f0_FUN_802654f0.c; descriptor to stream record builder with the +0x90..+0xCC block,src/resource/archive.rs
+resource::archive,802667f0,fn_802667f0,translated,medium,work/ghidra/main-gb/export/802667f0_FUN_802667f0.c; virtual state machine plus the ten-word mixer header and six-word rows,src/resource/archive.rs
+resource::archive,80266dc0,fn_80266dc0,translated,low,work/ghidra/main-gb/export/80266dc0_FUN_80266dc0.c; voice parameter upload; dead psq_st prologue omitted and field roles unresolved,src/resource/archive.rs
+resource::archive,80267f40,fn_80267f40,translated,medium,work/ghidra/main-gb/export/80267f40_FUN_80267f40.c; envelope and render update with fourteen 0x80281xxx setters,src/resource/archive.rs
+resource::archive,80268a50,fn_80268a50,translated,medium,work/ghidra/main-gb/export/80268a50_FUN_80268a50.c; stream record acquisition with the 0x802830A0 bind and rollback,src/resource/archive.rs
+resource::archive,8026a420,fn_8026a420,translated,medium,work/ghidra/main-gb/export/8026a420_FUN_8026a420.c; payload list rebuild mirroring fn_8026a010,src/resource/archive.rs

@@ -1,0 +1,21 @@
+module,address,name,status,confidence,evidence,rust_file
+ui,0x80014F10,fn_80014f10,translated,medium,work/ghidra/main-gb/export/80014f10_FUN_80014f10.c,src/ui/hud.rs
+ui,0x80014FF0,fn_80014ff0,translated,high,work/ghidra/main-gb/export/80014ff0_FUN_80014ff0.c,src/ui/hud.rs
+ui,0x80015160,fn_80015160,partial,medium,"work/ghidra/main-gb/export/80015160_FUN_80015160.c; when +0x1F8 != 4: 0x802DCBFC(this,0x802EDDA0) needs the hidden r12 dispatch record, then 0x80015C10(this) (now translated as fn_80015c10), then vtable slot +0x10 on layout+4; the unmodelled r12 operand is the remaining gap",src/ui/hud.rs
+ui,0x800151D0,fn_800151d0,translated,high,work/ghidra/main-gb/export/800151d0_FUN_800151d0.c,src/ui/hud.rs
+ui,0x80015D60,fn_80015d60,translated,medium,work/ghidra/main-gb/export/80015d60_FUN_80015d60.c,src/ui/hud.rs
+ui,0x80015E80,fn_80015e80,translated,high,work/ghidra/main-gb/export/80015e80_FUN_80015e80.c,src/ui/hud.rs
+ui,0x80015EC0,fn_80015ec0,translated,high,work/ghidra/main-gb/export/80015ec0_FUN_80015ec0.c,src/ui/hud.rs
+ui,0x80015F90,fn_80015f90,translated,medium,work/ghidra/main-gb/export/80015f90_FUN_80015f90.c,src/ui/hud.rs
+ui,0x80016020,fn_80016020,translated,high,work/ghidra/main-gb/export/80016020_FUN_80016020.c,src/ui/hud.rs
+ui,0x80016210,fn_80016210,translated,high,work/ghidra/main-gb/export/80016210_FUN_80016210.c,src/ui/hud.rs
+ui,0x800162C0,fn_800162c0,translated,medium,work/ghidra/main-gb/export/800162c0_FUN_800162c0.c,src/ui/hud.rs
+ui,0x800163F0,fn_800163f0,translated,high,work/ghidra/main-gb/export/800163f0_FUN_800163f0.c,src/ui/hud.rs
+ui,0x800166B0,fn_800166b0,translated,medium,work/ghidra/main-gb/export/800166b0_FUN_800166b0.c,src/ui/hud.rs
+ui,0x800167B0,fn_800167b0,translated,high,work/ghidra/main-gb/export/800167b0_FUN_800167b0.c,src/ui/hud.rs
+ui,0x800167F0,fn_800167f0,translated,high,work/ghidra/main-gb/export/800167f0_FUN_800167f0.c,src/ui/hud.rs
+ui,0x80016870,fn_80016870,translated,high,work/ghidra/main-gb/export/80016870_FUN_80016870.c,src/ui/hud.rs
+ui,0x80016F70,fn_80016f70,translated,medium,work/ghidra/main-gb/export/80016f70_FUN_80016f70.c,src/ui/hud.rs
+ui,0x800171F0,fn_800171f0,translated,high,work/ghidra/main-gb/export/800171f0_FUN_800171f0.c,src/ui/hud.rs
+ui,0x80017340,fn_80017340,translated,medium,work/ghidra/main-gb/export/80017340_FUN_80017340.c,src/ui/hud.rs
+ui,0x800175C0,fn_800175c0,translated,high,work/ghidra/main-gb/export/800175c0_FUN_800175c0.c,src/ui/hud.rs

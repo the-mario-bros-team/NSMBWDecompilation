@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,8015bb90,fn_8015bb90,translated,high,"work/ghidra/main-gb/export/8015bb90_FUN_8015bb90.c; readiness query id 10; clz(value-1)>>5 test",src/engine/display.rs
+engine::display,8015bbc0,fn_8015bbc0,translated,high,"work/ghidra/main-gb/export/8015bbc0_FUN_8015bbc0.c; readiness query id 0x0B",src/engine/display.rs
+engine::display,8015bbf0,fn_8015bbf0,translated,high,"work/ghidra/main-gb/export/8015bbf0_FUN_8015bbf0.c; id 0x2C0 must equal 1, then id 0x2E5",src/engine/display.rs
+engine::display,8015bce0,fn_8015bce0,translated,high,"work/ghidra/main-gb/export/8015bce0_FUN_8015bce0.c; scene refcount 0x8042A2E0 += 1",src/engine/display.rs
+engine::display,8015bd10,fn_8015bd10,translated,high,"work/ghidra/main-gb/export/8015bd10_FUN_8015bd10.c; calls 0x8006A280, returns 1",src/engine/display.rs
+engine::display,8015bf10,fn_8015bf10,translated,medium,"work/ghidra/main-gb/export/8015bf10_FUN_8015bf10.c; wipeKuppa gate 0x80429C40 + 0x8001C240; callee receiver dropped",src/engine/display.rs
+engine::display,8015bf50,fn_8015bf50,translated,medium,"work/ghidra/main-gb/export/8015bf50_FUN_8015bf50.c; wipeDoor gate 0x80429C38 + 0x8001BC60; callee receiver dropped",src/engine/display.rs
+engine::display,8015bf90,fn_8015bf90,translated,medium,"work/ghidra/main-gb/export/8015bf90_FUN_8015bf90.c; wipeFader gate 0x80429C48 + 0x8001C760; callee receiver dropped",src/engine/display.rs
+engine::display,8015bfd0,fn_8015bfd0,translated,medium,"work/ghidra/main-gb/export/8015bfd0_FUN_8015bfd0.c; wipeCircle gate 0x80429C30 + 0x8001B470; callee receiver dropped",src/engine/display.rs
+engine::display,8015c260,fn_8015c260,translated,medium,"work/ghidra/main-gb/export/8015c260_FUN_8015c260.c; destructor; 0x802B9280 receiver dropped",src/engine/display.rs
+engine::display,8015c2a0,fn_8015c2a0,translated,high,"work/ghidra/main-gb/export/8015c2a0_FUN_8015c2a0.c; release +0x18 via 0x8015F9F0, optional free",src/engine/display.rs
+engine::display,8015c300,fn_8015c300,translated,high,"work/ghidra/main-gb/export/8015c300_FUN_8015c300.c; twin of 0x8015C2A0, 100 bytes",src/engine/display.rs
+engine::display,8015ca50,fn_8015ca50,translated,medium,"work/ghidra/main-gb/export/8015ca50_FUN_8015ca50.c; layout +0x3D, 0x800B0A20(0x1E), SDA2 0x8042DBF0 through +0xF0/+0x1F4",src/engine/display.rs
+engine::display,8015cab0,fn_8015cab0,translated,high,"work/ghidra/main-gb/export/8015cab0_FUN_8015cab0.c; player count test -> ResetWait on interface +0xB0",src/engine/display.rs
+engine::display,8015cb20,fn_8015cb20,translated,high,"work/ghidra/main-gb/export/8015cb20_FUN_8015cb20.c; error-window queries -> GoToErrorFade; 0x4B0/0x3C timer pair",src/engine/display.rs
+engine::display,8015ccc0,fn_8015ccc0,translated,high,"work/ghidra/main-gb/export/8015ccc0_FUN_8015ccc0.c; player count test -> WiiStrapKeyWait",src/engine/display.rs
+engine::display,8015cd40,fn_8015cd40,translated,medium,"work/ghidra/main-gb/export/8015cd40_FUN_8015cd40.c; 0x4B0/0x3C timers + SDA2 0x8042DBF0 transfer",src/engine/display.rs
+engine::display,8015cdf0,fn_8015cdf0,translated,medium,"work/ghidra/main-gb/export/8015cdf0_FUN_8015cdf0.c; +0x108 timer, view slot +0x20 event 0x7F1F, input flag 0x80000",src/engine/display.rs
+engine::display,8015ce80,fn_8015ce80,translated,high,"work/ghidra/main-gb/export/8015ce80_FUN_8015ce80.c; clear finish flag, 0x800B0A90(0x1E), display bit 0x40",src/engine/display.rs
+engine::display,8015ced0,fn_8015ced0,translated,medium,"work/ghidra/main-gb/export/8015ced0_FUN_8015ced0.c; zero-player test, +0xFC/+0x208 guard, +0xF0/+0x209 clear",src/engine/display.rs
+engine::display,8015cf70,fn_8015cf70,translated,high,"work/ghidra/main-gb/export/8015cf70_FUN_8015cf70.c; 0x800B0DB0(0), 0x800B0A20(0x1E), +0x209 = 1",src/engine/display.rs
+engine::display,8015cfc0,fn_8015cfc0,translated,high,"work/ghidra/main-gb/export/8015cfc0_FUN_8015cfc0.c; player count test -> ControllerInfo 0x80377608",src/engine/display.rs
+engine::display,8015d030,fn_8015d030,translated,high,"work/ghidra/main-gb/export/8015d030_FUN_8015d030.c; set finish flag, clear display bit 0x40, drop scene ref",src/engine/display.rs
+engine::display,8015d080,fn_8015d080,translated,high,"work/ghidra/main-gb/export/8015d080_FUN_8015d080.c; scene refcount 0x8042A2E0 -= 1 when > 0",src/engine/display.rs
+engine::display,8015d0a0,fn_8015d0a0,translated,high,"work/ghidra/main-gb/export/8015d0a0_FUN_8015d0a0.c; clear display bit 0x08, store timers 300/30",src/engine/display.rs
+engine::display,8015d780,fn_8015d780,translated,high,"work/ghidra/main-gb/export/8015d780_FUN_8015d780.c; layout +0x3D = 0",src/engine/display.rs
+engine::display,8015d9c0,fn_8015d9c0,translated,high,"work/ghidra/main-gb/export/8015d9c0_FUN_8015d9c0.c; 0x800B0DB0(0) + 0x800B0A20(0x1E)",src/engine/display.rs
+engine::display,8015daa0,fn_8015daa0,translated,high,"work/ghidra/main-gb/export/8015daa0_FUN_8015daa0.c; clear display manager bit 0x40",src/engine/display.rs

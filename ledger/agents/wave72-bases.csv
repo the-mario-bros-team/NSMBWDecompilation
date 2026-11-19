@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80728550,fn_80728550,translated,medium,"work/ghidra/rel-d_basesNP/export/80728550_FUN_80728550.c; camera-player guard: 0x800B5C50 halfword above 0x1FFF enters descriptor 0x808306D8",src/game/bases.rs
+game::bases,807285d0,fn_807285d0,translated,high,"work/ghidra/rel-d_basesNP/export/807285d0_FUN_807285d0.c; sound cue 0x28D through 0x80198C30 with the +0xAC position record",src/game/bases.rs
+game::bases,80728630,fn_80728630,translated,medium,"work/ghidra/rel-d_basesNP/export/80728630_FUN_80728630.c; +0x102 += 0x400 clamped to -0x8000 then descriptor 0x80830718",src/game/bases.rs
+game::bases,807286e0,fn_807286e0,translated,high,"work/ghidra/rel-d_basesNP/export/807286e0_FUN_807286e0.c; sound cue 0x28E, twin of 807285d0",src/game/bases.rs
+game::bases,80728a70,fn_80728a70,translated,high,"work/ghidra/rel-d_basesNP/export/80728a70_FUN_80728a70.c; release wrapper: 0x8015F800 then optional 0x802B9280",src/game/bases.rs
+game::bases,80728bf0,fn_80728bf0,translated,high,"work/ghidra/rel-d_basesNP/export/80728bf0_FUN_80728bf0.c; 0x5F8 allocator plus constructor chain, vtable 0x8080B5C8",src/game/bases.rs
+game::bases,80728e70,fn_80728e70,translated,high,"work/ghidra/rel-d_basesNP/export/80728e70_FUN_80728e70.c; matrix +0x7C from +0xAC then +0x3F0 model placement",src/game/bases.rs
+game::bases,80728ed0,fn_80728ed0,translated,medium,"work/ghidra/rel-d_basesNP/export/80728ed0_FUN_80728ed0.c; camera left/right range test against the 0x80429E00 view record",src/game/bases.rs
+game::bases,80728f20,fn_80728f20,translated,medium,"work/ghidra/rel-d_basesNP/export/80728f20_FUN_80728f20.c; caches the 0x80429D40 active/player bytes into +0x5EE",src/game/bases.rs
+game::bases,80728f50,fn_80728f50,translated,high,"work/ghidra/rel-d_basesNP/export/80728f50_FUN_80728f50.c; player-index change test, enters 0x80830798 and writes the out word",src/game/bases.rs
+game::bases,80728fe0,fn_80728fe0,translated,medium,"work/ghidra/rel-d_basesNP/export/80728fe0_FUN_80728fe0.c; recursive player mask over the +0x460 and +0x4CC child lists",src/game/bases.rs
+game::bases,807290d0,fn_807290d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807290d0_FUN_807290d0.c; walks the +0x4A4 child list through 80728fe0",src/game/bases.rs
+game::bases,807293a0,fn_807293a0,translated,high,"work/ghidra/rel-d_basesNP/export/807293a0_FUN_807293a0.c; 0x800DAED0 on +0x494, returns 1",src/game/bases.rs
+game::bases,807293f0,fn_807293f0,translated,high,"work/ghidra/rel-d_basesNP/export/807293f0_FUN_807293f0.c; +0x4F4 position into +0xAC/+0xB0 and 0x80358E50 owner test",src/game/bases.rs
+game::bases,80729490,fn_80729490,translated,medium,"work/ghidra/rel-d_basesNP/export/80729490_FUN_80729490.c; change_mark_A bind into +0x430 and +0x468 frame seed",src/game/bases.rs
+game::bases,807295c0,fn_807295c0,translated,high,"work/ghidra/rel-d_basesNP/export/807295c0_FUN_807295c0.c; +0x5F1 countdown re-enters descriptor 0x808307D8",src/game/bases.rs
+game::bases,80729650,fn_80729650,translated,medium,"work/ghidra/rel-d_basesNP/export/80729650_FUN_80729650.c; vertical pad thresholds set +0x348 and enter 0x80830818",src/game/bases.rs
+game::bases,80729770,fn_80729770,translated,high,"work/ghidra/rel-d_basesNP/export/80729770_FUN_80729770.c; seeds +0x5E0..+0x5E8 from 0x807CD368[variant] and queues cue 0x2AC",src/game/bases.rs
+game::bases,80729820,fn_80729820,translated,medium,"work/ghidra/rel-d_basesNP/export/80729820_FUN_80729820.c; height accumulator clamps, riding mask and cue 0x2AD",src/game/bases.rs
+game::bases,80729e30,fn_80729e30,translated,high,"work/ghidra/rel-d_basesNP/export/80729e30_FUN_80729e30.c; release wrapper for the 0x438 obj_door actor",src/game/bases.rs
+game::bases,8072a180,fn_8072a180,translated,medium,"work/ghidra/rel-d_basesNP/export/8072a180_FUN_8072a180.c; 0x80064F50 liveness test then virtual +0x10, returns 1",src/game/bases.rs
+game::bases,8072a270,fn_8072a270,translated,medium,"work/ghidra/rel-d_basesNP/export/8072a270_FUN_8072a270.c; camera-player guard enters descriptor 0x80830898",src/game/bases.rs
+game::bases,8072a310,fn_8072a310,translated,medium,"work/ghidra/rel-d_basesNP/export/8072a310_FUN_8072a310.c; advances +0x434 and enters 0x808308D8 at the end frame",src/game/bases.rs
+game::bases,8072a3e0,fn_8072a3e0,translated,high,"work/ghidra/rel-d_basesNP/export/8072a3e0_FUN_8072a3e0.c; advances +0x430 and enters 0x80830858 at the end frame",src/game/bases.rs
+game::bases,8072a760,fn_8072a760,translated,high,"work/ghidra/rel-d_basesNP/export/8072a760_FUN_8072a760.c; release wrapper for the 0x5A8 actor",src/game/bases.rs
+game::bases,8072ad60,fn_8072ad60,translated,medium,"work/ghidra/rel-d_basesNP/export/8072ad60_FUN_8072ad60.c; reads the +0x584/+0x588 slot pair and flips the rider +0x38F byte",src/game/bases.rs
+game::bases,8072ae50,fn_8072ae50,translated,high,"work/ghidra/rel-d_basesNP/export/8072ae50_FUN_8072ae50.c; 0x3D0 allocator plus vtable 0x8080BB28",src/game/bases.rs

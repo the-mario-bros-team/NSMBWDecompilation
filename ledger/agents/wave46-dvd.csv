@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c57a0,fn_801c57a0,translated,medium,"work/ghidra/main-gb/export/801c57a0_FUN_801c57a0.c; GX state +0x7C = (flag&7)<<16 | value&0xFF; FIFO emit; +2 clear",src/runtime/dvd.rs
+runtime::dvd,801c57e0,fn_801c57e0,translated,medium,"work/ghidra/main-gb/export/801c57e0_FUN_801c57e0.c; GX state +0x7C = (flag&7)<<19 | (value&0xFF)<<8; FIFO emit",src/runtime/dvd.rs
+runtime::dvd,801c5820,fn_801c5820,translated,medium,"work/ghidra/main-gb/export/801c5820_FUN_801c5820.c; indexed +0x108 word = b<<19 | a<<18; FIFO emit",src/runtime/dvd.rs
+runtime::dvd,801c5860,fn_801c5860,translated,medium,"work/ghidra/main-gb/export/801c5860_FUN_801c5860.c; +0x254 two-bit field at bit 14; sets +0x5FC bit 2",src/runtime/dvd.rs
+runtime::dvd,801c5890,fn_801c5890,translated,medium,"work/ghidra/main-gb/export/801c5890_FUN_801c5890.c; extracts +0x254 bits 14/15 into out bits 1/0",src/runtime/dvd.rs
+runtime::dvd,801c58b0,fn_801c58b0,translated,medium,"work/ghidra/main-gb/export/801c58b0_FUN_801c58b0.c; sets +0x254 bit 19; FIFO emit",src/runtime/dvd.rs
+runtime::dvd,801c58f0,fn_801c58f0,translated,high,"work/ghidra/main-gb/export/801c58f0_FUN_801c58f0.c; copies +0x254 to 0xCC008000; clears +2",src/runtime/dvd.rs
+runtime::dvd,801c5920,fn_801c5920,translated,medium,"work/ghidra/main-gb/export/801c5920_FUN_801c5920.c; writes 0x49000000 to +0x230 and 0x4A000000 to +0x234",src/runtime/dvd.rs
+runtime::dvd,801c5960,fn_801c5960,translated,medium,"work/ghidra/main-gb/export/801c5960_FUN_801c5960.c; same pair as 0x801C5920 into +0x240/+0x244",src/runtime/dvd.rs
+runtime::dvd,801c59a0,fn_801c59a0,translated,medium,"work/ghidra/main-gb/export/801c59a0_FUN_801c59a0.c; writes 0x4D000000 | ((value<<1)>>5)&0x3FF to +0x238",src/runtime/dvd.rs
+runtime::dvd,801c5ae0,fn_801c5ae0,translated,medium,"work/ghidra/main-gb/export/801c5ae0_FUN_801c5ae0.c; sets +0x23C bits 12-13 and clears them at +0x24C",src/runtime/dvd.rs
+runtime::dvd,801c5b00,fn_801c5b00,translated,medium,"work/ghidra/main-gb/export/801c5b00_FUN_801c5b00.c; copies low two bits into +0x23C and +0x24C",src/runtime/dvd.rs
+runtime::dvd,801c6130,fn_801c6130,translated,medium,"work/ghidra/main-gb/export/801c6130_FUN_801c6130.c; sets +0x23C bits 7-8 under mask 0xFFFFFE7F",src/runtime/dvd.rs
+runtime::dvd,801c63f0,fn_801c63f0,translated,high,"work/ghidra/main-gb/export/801c63f0_FUN_801c63f0.c; emits constant 0x560003FF to 0xCC008000",src/runtime/dvd.rs
+runtime::dvd,801c6430,fn_801c6430,translated,medium,"work/ghidra/main-gb/export/801c6430_FUN_801c6430.c; stores six f32 at +0x10..+0x24",src/runtime/dvd.rs
+runtime::dvd,801c6450,fn_801c6450,translated,medium,"work/ghidra/main-gb/export/801c6450_FUN_801c6450.c; stores three f32 at +0x10..+0x18",src/runtime/dvd.rs
+runtime::dvd,801c6460,fn_801c6460,translated,medium,"work/ghidra/main-gb/export/801c6460_FUN_801c6460.c; stores three f32 at +0x1C..+0x24",src/runtime/dvd.rs
+runtime::dvd,801c76a0,fn_801c76a0,translated,medium,"work/ghidra/main-gb/export/801c76a0_FUN_801c76a0.c; builds 0x65000000 word from biased position and 11-bit fraction",src/runtime/dvd.rs
+runtime::dvd,801c7710,fn_801c7710,translated,high,"work/ghidra/main-gb/export/801c7710_FUN_801c7710.c; returns old +0x518 and stores the new word",src/runtime/dvd.rs
+runtime::dvd,801c7730,fn_801c7730,translated,high,"work/ghidra/main-gb/export/801c7730_FUN_801c7730.c; returns old +0x51C and stores the new word",src/runtime/dvd.rs
+runtime::dvd,801c8220,fn_801c8220,translated,high,"work/ghidra/main-gb/export/801c8220_FUN_801c8220.c; copies +0x174 to 0xCC008000; clears +2",src/runtime/dvd.rs
+runtime::dvd,801c8e10,fn_801c8e10,translated,medium,"work/ghidra/main-gb/export/801c8e10_FUN_801c8e10.c; sets +0x220 bit 3; FIFO emit; +2 clear",src/runtime/dvd.rs
+runtime::dvd,801c8e40,fn_801c8e40,translated,medium,"work/ghidra/main-gb/export/801c8e40_FUN_801c8e40.c; sets +0x220 bit 4; FIFO emit; +2 clear",src/runtime/dvd.rs
+runtime::dvd,801c8e70,fn_801c8e70,translated,medium,"work/ghidra/main-gb/export/801c8e70_FUN_801c8e70.c; packs a/b/c into +0x228 bits 0-4; FIFO emit",src/runtime/dvd.rs
+runtime::dvd,801c8eb0,fn_801c8eb0,translated,medium,"work/ghidra/main-gb/export/801c8eb0_FUN_801c8eb0.c; sets +0x22C bit 6; FIFO emit; +2 clear",src/runtime/dvd.rs
+runtime::dvd,801c8ee0,fn_801c8ee0,translated,medium,"work/ghidra/main-gb/export/801c8ee0_FUN_801c8ee0.c; table-indexed +0x22C update with conditional +0x254/+0x5FC/+0x224 writes",src/runtime/dvd.rs
+runtime::dvd,801c8f90,fn_801c8f90,translated,medium,"work/ghidra/main-gb/export/801c8f90_FUN_801c8f90.c; sets +0x220 bit 2; FIFO emit; +2 clear",src/runtime/dvd.rs
+runtime::dvd,801c8fc0,fn_801c8fc0,translated,medium,"work/ghidra/main-gb/export/801c8fc0_FUN_801c8fc0.c; packs a/b into +0x224 bits 0-8; FIFO emit",src/runtime/dvd.rs
+runtime::dvd,801c8ff0,fn_801c8ff0,translated,high,"work/ghidra/main-gb/export/801c8ff0_FUN_801c8ff0.c; emits 0x44000000 | two bits to 0xCC008000",src/runtime/dvd.rs
+runtime::dvd,801c9030,fn_801c9030,translated,medium,"work/ghidra/main-gb/export/801c9030_FUN_801c9030.c; sets +0x7C bit 22 and emits two 0x68 commands around fn_801c8220",src/runtime/dvd.rs

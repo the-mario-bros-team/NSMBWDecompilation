@@ -1,0 +1,19 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ad8900,fn_80ad8900,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad8900_FUN_80ad8900.c; sub-actor orbit: +0x6FC id, +0x700 radius, +0x704/+0x706 angle deltas; two qr3 u16 loads",src/game/enemies.rs
+game::enemies,80afdd50,fn_80afdd50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afdd50_FUN_80afdd50.c; sanbo lean/pitch: child +0x52C table select, 0x100 lean step, 0x800 spin, 1536.0 pitch",src/game/enemies.rs
+game::enemies,80ab1900,fn_80ab1900,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1900_FUN_80ab1900.c; mirrored +-4 / +-12 pairs from +0x100-0x4000; four qr3 loads plus the f31 spill pair",src/game/enemies.rs
+game::enemies,80a43810,fn_80a43810,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a43810_FUN_80a43810.c; follow +0x900 sub-actor at +0x904 radius; missed id calls 0x80064D10",src/game/enemies.rs
+game::enemies,80aa37e0,fn_80aa37e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aa37e0_FUN_80aa37e0.c; 32-point trail from +0xA4E through |a|-0x8000; loop +0x814..+0x914",src/game/enemies.rs
+game::enemies,80a79630,fn_80a79630,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a79630_FUN_80a79630.c; two-state sine envelope; 0x4000 switch; states 1 and 2 write +0x04",src/game/enemies.rs
+game::enemies,80abab50,fn_80abab50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abab50_FUN_80abab50.c; orbit +0x5F0 child; 0x80ABA950 publish; +0x584 vtable slot 0x0C with r*sin in f1",src/game/enemies.rs
+game::enemies,80a40290,fn_80a40290,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a40290_FUN_80a40290.c; coin bounce table 0x80B2C604; probe +0x6E8 is x-8 and y+16",src/game/enemies.rs
+game::enemies,80a20810,fn_80a20810,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a20810_FUN_80a20810.c; |radius| > |vec2| through two sqrt calls and the CR0.GT extract",src/game/enemies.rs
+game::enemies,80a7ada0,fn_80a7ada0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7ada0_FUN_80a7ada0.c; 1.5/0.5 squash from the doubled angle minus 0x4000; quarter terms 0.25/-0.25",src/game/enemies.rs
+game::enemies,80a6ea20,fn_80a6ea20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6ea20_FUN_80a6ea20.c; 72/32 platform offsets; -3 bias on +0x168 only",src/game/enemies.rs
+game::enemies,80a1d530,fn_80a1d530,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1d530_FUN_80a1d530.c; mirrored 32-unit offset; -0x8000-src half turn on side 0",src/game/enemies.rs
+game::enemies,80b12470,fn_80b12470,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b12470_FUN_80b12470.c; side-dependent +0x5CC step by 0x8042C2DC (0x0C00); +0x102 table 0x80B32094; +0x459 role inferred",src/game/enemies.rs
+game::enemies,80b174f0,fn_80b174f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b174f0_FUN_80b174f0.c; five-step 0.25 ramp between 1.5 and 2.0; +0x638 gate; retires above +0x63C=5",src/game/enemies.rs
+game::enemies,80b1da40,fn_80b1da40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1da40_FUN_80b1da40.c; lerp +0x61C/+0x620 to +0x628/+0x62C with (4+14+query)/distance",src/game/enemies.rs
+game::enemies,80b178b0,fn_80b178b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b178b0_FUN_80b178b0.c; state initialiser; clamps +0x5C4 to [63,70]; 0x8006D090 record 0x80B3231C; 0xB4 timer",src/game/enemies.rs
+game::enemies,80b173b0,fn_80b173b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b173b0_FUN_80b173b0.c; side-clamped ramp over +0x604..+0x608; top clamp runs 0x80075270 and 0x80078410",src/game/enemies.rs
+game::enemies,80b171b0,fn_80b171b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b171b0_FUN_80b171b0.c; 0x40 effect timer plus the 0x64C/0x654 pair; hover 0.05 ramp 1.0..1.5; 0x80078470 effect role inferred",src/game/enemies.rs

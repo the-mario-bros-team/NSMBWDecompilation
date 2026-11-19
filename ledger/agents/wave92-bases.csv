@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80654600,fn_80654600,translated,high,"work/ghidra/rel-d_basesNP/export/80654600_FUN_80654600.c; Wm_en_quicksand effect through the +0x468 interface slot +0xA0",src/game/bases.rs
+game::bases,80654880,fn_80654880,translated,medium,"work/ghidra/rel-d_basesNP/export/80654880_FUN_80654880.c; per-slot effect anchor from the rider model transform or the actor position",src/game/bases.rs
+game::bases,80654960,fn_80654960,translated,high,"work/ghidra/rel-d_basesNP/export/80654960_FUN_80654960.c; ages +0x6A4..+0x6A8 by one frame",src/game/bases.rs
+game::bases,806549a0,fn_806549a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806549a0_FUN_806549a0.c; two position triples for the per-slot anchor",src/game/bases.rs
+game::bases,80654a50,fn_80654a50,translated,medium,"work/ghidra/rel-d_basesNP/export/80654a50_FUN_80654a50.c; +0x5B4 rider walk with masks 0x40 and 0x20",src/game/bases.rs
+game::bases,80654b90,fn_80654b90,translated,medium,"work/ghidra/rel-d_basesNP/export/80654b90_FUN_80654b90.c; 0x282 0x283 0x284 landing spawns and the +0xE8 velocity arm",src/game/bases.rs
+game::bases,80654e30,fn_80654e30,translated,medium,"work/ghidra/rel-d_basesNP/export/80654e30_FUN_80654e30.c; platform constructor with 0x8007FA40 range registration",src/game/bases.rs
+game::bases,80654f60,fn_80654f60,translated,high,"work/ghidra/rel-d_basesNP/export/80654f60_FUN_80654f60.c; per-frame driver with the +0x6A0 hold gate",src/game/bases.rs
+game::bases,80655060,fn_80655060,translated,high,"work/ghidra/rel-d_basesNP/export/80655060_FUN_80655060.c; releases +0x148 animation and +0x5A0 mover",src/game/bases.rs
+game::bases,806551d0,fn_806551d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806551d0_FUN_806551d0.c; mover step and +0xB8 position snap",src/game/bases.rs
+game::bases,80655270,fn_80655270,translated,medium,"work/ghidra/rel-d_basesNP/export/80655270_FUN_80655270.c; re-entry with 0x8007FBF0 range and +0x284 slot copy",src/game/bases.rs
+game::bases,80655300,fn_80655300,translated,high,"work/ghidra/rel-d_basesNP/export/80655300_FUN_80655300.c; detach through 0x8012E510 and the +0x12C flag clear",src/game/bases.rs
+game::bases,80655360,fn_80655360,translated,medium,"work/ghidra/rel-d_basesNP/export/80655360_FUN_80655360.c; direction probe with query 0x46 and the 0x80828800 dispatch",src/game/bases.rs
+game::bases,806555a0,fn_806555a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806555a0_FUN_806555a0.c; per-player restore of +0x3F0 model and +0x430 animation",src/game/bases.rs
+game::bases,806556b0,fn_806556b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806556b0_FUN_806556b0.c; 0x802DCD74 callback with the 0x2CE and 0x2D0 effects",src/game/bases.rs
+game::bases,80655f20,fn_80655f20,translated,high,"work/ghidra/rel-d_basesNP/export/80655f20_FUN_80655f20.c; allocates 0x408 bytes and installs vtable 0x807E5E90",src/game/bases.rs
+game::bases,80657150,fn_80657150,translated,high,"work/ghidra/rel-d_basesNP/export/80657150_FUN_80657150.c; in-place header constructor with vtable 0x807E63E8",src/game/bases.rs
+game::bases,806590b0,fn_806590b0,translated,high,"work/ghidra/rel-d_basesNP/export/806590b0_FUN_806590b0.c; release instantiation 0x8015F800 plus 0x802B9280",src/game/bases.rs
+game::bases,80659110,fn_80659110,translated,high,"work/ghidra/rel-d_basesNP/export/80659110_FUN_80659110.c; second copy of the release instantiation",src/game/bases.rs
+game::bases,80659170,fn_80659170,translated,high,"work/ghidra/rel-d_basesNP/export/80659170_FUN_80659170.c; returns the main.dol pointer 0x80357BF4",src/game/bases.rs
+game::bases,80659260,fn_80659260,translated,medium,"work/ghidra/rel-d_basesNP/export/80659260_FUN_80659260.c; five-level +0x30 chain walk with vtable slot 0xC",src/game/bases.rs
+game::bases,80659340,fn_80659340,translated,medium,"work/ghidra/rel-d_basesNP/export/80659340_FUN_80659340.c; colon-suffix name compare through 0x802E1C40 and 0x802E1AB4",src/game/bases.rs
+game::bases,80659460,fn_80659460,translated,high,"work/ghidra/rel-d_basesNP/export/80659460_FUN_80659460.c; 0x478-byte constructor with vtable 0x807E6698",src/game/bases.rs
+game::bases,80659730,fn_80659730,translated,medium,"work/ghidra/rel-d_basesNP/export/80659730_FUN_80659730.c; matrix rebuild from position halfwords and three constants",src/game/bases.rs
+game::bases,806598c0,fn_806598c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806598c0_FUN_806598c0.c; volume test through 0x800B56E0 folded to a bool",src/game/bases.rs
+game::bases,806599d0,fn_806599d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806599d0_FUN_806599d0.c; +0x434 timer velocity and the +0x470 target retire",src/game/bases.rs
+game::bases,80659b60,fn_80659b60,translated,medium,"work/ghidra/rel-d_basesNP/export/80659b60_FUN_80659b60.c; fall-speed clamp and the 0x80828BA0 tilt dispatch",src/game/bases.rs
+game::bases,80659d30,fn_80659d30,translated,medium,"work/ghidra/rel-d_basesNP/export/80659d30_FUN_80659d30.c; normalized +0x440 vector step with timer retire",src/game/bases.rs
+game::bases,80659ea0,fn_80659ea0,translated,medium,"work/ghidra/rel-d_basesNP/export/80659ea0_FUN_80659ea0.c; tilt clamp and the player capture through 0x80828C20",src/game/bases.rs
+game::bases,8065a0e0,fn_8065a0e0,translated,high,"work/ghidra/rel-d_basesNP/export/8065a0e0_FUN_8065a0e0.c; spin step clamp to 0x700 and the 0x1EC cue",src/game/bases.rs

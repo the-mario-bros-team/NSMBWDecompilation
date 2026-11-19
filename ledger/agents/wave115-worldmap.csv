@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80107460,fn_80107460,translated,medium,"work/ghidra/main-gb/export/80107460_FUN_80107460.c; 580 bytes; message-manager backdrop quad and two-pass text measurement/draw; vtable slot 0x80321BD8+0x18 = 0x801072D0 recovered from main.elf",src/game/worldmap.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b2070,fn_802b2070,translated,high,"work/ghidra/main-gb/export/802b2070_FUN_802b2070.c; copies the 2-word record from src to this +0x00/+0x04",src/resource/archive.rs
+resource::archive,802b2090,fn_802b2090,translated,high,"work/ghidra/main-gb/export/802b2090_FUN_802b2090.c; clears +0x00 and self-links the +0x04/+0x08 list head",src/resource/archive.rs
+resource::archive,802b2980,fn_802b2980,translated,high,"work/ghidra/main-gb/export/802b2980_FUN_802b2980.c; 4-byte record copy",src/resource/archive.rs
+resource::archive,802b29b0,fn_802b29b0,translated,high,"work/ghidra/main-gb/export/802b29b0_FUN_802b29b0.c; 16-byte record copy; loads all bytes before storing",src/resource/archive.rs
+resource::archive,802b2a50,fn_802b2a50,translated,high,"work/ghidra/main-gb/export/802b2a50_FUN_802b2a50.c; 4-byte record copy; identical to fn_802b2980",src/resource/archive.rs
+resource::archive,802b2b10,fn_802b2b10,translated,high,"work/ghidra/main-gb/export/802b2b10_FUN_802b2b10.c; unsigned minimum of two values",src/resource/archive.rs
+resource::archive,802b4c40,fn_802b4c40,translated,high,"work/ghidra/main-gb/export/802b4c40_FUN_802b4c40.c; 0x801C7520(handle, +0x04, (+0x18>>0xD)&3, +0x16)",src/resource/archive.rs
+resource::archive,802b4d30,fn_802b4d30,translated,medium,"work/ghidra/main-gb/export/802b4d30_FUN_802b4d30.c; vtable 0x8034FB68, 7 default words at +0x34..+0x4C, byte clear at +0x50",src/resource/archive.rs
+resource::archive,802b4db0,fn_802b4db0,translated,high,"work/ghidra/main-gb/export/802b4db0_FUN_802b4db0.c; deleting destructor, frees via 0x802B9280 when flag > 0",src/resource/archive.rs
+resource::archive,802b50a0,fn_802b50a0,translated,high,"work/ghidra/main-gb/export/802b50a0_FUN_802b50a0.c; halfword at (*(+0x0C))+0x08",src/resource/archive.rs
+resource::archive,802b50b0,fn_802b50b0,translated,high,"work/ghidra/main-gb/export/802b50b0_FUN_802b50b0.c; (-byte >> 31) non-zero test on (*(+0x0C))+0x0A",src/resource/archive.rs
+resource::archive,802b50d0,fn_802b50d0,translated,high,"work/ghidra/main-gb/export/802b50d0_FUN_802b50d0.c; vtable 0x8034FB78, r2 default at +0x10, clears +0x04..+0x0C and +0x14..+0x1C",src/resource/archive.rs
+resource::archive,802b5b10,fn_802b5b10,translated,medium,"work/ghidra/main-gb/export/802b5b10_FUN_802b5b10.c; RLAN magic scan, version gate 8..10, pat1/pah1/pai1 tag lookup",src/resource/archive.rs
+resource::archive,802b5e10,fn_802b5e10,translated,high,"work/ghidra/main-gb/export/802b5e10_FUN_802b5e10.c; clears eleven halfwords +0x10..+0x24 and the byte at +0x26",src/resource/archive.rs
+resource::archive,802bb0e0,fn_802bb0e0,translated,high,"work/ghidra/main-gb/export/802bb0e0_FUN_802bb0e0.c; halfword store at +0x0A",src/resource/archive.rs
+resource::archive,802bb0f0,fn_802bb0f0,translated,high,"work/ghidra/main-gb/export/802bb0f0_FUN_802bb0f0.c; copies 3 bytes to +0x10..+0x12",src/resource/archive.rs
+resource::archive,802bb110,fn_802bb110,translated,high,"work/ghidra/main-gb/export/802bb110_FUN_802bb110.c; mode 0 -> +0x04=0/+0x13=0xFF, mode 1 -> +0x04=1/+0x13=0",src/resource/archive.rs
+resource::archive,802bb600,fn_802bb600,translated,high,"work/ghidra/main-gb/export/802bb600_FUN_802bb600.c; accumulates +0xA0 into +0x9C and wraps at the r2-0x3F48 limit",src/resource/archive.rs
+resource::archive,802bc670,fn_802bc670,translated,medium,"work/ghidra/main-gb/export/802bc670_FUN_802bc670.c; 32-byte aligned alloc of size+0xA0, vtable 0x8034FF60",src/resource/archive.rs
+resource::archive,802bc6e0,fn_802bc6e0,translated,high,"work/ghidra/main-gb/export/802bc6e0_FUN_802bc6e0.c; 0x800046B4(this, 0, 0xB0)",src/resource/archive.rs
+resource::archive,802bd250,fn_802bd250,translated,high,"work/ghidra/main-gb/export/802bd250_FUN_802bd250.c; returns +0x78 float when the +0x74 byte is set, else the zero default",src/resource/archive.rs
+resource::archive,802bd270,fn_802bd270,translated,high,"work/ghidra/main-gb/export/802bd270_FUN_802bd270.c; returns +0x7C float when the +0x74 byte is set, else the zero default",src/resource/archive.rs
+resource::archive,802bd7c0,fn_802bd7c0,translated,high,"work/ghidra/main-gb/export/802bd7c0_FUN_802bd7c0.c; destructor frees +0x08 via 0x802B9290 then this via 0x802B9280",src/resource/archive.rs
+resource::archive,802be8d0,fn_802be8d0,translated,medium,"work/ghidra/main-gb/export/802be8d0_FUN_802be8d0.c; virtual slot +0x08 then copies three words from +0x20/+0x24/+0x28",src/resource/archive.rs
+resource::archive,802be930,fn_802be930,translated,medium,"work/ghidra/main-gb/export/802be930_FUN_802be930.c; virtual slot +0x08 then copies three words from +0x00/+0x04/+0x08",src/resource/archive.rs
+resource::archive,802be990,fn_802be990,translated,medium,"work/ghidra/main-gb/export/802be990_FUN_802be990.c; virtual slot +0x08 then copies three words from +0x10/+0x14/+0x18",src/resource/archive.rs
+resource::archive,802bf060,fn_802bf060,translated,medium,"work/ghidra/main-gb/export/802bf060_FUN_802bf060.c; r13-0x47D8 enable byte selects r13-0x5B48 cache or the r2-0x3ED0 default",src/resource/archive.rs
+resource::archive,802bf420,fn_802bf420,translated,high,"work/ghidra/main-gb/export/802bf420_FUN_802bf420.c; four float stores at +0x50/+0x54/+0x58/+0x5C",src/resource/archive.rs
+resource::archive,802bfe10,fn_802bfe10,translated,high,"work/ghidra/main-gb/export/802bfe10_FUN_802bfe10.c; single float store at +0x60",src/resource/archive.rs
+resource::archive,802bff30,fn_802bff30,translated,medium,"work/ghidra/main-gb/export/802bff30_FUN_802bff30.c; calls 0x802BE420(this) then stores the r2-0x3E98 default at +0x10/+0x14/+0x18",src/resource/archive.rs

@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80226740,fn_80226740,translated,medium,"work/ghidra/main-gb/export/80226740_FUN_80226740.c; kind-3 completion block; name at +6, result bytes +0x46..+0x49; returns -101/-22",src/runtime/bt.rs
+runtime::bt,80226840,fn_80226840,translated,medium,"work/ghidra/main-gb/export/80226840_FUN_80226840.c; kind-3 block with callback at +0x100/+0x104; submits through 0x80225500",src/runtime/bt.rs
+runtime::bt,80226940,fn_80226940,translated,medium,"work/ghidra/main-gb/export/80226940_FUN_80226940.c; kind-4 synchronous; vector entry (buffer,count*13); reads reply back into *count",src/runtime/bt.rs
+runtime::bt,80226aa0,fn_80226aa0,translated,medium,"work/ghidra/main-gb/export/80226aa0_FUN_80226aa0.c; kind-4 asynchronous; mode 2 at +0x108, count pointer at +0x10C",src/runtime/bt.rs
+runtime::bt,80226bf0,fn_80226bf0,translated,medium,"work/ghidra/main-gb/export/80226bf0_FUN_80226bf0.c; kind-6 synchronous; 0x4C-byte reply at aligned+0x5F; six outputs",src/runtime/bt.rs
+runtime::bt,80226d50,fn_80226d50,translated,medium,"work/ghidra/main-gb/export/80226d50_FUN_80226d50.c; kind-6 asynchronous with copy-out mode 3 and six output pointers",src/runtime/bt.rs
+runtime::bt,80226e90,fn_80226e90,translated,high,"work/ghidra/main-gb/export/80226e90_FUN_80226e90.c; kind-7 synchronous name block; no prologue pair",src/runtime/bt.rs
+runtime::bt,80226f70,fn_80226f70,translated,medium,"work/ghidra/main-gb/export/80226f70_FUN_80226f70.c; kind-7 asynchronous; prologue low half stored at +0x100",src/runtime/bt.rs
+runtime::bt,80227040,fn_80227040,translated,high,"work/ghidra/main-gb/export/80227040_FUN_80227040.c; two 0x40 names at +0 and +0x40, kind-8 with length 0x80",src/runtime/bt.rs
+runtime::bt,80227150,fn_80227150,translated,high,"work/ghidra/main-gb/export/80227150_FUN_80227150.c; kind-8 asynchronous; callback words written before both copies",src/runtime/bt.rs
+runtime::bt,80227260,fn_80227260,translated,high,"work/ghidra/main-gb/export/80227260_FUN_80227260.c; kind-12 synchronous with two (pointer,4) vector entries and two read-backs",src/runtime/bt.rs
+runtime::bt,802273a0,fn_802273a0,translated,medium,"work/ghidra/main-gb/export/802273a0_FUN_802273a0.c; kind-9 name block with four result bytes, synchronous",src/runtime/bt.rs
+runtime::bt,802274a0,fn_802274a0,translated,medium,"work/ghidra/main-gb/export/802274a0_FUN_802274a0.c; kind-9 asynchronous twin of 0x802273A0",src/runtime/bt.rs
+runtime::bt,802275a0,fn_802275a0,translated,high,"work/ghidra/main-gb/export/802275a0_FUN_802275a0.c; copies the name into a block then opens it through 0x80224C70",src/runtime/bt.rs
+runtime::bt,80227670,fn_80227670,translated,medium,"work/ghidra/main-gb/export/80227670_FUN_80227670.c; asynchronous open through 0x80224B50 with the block as path",src/runtime/bt.rs
+runtime::bt,80227730,fn_80227730,translated,high,"work/ghidra/main-gb/export/80227730_FUN_80227730.c; kind-11 eight-byte read into a 32-byte-aligned destination",src/runtime/bt.rs
+runtime::bt,80227b70,fn_80227b70,translated,medium,"work/ghidra/main-gb/export/80227b70_FUN_80227b70.c; EXI probe with commands F2/F3 at 0xB0000000; writes 0x8042ABE8/EC/F0",src/runtime/bt.rs
+runtime::bt,80227c70,fn_80227c70,translated,high,"work/ghidra/main-gb/export/80227c70_FUN_80227c70.c; publishes 0xA5FF005A or 0 in 0x8042ABF4",src/runtime/bt.rs
+runtime::bt,80228df0,fn_80228df0,translated,high,"work/ghidra/main-gb/export/80228df0_FUN_80228df0.c; intrusive list append with u16 link offset at +0xA",src/runtime/bt.rs
+runtime::bt,80228e60,fn_80228e60,translated,high,"work/ghidra/main-gb/export/80228e60_FUN_80228e60.c; insert-before/append/prepend on the same list layout",src/runtime/bt.rs
+runtime::bt,80228f80,fn_80228f80,translated,high,"work/ghidra/main-gb/export/80228f80_FUN_80228f80.c; unlink with head/tail fixup and count decrement",src/runtime/bt.rs
+runtime::bt,8022c980,fn_8022c980,translated,high,"work/ghidra/main-gb/export/8022c980_FUN_8022c980.c; release tail identical to 0x80229370",src/runtime/bt.rs
+runtime::bt,802289e8,fn_802289e8,translated,medium,"work/ghidra/main-gb/export/802289e8_FUN_802289e8.c; EXI word read; 0xCD006828 start/mask, 0xCD006834 busy poll; size 1/2/4",src/runtime/bt.rs
+runtime::bt,80228b0c,fn_80228b0c,translated,medium,"work/ghidra/main-gb/export/80228b0c_FUN_80228b0c.c; EXI word write; payload assembled from size 1/2/4",src/runtime/bt.rs
+runtime::bt,80228c10,fn_80228c10,translated,medium,"work/ghidra/main-gb/export/80228c10_FUN_80228c10.c; EXI block read, one word per iteration",src/runtime/bt.rs
+runtime::bt,80228cf0,fn_80228cf0,translated,medium,"work/ghidra/main-gb/export/80228cf0_FUN_80228cf0.c; EXI block write, one word per iteration",src/runtime/bt.rs
+runtime::bt,8022c120,fn_8022c120,translated,medium,"work/ghidra/main-gb/export/8022c120_FUN_8022c120.c; three packed-table formats; format 2 is a binary search over u16 limit/value pairs",src/runtime/bt.rs
+runtime::bt,8022c1f0,fn_8022c1f0,translated,medium,"work/ghidra/main-gb/export/8022c1f0_FUN_8022c1f0.c; tiled-image cell descriptor; range-table walk and +0x10/+0x12 in-cell coordinates",src/runtime/bt.rs

@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80750000,fn_80750000,translated,high,work/ghidra/rel-d_basesNP/export/80750000_FUN_80750000.c; 0x800DF890(+0x664) + 0x2000 -> +0x6A2; countdown +0x6A5; event 0x80831CB8,src/game/bases.rs
+game::bases,80750090,fn_80750090,translated,medium,work/ghidra/rel-d_basesNP/export/80750090_FUN_80750090.c; two 0x8015F140 blends on 0x80429E00+0x58 and 0x80429DD0+0x90110; countdown and event 0x80831CF8,src/game/bases.rs
+game::bases,80750180,fn_80750180,translated,medium,work/ghidra/rel-d_basesNP/export/80750180_FUN_80750180.c; name 0x80812370 -> clip +0x430 over model +0x3F0; rates 0x807CE6C8/0x807CE700; tail 0x8074F600,src/game/bases.rs
+game::bases,80750220,fn_80750220,translated,high,work/ghidra/rel-d_basesNP/export/80750220_FUN_80750220.c; null-guarded destructor releasing +0x580/+0x49C/+0x468/+0x430/+0x3F0/+0x3D0 then optional 0x80162920,src/game/bases.rs
+game::bases,80750a70,fn_80750a70,translated,high,work/ghidra/rel-d_basesNP/export/80750a70_FUN_80750a70.c; 0x8015F800(obj;0) then optional 0x802B9280 free; returns obj,src/game/bases.rs
+game::bases,80750e10,fn_80750e10,translated,high,work/ghidra/rel-d_basesNP/export/80750e10_FUN_80750e10.c; copies the caller word into +0x520,src/game/bases.rs
+game::bases,80750ea0,fn_80750ea0,translated,high,work/ghidra/rel-d_basesNP/export/80750ea0_FUN_80750ea0.c; fn_80750e20 partner search; store via fn_80750e10; event 0x80831D90,src/game/bases.rs
+game::bases,80751740,fn_80751740,translated,high,work/ghidra/rel-d_basesNP/export/80751740_FUN_80751740.c; 0x8015F800(obj;0) then optional 0x802B9280 free; returns obj,src/game/bases.rs
+game::bases,807518c0,fn_807518c0,translated,medium,work/ghidra/rel-d_basesNP/export/807518c0_FUN_807518c0.c; allocates 0x570; vtable 0x80812B8C; +0x3D4 interface; +0x3F4 0x40-stride x3; +0x508 list,src/game/bases.rs
+game::bases,80751b20,fn_80751b20,translated,high,work/ghidra/rel-d_basesNP/export/80751b20_FUN_80751b20.c; 0x800C07B0(+0x3D4); returns 1,src/game/bases.rs
+game::bases,80751bd0,fn_80751bd0,translated,high,work/ghidra/rel-d_basesNP/export/80751bd0_FUN_80751bd0.c; 0x8006CDE0/0x8006CD40; clamps +0xB0 to 0x80429DD0+0x8FEC4; event 0x80831E90,src/game/bases.rs
+game::bases,80751f80,fn_80751f80,translated,high,work/ghidra/rel-d_basesNP/export/80751f80_FUN_80751f80.c; 0x8015F800(obj;0) then optional 0x802B9280 free; returns obj,src/game/bases.rs
+game::bases,80754370,fn_80754370,translated,high,work/ghidra/rel-d_basesNP/export/80754370_FUN_80754370.c; virtual +0x10 on +0x394; 0x800EAA70(+0x3D0); 0x800ECAE0(+0x514); returns 1,src/game/bases.rs
+game::bases,807543c0,fn_807543c0,translated,high,work/ghidra/rel-d_basesNP/export/807543c0_FUN_807543c0.c; 0x800EDE10(+0x514); 0x800EAB20(+0x3D0;0x5A); returns 1,src/game/bases.rs
+game::bases,80754400,fn_80754400,translated,high,work/ghidra/rel-d_basesNP/export/80754400_FUN_80754400.c; 0x800EDEB0(+0x514); returns 1,src/game/bases.rs
+game::bases,807545a0,fn_807545a0,translated,high,work/ghidra/rel-d_basesNP/export/807545a0_FUN_807545a0.c; writes the argument to 0x80429DD0+0x8FEC4 and +0x8FEC8,src/game/bases.rs
+game::bases,807545c0,fn_807545c0,translated,high,work/ghidra/rel-d_basesNP/export/807545c0_FUN_807545c0.c; writes +0xD784/+0x4CC/+0x504 and shifts world +0x8FEC4/+0x8FEC8,src/game/bases.rs
+game::bases,80754670,fn_80754670,translated,high,work/ghidra/rel-d_basesNP/export/80754670_FUN_80754670.c; 0x80162D50(0x1DC;0); returns the first match or 0,src/game/bases.rs
+game::bases,807546b0,fn_807546b0,translated,high,work/ghidra/rel-d_basesNP/export/807546b0_FUN_807546b0.c; copies the caller word into +0x1A484,src/game/bases.rs
+game::bases,807546c0,fn_807546c0,translated,high,work/ghidra/rel-d_basesNP/export/807546c0_FUN_807546c0.c; 0x80162D00 on +0x1A484; on success copies owner +0xB0 to +0x1A4AC,src/game/bases.rs
+game::bases,80754740,fn_80754740,translated,high,work/ghidra/rel-d_basesNP/export/80754740_FUN_80754740.c; fn_80754670/fn_807546b0/fn_807546c0 then event 0x80832090,src/game/bases.rs
+game::bases,807547d0,fn_807547d0,translated,medium,work/ghidra/rel-d_basesNP/export/807547d0_FUN_807547d0.c; owner check then event 0x808320D0; +0x1A4AC plus delta from 0x80754620 through fn_807545c0; phase +0x1A4B8,src/game/bases.rs
+game::bases,80754870,fn_80754870,translated,medium,work/ghidra/rel-d_basesNP/export/80754870_FUN_80754870.c; +0x1A498 plus delta from 0x80754620 through fn_807545c0; phase +0x1A4B8,src/game/bases.rs
+game::bases,8075f570,fn_8075f570,translated,high,work/ghidra/rel-d_basesNP/export/8075f570_FUN_8075f570.c; writes 0 to +0x29C,src/game/bases.rs
+game::bases,8075f980,fn_8075f980,translated,high,work/ghidra/rel-d_basesNP/export/8075f980_FUN_8075f980.c; latch +0x2B0; fn_8075fb30 into +0x2A4; 0x800F2A00 id 0x29D,src/game/bases.rs
+game::bases,8075fb30,fn_8075fb30,translated,high,"work/ghidra/rel-d_basesNP/export/8075fb30_FUN_8075fb30.c; 0x800FC4F0(out; +0x1AC; Koopa@0x80814C9C); three-word copy; returns 1",src/game/bases.rs
+game::bases,8075fb90,fn_8075fb90,translated,high,work/ghidra/rel-d_basesNP/export/8075fb90_FUN_8075fb90.c; writes position +0xAC..+0xB4 plus 0x80814C18/1C/20 into the caller record,src/game/bases.rs
+game::bases,8075fd00,fn_8075fd00,translated,high,work/ghidra/rel-d_basesNP/export/8075fd00_FUN_8075fd00.c; in-place ctor: 0x800F5FD0; +0x184=-1; vtable 0x80814EF8; +0x18C/+0x1A8/+0x1AC; 0x38-stride array at +0x1B8,src/game/bases.rs

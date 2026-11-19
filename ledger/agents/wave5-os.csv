@@ -1,0 +1,58 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,0x801AB2F0,insert_alarm,translated,high,work/ghidra/main-gb/export/801ab2f0_FUN_801ab2f0.c,src/runtime/os.rs
+runtime::os,0x801AB540,set_alarm,translated,high,work/ghidra/main-gb/export/801ab540_FUN_801ab540.c,src/runtime/os.rs
+runtime::os,0x801AB640,cancel_alarm,translated,high,work/ghidra/main-gb/export/801ab640_FUN_801ab640.c,src/runtime/os.rs
+runtime::os,0x801B2390,init_message_queue,translated,high,work/ghidra/main-gb/export/801b2390_FUN_801b2390.c,src/runtime/os.rs
+runtime::os,0x801B23F0,jam_message,translated,high,work/ghidra/main-gb/export/801b23f0_FUN_801b23f0.c,src/runtime/os.rs
+runtime::os,0x801B24C0,receive_message,translated,high,work/ghidra/main-gb/export/801b24c0_FUN_801b24c0.c,src/runtime/os.rs
+runtime::os,0x801B2E20,init_mutex,translated,high,work/ghidra/main-gb/export/801b2e20_FUN_801b2e20.c,src/runtime/os.rs
+runtime::os,0x801B2E60,lock_mutex,translated,high,work/ghidra/main-gb/export/801b2e60_FUN_801b2e60.c,src/runtime/os.rs
+runtime::os,0x801B2F40,unlock_mutex,translated,high,work/ghidra/main-gb/export/801b2f40_FUN_801b2f40.c,src/runtime/os.rs
+runtime::os,0x801B3080,try_lock_mutex,translated,high,work/ghidra/main-gb/export/801b3080_FUN_801b3080.c,src/runtime/os.rs
+runtime::os,0x801B3150,wait_condition,translated,high,work/ghidra/main-gb/export/801b3150_FUN_801b3150.c,src/runtime/os.rs
+runtime::os,0x801B4B20,init_thread_queue,translated,high,work/ghidra/main-gb/export/801b4b20_FUN_801b4b20.c,src/runtime/os.rs
+runtime::os,0x801B4B30,current_thread,translated,high,work/ghidra/main-gb/export/801b4b30_FUN_801b4b30.c,src/runtime/os.rs
+runtime::os,0x801B4B70,scheduler_lock,translated,high,work/ghidra/main-gb/export/801b4b70_FUN_801b4b70.c,src/runtime/os.rs
+runtime::os,0x801B4BB0,scheduler_unlock,translated,high,work/ghidra/main-gb/export/801b4bb0_FUN_801b4bb0.c,src/runtime/os.rs
+runtime::os,0x801B4BF0,run_queue_remove,translated,high,work/ghidra/main-gb/export/801b4bf0_FUN_801b4bf0.c,src/runtime/os.rs
+runtime::os,0x801B4C60,priority_from_mutexes,translated,high,work/ghidra/main-gb/export/801b4c60_FUN_801b4c60.c,src/runtime/os.rs
+runtime::os,0x801B4CA0,change_thread_priority,translated,high,work/ghidra/main-gb/export/801b4ca0_FUN_801b4ca0.c,src/runtime/os.rs
+runtime::os,0x801B4E50,lower_thread_priority,translated,high,work/ghidra/main-gb/export/801b4e50_FUN_801b4e50.c,src/runtime/os.rs
+runtime::os,0x801B4EA0,dispatch_threads,translated,high,work/ghidra/main-gb/export/801b4ea0_FUN_801b4ea0.c,src/runtime/os.rs
+runtime::os,0x801B5130,create_thread,translated,high,work/ghidra/main-gb/export/801b5130_FUN_801b5130.c,src/runtime/os.rs
+runtime::os,0x801B53A0,thread_exit,translated,high,work/ghidra/main-gb/export/801b53a0_FUN_801b53a0.c,src/runtime/os.rs
+runtime::os,0x801B5490,cancel_thread,translated,high,work/ghidra/main-gb/export/801b5490_FUN_801b5490.c,src/runtime/os.rs
+runtime::os,0x801B5670,join_thread,translated,high,work/ghidra/main-gb/export/801b5670_FUN_801b5670.c,src/runtime/os.rs
+runtime::os,0x801B57C0,detach_thread,translated,high,work/ghidra/main-gb/export/801b57c0_FUN_801b57c0.c,src/runtime/os.rs
+runtime::os,0x801B5860,resume_thread,translated,high,work/ghidra/main-gb/export/801b5860_FUN_801b5860.c,src/runtime/os.rs
+runtime::os,0x801B5B00,suspend_thread,translated,high,work/ghidra/main-gb/export/801b5b00_FUN_801b5b00.c,src/runtime/os.rs
+runtime::os,0x801B5C90,sleep_thread,translated,high,work/ghidra/main-gb/export/801b5c90_FUN_801b5c90.c,src/runtime/os.rs
+runtime::os,0x801B5D80,wake_all,translated,high,work/ghidra/main-gb/export/801b5d80_FUN_801b5d80.c,src/runtime/os.rs
+runtime::os,0x801B5E80,set_thread_priority,translated,high,work/ghidra/main-gb/export/801b5e80_FUN_801b5e80.c,src/runtime/os.rs
+runtime::os,0x801AC4A0,dc_store_range_sync,translated,high,"work/ghidra/main-gb/export/801ac4a0_FUN_801ac4a0.c; dcbst block loop over [start,start+size) then sc barrier (0x44000002). Raw 0x801AC4A0..0x801AC4CC matches.","src/runtime/os.rs"
+runtime::os,0x801AC4D0,dc_flush_range_nosync,translated,high,"work/ghidra/main-gb/export/801ac4d0_FUN_801ac4d0.c; dcbf block loop, no trailing sc (blr at 0x801AC4F8). Raw matches 0x801AC4D0..0x801AC4F8.","src/runtime/os.rs"
+runtime::os,0x801AC500,dc_store_range_nosync,translated,high,"work/ghidra/main-gb/export/801ac500_FUN_801ac500.c; dcbst block loop without sc; only the return path differs from 0x801AC4A0. Raw matches.","src/runtime/os.rs"
+runtime::os,0x801AC560,ic_invalidate_range,translated,high,"work/ghidra/main-gb/export/801ac560_FUN_801ac560.c; icbi 32-byte block loop then sync and isync. Raw 0x801AC560..0x801AC593 matches.","src/runtime/os.rs"
+runtime::os,0x801AC5D0,lc_enable,translated,medium,"work/ghidra/main-gb/export/801ac5d0_FUN_801ac5d0.c and raw 0x801AC5D0..0x801AC698: HID2|=0x1000; 0x400 dcbt/dcbst pairs at 0x80000000; HID2|=0x100f; mtspr 1023=0xE0000002, mtspr 1022=0xE00001FE; 0x200 dcbz_l at 0xE0000000; leaves r3=0xE0004000 and r4=HID2|0x100f. SPR 1022/1023 names unknown; cache ops recorded only.","src/runtime/os.rs"
+runtime::os,0x801AC6A0,lc_enable_locked,translated,high,"work/ghidra/main-gb/export/801ac6a0_FUN_801ac6a0.c; disable interrupts 0x801B1140, call lc_enable 0x801AC5D0, restore 0x801B1180. Raw matches.","src/runtime/os.rs"
+runtime::os,0x801AC6E0,lc_disable,translated,medium,"work/ghidra/main-gb/export/801ac6e0_FUN_801ac6e0.c and raw: 0x200 dcbi blocks at 0xE0000000, then mfspr HID2, rlwinm 0,4,31 and mtspr HID2. Leaves r3=0xE0004000, r4=HID2&0x0FFFFFFF; callers ignore the pair.","src/runtime/os.rs"
+runtime::os,0x801ACD40,install_context,translated,high,"work/ghidra/main-gb/export/801acd40_FUN_801acd40.c; writes context&0x3FFFFFFF to 0x800000C0, context to 0x800000D4, sets/clears MSR bit 0x2000 at context+0x19C against current 0x800000D8, isync on the clear path.","src/runtime/os.rs"
+runtime::os,0x801ACF80,clear_context,translated,high,"work/ghidra/main-gb/export/801acf80_FUN_801acf80.c; zeroes u16 context+0x1A0/+0x1A2 and clears current-context 0x800000D8 when it points at the same block.","src/runtime/os.rs"
+runtime::os,0x801ACFB0,init_context,translated,high,"work/ghidra/main-gb/export/801acfb0_FUN_801acfb0.c; LR +0x198=entry, SP +0x04=stack, MSR +0x19C=0x9032, CR/XER/zero GPR slots, SDA2 +0x08, SDA +0x34, zero GQR +0x1A8..+0x1C0, then 0x801ACF80. Raw agrees on SDA bases.","src/runtime/os.rs"
+runtime::os,0x801B4890,init_thread_system,translated,high,"work/ghidra/main-gb/export/801b4890_FUN_801b4890.c and raw 0x801B4890..0x801B4B10 (size 640): fills system context 0x8038E938, publishes via 0x801ACF80/0x801ACD40, sets stack 0x8043FC40/0x8042FC3C and 0xDEADBABE, calls switch handler r13-0x6150, sets 0x800000E4, zeroes stack to 0x801ACF10's result, clears 0x8038EC50 (0x100 bytes), sets 0x800000DC/0x800000E0 and clears idle context 0x8038ED50.","src/runtime/os.rs"
+runtime::os,0x801B50D0,reschedule,translated,high,"work/ghidra/main-gb/export/801b50d0_FUN_801b50d0.c; returns when r13-0x4F7C==0, else calls 0x801B4EA0(0).","src/runtime/os.rs"
+runtime::os,0x801B50F0,reschedule_forced,translated,high,"work/ghidra/main-gb/export/801b50f0_FUN_801b50f0.c; 0x801B1140 save, 0x801B4EA0(1), 0x801B1180 restore.","src/runtime/os.rs"
+runtime::os,0x801B6020,get_time_with_delta,translated,high,"work/ghidra/main-gb/export/801b6020_FUN_801b6020.c and raw: reads 0x800030D8/0x800030DC under disabled interrupts, adds (high,low) with carry into r3:r4, restores; no stores.","src/runtime/os.rs"
+runtime::os,0x801B47B0,copy_hot_reset_trampoline,translated,high,"work/ghidra/main-gb/export/801b47b0_FUN_801b47b0.c; memcpy 0x1C bytes from 0x801B4790 to 0x80000C00, flush 0x100, sync, icbi-invalidate 0x100.","src/runtime/os.rs"
+runtime::os,0x801BB9C0,boot_info_flag,translated,high,"work/ghidra/main-gb/export/801bb9c0_FUN_801bb9c0.c; returns *(u32*)(*(u32*)(r13-0x4EC8)+4) & (1<<bit). Companion writer 0x801BB930 is already translated in runtime::init and is not claimed here.","src/runtime/os.rs"
+runtime::os,0x801AC840,machine_check_handler,translated,high,"work/ghidra/main-gb/export/801ac840_FUN_801ac840.c; reads HID2, prints 0x80332820/0x80332838 with SRR1 context+0x19C, halts via 0x801AD070/0x801A9BA0 when (HID2&0xF00000)==0 or (SRR1&0x200000)==0, else prints the four cause strings and writes HID2 back via 0x801A9C80.","src/runtime/os.rs"
+runtime::os,0x801AD360,install_fpu_unavailable_handler,translated,high,"work/ghidra/main-gb/export/801ad360_FUN_801ad360.c; 0x801AB020(7,0x801AD2D0), clears 0x800000D8, reports 0x80332BE0. Raw matches.","src/runtime/os.rs"
+runtime::os,0x801B32D0,insert_power_callback,translated,high,"work/ghidra/main-gb/export/801b32d0_FUN_801b32d0.c; key-sorted insert by node+0x04, links +0x08/+0x0C, updates head/tail r13-0x4F88/r13-0x4F84. Raw 0x801B32D0..0x801B3354 matches (size 136).","src/runtime/os.rs"
+runtime::os,0x801B3360,run_power_callbacks,translated,high,"work/ghidra/main-gb/export/801b3360_FUN_801b3360.c; walks equal-key nodes, calls node->fn(a,b), folds non-zero results, then folds 0x801B4300(); returns 1 only when all results and the status read are zero. Raw folding sequence matches.","src/runtime/os.rs"
+runtime::os,0x801B3B00,return_to_menu_or_panic,translated,high,"work/ghidra/main-gb/export/801b3b00_FUN_801b3b00.c; 0x801B3870(0) then 0x801AD4E0(0x80333AF8,0x37F,0x80333B64).","src/runtime/os.rs"
+runtime::os,0x801B3B40,return_to_data_manager_or_panic,translated,high,"work/ghidra/main-gb/export/801b3b40_FUN_801b3b40.c; 0x801B3870(1) then 0x801AD4E0(0x80333AF8,0x391,0x80333B94).","src/runtime/os.rs"
+runtime::os,0x801B3B80,hot_reset_panic_path,translated,medium,"work/ghidra/main-gb/export/801b3b80_FUN_801b3b80.c; raw 0x801B3B80..0x801B3C20: state block at r1+8 (bytes +5=3,+6=2) through 0x801B7560/0x801B4680/0x801B7470, 0x801AE770, 0x801B4B70, 0x801BFFD0, optional 0x801B6820 when r13-0x5044/r13-0x4FD4 set, 0x801B69C0, then two 0x801AD4E0 panics. Helper roles unnamed.","src/runtime/os.rs"
+runtime::os,0x801B4440,read_stm_register,translated,medium,"work/ghidra/main-gb/export/801b4440_FUN_801b4440.c and raw: lock 0x8038E928/IRQ 0x8038E924, read u16 at 0x8038E8F4+0x1C+index*2, call 0x801B4020(0,0x14); already-locked path restores and uses base 0 as observed.","src/runtime/os.rs"
+runtime::os,0x801B44C0,write_stm_register,translated,medium,"work/ghidra/main-gb/export/801b44c0_FUN_801b44c0.c and raw: same lock, compare u16 at 0x8038E8F4+0x1C+index*2, notify 0x801B4020(0,0x14) if unchanged else store then 0x801B4020(1,0x14).","src/runtime/os.rs"
+runtime::os,0x801B6940,stm_shutdown_hot_reset,translated,high,"work/ghidra/main-gb/export/801b6940_FUN_801b6940.c and raw: 0xCC002002=0, panic when r13-0x4F64==0, 0x8038F380=0, 0x80225640(fd,0x2003,0x8038F380,0x20,0x8038F3A0,0x20), disable interrupts, 0x801AC5A0, spin.","src/runtime/os.rs"
+runtime::os,0x801B69C0,stm_shutdown_normal_reset,translated,high,"work/ghidra/main-gb/export/801b69c0_FUN_801b69c0.c; same shutdown as 0x801B6940 with ioctl 0x2001 and panic line 0x19C; no 0x8038F380 clear.","src/runtime/os.rs"

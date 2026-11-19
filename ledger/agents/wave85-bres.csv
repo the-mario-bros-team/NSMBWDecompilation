@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::bres,80238420,fn_80238420,translated,high,"work/ghidra/main-gb/export/80238420_FUN_80238420.c; matrix3x4 times vector3; nine multiply-adds, translation column not added",src/resource/bres.rs
+resource::bres,80238690,fn_80238690,translated,high,"work/ghidra/main-gb/export/80238690_FUN_80238690.c; expands AABB over count points; first point seeds min/max then per-axis compare",src/resource/bres.rs
+resource::bres,80238750,fn_80238750,translated,high,"work/ghidra/main-gb/export/80238750_FUN_80238750.c; transforms AABB by 3x4 matrix; min/max of six corner terms per axis",src/resource/bres.rs
+resource::bres,80239710,fn_80239710,translated,high,"work/ghidra/main-gb/export/80239710_FUN_80239710.c; six range tests return 1 when both AABBs overlap on all axes",src/resource/bres.rs
+resource::bres,8023c280,fn_8023c280,translated,medium,"work/ghidra/main-gb/export/8023c280_FUN_8023c280.c; polygon display-list builder; +0x48 material, +0x4A palette, +0x4C two textures, +0x50 eight textures; tags 0xA0/0xB0+slot",src/resource/bres.rs
+resource::bres,8023c760,fn_8023c760,translated,high,"work/ghidra/main-gb/export/8023c760_FUN_8023c760.c; 0x30-stride texgen record; present +0x8A, descriptor +0x8C..+0x8E; table 0x802F84B0",src/resource/bres.rs
+resource::bres,8023c830,fn_8023c830,translated,medium,"work/ghidra/main-gb/export/8023c830_FUN_8023c830.c; rewrites texgen source bytes at +0x10+slot and merges BP word via 0x802399B0",src/resource/bres.rs
+resource::bres,8023d5f0,fn_8023d5f0,translated,medium,"work/ghidra/main-gb/export/8023d5f0_FUN_8023d5f0.c; decodes packed 11-bit matrix at +0x0A/+0x20/+0x2F; exponent biased 0x11, scale 1/1024 inferred",src/resource/bres.rs
+resource::bres,8023d8b0,fn_8023d8b0,translated,medium,"work/ghidra/main-gb/export/8023d8b0_FUN_8023d8b0.c; same packed matrix without exponent scaling; returns exponent byte separately",src/resource/bres.rs
+resource::bres,8023daa0,fn_8023daa0,translated,medium,"work/ghidra/main-gb/export/8023daa0_FUN_8023daa0.c; packs 3x4 matrix into three 14-byte stage commands via 0x80239980; scale 1024 inferred",src/resource/bres.rs
+resource::bres,8023dea0,fn_8023dea0,translated,medium,"work/ghidra/main-gb/export/8023dea0_FUN_8023dea0.c; decodes 0x12-byte attribute record; present byte 0, flag +0x05..+0x08, selector +0x10/+0x11",src/resource/bres.rs
+resource::bres,8023e050,fn_8023e050,translated,medium,"work/ghidra/main-gb/export/8023e050_FUN_8023e050.c; writes two 9-byte commands of one 0x12-byte record; switch on mode 0..0x14",src/resource/bres.rs
+resource::bres,8023e390,fn_8023e390,translated,medium,"work/ghidra/main-gb/export/8023e390_FUN_8023e390.c; binds TEX0 via GXInitTexObj/CI+LOD and PLT0 via GXInitTlutObj into 0x20/0x0C caches",src/resource/bres.rs
+resource::bres,8023f370,fn_8023f370,translated,medium,"work/ghidra/main-gb/export/8023f370_FUN_8023f370.c; binds up to 11 animation tracks; mask shifted by two, colour key via 0x8023F140",src/resource/bres.rs
+resource::bres,8023f5a0,fn_8023f5a0,translated,medium,"work/ghidra/main-gb/export/8023f5a0_FUN_8023f5a0.c; resolves eight texture/palette handles; mask 4 bits per slot, key sample via 0x8023F4E0",src/resource/bres.rs

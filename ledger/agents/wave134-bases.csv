@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806329e0,fn_806329e0,translated,high,"work/ghidra/rel-d_basesNP/export/806329e0_FUN_806329e0.c; highest of slots 1..3; six pane stores",src/game/bases.rs
+game::bases,8065c100,fn_8065c100,translated,medium,"work/ghidra/rel-d_basesNP/export/8065c100_FUN_8065c100.c; 0x99E4 virtual +0xB0 three-float record",src/game/bases.rs
+game::bases,8065c260,fn_8065c260,translated,medium,"work/ghidra/rel-d_basesNP/export/8065c260_FUN_8065c260.c; height gate then message 796",src/game/bases.rs
+game::bases,806fcdf0,fn_806fcdf0,translated,medium,"work/ghidra/rel-d_basesNP/export/806fcdf0_FUN_806fcdf0.c; cursor reset; rand warm-up; returns 1",src/game/bases.rs
+game::bases,806ffb50,fn_806ffb50,translated,high,"work/ghidra/rel-d_basesNP/export/806ffb50_FUN_806ffb50.c; 0x398C-byte constructor; four inline arrays",src/game/bases.rs
+game::bases,807241c0,fn_807241c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807241c0_FUN_807241c0.c; two-axis emitter; 0x8007FA40 builder",src/game/bases.rs
+game::bases,807485d0,fn_807485d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807485d0_FUN_807485d0.c; stage rectangle point test",src/game/bases.rs
+game::bases,807811d0,fn_807811d0,translated,high,"work/ghidra/rel-d_basesNP/export/807811d0_FUN_807811d0.c; 45-degree angular predicate; opponent cell 0x8042A1A0",src/game/bases.rs
+game::bases,806c0cd0,fn_806c0cd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c0cd0_FUN_806c0cd0.c; vtable 0x807F7A80; conditional 0x802B9280",src/game/bases.rs
+game::bases,806c2e10,fn_806c2e10,translated,high,"work/ghidra/rel-d_basesNP/export/806c2e10_FUN_806c2e10.c; five +0x30 probes then tail recursion",src/game/bases.rs
+game::bases,806c2ef0,fn_806c2ef0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c2ef0_FUN_806c2ef0.c; colon-stripped name compare",src/game/bases.rs
+game::bases,806c3710,fn_806c3710,translated,medium,"work/ghidra/rel-d_basesNP/export/806c3710_FUN_806c3710.c; state 1 gate; x-delta sign passed to 0x806C3790",src/game/bases.rs
+game::bases,806c7360,fn_806c7360,translated,medium,"work/ghidra/rel-d_basesNP/export/806c7360_FUN_806c7360.c; 0x4A0-byte heap constructor",src/game/bases.rs
+game::bases,806c8810,fn_806c8810,translated,medium,"work/ghidra/rel-d_basesNP/export/806c8810_FUN_806c8810.c; flags bits 12..15 select 0x8082D148 or 0x8082D188",src/game/bases.rs
+game::bases,806c9940,fn_806c9940,translated,medium,"work/ghidra/rel-d_basesNP/export/806c9940_FUN_806c9940.c; +0x5D4 list accumulator",src/game/bases.rs
+game::bases,806ca470,fn_806ca470,translated,medium,"work/ghidra/rel-d_basesNP/export/806ca470_FUN_806ca470.c; 0x8006CDE0 then 0x8006CD40 with this",src/game/bases.rs
+game::bases,806cac40,fn_806cac40,translated,medium,"work/ghidra/rel-d_basesNP/export/806cac40_FUN_806cac40.c; motion record; speed and halfword angle",src/game/bases.rs
+game::bases,806cb270,fn_806cb270,translated,medium,"work/ghidra/rel-d_basesNP/export/806cb270_FUN_806cb270.c; 0x806CB010 resolve plus two registrations",src/game/bases.rs
+game::bases,806cca70,fn_806cca70,translated,medium,"work/ghidra/rel-d_basesNP/export/806cca70_FUN_806cca70.c; 0x8042A078 mask gate; position refresh",src/game/bases.rs
+game::bases,806cfe60,fn_806cfe60,translated,medium,"work/ghidra/rel-d_basesNP/export/806cfe60_FUN_806cfe60.c; signed +0x430 step clamped to -1280..1280",src/game/bases.rs
+game::bases,806cfed0,fn_806cfed0,translated,high,"work/ghidra/rel-d_basesNP/export/806cfed0_FUN_806cfed0.c; +0x663 timer and +0x665 bit 7",src/game/bases.rs
+game::bases,806cff20,fn_806cff20,translated,medium,"work/ghidra/rel-d_basesNP/export/806cff20_FUN_806cff20.c; +0x104 halfword through 0x8015F2E0",src/game/bases.rs
+game::bases,806c17e0,fn_806c17e0,translated,high,"work/ghidra/rel-d_basesNP/export/806c17e0_FUN_806c17e0.c; returns descriptor 0x80377A04",src/game/bases.rs
+game::bases,806c3920,fn_806c3920,translated,high,"work/ghidra/rel-d_basesNP/export/806c3920_FUN_806c3920.c; returns descriptor 0x80377A04",src/game/bases.rs
+game::bases,806cc620,fn_806cc620,translated,medium,"work/ghidra/rel-d_basesNP/export/806cc620_FUN_806cc620.c; 0x800929F0 record plus effect id 0xE or 0xF",src/game/bases.rs

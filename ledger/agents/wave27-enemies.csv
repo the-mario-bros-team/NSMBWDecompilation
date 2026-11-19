@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a8c3c0,fn_80a8c3c0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8c3c0_FUN_80a8c3c0.c; kurage variant initialiser; depth 6/8/10/12 through the 2^52+2^31 bias; state switch 0x80B73CB8.,src/game/enemies.rs
+game::enemies,80a8c550,fn_80a8c550,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8c550_FUN_80a8c550.c; kurage model/clip binder; g3d/kurage.brres; wait/eye_anim/BGM_anim; calls the deferred constructor 0x80A8BD20.,src/game/enemies.rs
+game::enemies,80a8ca50,fn_80a8ca50,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8ca50_FUN_80a8ca50.c; model vtable +0x14; fn_80a8c150(actor+0x6A8); ring vtable +0x10; returns 1.,src/game/enemies.rs
+game::enemies,80a8cc20,fn_80a8cc20,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8cc20_FUN_80a8cc20.c; swim-up start; rate -2.5; swim_up_st clip; 5.0 blend.,src/game/enemies.rs
+game::enemies,80a8ccd0,fn_80a8ccd0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8ccd0_FUN_80a8ccd0.c; four-step swim-up handler; GQR prologue artefacts omitted; hidden receiver on 0x80A8DD80.,src/game/enemies.rs
+game::enemies,80a8cf60,fn_80a8cf60,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8cf60_FUN_80a8cf60.c; swim-down start; -0.4 or 2.5*-0.4; blend triple 120/6-or-7/0.95.,src/game/enemies.rs
+game::enemies,80a8d020,fn_80a8d020,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8d020_FUN_80a8d020.c; dive handler states 1..4; dropped receivers on 0x80A8DB70 and 0x80A8D970.,src/game/enemies.rs
+game::enemies,80a8d370,fn_80a8d370,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8d370_FUN_80a8d370.c; wait clip; countdown random(200)+100; dive reference snapshot.,src/game/enemies.rs
+game::enemies,80a8d430,fn_80a8d430,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8d430_FUN_80a8d430.c; bob between reference +/-4.0; countdown; dropped receiver on 0x80A8D970.,src/game/enemies.rs
+game::enemies,80a8d580,fn_80a8d580,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8d580_FUN_80a8d580.c; surface handler; swim_up_st; frame 0.0 time 23.0; copies 0x8042C1B8..0x8042C1C0.,src/game/enemies.rs
+game::enemies,80a8d970,fn_80a8d970,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8d970_FUN_80a8d970.c; chain query slots +0x28/+0x14; eye search clip; two inferred receivers.,src/game/enemies.rs
+game::enemies,80a8dae0,fn_80a8dae0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8dae0_FUN_80a8dae0.c; locked-slot proximity test using 200.0 on Y and X.,src/game/enemies.rs
+game::enemies,80a8db70,fn_80a8db70,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8db70_FUN_80a8db70.c; four-slot target search; GQR prologue artefacts omitted; vtable +0x6C receiver inferred; first byte stored.,src/game/enemies.rs
+game::enemies,80a8dd20,fn_80a8dd20,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8dd20_FUN_80a8dd20.c; copies the locked player position into out[0..2]; guards slot >= 0.,src/game/enemies.rs
+game::enemies,80a8dd80,fn_80a8dd80,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8dd80_FUN_80a8dd80.c; two 0x8015F470 axis steps (0.03/0.02) then fn_80a8e0a0.,src/game/enemies.rs
+game::enemies,80a8de20,fn_80a8de20,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8de20_FUN_80a8de20.c; clears eye tracking; restores eye_anim; dropped actor argument on fn_80a8e0a0.,src/game/enemies.rs
+game::enemies,80a8def0,fn_80a8def0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8def0_FUN_80a8def0.c; eye yaw/pitch clamps +/-0.15 and +/-0.2 plus the +/-0.06 band; GQR artefacts omitted.,src/game/enemies.rs
+game::enemies,80a8e0a0,fn_80a8e0a0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8e0a0_FUN_80a8e0a0.c; mat_kurage_eye material; clears flag 0x8; writes words 5/6 from two doubles.,src/game/enemies.rs
+game::enemies,80a8e190,fn_80a8e190,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a8e190_FUN_80a8e190.c; eye blend tick; 150.0 random interval; one dropped double in the first 0x80166F10 call.,src/game/enemies.rs
+game::enemies,80a8e240,fn_80a8e240,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8e240_FUN_80a8e240.c; eye timer ramp 50..70 in 2.0 steps; clears the enable byte at the bottom.,src/game/enemies.rs
+game::enemies,80a8e810,fn_80a8e810,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8e810_FUN_80a8e810.c; 0x8015F800 plus optional 0x802B9280; returns the state.,src/game/enemies.rs
+game::enemies,80a8e870,fn_80a8e870,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8e870_FUN_80a8e870.c; second copy of the state callback; identical to 0x80A8E810.,src/game/enemies.rs
+game::enemies,80a8e8d0,fn_80a8e8d0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8e8d0_FUN_80a8e8d0.c; constant producer returning 0x80358004.,src/game/enemies.rs
+game::enemies,80a8e8e0,fn_80a8e8e0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8e8e0_FUN_80a8e8e0.c; constant producer returning 0x80357BF4.,src/game/enemies.rs
+game::enemies,80a8e9d0,fn_80a8e9d0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8e9d0_FUN_80a8e9d0.c; five +0x30 owner links with the vtable +0xC query then recursion.,src/game/enemies.rs
+game::enemies,80a8eab0,fn_80a8eab0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8eab0_FUN_80a8eab0.c; strchr ':' then suffix compare; vtable +0x20 name query.,src/game/enemies.rs
+game::enemies,80a8ebd0,fn_80a8ebd0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a8ebd0_FUN_80a8ebd0.c; 0x780-byte kurage constructor; vtables 0x8030448C and 0x80B4FB18; holders +0x524/+0x584/+0x5BC.,src/game/enemies.rs

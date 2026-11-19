@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80130500,fn_80130500,translated,medium,"work/ghidra/main-gb/export/80130500_FUN_80130500.c; resets +0x2061/+0x14A4/+0x205C/+0x2060, controller sound 0x24 with the 0x80370F7C pair",src/game/worldmap.rs
+game::worldmap,80130a70,fn_80130a70,translated,medium,"work/ghidra/main-gb/export/80130a70_FUN_80130a70.c; speed-dependent sound sample clamped to [1.0, 2.0], sound 0x26 or 0x27",src/game/worldmap.rs
+game::worldmap,80130b20,fn_80130b20,translated,medium,"work/ghidra/main-gb/export/80130b20_FUN_80130b20.c; smoke effect on +0x10DC bit 0 clear, state 1, sound 0x27",src/game/worldmap.rs
+game::worldmap,801335d0,fn_801335d0,translated,high,"work/ghidra/main-gb/export/801335d0_FUN_801335d0.c; clears bits 0x49/0x4A, ages +0x1C9C, posts 0x80324EB0",src/game/worldmap.rs
+game::worldmap,80133640,fn_80133640,translated,medium,"work/ghidra/main-gb/export/80133640_FUN_80133640.c; 0x80375FF0 name test + 10.0 height gate, enters state 3",src/game/worldmap.rs
+game::worldmap,801336e0,fn_801336e0,translated,medium,"work/ghidra/main-gb/export/801336e0_FUN_801336e0.c; state 3 + sound 0x34, contact point into +0x1C7C..+0x1C8C",src/game/worldmap.rs
+game::worldmap,801337e0,fn_801337e0,translated,high,"work/ghidra/main-gb/export/801337e0_FUN_801337e0.c; name match plus +0x14A4 == 3",src/game/worldmap.rs
+game::worldmap,80133a60,fn_80133a60,translated,high,"work/ghidra/main-gb/export/80133a60_FUN_80133a60.c; slot +0x3C4 pointer, clears 0x33/0x7A/0x49/0x4A and +0x2A8 bit 0",src/game/worldmap.rs
+game::worldmap,80133ae0,fn_80133ae0,translated,medium,"work/ghidra/main-gb/export/80133ae0_FUN_80133ae0.c; signed +0x10A0 / 4096.0 subtracted from the f1 height, event 0x80376030",src/game/worldmap.rs
+game::worldmap,80133cb0,fn_80133cb0,translated,medium,"work/ghidra/main-gb/export/80133cb0_FUN_80133cb0.c; bit 0x34, six zero stores, 0x802F4E9C speed by +0x1090, sound 0x2F",src/game/worldmap.rs
+game::worldmap,80133f50,fn_80133f50,translated,medium,"work/ghidra/main-gb/export/80133f50_FUN_80133f50.c; 0.875/1.125 facing-scaled speed, slot +0x8C, dispatches 0x80133E10/0x80133EC0 by raw address",src/game/worldmap.rs
+game::worldmap,80134050,fn_80134050,translated,high,"work/ghidra/main-gb/export/80134050_FUN_80134050.c; exit event 0x80375CAC + slot +0x434, or 0x80047530 + 0x80324EE0",src/game/worldmap.rs
+game::worldmap,801341b0,fn_801341b0,translated,high,"work/ghidra/main-gb/export/801341b0_FUN_801341b0.c; +0x9D gate, +0x1DD4, slot +0x3C8, 3.0 speed limit, event 0x80376070",src/game/worldmap.rs
+game::worldmap,80134280,fn_80134280,translated,medium,"work/ghidra/main-gb/export/80134280_FUN_80134280.c; bits 0x35/0x97/0x9F, height 8 + 16*floor(0xAC/16), 400.0 slot +0x42C, landing split",src/game/worldmap.rs
+game::worldmap,801344e0,fn_801344e0,translated,high,"work/ghidra/main-gb/export/801344e0_FUN_801344e0.c; state 1 and controller sound 0x2C",src/game/worldmap.rs
+game::worldmap,801345c0,fn_801345c0,translated,high,"work/ghidra/main-gb/export/801345c0_FUN_801345c0.c; state 2 and controller sound 0x2D",src/game/worldmap.rs
+game::worldmap,80134700,fn_80134700,translated,high,"work/ghidra/main-gb/export/80134700_FUN_80134700.c; state 3 and controller sound 0x2E",src/game/worldmap.rs
+game::worldmap,80134850,fn_80134850,translated,medium,"work/ghidra/main-gb/export/80134850_FUN_80134850.c; slot +0x434(0x1D), +0x1DD4 = 5, event 0x80375C6C, facing-scaled base speed",src/game/worldmap.rs
+game::worldmap,801348f0,fn_801348f0,translated,medium,"work/ghidra/main-gb/export/801348f0_FUN_801348f0.c; 0x801396C0 probe with 3.628 and facing-scaled speed, +0x1DD4 = 5 on contact",src/game/worldmap.rs
+game::worldmap,80134990,fn_80134990,translated,high,"work/ghidra/main-gb/export/80134990_FUN_80134990.c; position advance, 0x80324F08 post, facing flips for +0x10D4 bits 0 and 0x180000",src/game/worldmap.rs
+game::worldmap,80134b10,fn_80134b10,translated,high,"work/ghidra/main-gb/export/80134b10_FUN_80134b10.c; four gates, +0xB0 from +0x115C, event 0x80375EAC(5)",src/game/worldmap.rs
+game::worldmap,80134bc0,fn_80134bc0,translated,high,"work/ghidra/main-gb/export/80134bc0_FUN_80134bc0.c; +0x10D8 bit 0x100 and +0xEC <= 0, event 0x80375EAC(2) or (0)",src/game/worldmap.rs
+game::worldmap,801376d0,fn_801376d0,translated,high,"work/ghidra/main-gb/export/801376d0_FUN_801376d0.c; clears four motion words, sound 0x52, bit 8, slots +0x434/+0x43C, +0x2518 = 8",src/game/worldmap.rs
+game::worldmap,801377a0,fn_801377a0,translated,high,"work/ghidra/main-gb/export/801377a0_FUN_801377a0.c; 0x8005E460(0), heading from slot +0x444, clears bit 8",src/game/worldmap.rs
+game::worldmap,80137800,fn_80137800,translated,medium,"work/ghidra/main-gb/export/80137800_FUN_80137800.c; +0x2518 countdown, slot +0x43C(8), 0x801378B0 by raw address, event 0x80375C2C(1)",src/game/worldmap.rs
+game::worldmap,801379b0,fn_801379b0,translated,high,"work/ghidra/main-gb/export/801379b0_FUN_801379b0.c; clears bit 6 and disarms +0xEA4",src/game/worldmap.rs
+game::worldmap,801379f0,fn_801379f0,translated,high,"work/ghidra/main-gb/export/801379f0_FUN_801379f0.c; 0x80137B20 gate, event 0x80375C2C(1), sound 0x52, slot +0x450(0,1)",src/game/worldmap.rs
+game::worldmap,80137a90,fn_80137a90,translated,high,"work/ghidra/main-gb/export/80137a90_FUN_80137a90.c; slot +0x434(0x30), event 0x13C, sound 0x52, +0x14A8 = 0x3C",src/game/worldmap.rs
+game::worldmap,80137b20,fn_80137b20,translated,medium,"work/ghidra/main-gb/export/80137b20_FUN_80137b20.c; calls 0x80137B60 by raw address, returns +0x14A8 != 0",src/game/worldmap.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,8009ba70,fn_8009ba70,translated,high,"work/ghidra/main-gb/export/8009ba70_FUN_8009ba70.c; three 0x8015F4F0 binds: +0x75C from +0x762/0x200, +0x75A from +0x760/0x400, +0x758 from +0x75E/0x300",src/game/stage.rs
+game::stage,8009bce0,fn_8009bce0,translated,high,"work/ghidra/main-gb/export/8009bce0_FUN_8009bce0.c; (u16 at +8 + 0xFECF) & 0xFFFF through (~v | 2) - ((2 - v) >> 1), keeps bit 31",src/game/stage.rs
+game::stage,8009c350,fn_8009c350,translated,medium,"work/ghidra/main-gb/export/8009c350_FUN_8009c350.c; spin finish: 0x8008C380(+0x148), +0x60/+0x6C slot, 0x800E20A0 + 0x800CEA20 for slots 0..3, +0x7B0 gate, +0x120 bit 3, 0x800A4C40 state 2",src/game/stage.rs
+game::stage,8009c530,fn_8009c530,translated,medium,"work/ghidra/main-gb/export/8009c530_FUN_8009c530.c; sibling of 8009C350 with final 0x800A4C40 state 0",src/game/stage.rs
+game::stage,8009c650,fn_8009c650,translated,medium,"work/ghidra/main-gb/export/8009c650_FUN_8009c650.c; Wm_jr_damagespin02 then y += 0x802F04D8 and Wm_jr_damagespin01 through the +0xB1C/+0xA08 +0xA0 slots",src/game/stage.rs
+game::stage,8009c710,fn_8009c710,translated,medium,"work/ghidra/main-gb/export/8009c710_FUN_8009c710.c; same point/scale build with the four-argument +0xB0 slots",src/game/stage.rs
+game::stage,8009c810,fn_8009c810,translated,high,"work/ghidra/main-gb/export/8009c810_FUN_8009c810.c; 0x8016C890(Wm_jr_landsmoke, 0, point, 0, 0) with z from r2-0x6E34",src/game/stage.rs
+game::stage,8009c860,fn_8009c860,translated,high,"work/ghidra/main-gb/export/8009c860_FUN_8009c860.c; point from +0x794/+0x798 and +0xB4 - r2-0x6E30; +0x7B8/+0xA0 submit of Wm_jr_jumpstart",src/game/stage.rs
+game::stage,8009ca30,fn_8009ca30,translated,medium,"work/ghidra/main-gb/export/8009ca30_FUN_8009ca30.c; Wm_jr_breaksmoke submit then +0x7B8/+0x2C with the r2-0x6E1C angle and 3",src/game/stage.rs
+game::stage,8009d010,fn_8009d010,translated,medium,"work/ghidra/main-gb/export/8009d010_FUN_8009d010.c; clown damage-down animation: 0x8023A0B0 name entry, 0x801651F0 bind, 0x80169F80/0x801680E0 rates, 0x8009BA50 reset, +0x360=1",src/game/stage.rs
+game::stage,8009d450,fn_8009d450,translated,high,"work/ghidra/main-gb/export/8009d450_FUN_8009d450.c; clown squat: same five calls with s_clown_squat_80312710 and no +0x360 store",src/game/stage.rs
+game::stage,8009d540,fn_8009d540,translated,high,"work/ghidra/main-gb/export/8009d540_FUN_8009d540.c; clown fire animation, +0x544/+0x24 motion id 0x4EF, +0x7AC=1, +0x348=0x8009BD10, +0x360=1, +0x7B7=0",src/game/stage.rs
+game::stage,8009e6d0,fn_8009e6d0,translated,high,"work/ghidra/main-gb/export/8009e6d0_FUN_8009e6d0.c; 0x8015F800 then 0x802B9280 when size>0; returns this",src/game/stage.rs
+game::stage,8009e830,fn_8009e830,translated,high,"work/ghidra/main-gb/export/8009e830_FUN_8009e830.c; five +0x30 parent links each queried through vtable +0x0C then the recursive tail",src/game/stage.rs
+game::stage,8009e910,fn_8009e910,translated,high,"work/ghidra/main-gb/export/8009e910_FUN_8009e910.c; 0x802E1C40 colon cut on both paths, vtable +0x20, 0x802E1AB4 tail compare",src/game/stage.rs
+game::stage,8009e9d0,fn_8009e9d0,translated,high,"work/ghidra/main-gb/export/8009e9d0_FUN_8009e9d0.c; forwards (second, second, first) to 0x802DCBFC",src/game/stage.rs
+game::stage,8009ea00,fn_8009ea00,translated,high,work/ghidra/main-gb/export/8009ea00_FUN_8009ea00.c; duplicate of the 0x802DCBFC forwarding wrapper,src/game/stage.rs
+game::stage,8009ec30,fn_8009ec30,translated,high,"work/ghidra/main-gb/export/8009ec30_FUN_8009ec30.c; seven words 0x802F04E8..0x802F0500 into +0x414..+0x42C, +0x430 = +0x348 byte, +0x431 = +0x60/+0x6C kind byte",src/game/stage.rs
+game::stage,8009ed10,fn_8009ed10,translated,medium,"work/ghidra/main-gb/export/8009ed10_FUN_8009ed10.c; +0x1035 == 1 selects +0x391 0/1, 0x8042BB18 byte to +0x1E7/+0x2D1, +0x178 bit 7, 0x800D98F0(+0x2DC,0)",src/game/stage.rs
+game::stage,8009f250,fn_8009f250,translated,high,"work/ghidra/main-gb/export/8009f250_FUN_8009f250.c; 0x8015F800 then optional 0x802B9280; returns this",src/game/stage.rs
+game::stage,8009f2b0,fn_8009f2b0,translated,high,"work/ghidra/main-gb/export/8009f2b0_FUN_8009f2b0.c; sibling of 8009F250 with the same release/free pair",src/game/stage.rs
+game::stage,8009f3f0,fn_8009f3f0,translated,high,"work/ghidra/main-gb/export/8009f3f0_FUN_8009f3f0.c; five +0x30 parent links through vtable +0x0C then the recursive tail",src/game/stage.rs
+game::stage,8009f4d0,fn_8009f4d0,translated,high,"work/ghidra/main-gb/export/8009f4d0_FUN_8009f4d0.c; colon-cut path compare with vtable +0x20 and 0x802E1AB4",src/game/stage.rs
+game::stage,8009f590,fn_8009f590,translated,high,"work/ghidra/main-gb/export/8009f590_FUN_8009f590.c; forwards (second, second, first) to 0x802DCBFC",src/game/stage.rs
+game::stage,8009f5c0,fn_8009f5c0,translated,high,work/ghidra/main-gb/export/8009f5c0_FUN_8009f5c0.c; duplicate of the 0x802DCBFC forwarding wrapper,src/game/stage.rs
+game::stage,8009f5f0,fn_8009f5f0,translated,high,"work/ghidra/main-gb/export/8009f5f0_FUN_8009f5f0.c; 0x800581B0(this,8) then signed byte +0x1080",src/game/stage.rs
+game::stage,8009f630,fn_8009f630,translated,high,"work/ghidra/main-gb/export/8009f630_FUN_8009f630.c; +0x60/+0x3EC slot with 8 then +0x60/+0x3E8 result sign-extended",src/game/stage.rs
+game::stage,8009f690,fn_8009f690,translated,high,"work/ghidra/main-gb/export/8009f690_FUN_8009f690.c; 0x80058260(this,8) then signed byte +0x1082",src/game/stage.rs
+game::stage,8009f710,fn_8009f710,translated,high,"work/ghidra/main-gb/export/8009f710_FUN_8009f710.c; kind 1 -> 0x802F0514, kind 2 -> 0x802F0538, negative index and >8 rejected/clamped",src/game/stage.rs
+game::stage,8009f770,fn_8009f770,translated,medium,"work/ghidra/main-gb/export/8009f770_FUN_8009f770.c; kind 2 calls 0x800E22F0 and kind 1 calls 0x800E20A0 with the two r2 floats and the notice owner",src/game/stage.rs

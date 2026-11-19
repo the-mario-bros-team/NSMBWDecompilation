@@ -1,0 +1,13 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800fc4f0,fn_800fc4f0,translated,medium,work/ghidra/main-gb/export/800fc4f0_FUN_800fc4f0.c; 12-byte seed slot; 0x80168400 -> 0x80164F00 -> 0x80168230 with the third call's arguments rotated,src/engine/dsys.rs
+engine::dsys,800fc810,fn_800fc810,translated,high,work/ghidra/main-gb/export/800fc810_FUN_800fc810.c; shell byte 5 test via cntlzw,src/engine/dsys.rs
+engine::dsys,800fc830,fn_800fc830,translated,high,work/ghidra/main-gb/export/800fc830_FUN_800fc830.c; shell byte 7 test via cntlzw,src/engine/dsys.rs
+engine::dsys,800fc940,fn_800fc940,translated,high,work/ghidra/main-gb/export/800fc940_FUN_800fc940.c; signed bound 8 on the eight-word table 0x802F3420; 0x2A fallback,src/engine/dsys.rs
+engine::dsys,800fc970,fn_800fc970,translated,high,work/ghidra/main-gb/export/800fc970_FUN_800fc970.c; table code forwarded to 0x800FAD60; the index r3 is live at the 0x800FC940 call,src/engine/dsys.rs
+engine::dsys,800fc9c0,fn_800fc9c0,translated,high,work/ghidra/main-gb/export/800fc9c0_FUN_800fc9c0.c; 0x8005FFB0 count minus one through cntlzw,src/engine/dsys.rs
+engine::dsys,800fca20,fn_800fca20,translated,high,"work/ghidra/main-gb/export/800fca20_FUN_800fca20.c; fn_800fae40(param_1,0x26) folded with cntlzw",src/engine/dsys.rs
+engine::dsys,800fca50,fn_800fca50,translated,high,work/ghidra/main-gb/export/800fca50_FUN_800fca50.c; four-way conjunction over fn_800fae40/fn_800fca20/fn_800fc9c0/fn_800fcaf0,src/engine/dsys.rs
+engine::dsys,800fcaf0,fn_800fcaf0,translated,high,"work/ghidra/main-gb/export/800fcaf0_FUN_800fcaf0.c; shells 1..7 -> fn_800fae40(shell,0x15); 0 and 8 -> 1; else 0",src/engine/dsys.rs
+engine::dsys,800fcca0,fn_800fcca0,translated,high,work/ghidra/main-gb/export/800fcca0_FUN_800fcca0.c; * slot re-roll loop over fn_800fce60/fn_800b2ee0/fn_800fcf30; +0x395/+0x39F/+0x3A9 stores; clears the 0x8042A164 latch,src/engine/dsys.rs
+engine::dsys,800fcda0,fn_800fcda0,translated,high,work/ghidra/main-gb/export/800fcda0_thunk_FUN_800f7400.c; 4-byte thunk; b 0x800F7400,src/engine/dsys.rs
+engine::dsys,800fcdb0,fn_800fcdb0,translated,high,work/ghidra/main-gb/export/800fcdb0_FUN_800fcdb0.c; clears the byte at r13-0x551C (0x8042A164),src/engine/dsys.rs

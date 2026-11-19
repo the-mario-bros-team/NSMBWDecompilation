@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b14e0,fn_800b14e0,translated,high,"work/ghidra/main-gb/export/800b14e0_FUN_800b14e0.c; fukidashi constructor; four interfaces and StateID_StartWait binder",src/game/stage.rs
+game::stage,800b15d0,fn_800b15d0,translated,medium,"work/ghidra/main-gb/export/800b15d0_FUN_800b15d0.c; guarded free; export drops the allocator argument",src/game/stage.rs
+game::stage,800b1610,fn_800b1610,translated,high,"work/ghidra/main-gb/export/800b1610_FUN_800b1610.c; releases +0x18 then optional free",src/game/stage.rs
+game::stage,800b1670,fn_800b1670,translated,high,"work/ghidra/main-gb/export/800b1670_FUN_800b1670.c; duplicate of 800b1610 release body",src/game/stage.rs
+game::stage,800b16e0,fn_800b16e0,translated,high,"work/ghidra/main-gb/export/800b16e0_FUN_800b16e0.c; clears r13-0x5748; releases +0x1B4 and the +4 layout",src/game/stage.rs
+game::stage,800b1760,fn_800b1760,translated,medium,"work/ghidra/main-gb/export/800b1760_FUN_800b1760.c; first-use layout build; panes +0x1FC/+0x214; defaults +0x1D8..+0x23A",src/game/stage.rs
+game::stage,800b1910,fn_800b1910,translated,medium,"work/ghidra/main-gb/export/800b1910_FUN_800b1910.c; +0x239 gate; state slot +0x10 then 800b1a90/800b19c0",src/game/stage.rs
+game::stage,800b1990,fn_800b1990,translated,high,"work/ghidra/main-gb/export/800b1990_FUN_800b1990.c; active +0x239 unlinks this+4",src/game/stage.rs
+game::stage,800b19c0,fn_800b19c0,translated,medium,"work/ghidra/main-gb/export/800b19c0_FUN_800b19c0.c; owner id through r13-0x5730; manager +0x3D9 and pane +0x218",src/game/stage.rs
+game::stage,800b1a50,fn_800b1a50,translated,high,"work/ghidra/main-gb/export/800b1a50_FUN_800b1a50.c; row*0x1C + column*4 table read into +0x1DC/+0x1E0",src/game/stage.rs
+game::stage,800b1a90,fn_800b1a90,translated,medium,"work/ghidra/main-gb/export/800b1a90_FUN_800b1a90.c; subject 8005f900; override +0x1D8; transform 800b33d0; pane +0x2C",src/game/stage.rs
+game::stage,800b1bd0,fn_800b1bd0,translated,medium,"work/ghidra/main-gb/export/800b1bd0_FUN_800b1bd0.c; three RGBA tables; row table 80354e60; four panes +0x1FC",src/game/stage.rs
+game::stage,800b1eb0,fn_800b1eb0,translated,medium,"work/ghidra/main-gb/export/800b1eb0_FUN_800b1eb0.c; 43300000 f64 conversion; stores +0x94..+0xA4",src/game/stage.rs
+game::stage,800b1f80,fn_800b1f80,translated,high,"work/ghidra/main-gb/export/800b1f80_FUN_800b1f80.c; 800c9500 stop; +0x224 cleared; 800c93d0 channel 0",src/game/stage.rs
+game::stage,800b1fd0,fn_800b1fd0,translated,high,"work/ghidra/main-gb/export/800b1fd0_FUN_800b1fd0.c; 800b1bd0 colours then +0x19C slot +0x18 event 80358998",src/game/stage.rs
+game::stage,800b2070,fn_800b2070,translated,medium,"work/ghidra/main-gb/export/800b2070_FUN_800b2070.c; +0x220 range selects pane +0x214; restores +0x210 triple",src/game/stage.rs
+game::stage,800b2180,fn_800b2180,translated,high,"work/ghidra/main-gb/export/800b2180_FUN_800b2180.c; idle layout sends StateID_Move 803589d8",src/game/stage.rs
+game::stage,800b2230,fn_800b2230,translated,high,"work/ghidra/main-gb/export/800b2230_FUN_800b2230.c; timer +0x224/+0x230/+0x234; manager +0xB56; StateID_Exit",src/game/stage.rs
+game::stage,800b2370,fn_800b2370,translated,high,"work/ghidra/main-gb/export/800b2370_FUN_800b2370.c; 800c9490 step; manager id*0x16+kind+0xAFE; kind 8 block",src/game/stage.rs
+game::stage,800b2450,fn_800b2450,translated,high,"work/ghidra/main-gb/export/800b2450_FUN_800b2450.c; idle layout clears +0x1D8 and sends StateID_StartWait",src/game/stage.rs
+game::stage,800b24b0,fn_800b24b0,translated,high,"work/ghidra/main-gb/export/800b24b0_FUN_800b24b0.c; clears manager +0xB56; +0x234/+0x239; stops +4; hides root",src/game/stage.rs
+game::stage,800b2550,fn_800b2550,translated,high,"work/ghidra/main-gb/export/800b2550_FUN_800b2550.c; kind 8 id 1; 8005f900 subject; step switch +0x22C",src/game/stage.rs
+game::stage,800b2890,fn_800b2890,translated,high,"work/ghidra/main-gb/export/800b2890_FUN_800b2890.c; forwards to 802dcbfc with duplicated second argument",src/game/stage.rs
+game::stage,800b28c0,fn_800b28c0,translated,high,"work/ghidra/main-gb/export/800b28c0_FUN_800b28c0.c; duplicate of 800b2890 dispatcher wrapper",src/game/stage.rs
+game::stage,800b28f0,fn_800b28f0,translated,high,"work/ghidra/main-gb/export/800b28f0_FUN_800b28f0.c; four state records 80358958/98/D8/8A18 under 802dcd74 pair",src/game/stage.rs
+game::stage,800b2c30,fn_800b2c30,translated,high,"work/ghidra/main-gb/export/800b2c30_FUN_800b2c30.c; state-record destroy helper; 8015f800 then optional free",src/game/stage.rs

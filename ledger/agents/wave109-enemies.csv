@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a47b90,fn_80a47b90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a47b90_FUN_80a47b90.c; 0x1A2 event responder; child push, hit sound 0x2D1, re-arm",src/game/enemies.rs
+game::enemies,80a47cb0,fn_80a47cb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a47cb0_FUN_80a47cb0.c; dead clip thunk, slot 4",src/game/enemies.rs
+game::enemies,80a47cc0,fn_80a47cc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a47cc0_FUN_80a47cc0.c; attack record copied from child into +0x414..+0x432",src/game/enemies.rs
+game::enemies,80a47d90,fn_80a47d90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a47d90_FUN_80a47d90.c; child release, Damege bounce below 3, dead clip from hit 3",src/game/enemies.rs
+game::enemies,80a47eb0,fn_80a47eb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a47eb0_FUN_80a47eb0.c; hook 0x800A08D0, returns 1",src/game/enemies.rs
+game::enemies,80a48520,fn_80a48520,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a48520_FUN_80a48520.c; five-clip binder walk/wait/run/damage/dead; walk-run blend 4.0",src/game/enemies.rs
+game::enemies,80a48620,fn_80a48620,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a48620_FUN_80a48620.c; nine sound ids 0x174..0x17A initialised once; index from child +0x1080",src/game/enemies.rs
+game::enemies,80a48730,fn_80a48730,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a48730_FUN_80a48730.c; sound 0x218 on clip frames 0 and 12",src/game/enemies.rs
+game::enemies,80a487e0,fn_80a487e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a487e0_FUN_80a487e0.c; attack-state and strike-frame predicate",src/game/enemies.rs
+game::enemies,80a488b0,fn_80a488b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a488b0_FUN_80a488b0.c; 256.0 x 80.0 volume query over +0x31C/+0x320/+0x324",src/game/enemies.rs
+game::enemies,80a48970,fn_80a48970,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a48970_FUN_80a48970.c; pending side-angle test, clears +0x686",src/game/enemies.rs
+game::enemies,80a48a20,fn_80a48a20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a48a20_FUN_80a48a20.c; tilt step to target angle, clears +0x65C on arrival",src/game/enemies.rs
+game::enemies,80a48a80,fn_80a48a80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a48a80_FUN_80a48a80.c; two-phase walk-blend scalar 0.7/1.0 in ten steps",src/game/enemies.rs
+game::enemies,80a48b20,fn_80a48b20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a48b20_FUN_80a48b20.c; Walk entry, clip 0, per-side 0.5 speed, random 0x60..0x9F timer",src/game/enemies.rs
+game::enemies,80a48ba0,fn_80a48ba0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a48ba0_FUN_80a48ba0.c; Walk frame, lateral clamp 48.0, Turn/Wait selection",src/game/enemies.rs
+game::enemies,80a48e40,fn_80a48e40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a48e40_FUN_80a48e40.c; Turn frame, side-angle test else step 0x800",src/game/enemies.rs
+game::enemies,80a48f20,fn_80a48f20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a48f20_FUN_80a48f20.c; Wait entry, clip 1, phase and speed reset",src/game/enemies.rs
+game::enemies,80a48f90,fn_80a48f90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a48f90_FUN_80a48f90.c; Wait frame, four-phase yaw sweep 0x400 steps",src/game/enemies.rs
+game::enemies,80a49230,fn_80a49230,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a49230_FUN_80a49230.c; AttackJump entry, clip 2, forward 2.0",src/game/enemies.rs
+game::enemies,80a492d0,fn_80a492d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a492d0_FUN_80a492d0.c; AttackJump frame, land to AttackWalk, recoil -2.0",src/game/enemies.rs
+game::enemies,80a493f0,fn_80a493f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a493f0_FUN_80a493f0.c; AttackWalk entry, clip 2, timers 0x60 and rate 0.03125",src/game/enemies.rs
+game::enemies,80a49490,fn_80a49490,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a49490_FUN_80a49490.c; AttackWalk frame via 0x802DCD74; record id 0x11804101; Walk/ChangeWalkWait switch",src/game/enemies.rs
+game::enemies,80a49750,fn_80a49750,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a49750_FUN_80a49750.c; ChangeWalkWait entry, clip 0, timer 4",src/game/enemies.rs
+game::enemies,80a497a0,fn_80a497a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a497a0_FUN_80a497a0.c; ChangeWalkWait frame, timer expiry resumes Walk",src/game/enemies.rs
+game::enemies,80a49860,fn_80a49860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a49860_FUN_80a49860.c; Damege entry, clip 3, tail 8",src/game/enemies.rs
+game::enemies,80a498c0,fn_80a498c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a498c0_FUN_80a498c0.c; Damege frame, tail countdown then AttackWalk",src/game/enemies.rs

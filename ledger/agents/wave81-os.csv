@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80257100,fn_80257100,translated,high,"work/ghidra/main-gb/export/80257100_FUN_80257100.c; plain transform node constructor: vtable 0x8034E7F4, three matrix slots at +0x0C/+0x3C/+0x6C, 12-word fill at +0x9C",src/runtime/os.rs
+runtime::os,802571f0,fn_802571f0,translated,medium,"work/ghidra/main-gb/export/802571f0_FUN_802571f0.c; base destructor: restore vtable, release +0xD4 owner on the +0xD9 flag, free",src/runtime/os.rs
+runtime::os,802574e0,fn_802574e0,translated,high,"work/ghidra/main-gb/export/802574e0_FUN_802574e0.c; set or identity-reset matrix slot 0..2; clears the +0xCC 0x80000000 bit for slot 0",src/runtime/os.rs
+runtime::os,80257570,fn_80257570,translated,high,"work/ghidra/main-gb/export/80257570_FUN_80257570.c; copy into matrix slot 0..2; clears the +0xCC 0x80000000 bit for slot 0",src/runtime/os.rs
+runtime::os,802575d0,fn_802575d0,translated,high,"work/ghidra/main-gb/export/802575d0_FUN_802575d0.c; copy matrix slot 0..2 out to a caller buffer; destination is the first call argument",src/runtime/os.rs
+runtime::os,80257640,fn_80257640,translated,high,"work/ghidra/main-gb/export/80257640_FUN_80257640.c; clamp to 0..=0xFF then store the byte at +0xD0",src/runtime/os.rs
+runtime::os,80257670,fn_80257670,translated,high,"work/ghidra/main-gb/export/80257670_FUN_80257670.c; clamp to 0..=0xFF then store the byte at +0xD1",src/runtime/os.rs
+runtime::os,802576a0,fn_802576a0,translated,high,"work/ghidra/main-gb/export/802576a0_FUN_802576a0.c; three unrolled OR stores on the +0xD8 flag byte, masks 1/2/4",src/runtime/os.rs
+runtime::os,802576e0,fn_802576e0,translated,high,"work/ghidra/main-gb/export/802576e0_FUN_802576e0.c; three unrolled AND stores on the +0xD8 flag byte, masks 0xFE/0xFD/0xFB",src/runtime/os.rs
+runtime::os,80257720,fn_80257720,translated,high,"work/ghidra/main-gb/export/80257720_FUN_80257720.c; OR a halfword into +0xDA",src/runtime/os.rs
+runtime::os,80257740,fn_80257740,translated,medium,"work/ghidra/main-gb/export/80257740_FUN_80257740.c; write one 6-word half of +0x9C then notify vtable +0x20 with event 9 and a 0/1 selector",src/runtime/os.rs
+runtime::os,802577d0,fn_802577d0,translated,high,"work/ghidra/main-gb/export/802577d0_FUN_802577d0.c; copy one 6-word half of +0x9C out to a caller buffer; index must be 0 or 1",src/runtime/os.rs
+runtime::os,80257830,fn_80257830,translated,high,"work/ghidra/main-gb/export/80257830_FUN_80257830.c; call fn(value,arg) then return clz(result-1)>>5, i.e. result == 1",src/runtime/os.rs
+runtime::os,80257a00,fn_80257a00,translated,high,"work/ghidra/main-gb/export/80257a00_FUN_80257a00.c; classify the three floats at +0xDC/+0xE0/+0xE4: 2 not uniform, 0 uniform == sda2(-0x4904), 1 other",src/runtime/os.rs
+runtime::os,802585c0,fn_802585c0,translated,medium,"work/ghidra/main-gb/export/802585c0_FUN_802585c0.c; remove child by index: vtable +0x0C event 0x10003, shift-down loop, --count at +0xE4",src/runtime/os.rs
+runtime::os,80258680,fn_80258680,translated,medium,"work/ghidra/main-gb/export/80258680_FUN_80258680.c; find key in the +0xDC array then call vtable +0x38 with the index; result folded with (-r|r)>>31",src/runtime/os.rs
+runtime::os,80258710,fn_80258710,translated,medium,"work/ghidra/main-gb/export/80258710_FUN_80258710.c; child-array constructor: base ctor, vtable 0x8034E780, +0xDC/+0xE0/+0xE4 and +0xCC |= 0x60000000",src/runtime/os.rs
+runtime::os,80258780,fn_80258780,translated,high,"work/ghidra/main-gb/export/80258780_FUN_80258780.c; child-array destructor: drain via vtable +0x38 from count-1, restore base vtable, owner release, free",src/runtime/os.rs
+runtime::os,802588d0,fn_802588d0,translated,medium,"work/ghidra/main-gb/export/802588d0_FUN_802588d0.c; vtable +0x14 result plus 4",src/runtime/os.rs
+runtime::os,802590a0,fn_802590a0,translated,medium,"work/ghidra/main-gb/export/802590a0_FUN_802590a0.c; 0x80258F10 refresh then vtable +0x0C event 1 with three zero arguments",src/runtime/os.rs
+runtime::os,802590f0,fn_802590f0,translated,high,"work/ghidra/main-gb/export/802590f0_FUN_802590f0.c; vtable +0x0C event 2 with three zero arguments",src/runtime/os.rs
+runtime::os,80259680,fn_80259680,translated,medium,"work/ghidra/main-gb/export/80259680_FUN_80259680.c; sort the +0x04 and +0x08 ranges with the 0x802596E0 and 0x80259720 trampolines",src/runtime/os.rs
+runtime::os,80259f60,fn_80259f60,translated,high,"work/ghidra/main-gb/export/80259f60_FUN_80259f60.c; sort the +0x04 and +0x08 ranges with the class comparators 0x80259FC0 and 0x8025A050",src/runtime/os.rs
+runtime::os,8025a0e0,fn_8025a0e0,translated,medium,"work/ghidra/main-gb/export/8025a0e0_FUN_8025a0e0.c; sort both ranges with caller-supplied comparator addresses",src/runtime/os.rs
+runtime::os,8025a780,fn_8025a780,translated,high,"work/ghidra/main-gb/export/8025a780_FUN_8025a780.c; invert the +0xCC bits 0x20000000/0x40000000 with clz>>5 then vtable +0x0C with four arguments",src/runtime/os.rs
+runtime::os,802537d0,fn_802537d0,translated,medium,"work/ghidra/main-gb/export/802537d0_FUN_802537d0.c; store a word through the first argument and return that pointer; return value restored from call sites",src/runtime/os.rs
+runtime::os,8025f2b0,fn_8025f2b0,translated,medium,"work/ghidra/main-gb/export/8025f2b0_FUN_8025f2b0.c; same store-and-return-pointer leaf as 802537D0; used by the getter at 0x80258C80",src/runtime/os.rs
+runtime::os,8025efa0,fn_8025efa0,translated,high,"work/ghidra/main-gb/export/8025efa0_FUN_8025efa0.c; call 0x8024D5E0 with the constant 0x7FF",src/runtime/os.rs
+runtime::os,802570e0,fn_802570e0,translated,medium,"work/ghidra/main-gb/export/802570e0_FUN_802570e0.c; 0x801C0540(dst,+0x3C,+0x6C) multiplies the node's second and third matrices into a caller buffer",src/runtime/os.rs

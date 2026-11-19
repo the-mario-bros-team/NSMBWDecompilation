@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,80057c80,fn_80057c80,translated,high,"work/ghidra/main-gb/export/80057c80_FUN_80057c80.c; clears flag 0xAC and rotates +0x1084 into +0x1088",src/game/player.rs
+game::player,80057cc0,fn_80057cc0,translated,high,"work/ghidra/main-gb/export/80057cc0_FUN_80057cc0.c; returns the +0x1088 scratch word",src/game/player.rs
+game::player,80057cd0,fn_80057cd0,translated,high,"work/ghidra/main-gb/export/80057cd0_FUN_80057cd0.c; 1 when event flags 0x53 and 0x64 are both clear",src/game/player.rs
+game::player,80057d70,fn_80057d70,translated,medium,"work/ghidra/main-gb/export/80057d70_FUN_80057d70.c; gates flag 0x58 on flag 0x59, 0.0f and two speeds",src/game/player.rs
+game::player,80057e00,fn_80057e00,translated,high,"work/ghidra/main-gb/export/80057e00_FUN_80057e00.c; playback-blocked predicate over flags 0x75/0xB5",src/game/player.rs
+game::player,80057e70,fn_80057e70,translated,high,"work/ghidra/main-gb/export/80057e70_FUN_80057e70.c; dispatches +0xDEC interface slot 0x24",src/game/player.rs
+game::player,80057ee0,fn_80057ee0,translated,high,"work/ghidra/main-gb/export/80057ee0_FUN_80057ee0.c; dispatches +0xDEC interface slot 0x30",src/game/player.rs
+game::player,80057f60,fn_80057f60,translated,high,"work/ghidra/main-gb/export/80057f60_FUN_80057f60.c; dispatches +0xDEC interface slot 0x28",src/game/player.rs
+game::player,80057fd0,fn_80057fd0,translated,high,"work/ghidra/main-gb/export/80057fd0_FUN_80057fd0.c; dispatches +0xDEC interface slot 0x34",src/game/player.rs
+game::player,80058110,fn_80058110,translated,medium,"work/ghidra/main-gb/export/80058110_FUN_80058110.c; spawns effect 0x8019A6D0 with abs(+0x10C) as f64",src/game/player.rs
+game::player,800581a0,fn_800581a0,translated,high,"work/ghidra/main-gb/export/800581a0_FUN_800581a0.c; clears counter byte +0x1080",src/game/player.rs
+game::player,800581b0,fn_800581b0,translated,high,"work/ghidra/main-gb/export/800581b0_FUN_800581b0.c; increments +0x1080 while below a signed limit",src/game/player.rs
+game::player,80058250,fn_80058250,translated,high,"work/ghidra/main-gb/export/80058250_FUN_80058250.c; clears counter byte +0x1082",src/game/player.rs
+game::player,80058260,fn_80058260,translated,high,"work/ghidra/main-gb/export/80058260_FUN_80058260.c; increments +0x1082 while below a signed limit",src/game/player.rs
+game::player,80056370,fn_80056370,translated,medium,"work/ghidra/main-gb/export/80056370_FUN_80056370.c; sets +0x3B0 bit index and stores the +0x3B8 slot",src/game/player.rs
+game::player,800565a0,fn_800565a0,translated,medium,"work/ghidra/main-gb/export/800565a0_FUN_800565a0.c; compares +0x244/+0x248 sub-objects and their +0xE0 word",src/game/player.rs
+game::player,800565e0,fn_800565e0,translated,medium,"work/ghidra/main-gb/export/800565e0_FUN_800565e0.c; compares +0x254/+0x250 sub-objects and their +0xE0 word",src/game/player.rs
+game::player,8005dbe0,fn_8005dbe0,translated,high,"work/ghidra/main-gb/export/8005dbe0_FUN_8005dbe0.c; releases this via 0x802B9280 when destroy is positive",src/game/player.rs
+game::player,8005dc40,fn_8005dc40,translated,medium,"work/ghidra/main-gb/export/8005dc40_FUN_8005dc40.c; selects an f32 component by index 0/3/5/default",src/game/player.rs
+game::player,8005dca0,fn_8005dca0,translated,medium,"work/ghidra/main-gb/export/8005dca0_FUN_8005dca0.c; seeds a 12-byte entry from a 0x24-byte record",src/game/player.rs
+game::player,8005dcd0,fn_8005dcd0,translated,high,"work/ghidra/main-gb/export/8005dcd0_FUN_8005dcd0.c; clears 177 entries then calls fn_8005dd30",src/game/player.rs
+game::player,8005dd30,fn_8005dd30,translated,high,"work/ghidra/main-gb/export/8005dd30_FUN_8005dd30.c; seeds 177 entries with their index",src/game/player.rs
+game::player,8005dd80,fn_8005dd80,translated,high,"work/ghidra/main-gb/export/8005dd80_FUN_8005dd80.c; calls constructor 0x8005DDC0 with slot 0 and returns the table",src/game/player.rs
+game::player,8005e460,fn_8005e460,translated,high,"work/ghidra/main-gb/export/8005e460_FUN_8005e460.c; clears movement bit n of the +0x12 halfword",src/game/player.rs
+game::player,8005e480,fn_8005e480,translated,high,"work/ghidra/main-gb/export/8005e480_FUN_8005e480.c; clears the +0x04/+0x06/+0x0C/+0x0E halfwords and two bytes",src/game/player.rs
+game::player,8005e4a0,fn_8005e4a0,translated,high,"work/ghidra/main-gb/export/8005e4a0_FUN_8005e4a0.c; clears mask 0xFFF3 in +0x04 and +0x06",src/game/player.rs
+game::player,8005e560,fn_8005e560,translated,high,"work/ghidra/main-gb/export/8005e560_FUN_8005e560.c; movement bit 0x4 of +0x06",src/game/player.rs
+game::player,8005e570,fn_8005e570,translated,high,"work/ghidra/main-gb/export/8005e570_FUN_8005e570.c; movement bit 0x100 of +0x06",src/game/player.rs
+game::player,8005e580,fn_8005e580,translated,high,"work/ghidra/main-gb/export/8005e580_FUN_8005e580.c; movement bit 0x100 of +0x04",src/game/player.rs
+game::player,8005e610,fn_8005e610,translated,high,"work/ghidra/main-gb/export/8005e610_FUN_8005e610.c; movement bit 0x200 of +0x04",src/game/player.rs

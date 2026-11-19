@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80120310,fn_80120310,translated,medium,"work/ghidra/main-gb/export/80120310_FUN_80120310.c; +0x5F0 sine motion and +0x5F8 contact state; 0x80237BD0, 0x8015F140 ease and the 0x8011EE80/0x8011EBB0 tail",src/game/worldmap.rs
+game::worldmap,801252d0,fn_801252d0,translated,medium,"work/ghidra/main-gb/export/801252d0_FUN_801252d0.c; +0x3C4 pose snapshot into +0x480..+0x4A0; seeds 0x80375C08/0x80375C14 and calls 0x8015F200 plus the +0x47C slot 0xC",src/game/worldmap.rs
+game::worldmap,801260e0,fn_801260e0,translated,high,work/ghidra/main-gb/export/801260e0_thunk_FUN_801260f0.c; four-byte thunk forwarding to 0x801260F0,src/game/worldmap.rs
+game::worldmap,801260f0,fn_801260f0,translated,medium,"work/ghidra/main-gb/export/801260f0_FUN_801260f0.c; 0x80077650/0x80077700 tile queries, 0x38/0x39/0x3B range tests and the 16-unit upward walk; bounds pointer recovered from saved r4",src/game/worldmap.rs
+game::worldmap,80126310,fn_80126310,translated,medium,"work/ghidra/main-gb/export/80126310_FUN_80126310.c; 0x801C14C0 distance gate, 0x800CD360/370/380 damping, +0x3C8/+0x3CC counters and the two SDA pose words",src/game/worldmap.rs
+game::worldmap,801275b0,fn_801275b0,translated,medium,"work/ghidra/main-gb/export/801275b0_FUN_801275b0.c; 0x80127470 speed with the +0x1564 == 2 gain stored at +0xEC",src/game/worldmap.rs
+game::worldmap,80127600,fn_80127600,translated,medium,"work/ghidra/main-gb/export/80127600_FUN_80127600.c; +0x14A4 reset and 0x10/0x2B/0xD/0xC/0xF pose ladder with ids 5/8/0xB and 0x79/0x47/0x43/0x76/0x75",src/game/worldmap.rs
+game::worldmap,80127990,fn_80127990,translated,medium,"work/ghidra/main-gb/export/80127990_FUN_80127990.c; +0xEC fall gate, 0xC/0x10/0xD/0xF flags, 0x802F4E08 pose table and 0x80127B30 tail",src/game/worldmap.rs
+game::worldmap,8012c640,fn_8012c640,translated,medium,"work/ghidra/main-gb/export/8012c640_FUN_8012c640.c; 0x8012C5E0 gate, +0x484 state machine, 0x80057650 speed classes, controller +0x5C/+0x8C pose calls and sound 0xE6",src/game/worldmap.rs
+game::worldmap,8012dfb0,fn_8012dfb0,translated,medium,"work/ghidra/main-gb/export/8012dfb0_FUN_8012dfb0.c; two 0x800D5790 point records through 0x801C0BD0/0x801C0540/0x8016F130, midpoint, 0x80101AA0 wrap and the +0x17C bit 4 lift",src/game/worldmap.rs

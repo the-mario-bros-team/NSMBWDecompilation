@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80610ff0,fn_80610ff0,translated,high,"work/ghidra/rel-d_basesNP/export/80610ff0_FUN_80610ff0.c; element free guard + 0x802B9280",src/game/bases.rs
+game::bases,80611030,fn_80611030,translated,high,"work/ghidra/rel-d_basesNP/export/80611030_FUN_80611030.c; second element free guard + 0x802B9280",src/game/bases.rs
+game::bases,80611070,fn_80611070,translated,medium,"work/ghidra/rel-d_basesNP/export/80611070_FUN_80611070.c; +0x18 teardown 0x8015F9F0 then free",src/game/bases.rs
+game::bases,806110d0,fn_806110d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806110d0_FUN_806110d0.c; +0x18 teardown 0x8015F9F0 then free",src/game/bases.rs
+game::bases,80611270,fn_80611270,translated,high,"work/ghidra/rel-d_basesNP/export/80611270_FUN_80611270.c; demoMessage arc + layout + 3 anim groups + textboxes",src/game/bases.rs
+game::bases,80611330,fn_80611330,translated,medium,"work/ghidra/rel-d_basesNP/export/80611330_FUN_80611330.c; 0x8006C5C0 scene gate + fn_80600510 indicator fold",src/game/bases.rs
+game::bases,806114a0,fn_806114a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806114a0_FUN_806114a0.c; row 0x130/0x131 + 0x807C6A40 table + label reveal",src/game/bases.rs
+game::bases,806115f0,fn_806115f0,translated,high,"work/ghidra/rel-d_basesNP/export/806115f0_FUN_806115f0.c; idle gate -> 0x80823BA8",src/game/bases.rs
+game::bases,806116c0,fn_806116c0,translated,high,"work/ghidra/rel-d_basesNP/export/806116c0_FUN_806116c0.c; layout anim 2 + page latch +0x25C",src/game/bases.rs
+game::bases,80611710,fn_80611710,translated,high,"work/ghidra/rel-d_basesNP/export/80611710_FUN_80611710.c; idle gate -> 0x80823B28",src/game/bases.rs
+game::bases,80611790,fn_80611790,translated,medium,"work/ghidra/rel-d_basesNP/export/80611790_FUN_80611790.c; virtual +0x0C predicate then child store +0x0C",src/game/bases.rs
+game::bases,80611eb0,fn_80611eb0,translated,high,"work/ghidra/rel-d_basesNP/export/80611eb0_FUN_80611eb0.c; draw element free guard + 0x802B9280",src/game/bases.rs
+game::bases,80611ef0,fn_80611ef0,translated,high,"work/ghidra/rel-d_basesNP/export/80611ef0_FUN_80611ef0.c; second draw element free guard",src/game/bases.rs
+game::bases,80611f30,fn_80611f30,translated,medium,"work/ghidra/rel-d_basesNP/export/80611f30_FUN_80611f30.c; +0x18 teardown 0x8015F9F0 then free",src/game/bases.rs
+game::bases,80611f90,fn_80611f90,translated,medium,"work/ghidra/rel-d_basesNP/export/80611f90_FUN_80611f90.c; +0x18 teardown 0x8015F9F0 then free",src/game/bases.rs
+game::bases,80612130,fn_80612130,translated,high,"work/ghidra/rel-d_basesNP/export/80612130_FUN_80612130.c; draw arc + layout + N_draw_00 + T_draw_00",src/game/bases.rs
+game::bases,806122f0,fn_806122f0,translated,high,"work/ghidra/rel-d_basesNP/export/806122f0_FUN_806122f0.c; empty hook (4 bytes)",src/game/bases.rs
+game::bases,80612310,fn_80612310,translated,medium,"work/ghidra/rel-d_basesNP/export/80612310_FUN_80612310.c; 0x8042A440 slot +0x10 == 1 -> 0x80823C70",src/game/bases.rs
+game::bases,806123a0,fn_806123a0,translated,high,"work/ghidra/rel-d_basesNP/export/806123a0_FUN_806123a0.c; layout anim 0 + art pane show",src/game/bases.rs
+game::bases,806123f0,fn_806123f0,translated,high,"work/ghidra/rel-d_basesNP/export/806123f0_FUN_806123f0.c; idle gate -> 0x80823CB0",src/game/bases.rs
+game::bases,80612460,fn_80612460,translated,high,"work/ghidra/rel-d_basesNP/export/80612460_FUN_80612460.c; layout anim 1 + clear +0x250",src/game/bases.rs
+game::bases,806124f0,fn_806124f0,translated,high,"work/ghidra/rel-d_basesNP/export/806124f0_FUN_806124f0.c; idle gate -> 0x80823C70 + flags +0x24D/+0x24E",src/game/bases.rs
+game::bases,80614680,fn_80614680,translated,high,"work/ghidra/rel-d_basesNP/export/80614680_FUN_80614680.c; openingTitle arc + 4 anim entries + 3 text groups",src/game/bases.rs
+game::bases,80614a30,fn_80614a30,translated,high,"work/ghidra/rel-d_basesNP/export/80614a30_FUN_80614a30.c; reveal +0x244 pane + anim 3/1 stop + anim 0",src/game/bases.rs
+game::bases,80614ac0,fn_80614ac0,translated,high,"work/ghidra/rel-d_basesNP/export/80614ac0_FUN_80614ac0.c; idle gate -> 0x80823F70",src/game/bases.rs
+game::bases,80614b40,fn_80614b40,translated,high,"work/ghidra/rel-d_basesNP/export/80614b40_FUN_80614b40.c; idle gate -> 0x80823FB0",src/game/bases.rs
+game::bases,80614bc0,fn_80614bc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80614bc0_FUN_80614bc0.c; scene 0x2EE + pad mask 0x7F1F -> 0x80823FF0",src/game/bases.rs
+game::bases,80614c50,fn_80614c50,translated,high,"work/ghidra/rel-d_basesNP/export/80614c50_FUN_80614c50.c; latch +0x276 + sound 0x77 + anim 3",src/game/bases.rs
+game::bases,80614cc0,fn_80614cc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80614cc0_FUN_80614cc0.c; mode 2 demo request or fn_80614d40(0x10) + 0x801017D0",src/game/bases.rs
+game::bases,80614d40,fn_80614d40,translated,high,"work/ghidra/rel-d_basesNP/export/80614d40_FUN_80614d40.c; 0x80429F80 &= ~mask",src/game/bases.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806e9f40,fn_806e9f40,translated,high,work/ghidra/rel-d_basesNP/export/806e9f40_FUN_806e9f40.c; reads +0x38C gate and +0x6C character id; tests global mask 0x80429CA8; rider via 0x8012DBE0,src/game/bases.rs
+game::bases,806ea030,fn_806ea030,translated,high,work/ghidra/rel-d_basesNP/export/806ea030_FUN_806ea030.c; ORs lists +0x408 +0x40C +0x410; third advances through 0x80075230 with +0x3FC,src/game/bases.rs
+game::bases,806ea0f0,fn_806ea0f0,translated,high,work/ghidra/rel-d_basesNP/export/806ea0f0_FUN_806ea0f0.c; four literal terms over bits 0..3,src/game/bases.rs
+game::bases,806ea110,fn_806ea110,translated,high,work/ghidra/rel-d_basesNP/export/806ea110_FUN_806ea110.c; writes +0xD0..+0xE4 and scale +0x318..+0x324; model via 0x806E9E90; range through 0x8007FA40,src/game/bases.rs
+game::bases,806ea330,fn_806ea330,translated,high,work/ghidra/rel-d_basesNP/export/806ea330_FUN_806ea330.c; position 0x8006CED0; matrix 0x801C0BD0 at +0x7C; angle 0x8016EEF0 from +0x104,src/game/bases.rs
+game::bases,806ea410,fn_806ea410,translated,high,work/ghidra/rel-d_basesNP/export/806ea410_FUN_806ea410.c; mover +0x4E0 position into +0xAC/+0xB0; fires 0x8082E588 when 0x80358E50 lookup fails,src/game/bases.rs
+game::bases,806ea4e0,fn_806ea4e0,translated,high,work/ghidra/rel-d_basesNP/export/806ea4e0_FUN_806ea4e0.c; limit 0x80429CA0 against fn_806ea0f0 count; fires 0x8082E5C8 on +0x394,src/game/bases.rs
+game::bases,806ea550,fn_806ea550,translated,high,work/ghidra/rel-d_basesNP/export/806ea550_FUN_806ea550.c; audio manager 0x8042A078 through 0x800E41C0 with slot +0x355; speed +0x5CC to 0x800C1510,src/game/bases.rs
+game::bases,806ea5c0,fn_806ea5c0,translated,high,work/ghidra/rel-d_basesNP/export/806ea5c0_FUN_806ea5c0.c; mover +0x4E0 position minus +0xD0/+0xD4 into +0xAC/+0xB0,src/game/bases.rs
+game::bases,806ea9a0,fn_806ea9a0,translated,high,work/ghidra/rel-d_basesNP/export/806ea9a0_FUN_806ea9a0.c; 0x8015F800 base teardown; frees through 0x80162920 when free_flag is positive,src/game/bases.rs
+game::bases,806eab20,fn_806eab20,translated,high,work/ghidra/rel-d_basesNP/export/806eab20_FUN_806eab20.c; allocates 0x700 bytes; vtable 0x807FE2CC; accessor +0x3D4; arrays +0x3F4 +0x534; mover +0x604,src/game/bases.rs
+game::bases,806eabf0,fn_806eabf0,translated,high,work/ghidra/rel-d_basesNP/export/806eabf0_FUN_806eabf0.c; pad press latched via 0x80167B10 and blocked with 0x80167BC0,src/game/bases.rs
+game::bases,806eac40,fn_806eac40,translated,high,work/ghidra/rel-d_basesNP/export/806eac40_FUN_806eac40.c; unblocks the latch with 0x80167BC0; observed extra 0x3C argument ignored,src/game/bases.rs
+game::bases,806eac90,fn_806eac90,translated,high,work/ghidra/rel-d_basesNP/export/806eac90_FUN_806eac90.c; single four-byte latch word cleared at +0x10,src/game/bases.rs
+game::bases,806eacb0,fn_806eacb0,translated,high,work/ghidra/rel-d_basesNP/export/806eacb0_FUN_806eacb0.c; combines pressed and held words into the four latch words through 0x806EAC40/0x806EABF0,src/game/bases.rs
+game::bases,806eada0,fn_806eada0,translated,high,work/ghidra/rel-d_basesNP/export/806eada0_FUN_806eada0.c; loads g3d/bolt.brres through 0x800DF180 and binds the single pane,src/game/bases.rs
+game::bases,806eae50,fn_806eae50,translated,medium,work/ghidra/rel-d_basesNP/export/806eae50_FUN_806eae50.c; scans riders and writes the best slot plus masks; 0x802DCD60/0x802DCDAC are save/restore fragments aliasing out_slot,src/game/bases.rs
+game::bases,806eaf80,fn_806eaf80,translated,high,work/ghidra/rel-d_basesNP/export/806eaf80_FUN_806eaf80.c; notifies every rider through virtual +0x48 on +0x408/+0x40C/+0x410,src/game/bases.rs
+game::bases,806eb010,fn_806eb010,translated,high,work/ghidra/rel-d_basesNP/export/806eb010_FUN_806eb010.c; clears the four pad latches at +0x684 by calling fn_806eac90,src/game/bases.rs
+game::bases,806eb060,fn_806eb060,translated,high,work/ghidra/rel-d_basesNP/export/806eb060_FUN_806eb060.c; feeds pressed/held masks into each player latch with fn_806eacb0,src/game/bases.rs
+game::bases,806eb0e0,fn_806eb0e0,translated,high,work/ghidra/rel-d_basesNP/export/806eb0e0_FUN_806eb0e0.c; releases each of the four latches through fn_806eac40,src/game/bases.rs
+game::bases,806eb540,fn_806eb540,translated,high,work/ghidra/rel-d_basesNP/export/806eb540_FUN_806eb540.c; second mover +0x54C position into +0xAC/+0xB0; fires 0x8082E628 when the binding is gone,src/game/bases.rs
+game::bases,806eb600,fn_806eb600,translated,high,work/ghidra/rel-d_basesNP/export/806eb600_FUN_806eb600.c; fn_806eae50 scan into fn_806eb060; fires 0x8082E688 when the scan returns 2,src/game/bases.rs
+game::bases,806eb6b0,fn_806eb6b0,translated,medium,work/ghidra/rel-d_basesNP/export/806eb6b0_FUN_806eb6b0.c; carried-item ramp with clamps 0x807CBED4/0x807CBE98 and mover +0x604 retime; 0x80199390 events kept by id,src/game/bases.rs
+game::bases,806eb880,fn_806eb880,translated,high,work/ghidra/rel-d_basesNP/export/806eb880_FUN_806eb880.c; bolt teardown; frees +0x6C8 +0x68C +0x604 +0x534 +0x3F4 and the model holders; vtable 0x807FE2CC,src/game/bases.rs
+game::bases,806ebc40,fn_806ebc40,translated,high,work/ghidra/rel-d_basesNP/export/806ebc40_FUN_806ebc40.c; small helper teardown; frees through 0x80162920 when free_flag is positive,src/game/bases.rs
+game::bases,806ebdc0,fn_806ebdc0,translated,high,work/ghidra/rel-d_basesNP/export/806ebdc0_FUN_806ebdc0.c; allocates 0x1398 bytes and builds the lift_torokko halves and state elements,src/game/bases.rs
+game::bases,806ebf10,fn_806ebf10,translated,high,work/ghidra/rel-d_basesNP/export/806ebf10_FUN_806ebf10.c; builds one 0x180-byte state element in place,src/game/bases.rs
+game::bases,806ebf90,fn_806ebf90,translated,high,work/ghidra/rel-d_basesNP/export/806ebf90_FUN_806ebf90.c; destroys one 0x180-byte state element and optionally frees it,src/game/bases.rs
+game::bases,806ec080,fn_806ec080,translated,high,work/ghidra/rel-d_basesNP/export/806ec080_FUN_806ec080.c; loads g3d/lift_torokko.brres through 0x800DF180 into +0x04,src/game/bases.rs

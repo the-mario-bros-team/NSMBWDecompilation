@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a3a4a0,fn_80a3a4a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3a4a0_FUN_80a3a4a0.c; 655 instructions; Fire Snake 150-segment body manager; four-player 0x7AF0 distance pass; four qr3 single-halfword psq_l reads",src/game/enemies.rs
+game::enemies,80a3dea0,fn_80a3dea0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3dea0_FUN_80a3dea0.c; 735 instructions; 16-case kind dispatch through 0x80B3EE94; kind nibbles to +0x718/+0xA7C/+0x71C/+0x348/+0xA80/+0xA95/+0xA99",src/game/enemies.rs
+game::enemies,80a7bec0,fn_80a7bec0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7bec0_FUN_80a7bec0.c; 366 instructions; walker walk_st_/walk_ed_ clip sequence over the 0x80B2DE58 record table",src/game/enemies.rs

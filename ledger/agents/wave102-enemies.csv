@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ac7790,fn_80ac7790,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac7790_FUN_80ac7790.c; split-container initialiser; split clip + Wm_en_kuribosplit effect; BSS offset table seeded on first use,src/game/enemies.rs
+game::enemies,80ac7900,fn_80ac7900,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac7900_FUN_80ac7900.c; three-state frame step; blend 0.8 then 0.6; state switch 0x8035362C,src/game/enemies.rs
+game::enemies,80ac7b70,fn_80ac7b70,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac7b70_FUN_80ac7b70.c; posts effect 0x1FE at the actor position,src/game/enemies.rs
+game::enemies,80ac7bc0,fn_80ac7bc0,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac7bc0_FUN_80ac7bc0.c; posts effect 0x1FF at the actor position,src/game/enemies.rs
+game::enemies,80ac7c70,fn_80ac7c70,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac7c70_FUN_80ac7c70.c; 0x770-byte sibling destructor; +0x5F0 helper and four holders released,src/game/enemies.rs
+game::enemies,80ac7e50,fn_80ac7e50,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac7e50_FUN_80ac7e50.c; state-descriptor normaliser; 0x8015F800 then 0x802B9280 above mode 0,src/game/enemies.rs
+game::enemies,80ac7f70,fn_80ac7f70,translated,low,work/ghidra/rel-d_enemiesNP/export/80ac7f70_FUN_80ac7f70.c; 48-byte forwarder to 0x802DCBFC; hidden r12 not modelled,src/game/enemies.rs
+game::enemies,80ac7fa0,fn_80ac7fa0,translated,low,work/ghidra/rel-d_enemiesNP/export/80ac7fa0_FUN_80ac7fa0.c; second 48-byte forwarder to 0x802DCBFC; hidden r12 not modelled,src/game/enemies.rs
+game::enemies,80ac7fd0,fn_80ac7fd0,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac7fd0_FUN_80ac7fd0.c; 0xBE0-byte huhu constructor; vtable 0x80B59D88; five 0x128-byte breath slots,src/game/enemies.rs
+game::enemies,80ac8140,fn_80ac8140,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac8140_FUN_80ac8140.c; Entry step; scale 1.3; +-20 degree facing table; effect 0x148,src/game/enemies.rs
+game::enemies,80ac82b0,fn_80ac82b0,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac82b0_FUN_80ac82b0.c; g3d/huhu.brres binder; huhu node; wait clip; dead_02 at +0x5BC,src/game/enemies.rs
+game::enemies,80ac84d0,fn_80ac84d0,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac84d0_FUN_80ac84d0.c; matrix rebuild at +0x7C; 1.3 scale commit; node snapshots,src/game/enemies.rs
+game::enemies,80ac8640,fn_80ac8640,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac8640_FUN_80ac8640.c; fifteen-word effect block at +0x484 with callback 0x80A0B5A0,src/game/enemies.rs
+game::enemies,80ac8980,fn_80ac8980,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac8980_FUN_80ac8980.c; first pair-contact record at +0x414..+0x432,src/game/enemies.rs
+game::enemies,80ac8a90,fn_80ac8a90,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac8a90_FUN_80ac8a90.c; second pair-contact record at +0x414..+0x432,src/game/enemies.rs
+game::enemies,80ac8f70,fn_80ac8f70,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac8f70_FUN_80ac8f70.c; node snapshots into +0x5F8/+0x604/+0x610 for nodes 10/0/4,src/game/enemies.rs
+game::enemies,80ac9020,fn_80ac9020,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac9020_FUN_80ac9020.c; clip binder core; node lookup + 0x801651F0 + 0x80169F80,src/game/enemies.rs
+game::enemies,80ac90b0,fn_80ac90b0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac90b0_FUN_80ac90b0.c; second clip binder; 0x80165FD0 on the +0x5BC owner,src/game/enemies.rs
+game::enemies,80ac9230,fn_80ac9230,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac9230_FUN_80ac9230.c; attack_L/R_st wrapper at rate 6.0; side from +0x102 sign,src/game/enemies.rs
+game::enemies,80ac92a0,fn_80ac92a0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac92a0_FUN_80ac92a0.c; attack_L/R_md wrapper at rate 6.0,src/game/enemies.rs
+game::enemies,80ac9310,fn_80ac9310,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac9310_FUN_80ac9310.c; attack_L/R_ed wrapper at rate 6.0,src/game/enemies.rs
+game::enemies,80ac9380,fn_80ac9380,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac9380_FUN_80ac9380.c; wait clip at rate 5.0; +0x5EC = 0xB4,src/game/enemies.rs
+game::enemies,80ac93e0,fn_80ac93e0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80ac93e0_FUN_80ac93e0.c; frame step; Wm_en_huhuhaze and Wm_en_huhufloat; +0x5EC countdown,src/game/enemies.rs
+game::enemies,80ac9540,fn_80ac9540,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac9540_FUN_80ac9540.c; attack_st entry; speeds cleared; sound event 0x226,src/game/enemies.rs
+game::enemies,80ac97f0,fn_80ac97f0,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac97f0_FUN_80ac97f0.c; attack_md entry; +0x5F0 = 0xB4; +0x360 = 1,src/game/enemies.rs
+game::enemies,80ac9a40,fn_80ac9a40,translated,high,work/ghidra/rel-d_enemiesNP/export/80ac9a40_FUN_80ac9a40.c; attack_ed entry; speeds cleared only,src/game/enemies.rs

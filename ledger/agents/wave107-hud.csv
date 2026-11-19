@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,8001b620,fn_8001b620,translated,medium,"work/ghidra/main-gb/export/8001b620_FUN_8001b620.c; wipeCircle follow update; zeroes pane +0x2C..+0x34, then writes the transformed player position; builds the 4x7 ramp table at 0x803525E8 once behind SDA_BASE-0x5A4C",src/ui/hud.rs
+ui::hud,8001e6f0,fn_8001e6f0,translated,medium,"work/ghidra/main-gb/export/8001e6f0_FUN_8001e6f0.c; 0x80075270(f32, f32, u8, f32*) answers 1 or 2; the hit path forwards [+0xAC, result, SDA2-0x7E30] to vtable slot +0xC8",src/ui/hud.rs
+ui::hud,8001e790,fn_8001e790,translated,medium,"work/ghidra/main-gb/export/8001e790_FUN_8001e790.c; nine-float stack record (six scale copies + three source floats); 0x800929f0, 0x8006a4b0, 0x80198c30 id 0x282, 0x80078410",src/ui/hud.rs
+ui::hud,8001f8a0,fn_8001f8a0,translated,medium,"work/ghidra/main-gb/export/8001f8a0_FUN_8001f8a0.c; twelve slots at +0x0C..+0x38; every non-null entry goes to 0x80020100 with the slot as r3",src/ui/hud.rs
+ui::hud,8001fa70,fn_8001fa70,translated,medium,"work/ghidra/main-gb/export/8001fa70_FUN_8001fa70.c; daikonbou/g3d_daikonbou.brres; model at +0x544, animations at +0x588 and +0x5B8; scales SDA2-0x7E28 / SDA2-0x7E18",src/ui/hud.rs
+ui::hud,8001fd40,fn_8001fd40,translated,medium,"work/ghidra/main-gb/export/8001fd40_FUN_8001fd40.c; position +0xAC/+0xB0/+0xB4 and u16 angles +0x100/+0x102/+0x104; slot +0x298, 0x80064af0, 0x801c0bd0, angles written in reverse",src/ui/hud.rs

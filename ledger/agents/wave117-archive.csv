@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b0680,fn_802b0680,translated,medium,"work/ghidra/main-gb/export/802b0680_FUN_802b0680.c; four-face RLYT glyph-quad builder; 10-byte corner templates at 0x8034F9B8; six-argument draw call passed explicitly through 0x802B71E0",src/resource/archive.rs

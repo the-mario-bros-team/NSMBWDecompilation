@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c2ce0,fn_801c2ce0,translated,high,"work/ghidra/main-gb/export/801c2ce0_FUN_801c2ce0.c; eight-word FIFO record init; guarded pointer triple",src/runtime/dvd.rs
+runtime::dvd,801c2d70,fn_801c2d70,translated,medium,"work/ghidra/main-gb/export/801c2d70_FUN_801c2d70.c; CP/GP pointer compare; returns 1 when both pairs match",src/runtime/dvd.rs
+runtime::dvd,801c32e0,fn_801c32e0,translated,medium,"work/ghidra/main-gb/export/801c32e0_FUN_801c32e0.c; token refresh; CP block +0x14/+0x18/+0x1C and GP +0x18",src/runtime/dvd.rs
+runtime::dvd,801c35c0,fn_801c35c0,translated,medium,"work/ghidra/main-gb/export/801c35c0_FUN_801c35c0.c; guarded GP commit; mirror +0x30..+0x3A; FIFO drain",src/runtime/dvd.rs
+runtime::dvd,801c37c0,fn_801c37c0,translated,high,"work/ghidra/main-gb/export/801c37c0_FUN_801c37c0.c; 21-case selector switch writing +0x14/+0x18; CLUT tail",src/runtime/dvd.rs
+runtime::dvd,801c3a30,fn_801c3a30,translated,high,"work/ghidra/main-gb/export/801c3a30_FUN_801c3a30.c; table-driven form of the same selector switch",src/runtime/dvd.rs
+runtime::dvd,801c3c40,fn_801c3c40,translated,medium,"work/ghidra/main-gb/export/801c3c40_FUN_801c3c40.c; derived 0x21 command from +0x14/+0x18/+0x524/+0x525",src/runtime/dvd.rs
+runtime::dvd,801c3cf0,fn_801c3cf0,translated,medium,"work/ghidra/main-gb/export/801c3cf0_FUN_801c3cf0.c; size-code summation into state +6 via three r13 byte tables",src/runtime/dvd.rs
+runtime::dvd,801c3e20,fn_801c3e20,translated,high,"work/ghidra/main-gb/export/801c3e20_FUN_801c3e20.c; selector read-back; shift and mask per case",src/runtime/dvd.rs
+runtime::dvd,801c3fe0,fn_801c3fe0,translated,high,"work/ghidra/main-gb/export/801c3fe0_FUN_801c3fe0.c; builds (id,value) selector table 0x00-0x14 plus 0x19 and 0xFF",src/runtime/dvd.rs
+runtime::dvd,801c4070,fn_801c4070,translated,high,"work/ghidra/main-gb/export/801c4070_FUN_801c4070.c; reset +0x14/+0x18 and CLUT bytes; set +0x5FC bit 3",src/runtime/dvd.rs
+runtime::dvd,801c40b0,fn_801c40b0,translated,high,"work/ghidra/main-gb/export/801c40b0_FUN_801c40b0.c; per-index +0x1C/+0x3C/+0x5C setter; dirty mask +0x5FB",src/runtime/dvd.rs
+runtime::dvd,801c4250,fn_801c4250,translated,high,"work/ghidra/main-gb/export/801c4250_FUN_801c4250.c; four-word per-index table over the same setter",src/runtime/dvd.rs
+runtime::dvd,801c4420,fn_801c4420,translated,medium,"work/ghidra/main-gb/export/801c4420_FUN_801c4420.c; emits +0x5C per set +0x5FB bit then clears the mask",src/runtime/dvd.rs
+runtime::dvd,801c44a0,fn_801c44a0,translated,high,"work/ghidra/main-gb/export/801c44a0_FUN_801c44a0.c; per-index (a,b,c) read-back for selectors 9-0x14",src/runtime/dvd.rs
+runtime::dvd,801c4700,fn_801c4700,translated,high,"work/ghidra/main-gb/export/801c4700_FUN_801c4700.c; builds 16-byte per-index records for ids 9-0x14 plus 0xFF",src/runtime/dvd.rs
+runtime::dvd,801c4780,fn_801c4780,translated,high,"work/ghidra/main-gb/export/801c4780_FUN_801c4780.c; single FIFO store of the third argument",src/runtime/dvd.rs
+runtime::dvd,801c47d0,fn_801c47d0,translated,medium,"work/ghidra/main-gb/export/801c47d0_FUN_801c47d0.c; texcoord record +0xC8/+0xE8 and six-bit bias in +0x80/+0x84",src/runtime/dvd.rs
+runtime::dvd,801c4a50,fn_801c4a50,translated,medium,"work/ghidra/main-gb/export/801c4a50_FUN_801c4a50.c; count word into +0/+2/+4; indirect flag bytes +0x5F9/+0x5FA",src/runtime/dvd.rs
+runtime::dvd,801c4b70,fn_801c4b70,translated,medium,"work/ghidra/main-gb/export/801c4b70_FUN_801c4b70.c; two-sample VI wait; 0xCC003018 pulse with 0x32/5 tick delays",src/runtime/dvd.rs
+runtime::dvd,801c4ce0,fn_801c4ce0,translated,medium,"work/ghidra/main-gb/export/801c4ce0_FUN_801c4ce0.c; same VI wait then commit, reset +0x5FC and FIFO drain",src/runtime/dvd.rs
+runtime::dvd,801c4ea0,fn_801c4ea0,translated,medium,"work/ghidra/main-gb/export/801c4ea0_FUN_801c4ea0.c; 0x45000002 flush and sleep on the GX wait queue",src/runtime/dvd.rs
+runtime::dvd,801c5120,fn_801c5120,translated,medium,"work/ghidra/main-gb/export/801c5120_FUN_801c5120.c; retrace handler A; DSP save/callback/restore; IRQ +0xA bit 2",src/runtime/dvd.rs
+runtime::dvd,801c5200,fn_801c5200,translated,medium,"work/ghidra/main-gb/export/801c5200_FUN_801c5200.c; retrace handler B; sets retrace byte and wakes the wait queue",src/runtime/dvd.rs
+runtime::dvd,801c52f0,fn_801c52f0,translated,high,"work/ghidra/main-gb/export/801c52f0_FUN_801c52f0.c; dirty-bit dispatcher over +0x5FC; TEV and stage FIFO emission",src/runtime/dvd.rs

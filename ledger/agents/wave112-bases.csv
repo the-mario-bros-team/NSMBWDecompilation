@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80641f30,fn_80641f30,translated,high,"work/ghidra/rel-d_basesNP/export/80641f30_FUN_80641f30.c; deleting destructor; +0x18 member + 0x802B9280 release",src/game/bases.rs
+game::bases,80641f90,fn_80641f90,translated,high,"work/ghidra/rel-d_basesNP/export/80641f90_FUN_80641f90.c; deleting destructor; +0x18 member + 0x802B9280 release",src/game/bases.rs
+game::bases,80642df0,fn_80642df0,translated,medium,"work/ghidra/rel-d_basesNP/export/80642df0_FUN_80642df0.c; Wm_2d_stockitem spawn at the column transform",src/game/bases.rs
+game::bases,80642f30,fn_80642f30,translated,medium,"work/ghidra/rel-d_basesNP/export/80642f30_FUN_80642f30.c; column transform to +0x77C virtual +0xB0",src/game/bases.rs
+game::bases,80643040,fn_80643040,translated,medium,"work/ghidra/rel-d_basesNP/export/80643040_FUN_80643040.c; pad confirm; cues 0x669..0x66E; result via 0x802DCDB8",src/game/bases.rs
+game::bases,80643880,fn_80643880,translated,medium,"work/ghidra/rel-d_basesNP/export/80643880_FUN_80643880.c; column cursor + confirm 0x900; calls truncated 0x80643260",src/game/bases.rs
+game::bases,80643ac0,fn_80643ac0,translated,medium,"work/ghidra/rel-d_basesNP/export/80643ac0_FUN_80643ac0.c; repeat-step gate on +0x8AC; calls truncated 0x80643260",src/game/bases.rs
+game::bases,80643c90,fn_80643c90,translated,high,"work/ghidra/rel-d_basesNP/export/80643c90_FUN_80643c90.c; animator stop + clip 0x1D",src/game/bases.rs
+game::bases,80643cd0,fn_80643cd0,translated,high,"work/ghidra/rel-d_basesNP/export/80643cd0_FUN_80643cd0.c; close gate; clears 0x80429F7C+0xAFC and +0x8DD",src/game/bases.rs
+game::bases,80643e50,fn_80643e50,translated,medium,"work/ghidra/rel-d_basesNP/export/80643e50_FUN_80643e50.c; table refresh 0x80642A20 + spawn + clip selected+0xF",src/game/bases.rs
+game::bases,80643ea0,fn_80643ea0,translated,high,"work/ghidra/rel-d_basesNP/export/80643ea0_FUN_80643ea0.c; clip gate -> 0x80827AA8",src/game/bases.rs
+game::bases,80643f30,fn_80643f30,translated,medium,"work/ghidra/rel-d_basesNP/export/80643f30_FUN_80643f30.c; cooldown +0x8A8; 0x100/0x800 reload",src/game/bases.rs
+game::bases,80644c40,fn_80644c40,translated,high,"work/ghidra/rel-d_basesNP/export/80644c40_FUN_80644c40.c; draw forward when +0x260/+0x261 set",src/game/bases.rs
+game::bases,80644cf0,fn_80644cf0,translated,medium,"work/ghidra/rel-d_basesNP/export/80644cf0_FUN_80644cf0.c; seven-record recolour + text rebind",src/game/bases.rs
+game::bases,80644fa0,fn_80644fa0,translated,high,"work/ghidra/rel-d_basesNP/export/80644fa0_FUN_80644fa0.c; plain 0x802B9280 release",src/game/bases.rs
+game::bases,80645020,fn_80645020,translated,high,"work/ghidra/rel-d_basesNP/export/80645020_FUN_80645020.c; +0x18 member + 0x802B9280 release",src/game/bases.rs
+game::bases,80645d30,fn_80645d30,translated,high,"work/ghidra/rel-d_basesNP/export/80645d30_FUN_80645d30.c; plain 0x802B9280 release",src/game/bases.rs
+game::bases,80645db0,fn_80645db0,translated,high,"work/ghidra/rel-d_basesNP/export/80645db0_FUN_80645db0.c; +0x18 member + 0x802B9280 release",src/game/bases.rs
+game::bases,80647b50,fn_80647b50,translated,medium,"work/ghidra/rel-d_basesNP/export/80647b50_FUN_80647b50.c; player/phase gate for the 0x1A500 actor",src/game/bases.rs
+game::bases,80648260,fn_80648260,translated,medium,"work/ghidra/rel-d_basesNP/export/80648260_FUN_80648260.c; pitch reset; table 0x807C84EC; base flag 1",src/game/bases.rs
+game::bases,80648300,fn_80648300,translated,medium,"work/ghidra/rel-d_basesNP/export/80648300_FUN_80648300.c; upward pitch; base flag 3; +0x1A4DC=0x1F",src/game/bases.rs
+game::bases,806483b0,fn_806483b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806483b0_FUN_806483b0.c; downward pitch; base flag 4",src/game/bases.rs
+game::bases,80648440,fn_80648440,translated,high,"work/ghidra/rel-d_basesNP/export/80648440_FUN_80648440.c; writes 0x80429DD0+0x8FEC4/8FEC8",src/game/bases.rs
+game::bases,80648550,fn_80648550,translated,medium,"work/ghidra/rel-d_basesNP/export/80648550_FUN_80648550.c; 0x802DD1EC 64-bit mask scan",src/game/bases.rs
+game::bases,806485c0,fn_806485c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806485c0_FUN_806485c0.c; pitch ramp; cues 0x305/0x306",src/game/bases.rs
+game::bases,8064a290,fn_8064a290,translated,medium,"work/ghidra/rel-d_basesNP/export/8064a290_FUN_8064a290.c; block_arrow variant nibbles + callback table",src/game/bases.rs
+game::bases,8064a5f0,fn_8064a5f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8064a5f0_FUN_8064a5f0.c; matrix rebuild from position/rotation",src/game/bases.rs
+game::bases,8064e6c0,fn_8064e6c0,translated,high,"work/ghidra/rel-d_basesNP/export/8064e6c0_FUN_8064e6c0.c; 0x800642B0 reset + 0x80162920 release",src/game/bases.rs
+game::bases,8064e180,fn_8064e180,translated,high,"work/ghidra/rel-d_basesNP/export/8064e180_FUN_8064e180.c; one-step index wrap over +0x40C",src/game/bases.rs
+game::bases,8064e7d0,fn_8064e7d0,translated,high,"work/ghidra/rel-d_basesNP/export/8064e7d0_FUN_8064e7d0.c; colour 0x807C8704 + three zero u16 fields",src/game/bases.rs

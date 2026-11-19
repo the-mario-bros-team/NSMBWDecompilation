@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a0b8a0,fn_80a0b8a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0b8a0_FUN_80a0b8a0.c; 0x83 class-list walk; +0x754/+0x758 match; recursive bl with r4 = found",src/game/enemies.rs
+game::enemies,80a2f670,fn_80a2f670,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2f670_FUN_80a2f670.c; 0x8015F800 release plus 0x802B9280 free; single null guard",src/game/enemies.rs
+game::enemies,80a2f6d0,fn_80a2f6d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2f6d0_FUN_80a2f6d0.c; same teardown as 80a2f670 with the dead second beq at 0x80A2F6F4",src/game/enemies.rs
+game::enemies,80a6efb0,fn_80a6efb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a6efb0_FUN_80a6efb0.c; three altitude bands at 56.0/120.0; middle band tail-calls void 0x800B2EE0(2) so its return is undefined",src/game/enemies.rs
+game::enemies,80ab1890,fn_80ab1890,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1890_FUN_80ab1890.c; s16 +0x102 to +0x164 = v/4096 and +0x7DC = -3v/4096",src/game/enemies.rs
+game::enemies,80ab2620,fn_80ab2620,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab2620_FUN_80ab2620.c; two pad resets guarded by +0x988 == 1 then 0x80AB1780(1.0; this; 1)",src/game/enemies.rs
+game::enemies,80ad6ca0,fn_80ad6ca0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad6ca0_FUN_80ad6ca0.c; ten-argument 0x800DB180(0; 0; 0; 0; -22) plus 0x800DAE80 reset; both callees unexported",src/game/enemies.rs
+game::enemies,80aed1b0,fn_80aed1b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aed1b0_FUN_80aed1b0.c; deleting destructor of the +0x18 sub-object; 0x8015F9F0 then 0x802B9280 for a positive count",src/game/enemies.rs
+game::enemies,80aed210,fn_80aed210,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aed210_FUN_80aed210.c; same teardown plus the unreachable repeated beq at 0x80AED234",src/game/enemies.rs
+game::enemies,80b0d070,fn_80b0d070,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0d070_FUN_80b0d070.c; four pad bytes set to 1 plus two 0x80166F40(record; 1; 0) calls",src/game/enemies.rs
+game::enemies,80b0d0e0,fn_80b0d0e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0d0e0_FUN_80b0d0e0.c; same four stores with the literal 3",src/game/enemies.rs
+game::enemies,80b27ce0,fn_80b27ce0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b27ce0_FUN_80b27ce0.c; tile-grid emitter; row/col tables 0x80B32C48/0x80B32C50 and 0x80077860 per cell",src/game/enemies.rs
+game::enemies,80b28080,fn_80b28080,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b28080_FUN_80b28080.c; 17-slot relay; stops at the first null +0x6E8 and calls 0x80B27ED0(this; angle; i)",src/game/enemies.rs
+game::enemies,80b281c0,fn_80b281c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b281c0_FUN_80b281c0.c; four-player +0x8C4 relay through 0x800BC070 and 0x80133950/0x80133860",src/game/enemies.rs
+game::enemies,80b283b0,fn_80b283b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b283b0_FUN_80b283b0.c; clears +0x8B4/+0x8B0/+0x8BC and emits effect 0x2F2 or 0x2F1",src/game/enemies.rs
+game::enemies,80b28480,fn_80b28480,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b28480_FUN_80b28480.c; full-turn accumulator with the 0x80B32C7C/0x80B32C80 delta tables; resets and dispatches +0xD4 with 0x80B79930",src/game/enemies.rs
+game::enemies,80b28f60,fn_80b28f60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b28f60_FUN_80b28f60.c; unlinks the +0x534 node through 0x8007F950 and returns 1",src/game/enemies.rs
+game::enemies,80b29390,fn_80b29390,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b29390_FUN_80b29390.c; box_iron binder; g3d/box_iron.brres; node table 0x80B6DB30 indexed by +0x730",src/game/enemies.rs
+game::enemies,80b29450,fn_80b29450,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b29450_FUN_80b29450.c; +0x734 break/attach step; state table 0x80B32D08; three Wm_ob_cmnbox effects; effect 0x27F",src/game/enemies.rs
+game::enemies,80b297a0,fn_80b297a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b297a0_FUN_80b297a0.c; +0x728 latch and +0x20C/+0x440 copies; effects 0x280/0x27E",src/game/enemies.rs
+game::enemies,80b29910,fn_80b29910,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b29910_FUN_80b29910.c; clears +0xE8..+0xF0 and arms +0x710 = 0xC1/+0x728 = 1 on the +0x738 gate",src/game/enemies.rs
+game::enemies,80b299a0,fn_80b299a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b299a0_FUN_80b299a0.c; +0x704 to +0xE8 handoff around 0x800955F0 then 0x80B297A0/0x80B29450",src/game/enemies.rs
+game::enemies,80b29da0,fn_80b29da0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b29da0_FUN_80b29da0.c; 0x802DCBFC forwarder with addi r12 = first + 0x24; hidden r12 adjustor not modelled",src/game/enemies.rs
+game::enemies,80b29ee0,fn_80b29ee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b29ee0_FUN_80b29ee0.c; arrow binder; g3d/arrow.brres; node through 0x8016A3A0",src/game/enemies.rs
+game::enemies,80b2a070,fn_80b2a070,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b2a070_FUN_80b2a070.c; +0x7C matrix rebuild and +0x544 holder commit",src/game/enemies.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ae33c0,fn_80ae33c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae33c0_FUN_80ae33c0.c; shared registration callback of the four Pata fly states",src/game/enemies.rs
+game::enemies,80ae34e0,fn_80ae34e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae34e0_FUN_80ae34e0.c; 48-byte 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80ae3510,fn_80ae3510,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae3510_FUN_80ae3510.c; second 48-byte 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80ae3540,fn_80ae3540,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae3540_FUN_80ae3540.c; 0x6C8-byte daEnPata_c constructor, class vtable 0x80B60468",src/game/enemies.rs
+game::enemies,80ae3860,fn_80ae3860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae3860_FUN_80ae3860.c; releases the +0x548/+0x588 matrices via vtable +0x14",src/game/enemies.rs
+game::enemies,80ae38d0,fn_80ae38d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae38d0_FUN_80ae38d0.c; two-holder matrix placement, second 32.0 units lower",src/game/enemies.rs
+game::enemies,80aea530,fn_80aea530,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aea530_FUN_80aea530.c; daEnPuku_c registration callback",src/game/enemies.rs
+game::enemies,80aea5f0,fn_80aea5f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aea5f0_FUN_80aea5f0.c; extra callback word of StateID_Ice, returns 0x80358004",src/game/enemies.rs
+game::enemies,80aea600,fn_80aea600,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aea600_FUN_80aea600.c; extra callback word of StateID_EatOut, returns 0x80358104",src/game/enemies.rs
+game::enemies,80aea610,fn_80aea610,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aea610_FUN_80aea610.c; extra callback word of StateID_DieOther, returns 0x80357D74",src/game/enemies.rs
+game::enemies,80aea620,fn_80aea620,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aea620_FUN_80aea620.c; extra callback word of StateID_DieFall, returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80aea710,fn_80aea710,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aea710_FUN_80aea710.c; five-link +0x30 chain walker with recursion",src/game/enemies.rs
+game::enemies,80aea7f0,fn_80aea7f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aea7f0_FUN_80aea7f0.c; colon-suffix name predicate via 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80aea8b0,fn_80aea8b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aea8b0_FUN_80aea8b0.c; 48-byte 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80aea8e0,fn_80aea8e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aea8e0_FUN_80aea8e0.c; second 48-byte 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80ae3c60,fn_80ae3c60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae3c60_FUN_80ae3c60.c; poltergeist/pol_light model and clip binder, four variant tables",src/game/enemies.rs
+game::enemies,80ae3ed0,fn_80ae3ed0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae3ed0_FUN_80ae3ed0.c; four-player contact test, object rect or 128.0 actor box",src/game/enemies.rs
+game::enemies,80ae4080,fn_80ae4080,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae4080_FUN_80ae4080.c; fixed 48.0 player box test on layer byte +0x38F",src/game/enemies.rs
+game::enemies,80ae4530,fn_80ae4530,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae4530_FUN_80ae4530.c; box/contact state step, targets 0x80B77010/0x80B77050",src/game/enemies.rs
+game::enemies,80ae4600,fn_80ae4600,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae4600_FUN_80ae4600.c; box-or-counter step into 0x80B77050",src/game/enemies.rs
+game::enemies,80ae6560,fn_80ae6560,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae6560_FUN_80ae6560.c; 64-frame stage-effect timer; tail recovered from instruction words at 0x80AE6584",src/game/enemies.rs
+game::enemies,80ae6d70,fn_80ae6d70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae6d70_FUN_80ae6d70.c; contact damage step, sound 0x17B and +0x414 hit record",src/game/enemies.rs
+game::enemies,80ae6f10,fn_80ae6f10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae6f10_FUN_80ae6f10.c; fifteen-word effect block, mode-selected offset and scale",src/game/enemies.rs
+game::enemies,80ae7ca0,fn_80ae7ca0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae7ca0_FUN_80ae7ca0.c; pursuit step, contact offset and scaled direction",src/game/enemies.rs
+game::enemies,80ae7e00,fn_80ae7e00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae7e00_FUN_80ae7e00.c; radius <= horizontal distance predicate",src/game/enemies.rs
+game::enemies,80ae7f10,fn_80ae7f10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae7f10_FUN_80ae7f10.c; two-mode tilt ramp, yaw blend and +0xB0 re-anchor",src/game/enemies.rs
+game::enemies,80ae8a10,fn_80ae8a10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae8a10_FUN_80ae8a10.c; contact band test, side select, StateID_WaterMove 0x80B77350",src/game/enemies.rs
+game::enemies,80ae8b80,fn_80ae8b80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae8b80_FUN_80ae8b80.c; clamped tilt ramp with 0x8006CD90/0x8006CD40 motion commit",src/game/enemies.rs
+game::enemies,80ae8cf0,fn_80ae8cf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae8cf0_FUN_80ae8cf0.c; x-window step into 0x80B773D0/0x80B77410",src/game/enemies.rs
+game::enemies,80ae8f40,fn_80ae8f40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae8f40_FUN_80ae8f40.c; escape step into 0x80B77450 or 0x80B77290",src/game/enemies.rs

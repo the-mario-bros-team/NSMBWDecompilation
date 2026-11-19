@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80114940,fn_80114940,translated,high,"work/ghidra/main-gb/export/80114940_FUN_80114940.c; release via 0x8015F800 and optional 0x802B9280 free; returns the object",src/game/worldmap.rs
+game::worldmap,80114a60,fn_80114a60,translated,high,"work/ghidra/main-gb/export/80114a60_FUN_80114a60.c; single 0x802DCBFC(b,b,a) tail call",src/game/worldmap.rs
+game::worldmap,80114a90,fn_80114a90,translated,high,"work/ghidra/main-gb/export/80114a90_FUN_80114a90.c; byte-identical twin of 0x80114A60",src/game/worldmap.rs
+game::worldmap,80114ac0,fn_80114ac0,translated,medium,"work/ghidra/main-gb/export/80114ac0_FUN_80114ac0.c; allocates 0x6B8 bytes; installs vtables at +0x60 and +0x434 and clears +0x3EC..+0x6B0; 0x80066FC0 printed with no argument",src/game/worldmap.rs
+game::worldmap,80114ed0,fn_80114ed0,translated,high,"work/ghidra/main-gb/export/80114ed0_FUN_80114ed0.c; copies +0xAC..+0xB4 and +0x100..+0x104; 0x80064AF0 then 0x801C0BD0 plus three angle writers and 0x80115100",src/game/worldmap.rs
+game::worldmap,80114fc0,fn_80114fc0,translated,high,"work/ghidra/main-gb/export/80114fc0_FUN_80114fc0.c; adds +0x550/+0x554/+0x558 to the 0x80162590 object's +0xAC..+0xB4",src/game/worldmap.rs
+game::worldmap,801151f0,fn_801151f0,translated,high,"work/ghidra/main-gb/export/801151f0_FUN_801151f0.c; empty body (4-byte blr)",src/game/worldmap.rs
+game::worldmap,80115200,fn_80115200,translated,high,"work/ghidra/main-gb/export/80115200_FUN_80115200.c; empty body (4-byte blr)",src/game/worldmap.rs
+game::worldmap,80115210,fn_80115210,translated,high,"work/ghidra/main-gb/export/80115210_FUN_80115210.c; empty body (4-byte blr)",src/game/worldmap.rs
+game::worldmap,80115220,fn_80115220,translated,high,"work/ghidra/main-gb/export/80115220_FUN_80115220.c; empty body (4-byte blr)",src/game/worldmap.rs
+game::worldmap,80115250,fn_80115250,translated,high,"work/ghidra/main-gb/export/80115250_FUN_80115250.c; 0x801151F0 then virtual slot +0x14 on +0x434 then 0x80114FC0 and 0x8007FDA0",src/game/worldmap.rs
+game::worldmap,801152a0,fn_801152a0,translated,high,"work/ghidra/main-gb/export/801152a0_FUN_801152a0.c; 0x80115200 plus 0x8007F950 on +0x460",src/game/worldmap.rs
+game::worldmap,80115300,fn_80115300,translated,medium,"work/ghidra/main-gb/export/80115300_FUN_80115300.c; 0x80115210 then the untranslated ratio helpers 0x80115030/0x801150A0 then 0x8007F950",src/game/worldmap.rs
+game::worldmap,80115360,fn_80115360,translated,high,"work/ghidra/main-gb/export/80115360_FUN_80115360.c; subtracts +0x574..+0x57C from +0xDC..+0xE4 and calls 0x80162510 when *+0x580 is below one",src/game/worldmap.rs
+game::worldmap,801153e0,fn_801153e0,translated,high,"work/ghidra/main-gb/export/801153e0_FUN_801153e0.c; 0x80115220 plus 0x8007F950 on +0x460",src/game/worldmap.rs
+game::worldmap,8011ad90,fn_8011ad90,translated,medium,"work/ghidra/main-gb/export/8011ad90_FUN_8011ad90.c; +0x274 bit 0x8000 gate on the +0x2DC collision probe then +0x1EC state 3 and the 0x2D15 range test",src/game/worldmap.rs
+game::worldmap,8011ae20,fn_8011ae20,translated,high,"work/ghidra/main-gb/export/8011ae20_FUN_8011ae20.c; two 0x800D9900 calls on +0x2DC; tests bit 0x1000 of +0x3C",src/game/worldmap.rs
+game::worldmap,8011ae80,fn_8011ae80,translated,high,"work/ghidra/main-gb/export/8011ae80_FUN_8011ae80.c; returns +0x274 masked with 0x1FE000",src/game/worldmap.rs
+game::worldmap,8011af20,fn_8011af20,translated,medium,"work/ghidra/main-gb/export/8011af20_FUN_8011af20.c; indexes the 0x80375540 and 0x80375550 four-entry tables by param_1",src/game/worldmap.rs
+game::worldmap,8011b1b0,fn_8011b1b0,translated,high,"work/ghidra/main-gb/export/8011b1b0_FUN_8011b1b0.c; same release sequence as 0x80114940",src/game/worldmap.rs
+game::worldmap,8011b210,fn_8011b210,translated,high,"work/ghidra/main-gb/export/8011b210_FUN_8011b210.c; returns the constant pointer 0x80353F0C",src/game/worldmap.rs
+game::worldmap,8011b3e0,fn_8011b3e0,translated,high,"work/ghidra/main-gb/export/8011b3e0_FUN_8011b3e0.c; compares the name after the last 0x3A separator; virtual slot +0x20 supplies the object name",src/game/worldmap.rs
+game::worldmap,8011b4a0,fn_8011b4a0,translated,high,"work/ghidra/main-gb/export/8011b4a0_FUN_8011b4a0.c; third copy of the 0x802DCBFC(b,b,a) wrapper",src/game/worldmap.rs
+game::worldmap,8011b4d0,fn_8011b4d0,translated,high,"work/ghidra/main-gb/export/8011b4d0_FUN_8011b4d0.c; fourth copy of the 0x802DCBFC(b,b,a) wrapper",src/game/worldmap.rs
+game::worldmap,8011bda0,fn_8011bda0,translated,medium,"work/ghidra/main-gb/export/8011bda0_FUN_8011bda0.c; loops player slots 0..3; matches 0x80162D00(+0x2A78) then 0x8012E510; posts cue 0x11 when +0x128 is non-negative",src/game/worldmap.rs
+game::worldmap,8011c630,fn_8011c630,translated,high,"work/ghidra/main-gb/export/8011c630_FUN_8011c630.c; compares eight floats against 0x80358BA8..0x80358BC4 and passes null on equality to 0x800B80E0",src/game/worldmap.rs
+game::worldmap,8011d6e0,fn_8011d6e0,translated,high,"work/ghidra/main-gb/export/8011d6e0_FUN_8011d6e0.c; 0x802DCBFC(value,0x802F4CD8)",src/game/worldmap.rs
+game::worldmap,8011d8c0,fn_8011d8c0,translated,high,"work/ghidra/main-gb/export/8011d8c0_FUN_8011d8c0.c; adds +0x584/+0x588/+0x58C to the 0x80162590 object with +0x59C/+0x5A0/+0x5A4",src/game/worldmap.rs
+game::worldmap,8011f3f0,fn_8011f3f0,translated,high,"work/ghidra/main-gb/export/8011f3f0_FUN_8011f3f0.c; returns the first word of the 0x80162590 object or 0",src/game/worldmap.rs
+game::worldmap,8011f5d0,fn_8011f5d0,translated,high,"work/ghidra/main-gb/export/8011f5d0_FUN_8011f5d0.c; sentinel -1; 0x8011EDA0 query then 0x8011EB00 with 0x800B2EE0(2)",src/game/worldmap.rs

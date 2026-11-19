@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802a1090,fn_802a1090,translated,medium,"work/ghidra/main-gb/export/802a1090_FUN_802a1090.c; particle node-list drawer; material + 4-matrix expansion + per-node quad; 20 psq operands all I=0 (GQR0 float)",src/render/gx_band.rs
+render::gx_band,802a4400,fn_802a4400,translated,medium,"work/ghidra/main-gb/export/802a4400_FUN_802a4400.c; 1/n strip driver; one 0x28 record per node; fn_802a35c0 + 0x802A3A20; 18 psq operands all I=0 (GQR0 float)",src/render/gx_band.rs
+render::gx_band,802a64b0,fn_802a64b0,translated,medium,"work/ghidra/main-gb/export/802a64b0_FUN_802a64b0.c; billboard record builder; 28-byte output; 0x801C1530/0x802961E0/0x801C1160; 18 psq operands all I=0 (GQR0 float)",src/render/gx_band.rs

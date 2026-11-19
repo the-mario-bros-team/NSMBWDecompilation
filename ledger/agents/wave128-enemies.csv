@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a803f0,fn_80a803f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a803f0_FUN_80a803f0.c; +0x164..+0x170 radius; byte +0x36D = 2; clears +0x120 bit 0x200; sound 500",src/game/enemies.rs
+game::enemies,80a80470,fn_80a80470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80470_FUN_80a80470.c; vtable slot +0xA0 on +0x66C with Wm_en_atitismoke and a four-word record",src/game/enemies.rs
+game::enemies,80a804d0,fn_80a804d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a804d0_FUN_80a804d0.c; fifteen-word smoke record via 0x800B8700 plus a 0x3C-frame 0x80A0B5A0 callback",src/game/enemies.rs
+game::enemies,80a806b0,fn_80a806b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a806b0_FUN_80a806b0.c; 0x8016C890(Wm_en_igafirehit) with the +0x660/+0x664 record",src/game/enemies.rs
+game::enemies,80a80710,fn_80a80710,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80710_FUN_80a80710.c; clip lookup on +0x540 then attach to +0x584 and 0x80169F80 blend",src/game/enemies.rs
+game::enemies,80a80780,fn_80a80780,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80780_FUN_80a80780.c; clip attach to +0x5BC then model slot +0x18",src/game/enemies.rs
+game::enemies,80a807f0,fn_80a807f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a807f0_FUN_80a807f0.c; five-argument attach to +0x5F4 then model slot +0x18",src/game/enemies.rs
+game::enemies,80a80860,fn_80a80860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80860_FUN_80a80860.c; clip latch at +0x620 then attach to +0x624 and a 0.0 blend",src/game/enemies.rs
+game::enemies,80a808d0,fn_80a808d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a808d0_FUN_80a808d0.c; damage bind; zeroes +0xE8..+0xF0; releases +0x148; clears +0x102",src/game/enemies.rs
+game::enemies,80a809f0,fn_80a809f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a809f0_FUN_80a809f0.c; three base updates then a guarded switch to 0x80B733F8",src/game/enemies.rs
+game::enemies,80a80a60,fn_80a80a60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80a60_FUN_80a80a60.c; look bound into all four holders; sound 0x1F2",src/game/enemies.rs
+game::enemies,80a80b10,fn_80a80b10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80b10_FUN_80a80b10.c; four holder releases then sound 499 and 0x80B73438 on a +0x584 hit",src/game/enemies.rs
+game::enemies,80a80c60,fn_80a80c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80c60_FUN_80a80c60.c; button bit 1 jump and button bit 4 switch to 0x80B734F8",src/game/enemies.rs
+game::enemies,80a80d60,fn_80a80d60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80d60_FUN_80a80d60.c; button bit 1 jump; +0x102 clamped to the per-side 0x8042C1A4 entry",src/game/enemies.rs
+game::enemies,80a81050,fn_80a81050,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a81050_FUN_80a81050.c; wakeUp entry with the walk/wakeUp binds and both effect emitters",src/game/enemies.rs
+game::enemies,80a83a30,fn_80a83a30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a83a30_FUN_80a83a30.c; state clear 0x8015F800 plus release 0x802B9280 for a positive mode",src/game/enemies.rs
+game::enemies,80a83a90,fn_80a83a90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a83a90_FUN_80a83a90.c; duplicate of 0x80A83A30 with one extra mode guard",src/game/enemies.rs
+game::enemies,80a83af0,fn_80a83af0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a83af0_FUN_80a83af0.c; returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80a83be0,fn_80a83be0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a83be0_FUN_80a83be0.c; five +0x30 links each testing vtable slot +0xC then recursion",src/game/enemies.rs
+game::enemies,80a83cc0,fn_80a83cc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a83cc0_FUN_80a83cc0.c; colon-trimmed name compare with 0x802E1C40 and 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a83d80,fn_80a83d80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a83d80_FUN_80a83d80.c; 0x802DCBFC(second second first) forwarder",src/game/enemies.rs
+game::enemies,80a83db0,fn_80a83db0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a83db0_FUN_80a83db0.c; byte-identical copy of 0x80A83D80",src/game/enemies.rs
+game::enemies,80a83de0,fn_80a83de0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a83de0_FUN_80a83de0.c; 0xE68-byte constructor with vtable 0x80B4E530 and two ten-element arrays",src/game/enemies.rs
+game::enemies,80a84ed0,fn_80a84ed0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a84ed0_FUN_80a84ed0.c; side-indexed turn rate from 0x80B2E4B8 or 0x80B2E4C0",src/game/enemies.rs
+game::enemies,80a85520,fn_80a85520,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85520_FUN_80a85520.c; +0x274 mask 0x1FE000 plus a 0x800665A0 query then +0xEC = 2.0 or 1.0",src/game/enemies.rs
+game::enemies,80a85590,fn_80a85590,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85590_FUN_80a85590.c; tail call into slot +0x1C of the +0x544 holder",src/game/enemies.rs
+game::enemies,80a85610,fn_80a85610,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85610_FUN_80a85610.c; signed-byte mismatch test between +0xDFF and +0xE03",src/game/enemies.rs
+game::enemies,80a85c30,fn_80a85c30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85c30_FUN_80a85c30.c; +0xDD4 hold countdown gated by the +0xDD6 latch",src/game/enemies.rs
+game::enemies,80a86510,fn_80a86510,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86510_FUN_80a86510.c; 0x8005FEF0 random stamp minus one with a zero clamp",src/game/enemies.rs

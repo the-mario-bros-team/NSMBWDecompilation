@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800704d0,fn_800704d0,translated,high,"work/ghidra/main-gb/export/800704d0_FUN_800704d0.c; quantized (x,-y) cell cache at r13-0x58D8/-0x58D6; returns changed",src/game/stage.rs
+game::stage,80070600,fn_80070600,translated,high,"work/ghidra/main-gb/export/80070600_FUN_80070600.c; +0xA4 tag and +0xA0 tag<<16 stores; returns tag != 3",src/game/stage.rs
+game::stage,80070630,fn_80070630,translated,high,"work/ghidra/main-gb/export/80070630_FUN_80070630.c; kind 7 mask 0xFF00FFFF then call 0x80070650",src/game/stage.rs
+game::stage,80070650,fn_80070650,translated,medium,"work/ghidra/main-gb/export/80070650_FUN_80070650.c; 0x802EF598 weight compare; keeps heavier in +0xA0/+0xA4",src/game/stage.rs
+game::stage,800706a0,fn_800706a0,translated,medium,"work/ghidra/main-gb/export/800706a0_FUN_800706a0.c; 0x802EF598 weight compare; keeps lighter in +0xA8/+0xAC",src/game/stage.rs
+game::stage,800706e0,fn_800706e0,translated,medium,"work/ghidra/main-gb/export/800706e0_FUN_800706e0.c; 0x802EF598 weight compare; indexed +0xB0/+0xB8 slots",src/game/stage.rs
+game::stage,80070740,fn_80070740,translated,high,"work/ghidra/main-gb/export/80070740_FUN_80070740.c; +0xB0+slot*4 >> 16 & 0xFF accessor",src/game/stage.rs
+game::stage,80070760,fn_80070760,translated,medium,"work/ghidra/main-gb/export/80070760_FUN_80070760.c; 0x800708C0 then 0x802DE514; thresholds 0x4FD/0xE72/0x1975/0x268B",src/game/stage.rs
+game::stage,800707e0,fn_800707e0,translated,high,"work/ghidra/main-gb/export/800707e0_FUN_800707e0.c; 0x800708C0 height; sign-bit test returns height > 0",src/game/stage.rs
+game::stage,80070820,fn_80070820,translated,high,"work/ghidra/main-gb/export/80070820_FUN_80070820.c; 0x800707E0 then xor 1 when direction == 1",src/game/stage.rs
+game::stage,80070870,fn_80070870,translated,high,"work/ghidra/main-gb/export/80070870_FUN_80070870.c; 0x802EF548 s16 load; zero -> 2 positive -> 1 negative -> 0",src/game/stage.rs
+game::stage,800708c0,fn_800708c0,translated,medium,"work/ghidra/main-gb/export/800708c0_FUN_800708c0.c; +0x88 bit 0x8000 selects +0xBE or [+0x50]+0x2C; optional short negation",src/game/stage.rs
+game::stage,80070900,fn_80070900,translated,medium,"work/ghidra/main-gb/export/80070900_FUN_80070900.c; r2-0x7440 floor compare; calls 0x800708C0 with 0 or 1",src/game/stage.rs
+game::stage,80070920,fn_80070920,translated,high,"work/ghidra/main-gb/export/80070920_FUN_80070920.c; 0x800708C0 then short add -0x8000 when half_turn == 1",src/game/stage.rs
+game::stage,80070960,fn_80070960,translated,high,"work/ghidra/main-gb/export/80070960_FUN_80070960.c; +0xC2 s16 load; optional 32-bit negation",src/game/stage.rs
+game::stage,80070980,fn_80070980,translated,high,"work/ghidra/main-gb/export/80070980_FUN_80070980.c; 0x80070960 then short add -0x8000 when half_turn == 1",src/game/stage.rs
+game::stage,80070a40,fn_80070a40,translated,medium,"work/ghidra/main-gb/export/80070a40_FUN_80070a40.c; 0x80070BA0/0x80070BF0 cell probes; 0x800 bit and bit-3 index",src/game/stage.rs
+game::stage,80070b10,fn_80070b10,translated,medium,"work/ghidra/main-gb/export/80070b10_FUN_80070b10.c; 0x80070A40 state; state 2 rechecks 0x80070BA0 & 0x819",src/game/stage.rs
+game::stage,80070ba0,fn_80070ba0,translated,medium,"work/ghidra/main-gb/export/80070ba0_FUN_80070ba0.c; mask x and -y to 16 bits; forward to 0x80070C40",src/game/stage.rs
+game::stage,80070bf0,fn_80070bf0,translated,medium,"work/ghidra/main-gb/export/80070bf0_FUN_80070bf0.c; mask x and -y to 16 bits; forward to 0x80070C60",src/game/stage.rs
+game::stage,80070c40,fn_80070c40,translated,high,"work/ghidra/main-gb/export/80070c40_FUN_80070c40.c; r13-0x58B0 owner plus 3 args to 0x80077650",src/game/stage.rs
+game::stage,80070c60,fn_80070c60,translated,high,"work/ghidra/main-gb/export/80070c60_FUN_80070c60.c; r13-0x58B0 owner plus 3 args to 0x80077700",src/game/stage.rs
+game::stage,80070c80,fn_80070c80,translated,high,"work/ghidra/main-gb/export/80070c80_FUN_80070c80.c; [+4]+0x38C byte or 0",src/game/stage.rs
+game::stage,80070cb0,fn_80070cb0,translated,high,"work/ghidra/main-gb/export/80070cb0_FUN_80070cb0.c; +0x88 & 0x1FE000 nonzero test",src/game/stage.rs
+game::stage,80070cd0,fn_80070cd0,translated,medium,"work/ghidra/main-gb/export/80070cd0_FUN_80070cd0.c; 0x802DCD74 packed object; +0x3C bits mirror +0x88; 0x802DCDC0 publish",src/game/stage.rs

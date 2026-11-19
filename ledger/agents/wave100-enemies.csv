@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a1a9f0,fn_80a1a9f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1a9f0_FUN_80a1a9f0.c; normaliser: 0x8015F800 name init, 0x802B9280 release when mode > 0",src/game/enemies.rs
+game::enemies,80a1aa50,fn_80a1aa50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1aa50_FUN_80a1aa50.c; byte-identical second normaliser copy",src/game/enemies.rs
+game::enemies,80a1aab0,fn_80a1aab0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1aab0_FUN_80a1aab0.c; returns the fixed descriptor 0x80357BF4",src/game/enemies.rs
+game::enemies,80a1aba0,fn_80a1aba0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1aba0_FUN_80a1aba0.c; +0x30 child chain, vtable slot +0xC readiness test",src/game/enemies.rs
+game::enemies,80a1ac80,fn_80a1ac80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1ac80_FUN_80a1ac80.c; strrchr/strcmp on the ':'-suffix of both names",src/game/enemies.rs
+game::enemies,80a1ad40,fn_80a1ad40,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a1ad40_FUN_80a1ad40.c; 0x802DCBFC(object, object, state); hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a1ad70,fn_80a1ad70,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a1ad70_FUN_80a1ad70.c; byte-identical copy of the 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80a1ada0,fn_80a1ada0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1ada0_FUN_80a1ada0.c; alloc 0x630, vtable 0x80B37D08, 0x800C0D70 on +0x524, zero +0x610",src/game/enemies.rs
+game::enemies,80a1ae40,fn_80a1ae40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1ae40_FUN_80a1ae40.c; null/flag guard then 0x802B9280 with the argument dropped by the export",src/game/enemies.rs
+game::enemies,80a1ae80,fn_80a1ae80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1ae80_FUN_80a1ae80.c; copy of the release wrapper with the dropped free argument",src/game/enemies.rs
+game::enemies,80a1aec0,fn_80a1aec0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1aec0_FUN_80a1aec0.c; copy of the release wrapper with the dropped free argument",src/game/enemies.rs
+game::enemies,80a1af00,fn_80a1af00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1af00_FUN_80a1af00.c; copy of the release wrapper with the dropped free argument",src/game/enemies.rs
+game::enemies,80a1af40,fn_80a1af40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1af40_FUN_80a1af40.c; copies +0xAC..+0xB4 to +0x624..+0x62C, +0x620 = 16.0*(nibble+1), calls 0x80A1B060/0x80A1B0D0",src/game/enemies.rs
+game::enemies,80a1b060,fn_80a1b060,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1b060_FUN_80a1b060.c; 0x80B2B540 scale by ((w>>22)&0x1C)+((w>>11)&0x20), 0x800C10F0 then 0x800C1580",src/game/enemies.rs
+game::enemies,80a1b0d0,fn_80a1b0d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1b0d0_FUN_80a1b0d0.c; clears bits 0..((w>>12)&0xF) of the 0xFFFF masks at +0x614/+0x616",src/game/enemies.rs
+game::enemies,80a1b280,fn_80a1b280,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1b280_FUN_80a1b280.c; 0x800C1230/0x800C12B0 position read into +0xAC/+0xB0",src/game/enemies.rs
+game::enemies,80a1b300,fn_80a1b300,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1b300_FUN_80a1b300.c; state +0x610 spawn/timer/countdown arms, 0x801C14C0 speed magnitude, spawn via 0x80A1B3F0",src/game/enemies.rs
+game::enemies,80a1b3f0,fn_80a1b3f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1b3f0_FUN_80a1b3f0.c; 0x80064610 id 0x8E at +0x624, 0x80ABC610, store +0x610 into obj +0x820",src/game/enemies.rs
+game::enemies,80a1b560,fn_80a1b560,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1b560_FUN_80a1b560.c; alloc 0x600, vtable 0x80B37FC8, +0x524/+0x544/+0x584/+0x5BC/+0x5C8 holders",src/game/enemies.rs
+game::enemies,80a1b910,fn_80a1b910,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1b910_FUN_80a1b910.c; 0x802DCC4C period, 0x8042A200 modulo, 2^52 bias, 0x80168FE0 on +0x584",src/game/enemies.rs
+game::enemies,80a1b980,fn_80a1b980,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1b980_FUN_80a1b980.c; g3d/pakkun_black.brres, pakkun_black node, attack clip, +0x5F4 holder table, variant-1 +0x5BC animation",src/game/enemies.rs
+game::enemies,80a1bb30,fn_80a1bb30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1bb30_FUN_80a1bb30.c; 0x80077860 scene probe with (x-8.0) and -(16.0+z), selector 0x94",src/game/enemies.rs
+game::enemies,80a1bbd0,fn_80a1bbd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1bbd0_FUN_80a1bbd0.c; player list +0x554 classification, 1.0 seed of +0xDC..+0xE4, Move descriptor 0x80B6F658 via vtable +0xD4",src/game/enemies.rs
+game::enemies,80a1bd10,fn_80a1bd10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1bd10_FUN_80a1bd10.c; +0x5BC/+0x584/+0x544/+0x524 teardown, base 0x80095130, optional 0x80162920 free",src/game/enemies.rs
+game::enemies,80a1bf60,fn_80a1bf60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1bf60_FUN_80a1bf60.c; third normaliser copy, the callback named by the daEnBlackPakkun_c table",src/game/enemies.rs
+game::enemies,80a1c080,fn_80a1c080,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a1c080_FUN_80a1c080.c; 0x802DCBFC(object, object, state); hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a1c0b0,fn_80a1c0b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a1c0b0_FUN_80a1c0b0.c; byte-identical copy of the 0x802DCBFC forwarder",src/game/enemies.rs

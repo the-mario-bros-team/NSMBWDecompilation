@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,80160800,fn_80160800,translated,medium,"work/ghidra/main-gb/export/80160800_FUN_80160800.c; 164-byte handle release; r13-0x5308 remaining size; two elided receivers inferred",src/resource/registry.rs
+resource::registry,80161180,fn_80161180,translated,medium,"work/ghidra/main-gb/export/80161180_FUN_80161180.c; 52-byte angle-table lookup; r2-0x546C scale; 0x80328B48 halfword table",src/resource/registry.rs
+resource::registry,80163520,fn_80163520,translated,high,"work/ghidra/main-gb/export/80163520_FUN_80163520.c; 320-byte sound-group draw; count/flag guard, 0x14-stride element loop",src/resource/registry.rs
+resource::registry,80163e60,fn_80163e60,translated,medium,"work/ghidra/main-gb/export/80163e60_FUN_80163e60.c; 332-byte description copy; prologue r3:r4 pair, 8-byte entry table",src/resource/registry.rs
+resource::registry,801641b0,fn_801641b0,translated,medium,"work/ghidra/main-gb/export/801641b0_FUN_801641b0.c; 260-byte recursive match probe; +0x58/+0x64/+0x6C slots",src/resource/registry.rs
+resource::registry,80164500,fn_80164500,translated,medium,"work/ghidra/main-gb/export/80164500_FUN_80164500.c; 236-byte reader view; 0x1C view, 0x28 stack block, r13-0x52B8/0x52B4",src/resource/registry.rs
+resource::registry,801650d0,fn_801650d0,translated,medium,"work/ghidra/main-gb/export/801650d0_FUN_801650d0.c; 288-byte text record; 0x80248990 pair, 36-byte out block",src/resource/registry.rs
+resource::registry,801658a0,fn_801658a0,translated,medium,"work/ghidra/main-gb/export/801658a0_FUN_801658a0.c; 284-byte group build; fn_80165820 fold, 0x80243D20 header",src/resource/registry.rs
+resource::registry,801659c0,fn_801659c0,translated,medium,"work/ghidra/main-gb/export/801659c0_FUN_801659c0.c; 180-byte element commit; fn_80165a80 receiver inferred",src/resource/registry.rs
+resource::registry,80165c30,fn_80165c30,translated,medium,"work/ghidra/main-gb/export/80165c30_FUN_80165c30.c; 572-byte n-child group; 0x38 slab, 0x80329530 vtable",src/resource/registry.rs
+resource::registry,80165fd0,fn_80165fd0,translated,medium,"work/ghidra/main-gb/export/80165fd0_FUN_80165fd0.c; 320-byte child commit; 802F8588/802F85A8 casts",src/resource/registry.rs
+resource::registry,801664a0,fn_801664a0,translated,medium,"work/ghidra/main-gb/export/801664a0_FUN_801664a0.c; 284-byte second-class group; 0x80245500, 0x801666E0",src/resource/registry.rs
+resource::registry,801665c0,fn_801665c0,translated,medium,"work/ghidra/main-gb/export/801665c0_FUN_801665c0.c; 180-byte second-class commit; fn_80166680 receiver inferred",src/resource/registry.rs
+resource::registry,80166830,fn_80166830,translated,medium,"work/ghidra/main-gb/export/80166830_FUN_80166830.c; 572-byte second-class n-child group; 0x80329560 vtable",src/resource/registry.rs
+resource::registry,80166bd0,fn_80166bd0,translated,medium,"work/ghidra/main-gb/export/80166bd0_FUN_80166bd0.c; 320-byte second-class child commit; 802F85F0/802F8610",src/resource/registry.rs
+resource::registry,80167080,fn_80167080,translated,high,"work/ghidra/main-gb/export/80167080_FUN_80167080.c; 300-byte third-class group; extra null test on header",src/resource/registry.rs
+resource::registry,801671b0,fn_801671b0,translated,medium,"work/ghidra/main-gb/export/801671b0_FUN_801671b0.c; 180-byte third-class commit; fn_80167270 receiver inferred",src/resource/registry.rs
+resource::registry,80167420,fn_80167420,translated,medium,"work/ghidra/main-gb/export/80167420_FUN_80167420.c; 636-byte third-class n-child group; double free 0x802B8F70",src/resource/registry.rs
+resource::registry,80167800,fn_80167800,translated,medium,"work/ghidra/main-gb/export/80167800_FUN_80167800.c; 320-byte third-class child commit; 802F8658/802F8678",src/resource/registry.rs
+resource::registry,80167c40,fn_80167c40,translated,medium,"work/ghidra/main-gb/export/80167c40_FUN_80167c40.c; 280-byte four-argument group; 0x80242C30, 0x80167E50",src/resource/registry.rs
+resource::registry,80167d60,fn_80167d60,translated,medium,"work/ghidra/main-gb/export/80167d60_FUN_80167d60.c; 232-byte element re-key; two elided receivers inferred",src/resource/registry.rs
+resource::registry,8016c820,fn_8016c820,translated,high,"work/ghidra/main-gb/export/8016c820_FUN_8016c820.c; empty leaf, export is literal return",src/resource/registry.rs
+resource::registry,8016d640,fn_8016d640,translated,medium,"work/ghidra/main-gb/export/8016d640_FUN_8016d640.c; 464-byte actor record; 80377B1C/80377C30/34/38 list",src/resource/registry.rs
+resource::registry,8016daa0,fn_8016daa0,translated,medium,"work/ghidra/main-gb/export/8016daa0_FUN_8016daa0.c; 60-byte text reset; 0x7FF mode, control +0x20",src/resource/registry.rs
+resource::registry,8016dae0,fn_8016dae0,translated,medium,"work/ghidra/main-gb/export/8016dae0_FUN_8016dae0.c; 288-byte control install; states 2/3 veto the swap",src/resource/registry.rs
+resource::registry,80161f60,fn_80161f60,translated,medium,"work/ghidra/main-gb/export/80161f60_FUN_80161f60.c; 128-byte record detach; three intrusive unlinks",src/resource/registry.rs

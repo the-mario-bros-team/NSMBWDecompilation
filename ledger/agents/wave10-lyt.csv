@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::lyt,80180440,fn_80180440,translated,medium,"work/ghidra/main-gb/export/80180440_FUN_80180440.c; builds a 3x4 pane matrix from translation at +0x00/+0x04, angle at +0x08 scaled by 0.7111111 through opaque 0x801885B0/0x80188630, and scales at +0x0C/+0x10; writes 12 f32 including the -0.5 half-texel offsets.",src/ui/lyt.rs
+ui::lyt,801835a0,fn_801835a0,translated,medium,"work/ghidra/main-gb/export/801835a0_FUN_801835a0.c; checks index against (+0x50>>28), copies the 0x20-byte texture-SRT record from +0x58, converts it with 0x801C7160 and returns 0x801C71E0 width / 0x801C7200 height as two floats.",src/ui/lyt.rs
+ui::lyt,80188a00,fn_80188a00,translated,high,"work/ghidra/main-gb/export/80188a00_FUN_80188a00.c; clears material +0x00..+0x1F and globals 0x80378038/0x8037803C, rebuilds the four channel triples from +0x18/+0x1C using selector +0x20, and applies alpha +0x42 twice over 0xFF.",src/ui/lyt.rs
+ui::lyt,80188d90,fn_80188d90,translated,high,"work/ghidra/main-gb/export/80188d90_FUN_80188d90.c; guarded release wrapper (object != 0 and flag > 0) around 0x802B9280, returns the object pointer.",src/ui/lyt.rs
+ui::lyt,801898e0,fn_801898e0,translated,high,"work/ghidra/main-gb/export/801898e0_FUN_801898e0.c; stores two 4-byte colours at +0x18/+0x1C and +0x08, selects the +0x0C/+0x10/+0x14 groups by +0x20, and scales four bytes by alpha +0x42.",src/ui/lyt.rs
+ui::lyt,80189a80,fn_80189a80,translated,medium,"work/ghidra/main-gb/export/80189a80_FUN_80189a80.c; divides the two requested sizes by font virtual +0x0C/+0x10 and stores the results at +0x24/+0x28; member-call operands reconstructed.",src/ui/lyt.rs
+ui::lyt,8018b0d0,fn_8018b0d0,translated,medium,"work/ghidra/main-gb/export/8018b0d0_FUN_8018b0d0.c; mode 10 sums 0x8018BCA0 and 0x80189E60 into +0x30; mode 9 reads +0x54 through 0x8018BD80 and advances the +0x2C cursor by whole steps; returns 3/1/0.",src/ui/lyt.rs
+ui::lyt,8018b4e0,fn_8018b4e0,translated,medium,"work/ghidra/main-gb/export/8018b4e0_FUN_8018b4e0.c; reads the +0x54 step count through 0x8018BD80 and advances the text-layout +0x2C cursor using the horizontal metric and a rounded-up step count.",src/ui/lyt.rs
+ui::lyt,8018b5e0,fn_8018b5e0,translated,high,"work/ghidra/main-gb/export/8018b5e0_FUN_8018b5e0.c; installs vtable 0x8032C8B0 at object +0x00.",src/ui/lyt.rs
+ui::lyt,8018b5f0,fn_8018b5f0,translated,high,"work/ghidra/main-gb/export/8018b5f0_FUN_8018b5f0.c; guarded release wrapper around 0x802B9280, returns the object pointer.",src/ui/lyt.rs
+ui::lyt,8018b630,fn_8018b630,translated,medium,"work/ghidra/main-gb/export/8018b630_FUN_8018b630.c; twin of 8018B0D0 using 0x8018E660 for mode 10 and 0x8018E740 for the mode-9 step count; returns 3/1/0.",src/ui/lyt.rs
+ui::lyt,8018ba40,fn_8018ba40,translated,medium,"work/ghidra/main-gb/export/8018ba40_FUN_8018ba40.c; reads the +0x54 step count through 0x8018E740 and advances the text-layout +0x2C cursor; same arithmetic as 8018B4E0.",src/ui/lyt.rs
+ui::lyt,8018bca0,fn_8018bca0,translated,medium,"work/ghidra/main-gb/export/8018bca0_FUN_8018bca0.c; font virtual +0x34 metric times f32 +0x28 added to f32 +0x50, with a null-font zero path; returns f64.",src/ui/lyt.rs
+ui::lyt,8018e560,fn_8018e560,translated,high,"work/ghidra/main-gb/export/8018e560_FUN_8018e560.c; calls 0x80188D90(record,0) then 0x802B9280 when delete_flag > 0 and returns the record.",src/ui/lyt.rs
+ui::lyt,8018e660,fn_8018e660,translated,medium,"work/ghidra/main-gb/export/8018e660_FUN_8018e660.c; second copy of 8018BCA0: font virtual +0x34 times +0x28 plus +0x50, null-font path returns zero contribution.",src/ui/lyt.rs
+ui::lyt,80188dd0,fn_80188dd0,translated,high,"work/ghidra/main-gb/export/80188dd0_FUN_80188dd0.c; stores the font pointer at text-layout +0x48.",src/ui/lyt.rs
+ui::lyt,80188de0,fn_80188de0,translated,high,"work/ghidra/main-gb/export/80188de0_FUN_80188de0.c; loads the font pointer from text-layout +0x48.",src/ui/lyt.rs
+ui::lyt,80189a60,fn_80189a60,translated,high,"work/ghidra/main-gb/export/80189a60_FUN_80189a60.c; returns f32 +0x24 widened to f64.",src/ui/lyt.rs
+ui::lyt,80189a70,fn_80189a70,translated,high,"work/ghidra/main-gb/export/80189a70_FUN_80189a70.c; returns f32 +0x28 widened to f64.",src/ui/lyt.rs
+ui::lyt,80189ca0,fn_80189ca0,translated,high,"work/ghidra/main-gb/export/80189ca0_FUN_80189ca0.c; returns the vertical-layout byte at +0x43.",src/ui/lyt.rs
+ui::lyt,80189cb0,fn_80189cb0,translated,high,"work/ghidra/main-gb/export/80189cb0_FUN_80189cb0.c; returns f32 +0x44 widened to f64.",src/ui/lyt.rs
+ui::lyt,80189e00,fn_80189e00,translated,high,"work/ghidra/main-gb/export/80189e00_FUN_80189e00.c; stores two f32 values at +0x2C and +0x30.",src/ui/lyt.rs
+ui::lyt,80189e10,fn_80189e10,translated,high,"work/ghidra/main-gb/export/80189e10_FUN_80189e10.c; stores one f32 value at +0x2C.",src/ui/lyt.rs
+ui::lyt,80189e50,fn_80189e50,translated,high,"work/ghidra/main-gb/export/80189e50_FUN_80189e50.c; returns f32 +0x2C widened to f64.",src/ui/lyt.rs
+ui::lyt,80189e60,fn_80189e60,translated,high,"work/ghidra/main-gb/export/80189e60_FUN_80189e60.c; returns f32 +0x30 widened to f64.",src/ui/lyt.rs

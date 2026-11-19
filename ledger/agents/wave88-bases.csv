@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80693530,fn_80693530,translated,high,"work/ghidra/rel-d_basesNP/export/80693530_FUN_80693530.c; two-call release wrapper (0x8015F800 + optional 0x802B9280)",src/game/bases.rs
+game::bases,80694dc0,fn_80694dc0,translated,high,"work/ghidra/rel-d_basesNP/export/80694dc0_FUN_80694dc0.c; transform rebuild: 0x80064AF0 + 0x801C0BD0 + three angle setters + 0x8016A170/A150/A1A0",src/game/bases.rs
+game::bases,80694eb0,fn_80694eb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80694eb0_FUN_80694eb0.c; ef_sandpillar record lookup + 60-byte transform snapshot at +0x1290 + height at +0x530",src/game/bases.rs
+game::bases,806950f0,fn_806950f0,translated,high,"work/ghidra/rel-d_basesNP/export/806950f0_FUN_806950f0.c; walks +0x12AC target list; state 1/2 gets 0x80056C70(target,0x5B)",src/game/bases.rs
+game::bases,80695170,fn_80695170,translated,high,"work/ghidra/rel-d_basesNP/export/80695170_FUN_80695170.c; duplicate test against ten ring pointers at +0x548 stride 0x154; full when +0x544 > 9",src/game/bases.rs
+game::bases,80695260,fn_80695260,translated,high,"work/ghidra/rel-d_basesNP/export/80695260_FUN_80695260.c; appends target pointer/position to first free ring slot and bumps +0x544",src/game/bases.rs
+game::bases,806955d0,fn_806955d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806955d0_FUN_806955d0.c; state 1/2 strength call or state 3 Wm_en_spsmoke + +0x240 virtual",src/game/bases.rs
+game::bases,80695700,fn_80695700,translated,medium,"work/ghidra/rel-d_basesNP/export/80695700_FUN_80695700.c; derives two scale records from +0x530 and writes +0x164..+0x170 and +0x4A8..+0x4B4",src/game/bases.rs
+game::bases,80695760,fn_80695760,translated,high,"work/ghidra/rel-d_basesNP/export/80695760_FUN_80695760.c; steps +0x538 by +0x53C toward +0x540 and clamps",src/game/bases.rs
+game::bases,806957b0,fn_806957b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806957b0_FUN_806957b0.c; writes four +0x12E8 block words then +0x129C virtual +0x0C",src/game/bases.rs
+game::bases,80695830,fn_80695830,translated,high,"work/ghidra/rel-d_basesNP/export/80695830_FUN_80695830.c; clears ten ring slots and spawns Wm_ob_spillarsign01 at the actor position",src/game/bases.rs
+game::bases,80695990,fn_80695990,translated,high,"work/ghidra/rel-d_basesNP/export/80695990_FUN_80695990.c; 0x800DAE80(+0x129C) followed by actor virtual +0x9C",src/game/bases.rs
+game::bases,80695a20,fn_80695a20,translated,high,"work/ghidra/rel-d_basesNP/export/80695a20_FUN_80695a20.c; +0x534 countdown; 0x307 event at 0x3C; Wm_ob_spillarsign02 spawn",src/game/bases.rs
+game::bases,80695b20,fn_80695b20,translated,high,"work/ghidra/rel-d_basesNP/export/80695b20_FUN_80695b20.c; binds sandpillar clip at +0x434 and sandpillar_end at +0x460",src/game/bases.rs
+game::bases,80695c20,fn_80695c20,translated,medium,"work/ghidra/rel-d_basesNP/export/80695c20_FUN_80695c20.c; 0x308 event + two Wm_ob_sandpillar spawns + climb clamp at +0xE0",src/game/bases.rs
+game::bases,80696050,fn_80696050,translated,high,"work/ghidra/rel-d_basesNP/export/80696050_FUN_80696050.c; rebinds sandpillar_end clip and restarts +0x460",src/game/bases.rs
+game::bases,806960f0,fn_806960f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806960f0_FUN_806960f0.c; animation-finish split; ring release delegated to 0x806954C0; effect refresh",src/game/bases.rs
+game::bases,80696830,fn_80696830,translated,high,"work/ghidra/rel-d_basesNP/export/80696830_FUN_80696830.c; two-call release wrapper (0x8015F800 + optional 0x802B9280)",src/game/bases.rs
+game::bases,80697550,fn_80697550,translated,high,"work/ghidra/rel-d_basesNP/export/80697550_FUN_80697550.c; two-call release wrapper (0x8015F800 + optional 0x802B9280)",src/game/bases.rs
+game::bases,80698ee0,fn_80698ee0,translated,high,"work/ghidra/rel-d_basesNP/export/80698ee0_FUN_80698ee0.c; two-call release wrapper (0x8015F800 + optional 0x802B9280)",src/game/bases.rs
+game::bases,80698f40,fn_80698f40,translated,high,"work/ghidra/rel-d_basesNP/export/80698f40_FUN_80698f40.c; two-call release wrapper (0x8015F800 + optional 0x802B9280)",src/game/bases.rs
+game::bases,80698fa0,fn_80698fa0,translated,high,"work/ghidra/rel-d_basesNP/export/80698fa0_FUN_80698fa0.c; returns constant 0x80357E5C",src/game/bases.rs
+game::bases,80698fb0,fn_80698fb0,translated,high,"work/ghidra/rel-d_basesNP/export/80698fb0_FUN_80698fb0.c; returns constant 0x80357E1C",src/game/bases.rs
+game::bases,80698fc0,fn_80698fc0,translated,high,"work/ghidra/rel-d_basesNP/export/80698fc0_FUN_80698fc0.c; returns constant 0x80357DDC",src/game/bases.rs
+game::bases,8069d7b0,fn_8069d7b0,translated,high,"work/ghidra/rel-d_basesNP/export/8069d7b0_FUN_8069d7b0.c; two-call release wrapper (0x8015F800 + optional 0x802B9280)",src/game/bases.rs
+game::bases,8069d810,fn_8069d810,translated,high,"work/ghidra/rel-d_basesNP/export/8069d810_FUN_8069d810.c; two-call release wrapper (0x8015F800 + optional 0x802B9280)",src/game/bases.rs
+game::bases,8069d870,fn_8069d870,translated,high,"work/ghidra/rel-d_basesNP/export/8069d870_FUN_8069d870.c; returns constant 0x80357E9C",src/game/bases.rs
+game::bases,8069d880,fn_8069d880,translated,high,"work/ghidra/rel-d_basesNP/export/8069d880_FUN_8069d880.c; returns constant 0x80357E5C",src/game/bases.rs
+game::bases,8069d890,fn_8069d890,translated,high,"work/ghidra/rel-d_basesNP/export/8069d890_FUN_8069d890.c; returns constant 0x80357E1C",src/game/bases.rs
+game::bases,8069d8a0,fn_8069d8a0,translated,high,"work/ghidra/rel-d_basesNP/export/8069d8a0_FUN_8069d8a0.c; returns constant 0x80357DDC",src/game/bases.rs

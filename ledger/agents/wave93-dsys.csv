@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e1f80,fn_800e1f80,translated,medium,"work/ghidra/main-gb/export/800e1f80_FUN_800e1f80.c; band select; vtable +0xE0 veto; two band tables",src/engine/dsys.rs
+engine::dsys,800e2db0,fn_800e2db0,translated,high,"work/ghidra/main-gb/export/800e2db0_FUN_800e2db0.c; f32 square times r2-0x63C0",src/engine/dsys.rs
+engine::dsys,800e2dc0,fn_800e2dc0,translated,high,"work/ghidra/main-gb/export/800e2dc0_FUN_800e2dc0.c; three-term dot product in f32",src/engine/dsys.rs
+engine::dsys,800e3f20,fn_800e3f20,translated,medium,"work/ghidra/main-gb/export/800e3f20_FUN_800e3f20.c; 64-slot flag sweep; 0x802DD1EC mask; 0x8019BD20 flush",src/engine/dsys.rs
+engine::dsys,800e54e0,fn_800e54e0,translated,high,"work/ghidra/main-gb/export/800e54e0_FUN_800e54e0.c; guarded one-shot colour setup; 12 calls",src/engine/dsys.rs
+engine::dsys,800e55f0,fn_800e55f0,translated,high,"work/ghidra/main-gb/export/800e55f0_FUN_800e55f0.c; 17 channel calls; two stack words 0 and 0x80",src/engine/dsys.rs
+engine::dsys,800e5790,fn_800e5790,translated,high,"work/ghidra/main-gb/export/800e5790_FUN_800e5790.c; channel pairs 9 0xB 0xD",src/engine/dsys.rs
+engine::dsys,800e6290,fn_800e6290,translated,low,"work/ghidra/main-gb/export/800e6290_FUN_800e6290.c; opcode dispatch; 0x800E6030 arm printed with no arguments",src/engine/dsys.rs
+engine::dsys,800e76a0,fn_800e76a0,translated,medium,"work/ghidra/main-gb/export/800e76a0_FUN_800e76a0.c; node lookup by key; retire or insert",src/engine/dsys.rs
+engine::dsys,800e7ba0,fn_800e7ba0,translated,medium,"work/ghidra/main-gb/export/800e7ba0_FUN_800e7ba0.c; vtable 0x8031B1A8; three mode arms",src/engine/dsys.rs
+engine::dsys,800e9020,fn_800e9020,translated,high,"work/ghidra/main-gb/export/800e9020_FUN_800e9020.c; signed 2^52 widening; one scale multiply",src/engine/dsys.rs
+engine::dsys,800e9d10,fn_800e9d10,translated,medium,"work/ghidra/main-gb/export/800e9d10_FUN_800e9d10.c; vector magnitude 0x801C14C0; state switch to 0x80371B48",src/engine/dsys.rs
+engine::dsys,800ea000,fn_800ea000,translated,low,"work/ghidra/main-gb/export/800ea000_FUN_800ea000.c; forwarder to 0x802DCBFC whose r12 descriptor comes from the caller",src/engine/dsys.rs
+engine::dsys,800ea030,fn_800ea030,translated,low,"work/ghidra/main-gb/export/800ea030_FUN_800ea030.c; second forwarder to 0x802DCBFC",src/engine/dsys.rs
+engine::dsys,800ea060,fn_800ea060,translated,high,"work/ghidra/main-gb/export/800ea060_FUN_800ea060.c; six dWanKusari_c state descriptors; 9-word permutation",src/engine/dsys.rs
+engine::dsys,800ea630,fn_800ea630,translated,medium,"work/ghidra/main-gb/export/800ea630_FUN_800ea630.c; g3d_wanwan.brres load and bind",src/engine/dsys.rs
+engine::dsys,800ea6d0,fn_800ea6d0,translated,high,"work/ghidra/main-gb/export/800ea6d0_FUN_800ea6d0.c; finished guard plus state slot +0x14",src/engine/dsys.rs
+engine::dsys,800ea6f0,fn_800ea6f0,translated,medium,"work/ghidra/main-gb/export/800ea6f0_FUN_800ea6f0.c; frame rebuild from position and three u16 angles",src/engine/dsys.rs
+engine::dsys,800ea8d0,fn_800ea8d0,translated,high,"work/ghidra/main-gb/export/800ea8d0_FUN_800ea8d0.c; speed decay clamp and position integration",src/engine/dsys.rs
+engine::dsys,800ea980,fn_800ea980,translated,medium,"work/ghidra/main-gb/export/800ea980_FUN_800ea980.c; two sine samples seed speed and spin",src/engine/dsys.rs
+engine::dsys,800eaf90,fn_800eaf90,translated,high,"work/ghidra/main-gb/export/800eaf90_FUN_800eaf90.c; two sprite corner pairs; mode 2 3 second block",src/engine/dsys.rs
+engine::dsys,800eb290,fn_800eb290,translated,medium,"work/ghidra/main-gb/export/800eb290_FUN_800eb290.c; translation matrix pushed into two children",src/engine/dsys.rs
+engine::dsys,800eb410,fn_800eb410,translated,medium,"work/ghidra/main-gb/export/800eb410_FUN_800eb410.c; counter modulo stride; two state slots",src/engine/dsys.rs
+engine::dsys,800efb50,fn_800efb50,translated,medium,"work/ghidra/main-gb/export/800efb50_FUN_800efb50.c; three record indices re-applied; frame rebuild",src/engine/dsys.rs
+engine::dsys,800efe60,fn_800efe60,translated,medium,"work/ghidra/main-gb/export/800efe60_FUN_800efe60.c; record lookup; f32 at object +0x18",src/engine/dsys.rs
+engine::dsys,800eff30,fn_800eff30,translated,medium,"work/ghidra/main-gb/export/800eff30_FUN_800eff30.c; same lookup; clears bit 3 and stores f32",src/engine/dsys.rs

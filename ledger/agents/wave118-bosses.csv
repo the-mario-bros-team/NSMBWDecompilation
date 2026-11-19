@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bosses,80c228a0,fn_80c228a0,translated,high,"work/ghidra/rel-d_en_bossNP/export/80c228a0_FUN_80c228a0.c; raw REL text at 0x228a0; REL24 tail -> 0x80064610",src/game/bosses.rs

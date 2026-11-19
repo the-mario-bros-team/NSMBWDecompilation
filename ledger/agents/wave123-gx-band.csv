@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802a90c0,fn_802a90c0,translated,medium,"work/ghidra/main-gb/export/802a90c0_FUN_802a90c0.c; raw-checked work/dol/main.elf 0x802A90C0..0x802A9634; three-record ring, offset vector ctx[0xA4..0xAC]-node[0xAC..0xB4], +0x800 direction switch, forward/reverse seam triples; 1396 bytes",src/render/gx_band.rs

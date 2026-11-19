@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b201e0,fn_80b201e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b201e0_FUN_80b201e0.c; writes the +0x544 and +0x550 holder matrices from the actor position",src/game/enemies.rs
+game::enemies,80b20300,fn_80b20300,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b20300_FUN_80b20300.c; +0x38C mode test plus the +0x394 / +0x14 descriptor check and +0x568 decrement",src/game/enemies.rs
+game::enemies,80b20450,fn_80b20450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b20450_FUN_80b20450.c; one-shot +0x650 latch gated on the +0x654 object",src/game/enemies.rs
+game::enemies,80b204a0,fn_80b204a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b204a0_FUN_80b204a0.c; particle spawn at the +0x55C vector through the 0x80429D60 manager",src/game/enemies.rs
+game::enemies,80b20550,fn_80b20550,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b20550_FUN_80b20550.c; countdown height ramp writes +0xB0 then spawns or switches state",src/game/enemies.rs
+game::enemies,80b20610,fn_80b20610,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b20610_FUN_80b20610.c; full destructor releasing +0x56C +0x550 +0x544 +0x524 then the base actor",src/game/enemies.rs
+game::enemies,80b20860,fn_80b20860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b20860_FUN_80b20860.c; deleting destructor of the 0x678-byte actor",src/game/enemies.rs
+game::enemies,80b247b0,fn_80b247b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b247b0_FUN_80b247b0.c; first deleting destructor of the 0x80B247B0 state skeleton",src/game/enemies.rs
+game::enemies,80b24810,fn_80b24810,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b24810_FUN_80b24810.c; second deleting destructor of the same skeleton",src/game/enemies.rs
+game::enemies,80b24870,fn_80b24870,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b24870_FUN_80b24870.c; constant producer returning 0x80357BF4",src/game/enemies.rs
+game::enemies,80b24960,fn_80b24960,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b24960_FUN_80b24960.c; five-step +0x30 owner chain walk followed by a recursive step",src/game/enemies.rs
+game::enemies,80b24a40,fn_80b24a40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b24a40_FUN_80b24a40.c; colon-suffix name predicate over the +0x20 vtable slot",src/game/enemies.rs
+game::enemies,80b24b00,fn_80b24b00,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b24b00_FUN_80b24b00.c; 48-byte argument-swapping forwarder through 0x802DCBFC",src/game/enemies.rs
+game::enemies,80b24b30,fn_80b24b30,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b24b30_FUN_80b24b30.c; second 48-byte argument-swapping forwarder",src/game/enemies.rs
+game::enemies,80b24b60,fn_80b24b60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b24b60_FUN_80b24b60.c; allocates 0x678 bytes with class vtable 0x80B6CF40 and the Wm_ob_stream helper at +0x53C",src/game/enemies.rs
+game::enemies,80b24d90,fn_80b24d90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b24d90_FUN_80b24d90.c; three lazy direction-table copies in BSS then the +0x164..+0x170 orientation block",src/game/enemies.rs
+game::enemies,80b24ee0,fn_80b24ee0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b24ee0_FUN_80b24ee0.c; +0x358 / +0x35C mask test toggles the +0x148 emitter and +0x534",src/game/enemies.rs
+game::enemies,80b24f90,fn_80b24f90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b24f90_FUN_80b24f90.c; emitter reset plus four +0x524-indexed orientation tables into +0x164..+0x170",src/game/enemies.rs
+game::enemies,80b25020,fn_80b25020,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b25020_FUN_80b25020.c; validates the +0x538 handle then spawns effect 0x304 and runs the Wm_ob_stream pair",src/game/enemies.rs
+game::enemies,80b25130,fn_80b25130,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b25130_FUN_80b25130.c; six-argument Wm_ob_stream spawn through the +0xA0 slot of the 0x80329958 helper",src/game/enemies.rs
+game::enemies,80b25650,fn_80b25650,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25650_FUN_80b25650.c; constant producer returning 0x80377A04",src/game/enemies.rs
+game::enemies,80b26ed0,fn_80b26ed0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b26ed0_FUN_80b26ed0.c; first deleting destructor of the 0x80B26ED0 state skeleton",src/game/enemies.rs
+game::enemies,80b26f30,fn_80b26f30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b26f30_FUN_80b26f30.c; second deleting destructor of the same skeleton",src/game/enemies.rs
+game::enemies,80b26f90,fn_80b26f90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b26f90_FUN_80b26f90.c; constant producer returning 0x80352A74",src/game/enemies.rs
+game::enemies,80b26fa0,fn_80b26fa0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b26fa0_FUN_80b26fa0.c; second constant producer returning 0x80352A34",src/game/enemies.rs
+game::enemies,80b27090,fn_80b27090,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b27090_FUN_80b27090.c; five-step +0x30 owner chain walk followed by a recursive step",src/game/enemies.rs
+game::enemies,80b27170,fn_80b27170,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b27170_FUN_80b27170.c; colon-suffix name predicate over the +0x20 vtable slot",src/game/enemies.rs
+game::enemies,80b27230,fn_80b27230,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b27230_FUN_80b27230.c; 48-byte argument-swapping forwarder through 0x802DCBFC",src/game/enemies.rs
+game::enemies,80b27260,fn_80b27260,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b27260_FUN_80b27260.c; second 48-byte argument-swapping forwarder",src/game/enemies.rs
+game::enemies,80b27290,fn_80b27290,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b27290_FUN_80b27290.c; allocates 0x8D0 bytes with class vtable 0x80B6D6E8 and two 0x802DC9A0 pools",src/game/enemies.rs

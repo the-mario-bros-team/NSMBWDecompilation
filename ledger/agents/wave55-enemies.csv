@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ac0280,fn_80ac0280,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0280_FUN_80ac0280.c; state/name normaliser via 0x8015F800 and 0x802B9280",src/game/enemies.rs
+game::enemies,80ac02e0,fn_80ac02e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac02e0_FUN_80ac02e0.c; byte-identical second normaliser",src/game/enemies.rs
+game::enemies,80ac0340,fn_80ac0340,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0340_FUN_80ac0340.c; constant producer 0x80358004",src/game/enemies.rs
+game::enemies,80ac0350,fn_80ac0350,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0350_FUN_80ac0350.c; constant producer 0x80358084",src/game/enemies.rs
+game::enemies,80ac0360,fn_80ac0360,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0360_FUN_80ac0360.c; constant producer 0x80357BB4",src/game/enemies.rs
+game::enemies,80ac0370,fn_80ac0370,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0370_FUN_80ac0370.c; constant producer 0x80357BF4",src/game/enemies.rs
+game::enemies,80ac0460,fn_80ac0460,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0460_FUN_80ac0460.c; +0x30 chain walker, vtable slot +0xC readiness probe",src/game/enemies.rs
+game::enemies,80ac0540,fn_80ac0540,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0540_FUN_80ac0540.c; strrchr 0x802E1C40 + strcmp 0x802E1AB4 on the suffix after colon",src/game/enemies.rs
+game::enemies,80ac0600,fn_80ac0600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0600_FUN_80ac0600.c; deleting-destructor forwarder 0x802DCBFC, hidden r12 not modelled",src/game/enemies.rs
+game::enemies,80ac0630,fn_80ac0630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0630_FUN_80ac0630.c; second deleting-destructor forwarder 0x802DCBFC",src/game/enemies.rs
+game::enemies,80ac0660,fn_80ac0660,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0660_FUN_80ac0660.c; 0x5E8-byte lift_maruta constructor, vtable 0x80B58720, 12-slot table +0x550",src/game/enemies.rs
+game::enemies,80ac0710,fn_80ac0710,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0710_FUN_80ac0710.c; second normaliser, calls 0x802B9280 with no visible argument",src/game/enemies.rs
+game::enemies,80ac0a90,fn_80ac0a90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0a90_FUN_80ac0a90.c; g3d/lift_maruta.brres binder, model +0x540, animation holder +0x544",src/game/enemies.rs
+game::enemies,80ac0d60,fn_80ac0d60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0d60_FUN_80ac0d60.c; clears 12-slot table word +4 at stride 0xC",src/game/enemies.rs
+game::enemies,80ac0d90,fn_80ac0d90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0d90_FUN_80ac0d90.c; slot-presence test, returns 0 on match else 1",src/game/enemies.rs
+game::enemies,80ac0dd0,fn_80ac0dd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0dd0_FUN_80ac0dd0.c; first free slot calls untranslated 0x80AC0750",src/game/enemies.rs
+game::enemies,80ac0e00,fn_80ac0e00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0e00_FUN_80ac0e00.c; 12-slot per-frame step, speed clamp 0..0x800, sound event 0x2B2",src/game/enemies.rs
+game::enemies,80ac16d0,fn_80ac16d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac16d0_FUN_80ac16d0.c; mecha_koopa variant binder, g3d/mecha_koopa.brres, holders +0x548/+0x588/+0x5C0",src/game/enemies.rs
+game::enemies,80ac1920,fn_80ac1920,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac1920_FUN_80ac1920.c; +0x7C matrix rebuild, owner slot +0x28, region test 0x80B75A5C",src/game/enemies.rs
+game::enemies,80ac1ae0,fn_80ac1ae0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac1ae0_FUN_80ac1ae0.c; variant-selected word from 0x80B30280 to +0x164",src/game/enemies.rs
+game::enemies,80ac1b00,fn_80ac1b00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac1b00_FUN_80ac1b00.c; Wm_en_comattack effect spawn, shared scale block 0x80B75B94",src/game/enemies.rs
+game::enemies,80ac1b90,fn_80ac1b90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac1b90_FUN_80ac1b90.c; Wm_mr_hardhit effect spawn",src/game/enemies.rs
+game::enemies,80ac1bf0,fn_80ac1bf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac1bf0_FUN_80ac1bf0.c; attack record template 0x80B30290 plus holder slot +0x6C mode byte",src/game/enemies.rs
+game::enemies,80ac1cd0,fn_80ac1cd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac1cd0_FUN_80ac1cd0.c; forwards actor to 0x80064740 with an 8-byte scratch slot",src/game/enemies.rs
+game::enemies,80ac1d00,fn_80ac1d00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac1d00_FUN_80ac1d00.c; binds variant 1 through untranslated 0x80AC1800, countdown +0x5F8 = 0x1FF",src/game/enemies.rs
+game::enemies,80ac1d50,fn_80ac1d50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac1d50_FUN_80ac1d50.c; frame helpers, controller +0x1EC, sound event 0x20B above +0xEC threshold",src/game/enemies.rs
+game::enemies,80ac1e10,fn_80ac1e10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac1e10_FUN_80ac1e10.c; decrements +0x5F8, sound 0x20C below 0x61, phase-2 bind at 0x61",src/game/enemies.rs
+game::enemies,80ac1ed0,fn_80ac1ed0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac1ed0_FUN_80ac1ed0.c; second attack record template 0x80B302C8..D4 and variant table 0x8042C1B0",src/game/enemies.rs

@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ac4410,fn_80ac4410,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac4410_FUN_80ac4410.c; skeleton normaliser; resets descriptor via 0x8015F800 and releases via 0x802B9280 when mode > 0",src/game/enemies.rs
+game::enemies,80ac4470,fn_80ac4470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac4470_FUN_80ac4470.c; second normaliser; identical to 80ac4410",src/game/enemies.rs
+game::enemies,80ac44d0,fn_80ac44d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac44d0_FUN_80ac44d0.c; constant producer; returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80ac44e0,fn_80ac44e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac44e0_FUN_80ac44e0.c; constant producer; returns 0x80352DB4",src/game/enemies.rs
+game::enemies,80ac45d0,fn_80ac45d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac45d0_FUN_80ac45d0.c; +0x30 child-chain walker; vtable slot +0xC readiness test",src/game/enemies.rs
+game::enemies,80ac46b0,fn_80ac46b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac46b0_FUN_80ac46b0.c; ':'-suffix name predicate via strrchr 0x802E1C40 and strcmp 0x802E1AB4",src/game/enemies.rs
+game::enemies,80ac4770,fn_80ac4770,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac4770_FUN_80ac4770.c; 48-byte deleting-destructor forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80ac47a0,fn_80ac47a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac47a0_FUN_80ac47a0.c; second 48-byte deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80ac47d0,fn_80ac47d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac47d0_FUN_80ac47d0.c; 0x880-byte constructor; vtable 0x80B592A8; base ctor 0x80037EF0; g3d/met.brres layout at +0x7DC..+0x83C",src/game/enemies.rs
+game::enemies,80ac6ba0,fn_80ac6ba0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac6ba0_FUN_80ac6ba0.c; skeleton normaliser; identical to 80ac4410",src/game/enemies.rs
+game::enemies,80ac6c00,fn_80ac6c00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac6c00_FUN_80ac6c00.c; second normaliser; identical to 80ac6ba0",src/game/enemies.rs
+game::enemies,80ac6c60,fn_80ac6c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac6c60_FUN_80ac6c60.c; constant producer; returns 0x80353AE4",src/game/enemies.rs
+game::enemies,80ac6c70,fn_80ac6c70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac6c70_FUN_80ac6c70.c; constant producer; returns 0x80353B24",src/game/enemies.rs
+game::enemies,80ac6c80,fn_80ac6c80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac6c80_FUN_80ac6c80.c; constant producer; returns 0x80353AA4",src/game/enemies.rs
+game::enemies,80ac6c90,fn_80ac6c90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac6c90_FUN_80ac6c90.c; constant producer; returns 0x80353A64",src/game/enemies.rs
+game::enemies,80ac6d80,fn_80ac6d80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac6d80_FUN_80ac6d80.c; +0x30 child-chain walker; identical to 80ac45d0",src/game/enemies.rs
+game::enemies,80ac6e60,fn_80ac6e60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac6e60_FUN_80ac6e60.c; ':'-suffix name predicate; identical to 80ac46b0",src/game/enemies.rs
+game::enemies,80ac6f20,fn_80ac6f20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac6f20_FUN_80ac6f20.c; 48-byte deleting-destructor forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80ac6f50,fn_80ac6f50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac6f50_FUN_80ac6f50.c; second 48-byte deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80ac6f80,fn_80ac6f80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac6f80_FUN_80ac6f80.c; 0x770-byte constructor; vtable 0x80B598C8; g3d/huhu.brres actor via binder 0x80AC82B0",src/game/enemies.rs
+game::enemies,80acd5e0,fn_80acd5e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acd5e0_FUN_80acd5e0.c; skeleton normaliser; identical to 80ac4410",src/game/enemies.rs
+game::enemies,80acd640,fn_80acd640,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acd640_FUN_80acd640.c; second normaliser; identical to 80acd5e0",src/game/enemies.rs
+game::enemies,80acd6a0,fn_80acd6a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acd6a0_FUN_80acd6a0.c; constant producer; returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80acd6b0,fn_80acd6b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acd6b0_FUN_80acd6b0.c; constant producer; returns 0x80357BB4",src/game/enemies.rs
+game::enemies,80acd7a0,fn_80acd7a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acd7a0_FUN_80acd7a0.c; +0x30 child-chain walker; identical to 80ac45d0",src/game/enemies.rs
+game::enemies,80acd880,fn_80acd880,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acd880_FUN_80acd880.c; ':'-suffix name predicate; identical to 80ac46b0",src/game/enemies.rs
+game::enemies,80acd940,fn_80acd940,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acd940_FUN_80acd940.c; 48-byte deleting-destructor forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80acd970,fn_80acd970,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acd970_FUN_80acd970.c; second 48-byte deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80acd9a0,fn_80acd9a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acd9a0_FUN_80acd9a0.c; 0x608-byte constructor; vtable 0x80B5A808; daEnRailPolyChild_c sibling; net_walk binders next door",src/game/enemies.rs

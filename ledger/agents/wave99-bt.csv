@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,8020013c,fn_8020013c,translated,high,"work/ghidra/main-gb/export/8020013c_FUN_8020013c.c; packet-type code to payload offset through the r13 table pointer",src/runtime/bt.rs
+runtime::bt,80201754,fn_80201754,translated,medium,"work/ghidra/main-gb/export/80201754_FUN_80201754.c; QoS completion; cancels timer 803D2178 and calls the 803D2190 callback with a 0x1B block",src/runtime/bt.rs
+runtime::bt,80204750,fn_80204750,translated,high,"work/ghidra/main-gb/export/80204750_FUN_80204750.c; BTM cancel inquiry; state and callback clears plus deferred cancel counter",src/runtime/bt.rs
+runtime::bt,80204858,fn_80204858,translated,medium,"work/ghidra/main-gb/export/80204858_FUN_80204858.c; starts an inquiry from the ten-byte request block; mode 0/1 select state 2/1",src/runtime/bt.rs
+runtime::bt,80204a0c,fn_80204a0c,translated,medium,"work/ghidra/main-gb/export/80204a0c_FUN_80204a0c.c; remote-name request; forward the matching inquiry record payload to fn_802058ec",src/runtime/bt.rs
+runtime::bt,80204c2c,fn_80204c2c,translated,high,"work/ghidra/main-gb/export/80204c2c_FUN_80204c2c.c; first occupied inquiry record; returns (record+8, index)",src/runtime/bt.rs
+runtime::bt,80204ce4,fn_80204ce4,translated,medium,"work/ghidra/main-gb/export/80204ce4_FUN_80204ce4.c; next occupied inquiry record from a record pointer; signed index formula preserved",src/runtime/bt.rs
+runtime::bt,80204e20,fn_80204e20,translated,medium,"work/ghidra/main-gb/export/80204e20_FUN_80204e20.c; wipes inquiry records by BD_ADDR or all; eviction callback",src/runtime/bt.rs
+runtime::bt,80204ef0,fn_80204ef0,translated,high,"work/ghidra/main-gb/export/80204ef0_FUN_80204ef0.c; full inquiry teardown; three timers and twelve records",src/runtime/bt.rs
+runtime::bt,8020526c,fn_8020526c,translated,medium,"work/ghidra/main-gb/export/8020526c_FUN_8020526c.c; HCI event-filter builder; selectors 0/1/2 choose 0 or 6 payload bytes",src/runtime/bt.rs
+runtime::bt,80205350,fn_80205350,translated,medium,"work/ghidra/main-gb/export/80205350_FUN_80205350.c; inquiry event-filter state machine; then 0x0401 or 0x0403",src/runtime/bt.rs
+runtime::bt,80205ebc,fn_80205ebc,translated,high,"work/ghidra/main-gb/export/80205ebc_FUN_80205ebc.c; SCO state byte for a BD_ADDR",src/runtime/bt.rs
+runtime::bt,80205f74,fn_80205f74,translated,medium,"work/ghidra/main-gb/export/80205f74_FUN_80205f74.c; releases the active SCO slot and calls the service callback",src/runtime/bt.rs
+runtime::bt,8020603c,fn_8020603c,translated,high,"work/ghidra/main-gb/export/8020603c_FUN_8020603c.c; merges two packet-type range descriptors via the 802F7040 3x3 table",src/runtime/bt.rs
+runtime::bt,80206258,fn_80206258,translated,medium,"work/ghidra/main-gb/export/80206258_FUN_80206258.c; merges the two registered service ranges and the slot descriptor",src/runtime/bt.rs
+runtime::bt,802063b8,fn_802063b8,translated,medium,"work/ghidra/main-gb/export/802063b8_FUN_802063b8.c; applies a merged range to one SCO slot and dispatches one builder",src/runtime/bt.rs
+runtime::bt,802065ec,fn_802065ec,translated,medium,"work/ghidra/main-gb/export/802065ec_FUN_802065ec.c; finishes the active SCO command; service callbacks and role state",src/runtime/bt.rs
+runtime::bt,8020669c,fn_8020669c,translated,medium,"work/ghidra/main-gb/export/8020669c_FUN_8020669c.c; mode change completion; unsniff gate 80207614 then 0x040F/0x0413/0x080B",src/runtime/bt.rs
+runtime::bt,80206908,fn_80206908,translated,medium,"work/ghidra/main-gb/export/80206908_FUN_80206908.c; eSCO connection response; reject and accept paths",src/runtime/bt.rs
+runtime::bt,80206ae4,fn_80206ae4,translated,medium,"work/ghidra/main-gb/export/80206ae4_FUN_80206ae4.c; unparks a slot in state 6 with a matching handle",src/runtime/bt.rs
+runtime::bt,80206c70,fn_80206c70,translated,medium,"work/ghidra/main-gb/export/80206c70_FUN_80206c70.c; SCO connection request; claims a slot or rejects",src/runtime/bt.rs
+runtime::bt,80206e50,fn_80206e50,translated,medium,"work/ghidra/main-gb/export/80206e50_FUN_80206e50.c; connection response dispatcher; slot +0/+4 callbacks",src/runtime/bt.rs
+runtime::bt,80206ff0,fn_80206ff0,translated,high,"work/ghidra/main-gb/export/80206ff0_FUN_80206ff0.c; closes one SCO slot via HCI 0x0406",src/runtime/bt.rs
+runtime::bt,802074a0,fn_802074a0,translated,medium,"work/ghidra/main-gb/export/802074a0_FUN_802074a0.c; changed eSCO parameters; completion callback with a 0x0F block",src/runtime/bt.rs
+runtime::bt,80207af0,fn_80207af0,translated,medium,"work/ghidra/main-gb/export/80207af0_FUN_80207af0.c; completes or fails a pending connection setup",src/runtime/bt.rs
+runtime::bt,80207bb4,fn_80207bb4,translated,medium,"work/ghidra/main-gb/export/80207bb4_FUN_80207bb4.c; security authorization completion; runs the 8020A0B0 executor",src/runtime/bt.rs
+runtime::bt,8020bb44,fn_8020bb44,translated,medium,"work/ghidra/main-gb/export/8020bb44_FUN_8020bb44.c; GAP connection indication; eight-record table at 803D43EC",src/runtime/bt.rs

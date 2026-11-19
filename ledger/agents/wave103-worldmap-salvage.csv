@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,8011c100,fn_8011c100,translated,high,work/ghidra/main-gb/export/8011c100_FUN_8011c100.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/game/worldmap.rs

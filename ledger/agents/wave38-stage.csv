@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c1700,fn_800c1700,translated,high,"work/ghidra/main-gb/export/800c1700_FUN_800c1700.c; membership scan over 0x802F0FE8",src/game/stage.rs
+game::stage,800c1740,fn_800c1740,translated,high,"work/ghidra/main-gb/export/800c1740_FUN_800c1740.c; membership scan over 0x802F0FF8",src/game/stage.rs
+game::stage,800c1780,fn_800c1780,translated,high,"work/ghidra/main-gb/export/800c1780_FUN_800c1780.c; flip byte 68 and negate 60",src/game/stage.rs
+game::stage,800c17a0,fn_800c17a0,translated,medium,"work/ghidra/main-gb/export/800c17a0_FUN_800c17a0.c; zone test gates zone lookup",src/game/stage.rs
+game::stage,800c19e0,fn_800c19e0,translated,high,"work/ghidra/main-gb/export/800c19e0_FUN_800c19e0.c; slope and intercept through two points",src/game/stage.rs
+game::stage,800c1a40,fn_800c1a40,translated,high,"work/ghidra/main-gb/export/800c1a40_FUN_800c1a40.c; tolerance span test",src/game/stage.rs
+game::stage,800c1e10,fn_800c1e10,translated,high,"work/ghidra/main-gb/export/800c1e10_FUN_800c1e10.c; squared radius straddle test",src/game/stage.rs
+game::stage,800c2700,fn_800c2700,translated,medium,"work/ghidra/main-gb/export/800c2700_FUN_800c2700.c; circle test stores bearing to 0x80359210",src/game/stage.rs
+game::stage,800c27f0,fn_800c27f0,translated,medium,"work/ghidra/main-gb/export/800c27f0_FUN_800c27f0.c; clamped circle to 0x80359250",src/game/stage.rs
+game::stage,800c2930,fn_800c2930,translated,medium,"work/ghidra/main-gb/export/800c2930_FUN_800c2930.c; clamped circle to 0x80359290",src/game/stage.rs
+game::stage,800c2a60,fn_800c2a60,translated,medium,"work/ghidra/main-gb/export/800c2a60_FUN_800c2a60.c; clamped circle to 0x803592D0",src/game/stage.rs
+game::stage,800c2b90,fn_800c2b90,translated,medium,"work/ghidra/main-gb/export/800c2b90_FUN_800c2b90.c; clamped circle to 0x80359310",src/game/stage.rs
+game::stage,800c2cb0,fn_800c2cb0,translated,medium,"work/ghidra/main-gb/export/800c2cb0_FUN_800c2cb0.c; clamped circle to 0x80359350",src/game/stage.rs
+game::stage,800c2de0,fn_800c2de0,translated,medium,"work/ghidra/main-gb/export/800c2de0_FUN_800c2de0.c; clamped circle to 0x80359390",src/game/stage.rs
+game::stage,800c2f20,fn_800c2f20,translated,medium,"work/ghidra/main-gb/export/800c2f20_FUN_800c2f20.c; clamped circle to 0x803593D0",src/game/stage.rs
+game::stage,800c3050,fn_800c3050,translated,medium,"work/ghidra/main-gb/export/800c3050_FUN_800c3050.c; clamped circle to 0x80359410",src/game/stage.rs
+game::stage,800c3ad0,fn_800c3ad0,translated,high,"work/ghidra/main-gb/export/800c3ad0_FUN_800c3ad0.c; clamp plus 40 to span",src/game/stage.rs
+game::stage,800c3b10,fn_800c3b10,translated,high,"work/ghidra/main-gb/export/800c3b10_FUN_800c3b10.c; clamp plus 44 to span",src/game/stage.rs
+game::stage,800c3b50,fn_800c3b50,translated,medium,"work/ghidra/main-gb/export/800c3b50_FUN_800c3b50.c; subtract 0x4000 steps",src/game/stage.rs
+game::stage,800c3bac,fn_800c3bac,translated,high,"work/ghidra/main-gb/export/800c3bac_FUN_800c3bac.c; add 0xC000 steps",src/game/stage.rs
+game::stage,800c3bc0,fn_800c3bc0,translated,high,"work/ghidra/main-gb/export/800c3bc0_FUN_800c3bc0.c; subtract angle blend",src/game/stage.rs
+game::stage,800c3c30,fn_800c3c30,translated,high,"work/ghidra/main-gb/export/800c3c30_FUN_800c3c30.c; add angle blend",src/game/stage.rs
+game::stage,800c3ca0,fn_800c3ca0,translated,medium,"work/ghidra/main-gb/export/800c3ca0_FUN_800c3ca0.c; state machine kinds 1 4 5 9 D 12 13 19 1F",src/game/stage.rs
+game::stage,800c4060,fn_800c4060,translated,medium,"work/ghidra/main-gb/export/800c4060_FUN_800c4060.c; state machine kinds 2 B F 11 14 17 1B",src/game/stage.rs
+game::stage,800c43a0,fn_800c43a0,translated,medium,"work/ghidra/main-gb/export/800c43a0_FUN_800c43a0.c; state machine kinds 2 5 6 A E 11 14 1A 1E",src/game/stage.rs
+game::stage,800c4780,fn_800c4780,translated,medium,"work/ghidra/main-gb/export/800c4780_FUN_800c4780.c; state machine kinds 1 4 6 8 C 12 13 16 1C",src/game/stage.rs
+game::stage,800c4b50,fn_800c4b50,translated,high,"work/ghidra/main-gb/export/800c4b50_FUN_800c4b50.c; retry 4060 3CA0 43A0 then 0x80358E50",src/game/stage.rs
+game::stage,800c4c50,fn_800c4c50,translated,high,"work/ghidra/main-gb/export/800c4c50_FUN_800c4c50.c; retry 43A0 4780 4060 then 0x80358E50",src/game/stage.rs
+game::stage,800c4d50,fn_800c4d50,translated,high,"work/ghidra/main-gb/export/800c4d50_FUN_800c4d50.c; retry 3CA0 4060 4780 then 0x80358E50",src/game/stage.rs
+game::stage,800c4e50,fn_800c4e50,translated,high,"work/ghidra/main-gb/export/800c4e50_FUN_800c4e50.c; retry 4780 43A0 3CA0 then 0x80358E50",src/game/stage.rs

@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,8029f900,fn_8029f900,translated,medium,"work/ghidra/main-gb/export/8029f900_FUN_8029f900.c; raw-checked work/dol/main.elf 0x8029F900..0x802A063C; basis builder resolves to PSMTXConcat + GXLoadPosMtx; all 54 psq operands GQR0",src/render/gx_band.rs

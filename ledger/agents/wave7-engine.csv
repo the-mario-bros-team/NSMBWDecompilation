@@ -1,0 +1,10 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::globals,801015a0,fn_801015a0,translated,high,work/ghidra/main-gb/export/801015a0_FUN_801015a0.c,src/engine/globals.rs
+engine::globals,801015e0,fn_801015e0,translated,high,work/ghidra/main-gb/export/801015e0_FUN_801015e0.c,src/engine/globals.rs
+engine::globals,80101690,fn_80101690,translated,high,work/ghidra/main-gb/export/80101690_FUN_80101690.c,src/engine/globals.rs
+engine::globals,801016b0,fn_801016b0,translated,medium,work/ghidra/main-gb/export/801016b0_FUN_801016b0.c,src/engine/globals.rs
+engine::globals,801017d0,fn_801017d0,translated,high,work/ghidra/main-gb/export/801017d0_FUN_801017d0.c,src/engine/globals.rs
+engine::globals,801018c0,fn_801018c0,translated,high,work/ghidra/main-gb/export/801018c0_FUN_801018c0.c,src/engine/globals.rs
+engine::globals,80102260,fn_80102260,translated,medium,work/ghidra/main-gb/export/80102260_FUN_80102260.c,src/engine/globals.rs
+engine::globals,801027c0,fn_801027c0,translated,high,work/ghidra/main-gb/export/801027c0_FUN_801027c0.c,src/engine/globals.rs
+engine::globals,80102a80,fn_80102a80,translated,medium,work/ghidra/main-gb/export/80102a80_FUN_80102a80.c,src/engine/globals.rs

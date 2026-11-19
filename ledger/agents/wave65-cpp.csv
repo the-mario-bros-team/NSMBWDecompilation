@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802d3f60,fn_802d3f60,translated,medium,"work/ghidra/main-gb/export/802d3f60_FUN_802d3f60.c; state 2/3 guard; busy byte +5; call 0x80279B70",src/runtime/cpp.rs
+runtime::cpp,802d4030,fn_802d4030,translated,medium,"work/ghidra/main-gb/export/802d4030_FUN_802d4030.c; same body as 0x802D3F60; call 0x80279B70",src/runtime/cpp.rs
+runtime::cpp,802d4100,fn_802d4100,translated,medium,"work/ghidra/main-gb/export/802d4100_FUN_802d4100.c; same body; call 0x80279CE0",src/runtime/cpp.rs
+runtime::cpp,802d41d0,fn_802d41d0,translated,high,"work/ghidra/main-gb/export/802d41d0_FUN_802d41d0.c; guard byte +4; call 0x802783C0",src/runtime/cpp.rs
+runtime::cpp,802d41f0,fn_802d41f0,translated,high,"work/ghidra/main-gb/export/802d41f0_FUN_802d41f0.c; loop over handle +0x3C; 0x8027A7D0(entry,0)",src/runtime/cpp.rs
+runtime::cpp,802d4250,fn_802d4250,translated,high,"work/ghidra/main-gb/export/802d4250_FUN_802d4250.c; loop over handle +0x3C; forwards state",src/runtime/cpp.rs
+runtime::cpp,802d43c0,fn_802d43c0,translated,high,"work/ghidra/main-gb/export/802d43c0_FUN_802d43c0.c; 0x8027B1C0(handle+0xC,...); returns result == 0",src/runtime/cpp.rs
+runtime::cpp,802d44b0,fn_802d44b0,translated,high,"work/ghidra/main-gb/export/802d44b0_FUN_802d44b0.c; 0x8027B270(handle+0xC,...); returns result == 0",src/runtime/cpp.rs
+runtime::cpp,802d45a0,fn_802d45a0,translated,high,"work/ghidra/main-gb/export/802d45a0_FUN_802d45a0.c; 0x8027B160(handle+0xC,...); returns result == 0",src/runtime/cpp.rs
+runtime::cpp,802d46a0,fn_802d46a0,translated,high,"work/ghidra/main-gb/export/802d46a0_FUN_802d46a0.c; delete flag > 0 -> 0x802B9280",src/runtime/cpp.rs
+runtime::cpp,802d46e0,fn_802d46e0,translated,medium,"work/ghidra/main-gb/export/802d46e0_FUN_802d46e0.c; 0x8AC-byte ctor; fn_802d6210; 0x6C-stride array; vtables +0/+8/+0xF8",src/runtime/cpp.rs
+runtime::cpp,802d4780,fn_802d4780,translated,medium,"work/ghidra/main-gb/export/802d4780_FUN_802d4780.c; 0x8AC-byte teardown; fn_802d6350; optional free",src/runtime/cpp.rs
+runtime::cpp,802d77e0,fn_802d77e0,translated,medium,"work/ghidra/main-gb/export/802d77e0_FUN_802d77e0.c; delete flag > 0 -> 0x802B9280",src/runtime/cpp.rs
+runtime::cpp,802d7820,fn_802d7820,translated,high,"work/ghidra/main-gb/export/802d7820_FUN_802d7820.c; splits packed header: type-2, 24-bit size, payload +4",src/runtime/cpp.rs
+runtime::cpp,802d78a0,fn_802d78a0,translated,high,"work/ghidra/main-gb/export/802d78a0_FUN_802d78a0.c; store at +0 (INF1 slot)",src/runtime/cpp.rs
+runtime::cpp,802d78b0,fn_802d78b0,translated,high,"work/ghidra/main-gb/export/802d78b0_FUN_802d78b0.c; store at +4 (DAT1 slot)",src/runtime/cpp.rs
+runtime::cpp,802d78c0,fn_802d78c0,translated,high,"work/ghidra/main-gb/export/802d78c0_FUN_802d78c0.c; store at +8 (STR1 slot)",src/runtime/cpp.rs
+runtime::cpp,802d78d0,fn_802d78d0,translated,high,"work/ghidra/main-gb/export/802d78d0_FUN_802d78d0.c; store at +0xC (MID1 slot)",src/runtime/cpp.rs
+runtime::cpp,802d78e0,fn_802d78e0,translated,high,"work/ghidra/main-gb/export/802d78e0_FUN_802d78e0.c; store at +0x10 (FLW1 slot)",src/runtime/cpp.rs
+runtime::cpp,802d78f0,fn_802d78f0,translated,high,"work/ghidra/main-gb/export/802d78f0_FUN_802d78f0.c; store at +0x14 (FLI1 slot)",src/runtime/cpp.rs
+runtime::cpp,802d7900,fn_802d7900,translated,high,"work/ghidra/main-gb/export/802d7900_FUN_802d7900.c; store at +0x18 (count slot)",src/runtime/cpp.rs
+runtime::cpp,802d7910,fn_802d7910,translated,high,"work/ghidra/main-gb/export/802d7910_FUN_802d7910.c; tag -> 0..5 else 6; table 0x802FD2D0",src/runtime/cpp.rs
+runtime::cpp,802d7a80,fn_802d7a80,translated,high,"work/ghidra/main-gb/export/802d7a80_FUN_802d7a80.c; table[index] at *(u32)(+0x10)+0x10",src/runtime/cpp.rs
+runtime::cpp,802d7aa0,fn_802d7aa0,translated,medium,"work/ghidra/main-gb/export/802d7aa0_FUN_802d7aa0.c; record ctor; vtable 0x803507B8; calls 0x80296750 and 0x802DBB70",src/runtime/cpp.rs
+runtime::cpp,802d7b20,fn_802d7b20,translated,high,"work/ghidra/main-gb/export/802d7b20_FUN_802d7b20.c; fn_802dbc20(+0x7C,-1) then optional free",src/runtime/cpp.rs
+runtime::cpp,802d7c50,fn_802d7c50,translated,high,"work/ghidra/main-gb/export/802d7c50_FUN_802d7c50.c; resets +0x74 child; 0x80285CE0",src/runtime/cpp.rs
+runtime::cpp,802d7d50,fn_802d7d50,translated,high,"work/ghidra/main-gb/export/802d7d50_FUN_802d7d50.c; resets +0x74 child; 0x80285CE0 and 0x80285DB0",src/runtime/cpp.rs

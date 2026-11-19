@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806d9810,fn_806d9810,translated,high,"work/ghidra/rel-d_basesNP/export/806d9810_FUN_806d9810.c; 96 bytes; rebuilds the two ramp-length words from the span at +0x5A8/+0x5AC",src/game/bases.rs
+game::bases,806d9870,fn_806d9870,translated,medium,"work/ghidra/rel-d_basesNP/export/806d9870_FUN_806d9870.c; 276 bytes; positions and shows one player model after the 0x802F8FF0 type test",src/game/bases.rs
+game::bases,806d9990,fn_806d9990,translated,high,"work/ghidra/rel-d_basesNP/export/806d9990_FUN_806d9990.c; 60 bytes; calls the placement body for slot 0 and slot 1",src/game/bases.rs
+game::bases,806d99d0,fn_806d99d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806d99d0_FUN_806d99d0.c; 516 bytes; two-pass matrix placement of the +0x3F0 and +0x430 parts",src/game/bases.rs
+game::bases,806d9bf0,fn_806d9bf0,translated,medium,"work/ghidra/rel-d_basesNP/export/806d9bf0_FUN_806d9bf0.c; 648 bytes; rebuilds the three rig records +0x53C/+0x548/+0x554 and their parts",src/game/bases.rs
+game::bases,806d9e80,fn_806d9e80,translated,medium,"work/ghidra/rel-d_basesNP/export/806d9e80_FUN_806d9e80.c; 240 bytes; two 0x80064680 contact requests with id 0x1FB and the +0x5B8 flags",src/game/bases.rs
+game::bases,806d9f70,fn_806d9f70,translated,medium,"work/ghidra/rel-d_basesNP/export/806d9f70_FUN_806d9f70.c; 76 bytes; walks the global player list and calls 0x80162510 per node",src/game/bases.rs
+game::bases,806da050,fn_806da050,translated,medium,"work/ghidra/rel-d_basesNP/export/806da050_FUN_806da050.c; 76 bytes; walks the player list and steps each player frame via fn_806db9f0",src/game/bases.rs
+game::bases,806da120,fn_806da120,translated,medium,"work/ghidra/rel-d_basesNP/export/806da120_FUN_806da120.c; 204 bytes; rider-load classifier returning 0/1/2/3 from the +0x590 and +0x594 counters",src/game/bases.rs
+game::bases,806da220,fn_806da220,translated,high,"work/ghidra/rel-d_basesNP/export/806da220_FUN_806da220.c; 128 bytes; pad-mask gate that enters state 0x8082DA28",src/game/bases.rs
+game::bases,806da2e0,fn_806da2e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806da2e0_FUN_806da2e0.c; 268 bytes; exit path to 0x8082D9E8 and per-slot frame step to 0x8082DA68",src/game/bases.rs
+game::bases,806da410,fn_806da410,translated,medium,"work/ghidra/rel-d_basesNP/export/806da410_FUN_806da410.c; 236 bytes; decrements the +0x5BC delay and enters 0x8082DA28/0x8082DAA8",src/game/bases.rs
+game::bases,806da890,fn_806da890,translated,medium,"work/ghidra/rel-d_basesNP/export/806da890_FUN_806da890.c; 172 bytes; counts +0x5BC down without a matrix rebuild and enters 0x8082DB28",src/game/bases.rs
+game::bases,806da9b0,fn_806da9b0,translated,high,"work/ghidra/rel-d_basesNP/export/806da9b0_FUN_806da9b0.c; 200 bytes; releases the +0x560/+0x53C/+0x470/+0x3F0 arrays and optionally frees",src/game/bases.rs
+game::bases,806db6e0,fn_806db6e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806db6e0_FUN_806db6e0.c; 752 bytes; recounts the +0x500 child list and resizes the board frames +0x4C8/+0x4DC",src/game/bases.rs
+game::bases,806db9d0,fn_806db9d0,translated,high,"work/ghidra/rel-d_basesNP/export/806db9d0_FUN_806db9d0.c; 24 bytes; clears the four presence bytes +0x584..+0x587",src/game/bases.rs
+game::bases,806db9f0,fn_806db9f0,translated,high,"work/ghidra/rel-d_basesNP/export/806db9f0_FUN_806db9f0.c; 60 bytes; steps both player frames and resets the four rate words",src/game/bases.rs
+game::bases,806dba30,fn_806dba30,translated,high,"work/ghidra/rel-d_basesNP/export/806dba30_FUN_806dba30.c; 48 bytes; ORs the five presence bytes +0x584..+0x588",src/game/bases.rs
+game::bases,806dbae0,fn_806dbae0,translated,medium,"work/ghidra/rel-d_basesNP/export/806dbae0_FUN_806dbae0.c; 64 bytes; detach body calling 0x8006CDE0/0x8006CD40/0x80064F50",src/game/bases.rs
+game::bases,806dbb20,fn_806dbb20,translated,high,"work/ghidra/rel-d_basesNP/export/806dbb20_FUN_806dbb20.c; 56 bytes; stops the +0x4F0 motion interface and clears the flags",src/game/bases.rs
+game::bases,806dbb80,fn_806dbb80,translated,high,"work/ghidra/rel-d_basesNP/export/806dbb80_FUN_806dbb80.c; 56 bytes; restarts the +0x4F0 motion interface and clears the flags",src/game/bases.rs
+game::bases,806dbbd0,fn_806dbbd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806dbbd0_FUN_806dbbd0.c; 72 bytes; recounts riders then copies +0x104 into +0x530",src/game/bases.rs
+game::bases,806dc5b0,fn_806dc5b0,translated,high,"work/ghidra/rel-d_basesNP/export/806dc5b0_FUN_806dc5b0.c; 164 bytes; loads g3d/test_lift.brres and binds the test_lift pane",src/game/bases.rs
+game::bases,806dc660,fn_806dc660,translated,medium,"work/ghidra/rel-d_basesNP/export/806dc660_FUN_806dc660.c; 228 bytes; contact scan over the +0x440 children that votes into +0x4A4",src/game/bases.rs
+game::bases,806dc7e0,fn_806dc7e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806dc7e0_FUN_806dc7e0.c; 88 bytes; restores the +0x490..+0x498 constants and clears the steering pair",src/game/bases.rs
+game::bases,806dc850,fn_806dc850,translated,medium,"work/ghidra/rel-d_basesNP/export/806dc850_FUN_806dc850.c; 372 bytes; clamps the steering step against +0x4A0 and applies it to +0x104",src/game/bases.rs
+game::bases,806dc9e0,fn_806dc9e0,translated,high,"work/ghidra/rel-d_basesNP/export/806dc9e0_FUN_806dc9e0.c; 136 bytes; rebuilds the +0x3F0 model matrix from the actor position",src/game/bases.rs
+game::bases,806dccc0,fn_806dccc0,translated,high,"work/ghidra/rel-d_basesNP/export/806dccc0_FUN_806dccc0.c; 88 bytes; release wrapper calling 0x8015F800 and optionally 0x802B9280",src/game/bases.rs
+game::bases,806dce40,fn_806dce40,translated,high,"work/ghidra/rel-d_basesNP/export/806dce40_FUN_806dce40.c; 204 bytes; allocates and constructs the unnamed 0x728-byte lift actor",src/game/bases.rs

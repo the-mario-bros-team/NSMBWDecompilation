@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807900b0,fn_807900b0,translated,medium,work/ghidra/rel-d_basesNP/export/807900b0_FUN_807900b0.c; 0x44-byte record selected by +0x214; binds up to 0x11 effect handles at +0x21C,src/game/bases.rs
+game::bases,80790160,fn_80790160,translated,high,work/ghidra/rel-d_basesNP/export/80790160_FUN_80790160.c; releases the 0x11 +0x21C effect handles,src/game/bases.rs
+game::bases,807901e0,fn_807901e0,translated,medium,work/ghidra/rel-d_basesNP/export/807901e0_FUN_807901e0.c; creates one handle per entry of the 0x15-entry table at +0x260,src/game/bases.rs
+game::bases,80791ce0,fn_80791ce0,translated,high,work/ghidra/rel-d_basesNP/export/80791ce0_FUN_80791ce0.c; returns the +0x284 byte of the 0x29E actor,src/game/bases.rs
+game::bases,807923f0,fn_807923f0,translated,medium,work/ghidra/rel-d_basesNP/export/807923f0_FUN_807923f0.c; starts the skl_root effect once and seeds the animation rate,src/game/bases.rs
+game::bases,807939d0,fn_807939d0,translated,medium,work/ghidra/rel-d_basesNP/export/807939d0_FUN_807939d0.c; returns the shared f32 constant at 0x807D000C,src/game/bases.rs
+game::bases,807939e0,fn_807939e0,translated,medium,work/ghidra/rel-d_basesNP/export/807939e0_FUN_807939e0.c; rebuilds the +0x70C/+0x784 animation pair,src/game/bases.rs
+game::bases,80793a60,fn_80793a60,translated,medium,work/ghidra/rel-d_basesNP/export/80793a60_FUN_80793a60.c; copies the finished +0x784 clip into +0x74C,src/game/bases.rs
+game::bases,80794590,fn_80794590,translated,high,work/ghidra/rel-d_basesNP/export/80794590_FUN_80794590.c; clears +0x32C,src/game/bases.rs
+game::bases,807995a0,fn_807995a0,translated,medium,work/ghidra/rel-d_basesNP/export/807995a0_FUN_807995a0.c; forwards +0x22C to 0x80775100,src/game/bases.rs
+game::bases,807995c0,fn_807995c0,translated,high,work/ghidra/rel-d_basesNP/export/807995c0_FUN_807995c0.c; returns 0x80775100 for +0x234 or 0x2A,src/game/bases.rs
+game::bases,807995e0,fn_807995e0,translated,medium,work/ghidra/rel-d_basesNP/export/807995e0_FUN_807995e0.c; 0x14-step two-hop walk over the six child slots,src/game/bases.rs
+game::bases,80799750,fn_80799750,translated,medium,work/ghidra/rel-d_basesNP/export/80799750_FUN_80799750.c; combines 0x800F9970 with four record probes,src/game/bases.rs
+game::bases,80799860,fn_80799860,translated,medium,work/ghidra/rel-d_basesNP/export/80799860_FUN_80799860.c; Fk/Ka name-prefix test plus the 0x400 probe,src/game/bases.rs
+game::bases,807999d0,fn_807999d0,translated,medium,work/ghidra/rel-d_basesNP/export/807999d0_FUN_807999d0.c; restarts the +0x1D0 model slot +0x5C and resets the +0x184 chain,src/game/bases.rs
+game::bases,80799a50,fn_80799a50,translated,medium,work/ghidra/rel-d_basesNP/export/80799a50_FUN_80799a50.c; next sibling id from the six 0x80772300 queries,src/game/bases.rs
+game::bases,80799c90,fn_80799c90,translated,medium,work/ghidra/rel-d_basesNP/export/80799c90_FUN_80799c90.c; 0x800 gate then spawns 0x278 and tests +0x214,src/game/bases.rs
+game::bases,80799d10,fn_80799d10,translated,high,work/ghidra/rel-d_basesNP/export/80799d10_FUN_80799d10.c; 0x4000 flag test,src/game/bases.rs
+game::bases,80799eb0,fn_80799eb0,translated,high,work/ghidra/rel-d_basesNP/export/80799eb0_FUN_80799eb0.c; 0x400 flag test,src/game/bases.rs
+game::bases,80799f10,fn_80799f10,translated,medium,work/ghidra/rel-d_basesNP/export/80799f10_FUN_80799f10.c; F/W name classes update the +0x48 course cursor,src/game/bases.rs
+game::bases,8079a310,fn_8079a310,translated,high,work/ghidra/rel-d_basesNP/export/8079a310_FUN_8079a310.c; copies the +0x29C position triple,src/game/bases.rs
+game::bases,8079a330,fn_8079a330,translated,high,work/ghidra/rel-d_basesNP/export/8079a330_FUN_8079a330.c; byte-identical twin of 0x8079A310,src/game/bases.rs
+game::bases,8079a350,fn_8079a350,translated,medium,work/ghidra/rel-d_basesNP/export/8079a350_FUN_8079a350.c; compares the +0x22C name with the 0x801002F0 name,src/game/bases.rs
+game::bases,8079a3e0,fn_8079a3e0,translated,medium,work/ghidra/rel-d_basesNP/export/8079a3e0_FUN_8079a3e0.c; six-way direction classifier,src/game/bases.rs
+game::bases,8079a4b0,fn_8079a4b0,translated,high,work/ghidra/rel-d_basesNP/export/8079a4b0_FUN_8079a4b0.c; five flag bits 4/8/0x10/0x20/0x40,src/game/bases.rs
+game::bases,8079a5d0,fn_8079a5d0,translated,high,work/ghidra/rel-d_basesNP/export/8079a5d0_FUN_8079a5d0.c; counts six child slots after the 0x40000 gate,src/game/bases.rs
+game::bases,8079a690,fn_8079a690,translated,medium,work/ghidra/rel-d_basesNP/export/8079a690_FUN_8079a690.c; name byte 3 digit code through 0x800FC470,src/game/bases.rs
+game::bases,8079a750,fn_8079a750,translated,high,work/ghidra/rel-d_basesNP/export/8079a750_FUN_8079a750.c; 0x200000 flag after the 0x801015E0 event,src/game/bases.rs
+game::bases,8079a7d0,fn_8079a7d0,translated,medium,work/ghidra/rel-d_basesNP/export/8079a7d0_FUN_8079a7d0.c; link probe plus the three per-record tests,src/game/bases.rs
+game::bases,8079a870,fn_8079a870,translated,medium,work/ghidra/rel-d_basesNP/export/8079a870_FUN_8079a870.c; three constants plus two mask passes then fn_807995e0,src/game/bases.rs

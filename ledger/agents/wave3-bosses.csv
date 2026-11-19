@@ -1,0 +1,21 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bosses,80c00200,fn_80c00200,translated,high,"work/ghidra/rel-d_en_bossNP/export/80c00200_FUN_80c00200.c; 0x80C00224 bl 0x802B9280 with r3 = this (r3 is never reloaded after entry), and arc_heap_free_object takes the block in r3; the body passes it with call1",src/game/bosses.rs
+game::bosses,80c003c0,fn_80c003c0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c003c0_FUN_80c003c0.c,src/game/bosses.rs
+game::bosses,80c04730,fn_80c04730,translated,high,work/ghidra/rel-d_en_bossNP/export/80c04730_FUN_80c04730.c,src/game/bosses.rs
+game::bosses,80c04930,fn_80c04930,translated,high,"work/ghidra/rel-d_en_bossNP/export/80c04930_FUN_80c04930.c; each probe is lwz r3,[node+0x30]; lwz r12,[r3]; lwz r12,[r12+0xC]; mtspr CTR; bcctrl, so the receiver is the object at [node+0x30]; chain_probe passes it with vcall1(object,0x0C,object)",src/game/bosses.rs
+game::bosses,80c04c80,fn_80c04c80,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c04c80_FUN_80c04c80.c,src/game/bosses.rs
+game::bosses,80c04cc0,fn_80c04cc0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c04cc0_FUN_80c04cc0.c,src/game/bosses.rs
+game::bosses,80c11830,fn_80c11830,translated,high,work/ghidra/rel-d_en_bossNP/export/80c11830_FUN_80c11830.c,src/game/bosses.rs
+game::bosses,80c11890,fn_80c11890,translated,high,work/ghidra/rel-d_en_bossNP/export/80c11890_FUN_80c11890.c,src/game/bosses.rs
+game::bosses,80c15820,fn_80c15820,translated,high,work/ghidra/rel-d_en_bossNP/export/80c15820_FUN_80c15820.c,src/game/bosses.rs
+game::bosses,80c22ca0,fn_80c22ca0,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c22ca0_FUN_80c22ca0.c,src/game/bosses.rs
+game::bosses,80c2a050,fn_80c2a050,translated,high,work/ghidra/rel-d_en_bossNP/export/80c2a050_FUN_80c2a050.c,src/game/bosses.rs
+game::bosses,80c2f0c0,fn_80c2f0c0,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c2f0c0_FUN_80c2f0c0.c,src/game/bosses.rs
+game::bosses,80c30d10,fn_80c30d10,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c30d10_FUN_80c30d10.c,src/game/bosses.rs
+game::bosses,80c32800,fn_80c32800,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c32800_FUN_80c32800.c,src/game/bosses.rs
+game::bosses,80c331c0,fn_80c331c0,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c331c0_FUN_80c331c0.c,src/game/bosses.rs
+game::bosses,80c37940,fn_80c37940,translated,high,work/ghidra/rel-d_en_bossNP/export/80c37940_FUN_80c37940.c,src/game/bosses.rs
+game::bosses,80c464b0,fn_80c464b0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c464b0_FUN_80c464b0.c,src/game/bosses.rs
+game::bosses,80c4a4b0,fn_80c4a4b0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c4a4b0_FUN_80c4a4b0.c,src/game/bosses.rs
+game::bosses,80c4efa0,fn_80c4efa0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c4efa0_FUN_80c4efa0.c,src/game/bosses.rs
+game::bosses,80c4ff10,fn_80c4ff10,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c4ff10_FUN_80c4ff10.c,src/game/bosses.rs

@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d3a30,fn_800d3a30,translated,medium,"work/ghidra/main-gb/export/800d3a30_FUN_800d3a30.c; slot +0x28 record released via +0x14 then re-registered through 0x800D5B90; variant record at +0x770",src/engine/display.rs
+engine::display,800d3c80,fn_800d3c80,translated,high,"work/ghidra/main-gb/export/800d3c80_FUN_800d3c80.c; +0x170 == 0 -> 0x800D3AD0; else clear +0x170 and run slot +0x80",src/engine/display.rs
+engine::display,800d4670,fn_800d4670,translated,medium,"work/ghidra/main-gb/export/800d4670_FUN_800d4670.c; variant byte +0x152; 0x802F1330[variant] into slot +0xB0; pending/active variant pair +0x774/+0x770; standing animation by variant",src/engine/display.rs
+engine::display,800d4c10,fn_800d4c10,translated,medium,"work/ghidra/main-gb/export/800d4c10_FUN_800d4c10.c; 0x800D4AD0(first,object,3) then slot +0x18 with value",src/engine/display.rs
+engine::display,800d4c70,fn_800d4c70,translated,high,"work/ghidra/main-gb/export/800d4c70_FUN_800d4c70.c; 0x800D4AD0(first,object,2); 0x80168520(object,2); slots 1 and 3 cleared via 0x8000D260 and 0x8000D3B0",src/engine/display.rs
+engine::display,800d5730,fn_800d5730,translated,medium,"work/ghidra/main-gb/export/800d5730_FUN_800d5730.c; slot +0x28 node then 0x80168180(node,param_3,param_2)",src/engine/display.rs
+engine::display,800d5c10,fn_800d5c10,translated,medium,"work/ghidra/main-gb/export/800d5c10_FUN_800d5c10.c; release node at +0x28 via 0x80168FE0; when 0x800D5BE0 returns 0 call slot +0x88 with the 64-bit operand",src/engine/display.rs
+engine::display,800d5c80,fn_800d5c80,translated,high,"work/ghidra/main-gb/export/800d5c80_FUN_800d5c80.c; 0x80168FE0(object + 0x60)",src/engine/display.rs
+engine::display,800d5c90,fn_800d5c90,translated,medium,"work/ghidra/main-gb/export/800d5c90_FUN_800d5c90.c; release node at +0x28 via 0x801680E0; when 0x800D5BE0 returns 0 call slot +0x90",src/engine/display.rs
+engine::display,800d6df0,fn_800d6df0,translated,high,"work/ghidra/main-gb/export/800d6df0_FUN_800d6df0.c; 0x800D5580(word[+0x04])",src/engine/display.rs
+engine::display,800d6e90,fn_800d6e90,translated,medium,"work/ghidra/main-gb/export/800d6e90_FUN_800d6e90.c; virtual slot +0x18 of the actor at +0x04",src/engine/display.rs
+engine::display,800d7000,fn_800d7000,translated,medium,"work/ghidra/main-gb/export/800d7000_FUN_800d7000.c; virtual slot +0x20 of the actor at +0x04",src/engine/display.rs
+engine::display,800d7020,fn_800d7020,translated,medium,"work/ghidra/main-gb/export/800d7020_FUN_800d7020.c; +0x08 guard then virtual slot +0x24 of the actor at +0x04",src/engine/display.rs
+engine::display,800d7780,fn_800d7780,translated,medium,"work/ghidra/main-gb/export/800d7780_FUN_800d7780.c; tick counter r13-0x5480 modulo (2*+0x68 + 4*+0x6C + +0x48 + +0x58)",src/engine/display.rs
+engine::display,800d7820,fn_800d7820,translated,medium,"work/ghidra/main-gb/export/800d7820_FUN_800d7820.c; tick change -> slot +0x10 and cache +0x70; then 0x800D7480 clamp",src/engine/display.rs
+engine::display,800d79b0,fn_800d79b0,translated,medium,"work/ghidra/main-gb/export/800d79b0_FUN_800d79b0.c; +0x74 = 0; +0x64 = +0x6C; slot +0x18 with descriptor 0x80371720",src/engine/display.rs
+engine::display,800d7c20,fn_800d7c20,translated,medium,"work/ghidra/main-gb/export/800d7c20_FUN_800d7c20.c; 0x802DCBFC(second, second, first); duplicated operand preserved literally",src/engine/display.rs
+engine::display,800d7c50,fn_800d7c50,translated,medium,"work/ghidra/main-gb/export/800d7c50_FUN_800d7c50.c; twin of 800d7c20: 0x802DCBFC(second, second, first)",src/engine/display.rs
+engine::display,800d7fc0,fn_800d7fc0,translated,high,"work/ghidra/main-gb/export/800d7fc0_FUN_800d7fc0.c; guard then 0x8015F800(object, 0) and free via 0x802B9280 when flag > 0",src/engine/display.rs
+engine::display,800d9290,fn_800d9290,translated,high,"work/ghidra/main-gb/export/800d9290_FUN_800d9290.c; frame counter +0x20 advance/reverse against +0x1C with wrap bit 2 of +0x26 and +0x30",src/engine/display.rs
+engine::display,800d9370,fn_800d9370,translated,medium,"work/ghidra/main-gb/export/800d9370_FUN_800d9370.c; frame +0x20 selected record -> x and -y floats at +0x08/+0x0C; heading via 0x801611C0 into +0x24; +0x2C = 8",src/engine/display.rs
+engine::display,800d9560,fn_800d9560,translated,medium,"work/ghidra/main-gb/export/800d9560_FUN_800d9560.c; position += velocity; proximity via 0x800D96D0; frame step via 0x800D9290/0x800D9370 with hold +0x22; slot +0x0C",src/engine/display.rs
+engine::display,800d96d0,fn_800d96d0,translated,high,"work/ghidra/main-gb/export/800d96d0_FUN_800d96d0.c; dx*dx + dy*dy < r*r",src/engine/display.rs
+engine::display,800dc800,fn_800dc800,translated,high,"work/ghidra/main-gb/export/800dc800_FUN_800dc800.c; empty body: bare return",src/engine/display.rs
+engine::display,800dc970,fn_800dc970,translated,medium,"work/ghidra/main-gb/export/800dc970_FUN_800dc970.c; virtual slot +0x10 of the interface pointer at +0x5C",src/engine/display.rs
+engine::display,800dced0,fn_800dced0,translated,high,"work/ghidra/main-gb/export/800dced0_FUN_800dced0.c; empty body: bare return",src/engine/display.rs
+engine::display,800dcee0,fn_800dcee0,translated,medium,"work/ghidra/main-gb/export/800dcee0_FUN_800dcee0.c; virtual slot +0x18 of the embedded interface at +0x0C with descriptor 0x803718B0",src/engine/display.rs
+engine::display,800dcf00,fn_800dcf00,translated,medium,"work/ghidra/main-gb/export/800dcf00_FUN_800dcf00.c; virtual slot +0x10 of the embedded interface at +0x0C",src/engine/display.rs
+engine::display,800de290,fn_800de290,translated,high,"work/ghidra/main-gb/export/800de290_FUN_800de290.c; copies the 0x40-byte record at +0x5C into +0xAC..+0xEC and advances +0x5C by 0x40",src/engine/display.rs

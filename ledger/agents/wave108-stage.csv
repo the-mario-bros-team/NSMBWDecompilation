@@ -1,0 +1,12 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800818d0,fn_800818d0,translated,high,"work/ghidra/main-gb/export/800818d0_FUN_800818d0.c; returns 0x20F2C",src/game/stage.rs
+game::stage,80081960,fn_80081960,translated,medium,"work/ghidra/main-gb/export/80081960_FUN_80081960.c; three manager tests rewrite the status/id pair",src/game/stage.rs
+game::stage,80082740,fn_80082740,translated,medium,"work/ghidra/main-gb/export/80082740_FUN_80082740.c; clamps the tile window and runs the two draw passes twice",src/game/stage.rs
+game::stage,80082be0,fn_80082be0,translated,medium,"work/ghidra/main-gb/export/80082be0_FUN_80082be0.c; four layer modes and a ten-argument draw call",src/game/stage.rs
+game::stage,80082ed0,fn_80082ed0,translated,low,"work/ghidra/main-gb/export/80082ed0_FUN_80082ed0.c; four per-node billboard variants; x/z split inferred from the caller",src/game/stage.rs
+game::stage,80083fc0,fn_80083fc0,translated,medium,"work/ghidra/main-gb/export/80083fc0_FUN_80083fc0.c; three 3-byte-stride scans and three wrap arms",src/game/stage.rs
+game::stage,800883e0,fn_800883e0,translated,medium,"work/ghidra/main-gb/export/800883e0_FUN_800883e0.c; tile actor spawn with three band tables and two virtual slots",src/game/stage.rs
+game::stage,8008a090,fn_8008a090,translated,medium,"work/ghidra/main-gb/export/8008a090_FUN_8008a090.c; three stack blocks and the 0x802BFxxx chain",src/game/stage.rs
+game::stage,8008b2e0,fn_8008b2e0,translated,medium,"work/ghidra/main-gb/export/8008b2e0_FUN_8008b2e0.c; tail call into 0x8008B030 with f1 = 0.0f",src/game/stage.rs
+game::stage,8008b500,fn_8008b500,translated,medium,"work/ghidra/main-gb/export/8008b500_FUN_8008b500.c; second tail call into 0x8008B030 with f1 = 0.0f",src/game/stage.rs
+game::stage,8008f610,fn_8008f610,translated,high,"work/ghidra/main-gb/export/8008f610_FUN_8008f610.c; returns 1",src/game/stage.rs

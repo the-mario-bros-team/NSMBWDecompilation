@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806a2ca0,fn_806a2ca0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a2ca0_FUN_806a2ca0.c; mode-1 step dispatch; mounts via 806a3700, tags 0x44/0x45/0x46/0x1C",src/game/bases.rs
+game::bases,806a2ec0,fn_806a2ec0,translated,high,work/ghidra/rel-d_basesNP/export/806a2ec0_FUN_806a2ec0.c,src/game/bases.rs
+game::bases,806a3100,fn_806a3100,translated,medium,"work/ghidra/rel-d_basesNP/export/806a3100_FUN_806a3100.c; start-up; +0xD78 frame callback, 0xD54..0xD74 motion record",src/game/bases.rs
+game::bases,806a33e0,fn_806a33e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a33e0_FUN_806a33e0.c; hit reaction; sound 0x2A7, state 0x8082BA08",src/game/bases.rs
+game::bases,806a3570,fn_806a3570,translated,high,"work/ghidra/rel-d_basesNP/export/806a3570_FUN_806a3570.c; character radius *0x2000 at +0xD4C, *2.0 at +0xE8",src/game/bases.rs
+game::bases,806a3700,fn_806a3700,translated,medium,"work/ghidra/rel-d_basesNP/export/806a3700_FUN_806a3700.c; getin mount; Wm_jr_*stepon effects, sounds 0x59F/0x2A6/0x5B4",src/game/bases.rs
+game::bases,806a3960,fn_806a3960,translated,high,"work/ghidra/rel-d_basesNP/export/806a3960_FUN_806a3960.c; detach then re-mount through 806a3700",src/game/bases.rs
+game::bases,806a3a50,fn_806a3a50,translated,medium,"work/ghidra/rel-d_basesNP/export/806a3a50_FUN_806a3a50.c; 3x3 basis at +0xE5C from the 0x80424594 block",src/game/bases.rs
+game::bases,806a3be0,fn_806a3be0,translated,high,"work/ghidra/rel-d_basesNP/export/806a3be0_FUN_806a3be0.c; +/-224 tether, speed -0.5",src/game/bases.rs
+game::bases,806a3cd0,fn_806a3cd0,translated,high,"work/ghidra/rel-d_basesNP/export/806a3cd0_FUN_806a3cd0.c; +0x3FC push (6.0,0.0) and animation stop",src/game/bases.rs
+game::bases,806a3d60,fn_806a3d60,translated,high,"work/ghidra/rel-d_basesNP/export/806a3d60_FUN_806a3d60.c; knock-off predicate, counter >= 0x5B",src/game/bases.rs
+game::bases,806a3dd0,fn_806a3dd0,translated,high,work/ghidra/rel-d_basesNP/export/806a3dd0_FUN_806a3dd0.c,src/game/bases.rs
+game::bases,806a4030,fn_806a4030,translated,high,"work/ghidra/rel-d_basesNP/export/806a4030_FUN_806a4030.c; ply_change animation, rates 0/1/2/4/3",src/game/bases.rs
+game::bases,806a4110,fn_806a4110,translated,medium,"work/ghidra/rel-d_basesNP/export/806a4110_FUN_806a4110.c; scans profiles 299/0x129/0xD for overlap",src/game/bases.rs
+game::bases,806a42c0,fn_806a42c0,translated,high,"work/ghidra/rel-d_basesNP/export/806a42c0_FUN_806a42c0.c; four half-extent tests, slope 20.0, height 36.0, width 24.0",src/game/bases.rs
+game::bases,806a4410,fn_806a4410,translated,medium,"work/ghidra/rel-d_basesNP/export/806a4410_FUN_806a4410.c; mounted state 0x9F -> 0x15 -> 0x14",src/game/bases.rs
+game::bases,806a44a0,fn_806a44a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a44a0_FUN_806a44a0.c; mounted state 0x14 -> 0x15 -> 0x9F plus +0x84/+0x8C writes",src/game/bases.rs
+game::bases,806a4c20,fn_806a4c20,translated,high,work/ghidra/rel-d_basesNP/export/806a4c20_FUN_806a4c20.c,src/game/bases.rs
+game::bases,806a5340,fn_806a5340,translated,medium,"work/ghidra/rel-d_basesNP/export/806a5340_FUN_806a5340.c; reset to +0x114=-0.4, +0x500=0x78",src/game/bases.rs
+game::bases,806a5810,fn_806a5810,translated,high,"work/ghidra/rel-d_basesNP/export/806a5810_FUN_806a5810.c; sound 0x5B5 at +0xAC",src/game/bases.rs
+game::bases,806a9870,fn_806a9870,translated,high,"work/ghidra/rel-d_basesNP/export/806a9870_FUN_806a9870.c; destructor of the 0x860 actor built by 806a9740",src/game/bases.rs
+game::bases,806af9f0,fn_806af9f0,translated,high,"work/ghidra/rel-d_basesNP/export/806af9f0_FUN_806af9f0.c; profile 0x1A3 tag walk at +0x39C",src/game/bases.rs
+game::bases,806afa50,fn_806afa50,translated,high,"work/ghidra/rel-d_basesNP/export/806afa50_FUN_806afa50.c; profile 0x1A4 tag walk at +0x3E2",src/game/bases.rs
+game::bases,806afab0,fn_806afab0,translated,medium,"work/ghidra/rel-d_basesNP/export/806afab0_FUN_806afab0.c; 0x1A3 then 0x1A4; void prototype but r3 is consumed by 806afb70",src/game/bases.rs
+game::bases,806afaf0,fn_806afaf0,translated,high,work/ghidra/rel-d_basesNP/export/806afaf0_FUN_806afaf0.c,src/game/bases.rs
+game::bases,806afb00,fn_806afb00,translated,high,"work/ghidra/rel-d_basesNP/export/806afb00_FUN_806afb00.c; heading + 0x4000",src/game/bases.rs
+game::bases,806afb10,fn_806afb10,translated,high,"work/ghidra/rel-d_basesNP/export/806afb10_FUN_806afb10.c; re-read +0x430 then copy heading",src/game/bases.rs
+game::bases,806afb70,fn_806afb70,translated,high,"work/ghidra/rel-d_basesNP/export/806afb70_FUN_806afb70.c; adopt target, state 0x8082BEC8",src/game/bases.rs
+game::bases,806afd00,fn_806afd00,translated,medium,"work/ghidra/rel-d_basesNP/export/806afd00_FUN_806afd00.c; +0x394/+0x434 virtuals or 0x80064D10",src/game/bases.rs
+game::bases,806afe10,fn_806afe10,translated,high,"work/ghidra/rel-d_basesNP/export/806afe10_FUN_806afe10.c; releases +0x434 via 0x800DAED0",src/game/bases.rs

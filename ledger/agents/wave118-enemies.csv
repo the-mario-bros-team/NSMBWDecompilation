@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a91bb0,fn_80a91bb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a91bb0_FUN_80a91bb0.c; cloud actor +0x7C matrix, +0x548 holder, node 0 into +0x6EC",src/game/enemies.rs
+game::enemies,80a91d70,fn_80a91d70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91d70_FUN_80a91d70.c; stage height 0x80429E00[+0x38] - 0x80429DD0[+0x8FEA8]",src/game/enemies.rs
+game::enemies,80a91da0,fn_80a91da0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a91da0_FUN_80a91da0.c; state 0x80B74038 gate, per-side +0x504 clear, state 0x80B74078",src/game/enemies.rs
+game::enemies,80a91f40,fn_80a91f40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a91f40_FUN_80a91f40.c; 0x801625B0 list walk, states 0x80B74174/0x80B74134, reset 0x80A92050",src/game/enemies.rs
+game::enemies,80a9d690,fn_80a9d690,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9d690_FUN_80a9d690.c; returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80a9d6a0,fn_80a9d6a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9d6a0_FUN_80a9d6a0.c; returns 0x80357BB4",src/game/enemies.rs
+game::enemies,80a9d790,fn_80a9d790,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9d790_FUN_80a9d790.c; five-step +0x30 walk with slot +0xC test, same body as fn_80a9a600",src/game/enemies.rs
+game::enemies,80a9d870,fn_80a9d870,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9d870_FUN_80a9d870.c; ':'-suffix predicate over 0x802E1C40/0x802E1AB4, same body as fn_80a9a6e0",src/game/enemies.rs
+game::enemies,80a9d930,fn_80a9d930,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9d930_FUN_80a9d930.c; 0x802DCBFC argument-swapping forwarder",src/game/enemies.rs
+game::enemies,80a9ddb0,fn_80a9ddb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9ddb0_FUN_80a9ddb0.c; 0x80064AF0 rotate then +0x544 holder commit",src/game/enemies.rs
+game::enemies,80a9de90,fn_80a9de90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9de90_FUN_80a9de90.c; g3d/kanibo.brres, kanibo_rock at id 0x20",src/game/enemies.rs
+game::enemies,80a9df40,fn_80a9df40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9df40_FUN_80a9df40.c; sound 0x2C7 plus Wm_ob_cmnboxsmoke/grain/rockpiece then 0x80162510",src/game/enemies.rs
+game::enemies,80a9e090,fn_80a9e090,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9e090_FUN_80a9e090.c; 0x80065970 then +0xB0 += 0x80B2F220",src/game/enemies.rs
+game::enemies,80a9e2f0,fn_80a9e2f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9e2f0_FUN_80a9e2f0.c; calls 0x80A9DF40 and returns 1",src/game/enemies.rs
+game::enemies,80a98950,fn_80a98950,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a98950_FUN_80a98950.c; 0x800E20A0 flash, Wm_mr_softhit, +0x600 latch, 0x80A98780 record",src/game/enemies.rs
+game::enemies,80a98c10,fn_80a98c10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a98c10_FUN_80a98c10.c; g3d/pukupuku.brres, model id 0x23, +0x584 clip and +0x5C0 part animator",src/game/enemies.rs
+game::enemies,80a9b070,fn_80a9b070,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9b070_FUN_80a9b070.c; killer_rot_houdai_a/_b per slot, +0x744 clip for _a",src/game/enemies.rs
+game::enemies,80a9b1b0,fn_80a9b1b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9b1b0_FUN_80a9b1b0.c; three-word slot record at +0xB04 + slot*0xC, +0xC88 byte",src/game/enemies.rs
+game::enemies,80a9b280,fn_80a9b280,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9b280_FUN_80a9b280.c; 0x802DCBFC(actor, slot, actor + slot*0xC)",src/game/enemies.rs
+game::enemies,80a9b310,fn_80a9b310,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9b310_FUN_80a9b310.c; per-slot +0x544 slot +0x1C, 0x80169020 and 0x80168FE0",src/game/enemies.rs
+game::enemies,80a9ec50,fn_80a9ec50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9ec50_FUN_80a9ec50.c; +0x54C matrix with +/-0x834 sway, nodes 3/6/8 to +0x75C/+0x744/+0x750",src/game/enemies.rs
+game::enemies,80a9ee00,fn_80a9ee00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9ee00_FUN_80a9ee00.c; six karon_parts matrices at +0x768/+0x7F8 into +0x58C",src/game/enemies.rs
+game::enemies,80a9efe0,fn_80a9efe0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9efe0_FUN_80a9efe0.c; 0x800964A0 modes 0/2, Damage 0x80B74708",src/game/enemies.rs
+game::enemies,80a9f080,fn_80a9f080,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9f080_FUN_80a9f080.c; +0x848 guard, +0x3F4 contact slot, Turn to Walk, side tables",src/game/enemies.rs
+game::enemies,80a9f460,fn_80a9f460,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9f460_FUN_80a9f460.c; 0x800E20A0 flash, Wm_mr_softhit, sounds 0x1D5/0x1D2",src/game/enemies.rs
+game::enemies,80a9faf0,fn_80a9faf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9faf0_FUN_80a9faf0.c; g3d/karon.brres, karon model and six karon_partsA binders",src/game/enemies.rs
+game::enemies,80a9fd50,fn_80a9fd50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9fd50_FUN_80a9fd50.c; clip table 0x80B528F0, flag table 0x80B2F340, +0x84C index",src/game/enemies.rs
+game::enemies,80a9fde0,fn_80a9fde0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9fde0_FUN_80a9fde0.c; box from +0x318..+0x324, 0x80064DA0 then 0x80064D10",src/game/enemies.rs
+game::enemies,80a9fe70,fn_80a9fe70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9fe70_FUN_80a9fe70.c; two box words, 0x800B56E0 and 0x80064DA0 fallback",src/game/enemies.rs
+game::enemies,80a9ff20,fn_80a9ff20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9ff20_FUN_80a9ff20.c; contact bits 1/2/4, 0x8042C1A0 side table, 0x80AA0080 tail",src/game/enemies.rs

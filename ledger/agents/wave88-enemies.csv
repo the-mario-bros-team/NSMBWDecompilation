@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80af6190,fn_80af6190,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af6190_FUN_80af6190.c; descriptor normaliser 0x8015F800 + optional 0x802B9280",src/game/enemies.rs
+game::enemies,80af6840,fn_80af6840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af6840_FUN_80af6840.c; both +0x544/+0x584 holders released through slot +0x14, returns 1",src/game/enemies.rs
+game::enemies,80af6b50,fn_80af6b50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af6b50_FUN_80af6b50.c; 15-word record {0,x,y-4,z,1.2x3,0x8} armed via 0x802DCA98 for 0x3C",src/game/enemies.rs
+game::enemies,80af6cd0,fn_80af6cd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af6cd0_FUN_80af6cd0.c; two-holder matrix refresh from +0xAC..+0xB4 and +0x100..+0x104",src/game/enemies.rs
+game::enemies,80af6ed0,fn_80af6ed0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af6ed0_FUN_80af6ed0.c; teresa/fog/Wm_en_teresatail binder, variant +0x7E4 % 9, three 1.0 blends",src/game/enemies.rs
+game::enemies,80af7110,fn_80af7110,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af7110_FUN_80af7110.c; +0x7F0 latch polled through 0x80097B30",src/game/enemies.rs
+game::enemies,80af7180,fn_80af7180,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af7180_FUN_80af7180.c; side-aware aim angle +-0xE38 clamp accumulated into +0x100",src/game/enemies.rs
+game::enemies,80af7240,fn_80af7240,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af7240_FUN_80af7240.c; 0x80064740 probe, side flip +0x348/+0x7F0, aim through 80af7180",src/game/enemies.rs
+game::enemies,80af7330,fn_80af7330,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af7330_FUN_80af7330.c; marked-point placement via 0x80732AD0 and tail clip Wm_en_teresatail",src/game/enemies.rs
+game::enemies,80af8660,fn_80af8660,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af8660_FUN_80af8660.c; second copy of the descriptor normaliser",src/game/enemies.rs
+game::enemies,80af86c0,fn_80af86c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af86c0_FUN_80af86c0.c; third copy of the descriptor normaliser",src/game/enemies.rs
+game::enemies,80af8800,fn_80af8800,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af8800_FUN_80af8800.c; five unrolled +0x30 chain tests on vtable +0x0C then recursion",src/game/enemies.rs
+game::enemies,80af88e0,fn_80af88e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af88e0_FUN_80af88e0.c; colon-suffix name predicate via 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80af89a0,fn_80af89a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af89a0_FUN_80af89a0.c; 0x802DCBFC deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80af89d0,fn_80af89d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af89d0_FUN_80af89d0.c; second 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80af8a00,fn_80af8a00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af8a00_FUN_80af8a00.c; 0x9D8-byte constructor, vtable 0x80B647FC",src/game/enemies.rs
+game::enemies,80af8cd0,fn_80af8cd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af8cd0_FUN_80af8cd0.c; Slid_ entry, sound 0x1BC and dispatch 0x80353A64",src/game/enemies.rs
+game::enemies,80af9170,fn_80af9170,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af9170_FUN_80af9170.c; +0x77C phase test then 15-word record {0,x,y-4,z,1.15x3,0x8}",src/game/enemies.rs
+game::enemies,80af9290,fn_80af9290,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af9290_FUN_80af9290.c; walk clip rebind and side speed/angle seed",src/game/enemies.rs
+game::enemies,80af93c0,fn_80af93c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af93c0_FUN_80af93c0.c; walk frame step, 64.0 band test and 80af8cd0 slide entry",src/game/enemies.rs
+game::enemies,80af95d0,fn_80af95d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af95d0_FUN_80af95d0.c; turn frame step, +0x2E4 test returns to 0x80B77CB0",src/game/enemies.rs
+game::enemies,80af9b40,fn_80af9b40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af9b40_FUN_80af9b40.c; Saka_ state normaliser also named by register_sakasa_togezo_states",src/game/enemies.rs
+game::enemies,80af9ba0,fn_80af9ba0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af9ba0_FUN_80af9ba0.c; Slid_ state normaliser",src/game/enemies.rs
+game::enemies,80af9c00,fn_80af9c00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af9c00_FUN_80af9c00.c; returns the Slid_ state extra word 0x80353A64",src/game/enemies.rs
+game::enemies,80af9cf0,fn_80af9cf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af9cf0_FUN_80af9cf0.c; second five-link +0x30 chain walker",src/game/enemies.rs
+game::enemies,80af9dd0,fn_80af9dd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af9dd0_FUN_80af9dd0.c; second colon-suffix name predicate",src/game/enemies.rs
+game::enemies,80af9e90,fn_80af9e90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af9e90_FUN_80af9e90.c; 0x802DCBFC deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80af9ec0,fn_80af9ec0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af9ec0_FUN_80af9ec0.c; second 0x802DCBFC forwarder of the sibling skeleton",src/game/enemies.rs
+game::enemies,80af9ef0,fn_80af9ef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af9ef0_FUN_80af9ef0.c; 0x800-byte constructor, vtable 0x80B64CB8",src/game/enemies.rs

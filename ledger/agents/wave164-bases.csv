@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80720980,fn_80720980,translated,high,"work/ghidra/rel-d_basesNP/export/80720980_FUN_80720980.c; flag selects 8005CA50(pool,0) or 8005C930(pool); pool = *0x80429C94",src/game/bases.rs
+game::bases,80754570,fn_80754570,translated,high,"work/ghidra/rel-d_basesNP/export/80754570_FUN_80754570.c; store 1 at *0x80429DD0 + 0x9002C then vtable +0x60 slot 0x20",src/game/bases.rs
+game::bases,80759a20,fn_80759a20,translated,high,"work/ghidra/rel-d_basesNP/export/80759a20_FUN_80759a20.c; if +0x380 non-zero clear it and dispatch lwzu +0x26C slot 0x18",src/game/bases.rs
+game::bases,807be130,fn_807be130,translated,high,"work/ghidra/rel-d_basesNP/export/807be130_FUN_807be130.c; if +0x22C != +0x230 copy and 800B3BE0(+0x22C,+0x20C,0)",src/game/bases.rs
+game::bases,8064a4f0,fn_8064a4f0,translated,high,"work/ghidra/rel-d_basesNP/export/8064a4f0_FUN_8064a4f0.c; 8007F950(+0x534), return 1",src/game/bases.rs
+game::bases,806b1ae0,fn_806b1ae0,translated,high,"work/ghidra/rel-d_basesNP/export/806b1ae0_FUN_806b1ae0.c; ground threshold +0x3C-+0x44 vs +0xB0, else 80064F50(actor,0)",src/game/bases.rs
+game::bases,807193e0,fn_807193e0,translated,high,"work/ghidra/rel-d_basesNP/export/807193e0_FUN_807193e0.c; 8007F950(+0x5B0), return 1",src/game/bases.rs
+game::bases,8077a000,fn_8077a000,translated,high,"work/ghidra/rel-d_basesNP/export/8077a000_FUN_8077a000.c; index (+0x04 & 0xFF) into 80817F38, 801006E0(pool,entry,this+0xAC,r6)",src/game/bases.rs
+game::bases,807ae6a0,fn_807ae6a0,translated,high,"work/ghidra/rel-d_basesNP/export/807ae6a0_FUN_807ae6a0.c; call 80162A20, return value == 0",src/game/bases.rs
+game::bases,807af940,fn_807af940,translated,high,"work/ghidra/rel-d_basesNP/export/807af940_FUN_807af940.c; call 80162A20, return value == 0",src/game/bases.rs

@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c04d0,fn_801c04d0,translated,medium,"work/ghidra/main-gb/export/801c04d0_FUN_801c04d0.c; fills a 3x4 identity matrix; diagonal 1.0 from r2-0x4F50, off-diagonal 0.0 from r2-0x4F4C",src/runtime/dvd.rs
+runtime::dvd,801c0500,fn_801c0500,translated,medium,"work/ghidra/main-gb/export/801c0500_FUN_801c0500.c; copies twelve floats (a 3x4 matrix) from src to dst; paired-single f32 arm only",src/runtime/dvd.rs
+runtime::dvd,801c0da0,fn_801c0da0,translated,medium,"work/ghidra/main-gb/export/801c0da0_FUN_801c0da0.c; look-at basis: normalize eye-target, cross with up, cross back; rows carry minus the dot with eye",src/runtime/dvd.rs
+runtime::dvd,801c0f20,fn_801c0f20,translated,medium,"work/ghidra/main-gb/export/801c0f20_FUN_801c0f20.c; projection builder; 1/(far-near), far+near and two scale/offset terms; +0x28 from r2-0x4F3C",src/runtime/dvd.rs
+runtime::dvd,801c10d0,fn_801c10d0,translated,medium,"work/ghidra/main-gb/export/801c10d0_FUN_801c10d0.c; orthographic builder; 1/(hi-lo) for both axes, offsets added to +0x0C and +0x1C, +0x2C = 1.0",src/runtime/dvd.rs
+runtime::dvd,801c11c0,fn_801c11c0,translated,medium,"work/ghidra/main-gb/export/801c11c0_FUN_801c11c0.c; 4x4 light projection; three range reciprocals, placeholders from r2-0x4F28/-0x4F30/-0x4F2C/-0x4F24",src/runtime/dvd.rs
+runtime::dvd,801c1350,fn_801c1350,translated,medium,"work/ghidra/main-gb/export/801c1350_FUN_801c1350.c; 4x4 light projection variant; three range reciprocals, trailing entry from r2-0x4F30",src/runtime/dvd.rs
+runtime::dvd,801c13f0,fn_801c13f0,translated,medium,"work/ghidra/main-gb/export/801c13f0_FUN_801c13f0.c; adds two 3-vectors component-wise; paired-single f32 arm only",src/runtime/dvd.rs
+runtime::dvd,801c1420,fn_801c1420,translated,medium,"work/ghidra/main-gb/export/801c1420_FUN_801c1420.c; subtracts two 3-vectors component-wise; paired-single f32 arm only",src/runtime/dvd.rs
+runtime::dvd,801c1450,fn_801c1450,translated,medium,"work/ghidra/main-gb/export/801c1450_FUN_801c1450.c; multiplies a 3-vector by one scalar; paired-single f32 arm only",src/runtime/dvd.rs
+runtime::dvd,801c1470,fn_801c1470,translated,medium,"work/ghidra/main-gb/export/801c1470_FUN_801c1470.c; normalizes a 3-vector; 1/sqrt(mag) plus one Newton refinement using r2-0x4F14 and r2-0x4F18",src/runtime/dvd.rs
+runtime::dvd,801c14c0,fn_801c14c0,translated,medium,"work/ghidra/main-gb/export/801c14c0_FUN_801c14c0.c; returns the squared length of a 3-vector, with the same refinement and a zero guard",src/runtime/dvd.rs
+runtime::dvd,801c1510,fn_801c1510,translated,medium,"work/ghidra/main-gb/export/801c1510_FUN_801c1510.c; returns a.x*b.x + a.y*b.y + a.z*b.z accumulated in double",src/runtime/dvd.rs
+runtime::dvd,801c1530,fn_801c1530,translated,medium,"work/ghidra/main-gb/export/801c1530_FUN_801c1530.c; returns the cross product of two 3-vectors to an out pointer",src/runtime/dvd.rs
+runtime::dvd,801c1570,fn_801c1570,translated,medium,"work/ghidra/main-gb/export/801c1570_FUN_801c1570.c; negates two points, normalizes, crosses, then normalizes only when the squared length exceeds r2-0x4F10",src/runtime/dvd.rs
+runtime::dvd,801c1650,fn_801c1650,translated,medium,"work/ghidra/main-gb/export/801c1650_FUN_801c1650.c; returns the squared distance between two 3-vectors",src/runtime/dvd.rs
+runtime::dvd,801c6610,fn_801c6610,translated,medium,"work/ghidra/main-gb/export/801c6610_FUN_801c6610.c; texture filter scale selector; range checks against r2-0x4EC0/-0x4EA8, modes 1-3 write +0x1C/+0x20/+0x24",src/runtime/dvd.rs
+runtime::dvd,801c7130,fn_801c7130,translated,high,"work/ghidra/main-gb/export/801c7130_FUN_801c7130.c; two masked stores into one word: leading_zeros(count-1) selects bit 4, then the r13-0x6088 byte table supplies bits 5-7",src/runtime/dvd.rs
+runtime::dvd,801c7180,fn_801c7180,translated,high,"work/ghidra/main-gb/export/801c7180_FUN_801c7180.c; splits a texture descriptor into format, width, height, two 2-bit fields, a word and the +0x1F flag",src/runtime/dvd.rs
+runtime::dvd,801c7840,fn_801c7840,translated,high,"work/ghidra/main-gb/export/801c7840_FUN_801c7840.c; maps +0x564/+0x584 onto the +0x108/+0x128 register words, emits +0x128 and clears state+2",src/runtime/dvd.rs
+runtime::dvd,801c95e0,fn_801c95e0,translated,high,"work/ghidra/main-gb/export/801c95e0_FUN_801c95e0.c; flushes +0x5FC via 0x801C52F0, calls 0x801C56C0 when state+0 is zero, then emits the caller word",src/runtime/dvd.rs
+runtime::dvd,801c9660,fn_801c9660,translated,medium,"work/ghidra/main-gb/export/801c9660_FUN_801c9660.c; transforms a point through a 3x4 matrix and applies the scale/offset blocks, branch on r2-0x4DD8",src/runtime/dvd.rs
+runtime::dvd,801c9840,fn_801c9840,translated,high,"work/ghidra/main-gb/export/801c9840_FUN_801c9840.c; stores a twelve-word color block into +0x528..+0x540, selects the +0x530/+0x538 pair by mode, sets 0x08000000",src/runtime/dvd.rs
+runtime::dvd,801c98b0,fn_801c98b0,translated,medium,"work/ghidra/main-gb/export/801c98b0_FUN_801c98b0.c; +0x528 = (src[0] != r2-0x4DD8), copies six floats into +0x52C..+0x540, sets 0x08000000",src/runtime/dvd.rs
+runtime::dvd,801c9900,fn_801c9900,translated,medium,"work/ghidra/main-gb/export/801c9900_FUN_801c9900.c; writes the r2-0x4DD8/-0x4DD4 word selected by +0x528 then copies +0x52C..+0x540 out",src/runtime/dvd.rs
+runtime::dvd,801c9990,fn_801c9990,translated,high,"work/ghidra/main-gb/export/801c9990_FUN_801c9990.c; emits (upper << 16) | ((index & 0x3FF) << 2) | 0xB000 to the GX FIFO",src/runtime/dvd.rs
+runtime::dvd,801c9a20,fn_801c9a20,translated,high,"work/ghidra/main-gb/export/801c9a20_FUN_801c9a20.c; emits (upper << 16) | ((index*3 + 0x400) & 0xFFF) | 0x8000 to the GX FIFO",src/runtime/dvd.rs
+runtime::dvd,801c9a60,fn_801c9a60,translated,high,"work/ghidra/main-gb/export/801c9a60_FUN_801c9a60.c; sets the low six bits of state+0x80 and marks bit 26 of +0x5FC",src/runtime/dvd.rs
+runtime::dvd,801c9c40,fn_801c9c40,translated,medium,"work/ghidra/main-gb/export/801c9c40_FUN_801c9c40.c; copies the six floats at state+0x544..+0x558 to the caller buffer",src/runtime/dvd.rs

@@ -1,0 +1,15 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80241690,fn_80241690,translated,medium,"work/ghidra/main-gb/export/80241690_FUN_80241690.c; element-kind switch (bits 20..24); eight cases over 0x8023FE50/0x802405B0/0x80241020; fourth argument unverifiable",src/runtime/os.rs
+runtime::os,80241eb0,fn_80241eb0,translated,medium,"work/ghidra/main-gb/export/80241eb0_FUN_80241eb0.c; keyframe record reader into a 0x40-byte block; time clamp plus 0x8023F000/0x8023F140 per track",src/runtime/os.rs
+runtime::os,80243d20,fn_80243d20,translated,medium,"work/ghidra/main-gb/export/80243d20_FUN_80243d20.c; 0x5C-stride entry constructor; size selected*0x5C+count*2+0x34; vtables 0x8034E300/0x8034E228; fill 0x8023F370",src/runtime/os.rs
+runtime::os,80245300,fn_80245300,translated,medium,"work/ghidra/main-gb/export/80245300_FUN_80245300.c; word-table holder; align4(count*2+0x23)+entries*4; vtables 0x8034E420/0x8034E3D8/0x8034E390",src/runtime/os.rs
+runtime::os,80245500,fn_80245500,translated,medium,"work/ghidra/main-gb/export/80245500_FUN_80245500.c; 0x44-stride entry constructor; vtables 0x8034E420/0x8034E348; fill 0x8023F5A0",src/runtime/os.rs
+runtime::os,80245970,fn_80245970,translated,medium,"work/ghidra/main-gb/export/80245970_FUN_80245970.c; entry-index publish loop over record+0x32; 0x8023B7B0 lookup and 0x80249C60 notify",src/runtime/os.rs
+runtime::os,80245b40,fn_80245b40,translated,medium,"work/ghidra/main-gb/export/80245b40_FUN_80245b40.c; two texture bit masks; 0x801C7260 decode, 0x8023EB30/0x8023EBF0 TEX0 read, 0x801C6D90/0x801C6FA0/0x801C6FF0 write, 0x801C7520 headers",src/runtime/os.rs
+runtime::os,80246900,fn_80246900,translated,medium,"work/ghidra/main-gb/export/80246900_FUN_80246900.c; same holder as 0x80245300 with vtables 0x8034E540/0x8034E4F8/0x8034E4B0",src/runtime/os.rs
+runtime::os,80246b00,fn_80246b00,translated,medium,"work/ghidra/main-gb/export/80246b00_FUN_80246b00.c; 0xE8-stride entry constructor; vtables 0x8034E540/0x8034E468; fill 0x8023FA30",src/runtime/os.rs
+runtime::os,80246f70,fn_80246f70,translated,medium,"work/ghidra/main-gb/export/80246f70_FUN_80246f70.c; same publish loop as 0x80245970 over record+0x22",src/runtime/os.rs
+runtime::os,80249740,fn_80249740,translated,medium,"work/ghidra/main-gb/export/80249740_FUN_80249740.c; 0x44-stride re-index through virtual slots 0x44/0x50/0x54/0x58/0x64/0x68/0x6C/0x78/0x7C",src/runtime/os.rs
+runtime::os,8024a610,fn_8024a610,translated,medium,"work/ghidra/main-gb/export/8024a610_FUN_8024a610.c; constant fill of size/4 floats; 64-float blocks then 8-float chunks",src/runtime/os.rs
+runtime::os,8024a6e0,fn_8024a6e0,translated,medium,"work/ghidra/main-gb/export/8024a6e0_FUN_8024a6e0.c; angle-slot or 0x44 colour-record basis; 0x801C0540 compose with 0x802F8E90",src/runtime/os.rs
+runtime::os,8024abd0,fn_8024abd0,translated,medium,"work/ghidra/main-gb/export/8024abd0_FUN_8024abd0.c; basis builder variant; 0x801C1570/0x801C1530/0x801C0540 with the 0x803E3DE8 slot",src/runtime/os.rs

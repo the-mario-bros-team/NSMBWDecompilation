@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801d68c0,fn_801d68c0,translated,medium,"work/ghidra/main-gb/export/801d68c0_FUN_801d68c0.c; 0x30-tagged literal/fill stream over the fn_801d6850 state",src/runtime/dvd.rs
+runtime::dvd,801d6b60,fn_801d6b60,translated,medium,"work/ghidra/main-gb/export/801d6b60_FUN_801d6b60.c; 0x10-tagged stream with overlapping back-references over the fn_801d6880 state",src/runtime/dvd.rs
+runtime::dvd,801da370,fn_801da370,translated,medium,"work/ghidra/main-gb/export/801da370_FUN_801da370.c; recursive relative-path resolver out/base/relative",src/runtime/dvd.rs
+runtime::dvd,801d9950,fn_801d9950,translated,medium,"work/ghidra/main-gb/export/801d9950_FUN_801d9950.c; ISFS save-through-/tmp/sys state machine",src/runtime/dvd.rs
+runtime::dvd,801dbeb0,fn_801dbeb0,translated,medium,"work/ghidra/main-gb/export/801dbeb0_FUN_801dbeb0.c; validates a 0x4000-byte SYSCONF image and installs its directory",src/runtime/dvd.rs
+runtime::dvd,801dc280,fn_801dc280,translated,medium,"work/ghidra/main-gb/export/801dc280_FUN_801dc280.c; settings-store unlink plus record compaction",src/runtime/dvd.rs
+runtime::dvd,801dc420,fn_801dc420,translated,medium,"work/ghidra/main-gb/export/801dc420_FUN_801dc420.c; settings-store append with the seven-type TLV ladder",src/runtime/dvd.rs
+runtime::dvd,801dcc70,fn_801dcc70,translated,medium,"work/ghidra/main-gb/export/801dcc70_FUN_801dcc70.c; SYSCONF mount entry; starts or joins the write",src/runtime/dvd.rs
+runtime::dvd,801dce90,fn_801dce90,translated,medium,"work/ghidra/main-gb/export/801dce90_FUN_801dce90.c; SYSCONF ten-state completion machine",src/runtime/dvd.rs
+runtime::dvd,801dfac0,fn_801dfac0,translated,medium,"work/ghidra/main-gb/export/801dfac0_thunk_FUN_801f3840.c; 4-byte WUD thunk to 0x801F3840",src/runtime/dvd.rs
+runtime::dvd,801dfad0,fn_801dfad0,translated,medium,"work/ghidra/main-gb/export/801dfad0_thunk_FUN_801f38f0.c; 4-byte WUD thunk to 0x801F38F0",src/runtime/dvd.rs
+runtime::dvd,801dfaf0,fn_801dfaf0,translated,medium,"work/ghidra/main-gb/export/801dfaf0_thunk_FUN_801f3630.c; 4-byte WUD sync-callback setter thunk",src/runtime/dvd.rs
+runtime::dvd,801dfb00,fn_801dfb00,translated,medium,"work/ghidra/main-gb/export/801dfb00_thunk_FUN_801f3690.c; 4-byte WUD clear-callback setter thunk",src/runtime/dvd.rs
+runtime::dvd,801dfb10,fn_801dfb10,translated,medium,"work/ghidra/main-gb/export/801dfb10_thunk_FUN_801f32b0.c; 4-byte WUD word-pair setter thunk",src/runtime/dvd.rs
+runtime::dvd,801dfb20,fn_801dfb20,translated,medium,"work/ghidra/main-gb/export/801dfb20_thunk_FUN_801f8ec0.c; 4-byte WUD constant 0x14A78 getter thunk",src/runtime/dvd.rs
+runtime::dvd,801dfb30,fn_801dfb30,translated,medium,"work/ghidra/main-gb/export/801dfb30_thunk_FUN_801f3530.c; 4-byte WUD device-state getter thunk",src/runtime/dvd.rs

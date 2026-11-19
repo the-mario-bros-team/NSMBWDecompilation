@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80083b30,fn_80083b30,translated,high,"work/ghidra/main-gb/export/80083b30_thunk_FUN_8016e980.c; ELF word at 0x80083B30 is 0x480EAE50 = b 0x8016E980; one-call wrapper around resource::registry::fn_8016e980",src/game/stage.rs

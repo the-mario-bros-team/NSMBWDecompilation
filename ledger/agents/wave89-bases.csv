@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80787ae0,fn_80787ae0,translated,high,"work/ghidra/rel-d_basesNP/export/80787ae0_FUN_80787ae0.c; shared teardown of the fn_80787990 actor: vtable 0x808192F4 and five embedded destructors",src/game/bases.rs
+game::bases,8078b620,fn_8078b620,translated,high,"work/ghidra/rel-d_basesNP/export/8078b620_FUN_8078b620.c; release wrapper calling fn_80787ae0 and 0x80162920",src/game/bases.rs
+game::bases,8078b840,fn_8078b840,translated,high,"work/ghidra/rel-d_basesNP/export/8078b840_FUN_8078b840.c; byte-identical release wrapper",src/game/bases.rs
+game::bases,8078ba60,fn_8078ba60,translated,high,"work/ghidra/rel-d_basesNP/export/8078ba60_FUN_8078ba60.c; byte-identical release wrapper",src/game/bases.rs
+game::bases,8078bc80,fn_8078bc80,translated,high,"work/ghidra/rel-d_basesNP/export/8078bc80_FUN_8078bc80.c; byte-identical release wrapper",src/game/bases.rs
+game::bases,8078beb0,fn_8078beb0,translated,high,"work/ghidra/rel-d_basesNP/export/8078beb0_FUN_8078beb0.c; byte-identical release wrapper",src/game/bases.rs
+game::bases,8078c0d0,fn_8078c0d0,translated,high,"work/ghidra/rel-d_basesNP/export/8078c0d0_FUN_8078c0d0.c; byte-identical release wrapper",src/game/bases.rs
+game::bases,8078c260,fn_8078c260,translated,medium,"work/ghidra/rel-d_basesNP/export/8078c260_FUN_8078c260.c; in-place constructor installing vtables 0x8031BF68/0x8081A2A0 and two sub-objects",src/game/bases.rs
+game::bases,8078c6d0,fn_8078c6d0,translated,medium,"work/ghidra/rel-d_basesNP/export/8078c6d0_FUN_8078c6d0.c; class-index gate then 0x800F7560 animation bind and 0x800F78E0 step",src/game/bases.rs
+game::bases,8078c790,fn_8078c790,translated,medium,"work/ghidra/rel-d_basesNP/export/8078c790_FUN_8078c790.c; handle test then two animation setup calls",src/game/bases.rs
+game::bases,8078c840,fn_8078c840,translated,high,"work/ghidra/rel-d_basesNP/export/8078c840_FUN_8078c840.c; 22-entry table 0x8081A1E8 searched with 0x802E1BD0 against the 0x8031BEFC class table",src/game/bases.rs
+game::bases,8078c990,fn_8078c990,translated,medium,"work/ghidra/rel-d_basesNP/export/8078c990_FUN_8078c990.c; builds a 12-byte offset vector from +0xAC and spawns 0x800F85F0",src/game/bases.rs
+game::bases,8078e680,fn_8078e680,translated,high,"work/ghidra/rel-d_basesNP/export/8078e680_FUN_8078e680.c; latch byte +0x1A8 and word +0x1AC",src/game/bases.rs
+game::bases,8078e690,fn_8078e690,translated,high,"work/ghidra/rel-d_basesNP/export/8078e690_FUN_8078e690.c; clears +0x1A8 and the player byte at 0x80429F7C+0x394",src/game/bases.rs
+game::bases,8078e6b0,fn_8078e6b0,translated,high,"work/ghidra/rel-d_basesNP/export/8078e6b0_FUN_8078e6b0.c; timer +0x1B4 = 10 and phase byte +0x1B0 = 0",src/game/bases.rs
+game::bases,8078e6d0,fn_8078e6d0,translated,medium,"work/ghidra/rel-d_basesNP/export/8078e6d0_FUN_8078e6d0.c; first interaction state: countdown, 0x800B52F0 poll, notice 0x8019CA00 and virtual +0x68",src/game/bases.rs
+game::bases,8078e7c0,fn_8078e7c0,translated,high,"work/ghidra/rel-d_basesNP/export/8078e7c0_FUN_8078e7c0.c; identical timer/phase stores",src/game/bases.rs
+game::bases,8078e7e0,fn_8078e7e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8078e7e0_FUN_8078e7e0.c; second interaction state gated on 0x80101630 and 0x807714F0",src/game/bases.rs
+game::bases,8078e8d0,fn_8078e8d0,translated,high,"work/ghidra/rel-d_basesNP/export/8078e8d0_FUN_8078e8d0.c; mode 1 -> 4, mode 2 -> 2, else 1",src/game/bases.rs
+game::bases,8078e910,fn_8078e910,translated,medium,"work/ghidra/rel-d_basesNP/export/8078e910_FUN_8078e910.c; notice release plus conditional 0x80101110 flush",src/game/bases.rs
+game::bases,8078e950,fn_8078e950,translated,high,"work/ghidra/rel-d_basesNP/export/8078e950_FUN_8078e950.c; mode select from global bytes 0x8042A19C/0x8042A19D",src/game/bases.rs
+game::bases,8078ecc0,fn_8078ecc0,translated,medium,"work/ghidra/rel-d_basesNP/export/8078ecc0_FUN_8078ecc0.c; latches 0x8078EDF0 result into +0x1D0 and re-arms +0x1B4",src/game/bases.rs
+game::bases,8078f1a0,fn_8078f1a0,translated,high,"work/ghidra/rel-d_basesNP/export/8078f1a0_FUN_8078f1a0.c; leading-zero test of 0x800FAD60(2, 3)",src/game/bases.rs
+game::bases,8078f1d0,fn_8078f1d0,translated,high,"work/ghidra/rel-d_basesNP/export/8078f1d0_FUN_8078f1d0.c; identical timer/phase stores",src/game/bases.rs
+game::bases,8078f1f0,fn_8078f1f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8078f1f0_FUN_8078f1f0.c; third interaction state issuing notice 0x17/0x18 and latching player +0x547",src/game/bases.rs
+game::bases,807982a0,fn_807982a0,translated,high,"work/ghidra/rel-d_basesNP/export/807982a0_FUN_807982a0.c; sub-state 5 into +0x254 and +0x228",src/game/bases.rs
+game::bases,80798310,fn_80798310,translated,high,"work/ghidra/rel-d_basesNP/export/80798310_FUN_80798310.c; copies 0x807D0160 into both animation slots and sets state 3",src/game/bases.rs
+game::bases,80798370,fn_80798370,translated,high,"work/ghidra/rel-d_basesNP/export/80798370_FUN_80798370.c; sub-state 10 into +0x228",src/game/bases.rs
+game::bases,80798410,fn_80798410,translated,high,"work/ghidra/rel-d_basesNP/export/80798410_FUN_80798410.c; sub-state 11 into +0x228",src/game/bases.rs
+game::bases,807984f0,fn_807984f0,translated,high,"work/ghidra/rel-d_basesNP/export/807984f0_FUN_807984f0.c; sub-state 4 into +0x228",src/game/bases.rs

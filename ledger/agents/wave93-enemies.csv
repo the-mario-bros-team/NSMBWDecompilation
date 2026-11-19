@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a4d590,fn_80a4d590,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4d590_FUN_80a4d590.c; deleting destructor; 0x8015F800 + 0x802B9280",src/game/enemies.rs
+game::enemies,80a4d5f0,fn_80a4d5f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4d5f0_FUN_80a4d5f0.c; returns the shared descriptor 0x80358084",src/game/enemies.rs
+game::enemies,80a4d6e0,fn_80a4d6e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4d6e0_FUN_80a4d6e0.c; five-step +0x30 chain walker with recursion",src/game/enemies.rs
+game::enemies,80a4d7c0,fn_80a4d7c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4d7c0_FUN_80a4d7c0.c; colon-suffix name predicate over 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80a4d880,fn_80a4d880,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4d880_FUN_80a4d880.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4d8b0,fn_80a4d8b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4d8b0_FUN_80a4d8b0.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4d8e0,fn_80a4d8e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4d8e0_FUN_80a4d8e0.c; 0x760-byte constructor; class vtable 0x80B43744",src/game/enemies.rs
+game::enemies,80a4e0b0,fn_80a4e0b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4e0b0_FUN_80a4e0b0.c; deleting destructor; 0x8015F800 + 0x802B9280",src/game/enemies.rs
+game::enemies,80a4e110,fn_80a4e110,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4e110_FUN_80a4e110.c; returns the shared descriptor 0x80358084",src/game/enemies.rs
+game::enemies,80a4e200,fn_80a4e200,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4e200_FUN_80a4e200.c; five-step +0x30 chain walker with recursion",src/game/enemies.rs
+game::enemies,80a4e2e0,fn_80a4e2e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4e2e0_FUN_80a4e2e0.c; colon-suffix name predicate over 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80a4e3a0,fn_80a4e3a0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4e3a0_FUN_80a4e3a0.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4e3d0,fn_80a4e3d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4e3d0_FUN_80a4e3d0.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4e400,fn_80a4e400,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4e400_FUN_80a4e400.c; 0x760-byte constructor; class vtable 0x80B43AFC",src/game/enemies.rs
+game::enemies,80a4ea00,fn_80a4ea00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4ea00_FUN_80a4ea00.c; 0x800962A0(this, this+0xAC) inverted with xor 1",src/game/enemies.rs
+game::enemies,80a4ec30,fn_80a4ec30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4ec30_FUN_80a4ec30.c; deleting destructor; 0x8015F800 + 0x802B9280",src/game/enemies.rs
+game::enemies,80a4ed80,fn_80a4ed80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4ed80_FUN_80a4ed80.c; five-step +0x30 chain walker with recursion",src/game/enemies.rs
+game::enemies,80a4ee60,fn_80a4ee60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4ee60_FUN_80a4ee60.c; colon-suffix name predicate over 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80a4ef20,fn_80a4ef20,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4ef20_FUN_80a4ef20.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4ef50,fn_80a4ef50,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4ef50_FUN_80a4ef50.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4ef80,fn_80a4ef80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4ef80_FUN_80a4ef80.c; 0x760-byte constructor; class vtable 0x80B43EB4",src/game/enemies.rs
+game::enemies,80a4f250,fn_80a4f250,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4f250_FUN_80a4f250.c; four-way contact classifier; thresholds 80.0f at 0x80B2CB90 and 0.0f at 0x80B2CB78",src/game/enemies.rs
+game::enemies,80a4f4b0,fn_80a4f4b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4f4b0_FUN_80a4f4b0.c; eight-float record from 0x80152480 folded into +0xAC/+0xB0 against +0x5E8/+0x5EC",src/game/enemies.rs
+game::enemies,80a4f8e0,fn_80a4f8e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4f8e0_FUN_80a4f8e0.c; deleting destructor; 0x8015F800 + 0x802B9280",src/game/enemies.rs
+game::enemies,80a4f940,fn_80a4f940,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4f940_FUN_80a4f940.c; returns the shared descriptor 0x80358084",src/game/enemies.rs
+game::enemies,80a4fa30,fn_80a4fa30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4fa30_FUN_80a4fa30.c; five-step +0x30 chain walker with recursion",src/game/enemies.rs
+game::enemies,80a4fb10,fn_80a4fb10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4fb10_FUN_80a4fb10.c; colon-suffix name predicate over 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80a4fbd0,fn_80a4fbd0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4fbd0_FUN_80a4fbd0.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4fc00,fn_80a4fc00,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4fc00_FUN_80a4fc00.c; 48-byte forwarder into 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a4fc30,fn_80a4fc30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4fc30_FUN_80a4fc30.c; 0x6E8-byte constructor; class vtable 0x80B44264",src/game/enemies.rs

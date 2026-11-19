@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a200d0,fn_80a200d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a200d0_FUN_80a200d0.c; argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a20100,fn_80a20100,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a20100_FUN_80a20100.c; argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a20130,fn_80a20130,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a20130_FUN_80a20130.c; allocates 0x708; vtable 0x80B39054; sub-objects +0x534/+0x698",src/game/enemies.rs
+game::enemies,80a20770,fn_80a20770,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a20770_FUN_80a20770.c; four-slot player scan; vtable +0xE0 activity test",src/game/enemies.rs
+game::enemies,80a207e0,fn_80a207e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a207e0_FUN_80a207e0.c; two floats to short angle via 0x801611C0",src/game/enemies.rs
+game::enemies,80a20b10,fn_80a20b10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a20b10_FUN_80a20b10.c; dismiss request via 0x80087F40 then 0x80064D10(this 1)",src/game/enemies.rs
+game::enemies,80a20bd0,fn_80a20bd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a20bd0_FUN_80a20bd0.c; +0x60C&0xE guard; two clips 0x80352AF4/0x80352B34",src/game/enemies.rs
+game::enemies,80a20d60,fn_80a20d60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a20d60_FUN_80a20d60.c; state 2/3 switch; timer 0x32; +0x604 mask",src/game/enemies.rs
+game::enemies,80a20e70,fn_80a20e70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a20e70_FUN_80a20e70.c; frame step; fn_80a20bd0 then 0x80A20900",src/game/enemies.rs
+game::enemies,80a21220,fn_80a21220,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a21220_FUN_80a21220.c; deleting destructor; 0x8015F800 then 0x802B9280",src/game/enemies.rs
+game::enemies,80a21340,fn_80a21340,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a21340_FUN_80a21340.c; argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a21370,fn_80a21370,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a21370_FUN_80a21370.c; argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a213a0,fn_80a213a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a213a0_FUN_80a213a0.c; allocates 0x798; vtable 0x80B39478; holders +0x6F8/+0x734",src/game/enemies.rs
+game::enemies,80a21470,fn_80a21470,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a21470_FUN_80a21470.c; installs +0x580 callbacks; flags 0x260; enters 0x80B6F8E8",src/game/enemies.rs
+game::enemies,80a21640,fn_80a21640,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a21640_FUN_80a21640.c; holder +0x6B8 vtable +0x14 step; returns 1",src/game/enemies.rs
+game::enemies,80a21670,fn_80a21670,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a21670_FUN_80a21670.c; advances holder +0x534; returns 1",src/game/enemies.rs
+game::enemies,80a216a0,fn_80a216a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a216a0_FUN_80a216a0.c; position/angle matrix rebuild; samples matrix words 3/7/11",src/game/enemies.rs
+game::enemies,80a217b0,fn_80a217b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a217b0_FUN_80a217b0.c; g3d/remo_lift_soroban.brres binder; change_mark_A clip",src/game/enemies.rs
+game::enemies,80a21960,fn_80a21960,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a21960_FUN_80a21960.c; spawns Wm_en_burst_s when the local player count changes",src/game/enemies.rs
+game::enemies,80a21a30,fn_80a21a30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a21a30_FUN_80a21a30.c; advances +0x6B8 while the +0x794 blend is non-zero",src/game/enemies.rs
+game::enemies,80a21f90,fn_80a21f90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a21f90_FUN_80a21f90.c; deleting destructor; 0x8015F800 then 0x802B9280",src/game/enemies.rs
+game::enemies,80a220b0,fn_80a220b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a220b0_FUN_80a220b0.c; argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a220e0,fn_80a220e0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a220e0_FUN_80a220e0.c; argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a22110,fn_80a22110,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a22110_FUN_80a22110.c; allocates 0x808; vtable 0x80B399B4; four holders",src/game/enemies.rs
+game::enemies,80a223f0,fn_80a223f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a223f0_FUN_80a223f0.c; frame step; owner +0x394 animation +0x76C height +0x7D0",src/game/enemies.rs
+game::enemies,80a224c0,fn_80a224c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a224c0_FUN_80a224c0.c; selects +0x6BC or +0x6FC holder via 0x80B6F968",src/game/enemies.rs
+game::enemies,80a225a0,fn_80a225a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a225a0_FUN_80a225a0.c; matrix commit; colour table 0x80B2B7C0",src/game/enemies.rs
+game::enemies,80a22710,fn_80a22710,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a22710_FUN_80a22710.c; per-node colour patch via 0x8023D300/0x801685E0",src/game/enemies.rs
+game::enemies,80a22ae0,fn_80a22ae0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a22ae0_FUN_80a22ae0.c; free-only release; no base destructor call",src/game/enemies.rs
+game::enemies,80a22b50,fn_80a22b50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a22b50_FUN_80a22b50.c; mode 10/1 gate around the 0x800E76A0 query",src/game/enemies.rs

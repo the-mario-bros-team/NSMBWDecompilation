@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80114ba0,fn_80114ba0,translated,medium,"work/ghidra/main-gb/export/80114ba0_FUN_80114ba0.c; background reset; +0x584 flag; 0x80169F80 double-first placement",src/game/worldmap.rs
+game::worldmap,80115030,fn_80115030,translated,high,"work/ghidra/main-gb/export/80115030_FUN_80115030.c; unsigned-to-double division of +0xDC/+0xE0/+0xE4",src/game/worldmap.rs
+game::worldmap,801150a0,fn_801150a0,translated,high,"work/ghidra/main-gb/export/801150a0_FUN_801150a0.c; +0xE8/+0xF0 cleared; +0xEC = 0.5*+0x548/counter",src/game/worldmap.rs
+game::worldmap,80115910,fn_80115910,translated,high,"work/ghidra/main-gb/export/80115910_FUN_80115910.c; release via 0x8015F800 and optional 0x802B9280",src/game/worldmap.rs
+game::worldmap,80115a30,fn_80115a30,translated,high,"work/ghidra/main-gb/export/80115a30_FUN_80115a30.c; tail call 0x802DCBFC(b,b,a)",src/game/worldmap.rs
+game::worldmap,80115a60,fn_80115a60,translated,high,"work/ghidra/main-gb/export/80115a60_FUN_80115a60.c; byte-identical wrapper to 80115a30",src/game/worldmap.rs
+game::worldmap,80115a90,fn_80115a90,translated,high,"work/ghidra/main-gb/export/80115a90_FUN_80115a90.c; 0x80-byte screen record init; two 0x20-byte 1-filled blocks",src/game/worldmap.rs
+game::worldmap,80115d10,fn_80115d10,translated,medium,"work/ghidra/main-gb/export/80115d10_FUN_80115d10.c; 720x768 screen globals then 0x80116110/0x8016A960 init chain",src/game/worldmap.rs
+game::worldmap,80116050,fn_80116050,translated,medium,"work/ghidra/main-gb/export/80116050_FUN_80116050.c; 48-byte tile scratch; +0x14 present byte; +0x394 vtable slot",src/game/worldmap.rs
+game::worldmap,80116340,fn_80116340,translated,medium,"work/ghidra/main-gb/export/80116340_FUN_80116340.c; bgA/bgB resource names via 0x802E17DC; 0x800DF180 loader",src/game/worldmap.rs
+game::worldmap,80116930,fn_80116930,translated,high,"work/ghidra/main-gb/export/80116930_FUN_80116930.c; pure three-id classifier returning 0..7",src/game/worldmap.rs
+game::worldmap,80116a30,fn_80116a30,translated,high,"work/ghidra/main-gb/export/80116a30_FUN_80116a30.c; store 0x80081C40(0/1) in +0x3BC/+0x3C0",src/game/worldmap.rs
+game::worldmap,80116a70,fn_80116a70,translated,high,"work/ghidra/main-gb/export/80116a70_FUN_80116a70.c; table 0x802F4BB8 indexed by grid +2",src/game/worldmap.rs
+game::worldmap,80116ac0,fn_80116ac0,translated,high,"work/ghidra/main-gb/export/80116ac0_FUN_80116ac0.c; table 0x802F4BB8 indexed by grid +4",src/game/worldmap.rs
+game::worldmap,80116b10,fn_80116b10,translated,high,"work/ghidra/main-gb/export/80116b10_FUN_80116b10.c; +0x4E0 state selects 0x8FE6C/0x8FE70/zero",src/game/worldmap.rs
+game::worldmap,80116bb0,fn_80116bb0,translated,high,"work/ghidra/main-gb/export/80116bb0_FUN_80116bb0.c; unsigned range test reduced to state 2/3 -> 1 and 7 -> 2",src/game/worldmap.rs
+game::worldmap,80116c00,fn_80116c00,translated,medium,"work/ghidra/main-gb/export/80116c00_FUN_80116c00.c; three placement formulas and +0x5F8 cursor",src/game/worldmap.rs
+game::worldmap,80117a10,fn_80117a10,translated,medium,"work/ghidra/main-gb/export/80117a10_FUN_80117a10.c; extent division rounded up to odd then +2",src/game/worldmap.rs
+game::worldmap,80117c10,fn_80117c10,translated,high,"work/ghidra/main-gb/export/80117c10_FUN_80117c10.c; release via 0x8015F800 and optional 0x802B9280",src/game/worldmap.rs
+game::worldmap,80118d80,fn_80118d80,translated,high,"work/ghidra/main-gb/export/80118d80_FUN_80118d80.c; +0x4E4-indexed load from +0x3BC",src/game/worldmap.rs
+game::worldmap,80118da0,fn_80118da0,translated,high,"work/ghidra/main-gb/export/80118da0_FUN_80118da0.c; +0x3C0 when +0x4E4 is zero else +0x3BC",src/game/worldmap.rs
+game::worldmap,801191e0,fn_801191e0,translated,medium,"work/ghidra/main-gb/export/801191e0_FUN_801191e0.c; 0x114-stride entry vtable slot +0xB0; result byte at base+index+0x12",src/game/worldmap.rs
+game::worldmap,80119230,fn_80119230,translated,high,"work/ghidra/main-gb/export/80119230_FUN_80119230.c; tail call 0x80168230 with three arguments",src/game/worldmap.rs
+game::worldmap,8011a1a0,fn_8011a1a0,translated,high,"work/ghidra/main-gb/export/8011a1a0_FUN_8011a1a0.c; grid +0x12 size class in table 0x802F4BF8",src/game/worldmap.rs
+game::worldmap,8011a410,fn_8011a410,translated,high,"work/ghidra/main-gb/export/8011a410_FUN_8011a410.c; free wrapper returning the object",src/game/worldmap.rs
+game::worldmap,8011b300,fn_8011b300,translated,medium,"work/ghidra/main-gb/export/8011b300_FUN_8011b300.c; five +0x30 chain tests then recursive sixth link",src/game/worldmap.rs
+game::worldmap,8011c040,fn_8011c040,translated,medium,"work/ghidra/main-gb/export/8011c040_FUN_8011c040.c; eight-word record copy and two +0x620 layout events",src/game/worldmap.rs
+game::worldmap,8011c2b0,fn_8011c2b0,translated,high,"work/ghidra/main-gb/export/8011c2b0_FUN_8011c2b0.c; +0x5B4*+0x5B8 against 600/1536/3072 into +0x618",src/game/worldmap.rs
+game::worldmap,8011c6e0,fn_8011c6e0,translated,medium,"work/ghidra/main-gb/export/8011c6e0_FUN_8011c6e0.c; 0x8011C750 primary test with optional 0x8011C8B0 probe",src/game/worldmap.rs

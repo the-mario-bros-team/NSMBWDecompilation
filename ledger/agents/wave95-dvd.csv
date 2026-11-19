@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c0bd0,fn_801c0bd0,translated,medium,"work/ghidra/main-gb/export/801c0bd0_FUN_801c0bd0.c; 3x4 translation matrix; diagonal from r2-0x4F50, off-diagonal zero from r2-0x4F4C",src/runtime/dvd.rs
+runtime::dvd,801c0c10,fn_801c0c10,translated,medium,"work/ghidra/main-gb/export/801c0c10_FUN_801c0c10.c; copies a 3x4 matrix and adds dx/dy/dz to the +3 word of rows 0/1/2",src/runtime/dvd.rs
+runtime::dvd,801c0c60,fn_801c0c60,translated,medium,"work/ghidra/main-gb/export/801c0c60_FUN_801c0c60.c; 3x4 scale matrix diag(sx,sy,sz) with a zero last column",src/runtime/dvd.rs
+runtime::dvd,801c0c90,fn_801c0c90,translated,medium,"work/ghidra/main-gb/export/801c0c90_FUN_801c0c90.c; copies a 3x4 matrix scaling rows 0/1/2 by sx/sy/sz",src/runtime/dvd.rs
+runtime::dvd,801c0cf0,fn_801c0cf0,translated,medium,"work/ghidra/main-gb/export/801c0cf0_FUN_801c0cf0.c; quaternion to 3x4 rotation matrix with t = 2/(x^2+y^2+z^2+w^2)",src/runtime/dvd.rs
+runtime::dvd,801c0fd0,fn_801c0fd0,translated,medium,"work/ghidra/main-gb/export/801c0fd0_FUN_801c0fd0.c; skewed 4x4 projection from six scalars; 1/tan through 0x802E8590",src/runtime/dvd.rs
+runtime::dvd,801c1160,fn_801c1160,translated,medium,"work/ghidra/main-gb/export/801c1160_FUN_801c1160.c; 3x4 matrix times vector with w = 1",src/runtime/dvd.rs
+runtime::dvd,801c1260,fn_801c1260,translated,medium,"work/ghidra/main-gb/export/801c1260_FUN_801c1260.c; perspective 4x4 from fov/aspect/near/far; 1/tan through 0x802E8590",src/runtime/dvd.rs
+runtime::dvd,801c5b30,fn_801c5b30,translated,medium,"work/ghidra/main-gb/export/801c5b30_FUN_801c5b30.c; mip level estimate from the r2-0x4ED0 texel ratio, 0x400 clamp",src/runtime/dvd.rs
+runtime::dvd,801c5df0,fn_801c5df0,translated,medium,"work/ghidra/main-gb/export/801c5df0_FUN_801c5df0.c; emits 0x4E000000|texels, updates +0x23C bit 10, levels from +0x234",src/runtime/dvd.rs
+runtime::dvd,801c6150,fn_801c6150,translated,medium,"work/ghidra/main-gb/export/801c6150_FUN_801c6150.c; compare-mode emitter at +0x23C with 0x52004000 and conditional +0x220/+0x22C flush",src/runtime/dvd.rs
+runtime::dvd,801c6290,fn_801c6290,translated,medium,"work/ghidra/main-gb/export/801c6290_FUN_801c6290.c; second compare-mode emitter at +0x24C with 0x52000000 and the +0x250 gate",src/runtime/dvd.rs
+runtime::dvd,801c6880,fn_801c6880,translated,medium,"work/ghidra/main-gb/export/801c6880_FUN_801c6880.c; streams the twelve floats at +0x10 to the FIFO and sets the +2 marker to one",src/runtime/dvd.rs
+runtime::dvd,801c69e0,fn_801c69e0,translated,high,"work/ghidra/main-gb/export/801c69e0_FUN_801c69e0.c; TMEM colour byte select into +0xB0/+0xB4 plus the 0x400<<index dirty bit",src/runtime/dvd.rs
+runtime::dvd,801c6ba0,fn_801c6ba0,translated,high,"work/ghidra/main-gb/export/801c6ba0_FUN_801c6ba0.c; texel count and mip sum from the format block table, 0x20 or 0x40 blocks",src/runtime/dvd.rs
+runtime::dvd,801c6d90,fn_801c6d90,translated,medium,"work/ghidra/main-gb/export/801c6d90_FUN_801c6d90.c; 32-byte texture object init: memset, format/LOD/size/address words, tile size",src/runtime/dvd.rs
+runtime::dvd,801c6ff0,fn_801c6ff0,translated,medium,"work/ghidra/main-gb/export/801c6ff0_FUN_801c6ff0.c; texture object filter and bias words with the r2-0x4E68/r2-0x4E64 clamps",src/runtime/dvd.rs
+runtime::dvd,801c7260,fn_801c7260,translated,medium,"work/ghidra/main-gb/export/801c7260_FUN_801c7260.c; decodes a packed 64-bit vertex descriptor into eight outputs via r13 tables",src/runtime/dvd.rs
+runtime::dvd,801c7350,fn_801c7350,translated,medium,"work/ghidra/main-gb/export/801c7350_FUN_801c7350.c; channel colour write from the r13-0x60B8..-0x60C0 tables, +0x51C id patch, +0x564/+0x584",src/runtime/dvd.rs
+runtime::dvd,801c74c0,fn_801c74c0,translated,medium,"work/ghidra/main-gb/export/801c74c0_FUN_801c74c0.c; calls the +0x518 getter and forwards to fn_801c7350",src/runtime/dvd.rs
+runtime::dvd,801c7550,fn_801c7550,translated,medium,"work/ghidra/main-gb/export/801c7550_FUN_801c7550.c; copies a colour block into the +0x51C object and merges the low 10 bits of src[0]",src/runtime/dvd.rs
+runtime::dvd,801c75f0,fn_801c75f0,translated,high,"work/ghidra/main-gb/export/801c75f0_FUN_801c75f0.c; texcoord descriptor pack: two 3-bit format selectors and two 15-bit fields",src/runtime/dvd.rs
+runtime::dvd,801c7e00,fn_801c7e00,translated,high,"work/ghidra/main-gb/export/801c7e00_FUN_801c7e00.c; texcoord command from the three selector groups and two scaled floats",src/runtime/dvd.rs
+runtime::dvd,801c7f40,fn_801c7f40,translated,high,"work/ghidra/main-gb/export/801c7f40_FUN_801c7f40.c; stage register pair at +0x178/+0x17C with commands 0x25000000 and 0x26000000",src/runtime/dvd.rs
+runtime::dvd,801c8040,fn_801c8040,translated,high,"work/ghidra/main-gb/export/801c8040_FUN_801c8040.c; two-bit operand selectors at +0x170, 0xFF substituted by zero",src/runtime/dvd.rs
+runtime::dvd,801c8250,fn_801c8250,translated,medium,"work/ghidra/main-gb/export/801c8250_FUN_801c8250.c; copies a 0x80341400/0x80341428 entry (or the 0x...14/0x...3C pair) into +0x180/+0x1C0",src/runtime/dvd.rs
+runtime::dvd,801c8790,fn_801c8790,translated,medium,"work/ghidra/main-gb/export/801c8790_FUN_801c8790.c; texgen entry: +0x5A4 word, +0x5E8 enable bit, +0x150 pair via the 0x80341450 table",src/runtime/dvd.rs
+runtime::dvd,801c9470,fn_801c9470,translated,high,"work/ghidra/main-gb/export/801c9470_FUN_801c9470.c; draw frame begin: dirty flush, 0x600 shadow, 0x803904D0 block from (buffer,size)",src/runtime/dvd.rs
+runtime::dvd,801c9530,fn_801c9530,translated,medium,"work/ghidra/main-gb/export/801c9530_FUN_801c9530.c; draw frame end: submits 0x80390B50, restores the shadow, returns the 0x801C34D0 result",src/runtime/dvd.rs

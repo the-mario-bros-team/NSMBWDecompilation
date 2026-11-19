@@ -1,0 +1,6 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80222e38,fn_80222e38,translated,medium,"work/ghidra/main-gb/export/80222e38_FUN_80222e38.c; ServiceSearchAttributeResponse PDU id 7; UUID-pattern and attribute-id decode, per-record 0x36 header, continuation state",src/runtime/bt.rs
+runtime::bt,80225a80,fn_80225a80,translated,medium,"work/ghidra/main-gb/export/80225a80_FUN_80225a80.c; synchronous kind-7 IPC submit; static 0x803D9F00 shadow block, ring guard, returns -10/-22/-8",src/runtime/bt.rs
+runtime::bt,8022d720,fn_8022d720,translated,medium,"work/ghidra/main-gb/export/8022d720_FUN_8022d720.c; three-word texture cache, stack GX texture object, 0x801C6D90/0x801C6FF0/0x801C74C0, packed FIFO word",src/runtime/bt.rs
+runtime::bt,8022f350,fn_8022f350,translated,low,"work/ghidra/main-gb/export/8022f350_FUN_8022f350.c; glyph layout loop; virtual slots 0x10/0x48 and decoder 0x802DCBFC are unnamed",src/runtime/bt.rs
+runtime::bt,8022f960,fn_8022f960,translated,medium,"work/ghidra/main-gb/export/8022f960_FUN_8022f960.c; text bounding box over fn_8022f350; dropped fourth argument is the remaining byte count",src/runtime/bt.rs

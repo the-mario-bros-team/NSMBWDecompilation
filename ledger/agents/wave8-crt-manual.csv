@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802d74b0,fn_802d74b0,translated,high,"work/ghidra/main-gb/export/802d74b0_FUN_802d74b0.c; tail call 802356D0(802D71F0, value)",src/runtime/cpp.rs
+runtime::cpp,802d94d0,fn_802d94d0,translated,high,"work/ghidra/main-gb/export/802d94d0_FUN_802d94d0.c; store value at *(object+0x2C)+index*4",src/runtime/cpp.rs
+runtime::cpp,802d6cb0,fn_802d6cb0,translated,high,"work/ghidra/main-gb/export/802d6cb0_FUN_802d6cb0.c; call 80228DD0(0x80424CD8,0x28)",src/runtime/cpp.rs
+runtime::cpp,802d6cc0,fn_802d6cc0,translated,high,"work/ghidra/main-gb/export/802d6cc0_FUN_802d6cc0.c; r13-relative stores 0x8042AF94/0x80429BA0/0x8042AF9C",src/runtime/cpp.rs
+runtime::cpp,802de514,fn_802de514,translated,high,"work/ghidra/main-gb/export/802de514_FUN_802de514.c; branchless abs",src/runtime/cpp.rs
+runtime::cpp,802de524,fn_802de524,translated,high,"work/ghidra/main-gb/export/802de524_FUN_802de524.c; byte-identical abs, delegates to fn_802de514",src/runtime/cpp.rs
+
+runtime::cpp,802d94e0,fn_802d94e0,translated,high,"work/ghidra/main-gb/export/802d94e0_FUN_802d94e0.c; zero *(object+0x2C)+index*4",src/runtime/cpp.rs
+runtime::cpp,802da590,fn_802da590,translated,high,"work/ghidra/main-gb/export/802da590_FUN_802da590.c; call 80228DD0(0x80424CE8,0x18)",src/runtime/cpp.rs
+runtime::cpp,802da960,fn_802da960,translated,high,"work/ghidra/main-gb/export/802da960_FUN_802da960.c; vtable+0x0C of object at +0xA0",src/runtime/cpp.rs

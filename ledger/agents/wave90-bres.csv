@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::bres,802307e0,fn_802307e0,translated,high,"work/ghidra/main-gb/export/802307e0_FUN_802307e0.c; disposes via 0x8022C980 and frees via 0x802B9280 only when the count is positive; returns the object",src/resource/bres.rs
+resource::bres,80231b70,fn_80231b70,translated,medium,"work/ghidra/main-gb/export/80231b70_FUN_80231b70.c; eight-byte tail call to 0x802323E0 with no argument setup in the export",src/resource/bres.rs
+resource::bres,802331a0,fn_802331a0,translated,high,"work/ghidra/main-gb/export/802331a0_FUN_802331a0.c; writes the 640x480 console defaults into 0x803DA120 once, guarded by r13-0x4A18",src/resource/bres.rs
+resource::bres,80233260,fn_80233260,translated,high,"work/ghidra/main-gb/export/80233260_FUN_80233260.c; returns 1 when the defaults flag r13-0x4A18 and the framebuffer base 0x803DA120 are both nonzero",src/resource/bres.rs
+resource::bres,80233290,fn_80233290,translated,medium,"work/ghidra/main-gb/export/80233290_FUN_80233290.c; clips max(x,0)/min(x+w,fb) and fills 0x1080 pixels, doubling origin and extent when the framebuffer is 640x480",src/resource/bres.rs
+resource::bres,80233460,fn_80233460,translated,high,"work/ghidra/main-gb/export/80233460_FUN_80233460.c; cache-block store 0x801AC4A0(base 0x803DA120, size 0x803DA124)",src/resource/bres.rs
+resource::bres,80233570,fn_80233570,translated,medium,"work/ghidra/main-gb/export/80233570_FUN_80233570.c; per-line pen advances 10 pixels, tabs measure to 4-column stops, erase via 0x80233290 and layout via 0x802336D0",src/resource/bres.rs
+resource::bres,802336d0,fn_802336d0,translated,medium,"work/ghidra/main-gb/export/802336d0_FUN_802336d0.c; 128-byte table 0x802F71E8 marks -3 tab and -1 missing, six-pixel cells, glyph blit 0x802337B0",src/resource/bres.rs
+resource::bres,80233c60,fn_80233c60,translated,high,"work/ghidra/main-gb/export/80233c60_FUN_80233c60.c; locks 0x803DA148, unlinks through +0x28 and asserts console.cpp line 0x182 illegal console handle",src/resource/bres.rs
+resource::bres,80233ec0,fn_80233ec0,translated,high,"work/ghidra/main-gb/export/80233ec0_FUN_80233ec0.c; calls 0x80233C60 with the same record and returns it",src/resource/bres.rs
+resource::bres,80233ef0,fn_80233ef0,translated,medium,"work/ghidra/main-gb/export/80233ef0_FUN_80233ef0.c; paints the +0x18-+0x14 pending rows starting at (+0x10+pending) mod +0x06 with a ten-pixel pen",src/resource/bres.rs
+resource::bres,80234120,fn_80234120,translated,medium,"work/ghidra/main-gb/export/80234120_FUN_80234120.c; grid writer with newline, four-column tabs, Shift-JIS two-byte cells and the two +0x0A overflow policies",src/resource/bres.rs
+resource::bres,80234630,fn_80234630,translated,medium,"work/ghidra/main-gb/export/80234630_FUN_80234630.c; zeroes 0x803DA560, installs 0x80234860 over the 0x803DE8C0 buffer and hooks 0x80234720 on retrace 2/3/5/0xF",src/resource/bres.rs
+resource::bres,80234720,fn_80234720,translated,medium,"work/ghidra/main-gb/export/80234720_FUN_80234720.c; builds the 0x10-byte frame record, clears four EFB filters on slot 0xF and runs the 0x802348F0 loop",src/resource/bres.rs
+resource::bres,80235710,fn_80235710,translated,high,"work/ghidra/main-gb/export/80235710_FUN_80235710.c; stores +0/+4/+8/+0xC and links at the front or after the head of r13-0x49FC",src/resource/bres.rs
+resource::bres,802357a0,fn_802357a0,translated,high,"work/ghidra/main-gb/export/802357a0_FUN_802357a0.c; unlinks the head or the node whose +0xC link equals the target",src/resource/bres.rs
+resource::bres,802357f0,fn_802357f0,translated,high,"work/ghidra/main-gb/export/802357f0_FUN_802357f0.c; single zero store to the queue head r13-0x49FC",src/resource/bres.rs
+resource::bres,80235800,fn_80235800,translated,high,"work/ghidra/main-gb/export/80235800_FUN_80235800.c; (-head | head) >> 31 sign test of r13-0x49FC",src/resource/bres.rs
+resource::bres,80235830,fn_80235830,translated,medium,"work/ghidra/main-gb/export/80235830_FUN_80235830.c; 0x200-byte window at offset & 0x7FFFFFE0, 0x801CAA30 read and 0x801CEE90 poll",src/resource/bres.rs
+resource::bres,80235940,fn_80235940,translated,medium,"work/ghidra/main-gb/export/80235940_FUN_80235940.c; scans through the r13-0x49F8 reader for the n-th separator-delimited token",src/resource/bres.rs
+resource::bres,80235a10,fn_80235a10,translated,high,"work/ghidra/main-gb/export/80235a10_FUN_80235a10.c; hex digits from the 0x30-0x39/0x41-0x5A/0x61-0x7A ranges, value*16, 0 once above 0x0FFFFFFF",src/resource/bres.rs
+resource::bres,80235eb0,fn_80235eb0,translated,high,"work/ghidra/main-gb/export/80235eb0_FUN_80235eb0.c; walks r13-0x49FC calling 0x80235DC0 until a node returns nonzero",src/resource/bres.rs
+resource::bres,80235fe0,fn_80235fe0,translated,medium,"work/ghidra/main-gb/export/80235fe0_FUN_80235fe0.c; 0x801D4380 heap, 0x1C-byte record with list init at +0x04 and node offset 0x10",src/resource/bres.rs
+resource::bres,80236ad0,fn_80236ad0,translated,high,"work/ghidra/main-gb/export/80236ad0_FUN_80236ad0.c; five stores into the caller's 0x1C-byte record plus list init at +0x04",src/resource/bres.rs
+resource::bres,80236c70,fn_80236c70,translated,medium,"work/ghidra/main-gb/export/80236c70_FUN_80236c70.c; clears the heap lock word then allocates (heap, size, 4) and drops the block",src/resource/bres.rs
+resource::bres,80236d70,fn_80236d70,translated,medium,"work/ghidra/main-gb/export/80236d70_FUN_80236d70.c; same shape as 0x80235FE0 with the r13-0x49E8 heap and r13-0x49E4 record",src/resource/bres.rs
+resource::bres,80237860,fn_80237860,translated,high,"work/ghidra/main-gb/export/80237860_FUN_80237860.c; identical instruction sequence to 0x80236AD0",src/resource/bres.rs
+resource::bres,80237a00,fn_80237a00,translated,medium,"work/ghidra/main-gb/export/80237a00_FUN_80237a00.c; same shape as 0x80236C70 with the r13-0x49E8 heap",src/resource/bres.rs

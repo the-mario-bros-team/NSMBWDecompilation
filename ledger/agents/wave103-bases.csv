@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807b5bf0,fn_807b5bf0,translated,medium,"work/ghidra/rel-d_basesNP/export/807b5bf0_FUN_807b5bf0.c; material key 0x24/8/2/1/0 via 0x80007610 then 0x807B5C60(screen,0)",src/game/bases.rs
+game::bases,807b7500,fn_807b7500,translated,high,"work/ghidra/rel-d_basesNP/export/807b7500_FUN_807b7500.c; free 0x802B9280 when object != 0 and count > 0; returns object",src/game/bases.rs
+game::bases,807b8c50,fn_807b8c50,translated,medium,"work/ghidra/rel-d_basesNP/export/807b8c50_FUN_807b8c50.c; material key 0x24/8/2/0/0 via 0x80007610 then 0x807B8CB0(screen,0)",src/game/bases.rs
+game::bases,807b92c0,fn_807b92c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807b92c0_FUN_807b92c0.c; switch on world byte 0x8042A24D; nine count/table pairs 0x80820818..0x808340E4",src/game/bases.rs
+game::bases,807b9390,fn_807b9390,translated,medium,"work/ghidra/rel-d_basesNP/export/807b9390_FUN_807b9390.c; switch on world byte 0x8042A24D; nine count/table pairs 0x80820800..0x808209E0",src/game/bases.rs
+game::bases,807b9e40,fn_807b9e40,translated,medium,"work/ghidra/rel-d_basesNP/export/807b9e40_FUN_807b9e40.c; vtable 0x80820BC8 at +0x60; 13-entry array +0x74; globals 0x8042A234/0x8042A254",src/game/bases.rs
+game::bases,807ba5d0,fn_807ba5d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807ba5d0_FUN_807ba5d0.c; two material passes 0x24/8/2/0/0 and 0x24/8/2/1/1 then 0x807BA660(screen,selector)",src/game/bases.rs
+game::bases,807bb0c0,fn_807bb0c0,translated,high,"work/ghidra/rel-d_basesNP/export/807bb0c0_FUN_807bb0c0.c; returns constant 0",src/game/bases.rs
+game::bases,807bb0d0,fn_807bb0d0,translated,high,"work/ghidra/rel-d_basesNP/export/807bb0d0_FUN_807bb0d0.c; empty body (bare return)",src/game/bases.rs
+game::bases,807bb270,fn_807bb270,translated,high,"work/ghidra/rel-d_basesNP/export/807bb270_FUN_807bb270.c; free 0x802B9280 under object != 0 and count > 0",src/game/bases.rs
+game::bases,807bb2b0,fn_807bb2b0,translated,high,"work/ghidra/rel-d_basesNP/export/807bb2b0_FUN_807bb2b0.c; twin of 807bb270",src/game/bases.rs
+game::bases,807bb2f0,fn_807bb2f0,translated,high,"work/ghidra/rel-d_basesNP/export/807bb2f0_FUN_807bb2f0.c; 0x8015F9F0(object+0x18,0) then free 0x802B9280 when count > 0",src/game/bases.rs
+game::bases,807bb350,fn_807bb350,translated,high,"work/ghidra/rel-d_basesNP/export/807bb350_FUN_807bb350.c; twin of 807bb2f0",src/game/bases.rs
+game::bases,807bb510,fn_807bb510,translated,high,"work/ghidra/rel-d_basesNP/export/807bb510_FUN_807bb510.c; worldSelectMap arc loader; brlyt 0x80820D30; panes +0x274/+0x278",src/game/bases.rs
+game::bases,807bb630,fn_807bb630,translated,medium,"work/ghidra/rel-d_basesNP/export/807bb630_FUN_807bb630.c; ready byte +0x2B3; closes interface +0x20C and layout +0x74; 0x807BBA40/0x807BB710; returns 1",src/game/bases.rs
+game::bases,807bb840,fn_807bb840,translated,high,"work/ghidra/rel-d_basesNP/export/807bb840_FUN_807bb840.c; index wraparound: >= count -> 0, < 0 -> 7",src/game/bases.rs
+game::bases,807bb9f0,fn_807bb9f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807bb9f0_FUN_807bb9f0.c; writes value as i16 to pane+0x2C6 for count panes",src/game/bases.rs
+game::bases,807bbc30,fn_807bbc30,translated,medium,"work/ghidra/rel-d_basesNP/export/807bbc30_FUN_807bbc30.c; flag to pane+0x275 for count+1 panes; 0x80766F20 per pane",src/game/bases.rs
+game::bases,807bbca0,fn_807bbca0,translated,medium,"work/ghidra/rel-d_basesNP/export/807bbca0_FUN_807bbca0.c; decrements +0x290; on zero 0x807BB8D0 then descriptor 0x80834238",src/game/bases.rs
+game::bases,807bbd20,fn_807bbd20,translated,high,"work/ghidra/rel-d_basesNP/export/807bbd20_FUN_807bbd20.c; spawns Wm_cs_w9appear via 0x8008FB60 with world +0xAC position",src/game/bases.rs
+game::bases,807bc090,fn_807bc090,translated,high,"work/ghidra/rel-d_basesNP/export/807bc090_FUN_807bc090.c; stops layouts; resets selected pane +0x2A0 to 0x807D0A14; sets pane +0x277",src/game/bases.rs
+game::bases,807bc160,fn_807bc160,translated,high,"work/ghidra/rel-d_basesNP/export/807bc160_FUN_807bc160.c; 20-frame timer +0x2A0 then 0x80834178; idle -> 0x80834378",src/game/bases.rs
+game::bases,807bc5d0,fn_807bc5d0,translated,high,"work/ghidra/rel-d_basesNP/export/807bc5d0_FUN_807bc5d0.c; sound 0x78 then clears +0x277 on all nine panes",src/game/bases.rs
+game::bases,807bca90,fn_807bca90,translated,high,"work/ghidra/rel-d_basesNP/export/807bca90_FUN_807bca90.c; 0x8019C9F0 then clip 1 on layout +0x74 and sub-layout +0x70",src/game/bases.rs
+game::bases,807bcaf0,fn_807bcaf0,translated,high,"work/ghidra/rel-d_basesNP/export/807bcaf0_FUN_807bcaf0.c; idle -> clears +0x2B3/+0x229/bit0 of pane +0xBB; descriptor 0x808340F8",src/game/bases.rs
+game::bases,807bcce0,fn_807bcce0,translated,high,"work/ghidra/rel-d_basesNP/export/807bcce0_FUN_807bcce0.c; delay +0x29C; at zero mode 4 and 0x80102690(world,0,0); descriptor 0x80834338",src/game/bases.rs
+game::bases,807bce00,fn_807bce00,translated,medium,"work/ghidra/rel-d_basesNP/export/807bce00_FUN_807bce00.c; fade at world+0x184 via 0x801680E0; sound 0x662; 0x807BBD20",src/game/bases.rs
+game::bases,807bce70,fn_807bce70,translated,high,"work/ghidra/rel-d_basesNP/export/807bce70_FUN_807bce70.c; polls 0x80169020(world+0x184); descriptor 0x808343F8",src/game/bases.rs
+game::bases,807bdc70,fn_807bdc70,translated,high,"work/ghidra/rel-d_basesNP/export/807bdc70_FUN_807bdc70.c; 0x8015F800(object,0) then free 0x802B9280 when count > 0",src/game/bases.rs
+game::bases,807bf560,fn_807bf560,translated,high,"work/ghidra/rel-d_basesNP/export/807bf560_FUN_807bf560.c; snapshot +0x4BC..+0x4C4 into +0x610..+0x618; state +0x608 = 1",src/game/bases.rs

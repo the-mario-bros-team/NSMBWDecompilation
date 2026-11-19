@@ -1,0 +1,19 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a8bd20,fn_80a8bd20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a8bd20_FUN_80a8bd20.c; g3d/kurage.brres; three model holders 0x324/0x224/0x224; two srt blocks and one colour block",src/game/enemies.rs
+game::enemies,80aad490,fn_80aad490,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aad490_FUN_80aad490.c; variant | slot<<8 into 0x80AAA360; +0xB44 handle; sound 0x1BD; +0xE34 latch",src/game/enemies.rs
+game::enemies,80ac0840,fn_80ac0840,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac0840_FUN_80ac0840.c; qr3 halfword widened as (f32)(u16) then 1/256; 32.0 * 0x80237C40; 0.5*304.0 x limit",src/game/enemies.rs
+game::enemies,80a7a8c0,fn_80a7a8c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7a8c0_FUN_80a7a8c0.c; two-row probe at pair[0]+4.0; accepts every code except 0/2/0x2000; returns the hit-row count",src/game/enemies.rs
+game::enemies,80a7aa00,fn_80a7aa00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7aa00_FUN_80a7aa00.c; downward probe; (r & 0x2000)==0 and (r & 0x801D)!=0; returns 0/-1/-2",src/game/enemies.rs
+game::enemies,80ade060,fn_80ade060,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ade060_FUN_80ade060.c; 24-byte record at (x, y-8, z+16); id table 0x80B30AF0; +0x68D = mode+2",src/game/enemies.rs
+game::enemies,80a7a460,fn_80a7a460,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7a460_FUN_80a7a460.c; 2 x {4,2,2} grid; 0xA4 stride; writes +0x1C/+0x20",src/game/enemies.rs
+game::enemies,80aeaed0,fn_80aeaed0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aeaed0_FUN_80aeaed0.c; +0x814 id walk over 0x80B31158; +0x818 = i-1; fn_80aeace0(32.0,...)",src/game/enemies.rs
+game::enemies,80a707e0,fn_80a707e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a707e0_FUN_80a707e0.c; one 0x278-byte segment per +0x540 slot; +0x238 chain; the raw r5 is dead",src/game/enemies.rs
+game::enemies,80af2400,fn_80af2400,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af2400_FUN_80af2400.c; colour -> 1/2/3 rate; guide_st at 0x80B62BC4; blr one word past the extent",src/game/enemies.rs
+game::enemies,80a969c0,fn_80a969c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a969c0_FUN_80a969c0.c; expanded AABB vs swept segment; 0x16 flag rows; 0x3D counter; adopts the +0x6C state",src/game/enemies.rs
+game::enemies,80aa1030,fn_80aa1030,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aa1030_FUN_80aa1030.c; 0x8006CDE0 + 0x800955F0; fn_80aa0080(1.0)",src/game/enemies.rs
+game::enemies,80aa3a90,fn_80aa3a90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aa3a90_FUN_80aa3a90.c; per-slot +0x914 handles to +0x614 records; z steps 16.0",src/game/enemies.rs
+game::enemies,80aae360,fn_80aae360,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aae360_FUN_80aae360.c; 0x802DCBFC(mem, mem, size) forwarder",src/game/enemies.rs
+game::enemies,80aae390,fn_80aae390,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aae390_FUN_80aae390.c; 0x802DCBFC(mem, mem, size) forwarder",src/game/enemies.rs
+game::enemies,80aafcb0,fn_80aafcb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aafcb0_FUN_80aafcb0.c; 0x802DCBFC(mem, mem, size) forwarder",src/game/enemies.rs
+game::enemies,80aafce0,fn_80aafce0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aafce0_FUN_80aafce0.c; 0x802DCBFC(mem, mem, size) forwarder",src/game/enemies.rs
+game::enemies,80aaf2b0,fn_80aaf2b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aaf2b0_FUN_80aaf2b0.c; (a*a-b*b)*sqrt(a*a-b*b) when positive; a when b==0",src/game/enemies.rs

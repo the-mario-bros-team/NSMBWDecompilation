@@ -1,0 +1,6 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80298720,fn_80298720,translated,medium,"work/ghidra/main-gb/export/80298720_FUN_80298720.c; particle ring emitter; dead f14..f31 spills; LCG + 0x80296820 + 0x80296CE0 + vtable draw",src/render/gx_band.rs
+render::gx_band,80298b80,fn_80298b80,translated,medium,"work/ghidra/main-gb/export/80298b80_FUN_80298b80.c; ring/sweep driver; amplitudes clamped to epsilon; 2*pi wrap test; forwards scale to 0x80298720",src/render/gx_band.rs
+render::gx_band,80298ed0,fn_80298ed0,translated,medium,"work/ghidra/main-gb/export/80298ed0_FUN_80298ed0.c; grid/spiral emitter; ellipse ratio (100-p)/(100+p); count or count*count rings",src/render/gx_band.rs
+render::gx_band,80299510,fn_80299510,translated,medium,"work/ghidra/main-gb/export/80299510_FUN_80299510.c; double-sided spawn helper; [-1,1] jitter when vec is zero; float arm proven by later lfs draws",src/render/gx_band.rs
+render::gx_band,8029c820,fn_8029c820,translated,medium,"work/ghidra/main-gb/export/8029c820_FUN_8029c820.c; three texgen matrices; texture object rebuild + LOD + submit; angle from source+0x64",src/render/gx_band.rs

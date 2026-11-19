@@ -1,0 +1,20 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802919a0,fn_802919a0,translated,high,work/ghidra/main-gb/export/802919a0_FUN_802919a0.c; single u32 store of vtable 0x8034F5D8 at +0x1C,src/render/gx_band.rs
+render::gx_band,802919b0,fn_802919b0,translated,high,work/ghidra/main-gb/export/802919b0_FUN_802919b0.c; object!=0 and count>0 releases through 0x802B9280 and returns object,src/render/gx_band.rs
+render::gx_band,80291a10,fn_80291a10,translated,medium,work/ghidra/main-gb/export/80291a10_FUN_80291a10.c; 0x7E-byte text-run copy plus three per-axis phase re-randomisations (RNG +0xEC + 0x802E7E44 quantiser),src/render/gx_band.rs
+render::gx_band,802925d0,fn_802925d0,translated,medium,work/ghidra/main-gb/export/802925d0_FUN_802925d0.c; five-mode gradient ramp on context +0x10D..+0x111 with period scaling by 0x319C and a 128.0 + sin ramp for mode 5,src/render/gx_band.rs
+render::gx_band,80292b60,fn_80292b60,translated,medium,work/ghidra/main-gb/export/80292b60_FUN_80292b60.c; spawn helper: factory probe at virtual +0x4C then create at node virtual +0x10 with f1 + eight words; credit +0xE2 list +0x38 count +0x50 state +0x0C,src/render/gx_band.rs
+render::gx_band,802941f0,fn_802941f0,translated,medium,work/ghidra/main-gb/export/802941f0_FUN_802941f0.c; 0x128-byte draw-state packet assembled from r4 then submitted through virtual +0x0C (receiver at +0x2C); optional 0x80289070 matrix refresh,src/render/gx_band.rs
+render::gx_band,802946e0,fn_802946e0,translated,high,work/ghidra/main-gb/export/802946e0_FUN_802946e0.c; empty body (single blr),src/render/gx_band.rs
+render::gx_band,80294b20,fn_80294b20,translated,high,work/ghidra/main-gb/export/80294b20_FUN_80294b20.c; returns the fixed address 0x80423170,src/render/gx_band.rs
+render::gx_band,802951e0,fn_802951e0,translated,medium,work/ghidra/main-gb/export/802951e0_FUN_802951e0.c; self-relative name table: u16 count at +0 + 4*count + 4 first entry; names resolved through 0x80294E90 on the r4+0x10 list; returns unresolved count,src/render/gx_band.rs
+render::gx_band,80295300,fn_80295300,translated,medium,work/ghidra/main-gb/export/80295300_FUN_80295300.c; same walk as 0x802951E0 against the second table with 0x80294CA0 on the r4 list root; returns unresolved count,src/render/gx_band.rs
+render::gx_band,80295400,fn_80295400,translated,medium,work/ghidra/main-gb/export/80295400_FUN_80295400.c; per-index record search with 0x80228FF0/0x80294D60 then three name slots at payload+0x74 and a sub-record dispatch to 0x802951E0/0x80295300; bit 0x40000000 of record+8,src/render/gx_band.rs
+render::gx_band,80295860,fn_80295860,translated,medium,work/ghidra/main-gb/export/80295860_FUN_80295860.c; billboard basis: 1-|z| guard then d*(rsqrt) via 0x80237BA0; twelve-float store with 0.0f homogeneous column,src/render/gx_band.rs
+render::gx_band,80295a90,fn_80295a90,translated,medium,work/ghidra/main-gb/export/80295a90_FUN_80295a90.c; three column lengths via 0x802966F0; asin(+0x20/len0) clamped to -1..1; 0x80237C40 branch selects one of two atan2 pairs,src/render/gx_band.rs
+render::gx_band,80295c00,fn_80295c00,translated,high,work/ghidra/main-gb/export/80295c00_FUN_80295c00.c; loads +0x1C and +0x2C then stores +0x0C/+0x1C/+0x2C into r4,src/render/gx_band.rs
+render::gx_band,80296750,fn_80296750,translated,high,work/ghidra/main-gb/export/80296750_FUN_80296750.c; two u32 zero stores at +0 and +4,src/render/gx_band.rs
+render::gx_band,80296dc0,fn_80296dc0,translated,high,work/ghidra/main-gb/export/80296dc0_FUN_80296dc0.c; one u32 zero store at +0,src/render/gx_band.rs
+render::gx_band,8029f5e0,fn_8029f5e0,translated,high,work/ghidra/main-gb/export/8029f5e0_FUN_8029f5e0.c; empty body (single blr),src/render/gx_band.rs
+render::gx_band,8029f630,fn_8029f630,translated,high,work/ghidra/main-gb/export/8029f630_FUN_8029f630.c; empty body (single blr),src/render/gx_band.rs
+render::gx_band,8029f640,fn_8029f640,translated,medium,work/ghidra/main-gb/export/8029f640_FUN_8029f640.c; GXBegin(0x80 0 4) then one FIFO float a[+8]+b[+8] and the optional matrix-index byte 3 when flags bit 0 is set,src/render/gx_band.rs

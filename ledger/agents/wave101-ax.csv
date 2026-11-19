@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801a3880,fn_801a3880,translated,medium,"work/ghidra/main-gb/export/801a3880_FUN_801a3880.c; 96-frame 3-channel delay/filter mixer; field roles and sdata2 constants inferred",src/audio/ax.rs
+audio::ax,801a48f0,fn_801a48f0,translated,medium,"work/ghidra/main-gb/export/801a48f0_FUN_801a48f0.c; 4-channel twin of 801a3880; dead paired-single prologue omitted",src/audio/ax.rs
+audio::ax,801ac180,fn_801ac180,partial,medium,"work/ghidra/main-gb/export/801ac180_FUN_801ac180.c; two 0x80-byte segment copies and a dcache flush; the branch after the spin is not in the export",src/audio/ax.rs
+audio::ax,801ace30,fn_801ace30,partial,medium,"work/ghidra/main-gb/export/801ace30_FUN_801ace30.c; LR range patch and +0x1A2 bit-1 clear; the rfi/MSR composition is omitted",src/audio/ax.rs
+audio::ax,801ae770,fn_801ae770,translated,medium,"work/ghidra/main-gb/export/801ae770_FUN_801ae770.c; arena install, two IOS ioctls, 0xE0-byte buffer and terminal spin",src/audio/ax.rs
+audio::ax,801af5d4,fn_801af5d4,partial,low,"work/ghidra/main-gb/export/801af5d4_FUN_801af5d4.c; boot hand-off; timebase deadline and interrupt-restore operand inferred",src/audio/ax.rs

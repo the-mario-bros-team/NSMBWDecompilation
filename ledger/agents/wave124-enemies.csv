@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a66780,fn_80a66780,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a66780_FUN_80a66780.c; five-step +0x30 chain walker of the seventh descriptor skeleton",src/game/enemies.rs
+game::enemies,80a66860,fn_80a66860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a66860_FUN_80a66860.c; colon-suffix name predicate using 0x802E1C40 and 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a66920,fn_80a66920,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a66920_FUN_80a66920.c; 0x802DCBFC trampoline; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a66950,fn_80a66950,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a66950_FUN_80a66950.c; second 0x802DCBFC trampoline; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a67a60,fn_80a67a60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a67a60_FUN_80a67a60.c; player-bit mask test for slot codes 0..3",src/game/enemies.rs
+game::enemies,80a67ae0,fn_80a67ae0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a67ae0_FUN_80a67ae0.c; x-band test against 0x80429E00 +0x38/+0x40 after a 0x8006CED0 probe",src/game/enemies.rs
+game::enemies,80a67b40,fn_80a67b40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a67b40_FUN_80a67b40.c; per-frame type-2 object pass: item spawn, frame-buffer append and release",src/game/enemies.rs
+game::enemies,80a67d50,fn_80a67d50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a67d50_FUN_80a67d50.c; four-slot +0xA38 descending sort and free-slot claim",src/game/enemies.rs
+game::enemies,80a67e70,fn_80a67e70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a67e70_FUN_80a67e70.c; one trail effect per recorded slot through 0x800B35D0",src/game/enemies.rs
+game::enemies,80a67f40,fn_80a67f40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a67f40_FUN_80a67f40.c; 15.0-step bucket, slot insert and per-bucket item spawn",src/game/enemies.rs
+game::enemies,80a68170,fn_80a68170,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a68170_FUN_80a68170.c; target vtable +0x130 probe then two slot inserts and mask updates",src/game/enemies.rs
+game::enemies,80a682a0,fn_80a682a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a682a0_FUN_80a682a0.c; free-player x-band scan within 16.0 of the actor",src/game/enemies.rs
+game::enemies,80a68380,fn_80a68380,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a68380_FUN_80a68380.c; attached-player count equals the 0x80429CA0 limit",src/game/enemies.rs
+game::enemies,80a683d0,fn_80a683d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a683d0_FUN_80a683d0.c; marks +0xA94 when an attached player is still loaded",src/game/enemies.rs
+game::enemies,80a68460,fn_80a68460,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a68460_FUN_80a68460.c; player/rider +0xE0 attach test via 0x8014E9B0",src/game/enemies.rs
+game::enemies,80a684f0,fn_80a684f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a684f0_FUN_80a684f0.c; main step with 180/90/30 frame timers and the 0x80B725D0 record",src/game/enemies.rs
+game::enemies,80a68850,fn_80a68850,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a68850_FUN_80a68850.c; +0x72C/+0x58C holder refresh and idle frame rewind",src/game/enemies.rs
+game::enemies,80a68910,fn_80a68910,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a68910_FUN_80a68910.c; per-frame wrapper calling fn_80a684f0 then fn_80a68850",src/game/enemies.rs
+game::enemies,80a689c0,fn_80a689c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a689c0_FUN_80a689c0.c; shutdown: +0xA90 seed, two mode bytes and effect release",src/game/enemies.rs
+game::enemies,80a68a50,fn_80a68a50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a68a50_FUN_80a68a50.c; -110.0 floor step with sound 0xB0 and the 0x80B72610 record",src/game/enemies.rs
+game::enemies,80a6a2f0,fn_80a6a2f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6a2f0_FUN_80a6a2f0.c; 0x8015F800 record clear plus optional storage release",src/game/enemies.rs
+game::enemies,80a6b6a0,fn_80a6b6a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6b6a0_FUN_80a6b6a0.c; 0x8015F800 record clear plus optional storage release",src/game/enemies.rs
+game::enemies,80a6b700,fn_80a6b700,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6b700_FUN_80a6b700.c; 0x8015F800 record clear plus optional storage release",src/game/enemies.rs
+game::enemies,80a6b760,fn_80a6b760,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6b760_FUN_80a6b760.c; returns the class word 0x80353C64",src/game/enemies.rs
+game::enemies,80a6b770,fn_80a6b770,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6b770_FUN_80a6b770.c; returns the class word 0x80353BE4",src/game/enemies.rs
+game::enemies,80a6b860,fn_80a6b860,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a6b860_FUN_80a6b860.c; five-step +0x30 chain walker of the daikonbou support object",src/game/enemies.rs
+game::enemies,80a6b940,fn_80a6b940,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6b940_FUN_80a6b940.c; colon-suffix name predicate using 0x802E1C40 and 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a6c9a0,fn_80a6c9a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a6c9a0_FUN_80a6c9a0.c; rider x-distance sum over the +0x41C node list",src/game/enemies.rs

@@ -1,0 +1,12 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8068d060,fn_8068d060,translated,high,work/ghidra/rel-d_basesNP/export/8068d060_FUN_8068d060.c; gabon_rock ground-contact body; 16-bit step floor 192,src/game/bases.rs
+game::bases,80799340,fn_80799340,translated,medium,work/ghidra/rel-d_basesNP/export/80799340_FUN_80799340.c; world-map course-node resolver; returns the displaced id or 6,src/game/bases.rs
+game::bases,807005c0,fn_807005c0,translated,medium,work/ghidra/rel-d_basesNP/export/807005c0_FUN_807005c0.c; Wm_jr_electric four-node emitter; twelve +0xA0 element dispatches,src/game/bases.rs
+game::bases,8072b670,fn_8072b670,translated,high,work/ghidra/rel-d_basesNP/export/8072b670_FUN_8072b670.c; fire cannon create; the two flip arms are the reverse of the spec table,src/game/bases.rs
+game::bases,80613680,fn_80613680,translated,medium,work/ghidra/rel-d_basesNP/export/80613680_FUN_80613680.c; dEasyPairing_c four-slot panel advance; tables 0x807C6AD0 and 0x807C6AB8,src/game/bases.rs
+game::bases,80733490,fn_80733490,translated,high,work/ghidra/rel-d_basesNP/export/80733490_FUN_80733490.c; houdai_slope create body; five flag nibbles and both s16 tables,src/game/bases.rs
+game::bases,80746640,fn_80746640,translated,medium,work/ghidra/rel-d_basesNP/export/80746640_FUN_80746640.c; rail-placement record builder; 0x802DCBFC direct-branch descriptors,src/game/bases.rs
+game::bases,8079bf00,fn_8079bf00,translated,medium,work/ghidra/rel-d_basesNP/export/8079bf00_FUN_8079bf00.c; world-map node proximity gate; 192-entry sibling scan,src/game/bases.rs
+game::bases,8060c910,fn_8060c910,translated,high,work/ghidra/rel-d_basesNP/export/8060c910_FUN_8060c910.c; stop dDraw channel 1 then start channel 2,src/game/bases.rs
+game::bases,8060a040,fn_8060a040,translated,high,work/ghidra/rel-d_basesNP/export/8060a040_FUN_8060a040.c; release wrapper; 0x802B9280 only when the count is positive,src/game/bases.rs
+game::bases,8060f630,fn_8060f630,translated,high,work/ghidra/rel-d_basesNP/export/8060f630_FUN_8060f630.c; release wrapper; 0x802B9280 only when the count is positive,src/game/bases.rs

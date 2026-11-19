@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e24b0,fn_800e24b0,translated,medium,"work/ghidra/main-gb/export/800e24b0_FUN_800e24b0.c; vtable +0x3C0 lookup; band descriptor +0xAC/+4; both halves of the 0x802DCD74 pair",src/engine/dsys.rs
+engine::dsys,800e2580,fn_800e2580,translated,medium,"work/ghidra/main-gb/export/800e2580_FUN_800e2580.c; probe 0x801DD1D0; packed f32 pair; 0x802F2FB8 rounding table",src/engine/dsys.rs
+engine::dsys,800e26f0,fn_800e26f0,translated,high,"work/ghidra/main-gb/export/800e26f0_FUN_800e26f0.c; two abs deltas divided by fn_800e2580 pair; constant at +8",src/engine/dsys.rs
+engine::dsys,800e27c0,fn_800e27c0,translated,medium,"work/ghidra/main-gb/export/800e27c0_FUN_800e27c0.c; probe 0x801DD1D0; scaled phase minus parity correction",src/engine/dsys.rs
+engine::dsys,800e71c0,fn_800e71c0,translated,medium,"work/ghidra/main-gb/export/800e71c0_FUN_800e71c0.c; 0x802D7820 opcode expander; 17-arm switch; 0x80004364 copies",src/engine/dsys.rs
+engine::dsys,800e79f0,fn_800e79f0,translated,medium,"work/ghidra/main-gb/export/800e79f0_FUN_800e79f0.c; 0x80166BD0 track constructor; 0x80169F80 / 0x80166F10 bindings",src/engine/dsys.rs
+engine::dsys,800e7a80,fn_800e7a80,translated,medium,"work/ghidra/main-gb/export/800e7a80_FUN_800e7a80.c; 0x80167800 track constructor; 0x80169F80 / 0x80167B40 bindings",src/engine/dsys.rs
+engine::dsys,800e7b10,fn_800e7b10,translated,medium,"work/ghidra/main-gb/export/800e7b10_FUN_800e7b10.c; 0x80165FD0 track constructor; 0x80169F80 / 0x80166310 bindings",src/engine/dsys.rs
+engine::dsys,800e7ee0,fn_800e7ee0,translated,high,"work/ghidra/main-gb/export/800e7ee0_FUN_800e7ee0.c; widget +0x38 minus fn_800e8020",src/engine/dsys.rs
+engine::dsys,800e9060,fn_800e9060,translated,high,"work/ghidra/main-gb/export/800e9060_FUN_800e9060.c; three-float offset magnitude over fn_800e9020; upper clamp",src/engine/dsys.rs
+engine::dsys,800ea7d0,fn_800ea7d0,translated,medium,"work/ghidra/main-gb/export/800ea7d0_FUN_800ea7d0.c; two angles via 0x801611C0; squared-length 0x80237BA0; midpoint stores",src/engine/dsys.rs
+engine::dsys,800ead90,fn_800ead90,translated,medium,"work/ghidra/main-gb/export/800ead90_FUN_800ead90.c; +0x20 transform pass; 0x8023D300 / 0x8023D460",src/engine/dsys.rs
+engine::dsys,800eae90,fn_800eae90,translated,medium,"work/ghidra/main-gb/export/800eae90_FUN_800eae90.c; +0x60 transform pass; 0x8023D300 / 0x8023D460",src/engine/dsys.rs
+engine::dsys,800eb040,fn_800eb040,translated,medium,"work/ghidra/main-gb/export/800eb040_FUN_800eb040.c; water-full variants; 0x802DCD70 pair; magma/poison layer for 2/3",src/engine/dsys.rs
+engine::dsys,800eb6e0,fn_800eb6e0,translated,medium,"work/ghidra/main-gb/export/800eb6e0_FUN_800eb6e0.c; 0x1C record hit test; 0x80237BA0 corrections; 0x800EB6B0 angle",src/engine/dsys.rs
+engine::dsys,800eb930,fn_800eb930,translated,medium,"work/ghidra/main-gb/export/800eb930_FUN_800eb930.c; 0x50-entry scan; 0x800EB640 / fn_800eb6e0 dispatch",src/engine/dsys.rs
+engine::dsys,800edf70,fn_800edf70,translated,medium,"work/ghidra/main-gb/export/800edf70_FUN_800edf70.c; 0x80x0x80 radial gradient; 0x80170670 / 0x801707E0 / 0x80170830",src/engine/dsys.rs
+engine::dsys,800ee170,fn_800ee170,translated,medium,"work/ghidra/main-gb/export/800ee170_FUN_800ee170.c; aspect transform; 0x801C0BD0 / 0x801C0C60 / 0x801C0540",src/engine/dsys.rs
+engine::dsys,800ee610,fn_800ee610,translated,medium,"work/ghidra/main-gb/export/800ee610_FUN_800ee610.c; g3d_model.brres build; 0x800F1390 / 0x800F11F0 / 0x800F1550",src/engine/dsys.rs
+engine::dsys,800ee850,fn_800ee850,translated,medium,"work/ghidra/main-gb/export/800ee850_FUN_800ee850.c; table walk with 0x802E1BD0; retire via 0x800DFBE0 / 0x800DFA40",src/engine/dsys.rs
+engine::dsys,800ee9b0,fn_800ee9b0,translated,medium,"work/ghidra/main-gb/export/800ee9b0_FUN_800ee9b0.c; list add; 0x800F0E20 / 0x800F11F0 / 0x800DFBE0",src/engine/dsys.rs
+engine::dsys,800eee70,fn_800eee70,translated,medium,"work/ghidra/main-gb/export/800eee70_FUN_800eee70.c; variant 2 submode 1 phases; 0x800F11F0 / 0x800F1550",src/engine/dsys.rs
+engine::dsys,800ef230,fn_800ef230,translated,medium,"work/ghidra/main-gb/export/800ef230_FUN_800ef230.c; two-slot readiness; 0x80168080 target test; 0x800F0630",src/engine/dsys.rs
+engine::dsys,800ef9f0,fn_800ef9f0,translated,medium,"work/ghidra/main-gb/export/800ef9f0_FUN_800ef9f0.c; +0x70 reached-target predicate",src/engine/dsys.rs
+engine::dsys,800efaa0,fn_800efaa0,translated,medium,"work/ghidra/main-gb/export/800efaa0_FUN_800efaa0.c; +0x9C reached-target predicate",src/engine/dsys.rs

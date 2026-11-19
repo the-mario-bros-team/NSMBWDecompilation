@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,8019f490,fn_8019f490,translated,medium,"work/ghidra/main-gb/export/8019f490_FUN_8019f490.c; export is one call plus an endless loop, so the body is decoded from work/dol/main.elf 0x8019F490..0x8019F65C; 460 bytes",src/audio/ax.rs

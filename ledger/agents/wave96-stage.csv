@@ -1,0 +1,21 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800714d0,fn_800714d0,translated,medium,"work/ghidra/main-gb/export/800714d0_FUN_800714d0.c; scan-width guard, 0x80070BA0/0x80070BF0 probe, 0xC/0x1/0x10 direction codes, 0x800CFEA0 validation",src/game/stage.rs
+game::stage,80072180,fn_80072180,translated,medium,"work/ghidra/main-gb/export/80072180_FUN_80072180.c; packed 20.12 x span, type-9 probe, 0x8006D120 walk",src/game/stage.rs
+game::stage,80072bc0,fn_80072bc0,translated,medium,"work/ghidra/main-gb/export/80072bc0_FUN_80072bc0.c; 0x8006DB30 status, 0x800D9940 trigger, Wm_en_spsmoke 0x8016C890",src/game/stage.rs
+game::stage,80072cb0,fn_80072cb0,translated,medium,"work/ghidra/main-gb/export/80072cb0_FUN_80072cb0.c; 0x8006FA40 update, mirrors *(*(this+0x14)) to +0x4C",src/game/stage.rs
+game::stage,80075560,fn_80075560,translated,medium,"work/ghidra/main-gb/export/80075560_FUN_80075560.c; 0x800EB930 upward walk, 0x200 downward arm, r13-0x58D0 effect store",src/game/stage.rs
+game::stage,80076530,fn_80076530,translated,medium,"work/ghidra/main-gb/export/80076530_FUN_80076530.c; 0x800757B0 ground, +0x9003C fallback, four-tier height class",src/game/stage.rs
+game::stage,800775a0,fn_800775a0,translated,medium,"work/ghidra/main-gb/export/800775a0_FUN_800775a0.c; cell via 0x80077520, 0xFFFF sentinel, optional 0x80081AB0 convert",src/game/stage.rs
+game::stage,800789a0,fn_800789a0,translated,medium,"work/ghidra/main-gb/export/800789a0_FUN_800789a0.c; left bound +0x8FE64 widened by 0x80079060 ratio",src/game/stage.rs
+game::stage,80078a70,fn_80078a70,translated,high,"work/ghidra/main-gb/export/80078a70_FUN_80078a70.c; +0x90030 bound, same widening as fn_800789a0",src/game/stage.rs
+game::stage,80078b40,fn_80078b40,translated,high,"work/ghidra/main-gb/export/80078b40_FUN_80078b40.c; right bound +0x8FE68, same narrowing as fn_800789a0",src/game/stage.rs
+game::stage,80078c10,fn_80078c10,translated,high,"work/ghidra/main-gb/export/80078c10_FUN_80078c10.c; +0x90034 bound, same narrowing as fn_80078b40",src/game/stage.rs
+game::stage,80079780,fn_80079780,translated,medium,"work/ghidra/main-gb/export/80079780_FUN_80079780.c; four 0x8005ED90 samples, 0x8008E310 extents, 0x8015F140 curves",src/game/stage.rs
+game::stage,80079bf0,fn_80079bf0,translated,medium,"work/ghidra/main-gb/export/80079bf0_FUN_80079bf0.c; area selector 1/2/3, four x windows, 0x8015F140, 0x80078EB0 scale",src/game/stage.rs
+game::stage,8007ba70,fn_8007ba70,translated,medium,"work/ghidra/main-gb/export/8007ba70_FUN_8007ba70.c; trigger height clamp, +0x8FE90 store, 0x80078A70/0x80078C10 bounds",src/game/stage.rs
+game::stage,8007bc40,fn_8007bc40,translated,medium,"work/ghidra/main-gb/export/8007bc40_FUN_8007bc40.c; rectangle depth test against bounds and scene +0x78 reference",src/game/stage.rs
+game::stage,8007bd40,fn_8007bd40,translated,medium,"work/ghidra/main-gb/export/8007bd40_FUN_8007bd40.c; two-scale rectangle solve, +0x90038/+0x9003C limits",src/game/stage.rs
+game::stage,8007bef0,fn_8007bef0,translated,medium,"work/ghidra/main-gb/export/8007bef0_FUN_8007bef0.c; 4x 0x8005ED90 area bounds, 0x80079710 publish, 0x8007A6C0 sync, table clears",src/game/stage.rs
+game::stage,8007c7d0,fn_8007c7d0,translated,medium,"work/ghidra/main-gb/export/8007c7d0_FUN_8007c7d0.c; depth nudge in two-player mode, +0x8FEA0 step",src/game/stage.rs
+game::stage,8007e0e0,fn_8007e0e0,translated,medium,"work/ghidra/main-gb/export/8007e0e0_FUN_8007e0e0.c; z = +0x9001C + (+0x3C - +0x44) + 0x80078EB0 * BG colour B",src/game/stage.rs
+game::stage,8007fbf0,fn_8007fbf0,translated,high,"work/ghidra/main-gb/export/8007fbf0_FUN_8007fbf0.c; four scaled rectangle writes through 0x8007FCE0/FD10/FD40/FD60",src/game/stage.rs

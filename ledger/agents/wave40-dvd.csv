@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c4fa0,fn_801c4fa0,translated,medium,"work/ghidra/main-gb/export/801c4fa0_FUN_801c4fa0.c; VI timing half-word at +6 = line<<8 | value&0xFF",src/runtime/dvd.rs
+runtime::dvd,801c4fb0,fn_801c4fb0,translated,medium,"work/ghidra/main-gb/export/801c4fb0_FUN_801c4fb0.c; VI half-word at +8 = (value&3)|4",src/runtime/dvd.rs
+runtime::dvd,801c4fd0,fn_801c4fd0,translated,medium,"work/ghidra/main-gb/export/801c4fd0_FUN_801c4fd0.c; replaces bit 4 of half-word +2 under mask 0xFFEF",src/runtime/dvd.rs
+runtime::dvd,801c4ff0,fn_801c4ff0,translated,medium,"work/ghidra/main-gb/export/801c4ff0_FUN_801c4ff0.c; packs mode/CLZ terms and three fields into half-word +2",src/runtime/dvd.rs
+runtime::dvd,801c5050,fn_801c5050,translated,medium,"work/ghidra/main-gb/export/801c5050_FUN_801c5050.c; replaces bit 3 of half-word +2 under mask 0xFFF7",src/runtime/dvd.rs
+runtime::dvd,801c5070,fn_801c5070,translated,medium,"work/ghidra/main-gb/export/801c5070_FUN_801c5070.c; VI timing half-word at +4 = flag<<8 | value&0xFF",src/runtime/dvd.rs
+runtime::dvd,801c5090,fn_801c5090,translated,medium,"work/ghidra/main-gb/export/801c5090_FUN_801c5090.c; replaces bit 2 of half-word +2 under mask 0xFFFB",src/runtime/dvd.rs
+runtime::dvd,801c50b0,fn_801c50b0,translated,medium,"work/ghidra/main-gb/export/801c50b0_FUN_801c50b0.c; packs c bit4/b bits1-3/a bit0 into half-word +0",src/runtime/dvd.rs
+runtime::dvd,801c50d0,fn_801c50d0,translated,high,"work/ghidra/main-gb/export/801c50d0_FUN_801c50d0.c; interrupt-locked swap of r13-0x4D98 returning old value",src/runtime/dvd.rs
+runtime::dvd,801c66e0,fn_801c66e0,translated,medium,"work/ghidra/main-gb/export/801c66e0_FUN_801c66e0.c; three stfs stores at +0x28/+0x2C/+0x30",src/runtime/dvd.rs
+runtime::dvd,801c66f0,fn_801c66f0,translated,medium,"work/ghidra/main-gb/export/801c66f0_FUN_801c66f0.c; copies +0x28/+0x2C/+0x30 to three out pointers",src/runtime/dvd.rs
+runtime::dvd,801c6710,fn_801c6710,translated,medium,"work/ghidra/main-gb/export/801c6710_FUN_801c6710.c; writes negated x/y/z at +0x34/+0x38/+0x3C",src/runtime/dvd.rs
+runtime::dvd,801c6730,fn_801c6730,translated,medium,"work/ghidra/main-gb/export/801c6730_FUN_801c6730.c; negates +0x34/+0x38/+0x3C into three out pointers",src/runtime/dvd.rs
+runtime::dvd,801c6870,fn_801c6870,translated,high,"work/ghidra/main-gb/export/801c6870_FUN_801c6870.c; single word copy from *src to this+0xC",src/runtime/dvd.rs
+runtime::dvd,801c7100,fn_801c7100,translated,medium,"work/ghidra/main-gb/export/801c7100_FUN_801c7100.c; replaces bits 0-3 of packed word with b<<2|a",src/runtime/dvd.rs
+runtime::dvd,801c7120,fn_801c7120,translated,high,"work/ghidra/main-gb/export/801c7120_FUN_801c7120.c; stores word at +0x18",src/runtime/dvd.rs
+runtime::dvd,801c7160,fn_801c7160,translated,high,"work/ghidra/main-gb/export/801c7160_FUN_801c7160.c; stores word at +0x10",src/runtime/dvd.rs
+runtime::dvd,801c7170,fn_801c7170,translated,high,"work/ghidra/main-gb/export/801c7170_FUN_801c7170.c; loads word at +0x10",src/runtime/dvd.rs
+runtime::dvd,801c71e0,fn_801c71e0,translated,medium,"work/ghidra/main-gb/export/801c71e0_FUN_801c71e0.c; (word+8 & 0x3FF) + 1 inferred width",src/runtime/dvd.rs
+runtime::dvd,801c7200,fn_801c7200,translated,medium,"work/ghidra/main-gb/export/801c7200_FUN_801c7200.c; ((word+8 >> 10) & 0x3FF) + 1 inferred height",src/runtime/dvd.rs
+runtime::dvd,801c7220,fn_801c7220,translated,high,"work/ghidra/main-gb/export/801c7220_FUN_801c7220.c; loads word at +0x14",src/runtime/dvd.rs
+runtime::dvd,801c7230,fn_801c7230,translated,medium,"work/ghidra/main-gb/export/801c7230_FUN_801c7230.c; returns bits 0-1 of first word",src/runtime/dvd.rs
+runtime::dvd,801c7240,fn_801c7240,translated,medium,"work/ghidra/main-gb/export/801c7240_FUN_801c7240.c; returns bits 2-3 of first word",src/runtime/dvd.rs
+runtime::dvd,801c7250,fn_801c7250,translated,medium,"work/ghidra/main-gb/export/801c7250_FUN_801c7250.c; returns byte at +0x1F masked with 1",src/runtime/dvd.rs
+runtime::dvd,801c7340,fn_801c7340,translated,high,"work/ghidra/main-gb/export/801c7340_FUN_801c7340.c; loads word at +0x18",src/runtime/dvd.rs
+runtime::dvd,801ca640,fn_801ca640,translated,medium,"work/ghidra/main-gb/export/801ca640_FUN_801ca640.c; writes constant 4 to half-word at *(r13-0x4DEC)+4",src/runtime/dvd.rs
+runtime::dvd,801cfa50,fn_801cfa50,translated,high,"work/ghidra/main-gb/export/801cfa50_FUN_801cfa50.c; constant return 1",src/runtime/dvd.rs
+runtime::dvd,801cfa60,fn_801cfa60,translated,high,"work/ghidra/main-gb/export/801cfa60_FUN_801cfa60.c; empty body",src/runtime/dvd.rs

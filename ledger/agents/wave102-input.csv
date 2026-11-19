@@ -1,0 +1,25 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801f0b10,fn_801f0b10,translated,medium,"work/ghidra/main-gb/export/801f0b10_FUN_801f0b10.c; WUD pairing state machine 0x00..0xFF; 0x803A312C next-state byte; 0x64..0x67 save stages",src/runtime/input.rs
+runtime::input,801f1f70,fn_801f1f70,translated,medium,"work/ghidra/main-gb/export/801f1f70_FUN_801f1f70.c; rebuilds 10+6 device records from banks 0x803A39D8/0x803A5080; installs 0x801F1F20 and state 4",src/runtime/input.rs
+runtime::input,801f2650,fn_801f2650,translated,medium,"work/ghidra/main-gb/export/801f2650_FUN_801f2650.c; WiiFit save ladder state 0..6; two 16-bit checksum loops over 0x4AF18 and 0x80 bytes",src/runtime/input.rs
+runtime::input,801f3300,fn_801f3300,translated,high,"work/ghidra/main-gb/export/801f3300_thunk_FUN_801f8ec0.c; returns 0x14A78",src/runtime/input.rs
+runtime::input,801f36f0,fn_801f36f0,translated,medium,"work/ghidra/main-gb/export/801f36f0_FUN_801f36f0.c; link state 3 + four idle bytes; arms 0x803A3830 with 0x801F1600",src/runtime/input.rs
+runtime::input,801f8630,fn_801f8630,translated,high,"work/ghidra/main-gb/export/801f8630_FUN_801f8630.c; bare blr (GKI yield)",src/runtime/input.rs
+runtime::input,801f8640,fn_801f8640,translated,high,"work/ghidra/main-gb/export/801f8640_FUN_801f8640.c; bare blr (GKI enter critical)",src/runtime/input.rs
+runtime::input,801f8650,fn_801f8650,translated,high,"work/ghidra/main-gb/export/801f8650_FUN_801f8650.c; bare blr (GKI exit critical)",src/runtime/input.rs
+runtime::input,801f8660,fn_801f8660,translated,high,"work/ghidra/main-gb/export/801f8660_FUN_801f8660.c; bare blr (GKI delay)",src/runtime/input.rs
+runtime::input,801f87b0,fn_801f87b0,translated,high,"work/ghidra/main-gb/export/801f87b0_FUN_801f87b0.c; bare blr (GKI pool error)",src/runtime/input.rs
+runtime::input,801f87f0,fn_801f87f0,translated,high,"work/ghidra/main-gb/export/801f87f0_thunk_FUN_801eff50.c; App_MEMfree thunk",src/runtime/input.rs
+runtime::input,801f8bc0,fn_801f8bc0,translated,medium,"work/ghidra/main-gb/export/801f8bc0_FUN_801f8bc0.c; ACL re-chunk 0x2100; fragment 0x803D16CC; posts 0x1900",src/runtime/input.rs
+runtime::input,801f8f70,fn_801f8f70,translated,medium,"work/ghidra/main-gb/export/801f8f70_FUN_801f8f70.c; 0x1000 receive pump; pool 0x803CDDFC; 0x801EF6F0 by address",src/runtime/input.rs
+runtime::input,801f9120,fn_801f9120,translated,medium,"work/ghidra/main-gb/export/801f9120_FUN_801f9120.c; 0x1100 transmit pump; pool 0x803CDDFD; parser 0x80215460",src/runtime/input.rs
+runtime::input,801f9490,fn_801f9490,translated,medium,"work/ghidra/main-gb/export/801f9490_FUN_801f9490.c; 0x4C-byte state clear; endpoint open; two dynamic pools; state 4",src/runtime/input.rs
+runtime::input,801f96a0,fn_801f96a0,translated,medium,"work/ghidra/main-gb/export/801f96a0_FUN_801f96a0.c; state 4 -> 2; arms both pumps; clears start word",src/runtime/input.rs
+runtime::input,801f9840,fn_801f9840,translated,medium,"work/ghidra/main-gb/export/801f9840_FUN_801f9840.c; channel 0/2 queue; 0x801EFE60 nine-arg send / 0x801EF810 six-arg send",src/runtime/input.rs
+runtime::input,801f9fa0,fn_801f9fa0,translated,medium,"work/ghidra/main-gb/export/801f9fa0_FUN_801f9fa0.c; frame pump; 0xNN00 dispatch; BTA timer list 0x803D1690; 500-pass gate",src/runtime/input.rs
+runtime::input,801fc958,fn_801fc958,translated,medium,"work/ghidra/main-gb/export/801fc958_FUN_801fc958.c; scans five 9-byte discovery slots; forwards to 801F6A60 (returns 0)",src/runtime/input.rs
+runtime::input,801fcc74,fn_801fcc74,translated,medium,"work/ghidra/main-gb/export/801fcc74_FUN_801fcc74.c; marks discovery slot; r13-0x5DA8 three-byte link table",src/runtime/input.rs
+runtime::input,801fd16c,fn_801fd16c,translated,medium,"work/ghidra/main-gb/export/801fd16c_FUN_801fd16c.c; 23-bit AFH mask via 0x802F6E18; 0x80201FB4; CLZ result",src/runtime/input.rs
+runtime::input,801fd4bc,fn_801fd4bc,translated,medium,"work/ghidra/main-gb/export/801fd4bc_FUN_801fd4bc.c; mode 4/5 channel map; security timer release; HID service add/shift",src/runtime/input.rs
+runtime::input,801fd83c,fn_801fd83c,translated,medium,"work/ghidra/main-gb/export/801fd83c_FUN_801fd83c.c; quality mask; three security timers; mode 1/2/4 feature writes",src/runtime/input.rs
+runtime::input,801ff970,fn_801ff970,translated,medium,"work/ghidra/main-gb/export/801ff970_FUN_801ff970.c; per-state transition table 0x802F7030; action table 0x802F6FB8; 0x1700/0x1701/0x1708/0x170A notifications",src/runtime/input.rs

@@ -1,0 +1,18 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a00d00,fn_80a00d00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a00d00_FUN_80a00d00.c; daEnBuku_c four-player carry; +0x92E markers; 17.0 height; 2.0 pull; 3.0 snap",src/game/enemies.rs
+game::enemies,80a04a90,fn_80a04a90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a04a90_FUN_80a04a90.c; predicted-position delta + velocity at +0x670; normalised speed triple; 0x80A04940 sibling",src/game/enemies.rs
+game::enemies,80a10220,fn_80a10220,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a10220_FUN_80a10220.c; trail recorder; 0x1C-byte records at +0x92C; +0x928 count; side lane table 1.5/-1.5",src/game/enemies.rs
+game::enemies,80a197f0,fn_80a197f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a197f0_FUN_80a197f0.c; 0x802DCBFC deleting-destructor forwarder; hidden r12 operand not modelled",src/game/enemies.rs
+game::enemies,80a19820,fn_80a19820,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a19820_FUN_80a19820.c; 0x802DCBFC deleting-destructor forwarder; hidden r12 operand not modelled",src/game/enemies.rs
+game::enemies,80a1da70,fn_80a1da70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1da70_FUN_80a1da70.c; 0x802DCBFC deleting-destructor forwarder; hidden r12 operand not modelled",src/game/enemies.rs
+game::enemies,80a1daa0,fn_80a1daa0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1daa0_FUN_80a1daa0.c; 0x802DCBFC deleting-destructor forwarder; hidden r12 operand not modelled",src/game/enemies.rs
+game::enemies,80a1f4b0,fn_80a1f4b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1f4b0_FUN_80a1f4b0.c; 0x802DCBFC deleting-destructor forwarder; hidden r12 operand not modelled",src/game/enemies.rs
+game::enemies,80a1f4e0,fn_80a1f4e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1f4e0_FUN_80a1f4e0.c; 0x802DCBFC deleting-destructor forwarder; hidden r12 operand not modelled",src/game/enemies.rs
+game::enemies,80a2ec00,fn_80a2ec00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2ec00_FUN_80a2ec00.c; Wm_en_magmawave contact band; 0x800EB930 record kind; sounds 16/17; player SE 0x1D0",src/game/enemies.rs
+game::enemies,80a37cb0,fn_80a37cb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a37cb0_FUN_80a37cb0.c; nearest player on the +0x348 side; 1e7 seed; returns signed clip byte or -1",src/game/enemies.rs
+game::enemies,80ab13e0,fn_80ab13e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab13e0_FUN_80ab13e0.c; fishbone four-node binder; 0x80B54C00 name table; attack_st group at +0x768",src/game/enemies.rs
+game::enemies,80af3400,fn_80af3400,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af3400_FUN_80af3400.c; player-slot launch; radius table 15/7/7/7 at 0x80B3138C; qr3 u16 angle; motion id 1000",src/game/enemies.rs
+game::enemies,80b0cd80,fn_80b0cd80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0cd80_FUN_80b0cd80.c; Teresa body binder; wait/shay_teresaA; holders +0x640/+0x6B4; variant latch +0x9B4",src/game/enemies.rs
+game::enemies,80b0ceb0,fn_80b0ceb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0ceb0_FUN_80b0ceb0.c; Teresa tail binder; shay_teresaB/_wait; holders +0x678/+0x6E0; latch +0x9B8",src/game/enemies.rs
+game::enemies,80b16ba0,fn_80b16ba0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b16ba0_FUN_80b16ba0.c; node matrix commit +0x7C to +0x54C; three s16 angles; animation 1/2 from +0x628",src/game/enemies.rs
+game::enemies,80b27ed0,fn_80b27ed0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b27ed0_FUN_80b27ed0.c; per-slot relay; scene handle +0x6E8+4*slot; qr3 widens the incoming angle; speed via 0x80B27DC0",src/game/enemies.rs

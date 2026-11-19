@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80775d00,fn_80775d00,translated,high,"work/ghidra/rel-d_basesNP/export/80775d00_FUN_80775d00.c; five-arm world-map castle pop-in state; 0.01 seed, 380/20/20 frame table, 0.9/0.1 blend",src/game/bases.rs
+game::bases,80626db0,fn_80626db0,translated,medium,"work/ghidra/rel-d_basesNP/export/80626db0_FUN_80626db0.c; model-play-date counter/icon ticker; styles 22..27, phase ladder, coin ids {4,1,3,2}",src/game/bases.rs
+game::bases,8070f370,fn_8070f370,translated,high,"work/ghidra/rel-d_basesNP/export/8070f370_FUN_8070f370.c; boss_kameck_block vtable slot 0; 29-record placement table, animator 0x8007FA40, returns 1",src/game/bases.rs
+game::bases,806d1ef0,fn_806d1ef0,translated,high,"work/ghidra/rel-d_basesNP/export/806d1ef0_FUN_806d1ef0.c; daLiftRemoconSeesaw_c pointer-angle stepper; 910 band, 1536 quantum, 560 slew, cue 683",src/game/bases.rs
+game::bases,807bc310,fn_807bc310,translated,high,"work/ghidra/rel-d_basesNP/export/807bc310_FUN_807bc310.c; dWorldSelect_c select state; cues 122/1631, pad bits 0x2000/1/2/8/4, hold bit +0x2B5",src/game/bases.rs
+game::bases,8078fc80,fn_8078fc80,translated,high,"work/ghidra/rel-d_basesNP/export/8078fc80_FUN_8078fc80.c; CS_W5 pad-mode mapper; W502/W5G0/W503/W505 ladders and class gate 4/5/7",src/game/bases.rs
+game::bases,807a6be0,fn_807a6be0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a6be0_FUN_807a6be0.c; dCsSeqMng_c layer/fade writer; pose copy, dSys matrix stack, BSS layer cache 0x808333A0",src/game/bases.rs
+game::bases,80680fd0,fn_80680fd0,translated,high,"work/ghidra/rel-d_basesNP/export/80680fd0_FUN_80680fd0.c; daFloorDokanEight_c StateID_Move; 24 tilts, eight 0x74-stride pipes, 48 block flush, weights",src/game/bases.rs
+game::bases,8067c3a0,fn_8067c3a0,translated,high,"work/ghidra/rel-d_basesNP/export/8067c3a0_FUN_8067c3a0.c; returns the constant pointer 0x80353F0C (lis/addi/blr)",src/game/bases.rs
+game::bases,8067d200,fn_8067d200,translated,high,"work/ghidra/rel-d_basesNP/export/8067d200_FUN_8067d200.c; twin entry returning 0x80353F0C (identical three words)",src/game/bases.rs
+game::bases,8067f5d0,fn_8067f5d0,translated,high,"work/ghidra/rel-d_basesNP/export/8067f5d0_FUN_8067f5d0.c; 0x80169CD0 on the record and on +0x40, returns the record",src/game/bases.rs
+game::bases,8067f610,fn_8067f610,translated,high,"work/ghidra/rel-d_basesNP/export/8067f610_FUN_8067f610.c; twin release: 0x80169D20(+0x40,-1), 0x80169D20(record,-1), free when free>0",src/game/bases.rs
+game::bases,8067b140,fn_8067b140,translated,medium,"work/ghidra/rel-d_basesNP/export/8067b140_FUN_8067b140.c; tail bctr through member +0x3EC slot +0x08 with (member, this+0x3D0, 2)",src/game/bases.rs
+game::bases,8067b200,fn_8067b200,translated,high,"work/ghidra/rel-d_basesNP/export/8067b200_FUN_8067b200.c; class slot +0x98 then member +0x394 slot +0x18 with BSS label 0x8082A3D8",src/game/bases.rs
+game::bases,8067dcf0,fn_8067dcf0,translated,high,"work/ghidra/rel-d_basesNP/export/8067dcf0_FUN_8067dcf0.c; point-in-box test on +0xAC/+0xB0 against {left,top,width,height}",src/game/bases.rs

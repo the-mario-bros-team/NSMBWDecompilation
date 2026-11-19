@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,8029bab0,fn_8029bab0,translated,medium,"work/ghidra/main-gb/export/8029bab0_FUN_8029bab0.c; 1484 bytes; material-id cache plus TEV/texgen sync then one 8-vertex zero triangle strip formatted from the VAT descriptors",src/render/gx_band.rs

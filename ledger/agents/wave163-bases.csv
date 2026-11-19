@@ -1,0 +1,36 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806001e0,fn_806001e0,translated,high,"work/ghidra/rel-d_basesNP/export/806001e0_FUN_806001e0.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,806001f0,fn_806001f0,translated,high,"work/ghidra/rel-d_basesNP/export/806001f0_FUN_806001f0.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,806bb220,fn_806bb220,translated,high,"work/ghidra/rel-d_basesNP/export/806bb220_FUN_806bb220.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,8072c1f0,fn_8072c1f0,translated,high,"work/ghidra/rel-d_basesNP/export/8072c1f0_FUN_8072c1f0.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,80750da0,fn_80750da0,translated,high,"work/ghidra/rel-d_basesNP/export/80750da0_FUN_80750da0.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,807622a0,fn_807622a0,translated,high,"work/ghidra/rel-d_basesNP/export/807622a0_FUN_807622a0.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,8076b090,fn_8076b090,translated,high,"work/ghidra/rel-d_basesNP/export/8076b090_FUN_8076b090.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,8076ba60,fn_8076ba60,translated,high,"work/ghidra/rel-d_basesNP/export/8076ba60_FUN_8076ba60.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,8077d660,fn_8077d660,translated,high,"work/ghidra/rel-d_basesNP/export/8077d660_FUN_8077d660.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,80792a10,fn_80792a10,translated,high,"work/ghidra/rel-d_basesNP/export/80792a10_FUN_80792a10.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,8079ef00,fn_8079ef00,translated,high,"work/ghidra/rel-d_basesNP/export/8079ef00_FUN_8079ef00.c; Empty 4-byte blr body",src/game/bases.rs
+game::bases,80667dd0,fn_80667dd0,translated,high,"work/ghidra/rel-d_basesNP/export/80667dd0_thunk_FUN_80667de0.c; thunk b 80667DE0 (tail branch)",src/game/bases.rs
+game::bases,806e3370,fn_806e3370,translated,high,"work/ghidra/rel-d_basesNP/export/806e3370_thunk_FUN_806e3480.c; thunk b 806E3480 (tail branch)",src/game/bases.rs
+game::bases,80741ca0,fn_80741ca0,translated,high,"work/ghidra/rel-d_basesNP/export/80741ca0_thunk_FUN_80741a70.c; thunk b 80741A70 (tail branch)",src/game/bases.rs
+game::bases,80776c00,fn_80776c00,translated,high,"work/ghidra/rel-d_basesNP/export/80776c00_thunk_FUN_80776c10.c; thunk b 80776C10 (tail branch)",src/game/bases.rs
+game::bases,80773200,fn_80773200,translated,high,"work/ghidra/rel-d_basesNP/export/80773200_thunk_FUN_80773210.c; thunk b 80773210 one-arg big routine",src/game/bases.rs
+game::bases,807812d0,fn_807812d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807812d0_thunk_EXT_FUN_80100940.c; thunk b 80100940 (main.dol, address-only)",src/game/bases.rs
+game::bases,80792ee0,fn_80792ee0,translated,medium,"work/ghidra/rel-d_basesNP/export/80792ee0_thunk_EXT_FUN_80162590.c; thunk b 80162590 (main.dol, address-only)",src/game/bases.rs
+game::bases,80625970,fn_80625970,translated,high,"work/ghidra/rel-d_basesNP/export/80625970_FUN_80625970.c; 807EAC30 animation on +0x288 via 800B3B60",src/game/bases.rs
+game::bases,80651590,fn_80651590,translated,high,"work/ghidra/rel-d_basesNP/export/80651590_FUN_80651590.c; 0 when +0x3D8 null else tail 80162D00",src/game/bases.rs
+game::bases,807211d0,fn_807211d0,translated,high,"work/ghidra/rel-d_basesNP/export/807211d0_FUN_807211d0.c; +0x5B8 = 1 then 80166F40(+0x5C0,1,0)",src/game/bases.rs
+game::bases,8076fef0,fn_8076fef0,translated,high,"work/ghidra/rel-d_basesNP/export/8076fef0_FUN_8076fef0.c; two globals + this + 80430000 to 801006E0",src/game/bases.rs
+game::bases,8066c090,fn_8066c090,translated,high,"work/ghidra/rel-d_basesNP/export/8066c090_FUN_8066c090.c; store +0x5AC then vtable +0x60 slot 0xD4 with 80829808",src/game/bases.rs
+game::bases,806baeb0,fn_806baeb0,translated,high,"work/ghidra/rel-d_basesNP/export/806baeb0_FUN_806baeb0.c; sth +0x6DC then lwzu +0x394 slot 0x18 with 8082C7BC",src/game/bases.rs
+game::bases,806d1ed0,fn_806d1ed0,translated,high,"work/ghidra/rel-d_basesNP/export/806d1ed0_FUN_806d1ed0.c; extsb +0x430 through 800B3980(5.0,1.0,id)",src/game/bases.rs
+game::bases,807882e0,fn_807882e0,translated,high,"work/ghidra/rel-d_basesNP/export/807882e0_FUN_807882e0.c; 80819224/80819238 pair with r7=1 to 800F6710",src/game/bases.rs
+game::bases,807c1200,fn_807c1200,translated,high,"work/ghidra/rel-d_basesNP/export/807c1200_FUN_807c1200.c; store 1.0f32 at +0x720,+0x724,+0x72C",src/game/bases.rs
+game::bases,807c1380,fn_807c1380,translated,high,"work/ghidra/rel-d_basesNP/export/807c1380_FUN_807c1380.c; return +0x724 == 0.0",src/game/bases.rs
+game::bases,806b9720,fn_806b9720,translated,high,"work/ghidra/rel-d_basesNP/export/806b9720_FUN_806b9720.c; 807F61D4 + actor+0xAC to 8016C890",src/game/bases.rs
+game::bases,80783590,fn_80783590,translated,high,"work/ghidra/rel-d_basesNP/export/80783590_FUN_80783590.c; +0x424 = 2 then 801038F0(0.0,+0x434,0,-1)",src/game/bases.rs
+game::bases,806998d0,fn_806998d0,translated,high,"work/ghidra/rel-d_basesNP/export/806998d0_FUN_806998d0.c; call 800A3D00, return 1",src/game/bases.rs
+game::bases,806d0590,fn_806d0590,translated,high,"work/ghidra/rel-d_basesNP/export/806d0590_FUN_806d0590.c; sbyte +0x430 to 800D8B00(pool,id,5,2,0,0)",src/game/bases.rs
+game::bases,806d21a0,fn_806d21a0,translated,high,"work/ghidra/rel-d_basesNP/export/806d21a0_FUN_806d21a0.c; sbyte +0x430 to 800D8B00(pool,id,7,2,0,0)",src/game/bases.rs
+game::bases,806d38d0,fn_806d38d0,translated,high,"work/ghidra/rel-d_basesNP/export/806d38d0_FUN_806d38d0.c; sbyte +0x430 to 800D8B00(pool,id,5,2,0,0)",src/game/bases.rs
+game::bases,806d6e30,fn_806d6e30,translated,high,"work/ghidra/rel-d_basesNP/export/806d6e30_FUN_806d6e30.c; call 806D6270, return 1",src/game/bases.rs

@@ -1,0 +1,14 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807310c0,fn_807310c0,translated,high,"work/ghidra/rel-d_basesNP/export/807310c0_FUN_807310c0.c; daRotDokan_c two-anchor pose; yaw 0x4000 fold; radii 24.0 and 16.0; GQR3 u16 loads",src/game/bases.rs
+game::bases,80794980,fn_80794980,translated,medium,"work/ghidra/rel-d_basesNP/export/80794980_FUN_80794980.c; cobTsuta five-state growth; record table 0x8081B4EC stride 0x1C; tail seeds +0x264 with 0.0",src/game/bases.rs
+game::bases,80794bf0,fn_80794bf0,translated,high,"work/ghidra/rel-d_basesNP/export/80794bf0_FUN_80794bf0.c; 12-byte height leaf; +0x2C4 value and +0x350 handle to 0x80102DB0",src/game/bases.rs
+game::bases,80787bd0,fn_80787bd0,translated,medium,"work/ghidra/rel-d_basesNP/export/80787bd0_FUN_80787bd0.c; World-7 Koopa create tail; per-player pose arms; 0x1C-byte record via 0x802B9210",src/game/bases.rs
+game::bases,807b2050,fn_807b2050,translated,medium,"work/ghidra/rel-d_basesNP/export/807b2050_FUN_807b2050.c; player-link arrays 0x80354E50..0x80354EA0; 624-byte body vs 620-byte extent",src/game/bases.rs
+game::bases,80637a40,fn_80637a40,translated,high,"work/ghidra/rel-d_basesNP/export/80637a40_FUN_80637a40.c; four 0x3C-byte records at +0x7BC; order table 0x807C7D18; pure leaf",src/game/bases.rs
+game::bases,806e7080,fn_806e7080,translated,medium,"work/ghidra/rel-d_basesNP/export/806e7080_FUN_806e7080.c; lift_zen_shiro_yogan spawn; flag slices 12/24/16/20/8; quadrant offsets",src/game/bases.rs
+game::bases,80741010,fn_80741010,translated,high,"work/ghidra/rel-d_basesNP/export/80741010_FUN_80741010.c; four-player result wheel; 16 popup slots; rate arms +16/-16/proportional",src/game/bases.rs
+game::bases,8063a960,fn_8063a960,translated,medium,"work/ghidra/rel-d_basesNP/export/8063a960_FUN_8063a960.c; +0x2CC four 0x1C-byte records; order 0x80354E60 to 0x807C7F70",src/game/bases.rs
+game::bases,806f1b30,fn_806f1b30,translated,high,"work/ghidra/rel-d_basesNP/export/806f1b30_FUN_806f1b30.c; release owner via 0x8015F800 then 0x802B9280 when amount > 0",src/game/bases.rs
+game::bases,806fdc50,fn_806fdc50,translated,high,"work/ghidra/rel-d_basesNP/export/806fdc50_FUN_806fdc50.c; +0x218 countdown; pad bits 0x100/0x800 at [[0x80429F50]+4]+0x1C",src/game/bases.rs
+game::bases,806fdca0,fn_806fdca0,translated,high,"work/ghidra/rel-d_basesNP/export/806fdca0_FUN_806fdca0.c; single store of the value into +0x218",src/game/bases.rs
+game::bases,806fdcb0,fn_806fdcb0,translated,high,"work/ghidra/rel-d_basesNP/export/806fdcb0_FUN_806fdcb0.c; clears +0x1D4; 0x8005C930 on 0x80429C94; sets +0x1D of 0x80429FD8",src/game/bases.rs

@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80653ce0,fn_80653ce0,translated,high,"work/ghidra/rel-d_basesNP/export/80653ce0_FUN_80653ce0.c; range test against the 0x807C8848 extent table (2.0/2.0) and 0.0/2.0 thresholds",src/game/bases.rs
+game::bases,80656210,fn_80656210,translated,high,"work/ghidra/rel-d_basesNP/export/80656210_FUN_80656210.c; scene edge +/- 32.0 (0x807C88F8); single-precision return",src/game/bases.rs
+game::bases,806564a0,fn_806564a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806564a0_FUN_806564a0.c; Wm_jr_bomb payload {x, y, 500.0}; 0x80A46F60 is outside the REL text",src/game/bases.rs
+game::bases,80656500,fn_80656500,translated,high,"work/ghidra/rel-d_basesNP/export/80656500_FUN_80656500.c; 0x80162D50(0x79,0) handle copy into +0x3D0",src/game/bases.rs
+game::bases,80656570,fn_80656570,translated,high,"work/ghidra/rel-d_basesNP/export/80656570_FUN_80656570.c; +0x394 interface slot +0x18 with tags 0x80828920/0x808288E0",src/game/bases.rs
+game::bases,80656b70,fn_80656b70,translated,high,"work/ghidra/rel-d_basesNP/export/80656b70_FUN_80656b70.c; byte-identical to fn_806511d0 (0x8015F800 + 0x802B9280)",src/game/bases.rs
+game::bases,80658610,fn_80658610,translated,high,"work/ghidra/rel-d_basesNP/export/80658610_FUN_80658610.c; Wm_jr_bomb launch: sound 0x5C1 at +0xAC and +0xEC = 7.5",src/game/bases.rs
+game::bases,8065e460,fn_8065e460,translated,high,"work/ghidra/rel-d_basesNP/export/8065e460_FUN_8065e460.c; s16 clamp/interpolate over [0.0,1.0] with the 2^52+2^31 ladder",src/game/bases.rs
+game::bases,806626a0,fn_806626a0,translated,high,"work/ghidra/rel-d_basesNP/export/806626a0_FUN_806626a0.c; same destructor as fn_80656b70 plus the inlined null test",src/game/bases.rs
+game::bases,806677e0,fn_806677e0,translated,high,"work/ghidra/rel-d_basesNP/export/806677e0_FUN_806677e0.c; 0x398-byte factory, base ctor 0x80064110, vtable 0x807E8304",src/game/bases.rs

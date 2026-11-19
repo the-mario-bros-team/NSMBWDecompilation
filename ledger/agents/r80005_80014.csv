@@ -1,0 +1,23 @@
+module,address,name,status,confidence,evidence,rust_file
+game::actor,0x80008440,init_150_node_array,translated,high,"work/ghidra/main-gb/export/80008440_FUN_80008440.c (8x-unrolled loop + 6-entry peel collapsed to one 150-iteration loop)",src/game/actor.rs
+game::actor,0x800099D0,init_500_node_array,translated,high,"work/ghidra/main-gb/export/800099d0_FUN_800099d0.c (2x-unrolled loop collapsed to one 500-iteration loop)",src/game/actor.rs
+render::geometry,0x8000AE50,copy_12_floats,translated,high,work/ghidra/main-gb/export/8000ae50_FUN_8000ae50.c,src/render/geometry.rs
+render::geometry,0x8000B320,fn_8000b320,translated,high,work/ghidra/main-gb/export/8000b320_FUN_8000b320.c,src/render/geometry.rs
+render::geometry,0x8000D0D0,store_four_lane_vertices,translated,high,work/ghidra/main-gb/export/8000d0d0_FUN_8000d0d0.c,src/render/geometry.rs
+game::path,0x8000D190,fn_8000d190,translated,medium,work/ghidra/main-gb/export/8000d190_FUN_8000d190.c,src/game/path.rs
+game::path,0x8000D260,fn_8000d260,translated,medium,work/ghidra/main-gb/export/8000d260_FUN_8000d260.c,src/game/path.rs
+game::path,0x8000D3B0,fn_8000d3b0,translated,medium,work/ghidra/main-gb/export/8000d3b0_FUN_8000d3b0.c,src/game/path.rs
+game::path,0x8000D5B0,fn_8000d5b0,translated,medium,work/ghidra/main-gb/export/8000d5b0_FUN_8000d5b0.c,src/game/path.rs
+game::path,0x8000D660,fn_8000d660,translated,medium,work/ghidra/main-gb/export/8000d660_FUN_8000d660.c,src/game/path.rs
+render::geometry,0x8000D870,vec2_sub,translated,high,work/ghidra/main-gb/export/8000d870_FUN_8000d870.c,src/render/geometry.rs
+render::geometry,0x8000D8A0,vec2_differs_from,translated,high,work/ghidra/main-gb/export/8000d8a0_FUN_8000d8a0.c,src/render/geometry.rs
+game::path,0x8000DE70,fn_8000de70,translated,medium,work/ghidra/main-gb/export/8000de70_FUN_8000de70.c,src/game/path.rs
+game::path,0x8000DF60,fn_8000df60,translated,high,"work/ghidra/main-gb/export/8000df60_FUN_8000df60.c (loop rebuilt from instructions; Ghidra prologue-save artefact removed)",src/game/path.rs
+game::path,0x8000E030,fn_8000e030,translated,high,work/ghidra/main-gb/export/8000e030_FUN_8000e030.c,src/game/path.rs
+game::path,0x8000E840,fn_8000e840,translated,medium,work/ghidra/main-gb/export/8000e840_FUN_8000e840.c,src/game/path.rs
+render::gx,0x8000EBF0,fn_8000ebf0,translated,medium,work/ghidra/main-gb/export/8000ebf0_FUN_8000ebf0.c,src/render/gx.rs
+render::gx,0x8000EEB0,fn_8000eeb0,translated,high,work/ghidra/main-gb/export/8000eeb0_FUN_8000eeb0.c,src/render/gx.rs
+render::gx,0x8000EF20,fn_8000ef20,translated,high,work/ghidra/main-gb/export/8000ef20_FUN_8000ef20.c,src/render/gx.rs
+game::actor,0x8000F460,fn_8000f460,translated,high,work/ghidra/main-gb/export/8000f460_FUN_8000f460.c,src/game/actor.rs
+game::actor,0x8000F4B0,fn_8000f4b0,translated,medium,work/ghidra/main-gb/export/8000f4b0_FUN_8000f4b0.c,src/game/actor.rs
+render::geometry,0x8000F900,vec2_length,translated,high,work/ghidra/main-gb/export/8000f900_FUN_8000f900.c,src/render/geometry.rs

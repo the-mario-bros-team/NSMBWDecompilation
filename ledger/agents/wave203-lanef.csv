@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,80023b40,fn_80023b40,translated,high,work/ghidra/main-gb/export/80023b40_FUN_80023b40.c,src/ui/hud.rs
+ui::hud,80023c00,fn_80023c00,translated,high,work/ghidra/main-gb/export/80023c00_FUN_80023c00.c,src/ui/hud.rs
+ui::hud,80023c30,fn_80023c30,translated,high,work/ghidra/main-gb/export/80023c30_FUN_80023c30.c,src/ui/hud.rs
+ui::hud,80023c60,fn_80023c60,translated,high,work/ghidra/main-gb/export/80023c60_FUN_80023c60.c,src/ui/hud.rs
+ui::hud,80023c70,fn_80023c70,translated,high,work/ghidra/main-gb/export/80023c70_FUN_80023c70.c,src/ui/hud.rs
+ui::hud,80023c80,fn_80023c80,translated,high,work/ghidra/main-gb/export/80023c80_FUN_80023c80.c,src/ui/hud.rs
+ui::hud,80023c90,fn_80023c90,translated,high,work/ghidra/main-gb/export/80023c90_FUN_80023c90.c,src/ui/hud.rs
+ui::hud,80023ca0,fn_80023ca0,translated,high,work/ghidra/main-gb/export/80023ca0_FUN_80023ca0.c,src/ui/hud.rs
+ui::hud,80023cb0,fn_80023cb0,translated,high,work/ghidra/main-gb/export/80023cb0_FUN_80023cb0.c,src/ui/hud.rs
+ui::hud,80023f80,fn_80023f80,translated,medium,work/ghidra/main-gb/export/80023f80_FUN_80023f80.c,src/ui/hud.rs

@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,801051c0,fn_801051c0,translated,high,"work/ghidra/main-gb/export/801051c0_thunk_FUN_80105530.c; 4-byte branch to the 0x80105530 effect-pool allocator",src/game/worldmap.rs
+game::worldmap,80106b40,fn_80106b40,translated,medium,"work/ghidra/main-gb/export/80106b40_FUN_80106b40.c; segment/point curve sampler; record +0x00 segments +0x08 count; segment +0x00 count +0x08 points +0x0C duration",src/game/worldmap.rs
+game::worldmap,801076b0,fn_801076b0,translated,medium,"work/ghidra/main-gb/export/801076b0_FUN_801076b0.c; overlay load-state handler; states 4/6/0xB latched at +0x1B4; 0x13-frame idle timeout at +0x1BC",src/game/worldmap.rs
+game::worldmap,80107860,fn_80107860,translated,high,"work/ghidra/main-gb/export/80107860_FUN_80107860.c; starts 0x801072F0 and reduces 0x80107340 through countLeadingZeros>>5",src/game/worldmap.rs
+game::worldmap,80107890,fn_80107890,translated,high,"work/ghidra/main-gb/export/80107890_FUN_80107890.c; resets +0xE0/+0xF4 then clears +0x00..+0xE0 in two interleaved loops",src/game/worldmap.rs
+game::worldmap,80107920,fn_80107920,translated,medium,"work/ghidra/main-gb/export/80107920_FUN_80107920.c; copies 14 dispenser words to +0xA8 and rebuilds 3 columns via 0x801079E0",src/game/worldmap.rs
+game::worldmap,801079b0,fn_801079b0,translated,medium,"work/ghidra/main-gb/export/801079b0_FUN_801079b0.c; column 4 returns r13-0x65D8; otherwise indexes +0xE0 + mode*0xC + column*4",src/game/worldmap.rs
+game::worldmap,801079e0,fn_801079e0,translated,medium,"work/ghidra/main-gb/export/801079e0_FUN_801079e0.c; stores shared string or allocates strlen(source)+strlen(shared)+1 and concatenates",src/game/worldmap.rs
+game::worldmap,80107ab0,fn_80107ab0,translated,high,"work/ghidra/main-gb/export/80107ab0_FUN_80107ab0.c; returns 1 for columns 0 and 2 only",src/game/worldmap.rs
+game::worldmap,80107ad0,fn_80107ad0,translated,medium,"work/ghidra/main-gb/export/80107ad0_FUN_80107ad0.c; installs 45 r13-relative pointers from the 0x802DCD40 dispenser then closes it",src/game/worldmap.rs
+game::worldmap,80107c70,fn_80107c70,translated,high,"work/ghidra/main-gb/export/80107c70_FUN_80107c70.c; writes -1 at +0x04/+0x08 and clears +0x0C/+0x10",src/game/worldmap.rs
+game::worldmap,80107c90,fn_80107c90,translated,high,"work/ghidra/main-gb/export/80107c90_FUN_80107c90.c; full two-level language/mode mapping table then sets the +0x0C valid byte",src/game/worldmap.rs
+game::worldmap,80107f20,fn_80107f20,translated,high,"work/ghidra/main-gb/export/80107f20_FUN_80107f20.c; controller constructor; clears +0x04..+0x3E, mode 5 at +0x14, calls 0x80107FC0",src/game/worldmap.rs
+game::worldmap,80107fc0,fn_80107fc0,translated,medium,"work/ghidra/main-gb/export/80107fc0_FUN_80107fc0.c; allocates 0x24-byte elements, creates display child from canvas +0x04/+0x06 bounds, registers both callbacks",src/game/worldmap.rs
+game::worldmap,801084e0,fn_801084e0,translated,medium,"work/ghidra/main-gb/export/801084e0_FUN_801084e0.c; chooses pending state 2/3/4 and shifts +0x08/+0x0C/+0x10 history before 0x80108D80",src/game/worldmap.rs
+game::worldmap,80108be0,fn_80108be0,translated,high,"work/ghidra/main-gb/export/80108be0_FUN_80108be0.c; registers 0x80108C00 through 0x801B6640",src/game/worldmap.rs
+game::worldmap,80108bf0,fn_80108bf0,translated,high,"work/ghidra/main-gb/export/80108bf0_FUN_80108bf0.c; registers 0x80108C30 through 0x801B6730",src/game/worldmap.rs
+game::worldmap,80108c00,fn_80108c00,translated,high,"work/ghidra/main-gb/export/80108c00_FUN_80108c00.c; sets +0x1A on the object returned by 0x80107F10",src/game/worldmap.rs
+game::worldmap,80108c30,fn_80108c30,translated,high,"work/ghidra/main-gb/export/80108c30_FUN_80108c30.c; sets +0x1B on the object returned by 0x80107F10",src/game/worldmap.rs
+game::worldmap,80108c60,fn_80108c60,translated,medium,"work/ghidra/main-gb/export/80108c60_FUN_80108c60.c; display/graphics init chain 0x801BDE50..0x801C51B0 with conditional display-list restore",src/game/worldmap.rs
+game::worldmap,80108cf0,fn_80108cf0,translated,high,"work/ghidra/main-gb/export/80108cf0_thunk_FUN_801ac6e0.c; 4-byte branch to the 0x801AC6E0 block-cache invalidate",src/game/worldmap.rs
+game::worldmap,80108d80,fn_80108d80,translated,medium,"work/ghidra/main-gb/export/80108d80_FUN_80108d80.c; posts 0x1E to +0x04 child when +0x2F request and force/veto tests agree",src/game/worldmap.rs
+game::worldmap,80108e80,fn_80108e80,translated,medium,"work/ghidra/main-gb/export/80108e80_FUN_80108e80.c; clears +0x2F and calls child vtable +0x08 with 1",src/game/worldmap.rs
+game::worldmap,80108ef0,fn_80108ef0,translated,high,"work/ghidra/main-gb/export/80108ef0_FUN_80108ef0.c; forwards the r13-0x53E8 object to 0x80107850",src/game/worldmap.rs
+game::worldmap,80108f30,fn_80108f30,translated,high,"work/ghidra/main-gb/export/80108f30_thunk_FUN_802d3370.c; 4-byte branch to the 0x802D3370 allocator free-list insert",src/game/worldmap.rs
+game::worldmap,801092a0,fn_801092a0,translated,medium,"work/ghidra/main-gb/export/801092a0_FUN_801092a0.c; frees the r13-0x53D0 display object through 0x802D3370 and clears the slot",src/game/worldmap.rs

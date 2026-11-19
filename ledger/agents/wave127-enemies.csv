@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a55cb0,fn_80a55cb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a55cb0_FUN_80a55cb0.c; +0x5EC sample through effect class 0x6B",src/game/enemies.rs
+game::enemies,80a55de0,fn_80a55de0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a55de0_FUN_80a55de0.c; +0x6DC seed from 0x800B2EE0(0x6E)+10",src/game/enemies.rs
+game::enemies,80a56470,fn_80a56470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a56470_FUN_80a56470.c; facing sign 0x100/0xC0 into +0x2482",src/game/enemies.rs
+game::enemies,80a564a0,fn_80a564a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a564a0_FUN_80a564a0.c; g3d/center_firebar.brres binder and variant table",src/game/enemies.rs
+game::enemies,80a56560,fn_80a56560,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a56560_FUN_80a56560.c; model placement at +0xB0+8 and +0xB4-32",src/game/enemies.rs
+game::enemies,80a56b00,fn_80a56b00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a56b00_FUN_80a56b00.c; empty 4-byte hook",src/game/enemies.rs
+game::enemies,80a56db0,fn_80a56db0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a56db0_FUN_80a56db0.c; empty 4-byte hook",src/game/enemies.rs
+game::enemies,80a585d0,fn_80a585d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a585d0_FUN_80a585d0.c; 0x800B2EE0(3)==0 predicate",src/game/enemies.rs
+game::enemies,80a58610,fn_80a58610,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58610_FUN_80a58610.c; +0x164..+0x170 quad from +0xDC/+0xE0",src/game/enemies.rs
+game::enemies,80a58800,fn_80a58800,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58800_FUN_80a58800.c; ice entry sound 0x1B7 and +0x390 flag",src/game/enemies.rs
+game::enemies,80a58870,fn_80a58870,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58870_FUN_80a58870.c; two head and eight body ice-hit effects",src/game/enemies.rs
+game::enemies,80a58a30,fn_80a58a30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a58a30_FUN_80a58a30.c; state reset with class effect and gravity",src/game/enemies.rs
+game::enemies,80a58c80,fn_80a58c80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58c80_FUN_80a58c80.c; wait step contact query and state switch",src/game/enemies.rs
+game::enemies,80a58eb0,fn_80a58eb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58eb0_FUN_80a58eb0.c; wait clip bind and ten-frame hold",src/game/enemies.rs
+game::enemies,80a58f80,fn_80a58f80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58f80_FUN_80a58f80.c; wait frame step sound 0x1B6",src/game/enemies.rs
+game::enemies,80a590c0,fn_80a590c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a590c0_FUN_80a590c0.c; jump velocity integration and floor switch",src/game/enemies.rs
+game::enemies,80a59190,fn_80a59190,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59190_FUN_80a59190.c; ice entry then +0x500=0x1E",src/game/enemies.rs
+game::enemies,80a59230,fn_80a59230,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a59230_FUN_80a59230.c; Wm_en_pakkunfire and GQR-damaged distance query",src/game/enemies.rs
+game::enemies,80a59330,fn_80a59330,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59330_FUN_80a59330.c; +0x102 angle step and 0x802DE514 wrap test",src/game/enemies.rs
+game::enemies,80a59420,fn_80a59420,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59420_FUN_80a59420.c; R_jump_st bind and +0x1154 decrement",src/game/enemies.rs
+game::enemies,80a594f0,fn_80a594f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a594f0_FUN_80a594f0.c; four-way state selection through +0x394 slot 0x2C",src/game/enemies.rs
+game::enemies,80a59680,fn_80a59680,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59680_FUN_80a59680.c; R_jump bind and 0x80B2D030/0x80B2D038 speed tables",src/game/enemies.rs
+game::enemies,80a597a0,fn_80a597a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a597a0_FUN_80a597a0.c; air-speed damping and three guard calls",src/game/enemies.rs
+game::enemies,80a59890,fn_80a59890,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59890_FUN_80a59890.c; R_jump_ed bind and velocity clear",src/game/enemies.rs
+game::enemies,80a59940,fn_80a59940,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59940_FUN_80a59940.c; jump_ed frame step clip test",src/game/enemies.rs
+game::enemies,80a599e0,fn_80a599e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a599e0_FUN_80a599e0.c; jump entry +0x500=0x19 and 2^52 divisors",src/game/enemies.rs
+game::enemies,80a59ae0,fn_80a59ae0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59ae0_FUN_80a59ae0.c; per-frame velocity integration sound 0x1B6",src/game/enemies.rs
+game::enemies,80a59c60,fn_80a59c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59c60_FUN_80a59c60.c; +0x500=0x2D and 29.0 idiom divisors",src/game/enemies.rs
+game::enemies,80a59d40,fn_80a59d40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59d40_FUN_80a59d40.c; fall integration damping and 0x80B717C8 switch",src/game/enemies.rs
+game::enemies,80a59f00,fn_80a59f00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a59f00_FUN_80a59f00.c; fall variant floor reset and wait switch",src/game/enemies.rs

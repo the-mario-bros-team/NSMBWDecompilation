@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806fb540,fn_806fb540,translated,high,"work/ghidra/rel-d_basesNP/export/806fb540_FUN_806fb540.c; abs(0x802DE514) + 0x4000 fold + 1.0 -/+ x",src/game/bases.rs
+game::bases,80725170,fn_80725170,translated,high,"work/ghidra/rel-d_basesNP/export/80725170_FUN_80725170.c; ride pose reset; table 0x807CD208 + 0.75 * obj+0xE8",src/game/bases.rs
+game::bases,8069a170,fn_8069a170,translated,medium,"work/ghidra/rel-d_basesNP/export/8069a170_FUN_8069a170.c; normalised XZ difference + ±pi/8 sector",src/game/bases.rs
+game::bases,806a8aa0,fn_806a8aa0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a8aa0_FUN_806a8aa0.c; 224-unit base + 0.5*+0x424, count*+0x424 advance",src/game/bases.rs
+game::bases,80761880,fn_80761880,translated,medium,"work/ghidra/rel-d_basesNP/export/80761880_FUN_80761880.c; gate +0x250 cleared on peer timer equality",src/game/bases.rs
+game::bases,80656260,fn_80656260,translated,medium,"work/ghidra/rel-d_basesNP/export/80656260_FUN_80656260.c; quantised sample + residual height; 0x80429E00 BSS",src/game/bases.rs
+game::bases,807481b0,fn_807481b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807481b0_FUN_807481b0.c; 12-slot ring 0x80831750 spawn driver; id 455",src/game/bases.rs
+game::bases,80702ce0,fn_80702ce0,translated,high,"work/ghidra/rel-d_basesNP/export/80702ce0_FUN_80702ce0.c; five lights from ids 1,4,5,6,7 at height 100.0",src/game/bases.rs
+game::bases,8078b120,fn_8078b120,translated,medium,"work/ghidra/rel-d_basesNP/export/8078b120_FUN_8078b120.c; broom clip 5.0 + name table 0x80819658",src/game/bases.rs
+game::bases,80781d10,fn_80781d10,translated,medium,"work/ghidra/rel-d_basesNP/export/80781d10_FUN_80781d10.c; three shorts + orient + spawn state + camera pair",src/game/bases.rs
+game::bases,80716590,fn_80716590,translated,medium,"work/ghidra/rel-d_basesNP/export/80716590_FUN_80716590.c; velocity clear + timer 20 + sound 1397 + camera",src/game/bases.rs
+game::bases,80608d10,fn_80608d10,translated,high,"work/ghidra/rel-d_basesNP/export/80608d10_FUN_80608d10.c; two-flag render bit + slot 0x10 + fn_80608df0",src/game/bases.rs
+game::bases,806b3ac0,fn_806b3ac0,translated,medium,"work/ghidra/rel-d_basesNP/export/806b3ac0_FUN_806b3ac0.c; stage 0x3D4 + copy f1/f2 + 0x524 payload",src/game/bases.rs
+game::bases,80608c40,fn_80608c40,translated,high,"work/ghidra/rel-d_basesNP/export/80608c40_FUN_80608c40.c; coin layout load + alloc + N_coinDateAll_00 bind",src/game/bases.rs
+game::bases,8066b0f0,fn_8066b0f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8066b0f0_FUN_8066b0f0.c; four virtual slots 0x2A4/0x2A8/0xD4/0x1C",src/game/bases.rs
+game::bases,80681480,fn_80681480,translated,high,"work/ghidra/rel-d_basesNP/export/80681480_FUN_80681480.c; 0x8015F800(this,0) + 0x802B9280(this,0)",src/game/bases.rs
+game::bases,80681fa0,fn_80681fa0,translated,high,"work/ghidra/rel-d_basesNP/export/80681fa0_FUN_80681fa0.c; byte-identical twin of 80681480",src/game/bases.rs
+game::bases,806ff3f0,fn_806ff3f0,translated,high,"work/ghidra/rel-d_basesNP/export/806ff3f0_FUN_806ff3f0.c; 0x800642B0(this,0) + 0x80162920(this,0)",src/game/bases.rs
+game::bases,80600990,fn_80600990,translated,high,"work/ghidra/rel-d_basesNP/export/80600990_FUN_80600990.c; delete wrapper 1 of 5; 0x802B9280(this,count)",src/game/bases.rs
+game::bases,806009d0,fn_806009d0,translated,high,"work/ghidra/rel-d_basesNP/export/806009d0_FUN_806009d0.c; delete wrapper 2 of 5; identical to 80600990",src/game/bases.rs
+game::bases,80600a10,fn_80600a10,translated,high,"work/ghidra/rel-d_basesNP/export/80600a10_FUN_80600a10.c; delete wrapper 3 of 5; identical to 80600990",src/game/bases.rs
+game::bases,80600a50,fn_80600a50,translated,high,"work/ghidra/rel-d_basesNP/export/80600a50_FUN_80600a50.c; delete wrapper 4 of 5; identical to 80600990",src/game/bases.rs
+game::bases,80600a90,fn_80600a90,translated,high,"work/ghidra/rel-d_basesNP/export/80600a90_FUN_80600a90.c; delete wrapper 5 of 5; identical to 80600990",src/game/bases.rs
+game::bases,80670fa0,fn_80670fa0,translated,medium,"work/ghidra/rel-d_basesNP/export/80670fa0_FUN_80670fa0.c; landsmoke at +0xAC/+0xB0+ratio*+0xE0; slot 0xA0",src/game/bases.rs
+game::bases,80671060,fn_80671060,translated,medium,"work/ghidra/rel-d_basesNP/export/80671060_FUN_80671060.c; landsmoke variant through slot 0xB0",src/game/bases.rs
+game::bases,8067af10,fn_8067af10,translated,medium,"work/ghidra/rel-d_basesNP/export/8067af10_FUN_8067af10.c; flag byte + two sub-object binds + three scales",src/game/bases.rs
+game::bases,8067dc50,fn_8067dc50,translated,medium,"work/ghidra/rel-d_basesNP/export/8067dc50_FUN_8067dc50.c; first player whose bit is set in 0x80429CA8",src/game/bases.rs
+game::bases,8067dd60,fn_8067dd60,translated,medium,"work/ghidra/rel-d_basesNP/export/8067dd60_FUN_8067dd60.c; mode 1/2/3 query over actor+0x1EC returns 8",src/game/bases.rs

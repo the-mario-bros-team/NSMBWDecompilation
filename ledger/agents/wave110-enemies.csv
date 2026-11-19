@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b22a20,fn_80b22a20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b22a20_FUN_80b22a20.c; null-guarded two-callback release helper",src/game/enemies.rs
+game::enemies,80b22ba0,fn_80b22ba0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b22ba0_FUN_80b22ba0.c; 0x858-byte allocating constructor",src/game/enemies.rs
+game::enemies,80b22e00,fn_80b22e00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b22e00_FUN_80b22e00.c; g3d/pakkun_water.brres model and foo clip binder",src/game/enemies.rs
+game::enemies,80b23540,fn_80b23540,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b23540_FUN_80b23540.c; 0x14D effect spawn at y+48.0 and +0x570 back-link",src/game/enemies.rs
+game::enemies,80b23650,fn_80b23650,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b23650_FUN_80b23650.c; Wm_en_pakkun_foo placement and height blend",src/game/enemies.rs
+game::enemies,80b23720,fn_80b23720,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23720_FUN_80b23720.c; four-name contact predicate over unnamed main.dol BSS objects",src/game/enemies.rs
+game::enemies,80b23960,fn_80b23960,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23960_FUN_80b23960.c; contact test and +0x5C4 countdown into 0x80B79678",src/game/enemies.rs
+game::enemies,80b23ab0,fn_80b23ab0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23ab0_FUN_80b23ab0.c; +0x5E0 hold and name-gated switch to 0x80B796B8",src/game/enemies.rs
+game::enemies,80b23be0,fn_80b23be0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23be0_FUN_80b23be0.c; reversed contact test and +0x5C8 countdown into 0x80B796F8",src/game/enemies.rs
+game::enemies,80b23d30,fn_80b23d30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23d30_FUN_80b23d30.c; +0x5E0 hold and name-gated switch to 0x80B79638",src/game/enemies.rs
+game::enemies,80b23e30,fn_80b23e30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b23e30_FUN_80b23e30.c; state-3 selector call and +0x5D8 clear",src/game/enemies.rs
+game::enemies,80b23e80,fn_80b23e80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23e80_FUN_80b23e80.c; Wm_en_pakkunsweat re-arm on the +0x728 sub-object",src/game/enemies.rs
+game::enemies,80b23f00,fn_80b23f00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23f00_FUN_80b23f00.c; state-2 entry with side table +0xE8/+0x114/+0xF8 and 0x1B1 sound",src/game/enemies.rs
+game::enemies,80b25830,fn_80b25830,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25830_FUN_80b25830.c; block_jump matrix rebuild with 8.0 lift",src/game/enemies.rs
+game::enemies,80b25930,fn_80b25930,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25930_FUN_80b25930.c; single 0x8007F950 reset on +0x534",src/game/enemies.rs
+game::enemies,80b25960,fn_80b25960,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25960_FUN_80b25960.c; g3d/block_jump.brres binder with variant clip table",src/game/enemies.rs
+game::enemies,80b25a20,fn_80b25a20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25a20_FUN_80b25a20.c; per-player arming bitmasks and ability probes",src/game/enemies.rs
+game::enemies,80b25ca0,fn_80b25ca0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25ca0_FUN_80b25ca0.c; child-added callback forwarding to 0x80020910",src/game/enemies.rs
+game::enemies,80b25d10,fn_80b25d10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25d10_FUN_80b25d10.c; child-removed callback arming mode 2",src/game/enemies.rs
+game::enemies,80b25de0,fn_80b25de0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25de0_FUN_80b25de0.c; fourteen-byte per-player record clear",src/game/enemies.rs
+game::enemies,80b25e20,fn_80b25e20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25e20_FUN_80b25e20.c; four-player mounted-object scan into +0x732",src/game/enemies.rs
+game::enemies,80b25eb0,fn_80b25eb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25eb0_FUN_80b25eb0.c; fall-height band to speed table selector",src/game/enemies.rs
+game::enemies,80b25f40,fn_80b25f40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25f40_FUN_80b25f40.c; 0x279 flatten effect and +0x3FC blend",src/game/enemies.rs
+game::enemies,80b25fe0,fn_80b25fe0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25fe0_FUN_80b25fe0.c; direct 0x80146D00 bounce call",src/game/enemies.rs
+game::enemies,80b26030,fn_80b26030,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b26030_FUN_80b26030.c; 0x278 effect and five-word rate table",src/game/enemies.rs
+game::enemies,80b260d0,fn_80b260d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b260d0_FUN_80b260d0.c; first per-player pass with candidate/done masks",src/game/enemies.rs
+game::enemies,80b26280,fn_80b26280,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b26280_FUN_80b26280.c; second per-player pass without effect or timer",src/game/enemies.rs
+game::enemies,80b263e0,fn_80b263e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b263e0_FUN_80b263e0.c; retire armed slots after landing",src/game/enemies.rs
+game::enemies,80b264c0,fn_80b264c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b264c0_FUN_80b264c0.c; three-part land condition and bounce",src/game/enemies.rs

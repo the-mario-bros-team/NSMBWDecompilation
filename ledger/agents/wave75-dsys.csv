@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e6930,fn_800e6930,translated,high,"work/ghidra/main-gb/export/800e6930_FUN_800e6930.c; decimal digit count: >999 -> 4, >99 -> 3, else (v>>31)+(v>9)+1",src/engine/dsys.rs
+engine::dsys,800e6970,fn_800e6970,translated,high,"work/ghidra/main-gb/export/800e6970_FUN_800e6970.c; clears the sixteen u16 glyph slots at +4..+0x22",src/engine/dsys.rs
+engine::dsys,800e69c0,fn_800e69c0,translated,medium,"work/ghidra/main-gb/export/800e69c0_FUN_800e69c0.c; encodes a value via 0x800CDC40/0x800CE7D0, writes the glyph word at +4, copies the wide string to +6, adds 0x100 or 0x200 from context +0x3DA",src/engine/dsys.rs
+engine::dsys,800e6a90,fn_800e6a90,translated,high,"work/ghidra/main-gb/export/800e6a90_FUN_800e6a90.c; modes 0/1/2 call 0x800CDC70 with handle, handle-1, handle+1 from context +0x3B4",src/engine/dsys.rs
+engine::dsys,800e6b50,fn_800e6b50,translated,high,"work/ghidra/main-gb/export/800e6b50_FUN_800e6b50.c; renders the counter at context +0x3B8 with width from fn_800e6930",src/engine/dsys.rs
+engine::dsys,800e6bb0,fn_800e6bb0,translated,high,"work/ghidra/main-gb/export/800e6bb0_FUN_800e6bb0.c; mode 0 -> style 1, mode 1 -> style 3, then tail call 0x800E69C0",src/engine/dsys.rs
+engine::dsys,800e6c30,fn_800e6c30,translated,high,"work/ghidra/main-gb/export/800e6c30_FUN_800e6c30.c; single call to 0x800E69C0(this,value,0,5)",src/engine/dsys.rs
+engine::dsys,800e6c40,fn_800e6c40,translated,high,"work/ghidra/main-gb/export/800e6c40_FUN_800e6c40.c; 15-entry mode to style table 0x0E..0x17,0x19,0x18,0x1D..0x1F, then 0x800E69C0",src/engine/dsys.rs
+engine::dsys,800e6d40,fn_800e6d40,translated,high,"work/ghidra/main-gb/export/800e6d40_FUN_800e6d40.c; styles 2/10, 8, 7, 3/4 selected by the mode byte and context +0x3D9",src/engine/dsys.rs
+engine::dsys,800e6db0,fn_800e6db0,translated,high,"work/ghidra/main-gb/export/800e6db0_FUN_800e6db0.c; clears slots, glyph word from src+1 and type 1 at +4",src/engine/dsys.rs
+engine::dsys,800e6e00,fn_800e6e00,translated,medium,"work/ghidra/main-gb/export/800e6e00_FUN_800e6e00.c; counts the bytes after text[0], packs (len&0x1FE)<<7|text[0] at +6, type 2, copies the tail to +8",src/engine/dsys.rs
+engine::dsys,800e6e80,fn_800e6e80,translated,high,"work/ghidra/main-gb/export/800e6e80_FUN_800e6e80.c; six-entry mode table 6,7,8,2,4,0x0B with 0 default",src/engine/dsys.rs
+engine::dsys,800e7190,fn_800e7190,translated,high,"work/ghidra/main-gb/export/800e7190_FUN_800e7190.c; single call to 0x800E69C0(this,value,0,0x20)",src/engine/dsys.rs
+engine::dsys,800e71a0,fn_800e71a0,translated,high,"work/ghidra/main-gb/export/800e71a0_FUN_800e71a0.c; style 0x22 for a zero byte and 0x21 otherwise",src/engine/dsys.rs
+engine::dsys,800e7c70,fn_800e7c70,translated,high,"work/ghidra/main-gb/export/800e7c70_FUN_800e7c70.c; frees with 0x802B9280 only when pointer non-null and count positive, returns the pointer",src/engine/dsys.rs
+engine::dsys,800e7cb0,fn_800e7cb0,translated,high,"work/ghidra/main-gb/export/800e7cb0_FUN_800e7cb0.c; clamped inverse lerp of value in [low,high] using image floats 0x8042CD40 and 0x8042CD44",src/engine/dsys.rs
+engine::dsys,800e7d50,fn_800e7d50,translated,high,"work/ghidra/main-gb/export/800e7d50_FUN_800e7d50.c; moves low toward high by at most |delta|, f32-rounded result",src/engine/dsys.rs
+engine::dsys,800e7de0,fn_800e7de0,translated,medium,"work/ghidra/main-gb/export/800e7de0_FUN_800e7de0.c; stores the clamped ratio into widget +0x90110",src/engine/dsys.rs
+engine::dsys,800e7ed0,fn_800e7ed0,translated,high,"work/ghidra/main-gb/export/800e7ed0_FUN_800e7ed0.c; float store to the widget at 0x80429E00 +0x58",src/engine/dsys.rs
+engine::dsys,800e7f80,fn_800e7f80,translated,high,"work/ghidra/main-gb/export/800e7f80_FUN_800e7f80.c; float load from the widget +0x60",src/engine/dsys.rs
+engine::dsys,800e8010,fn_800e8010,translated,high,"work/ghidra/main-gb/export/800e8010_FUN_800e8010.c; float store to the widget +0x78",src/engine/dsys.rs
+engine::dsys,800e8020,fn_800e8020,translated,high,"work/ghidra/main-gb/export/800e8020_FUN_800e8020.c; float load from the widget +0x78",src/engine/dsys.rs
+engine::dsys,800e80c0,fn_800e80c0,translated,high,"work/ghidra/main-gb/export/800e80c0_FUN_800e80c0.c; float store to the widget +0x5C",src/engine/dsys.rs
+engine::dsys,800e80d0,fn_800e80d0,translated,high,"work/ghidra/main-gb/export/800e80d0_FUN_800e80d0.c; returns widget +0x3C minus the +0x7C accessor, computed in f32",src/engine/dsys.rs
+engine::dsys,800e8110,fn_800e8110,translated,high,"work/ghidra/main-gb/export/800e8110_FUN_800e8110.c; float store to the widget +0x7C",src/engine/dsys.rs
+engine::dsys,800e8120,fn_800e8120,translated,high,"work/ghidra/main-gb/export/800e8120_FUN_800e8120.c; float load from the widget +0x7C",src/engine/dsys.rs
+engine::dsys,800e8ab0,fn_800e8ab0,translated,high,"work/ghidra/main-gb/export/800e8ab0_FUN_800e8ab0.c; caches dSys+0x44 in 0x8042A480 and fills the 0x8042A0E0 metric block with 408x224, two f32 scales and both aspect ratios",src/engine/dsys.rs
+engine::dsys,800e8dc0,fn_800e8dc0,translated,medium,"work/ghidra/main-gb/export/800e8dc0_FUN_800e8dc0.c; allocates the 0x58-byte node chain, index at +0x30, back link +0x50, forward link +0x54, head in +0x24",src/engine/dsys.rs
+engine::dsys,800e8e90,fn_800e8e90,translated,high,"work/ghidra/main-gb/export/800e8e90_FUN_800e8e90.c; walks the node chain and calls 0x800EA630(node,owner) per node",src/engine/dsys.rs
+engine::dsys,800e8f10,fn_800e8f10,translated,high,"work/ghidra/main-gb/export/800e8f10_FUN_800e8f10.c; copies the u16 at *(this+0x28)+0x102 into each node +0x2A",src/engine/dsys.rs

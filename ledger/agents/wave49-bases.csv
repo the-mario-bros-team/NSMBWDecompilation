@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807840f0,fn_807840f0,translated,high,"work/ghidra/rel-d_basesNP/export/807840f0_FUN_807840f0.c; togezo actor constructor; vtable 0x80818A20, model +0x188, one 0x38 animation slot",src/game/bases.rs
+game::bases,80784360,fn_80784360,translated,high,"work/ghidra/rel-d_basesNP/export/80784360_FUN_80784360.c; loads g3d/togezo.brres and binds the togezo pane",src/game/bases.rs
+game::bases,80784410,fn_80784410,translated,medium,"work/ghidra/rel-d_basesNP/export/80784410_FUN_80784410.c; copies +0x100..+0x104 rotation and +0xAC position into the model object",src/game/bases.rs
+game::bases,807844d0,fn_807844d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807844d0_FUN_807844d0.c; zeroes +0xDC..+0xE4 and drops the actor below the camera",src/game/bases.rs
+game::bases,80784650,fn_80784650,translated,medium,"work/ghidra/rel-d_basesNP/export/80784650_FUN_80784650.c; saves +0xB8..+0xC0 and spawns through 0x800F69F0 with 0x80377DE0",src/game/bases.rs
+game::bases,80784740,fn_80784740,translated,medium,"work/ghidra/rel-d_basesNP/export/80784740_FUN_80784740.c; landing test, clears +0x124, signals 0x0E/0x56 and calls the vtable +0x68 slot",src/game/bases.rs
+game::bases,807848c0,fn_807848c0,translated,high,"work/ghidra/rel-d_basesNP/export/807848c0_FUN_807848c0.c; cobToride constructor; vtable 0x80818B58, four 0x38 slots, +0x294 vtable 0x807FEF40",src/game/bases.rs
+game::bases,80784a30,fn_80784a30,translated,medium,"work/ghidra/rel-d_basesNP/export/80784a30_FUN_80784a30.c; per-frame driver; loads model, copies +0x128..+0x134, spawns 0x80789A80 variant 1/2",src/game/bases.rs
+game::bases,80784c70,fn_80784c70,translated,medium,"work/ghidra/rel-d_basesNP/export/80784c70_FUN_80784c70.c; g3d/model.brres loader; four cobTorideOpen door slots from 0x80818B10 and three LeftDoor/RightDoor nodes",src/game/bases.rs
+game::bases,80784e50,fn_80784e50,translated,medium,"work/ghidra/rel-d_basesNP/export/80784e50_FUN_80784e50.c; copies rotation/position into the +0x1A8 model interface",src/game/bases.rs
+game::bases,80784f00,fn_80784f00,translated,medium,"work/ghidra/rel-d_basesNP/export/80784f00_FUN_80784f00.c; cobToride door state machine +0x2C4 with 0x801016B0 200-frame schedule",src/game/bases.rs
+game::bases,80785120,fn_80785120,translated,high,"work/ghidra/rel-d_basesNP/export/80785120_FUN_80785120.c; clears the +0x2BC timer word",src/game/bases.rs
+game::bases,80785580,fn_80785580,translated,medium,"work/ghidra/rel-d_basesNP/export/80785580_FUN_80785580.c; one-shot Koopa pane binding and animation 0x29D",src/game/bases.rs
+game::bases,80785600,fn_80785600,translated,high,"work/ghidra/rel-d_basesNP/export/80785600_FUN_80785600.c; spawns the 0x280 door object and forwards the open flag",src/game/bases.rs
+game::bases,80785640,fn_80785640,translated,medium,"work/ghidra/rel-d_basesNP/export/80785640_FUN_80785640.c; positions the door at +0x25C, sound 0x49 and animation 0x29",src/game/bases.rs
+game::bases,807856e0,fn_807856e0,translated,high,"work/ghidra/rel-d_basesNP/export/807856e0_FUN_807856e0.c; stage gate on world byte 0x8042A24D and 0x800FAE40(7,0x25)",src/game/bases.rs
+game::bases,80785830,fn_80785830,translated,high,"work/ghidra/rel-d_basesNP/export/80785830_FUN_80785830.c; cobTower constructor; vtable 0x80818CE0",src/game/bases.rs
+game::bases,80785a50,fn_80785a50,translated,high,"work/ghidra/rel-d_basesNP/export/80785a50_FUN_80785a50.c; loads g3d/model.brres and binds the cobTower pane",src/game/bases.rs
+game::bases,80785b00,fn_80785b00,translated,medium,"work/ghidra/rel-d_basesNP/export/80785b00_FUN_80785b00.c; copies rotation/position into the +0x1A4 model interface",src/game/bases.rs
+game::bases,80785c90,fn_80785c90,translated,high,"work/ghidra/rel-d_basesNP/export/80785c90_FUN_80785c90.c; cobTreasureShip constructor; vtable 0x80818DB8",src/game/bases.rs
+game::bases,80785e50,fn_80785e50,translated,medium,"work/ghidra/rel-d_basesNP/export/80785e50_FUN_80785e50.c; calls the +0x1A0 interface slot +0x14 when +0x1AC is set and returns 1",src/game/bases.rs
+game::bases,80785ea0,fn_80785ea0,translated,high,"work/ghidra/rel-d_basesNP/export/80785ea0_FUN_80785ea0.c; loads g3d/model.brres and binds the cobTreasureShip pane",src/game/bases.rs
+game::bases,80785f50,fn_80785f50,translated,medium,"work/ghidra/rel-d_basesNP/export/80785f50_FUN_80785f50.c; copies rotation/position into the +0x1A0 model interface",src/game/bases.rs
+game::bases,80786000,fn_80786000,translated,medium,"work/ghidra/rel-d_basesNP/export/80786000_FUN_80786000.c; platform event dispatcher for events 0x21/0x22/4 with course slots +0x378/+0x37C",src/game/bases.rs
+game::bases,80786170,fn_80786170,translated,medium,"work/ghidra/rel-d_basesNP/export/80786170_FUN_80786170.c; sets phase +0x1B0 to 5; the export drops the this argument",src/game/bases.rs
+game::bases,80786290,fn_80786290,translated,medium,"work/ghidra/rel-d_basesNP/export/80786290_FUN_80786290.c; resolves a new target with 0x80772BD0 and publishes it into the course object",src/game/bases.rs
+game::bases,80786330,fn_80786330,translated,high,"work/ghidra/rel-d_basesNP/export/80786330_FUN_80786330.c; restores +0xAC..+0xB4 from +0x1B8..+0x1C0 and sets the done flag +0x139",src/game/bases.rs
+game::bases,80786360,fn_80786360,translated,high,"work/ghidra/rel-d_basesNP/export/80786360_FUN_80786360.c; extracts the packed id from bits 16..23 of +0x04 with 0xFF sentinel",src/game/bases.rs
+game::bases,80786380,fn_80786380,translated,medium,"work/ghidra/rel-d_basesNP/export/80786380_FUN_80786380.c; snaps to the packed-id object, resets +0x102/+0x128..+0x134",src/game/bases.rs

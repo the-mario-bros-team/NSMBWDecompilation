@@ -1,0 +1,18 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80609440,fn_80609440,translated,medium,"work/ghidra/rel-d_basesNP/export/80609440_FUN_80609440.c; eleven BRK panes +0x244..+0x278, selectors +0x27C/+0x280, message ids 0x35..0x3B, gate 0x800FAE40",src/game/bases.rs
+game::bases,80628a00,fn_80628a00,translated,high,"work/ghidra/rel-d_basesNP/export/80628a00_FUN_80628a00.c; 65-entry table at 0x807C6FF0, 16-way gate, pages = ceil(count/5), weight debit",src/game/bases.rs
+game::bases,8065c370,fn_8065c370,translated,high,"work/ghidra/rel-d_basesNP/export/8065c370_FUN_8065c370.c; two five-entry copies from 0x80164B70(0) into +0x9C54/+0x9C74, +0x9CC8 = 0.0",src/game/bases.rs
+game::bases,80741510,fn_80741510,translated,medium,"work/ghidra/rel-d_basesNP/export/80741510_FUN_80741510.c; first active +0x514 record, four player slots, oscillator 0x800DF890, sounds 0x12A/0x12E",src/game/bases.rs
+game::bases,80757320,fn_80757320,translated,medium,"work/ghidra/rel-d_basesNP/export/80757320_FUN_80757320.c; rider slot +0x63D, offset +0x620 spring/clamps, step table 0x807CE9E0, sounds 0x2F4/0x2F5",src/game/bases.rs
+game::bases,8077ac30,fn_8077ac30,translated,medium,"work/ghidra/rel-d_basesNP/export/8077ac30_FUN_8077ac30.c; commands 0x3C/0x60/0x61/0x62, manager 0x8042A284, countdown +0x1FC = 0x1E",src/game/bases.rs
+game::bases,80786ea0,fn_80786ea0,translated,medium,"work/ghidra/rel-d_basesNP/export/80786ea0_FUN_80786ea0.c; spin tables at 0x807CF960, 90.0/270.0 windows, frame tables {2,1,2}/{2,3,2}",src/game/bases.rs
+game::bases,807886e0,fn_807886e0,translated,medium,"work/ghidra/rel-d_basesNP/export/807886e0_FUN_807886e0.c; commands 0x2A/0x2D/0x3A/0x3B/0x76/0x88, effect ids 0x4E/0x4F/0x50, countdown +0x424",src/game/bases.rs
+game::bases,8061ebd0,fn_8061ebd0,translated,high,"work/ghidra/rel-d_basesNP/export/8061ebd0_FUN_8061ebd0.c; table 0x807C6D50, row = +0x2D4 - 1, 0x10 stride",src/game/bases.rs
+game::bases,8061cf40,fn_8061cf40,translated,medium,"work/ghidra/rel-d_basesNP/export/8061cf40_FUN_8061cf40.c; vtable slot +0x0C gate, node stored at +0x0C, returns this+4 or 0",src/game/bases.rs
+game::bases,806149a0,fn_806149a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806149a0_FUN_806149a0.c; count==1 via cntlzw, wrapper +0x208 slot 0x18 with block 0x80823F30",src/game/bases.rs
+game::bases,8061b630,fn_8061b630,translated,medium,"work/ghidra/rel-d_basesNP/export/8061b630_FUN_8061b630.c; count==1 via cntlzw, wrapper +0x330 slot 0x18 with block 0x80824B80",src/game/bases.rs
+game::bases,8061b450,fn_8061b450,translated,medium,"work/ghidra/rel-d_basesNP/export/8061b450_FUN_8061b450.c; +0x374/+0x376 gates, +0x330 and +0x78/+0x70 vtable calls, 0x8061B530 tail",src/game/bases.rs
+game::bases,8061b790,fn_8061b790,translated,high,"work/ghidra/rel-d_basesNP/export/8061b790_FUN_8061b790.c; 0x800C9380(+0x70,1) then +0x378 = 0",src/game/bases.rs
+game::bases,80612c50,fn_80612c50,translated,medium,"work/ghidra/rel-d_basesNP/export/80612c50_FUN_80612c50.c; guard this!=0 && count>0, 0x802B9280(this,count), returns this",src/game/bases.rs
+game::bases,80614430,fn_80614430,translated,medium,"work/ghidra/rel-d_basesNP/export/80614430_FUN_80614430.c; guard this!=0 && count>0, 0x802B9280(this,count), returns this",src/game/bases.rs
+game::bases,8061b6d0,fn_8061b6d0,translated,high,"work/ghidra/rel-d_basesNP/export/8061b6d0_FUN_8061b6d0.c; 0x800C92F0(+0x70,0,0) then pane +0x36C flag |= 1",src/game/bases.rs

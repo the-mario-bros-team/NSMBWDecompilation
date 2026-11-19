@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802ca4c0,fn_802ca4c0,translated,high,work/ghidra/main-gb/export/802ca4c0_FUN_802ca4c0.c; 13 default stores; flags 0xF07E then 0x200/0x400/0x001; blr at 0x802CA558,src/resource/archive.rs
+resource::archive,802cb3f0,fn_802cb3f0,translated,high,work/ghidra/main-gb/export/802cb3f0_FUN_802cb3f0.c; addi r3 r13 -0x5B14 then blr; tsv 8 exact,src/resource/archive.rs
+resource::archive,802cb5f0,fn_802cb5f0,translated,high,work/ghidra/main-gb/export/802cb5f0_FUN_802cb5f0.c; three-channel GX setter ladder; 0x801C7D90 takes ten args; 0x802DCD70/0x802DCDBC are savegpr/restgpr stubs,src/resource/archive.rs
+resource::archive,802cc000,fn_802cc000,translated,high,work/ghidra/main-gb/export/802cc000_FUN_802cc000.c; divw cell split with two u16 truncations; four halfword stores; leaf,src/resource/archive.rs
+resource::archive,802cc730,fn_802cc730,translated,medium,work/ghidra/main-gb/export/802cc730_FUN_802cc730.c; guard chain then material bind and colour pack; four-vertex FIFO strip recovered from 0x802CC970..0x802CC9BC,src/resource/archive.rs
+resource::archive,802cd050,fn_802cd050,translated,medium,work/ghidra/main-gb/export/802cd050_FUN_802cd050.c; last-free-slot scan; 0x802CBB90 builds the 0x80-byte object; save stub hides the r3/r4 arguments,src/resource/archive.rs
+resource::archive,802cd1f0,fn_802cd1f0,translated,medium,work/ghidra/main-gb/export/802cd1f0_FUN_802cd1f0.c; 0x802CE410 tagged 4-byte list; 0xFF tag skipped; returns the r3 value the export discards,src/resource/archive.rs
+resource::archive,802cd3e0,fn_802cd3e0,translated,high,work/ghidra/main-gb/export/802cd3e0_FUN_802cd3e0.c; 0xA4 stride flag filter; capacity break; null fill of the tail,src/resource/archive.rs
+resource::archive,802cd470,fn_802cd470,translated,high,work/ghidra/main-gb/export/802cd470_FUN_802cd470.c; calls 0x802CD3E0 then clears +0x10,src/resource/archive.rs
+resource::archive,802cdb70,fn_802cdb70,translated,medium,work/ghidra/main-gb/export/802cdb70_FUN_802cdb70.c; 0x50-byte descriptor reset; 4-byte copy from r13 -0x5B14; two virtual slots; dead stack zeroing not reproduced,src/resource/archive.rs

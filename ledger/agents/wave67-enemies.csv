@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b03780,fn_80b03780,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03780_FUN_80b03780.c; registration release callback; two calls",src/game/enemies.rs
+game::enemies,80b037e0,fn_80b037e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b037e0_FUN_80b037e0.c; second copy of the release callback",src/game/enemies.rs
+game::enemies,80b03840,fn_80b03840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03840_FUN_80b03840.c; constant producer 0x80357BF4",src/game/enemies.rs
+game::enemies,80b03850,fn_80b03850,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03850_FUN_80b03850.c; constant producer 0x80357BB4",src/game/enemies.rs
+game::enemies,80b03940,fn_80b03940,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03940_FUN_80b03940.c; +0x30 chain walker with vtable +0xC probe",src/game/enemies.rs
+game::enemies,80b03a20,fn_80b03a20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b03a20_FUN_80b03a20.c; colon-suffix name predicate; vtable +0x20 accessor inferred",src/game/enemies.rs
+game::enemies,80b03ae0,fn_80b03ae0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b03ae0_FUN_80b03ae0.c; 48-byte forwarder to 0x802DCBFC; callee role unnamed",src/game/enemies.rs
+game::enemies,80b03b10,fn_80b03b10,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b03b10_FUN_80b03b10.c; second 48-byte forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80b03b40,fn_80b03b40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03b40_FUN_80b03b40.c; 0x2B40-byte constructor; vtable 0x80B66498; 2 * 0x1BC and 0x14 * 0x1B8 arrays",src/game/enemies.rs
+game::enemies,80b03bf0,fn_80b03bf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03bf0_FUN_80b03bf0.c; head element constructor; vtable 0x80B66718",src/game/enemies.rs
+game::enemies,80b03cc0,fn_80b03cc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03cc0_FUN_80b03cc0.c; trailing element constructor; base vtable kept",src/game/enemies.rs
+game::enemies,80b03d80,fn_80b03d80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03d80_FUN_80b03d80.c; element destructor; four holder releases",src/game/enemies.rs
+game::enemies,80b03e20,fn_80b03e20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b03e20_FUN_80b03e20.c; head element destructor; head then base vtable",src/game/enemies.rs
+game::enemies,80b04a30,fn_80b04a30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b04a30_FUN_80b04a30.c; render-list rebuild; callee 0x80B04E90 still untranslated",src/game/enemies.rs
+game::enemies,80b04c90,fn_80b04c90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b04c90_FUN_80b04c90.c; per-segment clip release loop at stride 0x1B8",src/game/enemies.rs
+game::enemies,80b04d00,fn_80b04d00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b04d00_FUN_80b04d00.c; per-segment model binder loop",src/game/enemies.rs
+game::enemies,80b04d80,fn_80b04d80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b04d80_FUN_80b04d80.c; per-segment holder reset loop",src/game/enemies.rs
+game::enemies,80b04df0,fn_80b04df0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b04df0_FUN_80b04df0.c; spawn-word variant select from table 0x80B66480",src/game/enemies.rs
+game::enemies,80b04e10,fn_80b04e10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b04e10_FUN_80b04e10.c; follow-controller release; sets +0x894 bit 0",src/game/enemies.rs
+game::enemies,80b054d0,fn_80b054d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b054d0_FUN_80b054d0.c; chain position shift down the trailing array",src/game/enemies.rs
+game::enemies,80b055d0,fn_80b055d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b055d0_FUN_80b055d0.c; head position copied into the second segment",src/game/enemies.rs
+game::enemies,80b05620,fn_80b05620,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b05620_FUN_80b05620.c; below-floor test against frame +0x3C/+0x44",src/game/enemies.rs
+game::enemies,80b05670,fn_80b05670,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b05670_FUN_80b05670.c; state-name test plus timer compare; controller role inferred",src/game/enemies.rs
+game::enemies,80b05df0,fn_80b05df0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b05df0_FUN_80b05df0.c; ground step over all segments then landing test",src/game/enemies.rs
+game::enemies,80b05f00,fn_80b05f00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b05f00_FUN_80b05f00.c; chain integration with +0x2B30 growth window",src/game/enemies.rs
+game::enemies,80b06120,fn_80b06120,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b06120_FUN_80b06120.c; chain integration variant without the growth window",src/game/enemies.rs

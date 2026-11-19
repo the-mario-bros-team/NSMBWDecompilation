@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80210100,fn_80210100,translated,high,"work/ghidra/main-gb/export/80210100_FUN_80210100.c; HID-host record release: flag +0x0C, timer +0x1C, clears +0x10/+0x14/+0x16",src/runtime/bt.rs
+runtime::bt,802101c8,fn_802101c8,translated,medium,"work/ghidra/main-gb/export/802101c8_FUN_802101c8.c; guard chain (1/5/10) then originate fn_8021254c; callee argument dropped by decompiler",src/runtime/bt.rs
+runtime::bt,8021036c,fn_8021036c,translated,high,"work/ghidra/main-gb/export/8021036c_FUN_8021036c.c; timer cancel then peer-state branch, status 4 when nothing to tear down",src/runtime/bt.rs
+runtime::bt,80210634,fn_80210634,translated,medium,"work/ghidra/main-gb/export/80210634_FUN_80210634.c; PSM 0x11/0x13 registration, four host defaults, 16-pair record clear; default widths inferred",src/runtime/bt.rs
+runtime::bt,8021078c,fn_8021078c,translated,medium,"work/ghidra/main-gb/export/8021078c_FUN_8021078c.c; state byte +0x10, two L2CAP disconnects with the tested channel ids",src/runtime/bt.rs
+runtime::bt,8021254c,fn_8021254c,translated,high,"work/ghidra/main-gb/export/8021254c_FUN_8021254c.c; MTU 0x100, originate PSM 0x11 on BD_ADDR +1, owner callback on failure",src/runtime/bt.rs
+runtime::bt,8021995c,fn_8021995c,translated,medium,"work/ghidra/main-gb/export/8021995c_FUN_8021995c.c; send-queue drain, status 0x4000/0x4004, AND with +0x88",src/runtime/bt.rs
+runtime::bt,80219be8,fn_80219be8,translated,high,"work/ghidra/main-gb/export/80219be8_FUN_80219be8.c; frame size 0x7F/0x695/0x69F-scaled plus 8000/5000/12000 credit limits",src/runtime/bt.rs
+runtime::bt,80219e94,fn_80219e94,translated,high,"work/ghidra/main-gb/export/80219e94_FUN_80219e94.c; five-port scan, odd-LCID promotion, returns +0xA4 record",src/runtime/bt.rs
+runtime::bt,80219f1c,fn_80219f1c,translated,high,"work/ghidra/main-gb/export/80219f1c_FUN_80219f1c.c; five-term idle test, cached byte +0x25, 0x10000/0x30000",src/runtime/bt.rs
+runtime::bt,80219f8c,fn_80219f8c,translated,high,"work/ghidra/main-gb/export/80219f8c_FUN_80219f8c.c; modem-status delta to flag mask, AND with port +0x88",src/runtime/bt.rs
+runtime::bt,8021a1c0,fn_8021a1c0,translated,medium,"work/ghidra/main-gb/export/8021a1c0_FUN_8021a1c0.c; ten callback words at 0x803D543C then PSM 3 registration",src/runtime/bt.rs
+runtime::bt,8021a23c,fn_8021a23c,translated,medium,"work/ghidra/main-gb/export/8021a23c_FUN_8021a23c.c; mux timer 0x8021E4D0, LCID slot store, accept 4 or DLC command 10",src/runtime/bt.rs
+runtime::bt,8021a2c8,fn_8021a2c8,translated,medium,"work/ghidra/main-gb/export/8021a2c8_FUN_8021a2c8.c; LCID lookup then state 9 with u16 parameter block",src/runtime/bt.rs
+runtime::bt,8021a3cc,fn_8021a3cc,translated,medium,"work/ghidra/main-gb/export/8021a3cc_FUN_8021a3cc.c; LCID lookup then config indication command 0x0C",src/runtime/bt.rs
+runtime::bt,8021a4d4,fn_8021a4d4,translated,medium,"work/ghidra/main-gb/export/8021a4d4_FUN_8021a4d4.c; LCID lookup then config confirmation command 0x0B",src/runtime/bt.rs
+runtime::bt,8021a5e0,fn_8021a5e0,translated,medium,"work/ghidra/main-gb/export/8021a5e0_FUN_8021a5e0.c; optional L2CAP disconnect response, then command 0x0E; shared epilogue 0x8021A5DC",src/runtime/bt.rs
+runtime::bt,8021a9a4,fn_8021a9a4,translated,high,"work/ghidra/main-gb/export/8021a9a4_FUN_8021a9a4.c; congestion value forwarded to fn_8021c7ac after two trace guards",src/runtime/bt.rs
+runtime::bt,8021aad8,fn_8021aad8,translated,high,"work/ghidra/main-gb/export/8021aad8_FUN_8021aad8.c; single u32 store into LCID slot table 0x803D5464",src/runtime/bt.rs
+runtime::bt,8021efa4,fn_8021efa4,translated,medium,"work/ghidra/main-gb/export/8021efa4_FUN_8021efa4.c; claims SDP CCB and stores DB +0x410 and callback +0x414",src/runtime/bt.rs
+runtime::bt,8021f000,fn_8021f000,translated,medium,"work/ghidra/main-gb/export/8021f000_FUN_8021f000.c; same claim plus defer byte +0x475",src/runtime/bt.rs
+runtime::bt,8021f064,fn_8021f064,translated,high,"work/ghidra/main-gb/export/8021f064_FUN_8021f064.c; singly linked list walk matching u16 id at +4",src/runtime/bt.rs
+runtime::bt,8021fa70,fn_8021fa70,translated,high,"work/ghidra/main-gb/export/8021fa70_FUN_8021fa70.c; SDP trace level get/set with 0xFF sentinel",src/runtime/bt.rs
+runtime::bt,8021fbd0,fn_8021fbd0,translated,medium,"work/ghidra/main-gb/export/8021fbd0_FUN_8021fbd0.c; recursive attribute search, class 3 compare and class 6 descent, depth < 4",src/runtime/bt.rs
+runtime::bt,8021fca8,fn_8021fca8,translated,high,"work/ghidra/main-gb/export/8021fca8_FUN_8021fca8.c; record lookup by handle, 0x298 stride over 0x803D6A64",src/runtime/bt.rs
+runtime::bt,8021fd04,fn_8021fd04,translated,medium,"work/ghidra/main-gb/export/8021fd04_FUN_8021fd04.c; attribute scan, count +8, entries 0x0C apart, id at +0x14",src/runtime/bt.rs
+runtime::bt,8021fd44,fn_8021fd44,translated,medium,"work/ghidra/main-gb/export/8021fd44_FUN_8021fd44.c; append record handle 0x10000+n, big-endian bytes through 0x8021FF38",src/runtime/bt.rs
+runtime::bt,8021fe24,fn_8021fe24,translated,medium,"work/ghidra/main-gb/export/8021fe24_FUN_8021fe24.c; compact records down one slot, fix attribute pointers, clear last-handle pair",src/runtime/bt.rs

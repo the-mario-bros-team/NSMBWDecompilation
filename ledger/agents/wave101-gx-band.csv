@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802a0660,fn_802a0660,translated,medium,"work/ghidra/main-gb/export/802a0660_FUN_802a0660.c; 0x30-byte block copy then +0x88 offset on the last row",src/render/gx_band.rs
+render::gx_band,802a08a0,fn_802a08a0,translated,medium,"work/ghidra/main-gb/export/802a08a0_FUN_802a08a0.c; normalise a float 3-vector, epsilon 1.1920929e-7",src/render/gx_band.rs
+render::gx_band,802a0910,fn_802a0910,translated,medium,"work/ghidra/main-gb/export/802a0910_FUN_802a0910.c; float 3-vector dot product",src/render/gx_band.rs
+render::gx_band,802a09f0,fn_802a09f0,translated,medium,"work/ghidra/main-gb/export/802a09f0_FUN_802a09f0.c; +0xAC/+0xB0/+0xB4 minus +0xB8/+0xBC/+0xC0",src/render/gx_band.rs
+render::gx_band,802a0a40,fn_802a0a40,translated,high,"work/ghidra/main-gb/export/802a0a40_FUN_802a0a40.c; sqrt(v) with a zero guard; both ldexpf blocks are bare",src/render/gx_band.rs
+render::gx_band,802a2de0,fn_802a2de0,translated,medium,"work/ghidra/main-gb/export/802a2de0_FUN_802a2de0.c; time-ordered range draw with mode 1/2 edge points",src/render/gx_band.rs
+render::gx_band,802a35c0,fn_802a35c0,translated,medium,"work/ghidra/main-gb/export/802a35c0_FUN_802a35c0.c; billboard basis plus 10-float node record",src/render/gx_band.rs
+render::gx_band,802a3e00,fn_802a3e00,translated,medium,"work/ghidra/main-gb/export/802a3e00_FUN_802a3e00.c; prev/cur strip pair, 0x28-byte records",src/render/gx_band.rs
+render::gx_band,802a40c0,fn_802a40c0,translated,medium,"work/ghidra/main-gb/export/802a40c0_FUN_802a40c0.c; prev/cur strips with the closing 0x802A3A20 call",src/render/gx_band.rs
+render::gx_band,802a47c0,fn_802a47c0,translated,medium,"work/ghidra/main-gb/export/802a47c0_FUN_802a47c0.c; +0xD4 sine ramp then mode 1/2/other range draw",src/render/gx_band.rs
+render::gx_band,802a5810,fn_802a5810,translated,medium,"work/ghidra/main-gb/export/802a5810_FUN_802a5810.c; mode-selected 4x3 column plus normalise",src/render/gx_band.rs
+render::gx_band,802a6850,fn_802a6850,translated,medium,"work/ghidra/main-gb/export/802a6850_FUN_802a6850.c; fn_802a35c0 with the 0x8042F020 constant window",src/render/gx_band.rs
+render::gx_band,802a6cb0,fn_802a6cb0,translated,medium,"work/ghidra/main-gb/export/802a6cb0_FUN_802a6cb0.c; quadratic segment blend of three +0x14 fields into the FIFO",src/render/gx_band.rs
+render::gx_band,802a6f80,fn_802a6f80,translated,medium,"work/ghidra/main-gb/export/802a6f80_FUN_802a6f80.c; float 3-vector add, destination first",src/render/gx_band.rs
+render::gx_band,802a6fb0,fn_802a6fb0,translated,medium,"work/ghidra/main-gb/export/802a6fb0_FUN_802a6fb0.c; fixed 0.5/0/0.5 blend of three +0x14 fields into the FIFO",src/render/gx_band.rs
+render::gx_band,802a7ca0,fn_802a7ca0,translated,medium,"work/ghidra/main-gb/export/802a7ca0_FUN_802a7ca0.c; three-record ring draw over one range",src/render/gx_band.rs
+render::gx_band,802a8020,fn_802a8020,translated,medium,"work/ghidra/main-gb/export/802a8020_FUN_802a8020.c; five-record ring draw with the 0.5/n step",src/render/gx_band.rs
+render::gx_band,802a8440,fn_802a8440,translated,medium,"work/ghidra/main-gb/export/802a8440_FUN_802a8440.c; initial two-point strip plus the three-record ring",src/render/gx_band.rs
+render::gx_band,802a8930,fn_802a8930,translated,medium,"work/ghidra/main-gb/export/802a8930_FUN_802a8930.c; float 3-vector subtract, destination first",src/render/gx_band.rs
+render::gx_band,802a8960,fn_802a8960,translated,medium,"work/ghidra/main-gb/export/802a8960_FUN_802a8960.c; float 3-vector add, destination first",src/render/gx_band.rs
+render::gx_band,802a8a10,fn_802a8a10,translated,medium,"work/ghidra/main-gb/export/802a8a10_FUN_802a8a10.c; three-record ring with the +0x14C count",src/render/gx_band.rs
+render::gx_band,802a8d10,fn_802a8d10,translated,medium,"work/ghidra/main-gb/export/802a8d10_FUN_802a8d10.c; two leading records plus the three-record ring",src/render/gx_band.rs
+render::gx_band,802a9640,fn_802a9640,translated,medium,"work/ghidra/main-gb/export/802a9640_FUN_802a9640.c; ramp with [1,0] endpoints and four-argument draw callees",src/render/gx_band.rs
+render::gx_band,802aa830,fn_802aa830,translated,medium,"work/ghidra/main-gb/export/802aa830_FUN_802aa830.c; fn_802a5810 with the 0x8042F020 constant window",src/render/gx_band.rs
+render::gx_band,802ae9c0,fn_802ae9c0,translated,medium,"work/ghidra/main-gb/export/802ae9c0_FUN_802ae9c0.c; text-run bounds walk with a width limit",src/render/gx_band.rs

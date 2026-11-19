@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c0540,fn_800c0540,translated,high,"work/ghidra/main-gb/export/800c0540_FUN_800c0540.c; copies +0xE4/+0xE8 to +0xF0/+0xF4 and integrates +0xEC by 0.5*+0x128",src/game/stage.rs
+game::stage,800c12b0,fn_800c12b0,translated,high,"work/ghidra/main-gb/export/800c12b0_FUN_800c12b0.c; copies the two position words +0x40/+0x44 into the caller buffer",src/game/stage.rs
+game::stage,800c1510,fn_800c1510,translated,high,"work/ghidra/main-gb/export/800c1510_FUN_800c1510.c; negates the f1 speed when the +0x68 byte is set and stores it at +0x60",src/game/stage.rs
+game::stage,800c6e20,fn_800c6e20,translated,medium,"work/ghidra/main-gb/export/800c6e20_FUN_800c6e20.c; seeds a line with the (+8,-8) r2 pair; the heading is the caller f1 the export does not print",src/game/stage.rs
+game::stage,800c6f00,fn_800c6f00,translated,medium,"work/ghidra/main-gb/export/800c6f00_FUN_800c6f00.c; seeds a line with the (+16,-16) r2 pair; the heading is the caller f1",src/game/stage.rs
+game::stage,800c6f60,fn_800c6f60,translated,high,"work/ghidra/main-gb/export/800c6f60_FUN_800c6f60.c; seeds a line with the (0,-16) r2 pair and the literal 16.0f heading",src/game/stage.rs
+game::stage,800c6fc0,fn_800c6fc0,translated,medium,"work/ghidra/main-gb/export/800c6fc0_FUN_800c6fc0.c; seeds a line with the (+16,0) r2 pair; the heading is the caller f1",src/game/stage.rs
+game::stage,800c7020,fn_800c7020,translated,high,"work/ghidra/main-gb/export/800c7020_FUN_800c7020.c; seeds a line at the (0,0) anchor with the literal 16.0f heading",src/game/stage.rs
+game::stage,800c7080,fn_800c7080,translated,high,"work/ghidra/main-gb/export/800c7080_FUN_800c7080.c; seeds a line with the (0,-32) r2 pair and the literal 32.0f heading",src/game/stage.rs
+game::stage,800c70e0,fn_800c70e0,translated,medium,"work/ghidra/main-gb/export/800c70e0_FUN_800c70e0.c; seeds a line with the (+32,-32) r2 pair; the heading is the caller f1",src/game/stage.rs
+game::stage,800c7140,fn_800c7140,translated,medium,"work/ghidra/main-gb/export/800c7140_FUN_800c7140.c; seeds a line with the (+32,0) r2 pair; the heading is the caller f1",src/game/stage.rs
+game::stage,800c71a0,fn_800c71a0,translated,high,"work/ghidra/main-gb/export/800c71a0_FUN_800c71a0.c; seeds a line at the (0,0) anchor with the literal 32.0f heading",src/game/stage.rs
+game::stage,800cd520,fn_800cd520,translated,medium,"work/ghidra/main-gb/export/800cd520_FUN_800cd520.c; creates the 0x4000-byte cell heap at +4 via 0x8016A960 then calls 0x800CD580 and 0x8016A9B0",src/game/stage.rs
+game::stage,800cd580,fn_800cd580,translated,medium,"work/ghidra/main-gb/export/800cd580_FUN_800cd580.c; allocates the 0x14/0x18 aux objects and stores them at +0x24/+0x28 with their heap/ids",src/game/stage.rs
+game::stage,800cd770,fn_800cd770,translated,medium,"work/ghidra/main-gb/export/800cd770_FUN_800cd770.c; unlinks a non-null object via 0x8006C7F0 and frees it when the size is positive",src/game/stage.rs
+game::stage,800cda70,fn_800cda70,translated,medium,"work/ghidra/main-gb/export/800cda70_FUN_800cda70.c; runs the 0x8008F140 slot constructor then clears +0x14/+0x18",src/game/stage.rs
+game::stage,800cdab0,fn_800cdab0,translated,medium,"work/ghidra/main-gb/export/800cdab0_FUN_800cdab0.c; destroys the +0x18 child through its vtable and resets the slot via 0x8008F170",src/game/stage.rs
+game::stage,800cdbf0,fn_800cdbf0,translated,medium,"work/ghidra/main-gb/export/800cdbf0_FUN_800cdbf0.c; allocates a 0x20-byte cell and stores it at +0x18",src/game/stage.rs
+game::stage,800cddf0,fn_800cddf0,translated,high,"work/ghidra/main-gb/export/800cddf0_FUN_800cddf0.c; converts half-width spaces and ASCII in a u16 buffer to full-width forms",src/game/stage.rs
+game::stage,800ce060,fn_800ce060,translated,high,"work/ghidra/main-gb/export/800ce060_FUN_800ce060.c; indexed byte store at +0x2A",src/game/stage.rs
+game::stage,800ce070,fn_800ce070,translated,high,"work/ghidra/main-gb/export/800ce070_FUN_800ce070.c; indexed byte load at +0x2A",src/game/stage.rs
+game::stage,800ce080,fn_800ce080,translated,high,"work/ghidra/main-gb/export/800ce080_FUN_800ce080.c; indexed byte store at +0x2E",src/game/stage.rs
+game::stage,800ce090,fn_800ce090,translated,high,"work/ghidra/main-gb/export/800ce090_FUN_800ce090.c; indexed byte load at +0x2E",src/game/stage.rs
+game::stage,800ce0a0,fn_800ce0a0,translated,high,"work/ghidra/main-gb/export/800ce0a0_FUN_800ce0a0.c; indexed byte store at +0x22",src/game/stage.rs
+game::stage,800ce0b0,fn_800ce0b0,translated,high,"work/ghidra/main-gb/export/800ce0b0_FUN_800ce0b0.c; indexed byte load at +0x22",src/game/stage.rs
+game::stage,800ce0c0,fn_800ce0c0,translated,high,"work/ghidra/main-gb/export/800ce0c0_FUN_800ce0c0.c; indexed store of bit 0 at +0x26",src/game/stage.rs
+game::stage,800ce0d0,fn_800ce0d0,translated,high,"work/ghidra/main-gb/export/800ce0d0_FUN_800ce0d0.c; indexed load of bit 0 at +0x26",src/game/stage.rs
+game::stage,800ce0e0,fn_800ce0e0,translated,high,"work/ghidra/main-gb/export/800ce0e0_FUN_800ce0e0.c; indexed byte store at +0x1E",src/game/stage.rs
+game::stage,800ce0f0,fn_800ce0f0,translated,high,"work/ghidra/main-gb/export/800ce0f0_FUN_800ce0f0.c; sign-extending indexed byte load at +0x1E",src/game/stage.rs

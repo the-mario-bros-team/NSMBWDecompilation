@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,800544f0,fn_800544f0,translated,medium,"work/ghidra/main-gb/export/800544f0_FUN_800544f0.c; 0x80071210 input/contact mask -> +0x10D4/+0x10D8 cascade; wall probe 0x80072440 plus the 0x800757E0/0x800757B0/0x80075800 surface probes",src/game/player.rs
+game::player,800569c0,fn_800569c0,translated,medium,"work/ghidra/main-gb/export/800569c0_FUN_800569c0.c; vtable +0xF0/+0xF4 anchors fixed-point /4096, then four 0x80072440 segment walks",src/game/player.rs
+game::player,800583a0,fn_800583a0,translated,low,"work/ghidra/main-gb/export/800583a0_FUN_800583a0.c; body angles +0x1FE/+0x200 eased via 0x8015F200; 0x80069270/0x800693E0 targets; GQR3 halfword read as s16",src/game/player.rs
+game::player,800592c0,fn_800592c0,translated,high,"work/ghidra/main-gb/export/800592c0_FUN_800592c0.c; 37 daPlBase_c descriptors at 0x8035421C/0x8035476C with the rotated nine-word payload copy",src/game/player.rs
+game::player,8005b8a0,fn_8005b8a0,translated,medium,"work/ghidra/main-gb/export/8005b8a0_FUN_8005b8a0.c; order the four present players by height, 0x800757B0 platform baseline, 4.0/0.7 spacing",src/game/player.rs
+game::player,8005ef50,fn_8005ef50,translated,medium,"work/ghidra/main-gb/export/8005ef50_FUN_8005ef50.c; three area-mode placement branches, 0x800B2F00 random order, 0x8005EEE0 spawn calls",src/game/player.rs

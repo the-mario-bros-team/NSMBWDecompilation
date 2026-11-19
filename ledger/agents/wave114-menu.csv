@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::menu,801701a0,fn_801701a0,translated,medium,"work/ghidra/main-gb/export/801701a0_FUN_801701a0.c; text-run page draw; twin 0x8016FA10 in src/resource/registry.rs proves the record layout and the two SDA scales; 612 bytes",src/ui/menu.rs

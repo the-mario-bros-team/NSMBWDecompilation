@@ -1,0 +1,21 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e4660,fn_802e4660,translated,high,"work/ghidra/main-gb/export/802e4660_FUN_802e4660.c; scalbn via frexp + exponent add + ldexp",src/engine/main_loop.rs
+engine::main_loop,802e5db8,fn_802e5db8,translated,medium,"work/ghidra/main-gb/export/802e5db8_FUN_802e5db8.c; rem_pio2 with npio2_hw table and Payne-Hanek tail",src/engine/main_loop.rs
+engine::main_loop,802e7fbc,fn_802e7fbc,translated,medium,"work/ghidra/main-gb/export/802e7fbc_FUN_802e7fbc.c; cos wrapper over the kernel pair",src/engine/main_loop.rs
+engine::main_loop,802e84c4,fn_802e84c4,translated,medium,"work/ghidra/main-gb/export/802e84c4_FUN_802e84c4.c; sin wrapper over the kernel pair",src/engine/main_loop.rs
+engine::main_loop,802e8590,fn_802e8590,translated,medium,"work/ghidra/main-gb/export/802e8590_FUN_802e8590.c; tan wrapper with odd-quadrant inversion",src/engine/main_loop.rs
+engine::main_loop,802e8608,fn_802e8608,translated,high,"work/ghidra/main-gb/export/802e8608_thunk_FUN_802e46a0.c; four-byte branch to acos",src/engine/main_loop.rs
+engine::main_loop,802e496c,fn_802e496c,translated,medium,"work/ghidra/main-gb/export/802e496c_FUN_802e496c.c; atan two-branch series with sqrt reduction",src/engine/main_loop.rs
+engine::main_loop,802e860c,fn_802e860c,translated,high,"work/ghidra/main-gb/export/802e860c_thunk_FUN_802e496c.c; four-byte branch to atan",src/engine/main_loop.rs
+engine::main_loop,802e4c04,fn_802e4c04,translated,medium,"work/ghidra/main-gb/export/802e4c04_FUN_802e4c04.c; atan2 quadrant reconstruction and special cases",src/engine/main_loop.rs
+engine::main_loop,802e8610,fn_802e8610,translated,high,"work/ghidra/main-gb/export/802e8610_thunk_FUN_802e4c04.c; four-byte branch to atan2",src/engine/main_loop.rs
+engine::main_loop,802e4e5c,fn_802e4e5c,translated,medium,"work/ghidra/main-gb/export/802e4e5c_FUN_802e4e5c.c; fmod bit-by-bit remainder loop",src/engine/main_loop.rs
+engine::main_loop,802e8614,fn_802e8614,translated,high,"work/ghidra/main-gb/export/802e8614_thunk_FUN_802e4e5c.c; four-byte branch to fmod",src/engine/main_loop.rs
+engine::main_loop,802ec2a8,fn_802ec2a8,translated,medium,"work/ghidra/main-gb/export/802ec2a8_FUN_802ec2a8.c; unaligned byte copy with MSR install and restore",src/engine/main_loop.rs
+engine::main_loop,802ec374,fn_802ec374,translated,medium,"work/ghidra/main-gb/export/802ec374_FUN_802ec374.c; mapped block transfer with cache-window test",src/engine/main_loop.rs
+engine::main_loop,802ed6ec,fn_802ed6ec,translated,medium,"work/ghidra/main-gb/export/802ed6ec_FUN_802ed6ec.c; mfspr and mtspr patch builder for one SPR",src/engine/main_loop.rs
+engine::main_loop,802ec5bc,fn_802ec5bc,translated,medium,"work/ghidra/main-gb/export/802ec5bc_FUN_802ec5bc.c; per-index eight-byte GPR group transfer",src/engine/main_loop.rs
+engine::main_loop,802ec85c,fn_802ec85c,translated,medium,"work/ghidra/main-gb/export/802ec85c_FUN_802ec85c.c; per-index SPR transfer with three flush blocks",src/engine/main_loop.rs
+engine::main_loop,802e16e8,fn_802e16e8,partial,low,"work/ghidra/main-gb/export/802e16e8_FUN_802e16e8.c; variadic snprintf entry; overflow arg area not modelled",src/engine/main_loop.rs
+engine::main_loop,802e17dc,fn_802e17dc,partial,low,"work/ghidra/main-gb/export/802e17dc_FUN_802e17dc.c; variadic sprintf entry; overflow arg area not modelled",src/engine/main_loop.rs
+engine::main_loop,802ea6bc,fn_802ea6bc,partial,medium,"work/ghidra/main-gb/export/802ea6bc_FUN_802ea6bc.c; clears the two exception flags; 356-byte extent mostly unattributed",src/engine/main_loop.rs

@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d0470,fn_800d0470,translated,medium,"work/ghidra/main-gb/export/800d0470_FUN_800d0470.c; effect-record list at r13-0x56B0; +0x0C..+0x14 position, +0x18 kind, +0x1C extra, u16 code at +0x20; allocates 0x24 bytes on a miss",src/engine/display.rs
+engine::display,800d2cf0,fn_800d2cf0,translated,medium,"work/ghidra/main-gb/export/800d2cf0_FUN_800d2cf0.c; ten-slot water pool, 0x13C stride from pool+4; returns 1 on the first free element",src/engine/display.rs
+engine::display,800d8670,fn_800d8670,translated,high,"work/ghidra/main-gb/export/800d8670_thunk_FUN_800d8680.c; 4-byte branch forwarded to fn_800d8680 (single argument)",src/engine/display.rs
+engine::display,800d8b00,fn_800d8b00,translated,medium,"work/ghidra/main-gb/export/800d8b00_FUN_800d8b00.c; band bits select fn_800d8e40 / fn_800d8bb0; tail bits arm +0x3C and +0x40",src/engine/display.rs
+engine::display,800d8c60,fn_800d8c60,translated,medium,"work/ghidra/main-gb/export/800d8c60_FUN_800d8c60.c; four connected slots via 0x800610E0, 0xFF all-player marker, +0x3C/+0x40 tails",src/engine/display.rs
+engine::display,800dfa40,fn_800dfa40,translated,medium,"work/ghidra/main-gb/export/800dfa40_FUN_800dfa40.c; 0x802F86C8 tag query, 0x80168400 key, interface slot 0x50",src/engine/display.rs
+engine::display,800dff30,fn_800dff30,translated,medium,"work/ghidra/main-gb/export/800dff30_FUN_800dff30.c; 0x802F8FF0 tag query, +0xE8 container walk, 0x800E0070 per id",src/engine/display.rs

@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802640e0,fn_802640e0,translated,medium,"work/ghidra/main-gb/export/802640e0_FUN_802640e0.c; packed-nibble track stream; 0x28-byte filter state fed to 0x80285660; 316 B",src/resource/archive.rs
+resource::archive,80264950,fn_80264950,translated,medium,"work/ghidra/main-gb/export/80264950_FUN_80264950.c; varargs track-window store; va_list gpr=2 means first vararg is r5; 388 B",src/resource/archive.rs

@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,8024e180,fn_8024e180,translated,medium,"work/ghidra/main-gb/export/8024e180_FUN_8024e180.c; 2,212-byte per-drawable GX packet emitter; the nine-byte CP-register 0x100C/0x100D write and the literal 0x90/0xA0/0xB0 frame aliasing were read from the 0x8024E180..0x8024EA20 instruction stream",src/runtime/os.rs

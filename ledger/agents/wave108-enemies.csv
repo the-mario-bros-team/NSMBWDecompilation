@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a819e0,fn_80a819e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a819e0_FUN_80a819e0.c; dispose callback; 0x8015F800 then release 0x802B9280 for mode > 0",src/game/enemies.rs
+game::enemies,80a81a40,fn_80a81a40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a81a40_FUN_80a81a40.c; second dispose callback; identical body",src/game/enemies.rs
+game::enemies,80a81aa0,fn_80a81aa0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a81aa0_FUN_80a81aa0.c; constant producer; returns 0x80357BB4 (DieFumi)",src/game/enemies.rs
+game::enemies,80a81b90,fn_80a81b90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a81b90_FUN_80a81b90.c; five-link +0x30 owner walk with recursive tail",src/game/enemies.rs
+game::enemies,80a81c70,fn_80a81c70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a81c70_FUN_80a81c70.c; name predicate; strrchr 0x802E1C40 + strcmp 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a81d30,fn_80a81d30,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a81d30_FUN_80a81d30.c; 0x802DCBFC forwarder; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a81d60,fn_80a81d60,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a81d60_FUN_80a81d60.c; second 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80a81d90,fn_80a81d90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a81d90_FUN_80a81d90.c; allocating constructor; 0x848 bytes; vtable 0x80B4DD10",src/game/enemies.rs
+game::enemies,80a82010,fn_80a82010,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a82010_FUN_80a82010.c; g3d/fugu.brres + fugu + swim binder",src/game/enemies.rs
+game::enemies,80a82300,fn_80a82300,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82300_FUN_80a82300.c; spawn gate; 0x800964A0 then 0x80095C80",src/game/enemies.rs
+game::enemies,80a82470,fn_80a82470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82470_FUN_80a82470.c; node-6 matrix copy into +0x5C8",src/game/enemies.rs
+game::enemies,80a824c0,fn_80a824c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a824c0_FUN_80a824c0.c; water-dash effect pair; sound 0x1DF; stage effect 0x1B",src/game/enemies.rs
+game::enemies,80a825f0,fn_80a825f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a825f0_FUN_80a825f0.c; height-band predicate; returns 2/1/0",src/game/enemies.rs
+game::enemies,80a826f0,fn_80a826f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a826f0_FUN_80a826f0.c; splash selector; sounds 0x1DE/0x1DD/0x282",src/game/enemies.rs
+game::enemies,80a82840,fn_80a82840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82840_FUN_80a82840.c; reference-window x test",src/game/enemies.rs
+game::enemies,80a82880,fn_80a82880,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82880_FUN_80a82880.c; elapsed time since +0x5DC",src/game/enemies.rs
+game::enemies,80a828c0,fn_80a828c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a828c0_FUN_80a828c0.c; two 0x8015F470 steps on +0x5D8 and +0xB0",src/game/enemies.rs
+game::enemies,80a82920,fn_80a82920,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a82920_FUN_80a82920.c; 0x11103 effect record builder",src/game/enemies.rs
+game::enemies,80a82a30,fn_80a82a30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82a30_FUN_80a82a30.c; aim step; 0x801611C0 + 0x8015F4F0",src/game/enemies.rs
+game::enemies,80a82a90,fn_80a82a90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82a90_FUN_80a82a90.c; window boundary test with 96.0 margin",src/game/enemies.rs
+game::enemies,80a82b00,fn_80a82b00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a82b00_FUN_80a82b00.c; 100-step ground probe of 16.0",src/game/enemies.rs
+game::enemies,80a82bb0,fn_80a82bb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a82bb0_FUN_80a82bb0.c; swim/jump clip binder",src/game/enemies.rs
+game::enemies,80a82c20,fn_80a82c20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82c20_FUN_80a82c20.c; tilt clamp; tables 0x80B2E370/0x80B2E3C8",src/game/enemies.rs
+game::enemies,80a82d30,fn_80a82d30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a82d30_FUN_80a82d30.c; swim step; dive decision",src/game/enemies.rs
+game::enemies,80a82f20,fn_80a82f20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82f20_FUN_80a82f20.c; swim step; ends on tilt limit",src/game/enemies.rs
+game::enemies,80a82ff0,fn_80a82ff0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a82ff0_FUN_80a82ff0.c; jump entry; timer 0x1E + jump clip",src/game/enemies.rs
+game::enemies,80a83080,fn_80a83080,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a83080_FUN_80a83080.c; jump step; timer and +0x118 refresh",src/game/enemies.rs
+game::enemies,80a83200,fn_80a83200,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a83200_FUN_80a83200.c; dive/land step; sub-state +0x360",src/game/enemies.rs

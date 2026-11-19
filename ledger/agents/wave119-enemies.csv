@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80afc810,fn_80afc810,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afc810_FUN_80afc810.c; detach 0x8015F800, free 0x802B9280 when count > 0",src/game/enemies.rs
+game::enemies,80afc930,fn_80afc930,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afc930_FUN_80afc930.c; 0x802DCBFC hidden-r12 forwarder, duplicated second argument",src/game/enemies.rs
+game::enemies,80afc960,fn_80afc960,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afc960_FUN_80afc960.c; second copy of the 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80afc990,fn_80afc990,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afc990_FUN_80afc990.c; 0x618-byte ctor, vtable 0x80B65138, holder +0x524, 2x0x40 matrix table +0x544",src/game/enemies.rs
+game::enemies,80afcb50,fn_80afcb50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afcb50_FUN_80afcb50.c; g3d/sanbo.brres + sanbo_head/sanbo_head_orange clip pair",src/game/enemies.rs
+game::enemies,80afcc50,fn_80afcc50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afcc50_FUN_80afcc50.c; +0x394 virtual +0x10, timer +0x60C, scale ramp and retire test",src/game/enemies.rs
+game::enemies,80afcdd0,fn_80afcdd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afcdd0_FUN_80afcdd0.c; two linear ramps over +0x60C/+0x610, +0x5C4 slot flip",src/game/enemies.rs
+game::enemies,80afced0,fn_80afced0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afced0_FUN_80afced0.c; slot matrix +0x544, pose copy and +0x5E0 offset add",src/game/enemies.rs
+game::enemies,80afcfa0,fn_80afcfa0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afcfa0_FUN_80afcfa0.c; position/angle base matrix at +0x7C",src/game/enemies.rs
+game::enemies,80afd060,fn_80afd060,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd060_FUN_80afd060.c; lazy 0x80B7817C offsets (0x1333,0,-0xE38) then base matrix",src/game/enemies.rs
+game::enemies,80afd210,fn_80afd210,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd210_FUN_80afd210.c; first player +0x164/+0x168 delta and +0x16C/+0x170 pair",src/game/enemies.rs
+game::enemies,80afd280,fn_80afd280,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd280_FUN_80afd280.c; +0x77F30 type table, side byte, +0x120 bits, state 0x80B78144",src/game/enemies.rs
+game::enemies,80afd500,fn_80afd500,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd500_FUN_80afd500.c; f64 rate to +0xEC, +0x5D4 code, state 0x80B78008",src/game/enemies.rs
+game::enemies,80afd550,fn_80afd550,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd550_FUN_80afd550.c; 0x8042C1B0 word table, state 0x80B78088",src/game/enemies.rs
+game::enemies,80afd590,fn_80afd590,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd590_FUN_80afd590.c; 0x80B77EE8/0x80B77EEC stride-8 pair, state 0x80B780C8",src/game/enemies.rs
+game::enemies,80afd670,fn_80afd670,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd670_FUN_80afd670.c; interpolation counters +0x5F0..+0x5FC, +0x368 source, state 0x80B77FC8",src/game/enemies.rs
+game::enemies,80afd720,fn_80afd720,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd720_FUN_80afd720.c; +0x368 sample via 0x80152480/0x8016F130, position blend",src/game/enemies.rs
+game::enemies,80afd860,fn_80afd860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afd860_FUN_80afd860.c; one subtract, three stores at +0xDC/+0xE0/+0xE4",src/game/enemies.rs
+game::enemies,80afd880,fn_80afd880,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afd880_FUN_80afd880.c; 0x80AFA570 angle triple into +0x100/+0x104",src/game/enemies.rs
+game::enemies,80afdca0,fn_80afdca0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afdca0_FUN_80afdca0.c; release +0x148 and clear +0x5D0",src/game/enemies.rs
+game::enemies,80afdcf0,fn_80afdcf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afdcf0_FUN_80afdcf0.c; 0x80AFD860 yaw decay plus 0x80AFD880 angle add",src/game/enemies.rs
+game::enemies,80afde80,fn_80afde80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afde80_FUN_80afde80.c; roll sign to +0x348, +0xE8 rest test to +0x459",src/game/enemies.rs
+game::enemies,80afdf20,fn_80afdf20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afdf20_FUN_80afdf20.c; duplicate of 0x80AFDE80 byte-for-byte",src/game/enemies.rs
+game::enemies,80afdfb0,fn_80afdfb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afdfb0_FUN_80afdfb0.c; 0x80B317FC roll table, four side/slot step combinations",src/game/enemies.rs
+game::enemies,80afe1d0,fn_80afe1d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afe1d0_FUN_80afe1d0.c; +0xE8..+0xFC seed, 0x800E20A0 sparkle on slot 0, +0x120 mask",src/game/enemies.rs
+game::enemies,80afe2c0,fn_80afe2c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80afe2c0_FUN_80afe2c0.c; 0x80B31820 roll table, reverse +0x100/+0x102 step",src/game/enemies.rs
+game::enemies,80afece0,fn_80afece0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80afece0_FUN_80afece0.c; returns 0x80358004",src/game/enemies.rs

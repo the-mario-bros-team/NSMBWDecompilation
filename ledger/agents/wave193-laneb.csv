@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806bf1c0,fn_806bf1c0,translated,high,work/ghidra/rel-d_basesNP/export/806bf1c0_FUN_806bf1c0.c,src/game/bases.rs
+game::bases,806c13b0,fn_806c13b0,translated,high,work/ghidra/rel-d_basesNP/export/806c13b0_FUN_806c13b0.c,src/game/bases.rs
+game::bases,806c7040,fn_806c7040,translated,high,work/ghidra/rel-d_basesNP/export/806c7040_FUN_806c7040.c,src/game/bases.rs
+game::bases,806cb050,fn_806cb050,translated,high,work/ghidra/rel-d_basesNP/export/806cb050_FUN_806cb050.c,src/game/bases.rs
+game::bases,806cb140,fn_806cb140,translated,high,work/ghidra/rel-d_basesNP/export/806cb140_FUN_806cb140.c,src/game/bases.rs
+game::bases,806cc530,fn_806cc530,translated,high,work/ghidra/rel-d_basesNP/export/806cc530_FUN_806cc530.c,src/game/bases.rs
+game::bases,806d0130,fn_806d0130,translated,high,work/ghidra/rel-d_basesNP/export/806d0130_FUN_806d0130.c,src/game/bases.rs
+game::bases,806d0410,fn_806d0410,translated,high,work/ghidra/rel-d_basesNP/export/806d0410_FUN_806d0410.c,src/game/bases.rs
+game::bases,806d4a20,fn_806d4a20,translated,high,work/ghidra/rel-d_basesNP/export/806d4a20_FUN_806d4a20.c,src/game/bases.rs
+game::bases,806d7a30,fn_806d7a30,translated,high,work/ghidra/rel-d_basesNP/export/806d7a30_FUN_806d7a30.c,src/game/bases.rs

@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,801616c0,fn_801616c0,translated,high,work/ghidra/main-gb/export/801616c0_FUN_801616c0.c,src/resource/registry.rs
+resource::registry,801620e0,fn_801620e0,translated,high,work/ghidra/main-gb/export/801620e0_FUN_801620e0.c,src/resource/registry.rs
+resource::registry,801621e0,fn_801621e0,translated,high,work/ghidra/main-gb/export/801621e0_FUN_801621e0.c,src/resource/registry.rs
+resource::registry,80162590,fn_80162590,translated,high,work/ghidra/main-gb/export/80162590_FUN_80162590.c,src/resource/registry.rs
+resource::registry,801625b0,fn_801625b0,translated,high,work/ghidra/main-gb/export/801625b0_FUN_801625b0.c,src/resource/registry.rs
+resource::registry,80162a20,fn_80162a20,translated,high,work/ghidra/main-gb/export/80162a20_FUN_80162a20.c,src/resource/registry.rs
+resource::registry,80163660,fn_80163660,translated,high,work/ghidra/main-gb/export/80163660_FUN_80163660.c,src/resource/registry.rs
+resource::registry,801683e0,fn_801683e0,translated,medium,work/ghidra/main-gb/export/801683e0_FUN_801683e0.c,src/resource/registry.rs
+resource::registry,8016a150,fn_8016a150,translated,high,work/ghidra/main-gb/export/8016a150_FUN_8016a150.c,src/resource/registry.rs
+resource::registry,8016c7f0,fn_8016c7f0,translated,high,work/ghidra/main-gb/export/8016c7f0_FUN_8016c7f0.c,src/resource/registry.rs
+resource::registry,8016c830,fn_8016c830,translated,high,work/ghidra/main-gb/export/8016c830_FUN_8016c830.c,src/resource/registry.rs
+resource::registry,8016f130,fn_8016f130,translated,high,work/ghidra/main-gb/export/8016f130_FUN_8016f130.c,src/resource/registry.rs
+resource::registry,8016f1f0,fn_8016f1f0,translated,high,work/ghidra/main-gb/export/8016f1f0_FUN_8016f1f0.c,src/resource/registry.rs
+resource::registry,8016f460,fn_8016f460,translated,medium,work/ghidra/main-gb/export/8016f460_FUN_8016f460.c,src/resource/registry.rs
+resource::registry,8016c5a0,fn_8016c5a0,translated,medium,work/ghidra/main-gb/export/8016c5a0_FUN_8016c5a0.c,src/resource/registry.rs

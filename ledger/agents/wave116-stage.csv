@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c9b50,fn_800c9b50,translated,medium,"work/ghidra/main-gb/export/800c9b50_FUN_800c9b50.c; frame record +6 -> 0x800B1310 font record -> 0x802AF080 install; fn_800c9e80 draws the line; width = 0.01f * u16(+4) * font vtable +0xC; two 0x802AF240 passes, shrink by (limit-(w2-w1)-4)/w1",src/game/stage.rs

@@ -1,0 +1,23 @@
+# Only the source tree is published: the decompilation (src, ledger, docs,
+# tools, scripts) and the Rust port (crates). Nothing from the game disc.
+/*
+!/.gitignore
+!/.cargo/
+!/LICENSE
+!/README.md
+!/HANDOFF.md
+!/PLAN.md
+!/Cargo.toml
+!/Cargo.lock
+!/src/
+!/crates/
+!/docs/
+!/ledger/
+!/tools/
+!/scripts/
+
+# Build output.
+target/
+
+# Generated from the user's own disc by ppc-recomp (see crates/game-recomp).
+/crates/game-recomp/gen/

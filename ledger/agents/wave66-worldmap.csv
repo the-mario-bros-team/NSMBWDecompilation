@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80123130,fn_80123130,translated,high,"work/ghidra/main-gb/export/80123130_FUN_80123130.c; null guard, 0x8015F800 teardown and optional 0x802B9280 free; returns the actor",src/game/worldmap.rs
+game::worldmap,80123250,fn_80123250,translated,high,"work/ghidra/main-gb/export/80123250_FUN_80123250.c; forwards (param_2,param_2,param_1) to 0x802DCBFC",src/game/worldmap.rs
+game::worldmap,80123280,fn_80123280,translated,high,"work/ghidra/main-gb/export/80123280_FUN_80123280.c; byte-identical copy of 80123250",src/game/worldmap.rs
+game::worldmap,801232b0,fn_801232b0,translated,medium,"work/ghidra/main-gb/export/801232b0_FUN_801232b0.c; 0x430-byte constructor: +0x60/+0x40C vtables, +0x3F0 child, +0x41C 0.0f, +0x420/+0x424 zero; base ctor r3 inferred",src/game/worldmap.rs
+game::worldmap,80123740,fn_80123740,translated,medium,"work/ghidra/main-gb/export/80123740_FUN_80123740.c; 0x8006FA40 height test then overlapping 4-word/3-float probe via 0x80075FD0",src/game/worldmap.rs
+game::worldmap,801237f0,fn_801237f0,translated,high,"work/ghidra/main-gb/export/801237f0_FUN_801237f0.c; probes y+10.0 with 0x800757B0 and accepts surfaces in (y-3.0, y+10.0]",src/game/worldmap.rs
+game::worldmap,801238b0,fn_801238b0,translated,high,"work/ghidra/main-gb/export/801238b0_FUN_801238b0.c; copies position to +0x410..+0x418, writes 120.0f to +0x41C, vcall +0x40C slot 0xC",src/game/worldmap.rs
+game::worldmap,80123910,fn_80123910,translated,high,"work/ghidra/main-gb/export/80123910_FUN_80123910.c; vcall +0x60 slot 0x98 then posts event 0x80375B58 on +0x394",src/game/worldmap.rs
+game::worldmap,80123970,fn_80123970,translated,high,"work/ghidra/main-gb/export/80123970_FUN_80123970.c; sets +0x274 bit 0x8000 on collider hit, resets +0x1EC twice, tests mask 0x3C1FE03F",src/game/worldmap.rs
+game::worldmap,80123a00,fn_80123a00,translated,high,"work/ghidra/main-gb/export/80123a00_FUN_80123a00.c; single 0x800943B0(object+0xAC) call",src/game/worldmap.rs
+game::worldmap,80123b70,fn_80123b70,translated,high,"work/ghidra/main-gb/export/80123b70_FUN_80123b70.c; layer 0 clamps +0xB4 to 2000.0/-1800.0 via 0x800767F0; layer 1 writes -1800.0",src/game/worldmap.rs
+game::worldmap,80123c00,fn_80123c00,translated,high,"work/ghidra/main-gb/export/80123c00_FUN_80123c00.c; 16-byte (64,64,32,32) record tested with 0x800B56E0 against 0x802F4D58",src/game/worldmap.rs
+game::worldmap,80123ca0,fn_80123ca0,translated,high,"work/ghidra/main-gb/export/80123ca0_FUN_80123ca0.c; flag mask 0x3F/0x3C000000, collider 0x800D9920, animation 0x80070720/0x800708C0 and +0x3C bit 0x1000",src/game/worldmap.rs
+game::worldmap,80123d70,fn_80123d70,translated,high,"work/ghidra/main-gb/export/80123d70_FUN_80123d70.c; stores the 0x80075270 result at +0x3DC and edges into 80123e60/80123f30/80123ff0",src/game/worldmap.rs
+game::worldmap,80123e60,fn_80123e60,translated,medium,"work/ghidra/main-gb/export/80123e60_FUN_80123e60.c; posts 0x265, mode (layer<<16)|1 or |2, tint 1.0 record to 0x800929F0, 0x80078410 frame 8",src/game/worldmap.rs
+game::worldmap,80123f30,fn_80123f30,translated,medium,"work/ghidra/main-gb/export/80123f30_FUN_80123f30.c; posts 0x284, mode (layer<<16)|4, six-word 1.0 record, 0x80078410 frame 0x12",src/game/worldmap.rs
+game::worldmap,80123ff0,fn_80123ff0,translated,medium,"work/ghidra/main-gb/export/80123ff0_FUN_80123ff0.c; posts 0x283, mode (layer<<16)|6, six-word 1.0 record, 0x80078410 frame 0x19",src/game/worldmap.rs
+game::worldmap,80124100,fn_80124100,translated,high,"work/ghidra/main-gb/export/80124100_FUN_80124100.c; iceball effects, +0x3D0 timer with 0x80375AB8 decrement, 0x1FE000 mask, ground/contact ladder",src/game/worldmap.rs
+game::worldmap,80124250,fn_80124250,translated,high,"work/ghidra/main-gb/export/80124250_FUN_80124250.c; 0x802F4D00..08 damping curve plus 0x8042D6C0/0x8042D6C8 state tables into +0xE8..+0x11C",src/game/worldmap.rs
+game::worldmap,80124340,fn_80124340,translated,high,"work/ghidra/main-gb/export/80124340_FUN_80124340.c; second per-frame variant with 0x8006CD90/CE70/CD40 and the collider branch",src/game/worldmap.rs
+game::worldmap,801244d0,fn_801244d0,translated,high,"work/ghidra/main-gb/export/801244d0_FUN_801244d0.c; iceball effects then event 0x80375B98 when +0x36C == 2",src/game/worldmap.rs
+game::worldmap,80124560,fn_80124560,translated,high,"work/ghidra/main-gb/export/80124560_FUN_80124560.c; vcall +0x60 slot 0x98 then 0x80162510",src/game/worldmap.rs
+game::worldmap,801245c0,fn_801245c0,translated,high,"work/ghidra/main-gb/export/801245c0_FUN_801245c0.c; 0x80375AA8[player] < 6 and (kind 1 or 0x80375AB8[player] < 2)",src/game/worldmap.rs
+game::worldmap,80124a80,fn_80124a80,translated,high,"work/ghidra/main-gb/export/80124a80_FUN_80124a80.c; byte-identical copy of 80123130",src/game/worldmap.rs
+game::worldmap,80124ba0,fn_80124ba0,translated,high,"work/ghidra/main-gb/export/80124ba0_FUN_80124ba0.c; forwards (param_2,param_2,param_1) to 0x802DCBFC",src/game/worldmap.rs
+game::worldmap,80124bd0,fn_80124bd0,translated,high,"work/ghidra/main-gb/export/80124bd0_FUN_80124bd0.c; third copy of the 0x802DCBFC forwarder",src/game/worldmap.rs
+game::worldmap,80124c00,fn_80124c00,translated,high,"work/ghidra/main-gb/export/80124c00_FUN_80124c00.c; 0x70-byte constructor: 0x8006C420 base then vtable 0x803249E0 at +0x60",src/game/worldmap.rs

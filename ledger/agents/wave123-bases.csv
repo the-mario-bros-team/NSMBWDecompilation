@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806809c0,fn_806809c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806809c0_FUN_806809c0.c; unsigned index modulo 3 - the two subtract-3 loops reduce to the residue mod 3",src/game/bases.rs
+game::bases,80681600,fn_80681600,translated,high,"work/ghidra/rel-d_basesNP/export/80681600_FUN_80681600.c; allocates 0x4F8 bytes, vtable 0x807ECFC8, starts +0x3E4/+0x458/+0x478, clears +0x474",src/game/bases.rs
+game::bases,80688610,fn_80688610,translated,high,"work/ghidra/rel-d_basesNP/export/80688610_FUN_80688610.c; +0x544 model transform from position +0xAC..+0xB4 and angles +0x100..+0x104",src/game/bases.rs
+game::bases,80688820,fn_80688820,translated,high,"work/ghidra/rel-d_basesNP/export/80688820_FUN_80688820.c; release wrapper - 0x802B9280 only when object != 0 and free > 0",src/game/bases.rs
+game::bases,80688860,fn_80688860,translated,medium,"work/ghidra/rel-d_basesNP/export/80688860_FUN_80688860.c; 0x800964A0 gate then 0x80095C80 with the three forwarded words",src/game/bases.rs
+game::bases,806888c0,fn_806888c0,translated,high,"work/ghidra/rel-d_basesNP/export/806888c0_FUN_806888c0.c; moves +0xEC toward +0xF8 by +0x560 and snaps on arrival",src/game/bases.rs
+game::bases,80688920,fn_80688920,translated,high,"work/ghidra/rel-d_basesNP/export/80688920_FUN_80688920.c; copies target +0xAC through handle +0x570 when +0x390 is clear",src/game/bases.rs
+game::bases,80688990,fn_80688990,translated,medium,"work/ghidra/rel-d_basesNP/export/80688990_FUN_80688990.c; when +0x570 is set dispatches vtable +0xD4 with 0x8082A9B0 then interface +0x1C",src/game/bases.rs
+game::bases,80688a40,fn_80688a40,translated,high,"work/ghidra/rel-d_basesNP/export/80688a40_FUN_80688a40.c; speed +0.005 clamped at 0.1, band select 1.5/0.5 at +0xF8, angles +0x400",src/game/bases.rs
+game::bases,80688d50,fn_80688d50,translated,medium,"work/ghidra/rel-d_basesNP/export/80688d50_FUN_80688d50.c; settle pass 0x800955F0 plus handle copy, angles +0x400, leaves at +0xB0 <= +0x578",src/game/bases.rs
+game::bases,80688f80,fn_80688f80,translated,medium,"work/ghidra/rel-d_basesNP/export/80688f80_FUN_80688f80.c; vtable +0x98 then +0xF4/+0xF8/+0xFC/+0x560/+0xB4 = 0, 0x807C99FC, 0, 0.1875, 1948.0",src/game/bases.rs
+game::bases,80689000,fn_80689000,translated,high,"work/ghidra/rel-d_basesNP/export/80689000_FUN_80689000.c; aim 0x80097170 at speed 1.0, angle step 0x400/0x280, ground window 0x80429E00 +0x3C-+0x44-32, latch +0x56C",src/game/bases.rs
+game::bases,80689110,fn_80689110,translated,medium,"work/ghidra/rel-d_basesNP/export/80689110_FUN_80689110.c; 0x800925F0(0x80429EE8, position, 2, 3) then 0x80064D10(actor, 0)",src/game/bases.rs
+game::bases,806898c0,fn_806898c0,translated,high,"work/ghidra/rel-d_basesNP/export/806898c0_FUN_806898c0.c; 0x8015F800 teardown then optional 0x802B9280, returns the object",src/game/bases.rs
+game::bases,8068b860,fn_8068b860,translated,medium,"work/ghidra/rel-d_basesNP/export/8068b860_FUN_8068b860.c; target matrix via interface +0x28/+0x14 probe 0x8082AC30 else position rebuild; binds +0x3F0 then fn_8068bb00",src/game/bases.rs
+game::bases,8068b9f0,fn_8068b9f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8068b9f0_FUN_8068b9f0.c; twelve-word copy from target +0x7C behind handle +0x468 after the 0x8016F150 default fill",src/game/bases.rs
+game::bases,8068bb00,fn_8068bb00,translated,medium,"work/ghidra/rel-d_basesNP/export/8068bb00_FUN_8068bb00.c; 0x80168400/0x80168180 fill a 60-byte block then 0x8016F130 copies it into +0x478",src/game/bases.rs
+game::bases,8068bb70,fn_8068bb70,translated,medium,"work/ghidra/rel-d_basesNP/export/8068bb70_FUN_8068bb70.c; 0x80070BA0/0x80070BF0 probes - returns 1 for bit 0x8000 plus kind 3",src/game/bases.rs
+game::bases,8068bbf0,fn_8068bbf0,translated,medium,"work/ghidra/rel-d_basesNP/export/8068bbf0_FUN_8068bbf0.c; 0x8006CED0 position pair plus 5628.0 reported to 0x800943F0",src/game/bases.rs
+game::bases,8068bc40,fn_8068bc40,translated,medium,"work/ghidra/rel-d_basesNP/export/8068bc40_FUN_8068bc40.c; Wm_en_hit at 0x807EF078 via 0x8016C890, +0x3E8 virtual to 0x80065B80, 0x800E20A0 with 0x8042CC88/0x8042CC8C",src/game/bases.rs
+game::bases,8068e6a0,fn_8068e6a0,translated,high,"work/ghidra/rel-d_basesNP/export/8068e6a0_FUN_8068e6a0.c; kind 1/2 child marks +0xC60 plus the slot byte from virtual +0x6C",src/game/bases.rs
+game::bases,8068e8e0,fn_8068e8e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8068e8e0_FUN_8068e8e0.c; type 0x1A3 +0x39C then type 0x1A4 +0x3E2 matched against +0xC3C",src/game/bases.rs
+game::bases,8068e970,fn_8068e970,translated,high,"work/ghidra/rel-d_basesNP/export/8068e970_FUN_8068e970.c; copies source word and +0x104 halfword into +0xC34/+0xC7E",src/game/bases.rs
+game::bases,8068eb80,fn_8068eb80,translated,medium,"work/ghidra/rel-d_basesNP/export/8068eb80_FUN_8068eb80.c; target latch then yaw +0xC7E into +0x104 and per-slot offsets from 0x807C9BF6, state 0x8082AE70",src/game/bases.rs
+game::bases,8068f810,fn_8068f810,translated,high,"work/ghidra/rel-d_basesNP/export/8068f810_FUN_8068f810.c; matrix plus +6/-6 axis rotations through 0x801C0540, pitch +0x428, binds +0x404",src/game/bases.rs
+game::bases,8068f960,fn_8068f960,translated,high,"work/ghidra/rel-d_basesNP/export/8068f960_FUN_8068f960.c; boolean +0xB0 < ground +0x3C-+0x44 - 32.0",src/game/bases.rs
+game::bases,8068fda0,fn_8068fda0,translated,high,"work/ghidra/rel-d_basesNP/export/8068fda0_FUN_8068fda0.c; 0x80162510 only when fn_8068f960 holds",src/game/bases.rs
+game::bases,8068fa60,fn_8068fa60,translated,medium,"work/ghidra/rel-d_basesNP/export/8068fa60_FUN_8068fa60.c; timer +0x41C, offset drift +0xDC..+0xE4, 0x80358004 probe, leave state 0x8082AEF0",src/game/bases.rs
+game::bases,8068fb80,fn_8068fb80,translated,high,"work/ghidra/rel-d_basesNP/export/8068fb80_FUN_8068fb80.c; float table 0x807C9CE0 indexed by +0x348, motion block +0xE8..+0x114, +0xE8 += 1.1 * target +0xC4",src/game/bases.rs
+game::bases,8068fc40,fn_8068fc40,translated,medium,"work/ghidra/rel-d_basesNP/export/8068fc40_FUN_8068fc40.c; yaw +0xA00 pitch +0x800 and effect 0x1E9 through 0x80198660(0x80429D5C)",src/game/bases.rs

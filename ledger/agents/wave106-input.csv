@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801e9730,fn_801e9730,translated,medium,"work/ghidra/main-gb/export/801e9730_FUN_801e9730.c; KPAD self-test generator; 3 tick seeds; report block +0x914..+0x933",src/runtime/input.rs
+runtime::input,801e9e20,fn_801e9e20,translated,medium,"work/ghidra/main-gb/export/801e9e20_FUN_801e9e20.c; twin generator over tables 0x80344D30/0x80344D60",src/runtime/input.rs
+runtime::input,801ed3a0,fn_801ed3a0,translated,high,"work/ghidra/main-gb/export/801ed3a0_FUN_801ed3a0.c; 12-byte tail call into 0x801ED3C0",src/runtime/input.rs
+runtime::input,801ed3c0,fn_801ed3c0,translated,medium,"work/ghidra/main-gb/export/801ed3c0_FUN_801ed3c0.c; KPAD ring flush; 0xB0-byte records; status 0/-1/-2/-3/-4/-5",src/runtime/input.rs
+runtime::input,801ee9a0,fn_801ee9a0,partial,medium,"work/ghidra/main-gb/export/801ee9a0_FUN_801ee9a0.c; gate r13-0x4B58 + banner; va_list payload not expressible",src/runtime/input.rs
+runtime::input,801eea50,fn_801eea50,partial,medium,"work/ghidra/main-gb/export/801eea50_FUN_801eea50.c; gate r13-0x5DDC + USB_ERR banner; va_list payload not expressible",src/runtime/input.rs

@@ -1,0 +1,9 @@
+[package]
+name = "input"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hle-ios = { path = "../hle-ios" }
+winit = "0.30"
+gilrs = "0.11"

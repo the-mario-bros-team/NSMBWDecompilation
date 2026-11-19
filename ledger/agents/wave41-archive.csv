@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,80260800,fn_80260800,translated,high,"work/ghidra/main-gb/export/80260800_FUN_80260800.c; unlink 0x80229030 then conditional free 0x802B9280",src/resource/archive.rs
+resource::archive,80260860,fn_80260860,translated,medium,"work/ghidra/main-gb/export/80260860_FUN_80260860.c; lazy singleton at 0x803FC810 guarded by r13-0x4994",src/resource/archive.rs
+resource::archive,802608d0,fn_802608d0,translated,medium,"work/ghidra/main-gb/export/802608d0_FUN_802608d0.c; static-array destructor 0x802DCA98 with 0xC stride and 3 entries",src/resource/archive.rs
+resource::archive,80260ec0,fn_80260ec0,translated,high,"work/ghidra/main-gb/export/80260ec0_FUN_80260ec0.c; returns the word at +0x04",src/resource/archive.rs
+resource::archive,80260ed0,fn_80260ed0,translated,high,"work/ghidra/main-gb/export/80260ed0_FUN_80260ed0.c; IRQ mask + payload store + list insert 0x80229160",src/resource/archive.rs
+resource::archive,80260f40,fn_80260f40,translated,high,"work/ghidra/main-gb/export/80260f40_FUN_80260f40.c; IRQ mask + list remove 0x80229190",src/resource/archive.rs
+resource::archive,8026a670,fn_8026a670,translated,medium,"work/ghidra/main-gb/export/8026a670_FUN_8026a670.c; vtable 0x8034EAF0; four r2 defaults 0x8042E8C0..CC; calls 0x8026A880",src/resource/archive.rs
+resource::archive,8026a700,fn_8026a700,translated,high,"work/ghidra/main-gb/export/8026a700_FUN_8026a700.c; 0x801A8400(+0x2C) then (size+0x87) & !0x1F",src/resource/archive.rs
+resource::archive,8026a740,fn_8026a740,translated,high,"work/ghidra/main-gb/export/8026a740_FUN_8026a740.c; forward to mutex init 0x802652E0 at +0x10",src/resource/archive.rs
+resource::archive,8026a810,fn_8026a810,translated,medium,"work/ghidra/main-gb/export/8026a810_FUN_8026a810.c; guarded by +0x0C; 0x80265330/0x80265390 save-restore around 0x801A8820(+0x2C)",src/resource/archive.rs
+resource::archive,8026ab10,fn_8026ab10,translated,medium,"work/ghidra/main-gb/export/8026ab10_FUN_8026ab10.c; vtable 0x8034EB18; four r2 defaults 0x8042E8E0..EC; +0x10 left untouched; calls 0x8026ADD0",src/resource/archive.rs
+resource::archive,8026aba0,fn_8026aba0,translated,high,"work/ghidra/main-gb/export/8026aba0_FUN_8026aba0.c; aligned sizes from 0x801A8400(+0x30) and 0x801A8F20(+0xD0); returns the larger",src/resource/archive.rs
+resource::archive,8026ac10,fn_8026ac10,translated,high,"work/ghidra/main-gb/export/8026ac10_FUN_8026ac10.c; forward to mutex init 0x802652E0 at +0x14",src/resource/archive.rs
+resource::archive,8026ad50,fn_8026ad50,translated,medium,"work/ghidra/main-gb/export/8026ad50_FUN_8026ad50.c; +0x10 mode selects 0x801A9360(+0xD0) or 0x801A8820(+0x30)",src/resource/archive.rs
+resource::archive,8026b070,fn_8026b070,translated,medium,"work/ghidra/main-gb/export/8026b070_FUN_8026b070.c; manager count via 0x80260860/0x802610B0; virtual +0x10 then +0x0C",src/resource/archive.rs
+resource::archive,8026b0e0,fn_8026b0e0,translated,medium,"work/ghidra/main-gb/export/8026b0e0_FUN_8026b0e0.c; vtable 0x8034EB18; slot 0x8034EB28 then +0x20; conditional free",src/resource/archive.rs
+resource::archive,8026b160,fn_8026b160,translated,medium,"work/ghidra/main-gb/export/8026b160_FUN_8026b160.c; vtable 0x8034EB40; three r2 defaults 0x8042E900..08; calls 0x8026B370",src/resource/archive.rs
+resource::archive,8026b1f0,fn_8026b1f0,translated,high,"work/ghidra/main-gb/export/8026b1f0_FUN_8026b1f0.c; 0x801A55C0(+0x2C) then (size+0x87) & !0x1F",src/resource/archive.rs
+resource::archive,8026b230,fn_8026b230,translated,high,"work/ghidra/main-gb/export/8026b230_FUN_8026b230.c; forward to mutex init 0x802652E0 at +0x10",src/resource/archive.rs
+resource::archive,8026b300,fn_8026b300,translated,medium,"work/ghidra/main-gb/export/8026b300_FUN_8026b300.c; guarded by +0x0C; save-restore around 0x801A5B60(+0x2C)",src/resource/archive.rs
+resource::archive,8026b880,fn_8026b880,translated,medium,"work/ghidra/main-gb/export/8026b880_FUN_8026b880.c; +0x10 mode selects 0x801A64F0(+0x88) or 0x801A5B60(+0x30)",src/resource/archive.rs
+resource::archive,8026bc00,fn_8026bc00,translated,medium,"work/ghidra/main-gb/export/8026bc00_FUN_8026bc00.c; manager count via 0x80260860/0x802610B0; virtual +0x10 then +0x0C",src/resource/archive.rs
+resource::archive,8026bc70,fn_8026bc70,translated,medium,"work/ghidra/main-gb/export/8026bc70_FUN_8026bc70.c; vtable 0x8034EB68; slot 0x8034EB78 then +0x20; conditional free",src/resource/archive.rs
+resource::archive,8026bdc0,fn_8026bdc0,translated,high,"work/ghidra/main-gb/export/8026bdc0_FUN_8026bdc0.c; 0x801A3460(+0x44) then (size+0x87) & !0x1F",src/resource/archive.rs
+resource::archive,8026be00,fn_8026be00,translated,high,"work/ghidra/main-gb/export/8026be00_FUN_8026be00.c; forward to mutex init 0x802652E0 at +0x10",src/resource/archive.rs
+resource::archive,8026bed0,fn_8026bed0,translated,medium,"work/ghidra/main-gb/export/8026bed0_FUN_8026bed0.c; guarded by +0x0C; save-restore around 0x801A3820(+0x44)",src/resource/archive.rs
+resource::archive,8026db50,fn_8026db50,translated,high,"work/ghidra/main-gb/export/8026db50_FUN_8026db50.c; r2 defaults 0x8042E9A0/A4; active byte +0x0C; clears +0x08",src/resource/archive.rs
+resource::archive,8026db80,fn_8026db80,translated,high,"work/ghidra/main-gb/export/8026db80_FUN_8026db80.c; +0x14 = r2 default 0x8042E9A0; +0x10 = 0",src/resource/archive.rs

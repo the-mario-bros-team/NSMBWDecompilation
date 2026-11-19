@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,802122b0,fn_802122b0,translated,medium,"work/ghidra/main-gb/export/802122b0_FUN_802122b0.c; HID report fragmenter; pool record +0x11 busy bit and +0x18 fragment limit; 6 arguments",src/runtime/bt.rs
+runtime::bt,80218f20,fn_80218f20,translated,medium,"work/ghidra/main-gb/export/80218f20_FUN_80218f20.c; port PN indication; nine-byte descriptor to port +0x51; null-port branch stores to absolute 0x51..0x59",src/runtime/bt.rs
+runtime::bt,8021a704,fn_8021a704,translated,medium,"work/ghidra/main-gb/export/8021a704_FUN_8021a704.c; mux data indication; LCID lookup; classifier 0x8021D8B4 then 0x8021DE28 or port event 4",src/runtime/bt.rs
+runtime::bt,8021aaf4,fn_8021aaf4,translated,medium,"work/ghidra/main-gb/export/8021aaf4_FUN_8021aaf4.c; mux command dispatcher; seven states 0..6 plus the shared wait-conn-cnf block",src/runtime/bt.rs
+runtime::bt,8021b738,fn_8021b738,translated,medium,"work/ghidra/main-gb/export/8021b738_FUN_8021b738.c; port event dispatcher; six states 0..5; 2476 bytes",src/runtime/bt.rs
+runtime::bt,8021de28,fn_8021de28,translated,medium,"work/ghidra/main-gb/export/8021de28_FUN_8021de28.c; mux frame parser; CONCAT folds written as byte stores with the export's masks",src/runtime/bt.rs
+runtime::bt,8021e4d0,fn_8021e4d0,translated,medium,"work/ghidra/main-gb/export/8021e4d0_FUN_8021e4d0.c; mux timer start/stop on the static MCB 0x803D57C4; returns the block or 0",src/runtime/bt.rs

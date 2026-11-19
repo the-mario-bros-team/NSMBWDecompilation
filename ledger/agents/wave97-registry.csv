@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,80160d10,fn_80160d10,translated,medium,"work/ghidra/main-gb/export/80160d10_FUN_80160d10.c; 0x801C14C0 length + FLT_EPSILON snap; step/distance delta subtract",src/resource/registry.rs
+resource::registry,80160e80,fn_80160e80,translated,high,"work/ghidra/main-gb/export/80160e80_FUN_80160e80.c; dx/dz handed to 0x801611C0 in f1/f2",src/resource/registry.rs
+resource::registry,80160ea0,fn_80160ea0,translated,medium,"work/ghidra/main-gb/export/80160ea0_FUN_80160ea0.c; dy plus sqrt(dx*dx+dz*dz) from 0x802BE470 handed to 0x801611C0",src/resource/registry.rs
+resource::registry,801613a0,fn_801613a0,translated,high,"work/ghidra/main-gb/export/801613a0_FUN_801613a0.c; 0x43300000/0x80000000 unsigned-word bias times rate from 0x80161490",src/resource/registry.rs
+resource::registry,80161400,fn_80161400,translated,high,"work/ghidra/main-gb/export/80161400_FUN_80161400.c; value times rate from 0x80161490 rounded to f32",src/resource/registry.rs
+resource::registry,80163220,fn_80163220,translated,medium,"work/ghidra/main-gb/export/80163220_FUN_80163220.c; 0x801C5860 flush and 0x801C8E70 blend then 0x801C8920 with four 0.0 and the r2-0x3470 word",src/resource/registry.rs
+resource::registry,80163760,fn_80163760,translated,high,"work/ghidra/main-gb/export/80163760_FUN_80163760.c; clamp f3 at 0.0 then five record stores plus 0x801637E0",src/resource/registry.rs
+resource::registry,801643b0,fn_801643b0,translated,medium,"work/ghidra/main-gb/export/801643b0_FUN_801643b0.c; 0x80163FF0 lookup then 0x802B50B0/0x802B50A0 feed fn_80163760 and fn_801644d0",src/resource/registry.rs
+resource::registry,80164770,fn_80164770,translated,medium,"work/ghidra/main-gb/export/80164770_FUN_80164770.c; two-table slot guard then 0x802B9240/0x802C81F0 with heap switch around them",src/resource/registry.rs
+resource::registry,801654b0,fn_801654b0,translated,medium,"work/ghidra/main-gb/export/801654b0_FUN_801654b0.c; leading_zeros folding for mode 4 then fn_80168f10 with the +0x20 refcount",src/resource/registry.rs
+resource::registry,80165ae0,fn_80165ae0,translated,medium,"work/ghidra/main-gb/export/80165ae0_FUN_80165ae0.c; first-class twin of 0x801654B0 with the same +0x20/+0x24 fields",src/resource/registry.rs
+resource::registry,801666e0,fn_801666e0,translated,medium,"work/ghidra/main-gb/export/801666e0_FUN_801666e0.c; second-class commit reads +0x30 refcount and +0x38 leading-zero word",src/resource/registry.rs
+resource::registry,801672d0,fn_801672d0,translated,medium,"work/ghidra/main-gb/export/801672d0_FUN_801672d0.c; third-class commit reads +0x20 refcount and +0x28 leading-zero word",src/resource/registry.rs
+resource::registry,80167e50,fn_80167e50,translated,medium,"work/ghidra/main-gb/export/80167e50_FUN_80167e50.c; four-argument class commit with the r2-0x53E0 constant group",src/resource/registry.rs
+resource::registry,80168bd0,fn_80168bd0,translated,medium,"work/ghidra/main-gb/export/80168bd0_FUN_80168bd0.c; zero scale hands the record to 0x80168B90 else six stores with 1.0/scale",src/resource/registry.rs
+resource::registry,80168f10,fn_80168f10,translated,medium,"work/ghidra/main-gb/export/80168f10_FUN_80168f10.c; clamp f3 then +0x28/+0x2C/+0x34/+0x30 stores and vtable slots 0x1C/0x28",src/resource/registry.rs
+resource::registry,80168fe0,fn_80168fe0,translated,medium,"work/ghidra/main-gb/export/80168fe0_FUN_80168fe0.c; 0x801680A0 slot call then f32 store at +0x30",src/resource/registry.rs
+resource::registry,80169020,fn_80169020,translated,medium,"work/ghidra/main-gb/export/80169020_FUN_80169020.c; vtable slots 0x20/0x2C compared against +0x2C and +0x28-1.0 by mode byte",src/resource/registry.rs
+resource::registry,801690e0,fn_801690e0,translated,medium,"work/ghidra/main-gb/export/801690e0_FUN_801690e0.c; range containment with rate sign and mode bit 2 selecting the direction",src/resource/registry.rs
+resource::registry,80169290,fn_80169290,translated,medium,"work/ghidra/main-gb/export/80169290_FUN_80169290.c; 0x801C6BA0 texture plus allocator slot 0x14 then 0x801C6D90/0x801C6FF0",src/resource/registry.rs
+resource::registry,801693f0,fn_801693f0,translated,high,"work/ghidra/main-gb/export/801693f0_FUN_801693f0.c; ten argument slots forwarded to fn_80169440 with +0x30 twice",src/resource/registry.rs
+resource::registry,80169440,fn_80169440,translated,medium,"work/ghidra/main-gb/export/80169440_FUN_80169440.c; halve then 0x801C6D90/0x801C6FF0/0x801C5960/0x801C59D0/0x801C6290 and the r13-0x5200 blend",src/resource/registry.rs
+resource::registry,8016ebf0,fn_8016ebf0,translated,medium,"work/ghidra/main-gb/export/8016ebf0_FUN_8016ebf0.c; s16 angle times 1/256 into 0x80237C40/0x80237BD0 then twelve stores",src/resource/registry.rs
+resource::registry,8016ed10,fn_8016ed10,translated,medium,"work/ghidra/main-gb/export/8016ed10_FUN_8016ed10.c; Y-axis variant of the twelve-store rotation block",src/resource/registry.rs
+resource::registry,8016ee30,fn_8016ee30,translated,medium,"work/ghidra/main-gb/export/8016ee30_FUN_8016ee30.c; Z-axis variant of the twelve-store rotation block",src/resource/registry.rs

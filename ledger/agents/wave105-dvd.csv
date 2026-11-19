@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c5570,fn_801c5570,translated,medium,"work/ghidra/main-gb/export/801c5570_FUN_801c5570.c; 0x98 header + width, round_up(width*height,4) zero fill under the state==0 guard, then trailing u8/u16; the export merges the last stb/sth pair into one word",src/runtime/dvd.rs
+runtime::dvd,801c56c0,fn_801c56c0,translated,medium,"work/ghidra/main-gb/export/801c56c0_FUN_801c56c0.c; unconditional twin: 0x98 byte, width halfword, round_up(width*height,4) zero fill, state+2 = 1",src/runtime/dvd.rs
+runtime::dvd,801c9e20,fn_801c9e20,translated,medium,"work/ghidra/main-gb/export/801c9e20_FUN_801c9e20.c; two selector tables: 35-case pixel mode at +0x5EC, 23-case fog mode at +0x5F0 with the +0x5F4 rewrites and the r13-0x4DEC halfword poke",src/runtime/dvd.rs
+runtime::dvd,801c22c0,fn_801c22c0,translated,medium,"work/ghidra/main-gb/export/801c22c0_FUN_801c22c0.c; default-state bring-up for a display-mode record: ~90 calls in export order, 3x4 identity block and the 0x23/0x16 mode pair",src/runtime/dvd.rs

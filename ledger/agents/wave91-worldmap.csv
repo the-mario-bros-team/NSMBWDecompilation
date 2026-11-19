@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,801202a0,fn_801202a0,translated,high,"work/ghidra/main-gb/export/801202a0_FUN_801202a0.c; ground probe into +0x5F4; clears +0xE8/+0x5F0/+0x5F8 and sets +0x564 bit 0x80",src/game/worldmap.rs
+game::worldmap,80120720,fn_80120720,translated,high,"work/ghidra/main-gb/export/80120720_FUN_80120720.c; child +0x2C clear; +0x5C8=0.4, +0x5CC=0, +0x5D0=0, +0x360=1",src/game/worldmap.rs
+game::worldmap,80120780,fn_80120780,translated,medium,"work/ghidra/main-gb/export/80120780_FUN_80120780.c; two-state fall machine over +0x360 with the 802F4C90 table, ground clamp and 0x80375838 event",src/game/worldmap.rs
+game::worldmap,80120950,fn_80120950,translated,medium,"work/ghidra/main-gb/export/80120950_FUN_80120950.c; second fall variant using 802F4CA0/802F4C80 tables and the 0.05 clamp",src/game/worldmap.rs
+game::worldmap,80120ac0,fn_80120ac0,translated,high,"work/ghidra/main-gb/export/80120ac0_FUN_80120ac0.c; +0x604=0x78, zeroes the motion triple, closes layout +0x148 and sets +0x554 bit 31",src/game/worldmap.rs
+game::worldmap,80120c70,fn_80120c70,translated,medium,"work/ghidra/main-gb/export/80120c70_FUN_80120c70.c; copies +0xB0 to +0x5FC and picks +0x114 from the 80375878 name test",src/game/worldmap.rs
+game::worldmap,80120fd0,fn_80120fd0,translated,high,"work/ghidra/main-gb/export/80120fd0_FUN_80120fd0.c; child reset, 0.8 impulse scale, +0x530=0x408, +0x604=0x1E",src/game/worldmap.rs
+game::worldmap,801211e0,fn_801211e0,translated,high,"work/ghidra/main-gb/export/801211e0_FUN_801211e0.c; 0.25 impulse scale, -2500 at +0xB4, +0x530=8, +0x604=0x1E",src/game/worldmap.rs
+game::worldmap,80121390,fn_80121390,translated,high,"work/ghidra/main-gb/export/80121390_FUN_80121390.c; slide setup with 1.0+0.5*extents at +0x16C/+0x170 and +0x564 mask 0x900000",src/game/worldmap.rs
+game::worldmap,801214a0,fn_801214a0,translated,medium,"work/ghidra/main-gb/export/801214a0_FUN_801214a0.c; three-way mode byte, +0x348/+0x38D refresh and the 8011EB00/80375A38 contact ladder",src/game/worldmap.rs
+game::worldmap,80121760,fn_80121760,translated,high,"work/ghidra/main-gb/export/80121760_FUN_80121760.c; child clear, +0x175=0, +0x38D=0xFF",src/game/worldmap.rs
+game::worldmap,801217c0,fn_801217c0,translated,medium,"work/ghidra/main-gb/export/801217c0_FUN_801217c0.c; probe-1 callback store, probe-3/4 effect and sound branches, default facing flip",src/game/worldmap.rs
+game::worldmap,80121b00,fn_80121b00,translated,medium,"work/ghidra/main-gb/export/80121b00_FUN_80121b00.c; second probe variant posts 8026F/8026D and clamps +0xAC to the 80082240 rail",src/game/worldmap.rs
+game::worldmap,80121d50,fn_80121d50,translated,medium,"work/ghidra/main-gb/export/80121d50_FUN_80121d50.c; 8011DF90 release plus 8007F950 on the +0x460 list",src/game/worldmap.rs
+game::worldmap,801250d0,fn_801250d0,translated,medium,"work/ghidra/main-gb/export/801250d0_FUN_801250d0.c; pad-mode range test then slot 0x10 of the +0x460 object",src/game/worldmap.rs
+game::worldmap,80125140,fn_80125140,translated,medium,"work/ghidra/main-gb/export/80125140_FUN_80125140.c; six mode cases across +0x47C/+0x4EC/+0x4B4 and unconditional +0x4D0",src/game/worldmap.rs
+game::worldmap,80125450,fn_80125450,translated,medium,"work/ghidra/main-gb/export/80125450_FUN_80125450.c; copies the resolved player into +0x394..+0x3A8 and runs the +0x3AC/+0x3B4/+0x3B8 helpers",src/game/worldmap.rs
+game::worldmap,80125a30,fn_80125a30,translated,medium,"work/ghidra/main-gb/export/80125a30_FUN_80125a30.c; pad-mode gate around 80125210(+0x3AC, object)",src/game/worldmap.rs
+game::worldmap,80125a90,fn_80125a90,translated,low,"work/ghidra/main-gb/export/80125a90_FUN_80125a90.c; per-mode raw calls to 801252A0/80125240/801252D0/80125270 whose jump tables are unrecovered",src/game/worldmap.rs
+game::worldmap,80125b80,fn_80125b80,translated,medium,"work/ghidra/main-gb/export/80125b80_FUN_80125b80.c; three-probe scan through 80125FF0/801260E0 then the 800CD2C0/80057CD0 gates",src/game/worldmap.rs
+game::worldmap,80125d90,fn_80125d90,translated,medium,"work/ghidra/main-gb/export/80125d90_FUN_80125d90.c; builds one probe point from +0x3A0 with the eight-float side table",src/game/worldmap.rs
+game::worldmap,80126f40,fn_80126f40,translated,medium,"work/ghidra/main-gb/export/80126f40_FUN_80126f40.c; eight input clears, 80145E40 gate and the 8004C4F0/44C/8004B730/8004C450 chain",src/game/worldmap.rs
+game::worldmap,80127340,fn_80127340,translated,medium,"work/ghidra/main-gb/export/80127340_FUN_80127340.c; +0x2530 countdown, +0xEC<2 input A8 clear and the 8004C480/44C/8004B730/8004C310 chain",src/game/worldmap.rs
+game::worldmap,801278e0,fn_801278e0,translated,medium,"work/ghidra/main-gb/export/801278e0_FUN_801278e0.c; 8012E760/801266B0 result pair, sub-controller states 1/3 and the 80324B38 transition",src/game/worldmap.rs
+game::worldmap,80128190,fn_80128190,translated,medium,"work/ghidra/main-gb/export/80128190_FUN_80128190.c; 8005E7A0/80048A60 guard then event 80375C2C through slot 0x294",src/game/worldmap.rs
+game::worldmap,80128220,fn_80128220,translated,medium,"work/ghidra/main-gb/export/80128220_FUN_80128220.c; state-1 model call (2.0,0,0,model,10) and eight input clears",src/game/worldmap.rs
+game::worldmap,801284c0,fn_801284c0,translated,medium,"work/ghidra/main-gb/export/801284c0_FUN_801284c0.c; ten-part eligibility gate returning 0/1/2 over the r2-0x58F0 action mask table",src/game/worldmap.rs
+game::worldmap,801285d0,fn_801285d0,translated,medium,"work/ghidra/main-gb/export/801285d0_FUN_801285d0.c; 8005E7A0 record plus 801284C0 gate then event 803761F0 or 803761B0",src/game/worldmap.rs

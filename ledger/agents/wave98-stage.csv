@@ -1,0 +1,25 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c1e90,fn_800c1e90,translated,medium,"work/ghidra/main-gb/export/800c1e90_FUN_800c1e90.c; segment test between +0x40/+0x44 contact and +0x50/+0x54 point; 0x800C1A90 called by address",src/game/stage.rs
+game::stage,800c2030,fn_800c2030,translated,medium,"work/ghidra/main-gb/export/800c2030_FUN_800c2030.c; shared test at the r2-0x6844 zero float; r4..r6 forwarded unchanged",src/game/stage.rs
+game::stage,800c2070,fn_800c2070,translated,medium,"work/ghidra/main-gb/export/800c2070_FUN_800c2070.c; test at r2-0x680C then +0x6C transition to 0x80358E90",src/game/stage.rs
+game::stage,800c2160,fn_800c2160,translated,medium,"work/ghidra/main-gb/export/800c2160_FUN_800c2160.c; 0x800C2030 then +0x6C transition to 0x80358FD0",src/game/stage.rs
+game::stage,800c2220,fn_800c2220,translated,medium,"work/ghidra/main-gb/export/800c2220_FUN_800c2220.c; 0x800C2030 then +0x6C transition to 0x80358F10",src/game/stage.rs
+game::stage,800c22e0,fn_800c22e0,translated,medium,"work/ghidra/main-gb/export/800c22e0_FUN_800c22e0.c; test at r2-0x6804 then +0x6C transition to 0x80359010",src/game/stage.rs
+game::stage,800c24f0,fn_800c24f0,translated,medium,"work/ghidra/main-gb/export/800c24f0_FUN_800c24f0.c; test at r2-0x67F8 then +0x6C transition to 0x80359110",src/game/stage.rs
+game::stage,800c2610,fn_800c2610,translated,medium,"work/ghidra/main-gb/export/800c2610_FUN_800c2610.c; test at r2-0x67F4 then +0x6C transition to 0x80359190",src/game/stage.rs
+game::stage,800c6e70,fn_800c6e70,translated,medium,"work/ghidra/main-gb/export/800c6e70_FUN_800c6e70.c; saves +0x40/+0x44/+100, runs 0x800C4F50 with r2-0x6800/r2-0x67A0, rolls back and negates +0x38/+0x3C when 0x800C18B0 reports contact",src/game/stage.rs
+game::stage,800cb5d0,fn_800cb5d0,translated,high,"work/ghidra/main-gb/export/800cb5d0_FUN_800cb5d0.c; vtable +0x14 release of [this+4] then of the non-null [this+8]",src/game/stage.rs
+game::stage,800cca70,fn_800cca70,translated,medium,"work/ghidra/main-gb/export/800cca70_FUN_800cca70.c; forwards [this+0x14] and index to 0x800CB630",src/game/stage.rs
+game::stage,800cd220,fn_800cd220,translated,high,"work/ghidra/main-gb/export/800cd220_FUN_800cd220.c; returns the f32 global 0x80317890; twin of 0x800CD230",src/game/stage.rs
+game::stage,800cd600,fn_800cd600,translated,high,"work/ghidra/main-gb/export/800cd600_FUN_800cd600.c; 4-byte no-op body",src/game/stage.rs
+game::stage,800ce100,fn_800ce100,translated,high,"work/ghidra/main-gb/export/800ce100_FUN_800ce100.c; word store at +0x68",src/game/stage.rs
+game::stage,800ce110,fn_800ce110,translated,high,"work/ghidra/main-gb/export/800ce110_FUN_800ce110.c; word load at +0x68",src/game/stage.rs
+game::stage,800ce240,fn_800ce240,translated,high,"work/ghidra/main-gb/export/800ce240_FUN_800ce240.c; indexed byte store at +0x10",src/game/stage.rs
+game::stage,800ce250,fn_800ce250,translated,high,"work/ghidra/main-gb/export/800ce250_FUN_800ce250.c; indexed byte load at +0x10",src/game/stage.rs
+game::stage,800ce530,fn_800ce530,translated,high,"work/ghidra/main-gb/export/800ce530_FUN_800ce530.c; indexed byte store at +0x742; ten-entry loop in 0x800CDED0",src/game/stage.rs
+game::stage,800ce540,fn_800ce540,translated,high,"work/ghidra/main-gb/export/800ce540_FUN_800ce540.c; indexed byte load at +0x742",src/game/stage.rs
+game::stage,800ce550,fn_800ce550,translated,high,"work/ghidra/main-gb/export/800ce550_FUN_800ce550.c; mode byte store at +6; called with 2 by 0x800CDED0",src/game/stage.rs
+game::stage,800ce560,fn_800ce560,translated,high,"work/ghidra/main-gb/export/800ce560_FUN_800ce560.c; mode byte load at +6",src/game/stage.rs
+game::stage,800ce570,fn_800ce570,translated,high,"work/ghidra/main-gb/export/800ce570_FUN_800ce570.c; 4-byte no-op body",src/game/stage.rs
+game::stage,800ce5f0,fn_800ce5f0,translated,high,"work/ghidra/main-gb/export/800ce5f0_FUN_800ce5f0.c; duplicate of the +6 mode byte store at 0x800CE550",src/game/stage.rs
+game::stage,800cfbb0,fn_800cfbb0,translated,high,"work/ghidra/main-gb/export/800cfbb0_FUN_800cfbb0.c; returns the 0x8035DCC0 message record table",src/game/stage.rs

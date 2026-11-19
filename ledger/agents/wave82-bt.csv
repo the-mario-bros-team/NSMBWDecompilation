@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80212c64,fn_80212c64,translated,high,"work/ghidra/main-gb/export/80212c64_FUN_80212c64.c; CCB lookup then event 0x17; clears cfg+0x24",src/runtime/bt.rs
+runtime::bt,80212d1c,fn_80212d1c,translated,high,"work/ghidra/main-gb/export/80212d1c_FUN_80212d1c.c; result u16 selects event 0x18 or 0x19",src/runtime/bt.rs
+runtime::bt,80212dec,fn_80212dec,translated,high,"work/ghidra/main-gb/export/80212dec_FUN_80212dec.c; CCB lookup then event 0x1A with null payload",src/runtime/bt.rs
+runtime::bt,80212e90,fn_80212e90,translated,high,"work/ghidra/main-gb/export/80212e90_FUN_80212e90.c; CCB lookup then event 0x1B with null payload",src/runtime/bt.rs
+runtime::bt,80213058,fn_80213058,translated,high,"work/ghidra/main-gb/export/80213058_FUN_80213058.c; idle timeout to global or to owner+0x58 when state 4",src/runtime/bt.rs
+runtime::bt,8021323c,fn_8021323c,translated,high,"work/ghidra/main-gb/export/8021323c_FUN_8021323c.c; empty callback body",src/runtime/bt.rs
+runtime::bt,80214c18,fn_80214c18,translated,medium,"work/ghidra/main-gb/export/80214c18_FUN_80214c18.c; handle argument recovered from caller; event 6 to children with timeout callback",src/runtime/bt.rs
+runtime::bt,80214c88,fn_80214c88,translated,medium,"work/ghidra/main-gb/export/80214c88_FUN_80214c88.c; state 1/2/3/5 teardown and state 4 ping-timeout path",src/runtime/bt.rs
+runtime::bt,80214dfc,fn_80214dfc,translated,medium,"work/ghidra/main-gb/export/80214dfc_FUN_80214dfc.c; payload chunks clamped to global load and +0x36 window; +0x38 load grows",src/runtime/bt.rs
+runtime::bt,8021544c,fn_8021544c,translated,high,"work/ghidra/main-gb/export/8021544c_FUN_8021544c.c; writes 0x803D4C42 and 0x803D4C44",src/runtime/bt.rs
+runtime::bt,80215630,fn_80215630,translated,medium,"work/ghidra/main-gb/export/80215630_FUN_80215630.c; reassembly room test then clears owner+0x50",src/runtime/bt.rs
+runtime::bt,8021569c,fn_8021569c,translated,medium,"work/ghidra/main-gb/export/8021569c_FUN_8021569c.c; BD_ADDR lookup then byte at +0x30; closes state-2 channels",src/runtime/bt.rs
+runtime::bt,8021571c,fn_8021571c,translated,high,"work/ghidra/main-gb/export/8021571c_FUN_8021571c.c; four-block scan closing state-2 channels",src/runtime/bt.rs
+runtime::bt,80215788,fn_80215788,translated,high,"work/ghidra/main-gb/export/80215788_FUN_80215788.c; handle from payload+8 masked 0xFFF; queue or free",src/runtime/bt.rs
+runtime::bt,80215864,fn_80215864,translated,medium,"work/ghidra/main-gb/export/80215864_FUN_80215864.c; BD_ADDR argument recovered; arms timer only when child list empty",src/runtime/bt.rs
+runtime::bt,802158a8,fn_802158a8,translated,high,"work/ghidra/main-gb/export/802158a8_FUN_802158a8.c; 0x7E8 clear, nine CCB links, free list and timeout 2",src/runtime/bt.rs
+runtime::bt,8021675c,fn_8021675c,translated,high,"work/ghidra/main-gb/export/8021675c_FUN_8021675c.c; code 4 hold poll, 3 event 0x1E, 2 timeout handler",src/runtime/bt.rs
+runtime::bt,802168d8,fn_802168d8,translated,high,"work/ghidra/main-gb/export/802168d8_FUN_802168d8.c; four-block allocator, BD_ADDR copy, active counter and window recompute",src/runtime/bt.rs
+runtime::bt,80216aac,fn_80216aac,translated,high,"work/ghidra/main-gb/export/80216aac_FUN_80216aac.c; four-block scan with 6-byte compare at +0x2A",src/runtime/bt.rs
+runtime::bt,80216bc4,fn_80216bc4,translated,medium,"work/ghidra/main-gb/export/80216bc4_FUN_80216bc4.c; getter for 0x803D4C41",src/runtime/bt.rs
+runtime::bt,80217f88,fn_80217f88,translated,high,"work/ghidra/main-gb/export/80217f88_FUN_80217f88.c; ten CCB records 0x7C apart indexed by cid-0x40",src/runtime/bt.rs
+runtime::bt,80217fe4,fn_80217fe4,translated,high,"work/ghidra/main-gb/export/80217fe4_FUN_80217fe4.c; eight PSM slots 0x2C apart; stores PSM at +2",src/runtime/bt.rs
+runtime::bt,802183d0,fn_802183d0,translated,high,"work/ghidra/main-gb/export/802183d0_FUN_802183d0.c; disconnect every connection with handle != 0xFFFF",src/runtime/bt.rs
+runtime::bt,8021879c,fn_8021879c,translated,high,"work/ghidra/main-gb/export/8021879c_FUN_8021879c.c; 0x418 clear, init flag, trace 5, callback install",src/runtime/bt.rs
+runtime::bt,80219594,fn_80219594,translated,high,"work/ghidra/main-gb/export/80219594_FUN_80219594.c; five port records 0xA4 apart; disconnect reason 0x12",src/runtime/bt.rs
+runtime::bt,8021d74c,fn_8021d74c,translated,medium,"work/ghidra/main-gb/export/8021d74c_FUN_8021d74c.c; UIH address header shift and finisher call; third argument recovered",src/runtime/bt.rs
+runtime::bt,8021e628,fn_8021e628,translated,medium,"work/ghidra/main-gb/export/8021e628_FUN_8021e628.c; timer cancel, retry-queue drain and 0x78 clear",src/runtime/bt.rs
+runtime::bt,8021f08c,fn_8021f08c,translated,medium,"work/ghidra/main-gb/export/8021f08c_FUN_8021f08c.c; SDP list walk, type 3/6 descent and value match",src/runtime/bt.rs

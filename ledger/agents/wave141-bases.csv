@@ -1,0 +1,12 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8076da30,fn_8076da30,translated,medium,"work/ghidra/rel-d_basesNP/export/8076da30_FUN_8076da30.c; sixteen-state Koopa Jr airship sequence; step rates -180/10, 180/4 and 90/angle",src/game/bases.rs
+game::bases,8065f910,fn_8065f910,translated,medium,"work/ghidra/rel-d_basesNP/export/8065f910_FUN_8065f910.c; four-state airship departure; timers 5/165/330/850, Wm_ob_witchcraftup emitter",src/game/bases.rs
+game::bases,8076c900,fn_8076c900,translated,medium,"work/ghidra/rel-d_basesNP/export/8076c900_FUN_8076c900.c; nineteen-state Toad/kinopio sequence; kinopio_all_root helper and scene flags",src/game/bases.rs
+game::bases,807108b0,fn_807108b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807108b0_FUN_807108b0.c; world-map spawner; 0x80805EA0 enemy rows, 0x808065A0 bounds, coin burst",src/game/bases.rs
+game::bases,8067e320,fn_8067e320,translated,medium,"work/ghidra/rel-d_basesNP/export/8067e320_FUN_8067e320.c; pad mask refresh; 0x802DD1EC pair split and 0x800E41C0 handler",src/game/bases.rs
+game::bases,8067eaf0,fn_8067eaf0,translated,medium,"work/ghidra/rel-d_basesNP/export/8067eaf0_FUN_8067eaf0.c; four-phase pad auto-repeat; channels +0x3EB..+0x3EC",src/game/bases.rs
+game::bases,8067de40,fn_8067de40,translated,medium,"work/ghidra/rel-d_basesNP/export/8067de40_FUN_8067de40.c; pad refresh while all pressed buttons are mapped",src/game/bases.rs
+game::bases,8067dfd0,fn_8067dfd0,translated,medium,"work/ghidra/rel-d_basesNP/export/8067dfd0_FUN_8067dfd0.c; empty-mask twin of 0x8067DE40",src/game/bases.rs
+game::bases,8067e500,fn_8067e500,translated,medium,"work/ghidra/rel-d_basesNP/export/8067e500_FUN_8067e500.c; stage rectangle vs kind-3 actor overlap test",src/game/bases.rs
+game::bases,80671d70,fn_80671d70,translated,medium,"work/ghidra/rel-d_basesNP/export/80671d70_FUN_80671d70.c; two balloon-scale states and the +0xB0 interpolation",src/game/bases.rs
+game::bases,80676a20,fn_80676a20,translated,medium,"work/ghidra/rel-d_basesNP/export/80676a20_FUN_80676a20.c; three-pane screen projection build for +0x3F8/+0x438/+0x478",src/game/bases.rs

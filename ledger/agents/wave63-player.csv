@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,8005c930,fn_8005c930,translated,medium,"work/ghidra/main-gb/export/8005c930_FUN_8005c930.c; guard word 0x80429CA0 + slot mask byte 0x80429CA8; (u32)(-flag)>>31 result; 0x80051E70 slot argument restored from loop index",src/game/player.rs
+game::player,8005ca50,fn_8005ca50,translated,medium,"work/ghidra/main-gb/export/8005ca50_FUN_8005ca50.c; four-slot mask loop calling 0x80051EF0; the extra r4 shown at the call site is the caller's live value and the callee takes only r3",src/game/player.rs
+game::player,8005cad0,fn_8005cad0,translated,high,"work/ghidra/main-gb/export/8005cad0_FUN_8005cad0.c; counts present slots with 0x8004DB40(slot 4) non-zero",src/game/player.rs
+game::player,8005cb60,fn_8005cb60,translated,high,"work/ghidra/main-gb/export/8005cb60_FUN_8005cb60.c; two word stores at +0x90 then +0x80",src/game/player.rs
+game::player,8005cb70,fn_8005cb70,translated,high,"work/ghidra/main-gb/export/8005cb70_FUN_8005cb70.c; clears event flag 0x5F on present slots not in 0x8004DB40 mode 4",src/game/player.rs
+game::player,8005cc00,fn_8005cc00,translated,medium,"work/ghidra/main-gb/export/8005cc00_FUN_8005cc00.c; 0x80052470 then 0x8004DB40 mode 4 then 0x80051E70; 0x80052470 slot argument restored from loop index",src/game/player.rs
+game::player,8005ccd0,fn_8005ccd0,translated,high,"work/ghidra/main-gb/export/8005ccd0_FUN_8005ccd0.c; requests 0..4 through 0x8005B5C0/0x8005B630 with state stores 1/3/5 at +0x08",src/game/player.rs
+game::player,8005cdd0,fn_8005cdd0,translated,medium,"work/ghidra/main-gb/export/8005cdd0_FUN_8005cdd0.c; inverted while guard over four slots; 0x80052470 slot argument restored from loop index",src/game/player.rs
+game::player,8005ce50,fn_8005ce50,translated,high,"work/ghidra/main-gb/export/8005ce50_FUN_8005ce50.c; forwards the selector to 0x80052290 on every present slot",src/game/player.rs
+game::player,8005ced0,fn_8005ced0,translated,medium,"work/ghidra/main-gb/export/8005ced0_FUN_8005ced0.c; state 0 resets +0x8C to -1; state 1 caches the first busy slot then advances to 2; 0x80052470 slot argument restored",src/game/player.rs
+game::player,8005cfb0,fn_8005cfb0,translated,high,"work/ghidra/main-gb/export/8005cfb0_FUN_8005cfb0.c; per-frame tick over states 0/1/3/5 with stores 1/2/4/6 and the 0x80102220 call",src/game/player.rs
+game::player,8005d0c0,fn_8005d0c0,translated,high,"work/ghidra/main-gb/export/8005d0c0_FUN_8005d0c0.c; single load of +0x64",src/game/player.rs
+game::player,8005d0d0,fn_8005d0d0,translated,high,"work/ghidra/main-gb/export/8005d0d0_FUN_8005d0d0.c; three-word history shift +0x64/+0x68/+0x6C into +0x60/+0x64/+0x68 with -1 sentinel",src/game/player.rs
+game::player,8005e6e0,fn_8005e6e0,translated,high,"work/ghidra/main-gb/export/8005e6e0_thunk_FUN_8005e570.c; 4-byte branch thunk to 0x8005E570",src/game/player.rs
+game::player,8005e6f0,fn_8005e6f0,translated,high,"work/ghidra/main-gb/export/8005e6f0_FUN_8005e6f0.c; sets byte +0x19 when the thunk bit is set and returns that flag",src/game/player.rs
+game::player,8005e740,fn_8005e740,translated,medium,"work/ghidra/main-gb/export/8005e740_FUN_8005e740.c; +0x12 bits 0x08/0x10 select 1/0 else 0x8005E580; callee argument restored as object",src/game/player.rs
+game::player,8005e770,fn_8005e770,translated,high,"work/ghidra/main-gb/export/8005e770_thunk_FUN_8005e580.c; 4-byte branch thunk to 0x8005E580",src/game/player.rs
+game::player,8005e780,fn_8005e780,translated,high,"work/ghidra/main-gb/export/8005e780_FUN_8005e780.c; single byte load at +0x17",src/game/player.rs
+game::player,8005e790,fn_8005e790,translated,high,"work/ghidra/main-gb/export/8005e790_FUN_8005e790.c; clears bytes +0x17 and +0x18",src/game/player.rs
+game::player,8005e7a0,fn_8005e7a0,translated,medium,"work/ghidra/main-gb/export/8005e7a0_FUN_8005e7a0.c; 0x8005E520 then 0x8005E510 with 0/1 written through the optional out pointer; 0x8005E520 argument restored",src/game/player.rs
+game::player,8005e830,fn_8005e830,translated,high,"work/ghidra/main-gb/export/8005e830_thunk_FUN_8005e500.c; 4-byte branch thunk to 0x8005E500",src/game/player.rs
+game::player,8005e840,fn_8005e840,translated,medium,"work/ghidra/main-gb/export/8005e840_FUN_8005e840.c; (0x8005E4D0 & 0xE)==0 gate then 0x8005E500; 0x8005E4D0 argument restored as object",src/game/player.rs
+game::player,8005e890,fn_8005e890,translated,medium,"work/ghidra/main-gb/export/8005e890_FUN_8005e890.c; +0x04 & 0xC gate then 0x8005E4F0; callee argument restored as object",src/game/player.rs
+game::player,8005e8b0,fn_8005e8b0,translated,high,"work/ghidra/main-gb/export/8005e8b0_FUN_8005e8b0.c; -1 sentinel, count clamp at 10 and (index*10+9) word stride over the record words",src/game/player.rs
+game::player,8005e910,fn_8005e910,translated,high,"work/ghidra/main-gb/export/8005e910_FUN_8005e910.c; +0x12 bit 0x80 guard then OR into +0x0C",src/game/player.rs
+game::player,8005e930,fn_8005e930,translated,high,"work/ghidra/main-gb/export/8005e930_FUN_8005e930.c; +0x12 bit 0x80 guard then AND-complement in +0x0C",src/game/player.rs
+game::player,8005e960,fn_8005e960,translated,high,"work/ghidra/main-gb/export/8005e960_FUN_8005e960.c; +0x12 bit 0x80 guard then OR into +0x0E",src/game/player.rs
+game::player,8005e980,fn_8005e980,translated,high,"work/ghidra/main-gb/export/8005e980_FUN_8005e980.c; +0x12 bit 0x80 guard then halfword 1 at +0x10",src/game/player.rs
+game::player,8005e9a0,fn_8005e9a0,translated,medium,"work/ghidra/main-gb/export/8005e9a0_FUN_8005e9a0.c; 0x80064610 five-argument spawn (typed void in the export; result is the r3 left by its 0x8006CA80 tail call) then 0x8014EA30 bind and vtable +0x270 call",src/game/player.rs

@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,80026b50,fn_80026b50,translated,high,work/ghidra/main-gb/export/80026b50_FUN_80026b50.c,src/ui/hud.rs
+ui::hud,80026b80,fn_80026b80,translated,high,work/ghidra/main-gb/export/80026b80_FUN_80026b80.c,src/ui/hud.rs
+ui::hud,80026bb0,fn_80026bb0,translated,high,work/ghidra/main-gb/export/80026bb0_FUN_80026bb0.c,src/ui/hud.rs
+ui::hud,80026bc0,fn_80026bc0,translated,high,work/ghidra/main-gb/export/80026bc0_FUN_80026bc0.c,src/ui/hud.rs
+ui::hud,80026c00,fn_80026c00,translated,medium,work/ghidra/main-gb/export/80026c00_FUN_80026c00.c,src/ui/hud.rs
+ui::hud,80026fb0,fn_80026fb0,translated,high,work/ghidra/main-gb/export/80026fb0_FUN_80026fb0.c,src/ui/hud.rs
+ui::hud,800270f0,fn_800270f0,translated,high,work/ghidra/main/export/800270f0_FUN_800270f0.c; no main-gb export; confirmed with ppc159.js disassembly,src/ui/hud.rs
+ui::hud,800271d0,fn_800271d0,translated,high,work/ghidra/main/export/800271d0_FUN_800271d0.c; no main-gb export; confirmed with ppc159.js disassembly,src/ui/hud.rs
+ui::hud,80027290,fn_80027290,translated,high,work/ghidra/main/export/80027290_FUN_80027290.c; no main-gb export; confirmed with ppc159.js disassembly,src/ui/hud.rs
+ui::hud,800272c0,fn_800272c0,translated,high,work/ghidra/main/export/800272c0_FUN_800272c0.c; no main-gb export; confirmed with ppc159.js disassembly,src/ui/hud.rs

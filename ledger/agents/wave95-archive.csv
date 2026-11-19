@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b1c90,fn_802b1c90,translated,medium,"work/ghidra/main-gb/export/802b1c90_FUN_802b1c90.c; base constructor call then vtable 0x8034FA80 store",src/resource/archive.rs
+resource::archive,802b1e70,fn_802b1e70,translated,medium,"work/ghidra/main-gb/export/802b1e70_FUN_802b1e70.c; six-float power-of-two rescale then 0x801C7E00(dst, vector, exponent)",src/resource/archive.rs
+resource::archive,802b4940,fn_802b4940,translated,high,"work/ghidra/main-gb/export/802b4940_FUN_802b4940.c; vtable +0x14 called with (this, 0)",src/resource/archive.rs
+resource::archive,802b4ae0,fn_802b4ae0,translated,high,"work/ghidra/main-gb/export/802b4ae0_FUN_802b4ae0.c; 0x1C-stride table pair read plus default pair",src/resource/archive.rs
+resource::archive,802b4df0,fn_802b4df0,translated,medium,"work/ghidra/main-gb/export/802b4df0_FUN_802b4df0.c; eight-byte-stride binary search with tolerance window",src/resource/archive.rs
+resource::archive,802baed0,fn_802baed0,translated,medium,"work/ghidra/main-gb/export/802baed0_FUN_802baed0.c; colour enqueue and manager texture rebind",src/resource/archive.rs
+resource::archive,802bb030,fn_802bb030,translated,medium,"work/ghidra/main-gb/export/802bb030_FUN_802bb030.c; nine-word record init plus 0x802BB0F0 and virtual +0x08",src/resource/archive.rs
+resource::archive,802bc120,fn_802bc120,translated,medium,"work/ghidra/main-gb/export/802bc120_FUN_802bc120.c; two halfwords plus 0x20-aligned payload allocation",src/resource/archive.rs
+resource::archive,802bc1a0,fn_802bc1a0,translated,medium,"work/ghidra/main-gb/export/802bc1a0_FUN_802bc1a0.c; manager record dimensions forwarded to 0x802BC120",src/resource/archive.rs
+resource::archive,802bc7a0,fn_802bc7a0,translated,medium,"work/ghidra/main-gb/export/802bc7a0_FUN_802bc7a0.c; vtable 0x80350030 plus field initialiser 0x802BC800",src/resource/archive.rs
+resource::archive,802bc800,fn_802bc800,translated,high,"work/ghidra/main-gb/export/802bc800_FUN_802bc800.c; colour block matrices counters and draw-state bytes",src/resource/archive.rs
+resource::archive,802bc9e0,fn_802bc9e0,translated,medium,"work/ghidra/main-gb/export/802bc9e0_FUN_802bc9e0.c; basis orthonormalisation through three 0x802BE6B0 calls",src/resource/archive.rs
+resource::archive,802bd310,fn_802bd310,translated,medium,"work/ghidra/main-gb/export/802bd310_FUN_802bd310.c; lazy 0xE60 allocation and 0x802BD4A0 construction",src/resource/archive.rs
+resource::archive,802bd370,fn_802bd370,translated,medium,"work/ghidra/main-gb/export/802bd370_FUN_802bd370.c; range guard then child word read",src/resource/archive.rs
+resource::archive,802bd420,fn_802bd420,translated,high,"work/ghidra/main-gb/export/802bd420_FUN_802bd420.c; handler sub-object +0x10 slot call returning 1",src/resource/archive.rs
+resource::archive,802bd460,fn_802bd460,translated,high,"work/ghidra/main-gb/export/802bd460_FUN_802bd460.c; optional callback with a two-word stack pair",src/resource/archive.rs
+resource::archive,802bd8c0,fn_802bd8c0,translated,medium,"work/ghidra/main-gb/export/802bd8c0_FUN_802bd8c0.c; child loop through virtual +0x30 with range guard",src/resource/archive.rs
+resource::archive,802be580,fn_802be580,translated,medium,"work/ghidra/main-gb/export/802be580_FUN_802be580.c; twelve-float copy from f1..f8 and four stack floats",src/resource/archive.rs
+resource::archive,802be640,fn_802be640,translated,medium,"work/ghidra/main-gb/export/802be640_FUN_802be640.c; two-component normalise with 0x802BE470 root call",src/resource/archive.rs
+resource::archive,802be6b0,fn_802be6b0,translated,medium,"work/ghidra/main-gb/export/802be6b0_FUN_802be6b0.c; three-component normalise with 0x802BE470 root call",src/resource/archive.rs
+resource::archive,802be880,fn_802be880,translated,medium,"work/ghidra/main-gb/export/802be880_FUN_802be880.c; virtual +0x08 result forwarded to 0x80253BE0",src/resource/archive.rs
+resource::archive,802bea00,fn_802bea00,translated,medium,"work/ghidra/main-gb/export/802bea00_FUN_802bea00.c; snapshot copy plus three basis rows and translation terms",src/resource/archive.rs
+resource::archive,802bed10,fn_802bed10,translated,medium,"work/ghidra/main-gb/export/802bed10_FUN_802bed10.c; GX 2D blit pipeline setup call chain",src/resource/archive.rs
+resource::archive,802bef00,fn_802bef00,translated,medium,"work/ghidra/main-gb/export/802bef00_FUN_802bef00.c; GX FIFO word with descriptor byte at +0x03",src/resource/archive.rs
+resource::archive,802bf3d0,fn_802bf3d0,translated,medium,"work/ghidra/main-gb/export/802bf3d0_FUN_802bf3d0.c; vtable 0x803500D8 plus 0x802BF540 field initialiser",src/resource/archive.rs

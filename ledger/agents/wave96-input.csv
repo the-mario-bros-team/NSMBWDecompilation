@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801f0020,fn_801f0020,translated,high,"work/ghidra/main-gb/export/801f0020_FUN_801f0020.c; state-9 channel scan, returns 1/0x1D/0x0E",src/runtime/input.rs
+runtime::input,801f0180,fn_801f0180,translated,medium,"work/ghidra/main-gb/export/801f0180_FUN_801f0180.c; CNT/WBC name probe, returns 6/0xFF",src/runtime/input.rs
+runtime::input,801f02f0,fn_801f02f0,translated,medium,"work/ghidra/main-gb/export/801f02f0_FUN_801f02f0.c; record registration plus 128-byte checksum, returns 7/0xFF",src/runtime/input.rs
+runtime::input,801f0670,fn_801f0670,translated,high,"work/ghidra/main-gb/export/801f0670_FUN_801f0670.c; stores ten link-key records, returns 0x16/0x19/100",src/runtime/input.rs
+runtime::input,801f09a0,fn_801f09a0,translated,high,"work/ghidra/main-gb/export/801f09a0_FUN_801f09a0.c; state-8 scan and pairing callback, returns 0x0E/0",src/runtime/input.rs
+runtime::input,801f1930,fn_801f1930,translated,medium,"work/ghidra/main-gb/export/801f1930_FUN_801f1930.c; WUD device/save state dispatcher on 0x803A312D",src/runtime/input.rs
+runtime::input,801f2b80,fn_801f2b80,translated,medium,"work/ghidra/main-gb/export/801f2b80_FUN_801f2b80.c; WUD timer step, 500-tick gate",src/runtime/input.rs
+runtime::input,801f2df0,fn_801f2df0,translated,high,"work/ghidra/main-gb/export/801f2df0_FUN_801f2df0.c; clears control block, relinks six- and ten-slot lists",src/runtime/input.rs
+runtime::input,801f3190,fn_801f3190,translated,medium,"work/ghidra/main-gb/export/801f3190_FUN_801f3190.c; one-shot BTA init, returns 1/0",src/runtime/input.rs
+runtime::input,801f5260,fn_801f5260,translated,medium,"work/ghidra/main-gb/export/801f5260_FUN_801f5260.c; nine-event BTA cleanup-stack callback",src/runtime/input.rs
+runtime::input,801f59d0,fn_801f59d0,translated,medium,"work/ghidra/main-gb/export/801f59d0_FUN_801f59d0.c; sync/delete event handler for ids 8, 9, 10 and 0x10",src/runtime/input.rs
+runtime::input,801f6a00,fn_801f6a00,translated,medium,"work/ghidra/main-gb/export/801f6a00_FUN_801f6a00.c; app-id 3 dispatch to 0x803A380C",src/runtime/input.rs
+runtime::input,801f7aa0,fn_801f7aa0,translated,medium,"work/ghidra/main-gb/export/801f7aa0_FUN_801f7aa0.c; dynamic GKI pool create, returns index or 0xFF",src/runtime/input.rs
+runtime::input,801f7df0,fn_801f7df0,translated,medium,"work/ghidra/main-gb/export/801f7df0_FUN_801f7df0.c; dynamic GKI pool release",src/runtime/input.rs
+runtime::input,801f8040,fn_801f8040,translated,medium,"work/ghidra/main-gb/export/801f8040_FUN_801f8040.c; BTU alarm tick/deadline scheduler",src/runtime/input.rs
+runtime::input,801f8e80,fn_801f8e80,translated,high,"work/ghidra/main-gb/export/801f8e80_FUN_801f8e80.c; adjusts HID report length and returns 0",src/runtime/input.rs
+runtime::input,801f9830,fn_801f9830,translated,high,"work/ghidra/main-gb/export/801f9830_FUN_801f9830.c; constant-0 HID stub",src/runtime/input.rs
+runtime::input,801f9d10,fn_801f9d10,translated,high,"work/ghidra/main-gb/export/801f9d10_FUN_801f9d10.c; trace guard for 0x801F9C50",src/runtime/input.rs
+runtime::input,801f9d30,fn_801f9d30,translated,high,"work/ghidra/main-gb/export/801f9d30_FUN_801f9d30.c; trace guard for 0x801F9C50",src/runtime/input.rs
+runtime::input,801f9d50,fn_801f9d50,translated,high,"work/ghidra/main-gb/export/801f9d50_FUN_801f9d50.c; trace guard for 0x801F9C50",src/runtime/input.rs
+runtime::input,801f9d70,fn_801f9d70,translated,high,"work/ghidra/main-gb/export/801f9d70_FUN_801f9d70.c; trace guard for 0x801F9C50",src/runtime/input.rs
+runtime::input,801f9d90,fn_801f9d90,translated,high,"work/ghidra/main-gb/export/801f9d90_FUN_801f9d90.c; trace guard for 0x801F9C50",src/runtime/input.rs
+runtime::input,801f9db0,fn_801f9db0,translated,high,"work/ghidra/main-gb/export/801f9db0_FUN_801f9db0.c; trace guard for 0x801F9C50",src/runtime/input.rs
+runtime::input,801f9dd0,fn_801f9dd0,translated,high,"work/ghidra/main-gb/export/801f9dd0_FUN_801f9dd0.c; trace guard for 0x801F9C50",src/runtime/input.rs
+runtime::input,801fd0e0,fn_801fd0e0,translated,medium,"work/ghidra/main-gb/export/801fd0e0_FUN_801fd0e0.c; builds one 0x107 message from the current record",src/runtime/input.rs
+runtime::input,801ffec4,fn_801ffec4,translated,medium,"work/ghidra/main-gb/export/801ffec4_FUN_801ffec4.c; HID control-block lookup, returns index",src/runtime/input.rs

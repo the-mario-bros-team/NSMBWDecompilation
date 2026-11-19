@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e0540,fn_800e0540,translated,high,"work/ghidra/main-gb/export/800e0540_FUN_800e0540.c; 0x6A0-byte header plus three pairs of 0x980-byte records; 0x800CF080 consumer",src/engine/dsys.rs
+engine::dsys,800e9130,fn_800e9130,translated,medium,"work/ghidra/main-gb/export/800e9130_FUN_800e9130.c; 0x3A00 psq angle and sin/cos roles inferred; node rail writer",src/engine/dsys.rs
+engine::dsys,800ec3b0,fn_800ec3b0,translated,medium,"work/ghidra/main-gb/export/800ec3b0_FUN_800ec3b0.c; emitter respawn/clamp plus two explicit 4-byte colour words",src/engine/dsys.rs

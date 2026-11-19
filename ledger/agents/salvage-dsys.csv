@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e5060,fn_800e5060,translated,high,work/ghidra/main-gb/export/800e5060_FUN_800e5060.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/dsys.rs
+engine::dsys,800e5110,fn_800e5110,translated,high,work/ghidra/main-gb/export/800e5110_FUN_800e5110.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/dsys.rs
+engine::dsys,800e51a0,fn_800e51a0,translated,high,work/ghidra/main-gb/export/800e51a0_FUN_800e51a0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/dsys.rs
+engine::dsys,800e5200,fn_800e5200,translated,high,work/ghidra/main-gb/export/800e5200_FUN_800e5200.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/dsys.rs
+engine::dsys,800e52d0,fn_800e52d0,translated,high,work/ghidra/main-gb/export/800e52d0_FUN_800e52d0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/dsys.rs
+engine::dsys,800e5400,fn_800e5400,translated,high,work/ghidra/main-gb/export/800e5400_FUN_800e5400.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/dsys.rs
+engine::dsys,800e5480,fn_800e5480,translated,high,work/ghidra/main-gb/export/800e5480_FUN_800e5480.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/dsys.rs

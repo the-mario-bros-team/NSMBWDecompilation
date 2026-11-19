@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806d5110,fn_806d5110,translated,high,"work/ghidra/rel-d_basesNP/export/806d5110_FUN_806d5110.c; null-gated 8015F800/802B9280 release; returns the actor",src/game/bases.rs
+game::bases,806d5290,fn_806d5290,translated,high,"work/ghidra/rel-d_basesNP/export/806d5290_FUN_806d5290.c; allocates 0xF10; base 0x80066FC0; vtable 0x807FB0E8; nine 0x5C records at +0xBB4",src/game/bases.rs
+game::bases,806d53f0,fn_806d53f0,translated,high,"work/ghidra/rel-d_basesNP/export/806d53f0_FUN_806d53f0.c; writes 0xFF to both digit index bytes",src/game/bases.rs
+game::bases,806d5400,fn_806d5400,translated,high,"work/ghidra/rel-d_basesNP/export/806d5400_FUN_806d5400.c; writes index to both digit bytes and clears the timer",src/game/bases.rs
+game::bases,806d5420,fn_806d5420,translated,high,"work/ghidra/rel-d_basesNP/export/806d5420_FUN_806d5420.c; current index below 8 else sign of previous-8",src/game/bases.rs
+game::bases,806d5450,fn_806d5450,translated,medium,"work/ghidra/rel-d_basesNP/export/806d5450_FUN_806d5450.c; digit roll: hides panel(s) through 800D81D0; shifts both indices; timer armed to 4",src/game/bases.rs
+game::bases,806d5540,fn_806d5540,translated,high,"work/ghidra/rel-d_basesNP/export/806d5540_FUN_806d5540.c; clears the u32 id and the byte counter of one ridden slot",src/game/bases.rs
+game::bases,806d5550,fn_806d5550,translated,high,"work/ghidra/rel-d_basesNP/export/806d5550_FUN_806d5550.c; decrements the ridden slot counter when non-zero",src/game/bases.rs
+game::bases,806d5570,fn_806d5570,translated,high,"work/ghidra/rel-d_basesNP/export/806d5570_FUN_806d5570.c; stores the id and arms the counter to 0x1E",src/game/bases.rs
+game::bases,806d5580,fn_806d5580,translated,high,"work/ghidra/rel-d_basesNP/export/806d5580_FUN_806d5580.c; -(byte)>>31 is the compiler's counter==0 test",src/game/bases.rs
+game::bases,806d5810,fn_806d5810,translated,medium,"work/ghidra/rel-d_basesNP/export/806d5810_FUN_806d5810.c; 8023A0B0 names[0x807CB6A8+index*4]; 801651F0 clip; 80169F80/801680E0 transform pair",src/game/bases.rs
+game::bases,806d58b0,fn_806d58b0,translated,high,"work/ghidra/rel-d_basesNP/export/806d58b0_FUN_806d58b0.c; 801C0BD0 transform from +0xAC/+0x100; 8016EEF0 Z angle; model holder +0x3F4",src/game/bases.rs
+game::bases,806d5bb0,fn_806d5bb0,translated,high,"work/ghidra/rel-d_basesNP/export/806d5bb0_FUN_806d5bb0.c; clears the 16 digit records at +0x784..+0x7B4 stride 3",src/game/bases.rs
+game::bases,806d5c00,fn_806d5c00,translated,high,"work/ghidra/rel-d_basesNP/export/806d5c00_FUN_806d5c00.c; advances every digit record with panel base +0x4C4",src/game/bases.rs
+game::bases,806d5c60,fn_806d5c60,translated,high,"work/ghidra/rel-d_basesNP/export/806d5c60_FUN_806d5c60.c; arms the first free digit record; sound 0x2AA through 80198C30",src/game/bases.rs
+game::bases,806d5d00,fn_806d5d00,translated,high,"work/ghidra/rel-d_basesNP/export/806d5d00_FUN_806d5d00.c; clears the 128 ridden slots at +0x7B4..+0xBB4 stride 8",src/game/bases.rs
+game::bases,806d5d50,fn_806d5d50,translated,high,"work/ghidra/rel-d_basesNP/export/806d5d50_FUN_806d5d50.c; ages the 128 ridden slots by one frame",src/game/bases.rs
+game::bases,806d5da0,fn_806d5da0,translated,high,"work/ghidra/rel-d_basesNP/export/806d5da0_FUN_806d5da0.c; refreshes the live slot owning id; rearms it to 0x1E",src/game/bases.rs
+game::bases,806d5e30,fn_806d5e30,translated,high,"work/ghidra/rel-d_basesNP/export/806d5e30_FUN_806d5e30.c; claims the first expired slot for id through 806D5570",src/game/bases.rs
+game::bases,806d5eb0,fn_806d5eb0,translated,high,"work/ghidra/rel-d_basesNP/export/806d5eb0_FUN_806d5eb0.c; counts the live ridden slots",src/game/bases.rs
+game::bases,806d5f20,fn_806d5f20,translated,high,"work/ghidra/rel-d_basesNP/export/806d5f20_FUN_806d5f20.c; 802DCD68 prolog; initialises nine 0x5C records through 800DB530; 802DCDB4 epilog",src/game/bases.rs
+game::bases,806d61c0,fn_806d61c0,translated,high,"work/ghidra/rel-d_basesNP/export/806d61c0_FUN_806d61c0.c; 800DAE80 reset over the 0x5C motion records",src/game/bases.rs
+game::bases,806d6210,fn_806d6210,translated,high,"work/ghidra/rel-d_basesNP/export/806d6210_FUN_806d6210.c; vtable +0xC teardown per 0x5C motion record",src/game/bases.rs
+game::bases,806d6270,fn_806d6270,translated,high,"work/ghidra/rel-d_basesNP/export/806d6270_FUN_806d6270.c; 800DAED0 release over the 0x5C motion records",src/game/bases.rs
+game::bases,806d64d0,fn_806d64d0,translated,high,"work/ghidra/rel-d_basesNP/export/806d64d0_FUN_806d64d0.c; true when +0xAC or +0xB0 is outside 0x807CB6FC..0x807CB700",src/game/bases.rs
+game::bases,806d6610,fn_806d6610,translated,medium,"work/ghidra/rel-d_basesNP/export/806d6610_FUN_806d6610.c; +0xF04 gates +0x3F4 vtable +0x1C; +0xF05 gates +0x498 vtable +0x14",src/game/bases.rs
+game::bases,806d6890,fn_806d6890,translated,high,"work/ghidra/rel-d_basesNP/export/806d6890_FUN_806d6890.c; walks the +0x10 child lists and reports a non-zero word at +4",src/game/bases.rs
+game::bases,806d68e0,fn_806d68e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806d68e0_FUN_806d68e0.c; linear search of count<=0x7F words; both bound failures return 1",src/game/bases.rs
+game::bases,806d6d50,fn_806d6d50,translated,medium,"work/ghidra/rel-d_basesNP/export/806d6d50_FUN_806d6d50.c; frame pass 6610/62C0/+0x394 vtable +0x10; bounds gate; four GQR callees by address",src/game/bases.rs
+game::bases,806d6e00,fn_806d6e00,translated,medium,"work/ghidra/rel-d_basesNP/export/806d6e00_FUN_806d6e00.c; calls +0x3F4 vtable +0x14 and returns 1",src/game/bases.rs

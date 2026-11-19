@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801acad0,fn_801acad0,translated,medium,"work/ghidra/main-gb/export/801acad0_FUN_801acad0.c; FPU context restore: state bit +0x1A2, FPSCR via mtfsf, 32 psq_l at +0x1C8 and 32 lfd at +0x90",src/audio/ax.rs
+audio::ax,801acc00,fn_801acc00,translated,medium,"work/ghidra/main-gb/export/801acc00_FUN_801acc00.c; FPU context save: sets +0x1A2 bit 0, 32 stfd at +0x90, mffs/stfd FPSCR at +0x190, 32 psq_st at +0x1C8",src/audio/ax.rs
+audio::ax,801ad3b0,fn_801ad3b0,translated,medium,"work/ghidra/main-gb/export/801ad3b0_FUN_801ad3b0.c; mfmsr/ori 0x2000/mtmsr/isync then the same 32 stfd + FPSCR + 32 psq_st snapshot as 801ACC00",src/audio/ax.rs
+audio::ax,801ae0e0,fn_801ae0e0,translated,medium,"work/ghidra/main-gb/export/801ae0e0_FUN_801ae0e0.c; first-stage OSExec: four arena blocks, IOS DVD probe, two 0x801D2130 reads, two-directory id scan, 0xD8 record read, launch",src/audio/ax.rs
+audio::ax,801ae840,fn_801ae840,translated,medium,"work/ghidra/main-gb/export/801ae840_FUN_801ae840.c; DVD init plus argv record, fn_801ae0e0, 0x910-word chunk reads, 2004_02_01 tag, decompressor start/read/stop and stage jump",src/audio/ax.rs
+audio::ax,801af180,fn_801af180,translated,medium,"work/ghidra/main-gb/export/801af180_FUN_801af180.c; 24x24 nibble glyph blit: 0x801B0860 decode, luma (colour*nib*0xEF)/0xEF1+0x10, parity-selected chroma bytes",src/audio/ax.rs
+audio::ax,801af7c0,fn_801af7c0,translated,medium,"work/ghidra/main-gb/export/801af7c0_FUN_801af7c0.c; 0x96000-byte YUV fill of 0x1E0 rows, VI call 0x801AF4B0, fn_801af180 banner text, 0x8015F730 report and halt",src/audio/ax.rs

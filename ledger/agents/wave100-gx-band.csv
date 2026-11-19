@@ -1,0 +1,19 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80280910,fn_80280910,translated,medium,"work/ghidra/main-gb/export/80280910_FUN_80280910.c; texture-grid flush driven by the +0xA2 mask bits 4/8/0x10/0x20/0x80/0x100",src/render/gx_band.rs
+render::gx_band,80280ba0,fn_80280ba0,translated,medium,"work/ghidra/main-gb/export/80280ba0_FUN_80280ba0.c; two-phase grid apply; +0x9E/+0xA0 select texture release mode 1/2",src/render/gx_band.rs
+render::gx_band,80281c90,fn_80281c90,translated,medium,"work/ghidra/main-gb/export/80281c90_FUN_80281c90.c; per-cell uv/offset push; scale from +0xE8 and batch 0x80260A80",src/render/gx_band.rs
+render::gx_band,80282040,fn_80282040,translated,medium,"work/ghidra/main-gb/export/80282040_FUN_80282040.c; screen-box wrap; band split on |f2-1| vs |f1| then final +1.0",src/render/gx_band.rs
+render::gx_band,80283420,fn_80283420,translated,medium,"work/ghidra/main-gb/export/80283420_FUN_80283420.c; pool chunk re-sort by the +0xA8 level then 0x802818C0 on visible nodes",src/render/gx_band.rs
+render::gx_band,802835b0,fn_802835b0,translated,medium,"work/ghidra/main-gb/export/802835b0_FUN_802835b0.c; 2^(n/3072) ratio via semitone table 0x802FA7B0 and 1/256 table 0x802FA7E0",src/render/gx_band.rs
+render::gx_band,802837c0,fn_802837c0,translated,medium,"work/ghidra/main-gb/export/802837c0_FUN_802837c0.c; ramp sample with midpoint normalisation; +0x04 flag and +0x05 output window",src/render/gx_band.rs
+render::gx_band,802838a0,fn_802838a0,translated,medium,"work/ghidra/main-gb/export/802838a0_FUN_802838a0.c; ramp sample; clamp to [0,2] and table pointer from 0x8034F288",src/render/gx_band.rs
+render::gx_band,80283ec0,fn_80283ec0,translated,medium,"work/ghidra/main-gb/export/80283ec0_FUN_80283ec0.c; virtual +0x20 probe then 8-argument timeline rebuild; sets +0x230 on success",src/render/gx_band.rs
+render::gx_band,80284040,fn_80284040,translated,high,"work/ghidra/main-gb/export/80284040_FUN_80284040.c; tail call to fn_80284b00 with the +0x110 header bias",src/render/gx_band.rs
+render::gx_band,80284050,fn_80284050,translated,high,"work/ghidra/main-gb/export/80284050_FUN_80284050.c; tail call to fn_80284b10 with the +0x110 header bias",src/render/gx_band.rs
+render::gx_band,80284700,fn_80284700,translated,medium,"work/ghidra/main-gb/export/80284700_FUN_80284700.c; material timeline rebuild; three lock pairs and the +0xE8..+0xF4 state words",src/render/gx_band.rs
+render::gx_band,80284f30,fn_80284f30,translated,medium,"work/ghidra/main-gb/export/80284f30_FUN_80284f30.c; texture-render request; virtual +0x0C decode then 0x80268A50 create",src/render/gx_band.rs
+render::gx_band,80286ca0,fn_80286ca0,translated,medium,"work/ghidra/main-gb/export/80286ca0_FUN_80286ca0.c; scroll-plane descriptor fill at +0xC020; three words + matrix + two floats",src/render/gx_band.rs
+render::gx_band,80286d80,fn_80286d80,translated,medium,"work/ghidra/main-gb/export/80286d80_FUN_80286d80.c; two-way bubble sort of one bucket list through the r4 comparator",src/render/gx_band.rs
+render::gx_band,80287930,fn_80287930,translated,medium,"work/ghidra/main-gb/export/80287930_FUN_80287930.c; child node spawn from a track record; matrix compose and +0xFC..+0x105 copy",src/render/gx_band.rs
+render::gx_band,8028dc70,fn_8028dc70,translated,medium,"work/ghidra/main-gb/export/8028dc70_FUN_8028dc70.c; byte keyframe track sampler; stride/mask tables 0x8034F3D8 and 0x8034F4D8",src/render/gx_band.rs
+render::gx_band,8028dfc0,fn_8028dfc0,translated,medium,"work/ghidra/main-gb/export/8028dfc0_FUN_8028dfc0.c; word keyframe track sampler; same tables as 0x8028DC70 with four-byte elements",src/render/gx_band.rs

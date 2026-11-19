@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806627f0,fn_806627f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806627f0_FUN_806627f0.c; +0x30 chain walk: five unrolled vmethod0(child,0xC) probes then self-recursive tail",src/game/bases.rs
+game::bases,80665240,fn_80665240,translated,medium,"work/ghidra/rel-d_basesNP/export/80665240_FUN_80665240.c; byte-identical chain walk to 0x806627F0 with its own recursive target",src/game/bases.rs
+game::bases,80666860,fn_80666860,translated,medium,"work/ghidra/rel-d_basesNP/export/80666860_FUN_80666860.c; byte-identical chain walk to 0x806627F0 with its own recursive target",src/game/bases.rs
+game::bases,806675e0,fn_806675e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806675e0_FUN_806675e0.c; byte-identical chain walk to 0x806627F0 with its own recursive target",src/game/bases.rs
+game::bases,8066f500,fn_8066f500,translated,medium,"work/ghidra/rel-d_basesNP/export/8066f500_FUN_8066f500.c; byte-identical chain walk to 0x806627F0 with its own recursive target",src/game/bases.rs
+game::bases,80671510,fn_80671510,translated,medium,"work/ghidra/rel-d_basesNP/export/80671510_FUN_80671510.c; clears +0x8A0; fn_80671280 count widened via 0x807C9110; binds wait_ball_big 0x807E9ED0; sound 0x54B",src/game/bases.rs
+game::bases,80671a80,fn_80671a80,translated,high,"work/ghidra/rel-d_basesNP/export/80671a80_FUN_80671a80.c; 0x8015F470 rebuilds from 1.2/0.8 step 0.013333334; actor slots 0x284 x3 and 0x288; +0xB0 = +0x6C4 + +0xE0*(0x288/0x284)",src/game/bases.rs
+game::bases,80673ba0,fn_80673ba0,translated,medium,"work/ghidra/rel-d_basesNP/export/80673ba0_FUN_80673ba0.c; byte-identical chain walk to 0x806627F0 with its own recursive target",src/game/bases.rs
+game::bases,80675960,fn_80675960,translated,high,"work/ghidra/rel-d_basesNP/export/80675960_FUN_80675960.c; 0x8008C380(+0x148); 60.0 window on +0x430 restarts at +0x4D8; 0x80169020/0x8008C4B0 guard; descriptor 0x80829E98",src/game/bases.rs
+game::bases,80678300,fn_80678300,translated,high,"work/ghidra/rel-d_basesNP/export/80678300_FUN_80678300.c; 32.0*+0xDC+8.0 over the +0x4DC list; flag bit 8 from fn_80678280 and +0x274&0x3F; rescales +0x24 by new/old +0x4C8",src/game/bases.rs

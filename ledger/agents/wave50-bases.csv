@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807001c0,fn_807001c0,translated,high,"work/ghidra/rel-d_basesNP/export/807001c0_FUN_807001c0.c; four +0x14 virtual calls over the 0x40-stride members at +0x544; returns 1",src/game/bases.rs
+game::bases,80700820,fn_80700820,translated,high,"work/ghidra/rel-d_basesNP/export/80700820_FUN_80700820.c; context getter 0x802DCD74; resets +0x8C4 then three 4-entry arrays at +0x8FC/+0x192C/+0x295C stride 0x128; 0x802DCDC0",src/game/bases.rs
+game::bases,80700c50,fn_80700c50,translated,high,"work/ghidra/rel-d_basesNP/export/80700c50_FUN_80700c50.c; standard registered-state destructor 0x8015F800 then optional 0x802B9280; returns object",src/game/bases.rs
+game::bases,80700cb0,fn_80700cb0,translated,high,"work/ghidra/rel-d_basesNP/export/80700cb0_FUN_80700cb0.c; standard registered-state destructor 0x8015F800 then optional 0x802B9280; returns object",src/game/bases.rs
+game::bases,80700df0,fn_80700df0,translated,high,"work/ghidra/rel-d_basesNP/export/80700df0_FUN_80700df0.c; five inline +0x30 child links tested through virtual +0x0C then recursion on the sixth",src/game/bases.rs
+game::bases,80700ed0,fn_80700ed0,translated,medium,"work/ghidra/rel-d_basesNP/export/80700ed0_FUN_80700ed0.c; skip text before ':' on both names and compare suffixes; 0x802E1C40/0x802E1AB4 identities inferred",src/game/bases.rs
+game::bases,80700ff0,fn_80700ff0,translated,high,"work/ghidra/rel-d_basesNP/export/80700ff0_FUN_80700ff0.c; alloc 0x418 via 0x801628C0; 0x80066FC0 base ctor; vtable 0x80803F08 at +0x60",src/game/bases.rs
+game::bases,80701530,fn_80701530,translated,high,"work/ghidra/rel-d_basesNP/export/80701530_FUN_80701530.c; 0x800671B0(object,0) then optional 0x80162920; returns object",src/game/bases.rs
+game::bases,807016a0,fn_807016a0,translated,high,"work/ghidra/rel-d_basesNP/export/807016a0_FUN_807016a0.c; standard registered-state destructor 0x8015F800 then optional 0x802B9280; returns object",src/game/bases.rs
+game::bases,80701a00,fn_80701a00,translated,high,"work/ghidra/rel-d_basesNP/export/80701a00_FUN_80701a00.c; 0xE8-byte element ctor: members at +0x00/+0x1C/+0x54/+0x74/+0xC0 and vtable 0x80329578 on +0xB4",src/game/bases.rs
+game::bases,80701a90,fn_80701a90,translated,high,"work/ghidra/rel-d_basesNP/export/80701a90_FUN_80701a90.c; element dtor: 0x801676A0(+0xB4) 0x80169D20(+0x74) and two 0x8016A780 members; optional free",src/game/bases.rs
+game::bases,80701b10,fn_80701b10,translated,high,"work/ghidra/rel-d_basesNP/export/80701b10_FUN_80701b10.c; 0x90-byte element ctor: 0x8016A740(+0x58) vtable 0x80317860 at +0x74; default 0x807CC530",src/game/bases.rs
+game::bases,80701b70,fn_80701b70,translated,high,"work/ghidra/rel-d_basesNP/export/80701b70_FUN_80701b70.c; element dtor 0x8016A780(+0x58) then optional 0x802B9280; returns object",src/game/bases.rs
+game::bases,80701c10,fn_80701c10,translated,medium,"work/ghidra/rel-d_basesNP/export/80701c10_FUN_80701c10.c; 0x80088DD0 with no recoverable argument then +0x74 slot 8 bound to +0x58 at priority 2",src/game/bases.rs
+game::bases,80701c90,fn_80701c90,translated,high,"work/ghidra/rel-d_basesNP/export/80701c90_FUN_80701c90.c; writes four colour words from 0x807CC544/548 and sets flags +0x10..+0x12",src/game/bases.rs
+game::bases,80701cd0,fn_80701cd0,translated,high,"work/ghidra/rel-d_basesNP/export/80701cd0_FUN_80701cd0.c; clears colour words +0x00..+0x08 and flags +0x10..+0x13; indices +0x14/+0x15=0xFF",src/game/bases.rs
+game::bases,80701d10,fn_80701d10,translated,medium,"work/ghidra/rel-d_basesNP/export/80701d10_FUN_80701d10.c; palette switch and per-frame fade using +0x14/+0x15 and +0x0C; constant roles inferred",src/game/bases.rs
+game::bases,80701e10,fn_80701e10,translated,high,"work/ghidra/rel-d_basesNP/export/80701e10_FUN_80701e10.c; 0x8016C890 with Wm_en_burst_m at 0x80804074 and position; clears +0x11",src/game/bases.rs
+game::bases,80701e60,fn_80701e60,translated,medium,"work/ghidra/rel-d_basesNP/export/80701e60_FUN_80701e60.c; copies position then emits event 0x2A6 with player handle from +0x14; clears +0x12",src/game/bases.rs
+game::bases,80701ef0,fn_80701ef0,translated,medium,"work/ghidra/rel-d_basesNP/export/80701ef0_FUN_80701ef0.c; copies position then emits event 0x2A7 with player handle from +0x15; clears +0x13",src/game/bases.rs
+game::bases,807020c0,fn_807020c0,translated,high,"work/ghidra/rel-d_basesNP/export/807020c0_FUN_807020c0.c; +0x1C slot 8 rebound to object at priority 7 then tail call fn_80701f80",src/game/bases.rs
+game::bases,80702110,fn_80702110,translated,medium,"work/ghidra/rel-d_basesNP/export/80702110_FUN_80702110.c; copies xyz/height into +0x20..+0x40; three 0x801C0BD0 matrices composed and applied to +0x74; colour cache 0x8082F1C0",src/game/bases.rs
+game::bases,807022d0,fn_807022d0,translated,high,"work/ghidra/rel-d_basesNP/export/807022d0_FUN_807022d0.c; +0x1C slot 0x10 and +0x74 slot 0x14",src/game/bases.rs
+game::bases,80702330,fn_80702330,translated,high,"work/ghidra/rel-d_basesNP/export/80702330_FUN_80702330.c; writes both index bytes and clears the timer byte",src/game/bases.rs
+game::bases,80702350,fn_80702350,translated,high,"work/ghidra/rel-d_basesNP/export/80702350_FUN_80702350.c; returns 1 when the current index is below 5 else sign of previous-minus-5",src/game/bases.rs
+game::bases,80702380,fn_80702380,translated,medium,"work/ghidra/rel-d_basesNP/export/80702380_FUN_80702380.c; fades the current (or both) 0x90-stride lights through 0x800D81D0 then steps both indices and the timer",src/game/bases.rs
+game::bases,80702470,fn_80702470,translated,high,"work/ghidra/rel-d_basesNP/export/80702470_FUN_80702470.c; if the flag is clear play sound 0x15 via 0x800B3600 then set it",src/game/bases.rs
+game::bases,807024c0,fn_807024c0,translated,high,"work/ghidra/rel-d_basesNP/export/807024c0_FUN_807024c0.c; if the flag is set stop sound 0x15 via 0x800B3750 then clear it",src/game/bases.rs
+game::bases,80702510,fn_80702510,translated,high,"work/ghidra/rel-d_basesNP/export/80702510_FUN_80702510.c; two literal zero byte stores",src/game/bases.rs
+game::bases,80702520,fn_80702520,translated,medium,"work/ghidra/rel-d_basesNP/export/80702520_FUN_80702520.c; two-frame debounce over one player record; forwards the unchanged player register to fn_80702470/fn_807024c0",src/game/bases.rs

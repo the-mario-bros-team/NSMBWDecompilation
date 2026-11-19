@@ -1,0 +1,39 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,800410f0,fn_800410f0,translated,medium,"work/ghidra/main-gb/export/800410f0_FUN_800410f0.c; binds the 0x284 descriptor; posts a seven-word record; plays sound 0x12; sets +0x408 = 1",src/game/player.rs
+game::player,80044950,fn_80044950,translated,high,"work/ghidra/main-gb/export/80044950_FUN_80044950.c; return &DAT_80377a04",src/game/player.rs
+game::player,80045a10,fn_80045a10,translated,medium,"work/ghidra/main-gb/export/80045a10_FUN_80045a10.c; stores +0x5C8; builds the +0x4E4 key from the 0x802EE948 record; calls 0x80045710 and 0x800459f0",src/game/player.rs
+game::player,80047280,fn_80047280,translated,high,"work/ghidra/main-gb/export/80047280_FUN_80047280.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047290,fn_80047290,translated,high,"work/ghidra/main-gb/export/80047290_FUN_80047290.c; return &DAT_80377a04",src/game/player.rs
+game::player,800472a0,fn_800472a0,translated,high,"work/ghidra/main-gb/export/800472a0_FUN_800472a0.c; return &DAT_80377a04",src/game/player.rs
+game::player,800472b0,fn_800472b0,translated,high,"work/ghidra/main-gb/export/800472b0_FUN_800472b0.c; return &DAT_80377a04",src/game/player.rs
+game::player,800472c0,fn_800472c0,translated,high,"work/ghidra/main-gb/export/800472c0_FUN_800472c0.c; return &DAT_80377a04",src/game/player.rs
+game::player,800472d0,fn_800472d0,translated,high,"work/ghidra/main-gb/export/800472d0_FUN_800472d0.c; return &DAT_80377a04",src/game/player.rs
+game::player,800472e0,fn_800472e0,translated,high,"work/ghidra/main-gb/export/800472e0_FUN_800472e0.c; return &DAT_80377a04",src/game/player.rs
+game::player,800472f0,fn_800472f0,translated,high,"work/ghidra/main-gb/export/800472f0_FUN_800472f0.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047300,fn_80047300,translated,high,"work/ghidra/main-gb/export/80047300_FUN_80047300.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047310,fn_80047310,translated,high,"work/ghidra/main-gb/export/80047310_FUN_80047310.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047320,fn_80047320,translated,high,"work/ghidra/main-gb/export/80047320_FUN_80047320.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047330,fn_80047330,translated,high,"work/ghidra/main-gb/export/80047330_FUN_80047330.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047340,fn_80047340,translated,high,"work/ghidra/main-gb/export/80047340_FUN_80047340.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047350,fn_80047350,translated,high,"work/ghidra/main-gb/export/80047350_FUN_80047350.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047360,fn_80047360,translated,high,"work/ghidra/main-gb/export/80047360_FUN_80047360.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047370,fn_80047370,translated,high,"work/ghidra/main-gb/export/80047370_FUN_80047370.c; return &DAT_80377a04",src/game/player.rs
+game::player,80047f10,fn_80047f10,translated,medium,"work/ghidra/main-gb/export/80047f10_FUN_80047f10.c; two-point probe through vtable +0xEC/+0xF8 and 0x80075CA0",src/game/player.rs
+game::player,8004d700,fn_8004d700,translated,high,"work/ghidra/main-gb/export/8004d700_FUN_8004d700.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d710,fn_8004d710,translated,high,"work/ghidra/main-gb/export/8004d710_FUN_8004d710.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d720,fn_8004d720,translated,high,"work/ghidra/main-gb/export/8004d720_FUN_8004d720.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d730,fn_8004d730,translated,high,"work/ghidra/main-gb/export/8004d730_FUN_8004d730.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d740,fn_8004d740,translated,high,"work/ghidra/main-gb/export/8004d740_FUN_8004d740.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d750,fn_8004d750,translated,high,"work/ghidra/main-gb/export/8004d750_FUN_8004d750.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d760,fn_8004d760,translated,high,"work/ghidra/main-gb/export/8004d760_FUN_8004d760.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d770,fn_8004d770,translated,high,"work/ghidra/main-gb/export/8004d770_FUN_8004d770.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d780,fn_8004d780,translated,high,"work/ghidra/main-gb/export/8004d780_FUN_8004d780.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d790,fn_8004d790,translated,high,"work/ghidra/main-gb/export/8004d790_FUN_8004d790.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d7a0,fn_8004d7a0,translated,high,"work/ghidra/main-gb/export/8004d7a0_FUN_8004d7a0.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d7b0,fn_8004d7b0,translated,high,"work/ghidra/main-gb/export/8004d7b0_FUN_8004d7b0.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d7c0,fn_8004d7c0,translated,high,"work/ghidra/main-gb/export/8004d7c0_FUN_8004d7c0.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d7d0,fn_8004d7d0,translated,high,"work/ghidra/main-gb/export/8004d7d0_FUN_8004d7d0.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d7e0,fn_8004d7e0,translated,high,"work/ghidra/main-gb/export/8004d7e0_FUN_8004d7e0.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d7f0,fn_8004d7f0,translated,high,"work/ghidra/main-gb/export/8004d7f0_FUN_8004d7f0.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d800,fn_8004d800,translated,high,"work/ghidra/main-gb/export/8004d800_FUN_8004d800.c; return &DAT_80377a04",src/game/player.rs
+game::player,8004d810,fn_8004d810,translated,high,"work/ghidra/main-gb/export/8004d810_FUN_8004d810.c; return &DAT_80377a04",src/game/player.rs

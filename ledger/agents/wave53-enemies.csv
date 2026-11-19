@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b18580,fn_80b18580,translated,high,work/ghidra/rel-d_enemiesNP/export/80b18580_FUN_80b18580.c; registration/dispose callback; 0x8015F800 then mode-gated 0x802B9280.,src/game/enemies.rs
+game::enemies,80b185e0,fn_80b185e0,translated,high,work/ghidra/rel-d_enemiesNP/export/80b185e0_FUN_80b185e0.c; second copy of the registration/dispose callback.,src/game/enemies.rs
+game::enemies,80b18640,fn_80b18640,translated,high,work/ghidra/rel-d_enemiesNP/export/80b18640_FUN_80b18640.c; constant producer returning 0x80358004.,src/game/enemies.rs
+game::enemies,80b18650,fn_80b18650,translated,high,work/ghidra/rel-d_enemiesNP/export/80b18650_FUN_80b18650.c; constant producer returning 0x80357BF4.,src/game/enemies.rs
+game::enemies,80b18740,fn_80b18740,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b18740_FUN_80b18740.c; walks the +0x30 chain while the child vtable slot +0xC returns 0.,src/game/enemies.rs
+game::enemies,80b18820,fn_80b18820,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b18820_FUN_80b18820.c; name-suffix predicate; strrchr 0x802E1C40 then strcmp 0x802E1AB4.,src/game/enemies.rs
+game::enemies,80b188e0,fn_80b188e0,partial,medium,work/ghidra/rel-d_enemiesNP/export/80b188e0_FUN_80b188e0.c; 48-byte deleting-destructor forwarder to 0x802DCBFC; hidden r12 this-adjust not modelled.,src/game/enemies.rs
+game::enemies,80b18910,fn_80b18910,partial,medium,work/ghidra/rel-d_enemiesNP/export/80b18910_FUN_80b18910.c; second 48-byte deleting-destructor forwarder; hidden r12 this-adjust not modelled.,src/game/enemies.rs
+game::enemies,80b18940,fn_80b18940,translated,high,work/ghidra/rel-d_enemiesNP/export/80b18940_FUN_80b18940.c; allocates 0x3C0; vtable 0x80B6A63C; timer +0x392 and vector +0x3B0..+0x3B8.,src/game/enemies.rs
+game::enemies,80b189c0,fn_80b189c0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b189c0_FUN_80b189c0.c; effect 0x33 gated by manager +0x150 < 8; per-direction offset row 0x80B32360/70.,src/game/enemies.rs
+game::enemies,80b18a60,fn_80b18a60,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b18a60_FUN_80b18a60.c; effect 0x85 gated by manager +0x14C < 8; offset row 0x80B32388/98.,src/game/enemies.rs
+game::enemies,80b18b00,fn_80b18b00,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b18b00_FUN_80b18b00.c; +0x392 countdown; +0x394 step mod 3; timer table 0x80B323A8; +0x3A8 advances mod 16.,src/game/enemies.rs
+game::enemies,80b18cc0,fn_80b18cc0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b18cc0_FUN_80b18cc0.c; player-side query 0x80064740 then collision helper 0x802DCBFC.,src/game/enemies.rs
+game::enemies,80b18d90,fn_80b18d90,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b18d90_FUN_80b18d90.c; loads four window floats +0x398..+0x3A4 then inverted 0x80B18F20 result.,src/game/enemies.rs
+game::enemies,80b19140,fn_80b19140,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b19140_FUN_80b19140.c; controller at +0x394 slot +0x10; resets +0x53C or retires via 0x80064D10.,src/game/enemies.rs
+game::enemies,80b191b0,fn_80b191b0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b191b0_FUN_80b191b0.c; camera-slot object 0x80429E98 + index 0x3B0; extent getter 0x8008E890 fills +0x52C..+0x538.,src/game/enemies.rs
+game::enemies,80b19250,fn_80b19250,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b19250_FUN_80b19250.c; scans four player slots via 0x8005FB90 and the 0x80429CA8 mask.,src/game/enemies.rs
+game::enemies,80b192f0,fn_80b192f0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b192f0_FUN_80b192f0.c; abs via 0x80101AA0 then x-window test +0x52C..+0x534.,src/game/enemies.rs
+game::enemies,80b19350,fn_80b19350,translated,high,work/ghidra/rel-d_enemiesNP/export/80b19350_FUN_80b19350.c; elapsed time from 0x800B30C0 minus +0x53C rounded through f32.,src/game/enemies.rs
+game::enemies,80b19390,fn_80b19390,translated,high,work/ghidra/rel-d_enemiesNP/export/80b19390_FUN_80b19390.c; empty predicate returning 0.,src/game/enemies.rs
+game::enemies,80b193a0,fn_80b193a0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b193a0_FUN_80b193a0.c; effect 0xC0 spawn with signed table 0x8042C1A0 and scale 0x80B32424/28; tags +0x5BC and +0x349.,src/game/enemies.rs
+game::enemies,80b194b0,fn_80b194b0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b194b0_FUN_80b194b0.c; releases the +0x524 projectile via 0x80162D00 and sets its +0x5EC.,src/game/enemies.rs
+game::enemies,80b19510,fn_80b19510,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b19510_FUN_80b19510.c; player-in-range state choice among 0x80B79038/78/B8.,src/game/enemies.rs
+game::enemies,80b195b0,fn_80b195b0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b195b0_FUN_80b195b0.c; +0x528 countdown then spawns 0xC0 via 0x80B193A0; delay (byte +0x05 + 1) * 30.,src/game/enemies.rs
+game::enemies,80b196a0,fn_80b196a0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80b196a0_FUN_80b196a0.c; reloads +0x528; idle 0x80B79038 or launch 0x80B79078 once the projectile is gone.,src/game/enemies.rs

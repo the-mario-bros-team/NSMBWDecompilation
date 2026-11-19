@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,801611c0,fn_801611c0,translated,high,"work/ghidra/main-gb/export/801611c0_FUN_801611c0.c; eight-octant angle table; f1/f2 recovered from the tail branch at 0x80160E80",src/resource/registry.rs
+resource::registry,8016dec0,fn_8016dec0,translated,medium,"work/ghidra/main-gb/export/8016dec0_FUN_8016dec0.c; eight corners, ten face directions at +0x30..+0xE0 and the +0x78 min/max box",src/resource/registry.rs
+resource::registry,8016f220,fn_8016f220,translated,medium,"work/ghidra/main-gb/export/8016f220_FUN_8016f220.c; four-player frame loop over 0x80377C88 and 0x80377CA8",src/resource/registry.rs
+resource::registry,8016fa10,fn_8016fa10,translated,medium,"work/ghidra/main-gb/export/8016fa10_FUN_8016fa10.c; two-pass glyph draw plus the +0x04 countdown and 0x8016FE40 retire call",src/resource/registry.rs

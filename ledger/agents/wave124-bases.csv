@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806a13c0,fn_806a13c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a13c0_FUN_806a13c0.c; five-link +0x30 chain walk; recurses on the sixth node",src/game/bases.rs
+game::bases,806a14a0,fn_806a14a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a14a0_FUN_806a14a0.c; ':'-suffix name compare via 802E1C40/802E1AB4",src/game/bases.rs
+game::bases,806a1850,fn_806a1850,translated,medium,"work/ghidra/rel-d_basesNP/export/806a1850_FUN_806a1850.c; Wm_en_landsmoke burst; 800757B0 then 8016C890",src/game/bases.rs
+game::bases,806a1f40,fn_806a1f40,translated,high,"work/ghidra/rel-d_basesNP/export/806a1f40_FUN_806a1f40.c; registered destructor 8015F800 + 802B9280",src/game/bases.rs
+game::bases,806a1fa0,fn_806a1fa0,translated,high,"work/ghidra/rel-d_basesNP/export/806a1fa0_FUN_806a1fa0.c; returns constant 8082B52C",src/game/bases.rs
+game::bases,806a2090,fn_806a2090,translated,medium,"work/ghidra/rel-d_basesNP/export/806a2090_FUN_806a2090.c; five-link +0x30 chain walk (second copy)",src/game/bases.rs
+game::bases,806a2170,fn_806a2170,translated,medium,"work/ghidra/rel-d_basesNP/export/806a2170_FUN_806a2170.c; ':'-suffix name compare (second copy)",src/game/bases.rs
+game::bases,806a22c0,fn_806a22c0,translated,high,"work/ghidra/rel-d_basesNP/export/806a22c0_FUN_806a22c0.c; two-threshold classifier 807CA37C/807CA380",src/game/bases.rs
+game::bases,806a2300,fn_806a2300,translated,medium,"work/ghidra/rel-d_basesNP/export/806a2300_FUN_806a2300.c; Wm_jr_misshit sounds 5B7/5B8/5B9; effect pointers 807CA384..38C",src/game/bases.rs
+game::bases,806a6450,fn_806a6450,translated,medium,"work/ghidra/rel-d_basesNP/export/806a6450_FUN_806a6450.c; collision: +0x38C hit branch, state 8082BAC8, 806C2140 spark",src/game/bases.rs
+game::bases,806a6b10,fn_806a6b10,translated,medium,"work/ghidra/rel-d_basesNP/export/806a6b10_FUN_806a6b10.c; slot allocator; bitmap +0x14, count +0x04, elements +0x08",src/game/bases.rs
+game::bases,806a70c0,fn_806a70c0,translated,high,"work/ghidra/rel-d_basesNP/export/806a70c0_FUN_806a70c0.c; countLeadingZeros(+0x730) >> 5",src/game/bases.rs
+game::bases,806a72e0,fn_806a72e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a72e0_FUN_806a72e0.c; 8006DB30/EF40/FA40 landing probes; tags 0/1/2",src/game/bases.rs
+game::bases,806a7cc0,fn_806a7cc0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a7cc0_FUN_806a7cc0.c; clears every +0x14 bitmap bit and +0x18 live count",src/game/bases.rs
+game::bases,806a7f30,fn_806a7f30,translated,medium,"work/ghidra/rel-d_basesNP/export/806a7f30_FUN_806a7f30.c; 802B9270(count*4, heap, 4) into +0x08",src/game/bases.rs
+game::bases,806a8360,fn_806a8360,translated,medium,"work/ghidra/rel-d_basesNP/export/806a8360_FUN_806a8360.c; five-link +0x30 chain walk (third copy)",src/game/bases.rs
+game::bases,806a8440,fn_806a8440,translated,medium,"work/ghidra/rel-d_basesNP/export/806a8440_FUN_806a8440.c; ':'-suffix name compare (third copy)",src/game/bases.rs
+game::bases,806a8980,fn_806a8980,translated,medium,"work/ghidra/rel-d_basesNP/export/806a8980_FUN_806a8980.c; slot spawn 0x428+index*4; profile 0x135; +0x774/+0x77C",src/game/bases.rs
+game::bases,806a8a40,fn_806a8a40,translated,high,"work/ghidra/rel-d_basesNP/export/806a8a40_FUN_806a8a40.c; index = (x - origin)/width over 0x38 slots",src/game/bases.rs
+game::bases,806a8b90,fn_806a8b90,translated,medium,"work/ghidra/rel-d_basesNP/export/806a8b90_FUN_806a8b90.c; collision: +0x38C hit branch, state 8082BBC8, burst 806A8DD0",src/game/bases.rs
+game::bases,806a8dd0,fn_806a8dd0,translated,high,"work/ghidra/rel-d_basesNP/export/806a8dd0_FUN_806a8dd0.c; Wm_en_burst_m + Wm_en_firesnk_icehitsmk_h; sound 51F",src/game/bases.rs
+game::bases,806a8ee0,fn_806a8ee0,translated,high,"work/ghidra/rel-d_basesNP/export/806a8ee0_FUN_806a8ee0.c; fireplace per-frame: panes +0x524/+0x64C, timers +0x778/+0x774",src/game/bases.rs
+game::bases,806a9990,fn_806a9990,translated,medium,"work/ghidra/rel-d_basesNP/export/806a9990_FUN_806a9990.c; tag +0x6C4; modes 0/1 -> 8082BC44, 2 -> +0x6C0",src/game/bases.rs
+game::bases,806a99f0,fn_806a99f0,translated,high,"work/ghidra/rel-d_basesNP/export/806a99f0_FUN_806a99f0.c; returns +0x6C0",src/game/bases.rs
+game::bases,806a9ea0,fn_806a9ea0,translated,high,"work/ghidra/rel-d_basesNP/export/806a9ea0_FUN_806a9ea0.c; releases +0x544/+0x5BC and conditionally +0x638",src/game/bases.rs
+game::bases,806aa190,fn_806aa190,translated,medium,"work/ghidra/rel-d_basesNP/export/806aa190_FUN_806aa190.c; animation frame from vtable +0x2C0 into +0x102",src/game/bases.rs
+game::bases,806ac260,fn_806ac260,translated,high,"work/ghidra/rel-d_basesNP/export/806ac260_FUN_806ac260.c; 3-entry and 7-entry 0x18-stride tables at +0x650/+0x6CC",src/game/bases.rs
+game::bases,806ac430,fn_806ac430,translated,medium,"work/ghidra/rel-d_basesNP/export/806ac430_FUN_806ac430.c; animation frame from vtable +0x2B8 into +0x102",src/game/bases.rs
+game::bases,806addf0,fn_806addf0,translated,high,"work/ghidra/rel-d_basesNP/export/806addf0_FUN_806addf0.c; registered destructor 8015F800 + 802B9280",src/game/bases.rs
+game::bases,806ae9d0,fn_806ae9d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806ae9d0_FUN_806ae9d0.c; per-frame 0x6E0 actor; counter +0x480, sound 58D",src/game/bases.rs

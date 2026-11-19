@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8061b890,fn_8061b890,translated,medium,"work/ghidra/rel-d_basesNP/export/8061b890_FUN_8061b890.c; dGameOver_c save-image round trip; 4 palette + 10x42 body; 7 releases",src/game/bases.rs
+game::bases,8062be20,fn_8062be20,translated,high,"work/ghidra/rel-d_basesNP/export/8062be20_FUN_8062be20.c; course-select cursor step; dir bits 1/2/4/8; cell +0x248/+0x24C bit 0",src/game/bases.rs
+game::bases,80648770,fn_80648770,translated,medium,"work/ghidra/rel-d_basesNP/export/80648770_FUN_80648770.c; 64-bit mask shifter; +0x358/+0x35C, masks +0x1A490/+0x1A494",src/game/bases.rs
+game::bases,8064cd60,fn_8064cd60,translated,medium,"work/ghidra/rel-d_basesNP/export/8064cd60_FUN_8064cd60.c; I_kinoko variant loader; variant +0x6E4; wait2 + I_kinoko_switch",src/game/bases.rs
+game::bases,80703dc0,fn_80703dc0,translated,high,"work/ghidra/rel-d_basesNP/export/80703dc0_FUN_80703dc0.c; boat-light bands; timers +0xE0A, mask +0xE11, returns popcount",src/game/bases.rs
+game::bases,8074cba0,fn_8074cba0,translated,medium,"work/ghidra/rel-d_basesNP/export/8074cba0_FUN_8074cba0.c; join-panel tick; travel +0x408, state +0x420, re-arm 320/576",src/game/bases.rs
+game::bases,80752730,fn_80752730,translated,medium,"work/ghidra/rel-d_basesNP/export/80752730_FUN_80752730.c; obj_waterfloat matrix; spin +0x488/+0x48C, blend +0x4A0",src/game/bases.rs
+game::bases,8076b710,fn_8076b710,translated,high,"work/ghidra/rel-d_basesNP/export/8076b710_FUN_8076b710.c; cobKinoko binder; panes +0x1A4/+0x280, clips kinoko/trunk",src/game/bases.rs
+game::bases,8078a8f0,fn_8078a8f0,translated,high,"work/ghidra/rel-d_basesNP/export/8078a8f0_FUN_8078a8f0.c; Kameck binder; g3d/kameck.brres; clips +0x44C/+0x4BC/+0x564",src/game/bases.rs
+game::bases,80792570,fn_80792570,translated,medium,"work/ghidra/rel-d_basesNP/export/80792570_FUN_80792570.c; map-enemy states 1..5; returns 1 on state 5; effect 100",src/game/bases.rs

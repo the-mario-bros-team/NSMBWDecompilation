@@ -1,0 +1,22 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80130340,fn_80130340,translated,medium,"work/ghidra/main-gb/export/80130340_FUN_80130340.c; +0x2060 re-arm and +0x294 event gate over +0xEA4 and +0x14A4",src/game/worldmap.rs
+game::worldmap,80131990,fn_80131990,translated,medium,"work/ghidra/main-gb/export/80131990_FUN_80131990.c; vertical/lateral easing with the +0x11C state ladder",src/game/worldmap.rs
+game::worldmap,80131f20,fn_80131f20,translated,medium,"work/ghidra/main-gb/export/80131f20_FUN_80131f20.c; three-axis matrix chain and two-point ground probe",src/game/worldmap.rs
+game::worldmap,80132340,fn_80132340,translated,medium,"work/ghidra/main-gb/export/80132340_FUN_80132340.c; Wm_mr_ivy midpoint placement over two mount samples",src/game/worldmap.rs
+game::worldmap,80132580,fn_80132580,translated,medium,"work/ghidra/main-gb/export/80132580_FUN_80132580.c; forward/backward probes and +0x1538 commit",src/game/worldmap.rs
+game::worldmap,80132a80,fn_80132a80,translated,medium,"work/ghidra/main-gb/export/80132a80_FUN_80132a80.c; +0x2B8 variant speed and turn ladder",src/game/worldmap.rs
+game::worldmap,80133950,fn_80133950,translated,medium,"work/ghidra/main-gb/export/80133950_FUN_80133950.c; placement offset and +0x1544 height under the 801337e0 gate",src/game/worldmap.rs
+game::worldmap,80133b60,fn_80133b60,translated,medium,"work/ghidra/main-gb/export/80133b60_FUN_80133b60.c; partner slide on input bit 4 with the +0x3C8 veto",src/game/worldmap.rs
+game::worldmap,80133e10,fn_80133e10,partial,low,"work/ghidra/main-gb/export/80133e10_FUN_80133e10.c; variant vector slot call; export reports an unrecovered jump table at 0x80133E58",src/game/worldmap.rs
+game::worldmap,80135070,fn_80135070,translated,medium,"work/ghidra/main-gb/export/80135070_FUN_80135070.c; +0x110 speed from the +0x3D4 gate and facing table",src/game/worldmap.rs
+game::worldmap,80135810,fn_80135810,translated,medium,"work/ghidra/main-gb/export/80135810_FUN_80135810.c; forward probe snap with the material test",src/game/worldmap.rs
+game::worldmap,801358e0,fn_801358e0,translated,medium,"work/ghidra/main-gb/export/801358e0_FUN_801358e0.c; landing commit with flag 0x4000",src/game/worldmap.rs
+game::worldmap,801359c0,fn_801359c0,translated,medium,"work/ghidra/main-gb/export/801359c0_FUN_801359c0.c; ground/lean frame with three probes and the +0x5C hand-off",src/game/worldmap.rs
+game::worldmap,801363c0,fn_801363c0,translated,medium,"work/ghidra/main-gb/export/801363c0_FUN_801363c0.c; trick height attempt and 801396c0 commit",src/game/worldmap.rs
+game::worldmap,80137550,fn_80137550,translated,medium,"work/ghidra/main-gb/export/80137550_FUN_80137550.c; forwards 80137590 and clears +0x14AC",src/game/worldmap.rs
+game::worldmap,80137e20,fn_80137e20,translated,medium,"work/ghidra/main-gb/export/80137e20_FUN_80137e20.c; +0x14A0 variant reset with the +0x2514 publish",src/game/worldmap.rs
+game::worldmap,801396c0,fn_801396c0,translated,medium,"work/ghidra/main-gb/export/801396c0_FUN_801396c0.c; slide contact commit with the +0xF8 height slot",src/game/worldmap.rs
+game::worldmap,8013a880,fn_8013a880,translated,medium,"work/ghidra/main-gb/export/8013a880_FUN_8013a880.c; attach-flag clear and 800D6940 dismount record",src/game/worldmap.rs
+game::worldmap,8013bb90,fn_8013bb90,translated,medium,"work/ghidra/main-gb/export/8013bb90_FUN_8013bb90.c; horizontal distance publish with 80064610 event packing",src/game/worldmap.rs
+game::worldmap,8013e850,fn_8013e850,translated,medium,"work/ghidra/main-gb/export/8013e850_FUN_8013e850.c; class-2 list scan for the nearest ride anchor",src/game/worldmap.rs
+game::worldmap,8013eff0,fn_8013eff0,translated,medium,"work/ghidra/main-gb/export/8013eff0_FUN_8013eff0.c; three-phase partner sequence at +0x1458/+0x145C",src/game/worldmap.rs

@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,80026ca0,fn_80026ca0,translated,high,work/ghidra/main-gb/export/80026ca0_FUN_80026ca0.c; blr at 0x80026D80; sole caller at 0x800393A0,src/ui/hud.rs
+ui::hud,8002d260,fn_8002d260,translated,high,work/ghidra/main-gb/export/8002d260_FUN_8002d260.c; blr at 0x8002D330; tail call of 0x8002D0C0 at 0x8002D234,src/ui/hud.rs

@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80240100,fn_80240100,translated,medium,"work/ghidra/main-gb/export/80240100_FUN_80240100.c; 32-bit Hermite key track; twin of 0x8023F000",src/runtime/os.rs
+runtime::os,80240240,fn_80240240,translated,medium,"work/ghidra/main-gb/export/80240240_FUN_80240240.c; 16-bit quantised Hermite track; s16 key/value/tangent",src/runtime/os.rs
+runtime::os,802405b0,fn_802405b0,translated,low,"work/ghidra/main-gb/export/802405b0_FUN_802405b0.c; three-channel anim evaluator; raw 8/16/32-bit and byte/half/float LUT formats",src/runtime/os.rs
+runtime::os,8024fef0,fn_8024fef0,translated,medium,"work/ghidra/main-gb/export/8024fef0_FUN_8024fef0.c; composed-matrix and inverse/normal palette builder",src/runtime/os.rs

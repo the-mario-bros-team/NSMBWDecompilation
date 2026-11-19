@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,8021022c,fn_8021022c,translated,medium,"work/ghidra/main-gb/export/8021022c_FUN_8021022c.c; six-argument HID gate over the sixteen 0x34-byte device records; status 1/4/5 then builder 0x802122B0",src/runtime/bt.rs
+runtime::bt,802128a0,fn_802128a0,translated,high,"work/ghidra/main-gb/export/802128a0_FUN_802128a0.c; L2CAP connect request: six rejection paths; links the PSM block at ccb+0x30; returns the CCB local CID",src/runtime/bt.rs
+runtime::bt,80212ad4,fn_80212ad4,translated,medium,"work/ghidra/main-gb/export/80212ad4_FUN_80212ad4.c; connect response; identifier compared with ccb+0x36; events 0x15/0x16; result block prefix is uninitialised stack",src/runtime/bt.rs
+runtime::bt,80213120,fn_80213120,translated,medium,"work/ghidra/main-gb/export/80213120_FUN_80213120.c; compares BD_ADDR with r2-0x4C70 (0x8042E410) and writes +0x58 on up to four blocks in state 4",src/runtime/bt.rs
+runtime::bt,80214f04,fn_80214f04,translated,medium,"work/ghidra/main-gb/export/80214f04_FUN_80214f04.c; congestion report, queue push or drop, QoS re-issue and queue drain with the timer arm pair",src/runtime/bt.rs
+runtime::bt,802151d0,fn_802151d0,translated,high,"work/ghidra/main-gb/export/802151d0_FUN_802151d0.c; splits the load word over the active blocks; writes +0x34/+0x36/+0x3A/+0x3C/+0x3E",src/runtime/bt.rs
+runtime::bt,80215368,fn_80215368,translated,high,"work/ghidra/main-gb/export/80215368_FUN_80215368.c; little-endian handle/amount records; ceiling clamp at +0x34; load at +0x38; global credited total",src/runtime/bt.rs
+runtime::bt,80215460,fn_80215460,translated,medium,"work/ghidra/main-gb/export/80215460_FUN_80215460.c; retains a start fragment, appends continuations under the 0x6A0 cap, patches the retained length",src/runtime/bt.rs
+runtime::bt,802159bc,fn_802159bc,translated,medium,"work/ghidra/main-gb/export/802159bc_FUN_802159bc.c; receive dispatcher: hold queue for unknown handles, then connectionless/connection/CCB event 0x13",src/runtime/bt.rs
+runtime::bt,802167ac,fn_802167ac,translated,medium,"work/ghidra/main-gb/export/802167ac_FUN_802167ac.c; hold poll: cancel or keep the timer, decrement each held packet and re-submit the expired ones",src/runtime/bt.rs
+runtime::bt,80216c98,fn_80216c98,translated,medium,"work/ghidra/main-gb/export/80216c98_FUN_80216c98.c; command reject; reason 1 gives two payload bytes, reason 2 gives four; allocates through 0x80216BD4",src/runtime/bt.rs
+runtime::bt,802175e0,fn_802175e0,translated,medium,"work/ghidra/main-gb/export/802175e0_FUN_802175e0.c; configuration reject; fixed header plus option echo with the (type&0x7F)<4 skip rule",src/runtime/bt.rs
+runtime::bt,8021843c,fn_8021843c,translated,medium,"work/ghidra/main-gb/export/8021843c_FUN_8021843c.c; create-connection gate; state bytes {0,0,0,3} then {0,0,0,2}; SCO query 0x80207674 and feature bit 0x20",src/runtime/bt.rs
+runtime::bt,8021c904,fn_8021c904,translated,medium,"work/ghidra/main-gb/export/8021c904_FUN_8021c904.c; DLC open sends event 9; otherwise completes establishment with status 1",src/runtime/bt.rs
+runtime::bt,8021c96c,fn_8021c96c,translated,medium,"work/ghidra/main-gb/export/8021c96c_FUN_8021c96c.c; event 0x0B with the status word; third argument is dead in the export",src/runtime/bt.rs
+runtime::bt,8021c9dc,fn_8021c9dc,translated,medium,"work/ghidra/main-gb/export/8021c9dc_FUN_8021c9dc.c; parameter negotiation: credit capped at min(+0x9C,7) and 7; flag bit 1; PN builder and 0x3C timer",src/runtime/bt.rs
+runtime::bt,8021cae4,fn_8021cae4,translated,medium,"work/ghidra/main-gb/export/8021cae4_FUN_8021cae4.c; disconnect result sets flag bit 2 or 4; 0x91 builder with trailer 0x3F7F",src/runtime/bt.rs
+runtime::bt,8021cbc0,fn_8021cbc0,translated,medium,"work/ghidra/main-gb/export/8021cbc0_FUN_8021cbc0.c; port state 2 and event state 4; control flag +0x64 bit 0; DLC flag bit 3",src/runtime/bt.rs
+runtime::bt,8021cc64,fn_8021cc64,translated,medium,"work/ghidra/main-gb/export/8021cc64_FUN_8021cc64.c; credit mode stored inverted at +0x5E; DLC flag bit 3; descriptor is the port's own +0x5A",src/runtime/bt.rs
+runtime::bt,8021cd08,fn_8021cd08,translated,medium,"work/ghidra/main-gb/export/8021cd08_FUN_8021cd08.c; line status sets DLC flag bit 4 and builds the short 0x91 response",src/runtime/bt.rs
+runtime::bt,8021cda0,fn_8021cda0,translated,medium,"work/ghidra/main-gb/export/8021cda0_FUN_8021cda0.c; release indication: event 0x0C with no payload",src/runtime/bt.rs
+runtime::bt,8021cdcc,fn_8021cdcc,translated,medium,"work/ghidra/main-gb/export/8021cdcc_FUN_8021cdcc.c; data indication: event 0x0E forwarding the packet",src/runtime/bt.rs
+runtime::bt,8021d270,fn_8021d270,translated,medium,"work/ghidra/main-gb/export/8021d270_FUN_8021d270.c; PN frame layout; DLCI recovered from extraout_r4; 0x81/0x11 fields and big-endian MTU",src/runtime/bt.rs
+runtime::bt,8021d8b4,fn_8021d8b4,translated,medium,"work/ghidra/main-gb/export/8021d8b4_FUN_8021d8b4.c; mux frame classifier; address/control/length decode; DISC/SABME/UA/UIH/UI with per-type tests",src/runtime/bt.rs
+runtime::bt,8021f5c0,fn_8021f5c0,translated,high,"work/ghidra/main-gb/export/8021f5c0_FUN_8021f5c0.c; SDP record reader; six u16 attributes 0x200-0x205 and three 0x50-byte blobs",src/runtime/bt.rs

@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,801b3c30,fn_801b3c30,translated,high,"work/ghidra/main-gb/export/801b3c30_FUN_801b3c30.c; hot-reset fallback: re-init StateTM when either sda flag is set, then 0x801B69C0 + OSReset.c assert 0x40a",src/runtime/os.rs
+runtime::os,801b3c90,fn_801b3c90,translated,high,"work/ghidra/main-gb/export/801b3c90_FUN_801b3c90.c; latched vertical timing (0x8038E520/E524) else 0xCC003024 >> 3",src/runtime/os.rs
+runtime::os,801b4300,fn_801b4300,translated,high,"work/ghidra/main-gb/export/801b4300_FUN_801b4300.c; returns 0x8038E92C status word folded by run_power_callbacks",src/runtime/os.rs
+runtime::os,801b4b40,fn_801b4b40,translated,high,"work/ghidra/main-gb/export/801b4b40_FUN_801b4b40.c; u16 at +0x2C8 == 0 or 8 -> 1 through the -flag >> 31 idiom",src/runtime/os.rs
+runtime::os,801b5f70,fn_801b5f70,translated,high,"work/ghidra/main-gb/export/801b5f70_FUN_801b5f70.c; one load of the u32 at +0x2D4",src/runtime/os.rs
+runtime::os,801b5fa0,fn_801b5fa0,translated,high,"work/ghidra/main-gb/export/801b5fa0_FUN_801b5fa0.c; recovered body is empty (return only)",src/runtime/os.rs
+runtime::os,801b64d0,fn_801b64d0,translated,high,"work/ghidra/main-gb/export/801b64d0_FUN_801b64d0.c; UTF-16 read with surrogate pair, 0x10000 bias, returns next cursor or 0",src/runtime/os.rs
+runtime::os,801b6540,fn_801b6540,translated,high,"work/ghidra/main-gb/export/801b6540_FUN_801b6540.c; 32-entry table scan at 0x80333DC0 for codes 0x80..0x9F, +0x80 bias",src/runtime/os.rs
+runtime::os,801b65c0,fn_801b65c0,translated,high,"work/ghidra/main-gb/export/801b65c0_FUN_801b65c0.c; two-level lookup through the 256-word page table at 0x8033F800",src/runtime/os.rs
+runtime::os,801b6600,fn_801b6600,translated,high,"work/ghidra/main-gb/export/801b6600_FUN_801b6600.c; one load of sda(-0x4F70)",src/runtime/os.rs
+runtime::os,801b6610,fn_801b6610,translated,high,"work/ghidra/main-gb/export/801b6610_FUN_801b6610.c; one load of sda(-0x6148)",src/runtime/os.rs
+runtime::os,801b6620,fn_801b6620,translated,high,"work/ghidra/main-gb/export/801b6620_FUN_801b6620.c; low-memory 0x80003130/34 copied into the two SDA caches",src/runtime/os.rs
+runtime::os,801b6640,fn_801b6640,translated,high,"work/ghidra/main-gb/export/801b6640_FUN_801b6640.c; hot-plug hook swap (sda -0x4F4C) + 0x1000 eventhook ioctl; returns previous hook",src/runtime/os.rs
+runtime::os,801b6730,fn_801b6730,translated,high,"work/ghidra/main-gb/export/801b6730_FUN_801b6730.c; shutdown hook swap (sda -0x4F50), literal twin of 0x801B6640",src/runtime/os.rs
+runtime::os,801b6820,fn_801b6820,translated,high,"work/ghidra/main-gb/export/801b6820_FUN_801b6820.c; opens /dev/stm/immediate and /dev/stm/eventhook, resets hooks, arms 0x1000 ioctl",src/runtime/os.rs
+runtime::os,801b6a40,fn_801b6a40,translated,medium,"work/ghidra/main-gb/export/801b6a40_FUN_801b6a40.c; 0x5001 encode word a<<7 | c | b<<3 plus the eight request-block stores; restore mask swept by Ghidra",src/runtime/os.rs
+runtime::os,801b6b40,fn_801b6b40,translated,high,"work/ghidra/main-gb/export/801b6b40_FUN_801b6b40.c; 0x3002 disarm ioctl, clears sda(-0x4F58) on success, -6 when not ready",src/runtime/os.rs
+runtime::os,801b6bf0,fn_801b6bf0,translated,high,"work/ghidra/main-gb/export/801b6bf0_FUN_801b6bf0.c; async event callback: 0x20000 with the 0xCC003000 bit-16 test, 0x800 hook, re-arm",src/runtime/os.rs
+runtime::os,801b7470,fn_801b7470,translated,medium,"work/ghidra/main-gb/export/801b7470_FUN_801b7470.c; 32-byte NAND record write, word 0 = sum of words 1..7; callee roles inferred from sizes",src/runtime/os.rs
+runtime::os,801b7560,fn_801b7560,translated,medium,"work/ghidra/main-gb/export/801b7560_FUN_801b7560.c; record read + checksum compare, zero-fills destination on every failure path",src/runtime/os.rs
+runtime::os,801b7690,fn_801b7690,translated,medium,"work/ghidra/main-gb/export/801b7690_FUN_801b7690.c; firmware version byte >4 and !=9 gates the network shutdown calls and their three report strings",src/runtime/os.rs
+runtime::os,801b78b0,fn_801b78b0,translated,medium,"work/ghidra/main-gb/export/801b78b0_FUN_801b78b0.c; /dev/net/kd/request open/ioctl-1/close with -29 and -42 error remapping",src/runtime/os.rs
+runtime::os,801b79b0,fn_801b79b0,translated,medium,"work/ghidra/main-gb/export/801b79b0_FUN_801b79b0.c; async 0x28 request, request block 0x8038F660, reply 0x8038F680, callback 0x801B7C10",src/runtime/os.rs
+runtime::os,801b7a20,fn_801b7a20,translated,high,"work/ghidra/main-gb/export/801b7a20_FUN_801b7a20.c; retry state machine over sda -0x4F14/-0x4F18/-0x4F1C/-0x4F20 with the give-up string",src/runtime/os.rs
+runtime::os,801bb160,fn_801bb160,translated,high,"work/ghidra/main-gb/export/801bb160_FUN_801bb160.c; mask 0xFC0000FF with fields at bits 16..21 and 8..13, stored to 0x8033FF94 and 0xCD006430",src/runtime/os.rs
+runtime::os,801bb840,fn_801bb840,translated,high,"work/ghidra/main-gb/export/801bb840_FUN_801bb840.c; SISetSamplingRate: clamp 11, TV-format table select, VI parity multiplier",src/runtime/os.rs
+runtime::os,801bb920,fn_801bb920,translated,high,"work/ghidra/main-gb/export/801bb920_FUN_801bb920.c; re-applies sda(-0x4ED0) through 0x801BB840",src/runtime/os.rs
+runtime::os,801bc3e0,fn_801bc3e0,translated,medium,"work/ghidra/main-gb/export/801bc3e0_FUN_801bc3e0.c; swap sda(-0x4E40) under interrupt mask, returns previous; mask argument swept by Ghidra",src/runtime/os.rs
+runtime::os,801bc430,fn_801bc430,translated,medium,"work/ghidra/main-gb/export/801bc430_FUN_801bc430.c; swap sda(-0x4E44), twin of 0x801BC3E0; mask argument swept by Ghidra",src/runtime/os.rs

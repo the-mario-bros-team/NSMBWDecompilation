@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ab1a10,fn_80ab1a10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1a10_FUN_80ab1a10.c; three-argument contact probe 0x80097B30 clears +0x99A",src/game/enemies.rs
+game::enemies,80ab1a80,fn_80ab1a80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1a80_FUN_80ab1a80.c; writes the three-word displacement from the +0xD0 probe block",src/game/enemies.rs
+game::enemies,80ab1b10,fn_80ab1b10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab1b10_FUN_80ab1b10.c; player query + has_state 0x3A + 128.0 and +-0x2000 gates; halfword 0x4000 * 0.5 from the REL bytes",src/game/enemies.rs
+game::enemies,80ab1ca0,fn_80ab1ca0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1ca0_FUN_80ab1ca0.c; clamp +0xB0 to 0x80429DD0 +0x8FEC4 minus 16.0",src/game/enemies.rs
+game::enemies,80ab1ce0,fn_80ab1ce0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab1ce0_FUN_80ab1ce0.c; revalidates the cached player index at +0x99C",src/game/enemies.rs
+game::enemies,80ab1d60,fn_80ab1d60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab1d60_FUN_80ab1d60.c; aim via 0x801611C0 plus 0x4000 mirror and 0x8015F4F0 at the given rate",src/game/enemies.rs
+game::enemies,80ab1df0,fn_80ab1df0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab1df0_FUN_80ab1df0.c; tail call through vtable slot +0x1C of the +0x544 holder",src/game/enemies.rs
+game::enemies,80ab1e00,fn_80ab1e00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1e00_FUN_80ab1e00.c; sound 0x209 and Wm_en_burst_water01/02 at +0x8A8",src/game/enemies.rs
+game::enemies,80ab1ec0,fn_80ab1ec0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1ec0_FUN_80ab1ec0.c; visibility query 0x80096E60 then fn_80ab1e00",src/game/enemies.rs
+game::enemies,80ab1f10,fn_80ab1f10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1f10_FUN_80ab1f10.c; step one axis to +0x964 target at +0x95C rate",src/game/enemies.rs
+game::enemies,80ab1f70,fn_80ab1f70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1f70_FUN_80ab1f70.c; integrate +0x960 into +0x900 with the +0x978 floor",src/game/enemies.rs
+game::enemies,80ab1fa0,fn_80ab1fa0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1fa0_FUN_80ab1fa0.c; +-0x18E1 sweep of +0x104 and the four-value +0x99D byte",src/game/enemies.rs
+game::enemies,80ab2050,fn_80ab2050,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab2050_FUN_80ab2050.c; main frame handler: heading recentre, two limit dispatches, owner query, countdown",src/game/enemies.rs
+game::enemies,80ab2280,fn_80ab2280,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab2280_FUN_80ab2280.c; variant 1 rebind through 0x80AB1780 and 0x28-frame timer",src/game/enemies.rs
+game::enemies,80ab23f0,fn_80ab23f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab23f0_FUN_80ab23f0.c; variant 2 rebind plus +0x958 2.0 and the 10-frame timer",src/game/enemies.rs
+game::enemies,80ab3100,fn_80ab3100,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab3100_FUN_80ab3100.c; destructor 0x8015F800 and conditional heap release",src/game/enemies.rs
+game::enemies,80ab3220,fn_80ab3220,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab3220_FUN_80ab3220.c; 0x802DCBFC forwarder; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80ab3250,fn_80ab3250,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab3250_FUN_80ab3250.c; second 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80ab3280,fn_80ab3280,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab3280_FUN_80ab3280.c; 0x878-byte constructor with three holder layers and two 0x802D7AA0 sub-objects",src/game/enemies.rs
+game::enemies,80ab3ae0,fn_80ab3ae0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab3ae0_FUN_80ab3ae0.c; heading +0x800 and the two base frame steps; state helper at 0x80429CA0==1",src/game/enemies.rs
+game::enemies,80ab3b40,fn_80ab3b40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab3b40_FUN_80ab3b40.c; walk clip bind plus the 0x80B75308 speed table",src/game/enemies.rs
+game::enemies,80ab3c90,fn_80ab3c90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab3c90_FUN_80ab3c90.c; walk clip bind plus the 0x80B75320 speed table",src/game/enemies.rs
+game::enemies,80ab3e00,fn_80ab3e00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab3e00_FUN_80ab3e00.c; four-state fall and bounce machine over +0x360",src/game/enemies.rs
+game::enemies,80ab4070,fn_80ab4070,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab4070_FUN_80ab4070.c; push-record switch to state 4 and dispatch 0x80358104",src/game/enemies.rs
+game::enemies,80ab40f0,fn_80ab40f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab40f0_FUN_80ab40f0.c; six speed/reset stores then walk clip rebind at 2.0",src/game/enemies.rs
+game::enemies,80ab41a0,fn_80ab41a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab41a0_FUN_80ab41a0.c; touch-down lift to 1500.0 with the bit-16 clear and dispatch",src/game/enemies.rs
+game::enemies,80ab4250,fn_80ab4250,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab4250_FUN_80ab4250.c; four-variant limit/speed tables 0x80B2FC28..0x80B2FC58",src/game/enemies.rs
+game::enemies,80ab4380,fn_80ab4380,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab4380_FUN_80ab4380.c; limit snap with 1500.0 + 16.0 * spawn bits and the two dispatches",src/game/enemies.rs
+game::enemies,80ab4510,fn_80ab4510,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab4510_FUN_80ab4510.c; four-phase touch-down sequence over +0x870",src/game/enemies.rs

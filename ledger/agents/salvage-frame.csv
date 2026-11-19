@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::frame,80107850,fn_80107850,translated,high,work/ghidra/main-gb/export/80107850_FUN_80107850.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/frame.rs
+engine::frame,80109340,fn_80109340,translated,high,work/ghidra/main-gb/export/80109340_FUN_80109340.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/frame.rs
+engine::frame,80107f10,fn_80107f10,translated,high,work/ghidra/main-gb/export/80107f10_FUN_80107f10.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/frame.rs

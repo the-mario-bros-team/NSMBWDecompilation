@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80648cb0,fn_80648cb0,translated,high,"work/ghidra/rel-d_basesNP/export/80648cb0_FUN_80648cb0.c; four-state vertical driver, +0x1A49C..+0x1A4F6 block, sine at 0x80237BD0",src/game/bases.rs
+game::bases,80699380,fn_80699380,translated,medium,"work/ghidra/rel-d_basesNP/export/80699380_FUN_80699380.c; mode select, transform offset, collision descriptor, three 12.20 records, hitbox block, returns 1",src/game/bases.rs
+game::bases,8069c2c0,fn_8069c2c0,translated,high,"work/ghidra/rel-d_basesNP/export/8069c2c0_FUN_8069c2c0.c; rider tick, clip-idle gate, sector flags +0xD30..+0xD34, launch timer, orientation/collision tail",src/game/bases.rs
+game::bases,806e4f30,fn_806e4f30,translated,high,"work/ghidra/rel-d_basesNP/export/806e4f30_FUN_806e4f30.c; lift_zen_kaihei idle/open clip cross-fade, counter +0x48C, state +0x588",src/game/bases.rs
+game::bases,807318f0,fn_807318f0,translated,high,"work/ghidra/rel-d_basesNP/export/807318f0_FUN_807318f0.c; four-direction burst emitter, qr3 u16 angle, tables 0x807CD750/60/70, mask +0xA05",src/game/bases.rs
+game::bases,80760700,fn_80760700,translated,high,"work/ghidra/rel-d_basesNP/export/80760700_FUN_80760700.c; cobCourse door enter/attach, world byte 0x8042A24D, spawn 0x284/0x29F, cues 0x22/0x24/0x25/0x2B/0x30",src/game/bases.rs
+game::bases,80762c40,fn_80762c40,translated,high,"work/ghidra/rel-d_basesNP/export/80762c40_FUN_80762c40.c; clears +0x254",src/game/bases.rs
+game::bases,80765200,fn_80765200,translated,high,"work/ghidra/rel-d_basesNP/export/80765200_FUN_80765200.c; sets +0x47C = 2",src/game/bases.rs
+game::bases,80765290,fn_80765290,translated,high,"work/ghidra/rel-d_basesNP/export/80765290_FUN_80765290.c; sets +0x47C = 3",src/game/bases.rs
+game::bases,8076c6b0,fn_8076c6b0,translated,high,"work/ghidra/rel-d_basesNP/export/8076c6b0_FUN_8076c6b0.c; clears +0x190",src/game/bases.rs
+game::bases,8076d8a0,fn_8076d8a0,translated,high,"work/ghidra/rel-d_basesNP/export/8076d8a0_FUN_8076d8a0.c; sets +0x35C = -1 then tail-branches to 0x8076D8B0",src/game/bases.rs
+game::bases,8076d8b0,fn_8076d8b0,translated,high,"work/ghidra/rel-d_basesNP/export/8076d8b0_FUN_8076d8b0.c; clears +0x33C, seeds +0xDC/E0/E4 with 0.01 from 0x807CF234",src/game/bases.rs
+game::bases,8076da10,fn_8076da10,translated,high,"work/ghidra/rel-d_basesNP/export/8076da10_FUN_8076da10.c; writes +0x340 = 0x807CF238[index], entries 0/5/7/0xB",src/game/bases.rs
+game::bases,8076fe40,fn_8076fe40,translated,high,"work/ghidra/rel-d_basesNP/export/8076fe40_FUN_8076fe40.c; 0x808327E0 != 0 and *(i32*)(+8) >= 3",src/game/bases.rs
+game::bases,807b77e0,fn_807b77e0,translated,high,"work/ghidra/rel-d_basesNP/export/807b77e0_FUN_807b77e0.c; stage/world-map teardown, four pane bytes, eight owner releases, returns 0/1",src/game/bases.rs
+game::bases,807bec10,fn_807bec10,translated,medium,"work/ghidra/rel-d_basesNP/export/807bec10_FUN_807bec10.c; two-point trail lerp, 0.1 distance snap/release, preset-B effect 0x6D",src/game/bases.rs

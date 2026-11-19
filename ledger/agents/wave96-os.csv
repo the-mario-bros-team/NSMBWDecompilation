@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80241020,fn_80241020,translated,medium,"work/ghidra/main-gb/export/80241020_FUN_80241020.c; tag-selected curve reader; three components + returned slot",src/runtime/os.rs
+runtime::os,80241710,fn_80241710,translated,medium,"work/ghidra/main-gb/export/80241710_FUN_80241710.c; unit vector to yaw/pitch/roll; 0x80237BA0 sqrt + two 0x80237D10 angles",src/runtime/os.rs
+runtime::os,80242c30,fn_80242c30,translated,medium,"work/ghidra/main-gb/export/80242c30_FUN_80242c30.c; slot constructor; size count*2+0x30; three vtable literals",src/runtime/os.rs
+runtime::os,80242d80,fn_80242d80,translated,medium,"work/ghidra/main-gb/export/80242d80_FUN_80242d80.c; kernel at +0x28; store at +0x18; vtable slot +0x0C notify",src/runtime/os.rs
+runtime::os,80243f10,fn_80243f10,translated,medium,"work/ghidra/main-gb/export/80243f10_FUN_80243f10.c; width + stride 0x5C refresh through 0x8023F370",src/runtime/os.rs
+runtime::os,802456f0,fn_802456f0,translated,medium,"work/ghidra/main-gb/export/802456f0_FUN_802456f0.c; width + stride 0x44 refresh through 0x8023F5A0",src/runtime/os.rs
+runtime::os,80246cf0,fn_80246cf0,translated,medium,"work/ghidra/main-gb/export/80246cf0_FUN_80246cf0.c; width + stride 0xE8 refresh through 0x8023FA30",src/runtime/os.rs
+runtime::os,80247140,fn_80247140,translated,medium,"work/ghidra/main-gb/export/80247140_FUN_80247140.c; four-nibble mask copy; five-word groups",src/runtime/os.rs
+runtime::os,802481b0,fn_802481b0,translated,medium,"work/ghidra/main-gb/export/802481b0_FUN_802481b0.c; two-array block; 0x8034E690/638/5E0 vtable sequence",src/runtime/os.rs
+runtime::os,80248990,fn_80248990,translated,medium,"work/ghidra/main-gb/export/80248990_FUN_80248990.c; entry block; size sel*0x4C+count*2+0x34; 0x80241690 per entry",src/runtime/os.rs
+runtime::os,80248b80,fn_80248b80,translated,medium,"work/ghidra/main-gb/export/80248b80_FUN_80248b80.c; width + stride 0x4C refresh through 0x80241690",src/runtime/os.rs
+runtime::os,8024aac0,fn_8024aac0,translated,medium,"work/ghidra/main-gb/export/8024aac0_FUN_8024aac0.c; installs matrix slot; 0x801C07A0 scratch + two 0x801C0540 copies",src/runtime/os.rs
+runtime::os,8024b0e0,fn_8024b0e0,translated,medium,"work/ghidra/main-gb/export/8024b0e0_FUN_8024b0e0.c; channel table init; +0x24 byte slots; 0x801C6880 per entry",src/runtime/os.rs
+runtime::os,8024b1e0,fn_8024b1e0,translated,low,"work/ghidra/main-gb/export/8024b1e0_FUN_8024b1e0.c; material masks + colour bytes; nested cache-bit search",src/runtime/os.rs
+runtime::os,8024b720,fn_8024b720,translated,medium,"work/ghidra/main-gb/export/8024b720_FUN_8024b720.c; eight-slot cache compare; 0x803DEFC0 copy; pair table 0x803DEF50",src/runtime/os.rs
+runtime::os,8024b990,fn_8024b990,translated,medium,"work/ghidra/main-gb/export/8024b990_FUN_8024b990.c; three-word cache; u16 mask 0x803DF140; invalidates 0x803DF0C0 bit",src/runtime/os.rs
+runtime::os,8024bae0,fn_8024bae0,translated,high,"work/ghidra/main-gb/export/8024bae0_FUN_8024bae0.c; five packed-state bytes; masks 0xFFFFFFFC and 0xFFFFFFFE",src/runtime/os.rs
+runtime::os,8024bcb0,fn_8024bcb0,translated,medium,"work/ghidra/main-gb/export/8024bcb0_FUN_8024bcb0.c; last-record latch sda(-0x49C4); pair index replay",src/runtime/os.rs
+runtime::os,8024c0e0,fn_8024c0e0,translated,medium,"work/ghidra/main-gb/export/8024c0e0_FUN_8024c0e0.c; 0x8023D5B0 header + three 0x8023D5F0 matrices",src/runtime/os.rs
+runtime::os,8024c2b0,fn_8024c2b0,translated,medium,"work/ghidra/main-gb/export/8024c2b0_FUN_8024c2b0.c; vertex/colour/texcoord FIFO writes; masks 0xFFFF87C3/C1",src/runtime/os.rs
+runtime::os,8024c960,fn_8024c960,translated,low,"work/ghidra/main-gb/export/8024c960_FUN_8024c960.c; eight channel matrices; 0x803DF180 kernel/value table",src/runtime/os.rs
+runtime::os,8024cc10,fn_8024cc10,translated,medium,"work/ghidra/main-gb/export/8024cc10_FUN_8024cc10.c; pair replay + 0x803DF144 three-word cache",src/runtime/os.rs
+runtime::os,8024cdc0,fn_8024cdc0,translated,medium,"work/ghidra/main-gb/export/8024cdc0_FUN_8024cdc0.c; screen selector + eight thresholds via 0x8024A150/A0D0",src/runtime/os.rs
+runtime::os,8024d2c0,fn_8024d2c0,translated,medium,"work/ghidra/main-gb/export/8024d2c0_FUN_8024d2c0.c; slot latch 0x803DF980; 0x30 table 0x803DF988",src/runtime/os.rs
+runtime::os,8024d420,fn_8024d420,translated,medium,"work/ghidra/main-gb/export/8024d420_FUN_8024d420.c; four slot arrays 0x803E29E8/2FE8/37E8/3DE8",src/runtime/os.rs

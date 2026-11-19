@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,8015f730,fn_8015f730,translated,medium,"work/ghidra/main-gb/export/8015f730_FUN_8015f730.c; 0x80-byte va_list frame: r3..r10 save at +0x08, f1..f8 save at +0x28, tag 0x01000000 and two area pointers at +0x68; tail call 0x8015F7B0(format, va_list)",src/engine/display.rs

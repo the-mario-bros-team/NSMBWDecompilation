@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a19a70,fn_80a19a70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a19a70_FUN_80a19a70.c; g3d/bilikyu.brres + bilikyu node binder, body_wait clip",src/game/enemies.rs
+game::enemies,80a19bd0,fn_80a19bd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a19bd0_FUN_80a19bd0.c; 0x80358004 retire path, 0x1CE effect, returns 1",src/game/enemies.rs
+game::enemies,80a19df0,fn_80a19df0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a19df0_FUN_80a19df0.c; +0x724 bob added to y, matrix rebuild into +0x7C/+0x544",src/game/enemies.rs
+game::enemies,80a19ee0,fn_80a19ee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a19ee0_FUN_80a19ee0.c; +0x720 counter bit 0x20 selects the +0x724 direction",src/game/enemies.rs
+game::enemies,80a19f30,fn_80a19f30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a19f30_FUN_80a19f30.c; animation matrix 0 of +0x544 copied to +0x5E8",src/game/enemies.rs
+game::enemies,80a1a150,fn_80a1a150,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1a150_FUN_80a1a150.c; contact 9 switches to state 0x80B6F598",src/game/enemies.rs
+game::enemies,80a1a200,fn_80a1a200,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1a200_FUN_80a1a200.c; body_wait clip replay, weight 0",src/game/enemies.rs
+game::enemies,80a1a290,fn_80a1a290,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1a290_FUN_80a1a290.c; 0xD step, Wm_en_birikyu effect through +0x5F4 slot +0xA0",src/game/enemies.rs
+game::enemies,80a1a300,fn_80a1a300,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1a300_FUN_80a1a300.c; body_stop clip, +0x71C=0x78, +0x38E bit 3 cleared",src/game/enemies.rs
+game::enemies,80a1a3a0,fn_80a1a3a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1a3a0_FUN_80a1a3a0.c; +0x71C countdown; export drops the fn_80a19ee0 receiver",src/game/enemies.rs
+game::enemies,80a1c790,fn_80a1c790,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1c790_FUN_80a1c790.c; single indexed read of the 0x80B2B5E0 byte table",src/game/enemies.rs
+game::enemies,80a1c7a0,fn_80a1c7a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1c7a0_FUN_80a1c7a0.c; four player bytes +0x66C..+0x66F, 0x237 sound, +0xEC flip",src/game/enemies.rs
+game::enemies,80a1cb70,fn_80a1cb70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1cb70_FUN_80a1cb70.c; 0x3C message, flags = slot<<16 | word&0xFFFCFFFF",src/game/enemies.rs
+game::enemies,80a1cbd0,fn_80a1cbd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1cbd0_FUN_80a1cbd0.c; Wm_en_burst_s spawn, 0x296 sound, 0x1F1 message by +0x824 variant",src/game/enemies.rs
+game::enemies,80a1cce0,fn_80a1cce0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1cce0_FUN_80a1cce0.c; 0x191 drain over +0x80C, returns to 0x80A40F30",src/game/enemies.rs
+game::enemies,80a1cd70,fn_80a1cd70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1cd70_FUN_80a1cd70.c; five guards then 0x80A1C8F0(this,0), latches +0x822",src/game/enemies.rs
+game::enemies,80a1cdf0,fn_80a1cdf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1cdf0_FUN_80a1cdf0.c; 0xB0 message with the 0x80B2B670 variant offset",src/game/enemies.rs
+game::enemies,80a1cea0,fn_80a1cea0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1cea0_FUN_80a1cea0.c; 0x3C message, 0x80B2B678 side table, 0x04000000 flag",src/game/enemies.rs
+game::enemies,80a1cf30,fn_80a1cf30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1cf30_FUN_80a1cf30.c; 0x191 message, flags = side<<16 | 10",src/game/enemies.rs
+game::enemies,80a1cfb0,fn_80a1cfb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1cfb0_FUN_80a1cfb0.c; +0x804==1 and +0x800==4 predicate",src/game/enemies.rs
+game::enemies,80a1cfe0,fn_80a1cfe0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1cfe0_FUN_80a1cfe0.c; 0x80077860 id selector over the 0x80B2B690 table",src/game/enemies.rs
+game::enemies,80a1d130,fn_80a1d130,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1d130_FUN_80a1d130.c; +0x800 switch 2/3/5/A/C/D/18/1E, export drops three receivers",src/game/enemies.rs
+game::enemies,80a1d330,fn_80a1d330,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1d330_FUN_80a1d330.c; 0x80A1CFE0 then 0x80A1D130; export drops the first argument",src/game/enemies.rs
+game::enemies,80a1d4f0,fn_80a1d4f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1d4f0_FUN_80a1d4f0.c; 0x80A1CFE0 then 0x80162510; export drops the first argument",src/game/enemies.rs
+game::enemies,80a1d600,fn_80a1d600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1d600_FUN_80a1d600.c; +0x7EC anchor seed then the GQR-blocked 0x80A1D530",src/game/enemies.rs
+game::enemies,80a1d690,fn_80a1d690,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1d690_FUN_80a1d690.c; +0x81A angle stepped by 0x300, flips at 0x1800",src/game/enemies.rs
+game::enemies,80a1d950,fn_80a1d950,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1d950_FUN_80a1d950.c; 0x8015F800 register, conditional 0x802B9280 release",src/game/enemies.rs
+game::enemies,80a1dad0,fn_80a1dad0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1dad0_FUN_80a1dad0.c; 0x730-byte allocator, vtable 0x80B387B8, +0x534/+0x698 holders",src/game/enemies.rs

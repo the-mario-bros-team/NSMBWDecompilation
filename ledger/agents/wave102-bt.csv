@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80220524,fn_80220524,translated,medium,"work/ghidra/main-gb/export/80220524_FUN_80220524.c; SDP attribute deleter: record walk descriptor shift value-pointer fixup and value-area compaction",src/runtime/bt.rs
+runtime::bt,80221440,fn_80221440,translated,medium,"work/ghidra/main-gb/export/80221440_FUN_80221440.c; recursive SDP attribute-tree builder over the database node area at database+0x68",src/runtime/bt.rs
+runtime::bt,80222698,fn_80222698,translated,medium,"work/ghidra/main-gb/export/80222698_FUN_80222698.c; SDP ServiceSearchResponse PDU id 3 with record handles and continuation index",src/runtime/bt.rs
+runtime::bt,80222aa8,fn_80222aa8,translated,medium,"work/ghidra/main-gb/export/80222aa8_FUN_80222aa8.c; SDP ServiceAttributeResponse PDU id 5 built at ccb+0x26 with short/long sequence header",src/runtime/bt.rs
+runtime::bt,802260b0,fn_802260b0,translated,medium,"work/ghidra/main-gb/export/802260b0_thunk_FUN_80225eb0.c; 4-byte tail branch to the pool allocator fn_80225eb0",src/runtime/bt.rs
+runtime::bt,80227800,fn_80227800,translated,medium,"work/ghidra/main-gb/export/80227800_thunk_FUN_80225410.c; 4-byte tail branch to the IPC helper fn_80225410",src/runtime/bt.rs
+runtime::bt,80227a40,fn_80227a40,translated,medium,"work/ghidra/main-gb/export/80227a40_thunk_FUN_80224e60.c; 4-byte tail branch to the IPC helper fn_80224e60",src/runtime/bt.rs
+runtime::bt,8022863c,fn_8022863c,translated,high,"work/ghidra/main-gb/export/8022863c_FUN_8022863c.c; empty EXI callback slot (single blr)",src/runtime/bt.rs
+runtime::bt,80228640,fn_80228640,translated,high,"work/ghidra/main-gb/export/80228640_FUN_80228640.c; empty EXI callback slot (single blr)",src/runtime/bt.rs
+runtime::bt,802293b0,fn_802293b0,translated,medium,"work/ghidra/main-gb/export/802293b0_FUN_802293b0.c; palette cursor advance for event kinds 9 and 10 returning 3/1/0",src/runtime/bt.rs
+runtime::bt,80229860,fn_80229860,translated,medium,"work/ghidra/main-gb/export/80229860_FUN_80229860.c; same cursor advance with the 0x802308D0 step instead of fn_8022df30",src/runtime/bt.rs
+runtime::bt,80229990,fn_80229990,translated,medium,"work/ghidra/main-gb/export/80229990_FUN_80229990.c; palette cursor rectangle union for event kinds 9 and 10",src/runtime/bt.rs
+runtime::bt,8022c9c0,fn_8022c9c0,translated,medium,"work/ghidra/main-gb/export/8022c9c0_FUN_8022c9c0.c; GX default render state with five layer branches or fn_8022daf0 for a live object",src/runtime/bt.rs
+runtime::bt,8022d2f0,fn_8022d2f0,translated,medium,"work/ghidra/main-gb/export/8022d2f0_FUN_8022d2f0.c; two scale fields divided by the inner width and height counts",src/runtime/bt.rs
+runtime::bt,8022d3c0,fn_8022d3c0,translated,medium,"work/ghidra/main-gb/export/8022d3c0_FUN_8022d3c0.c; one scale value divided by the height count stored in both scale fields",src/runtime/bt.rs
+runtime::bt,8022d5f0,fn_8022d5f0,translated,medium,"work/ghidra/main-gb/export/8022d5f0_FUN_8022d5f0.c; scroll advance over the inner page descriptor with the 0x43 blend flag",src/runtime/bt.rs
+runtime::bt,8022dfb0,fn_8022dfb0,translated,medium,"work/ghidra/main-gb/export/8022dfb0_FUN_8022dfb0.c; formats and renders a text copy then returns the measured width",src/runtime/bt.rs
+runtime::bt,8022e1c0,fn_8022e1c0,translated,medium,"work/ghidra/main-gb/export/8022e1c0_FUN_8022e1c0.c; formats and renders a text copy then returns the measured height",src/runtime/bt.rs
+runtime::bt,8022e5b0,fn_8022e5b0,translated,medium,"work/ghidra/main-gb/export/8022e5b0_FUN_8022e5b0.c; formats into the scratch buffer and renders a text copy into the caller rect",src/runtime/bt.rs
+runtime::bt,8022eaf0,fn_8022eaf0,translated,medium,"work/ghidra/main-gb/export/8022eaf0_FUN_8022eaf0.c; formats appends without newline then writes the advanced cursor back",src/runtime/bt.rs
+runtime::bt,8022eed0,fn_8022eed0,translated,medium,"work/ghidra/main-gb/export/8022eed0_FUN_8022eed0.c; appends a prepared buffer through 0x8022FA70 and writes the cursor back",src/runtime/bt.rs
+runtime::bt,8022f010,fn_8022f010,translated,medium,"work/ghidra/main-gb/export/8022f010_FUN_8022f010.c; formats and appends one line with the newline flag",src/runtime/bt.rs
+runtime::bt,8022b3c0,fn_8022b3c0,translated,medium,"work/ghidra/main-gb/export/8022b3c0_thunk_FUN_801ac710.c; 4-byte tail branch to the empty cache stub 0x801AC710",src/runtime/bt.rs
+runtime::bt,8022b3d0,fn_8022b3d0,translated,medium,"work/ghidra/main-gb/export/8022b3d0_thunk_FUN_801ac740.c; 4-byte tail branch to the empty cache stub 0x801AC740",src/runtime/bt.rs
+runtime::bt,8022b3e0,fn_8022b3e0,translated,medium,"work/ghidra/main-gb/export/8022b3e0_thunk_FUN_801ac770.c; 4-byte tail branch to the cache-range walker 0x801AC770",src/runtime/bt.rs

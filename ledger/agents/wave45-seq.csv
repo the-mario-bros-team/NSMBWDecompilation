@@ -1,0 +1,32 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,80275040,fn_80275040,translated,high,"work/ghidra/main-gb/export/80275040_FUN_80275040.c; six +0x30..+0x44 stores, +0x48/+0x4C/+0x50/+0x60 small-data defaults, byte +0x58 = 1, calls 0x80238110",src/audio/seq.rs
+audio::seq,802750c0,fn_802750c0,translated,high,"work/ghidra/main-gb/export/802750c0_FUN_802750c0.c; f32 store at +0x48",src/audio/seq.rs
+audio::seq,802750d0,fn_802750d0,translated,high,"work/ghidra/main-gb/export/802750d0_FUN_802750d0.c; f32 store at +0x4C",src/audio/seq.rs
+audio::seq,802750e0,fn_802750e0,translated,high,"work/ghidra/main-gb/export/802750e0_FUN_802750e0.c; f32 store at +0x50",src/audio/seq.rs
+audio::seq,802750f0,fn_802750f0,translated,high,"work/ghidra/main-gb/export/802750f0_FUN_802750f0.c; vtable pair 0x8034F080/0x8034F098, list head this+0x10 at +0x10/+0x14, free list 0x803FCC88, count 0x20",src/audio/seq.rs
+audio::seq,80275150,fn_80275150,translated,high,"work/ghidra/main-gb/export/80275150_FUN_80275150.c; info header word0+word2+word5 times 0x28",src/audio/seq.rs
+audio::seq,802751b0,fn_802751b0,translated,high,"work/ghidra/main-gb/export/802751b0_FUN_802751b0.c; forwards param_3/param_4 plus stride 0x28 to 0x8026D860 and returns 1",src/audio/seq.rs
+audio::seq,802753f0,fn_802753f0,translated,high,"work/ghidra/main-gb/export/802753f0_FUN_802753f0.c; vtable 0x8034F0B8, four-slot array ctor 0x802DC9A0, +0x48/+0x4C/+0x50 defaults, limits 0x7FFFFFFF/1 via 0x80269D00",src/audio/seq.rs
+audio::seq,802754b0,fn_802754b0,translated,high,"work/ghidra/main-gb/export/802754b0_FUN_802754b0.c; null guard, four-slot teardown, array dtor 0x802DCA98, optional free 0x802B9280",src/audio/seq.rs
+audio::seq,80275560,fn_80275560,translated,high,"work/ghidra/main-gb/export/80275560_FUN_80275560.c; word load at this + index*0x10 + 8",src/audio/seq.rs
+audio::seq,80275570,fn_80275570,translated,high,"work/ghidra/main-gb/export/80275570_FUN_80275570.c; forwards slot this + index*0x10 + 8 to 0x80269D00",src/audio/seq.rs
+audio::seq,80275640,fn_80275640,translated,high,"work/ghidra/main-gb/export/80275640_FUN_80275640.c; vtable 0x8034F0D8, +0x04 = 0, bytes +0x08 = 0x2F and +0x09 = 0",src/audio/seq.rs
+audio::seq,80275670,fn_80275670,translated,high,"work/ghidra/main-gb/export/80275670_FUN_80275670.c; non-null and destroy > 0 frees via 0x802B9280, returns this",src/audio/seq.rs
+audio::seq,802756b0,fn_802756b0,translated,high,"work/ghidra/main-gb/export/802756b0_FUN_802756b0.c; (-word | word) >> 31 non-zero test of +0x04",src/audio/seq.rs
+audio::seq,802756d0,fn_802756d0,translated,high,"work/ghidra/main-gb/export/802756d0_FUN_802756d0.c; word store at +0x04",src/audio/seq.rs
+audio::seq,802756e0,fn_802756e0,translated,high,"work/ghidra/main-gb/export/802756e0_FUN_802756e0.c; +0x04 = 0, byte +0x08 = 0x2F, byte +0x09 = 0",src/audio/seq.rs
+audio::seq,80275700,fn_80275700,translated,high,"work/ghidra/main-gb/export/80275700_FUN_80275700.c; forwards *(this+4) to 0x80276940",src/audio/seq.rs
+audio::seq,80275710,fn_80275710,translated,high,"work/ghidra/main-gb/export/80275710_FUN_80275710.c; forwards *(this+4) to 0x80276980",src/audio/seq.rs
+audio::seq,80275720,fn_80275720,translated,high,"work/ghidra/main-gb/export/80275720_FUN_80275720.c; forwards *(this+4) to 0x802769D0",src/audio/seq.rs
+audio::seq,80275730,fn_80275730,translated,high,"work/ghidra/main-gb/export/80275730_FUN_80275730.c; 0x80276E00(*(this+4), target+0x34, value)",src/audio/seq.rs
+audio::seq,80275740,fn_80275740,translated,high,"work/ghidra/main-gb/export/80275740_FUN_80275740.c; 0x80276E00(*(this+4), target+0x38, value)",src/audio/seq.rs
+audio::seq,802757d0,fn_802757d0,translated,medium,"work/ghidra/main-gb/export/802757d0_FUN_802757d0.c; forwards *(this+4) and the out pointer to 0x802768B0; out/return recovered from five callers",src/audio/seq.rs
+audio::seq,80275a80,fn_80275a80,translated,medium,"work/ghidra/main-gb/export/80275a80_FUN_80275a80.c; packed 0x802DCD6C object/id, six-word record via 0x80276660, prefix join and vtable +0x18/+0x1C loaders",src/audio/seq.rs
+audio::seq,80275ba0,fn_80275ba0,translated,medium,"work/ghidra/main-gb/export/80275ba0_FUN_80275ba0.c; same as 0x80275A80 but passes record words 4/5",src/audio/seq.rs
+audio::seq,80275cc0,fn_80275cc0,translated,high,"work/ghidra/main-gb/export/80275cc0_FUN_80275cc0.c; strlen, append / when the last byte is not a separator, terminate, copy via 0x802E19F8",src/audio/seq.rs
+audio::seq,80275d40,fn_80275d40,translated,high,"work/ghidra/main-gb/export/80275d40_FUN_80275d40.c; seven zero stores at +0x28..+0x40",src/audio/seq.rs
+audio::seq,80275d70,fn_80275d70,translated,high,"work/ghidra/main-gb/export/80275d70_FUN_80275d70.c; RSAR magic 0x52534152, u16 +6 >= 0x100 clamp, ten-word header copy",src/audio/seq.rs
+audio::seq,80275e20,fn_80275e20,translated,high,"work/ghidra/main-gb/export/80275e20_FUN_80275e20.c; base header+8 at +0x2C, five zero-relative offsets at +8/+0xC/+0x10/+0x14/+0x18 turned into pointers",src/audio/seq.rs
+audio::seq,80275ed0,fn_80275ed0,translated,high,"work/ghidra/main-gb/export/80275ed0_FUN_80275ed0.c; stores header+8 at +0x28",src/audio/seq.rs
+audio::seq,80275ee0,fn_80275ee0,translated,medium,"work/ghidra/main-gb/export/80275ee0_FUN_80275ee0.c; table bounds via 0x80283A60, version-gated type byte at +5 or entry+0x16, returns 1/2/3 or 0",src/audio/seq.rs
+audio::seq,80275fd0,fn_80275fd0,translated,medium,"work/ghidra/main-gb/export/80275fd0_FUN_80275fd0.c; table bounds via 0x80283A60, entry +0x14/+0x15/+0x17/+0x28/+0x29/+0x2A fields into eight output words",src/audio/seq.rs

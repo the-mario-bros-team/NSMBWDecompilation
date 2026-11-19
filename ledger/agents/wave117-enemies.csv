@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a36a70,fn_80a36a70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a36a70_FUN_80a36a70.c; side probe 0x80096240, saved byte +0x86C, state 0x80B70558",src/game/enemies.rs
+game::enemies,80a36b10,fn_80a36b10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a36b10_FUN_80a36b10.c; flags bit 1 gate over 0x80A368B0, state 0x80B703D8",src/game/enemies.rs
+game::enemies,80a36b90,fn_80a36b90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a36b90_FUN_80a36b90.c; +0x5C0 = 0x1E, +0x360 = 1, sound 0x219",src/game/enemies.rs
+game::enemies,80a36e70,fn_80a36e70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a36e70_FUN_80a36e70.c; go_out_st clip at +0x584, speed triple from +0x04 bit 1",src/game/enemies.rs
+game::enemies,80a36f30,fn_80a36f30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a36f30_FUN_80a36f30.c; slot +0x1C of +0x544, 0x80072BC0 gate, state 0x80B70458",src/game/enemies.rs
+game::enemies,80a37690,fn_80a37690,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a37690_FUN_80a37690.c; blend 0.8 on +0x584, zero speed triple, +0x360 = 1",src/game/enemies.rs
+game::enemies,80a37de0,fn_80a37de0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a37de0_FUN_80a37de0.c; +0x834 slot through 0x8005F900 into +0x838",src/game/enemies.rs
+game::enemies,80a38050,fn_80a38050,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a38050_FUN_80a38050.c; Wm_en_brakesmoke effect via +0xA0 slot of +0x70C",src/game/enemies.rs
+game::enemies,80a3ca80,fn_80a3ca80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3ca80_FUN_80a3ca80.c; six 0x802DCA98 arrays, 500-slot lifetime",src/game/enemies.rs
+game::enemies,80a3dbe0,fn_80a3dbe0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3dbe0_FUN_80a3dbe0.c; six 0x802DCA98 arrays, 0x4B-slot lifetime",src/game/enemies.rs
+game::enemies,80a3f280,fn_80a3f280,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3f280_FUN_80a3f280.c; mode gate 0/0xD/0x10 then 0x80027E00 with +0xA74",src/game/enemies.rs
+game::enemies,80a3f360,fn_80a3f360,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3f360_FUN_80a3f360.c; category 3 plus six kinds, effect 0x80A40FA0 at (-8,+16)",src/game/enemies.rs
+game::enemies,80a3f450,fn_80a3f450,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3f450_FUN_80a3f450.c; retire/limit/mode guard, 0x800777B0 map call",src/game/enemies.rs
+game::enemies,80a3f530,fn_80a3f530,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3f530_FUN_80a3f530.c; player credit, score 100, sound 0x237, 0x80162510",src/game/enemies.rs
+game::enemies,80a3f660,fn_80a3f660,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3f660_FUN_80a3f660.c; +0x104 approached by +/-0x71C with mask 0x40, +0xA96 flip",src/game/enemies.rs
+game::enemies,80a3f6f0,fn_80a3f6f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3f6f0_FUN_80a3f6f0.c; parent +0x6BC plus +0x700/+0x618 offsets",src/game/enemies.rs
+game::enemies,80a3f7a0,fn_80a3f7a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3f7a0_FUN_80a3f7a0.c; parent +0x524 height, +0x720 branch through 0x80101AA0",src/game/enemies.rs
+game::enemies,80a3f840,fn_80a3f840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3f840_FUN_80a3f840.c; parent +0x470/+0x474/+0x478 into +0xA58 and position",src/game/enemies.rs
+game::enemies,80a3f9a0,fn_80a3f9a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3f9a0_FUN_80a3f9a0.c; +0xB0 = +0x6F8 - parent +0x630",src/game/enemies.rs
+game::enemies,80a3fa30,fn_80a3fa30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3fa30_FUN_80a3fa30.c; identical to fn_80a3f9a0",src/game/enemies.rs
+game::enemies,80a3fac0,fn_80a3fac0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3fac0_FUN_80a3fac0.c; +0x740/+0xEC guard and 0x80A3F450 test",src/game/enemies.rs
+game::enemies,80a3fb80,fn_80a3fb80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3fb80_FUN_80a3fb80.c; +0x45D flip then stage scene 3 and ground check",src/game/enemies.rs
+game::enemies,80a3fc20,fn_80a3fc20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3fc20_FUN_80a3fc20.c; mode 0x10, 0x8007FBF0 placement, speed and pitch seeds",src/game/enemies.rs
+game::enemies,80a3fcc0,fn_80a3fcc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3fcc0_FUN_80a3fcc0.c; ground query 0x80027B00 and 0.35/0.31 random speed",src/game/enemies.rs
+game::enemies,80a3fd70,fn_80a3fd70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3fd70_FUN_80a3fd70.c; mode 5 facing tables, else random word masked by +0xA78",src/game/enemies.rs
+game::enemies,80a3fec0,fn_80a3fec0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3fec0_FUN_80a3fec0.c; guard, two base updates, ground query, motion tail",src/game/enemies.rs
+game::enemies,80a3ff30,fn_80a3ff30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3ff30_FUN_80a3ff30.c; random +0xE8, zero vertical and +0x11C, mode 1 re-arm",src/game/enemies.rs
+game::enemies,80a3fff0,fn_80a3fff0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3fff0_FUN_80a3fff0.c; +0x740 ladder over 0x802EE4E0, sound 0x23A, 0x80B2C5E8 classes",src/game/enemies.rs

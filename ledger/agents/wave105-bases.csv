@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806c07d0,fn_806c07d0,translated,high,"work/ghidra/rel-d_basesNP/export/806c07d0_FUN_806c07d0.c; registered destructor: 0x8015F800(state,0), 0x802B9280(state) when free>0",src/game/bases.rs
+game::bases,806c0830,fn_806c0830,translated,high,"work/ghidra/rel-d_basesNP/export/806c0830_FUN_806c0830.c; second registered destructor of the hashigo interface family",src/game/bases.rs
+game::bases,806c0970,fn_806c0970,translated,high,"work/ghidra/rel-d_basesNP/export/806c0970_FUN_806c0970.c; descends the +0x30 chain, returns the parent of the child whose virtual +0x0C answered",src/game/bases.rs
+game::bases,806c0a50,fn_806c0a50,translated,medium,"work/ghidra/rel-d_basesNP/export/806c0a50_FUN_806c0a50.c; ':' suffix compare via 0x802E1C40/0x802E1AB4 against virtual +0x20 name; helper identities inferred",src/game/bases.rs
+game::bases,806c0c30,fn_806c0c30,translated,medium,"work/ghidra/rel-d_basesNP/export/806c0c30_FUN_806c0c30.c; guard plus 0x802B9280 release; export drops the explicit argument",src/game/bases.rs
+game::bases,806c0c70,fn_806c0c70,translated,medium,"work/ghidra/rel-d_basesNP/export/806c0c70_FUN_806c0c70.c; vtable 0x807F7A80 at offset 0 then 0x800D2400 then free; 0x800D2400 argument inferred",src/game/bases.rs
+game::bases,806c0ed0,fn_806c0ed0,translated,high,"work/ghidra/rel-d_basesNP/export/806c0ed0_FUN_806c0ed0.c; counts nodes of the +0x40C list linked through +0x08",src/game/bases.rs
+game::bases,806c1020,fn_806c1020,translated,high,"work/ghidra/rel-d_basesNP/export/806c1020_FUN_806c1020.c; fills the +0x4E4..+0x524 halfword window with one value",src/game/bases.rs
+game::bases,806c1b80,fn_806c1b80,translated,high,"work/ghidra/rel-d_basesNP/export/806c1b80_FUN_806c1b80.c; virtual +0x14 on the +0x3F0 interface, returns 1",src/game/bases.rs
+game::bases,806c40d0,fn_806c40d0,translated,high,"work/ghidra/rel-d_basesNP/export/806c40d0_FUN_806c40d0.c; virtual +0x360, 0x8006CDE0, 0x800955F0, conditional +0xEC constant after 0x80072BC0(+0x1EC)",src/game/bases.rs
+game::bases,806c43d0,fn_806c43d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c43d0_FUN_806c43d0.c; bone +0x880, clip slot 1, rates 0x807CB054/0x807CB050, latch +0x6F8",src/game/bases.rs
+game::bases,806c4460,fn_806c4460,translated,high,"work/ghidra/rel-d_basesNP/export/806c4460_FUN_806c4460.c; byte-identical destructor body to fn_806c40d0",src/game/bases.rs
+game::bases,806c44d0,fn_806c44d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c44d0_FUN_806c44d0.c; bone +0x884, clip slot 0, rates 0x807CB04C/0x807CB050",src/game/bases.rs
+game::bases,806c4560,fn_806c4560,translated,high,"work/ghidra/rel-d_basesNP/export/806c4560_FUN_806c4560.c; byte-identical destructor body to fn_806c40d0",src/game/bases.rs
+game::bases,806c45d0,fn_806c45d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c45d0_FUN_806c45d0.c; bone +0x888, clip slot 1, rates 0x807CB04C/0x807CB050",src/game/bases.rs
+game::bases,806c4660,fn_806c4660,translated,high,"work/ghidra/rel-d_basesNP/export/806c4660_FUN_806c4660.c; byte-identical destructor body to fn_806c40d0",src/game/bases.rs
+game::bases,806c46d0,fn_806c46d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c46d0_FUN_806c46d0.c; bone +0x88C, clip slot 0, rates 0x807CB04C/0x807CB050",src/game/bases.rs
+game::bases,806c4760,fn_806c4760,translated,high,"work/ghidra/rel-d_basesNP/export/806c4760_FUN_806c4760.c; byte-identical destructor body to fn_806c40d0",src/game/bases.rs
+game::bases,806c49e0,fn_806c49e0,translated,high,"work/ghidra/rel-d_basesNP/export/806c49e0_FUN_806c49e0.c; copies player character byte +0x348 or draws via 0x800B2EE0, table select 0x807CB060, three constants, 0x8007F950(+0x5E0), virtual +0x98",src/game/bases.rs
+game::bases,806c4aa0,fn_806c4aa0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c4aa0_FUN_806c4aa0.c; 0x8006CDE0 (dropped arg), 0x800955F0, release 0x80162510 below the 0x80429E00 floor",src/game/bases.rs
+game::bases,806c59d0,fn_806c59d0,translated,high,"work/ghidra/rel-d_basesNP/export/806c59d0_FUN_806c59d0.c; registered destructor: 0x8015F800(state,0) then optional 0x802B9280",src/game/bases.rs
+game::bases,806c5a30,fn_806c5a30,translated,high,"work/ghidra/rel-d_basesNP/export/806c5a30_FUN_806c5a30.c; sibling registered destructor",src/game/bases.rs
+game::bases,806c5a90,fn_806c5a90,translated,high,"work/ghidra/rel-d_basesNP/export/806c5a90_FUN_806c5a90.c; returns the interface object at 0x8082C43C",src/game/bases.rs
+game::bases,806c5b80,fn_806c5b80,translated,high,"work/ghidra/rel-d_basesNP/export/806c5b80_FUN_806c5b80.c; same +0x30 chain walk as fn_806c0970 with virtual +0x0C test",src/game/bases.rs
+game::bases,806c5c60,fn_806c5c60,translated,medium,"work/ghidra/rel-d_basesNP/export/806c5c60_FUN_806c5c60.c; ':' suffix compare against virtual +0x20 name; helper identities inferred",src/game/bases.rs
+game::bases,806c5d80,fn_806c5d80,translated,medium,"work/ghidra/rel-d_basesNP/export/806c5d80_FUN_806c5d80.c; allocates 0x6A8 and calls the in-place constructor fn_806c62d0 with the new pointer",src/game/bases.rs
+game::bases,806c61e0,fn_806c61e0,translated,high,"work/ghidra/rel-d_basesNP/export/806c61e0_FUN_806c61e0.c; virtual +0x14 on the +0x544 model, returns 1",src/game/bases.rs
+game::bases,806c6210,fn_806c6210,translated,high,"work/ghidra/rel-d_basesNP/export/806c6210_FUN_806c6210.c; 0x8007F950(+0x5B4), returns 1",src/game/bases.rs
+game::bases,806c6770,fn_806c6770,translated,high,"work/ghidra/rel-d_basesNP/export/806c6770_FUN_806c6770.c; 0x8007F950(+0x5C0), returns 1",src/game/bases.rs

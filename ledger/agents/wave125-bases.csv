@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80722900,fn_80722900,translated,high,"work/ghidra/rel-d_basesNP/export/80722900_FUN_80722900.c; allocates 0x5D0 bytes and runs fn_80722970",src/game/bases.rs
+game::bases,80722970,fn_80722970,translated,high,"work/ghidra/rel-d_basesNP/export/80722970_FUN_80722970.c; in-place Peach ship constructor; vtable 0x8080A720",src/game/bases.rs
+game::bases,80722b00,fn_80722b00,translated,high,"work/ghidra/rel-d_basesNP/export/80722b00_FUN_80722b00.c; loads g3d/peach.brres and starts ship_wait",src/game/bases.rs
+game::bases,80722de0,fn_80722de0,translated,medium,"work/ghidra/rel-d_basesNP/export/80722de0_FUN_80722de0.c; copies 12 words from player +0x8E0 into +0x7C",src/game/bases.rs
+game::bases,80722ea0,fn_80722ea0,translated,high,"work/ghidra/rel-d_basesNP/export/80722ea0_FUN_80722ea0.c; virtual +0x2BC scaled by signed byte table 0x8042C1A0",src/game/bases.rs
+game::bases,80723360,fn_80723360,translated,high,"work/ghidra/rel-d_basesNP/export/80723360_FUN_80723360.c; stores facing byte and starts ship_helpme2",src/game/bases.rs
+game::bases,80724020,fn_80724020,translated,medium,"work/ghidra/rel-d_basesNP/export/80724020_FUN_80724020.c; transform rebuild with optional 0x80724460 placement",src/game/bases.rs
+game::bases,80724170,fn_80724170,translated,high,"work/ghidra/rel-d_basesNP/export/80724170_FUN_80724170.c; reads 52-byte model matrix into +0x4C0",src/game/bases.rs
+game::bases,807243f0,fn_807243f0,translated,high,"work/ghidra/rel-d_basesNP/export/807243f0_FUN_807243f0.c; copies player slot byte and dispatches Shock 0x80830518",src/game/bases.rs
+game::bases,80724580,fn_80724580,translated,high,"work/ghidra/rel-d_basesNP/export/80724580_FUN_80724580.c; walks +0x4D8 list for child states 1 and 2",src/game/bases.rs
+game::bases,807245f0,fn_807245f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807245f0_FUN_807245f0.c; Shock and Shock2 probes then fn_807243f0",src/game/bases.rs
+game::bases,807246d0,fn_807246d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807246d0_FUN_807246d0.c; 0x15A contact clears +0x5A4 and calls 0x806B1B10",src/game/bases.rs
+game::bases,80724b60,fn_80724b60,translated,high,"work/ghidra/rel-d_basesNP/export/80724b60_FUN_80724b60.c; ground probes latch fall speed and snap +0xAC",src/game/bases.rs
+game::bases,80724c00,fn_80724c00,translated,medium,"work/ghidra/rel-d_basesNP/export/80724c00_FUN_80724c00.c; writes +0x16C/+0x170 and arms mode 5",src/game/bases.rs
+game::bases,80724c80,fn_80724c80,translated,medium,"work/ghidra/rel-d_basesNP/export/80724c80_FUN_80724c80.c; rebinds player and clears bits 0-1 at +0x12C",src/game/bases.rs
+game::bases,80724f90,fn_80724f90,translated,high,"work/ghidra/rel-d_basesNP/export/80724f90_FUN_80724f90.c; yaw delta table 0x807CD1F0 and Shock transition",src/game/bases.rs
+game::bases,807250b0,fn_807250b0,translated,high,"work/ghidra/rel-d_basesNP/export/807250b0_FUN_807250b0.c; yaw delta table 0x807CD204 and Shock transition",src/game/bases.rs
+game::bases,80725270,fn_80725270,translated,medium,"work/ghidra/rel-d_basesNP/export/80725270_FUN_80725270.c; drop probe with effect tiers 0x282/0x283/0x284",src/game/bases.rs
+game::bases,807255d0,fn_807255d0,translated,high,"work/ghidra/rel-d_basesNP/export/807255d0_FUN_807255d0.c; Wm_ob_powdown impact with 60-frame timer",src/game/bases.rs
+game::bases,80725830,fn_80725830,translated,high,"work/ghidra/rel-d_basesNP/export/80725830_FUN_80725830.c; second impact with 30-frame timer and motion stop",src/game/bases.rs
+game::bases,8072ba10,fn_8072ba10,translated,medium,"work/ghidra/rel-d_basesNP/export/8072ba10_FUN_8072ba10.c; frame tail with 0x8072C000 and 0x8072C1F0",src/game/bases.rs
+game::bases,8072bad0,fn_8072bad0,translated,high,"work/ghidra/rel-d_basesNP/export/8072bad0_FUN_8072bad0.c; frees 0xA4-stride records when reason is 2",src/game/bases.rs
+game::bases,8072bb50,fn_8072bb50,translated,high,"work/ghidra/rel-d_basesNP/export/8072bb50_FUN_8072bb50.c; virtual +0x14 on model and clip holders",src/game/bases.rs
+game::bases,8072bea0,fn_8072bea0,translated,high,"work/ghidra/rel-d_basesNP/export/8072bea0_FUN_8072bea0.c; reads clip matrix into +0x4B4",src/game/bases.rs
+game::bases,8072bf60,fn_8072bf60,translated,high,"work/ghidra/rel-d_basesNP/export/8072bf60_FUN_8072bf60.c; builds 0xA4-stride array from variant table 0x807CD4A0",src/game/bases.rs
+game::bases,8072c9b0,fn_8072c9b0,translated,high,"work/ghidra/rel-d_basesNP/export/8072c9b0_FUN_8072c9b0.c; 0x570-byte pori companion constructor; vtable 0x8080C680",src/game/bases.rs
+game::bases,8072d3b0,fn_8072d3b0,translated,high,"work/ghidra/rel-d_basesNP/export/8072d3b0_FUN_8072d3b0.c; cube_kinoko gravity and variant pane start",src/game/bases.rs
+game::bases,8072d450,fn_8072d450,translated,high,"work/ghidra/rel-d_basesNP/export/8072d450_FUN_8072d450.c; pori companion destructor for +0x4D0 and +0x3EC",src/game/bases.rs
+game::bases,8072d6c0,fn_8072d6c0,translated,high,"work/ghidra/rel-d_basesNP/export/8072d6c0_FUN_8072d6c0.c; transform writer for +0x3D0/+0x3F0/+0x430 actor",src/game/bases.rs
+game::bases,8072d8f0,fn_8072d8f0,translated,high,"work/ghidra/rel-d_basesNP/export/8072d8f0_FUN_8072d8f0.c; releases clip model and accessor holders",src/game/bases.rs

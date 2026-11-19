@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801e55c0,fn_801e55c0,translated,medium,"work/ghidra/main-gb/export/801e55c0_FUN_801e55c0.c; DPD + accelerometer calibration rebuilt from the factory buffer at +0x974; four corner records, centres, angles and the two 10-byte accel records",src/runtime/input.rs
+runtime::input,801ee230,fn_801ee230,translated,medium,"work/ghidra/main-gb/export/801ee230_FUN_801ee230.c; per-channel sampling callback: status ring push, 1/delta accel scales, format handshake and the classic-controller neutral-point state machine",src/runtime/input.rs

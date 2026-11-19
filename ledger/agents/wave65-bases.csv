@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80690030,fn_80690030,translated,high,"work/ghidra/rel-d_basesNP/export/80690030_FUN_80690030.c; destructor pair 0x8015F800 then 0x802B9280 for free > 0",src/game/bases.rs
+game::bases,80690570,fn_80690570,translated,high,"work/ghidra/rel-d_basesNP/export/80690570_FUN_80690570.c; interface slot +0x8 with (this, actor, 7) then 80690430",src/game/bases.rs
+game::bases,806905c0,fn_806905c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806905c0_FUN_806905c0.c; +0x20..+0x40 spawn record and two composed matrices into +0x74",src/game/bases.rs
+game::bases,80690780,fn_80690780,translated,high,"work/ghidra/rel-d_basesNP/export/80690780_FUN_80690780.c; vtable +0x10 of +0x1C and +0x14 of +0x74",src/game/bases.rs
+game::bases,806909e0,fn_806909e0,translated,high,"work/ghidra/rel-d_basesNP/export/806909e0_FUN_806909e0.c; +0x4C4 position snapshot and +0x5BC record then 806905c0 on +0x4DC",src/game/bases.rs
+game::bases,80690c50,fn_80690c50,translated,high,"work/ghidra/rel-d_basesNP/export/80690c50_FUN_80690c50.c; +0x3D0 guard then matrix +0x40C and base update 0x800618B0",src/game/bases.rs
+game::bases,80690e90,fn_80690e90,translated,high,"work/ghidra/rel-d_basesNP/export/80690e90_FUN_80690e90.c; nine model releases then 0x800671B0 and 0x80162920 free",src/game/bases.rs
+game::bases,80691100,fn_80691100,translated,high,"work/ghidra/rel-d_basesNP/export/80691100_FUN_80691100.c; destructor registered by 80690f70",src/game/bases.rs
+game::bases,80691160,fn_80691160,translated,high,"work/ghidra/rel-d_basesNP/export/80691160_FUN_80691160.c; returns class-name pointer 0x80355D0C",src/game/bases.rs
+game::bases,80691250,fn_80691250,translated,medium,"work/ghidra/rel-d_basesNP/export/80691250_FUN_80691250.c; +0x30 child chain with five unrolled virtual +0xC queries then recursion",src/game/bases.rs
+game::bases,80691330,fn_80691330,translated,medium,"work/ghidra/rel-d_basesNP/export/80691330_FUN_80691330.c; compares the suffix after ':' of the virtual +0x20 name",src/game/bases.rs
+game::bases,80691c30,fn_80691c30,translated,high,"work/ghidra/rel-d_basesNP/export/80691c30_FUN_80691c30.c; +0x0125 step clamped to +/-0.5 and ceiling test",src/game/bases.rs
+game::bases,80691ca0,fn_80691ca0,translated,high,"work/ghidra/rel-d_basesNP/export/80691ca0_FUN_80691ca0.c; downward mirror of 80691c30 with a <= floor test",src/game/bases.rs
+game::bases,80691f30,fn_80691f30,translated,high,"work/ghidra/rel-d_basesNP/export/80691f30_FUN_80691f30.c; interface +0x10 then the GQR angle writer 0x80691D20",src/game/bases.rs
+game::bases,80691f90,fn_80691f90,translated,high,"work/ghidra/rel-d_basesNP/export/80691f90_FUN_80691f90.c; sets +0x506 and calls vtable +0xE4 N times",src/game/bases.rs
+game::bases,80692030,fn_80692030,translated,medium,"work/ghidra/rel-d_basesNP/export/80692030_FUN_80692030.c; +0x1EC clear and state 0x8082AFD0 when 80691c30 hits",src/game/bases.rs
+game::bases,806920b0,fn_806920b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806920b0_FUN_806920b0.c; +0xAC travel and states 0x8082B010 / 0x8082B050",src/game/bases.rs
+game::bases,80692170,fn_80692170,translated,medium,"work/ghidra/rel-d_basesNP/export/80692170_FUN_80692170.c; +0xAC travel and states 0x8082AFD0 / 0x8082B050",src/game/bases.rs
+game::bases,80692230,fn_80692230,translated,medium,"work/ghidra/rel-d_basesNP/export/80692230_FUN_80692230.c; floor gate then 0x80162510 or state 0x8082B090",src/game/bases.rs
+game::bases,806927a0,fn_806927a0,translated,high,"work/ghidra/rel-d_basesNP/export/806927a0_FUN_806927a0.c; destructor pair 0x8015F800 then 0x802B9280 for free > 0",src/game/bases.rs
+game::bases,80692e80,fn_80692e80,translated,high,"work/ghidra/rel-d_basesNP/export/80692e80_FUN_80692e80.c; +0x7C matrix with rotation order Y X Z then model +0x3F0",src/game/bases.rs
+game::bases,80693080,fn_80693080,translated,high,"work/ghidra/rel-d_basesNP/export/80693080_FUN_80693080.c; +0x434 animation reset bound to +0x3F0 with scale 1.0f",src/game/bases.rs
+game::bases,806930f0,fn_806930f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806930f0_FUN_806930f0.c; timer 60 and +0x544 velocities at one 60 Hz step",src/game/bases.rs
+game::bases,806939f0,fn_806939f0,translated,high,"work/ghidra/rel-d_basesNP/export/806939f0_FUN_806939f0.c; +0x4AC release and 0x80064F50 when flags +0x4 low nibble is zero",src/game/bases.rs
+game::bases,80693b50,fn_80693b50,translated,medium,"work/ghidra/rel-d_basesNP/export/80693b50_FUN_80693b50.c; 0x40-stride slot at +0x3F0 selected by +0x4A0 then vtable +0x14",src/game/bases.rs
+game::bases,80693ee0,fn_80693ee0,translated,medium,"work/ghidra/rel-d_basesNP/export/80693ee0_FUN_80693ee0.c; interface +0x18 with descriptor 0x8082B190",src/game/bases.rs
+game::bases,80694110,fn_80694110,translated,medium,"work/ghidra/rel-d_basesNP/export/80694110_FUN_80694110.c; +0x590 owner latch and +0x474 animation bind",src/game/bases.rs
+game::bases,806941a0,fn_806941a0,translated,high,"work/ghidra/rel-d_basesNP/export/806941a0_FUN_806941a0.c; +0x474 release and 80693be0 when +0x584 bit 2 is set",src/game/bases.rs
+game::bases,80694860,fn_80694860,translated,high,"work/ghidra/rel-d_basesNP/export/80694860_FUN_80694860.c; sub-vtable 0x80329958 at +0x1C then 0x802B9280 free",src/game/bases.rs
+game::bases,806948f0,fn_806948f0,translated,high,"work/ghidra/rel-d_basesNP/export/806948f0_FUN_806948f0.c; destructor 0x800DAE00 then 0x802B9280 free",src/game/bases.rs

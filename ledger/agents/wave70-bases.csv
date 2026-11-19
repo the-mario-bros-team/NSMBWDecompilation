@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80682d30,fn_80682d30,translated,medium,"work/ghidra/rel-d_basesNP/export/80682d30_FUN_80682d30.c; board slot landing edge; writes +0xAD5; calls 0x80056370 event 1",src/game/bases.rs
+game::bases,80682e20,fn_80682e20,translated,high,"work/ghidra/rel-d_basesNP/export/80682e20_FUN_80682e20.c; mirror landing edge; calls 0x80056370 event 2",src/game/bases.rs
+game::bases,806835a0,fn_806835a0,translated,high,"work/ghidra/rel-d_basesNP/export/806835a0_FUN_806835a0.c; 0x8015F800 + optional 0x802B9280 release",src/game/bases.rs
+game::bases,80683750,fn_80683750,translated,high,"work/ghidra/rel-d_basesNP/export/80683750_FUN_80683750.c; base crumble actor ctor; vtable 0x807ED3E8; 0x114 x2 effect array at +0x678",src/game/bases.rs
+game::bases,806837d0,fn_806837d0,translated,high,"work/ghidra/rel-d_basesNP/export/806837d0_FUN_806837d0.c; full teardown of the +0x678 array, +0x584, +0x544, +0x524",src/game/bases.rs
+game::bases,80683a60,fn_80683a60,translated,medium,"work/ghidra/rel-d_basesNP/export/80683a60_FUN_80683a60.c; scale reset + seven-word 0x8007FB10 probe; 0x8007F900 start",src/game/bases.rs
+game::bases,80683b00,fn_80683b00,translated,high,"work/ghidra/rel-d_basesNP/export/80683b00_FUN_80683b00.c; both effect virtuals +0xA0 with Wm_jr_crumble01/02",src/game/bases.rs
+game::bases,80683b80,fn_80683b80,translated,high,"work/ghidra/rel-d_basesNP/export/80683b80_FUN_80683b80.c; both effect virtuals +0xB0 with position",src/game/bases.rs
+game::bases,80683d70,fn_80683d70,translated,high,"work/ghidra/rel-d_basesNP/export/80683d70_FUN_80683d70.c; 0x8007F950 on +0x584; returns 1",src/game/bases.rs
+game::bases,80684150,fn_80684150,translated,high,"work/ghidra/rel-d_basesNP/export/80684150_FUN_80684150.c; 0x8015F800 + optional 0x802B9280 release",src/game/bases.rs
+game::bases,80684a30,fn_80684a30,translated,high,"work/ghidra/rel-d_basesNP/export/80684a30_FUN_80684a30.c; in-place ctor; vtable 0x807EDB10",src/game/bases.rs
+game::bases,80684d90,fn_80684d90,translated,medium,"work/ghidra/rel-d_basesNP/export/80684d90_FUN_80684d90.c; scale reset + (-16,8,16,-64) probe; sets +0x654",src/game/bases.rs
+game::bases,80684e40,fn_80684e40,translated,medium,"work/ghidra/rel-d_basesNP/export/80684e40_FUN_80684e40.c; matrix rebuild; three rotations + 16/-16 offsets",src/game/bases.rs
+game::bases,80684f60,fn_80684f60,translated,high,"work/ghidra/rel-d_basesNP/export/80684f60_FUN_80684f60.c; 0x8008C380 + 0x8007F950; returns 1",src/game/bases.rs
+game::bases,80684fa0,fn_80684fa0,translated,high,"work/ghidra/rel-d_basesNP/export/80684fa0_FUN_80684fa0.c; four-frame countdown arm at +0x680",src/game/bases.rs
+game::bases,80684fe0,fn_80684fe0,translated,high,"work/ghidra/rel-d_basesNP/export/80684fe0_FUN_80684fe0.c; height step clamped to 64 into +0xB0",src/game/bases.rs
+game::bases,80685010,fn_80685010,translated,medium,"work/ghidra/rel-d_basesNP/export/80685010_FUN_80685010.c; 0x80168880 model frame apply, slot 3",src/game/bases.rs
+game::bases,80685050,fn_80685050,translated,high,"work/ghidra/rel-d_basesNP/export/80685050_FUN_80685050.c; +0x678 advance clamped to +/-0.7",src/game/bases.rs
+game::bases,80685090,fn_80685090,translated,medium,"work/ghidra/rel-d_basesNP/export/80685090_FUN_80685090.c; 0x80162D50(0x12F) query then 0x80686350 per free slot",src/game/bases.rs
+game::bases,80685140,fn_80685140,translated,high,"work/ghidra/rel-d_basesNP/export/80685140_FUN_80685140.c; single byte clear at +0x68E",src/game/bases.rs
+game::bases,80685260,fn_80685260,translated,high,"work/ghidra/rel-d_basesNP/export/80685260_FUN_80685260.c; float history and four edge-byte shift",src/game/bases.rs
+game::bases,806852c0,fn_806852c0,translated,high,"work/ghidra/rel-d_basesNP/export/806852c0_FUN_806852c0.c; per-slot edge query +0x686/+0x68A",src/game/bases.rs
+game::bases,806852f0,fn_806852f0,translated,high,"work/ghidra/rel-d_basesNP/export/806852f0_FUN_806852f0.c; byte getter for +0x68E",src/game/bases.rs
+game::bases,80685530,fn_80685530,translated,high,"work/ghidra/rel-d_basesNP/export/80685530_FUN_80685530.c; 0x8015F800 + optional 0x802B9280 release",src/game/bases.rs
+game::bases,806858b0,fn_806858b0,translated,high,"work/ghidra/rel-d_basesNP/export/806858b0_FUN_806858b0.c; free-only destructor via 0x802B9280",src/game/bases.rs
+game::bases,806858f0,fn_806858f0,translated,high,"work/ghidra/rel-d_basesNP/export/806858f0_FUN_806858f0.c; releases +0x18 then optional 0x802B9280",src/game/bases.rs
+game::bases,80685950,fn_80685950,translated,high,"work/ghidra/rel-d_basesNP/export/80685950_FUN_80685950.c; second instantiation of the +0x18 release template",src/game/bases.rs
+game::bases,80685b50,fn_80685b50,translated,high,"work/ghidra/rel-d_basesNP/export/80685b50_FUN_80685b50.c; 0x18-byte record ctor, vtable 0x807EDF8C",src/game/bases.rs
+game::bases,80685db0,fn_80685db0,translated,medium,"work/ghidra/rel-d_basesNP/export/80685db0_FUN_80685db0.c; full teardown of the 0x806856E0 object; two 0x802B9290 frees",src/game/bases.rs

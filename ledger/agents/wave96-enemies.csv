@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b10110,fn_80b10110,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b10110_FUN_80b10110.c; +0x544 vtable slot 0x14 tail call, r3 stays the actor",src/game/enemies.rs
+game::enemies,80b10120,fn_80b10120,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b10120_FUN_80b10120.c; same tail call through +0x5BC",src/game/enemies.rs
+game::enemies,80b102a0,fn_80b102a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b102a0_FUN_80b102a0.c; kind 0x3B hit -> class slot 0x12C, else +0x394 name tests and the +0x5C9 plane",src/game/enemies.rs
+game::enemies,80b10440,fn_80b10440,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b10440_FUN_80b10440.c; kind-0x3B then kind-0x47 scan, box (x-8,y)-(x+8,y+16) against the +0x148 probe corners",src/game/enemies.rs
+game::enemies,80b10940,fn_80b10940,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b10940_FUN_80b10940.c; frame append, 24.0 effect, +0x5CB side flip into 0x80B78BA8",src/game/enemies.rs
+game::enemies,80b10b20,fn_80b10b20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b10b20_FUN_80b10b20.c; lazy (0,-24)/(16,0)/(0,16)/(-24,0) cells, mask 0x803D",src/game/enemies.rs
+game::enemies,80b10be0,fn_80b10be0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b10be0_FUN_80b10be0.c; sin/cos of +0x100-0x4000 and an 8-unit probe, mask 0x803D cleared",src/game/enemies.rs
+game::enemies,80b10ce0,fn_80b10ce0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b10ce0_FUN_80b10ce0.c; per-side velocity from 0x80B78AB8 mirrored by +0x348",src/game/enemies.rs
+game::enemies,80b10d50,fn_80b10d50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b10d50_FUN_80b10d50.c; refills the 64-record trail at +0x5EC, step 1/32 of the row entry",src/game/enemies.rs
+game::enemies,80b10f80,fn_80b10f80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b10f80_FUN_80b10f80.c; head-tail heading with lanes 0/63 and 0x801611C0 into +0x100",src/game/enemies.rs
+game::enemies,80b11020,fn_80b11020,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b11020_FUN_80b11020.c; perpendicular 8-unit tangent into +0x164/+0x168",src/game/enemies.rs
+game::enemies,80b110f0,fn_80b110f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b110f0_FUN_80b110f0.c; side step on the +/-8 offsets, +0x5C9 update and two-float output",src/game/enemies.rs
+game::enemies,80b11300,fn_80b11300,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b11300_FUN_80b11300.c; +0x5CA selects the front or the back trail push",src/game/enemies.rs
+game::enemies,80b11360,fn_80b11360,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b11360_FUN_80b11360.c; 126-word descending shift then a front insert at +0x5EC",src/game/enemies.rs
+game::enemies,80b11480,fn_80b11480,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b11480_FUN_80b11480.c; 126-word ascending shift then a back insert at +0x7E4",src/game/enemies.rs
+game::enemies,80b11780,fn_80b11780,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b11780_FUN_80b11780.c; four rotated corners (-10,18)(10,18)(-10,-2)(10,-2) into +0x5D0..+0x5E4",src/game/enemies.rs
+game::enemies,80b11a30,fn_80b11a30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b11a30_FUN_80b11a30.c; first kind-0x79 actor +0x394 float or 0.0",src/game/enemies.rs
+game::enemies,80b11a70,fn_80b11a70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b11a70_FUN_80b11a70.c; damage report, snap to the box centre, sound 0x17B and the die state",src/game/enemies.rs
+game::enemies,80b11bf0,fn_80b11bf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b11bf0_FUN_80b11bf0.c; two name tests then rebind the walk node at scale 2.0",src/game/enemies.rs
+game::enemies,80b11cf0,fn_80b11cf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b11cf0_FUN_80b11cf0.c; main step: contact, forward probe and push branches around the 0.525 speed threshold",src/game/enemies.rs
+game::enemies,80b11ec0,fn_80b11ec0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b11ec0_FUN_80b11ec0.c; phase-1 turn toward the +0x348^1 side with a 0x400 step",src/game/enemies.rs
+game::enemies,80b11f80,fn_80b11f80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b11f80_FUN_80b11f80.c; phase 1/2 turn steps, 0.25 latch and the 0x80B78AE8 entry",src/game/enemies.rs
+game::enemies,80b1f970,fn_80b1f970,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1f970_FUN_80b1f970.c; dispose callback 0x8015F800 then 0x802B9280 for a positive mode",src/game/enemies.rs
+game::enemies,80b1f9d0,fn_80b1f9d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1f9d0_FUN_80b1f9d0.c; duplicate dispose callback",src/game/enemies.rs
+game::enemies,80b1fa30,fn_80b1fa30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1fa30_FUN_80b1fa30.c; constant producer 0x80357BF4",src/game/enemies.rs
+game::enemies,80b1fa40,fn_80b1fa40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1fa40_FUN_80b1fa40.c; constant producer 0x80358104",src/game/enemies.rs
+game::enemies,80b1fb30,fn_80b1fb30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1fb30_FUN_80b1fb30.c; +0x30 chain walker over vtable slot 0xC",src/game/enemies.rs
+game::enemies,80b1fc10,fn_80b1fc10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1fc10_FUN_80b1fc10.c; ':' suffix strcmp predicate over vtable slot 0x20",src/game/enemies.rs
+game::enemies,80b1fd30,fn_80b1fd30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1fd30_FUN_80b1fd30.c; 0x660-byte constructor with vtable 0x80B6BC58",src/game/enemies.rs
+game::enemies,80b1ff30,fn_80b1ff30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1ff30_FUN_80b1ff30.c; g3d/wanwan.brres binder with the wanwan_kui and wanwan_chain_ring nodes",src/game/enemies.rs

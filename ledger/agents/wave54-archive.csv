@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b3300,fn_802b3300,translated,high,"work/ghidra/main-gb/export/802b3300_FUN_802b3300.c; returns the base pointer at +0x40",src/resource/archive.rs
+resource::archive,802b3310,fn_802b3310,translated,high,"work/ghidra/main-gb/export/802b3310_FUN_802b3310.c; base + (counts>>28)*0x1C",src/resource/archive.rs
+resource::archive,802b3330,fn_802b3330,translated,high,"work/ghidra/main-gb/export/802b3330_FUN_802b3330.c; adds the 28-byte and 20-byte groups",src/resource/archive.rs
+resource::archive,802b3360,fn_802b3360,translated,high,"work/ghidra/main-gb/export/802b3360_FUN_802b3360.c; adds the 4-byte group at bits 18..21",src/resource/archive.rs
+resource::archive,802b3390,fn_802b3390,translated,high,"work/ghidra/main-gb/export/802b3390_FUN_802b3390.c; adds the 4-byte group at bit 6",src/resource/archive.rs
+resource::archive,802b33d0,fn_802b33d0,translated,high,"work/ghidra/main-gb/export/802b33d0_FUN_802b33d0.c; adds the 4-byte groups at bits 5 and 6",src/resource/archive.rs
+resource::archive,802b3410,fn_802b3410,translated,high,"work/ghidra/main-gb/export/802b3410_FUN_802b3410.c; adds the 4-byte groups at bits 5, 6 and 12",src/resource/archive.rs
+resource::archive,802b3460,fn_802b3460,translated,high,"work/ghidra/main-gb/export/802b3460_FUN_802b3460.c; adds the 4-byte groups at bits 4..6 and 12",src/resource/archive.rs
+resource::archive,802b34b0,fn_802b34b0,translated,high,"work/ghidra/main-gb/export/802b34b0_FUN_802b34b0.c; adds the 4-byte group at bit 3",src/resource/archive.rs
+resource::archive,802b3510,fn_802b3510,translated,high,"work/ghidra/main-gb/export/802b3510_FUN_802b3510.c; adds the 4-byte group at bits 13..15",src/resource/archive.rs
+resource::archive,802b3570,fn_802b3570,translated,high,"work/ghidra/main-gb/export/802b3570_FUN_802b3570.c; adds the combined 20-byte group count",src/resource/archive.rs
+resource::archive,802b35e0,fn_802b35e0,translated,medium,"work/ghidra/main-gb/export/802b35e0_FUN_802b35e0.c; copies 0x14 bytes to +0x44 via 0x802E19F8 and clears +0x58; callee role inferred",src/resource/archive.rs
+resource::archive,802b5af0,fn_802b5af0,translated,high,"work/ghidra/main-gb/export/802b5af0_FUN_802b5af0.c; clears four words at +0x00..+0x0C",src/resource/archive.rs
+resource::archive,802b5c20,fn_802b5c20,translated,high,"work/ghidra/main-gb/export/802b5c20_FUN_802b5c20.c; guarded halfword at child(+0x08)+0x0A",src/resource/archive.rs
+resource::archive,802b5c40,fn_802b5c40,translated,high,"work/ghidra/main-gb/export/802b5c40_FUN_802b5c40.c; child(+0x08) + child[+0x10]",src/resource/archive.rs
+resource::archive,802b5c60,fn_802b5c60,translated,high,"work/ghidra/main-gb/export/802b5c60_FUN_802b5c60.c; bit 0 of child(+0x08)[+0x18]",src/resource/archive.rs
+resource::archive,802b5c80,fn_802b5c80,translated,high,"work/ghidra/main-gb/export/802b5c80_FUN_802b5c80.c; guarded halfword at child(+0x0C)+0x0C",src/resource/archive.rs
+resource::archive,802b5ca0,fn_802b5ca0,translated,high,"work/ghidra/main-gb/export/802b5ca0_FUN_802b5ca0.c; child(+0x0C) + child[+0x08]",src/resource/archive.rs
+resource::archive,802bc210,fn_802bc210,translated,high,"work/ghidra/main-gb/export/802bc210_FUN_802bc210.c; 16-byte row round-up times count times 2",src/resource/archive.rs
+resource::archive,802bc230,fn_802bc230,translated,high,"work/ghidra/main-gb/export/802bc230_FUN_802bc230.c; circular-list membership test over node+0x0C links",src/resource/archive.rs
+resource::archive,802bc8c0,fn_802bc8c0,translated,high,"work/ghidra/main-gb/export/802bc8c0_FUN_802bc8c0.c; copies the two words at +0x38/+0x3C",src/resource/archive.rs
+resource::archive,802bc8e0,fn_802bc8e0,translated,high,"work/ghidra/main-gb/export/802bc8e0_FUN_802bc8e0.c; float at +0x60 widened to double",src/resource/archive.rs
+resource::archive,802bc8f0,fn_802bc8f0,translated,high,"work/ghidra/main-gb/export/802bc8f0_FUN_802bc8f0.c; signed byte at +0x76",src/resource/archive.rs
+resource::archive,802bc900,fn_802bc900,translated,high,"work/ghidra/main-gb/export/802bc900_FUN_802bc900.c; call 0x801E14E0(word +0x04, 1)",src/resource/archive.rs
+resource::archive,802bc910,fn_802bc910,translated,high,"work/ghidra/main-gb/export/802bc910_FUN_802bc910.c; call 0x801E14E0(word +0x04, 0)",src/resource/archive.rs
+resource::archive,802bc920,fn_802bc920,translated,medium,"work/ghidra/main-gb/export/802bc920_FUN_802bc920.c; alloc 0x20 via fn_802b9210, construct 0x802BDD00, store +0xB48, init 0x802BDD60; constructor argument inferred",src/resource/archive.rs
+resource::archive,802bf9b0,fn_802bf9b0,translated,high,"work/ghidra/main-gb/export/802bf9b0_FUN_802bf9b0.c; bit 0 of the byte at +0x6C",src/resource/archive.rs
+resource::archive,802bf9c0,fn_802bf9c0,translated,high,"work/ghidra/main-gb/export/802bf9c0_FUN_802bf9c0.c; bit 1 of the byte at +0x6C",src/resource/archive.rs

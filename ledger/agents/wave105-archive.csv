@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b20b0,fn_802b20b0,translated,medium,"work/ghidra/main-gb/export/802b20b0_FUN_802b20b0.c; .brlyt header parser: 11 packed counts + six table fills",src/resource/archive.rs
+resource::archive,802b2c70,fn_802b2c70,translated,medium,"work/ghidra/main-gb/export/802b2c70_FUN_802b2c70.c; RLYT section-table resize, size sum and five texture seeds",src/resource/archive.rs
+resource::archive,802b5cc0,fn_802b5cc0,translated,medium,"work/ghidra/main-gb/export/802b5cc0_FUN_802b5cc0.c; per-section-entry count through vtable slots 0x3C/0x40",src/resource/archive.rs
+resource::archive,802b5da0,fn_802b5da0,translated,medium,"work/ghidra/main-gb/export/802b5da0_FUN_802b5da0.c; sums fn_802b5cc0 over the +0x10 list",src/resource/archive.rs
+resource::archive,802b5e50,fn_802b5e50,translated,medium,"work/ghidra/main-gb/export/802b5e50_FUN_802b5e50.c; two section scans build the 0x28-byte window record",src/resource/archive.rs
+resource::archive,802b60b0,fn_802b60b0,translated,medium,"work/ghidra/main-gb/export/802b60b0_FUN_802b60b0.c; binds the window record into the 0x10-byte slot array",src/resource/archive.rs
+resource::archive,802b6c80,fn_802b6c80,translated,medium,"work/ghidra/main-gb/export/802b6c80_FUN_802b6c80.c; GX FIFO position strip; three dead count loops omitted",src/resource/archive.rs
+resource::archive,802b7310,fn_802b7310,translated,medium,"work/ghidra/main-gb/export/802b7310_FUN_802b7310.c; dispatches slot 0x44 to every node of the +0x10 list",src/resource/archive.rs
+resource::archive,802bba30,fn_802bba30,translated,medium,"work/ghidra/main-gb/export/802bba30_FUN_802bba30.c; 34-call GX overlay setup + one FIFO halfword",src/resource/archive.rs
+resource::archive,802bbfd0,fn_802bbfd0,translated,medium,"work/ghidra/main-gb/export/802bbfd0_FUN_802bbfd0.c; countLeadingZeros ladder selects table[0..9]",src/resource/archive.rs
+resource::archive,802bc980,fn_802bc980,translated,medium,"work/ghidra/main-gb/export/802bc980_FUN_802bc980.c; +0xB48 guard then the 0x802BDF70 start call",src/resource/archive.rs
+resource::archive,802bc9a0,fn_802bc9a0,translated,low,"work/ghidra/main-gb/export/802bc9a0_FUN_802bc9a0.c; +0xB48 guard then a zero-argument 0x802BDFC0 call",src/resource/archive.rs
+resource::archive,802bd4a0,fn_802bd4a0,translated,medium,"work/ghidra/main-gb/export/802bd4a0_FUN_802bd4a0.c; controller-manager bootstrap with four vtable stores",src/resource/archive.rs
+resource::archive,802be530,fn_802be530,translated,high,"work/ghidra/main-gb/export/802be530_thunk_FUN_801c08a0.c; 4-byte tail call to 0x801C08A0",src/resource/archive.rs
+resource::archive,802be5d0,fn_802be5d0,translated,high,"work/ghidra/main-gb/export/802be5d0_thunk_FUN_801c9940.c; 4-byte tail call to 0x801C9940",src/resource/archive.rs

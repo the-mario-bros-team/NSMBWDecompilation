@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807714f0,fn_807714f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807714f0_FUN_807714f0.c; returns byte 0x8042A24D (world/area id inferred from fn_807702a0)",src/game/bases.rs
+game::bases,80771540,fn_80771540,translated,high,"work/ghidra/rel-d_basesNP/export/80771540_FUN_80771540.c; base ctor 0x800F5FD0; vtable 0x808172A8 at +0x60; three 0x802DC9A0 pools at +0x1A0/+0x3394/+0x5C7F4",src/game/bases.rs
+game::bases,807715f0,fn_807715f0,translated,high,"work/ghidra/rel-d_basesNP/export/807715f0_FUN_807715f0.c; vtable 0x8031BBB8; three NW4R sub-objects; pool at +0xC8; table 0x80817330 at +0x7DC",src/game/bases.rs
+game::bases,807716f0,fn_807716f0,translated,high,"work/ghidra/rel-d_basesNP/export/807716f0_FUN_807716f0.c; resets +0x10 via 0x80168D10 and installs vtable 0x807E3E98",src/game/bases.rs
+game::bases,80771740,fn_80771740,translated,high,"work/ghidra/rel-d_basesNP/export/80771740_FUN_80771740.c; 0x80168D80(+0x10,0) then optional free 0x802B9280",src/game/bases.rs
+game::bases,807717a0,fn_807717a0,translated,high,"work/ghidra/rel-d_basesNP/export/807717a0_FUN_807717a0.c; guarded free 0x802B9280, returns this",src/game/bases.rs
+game::bases,80771800,fn_80771800,translated,high,"work/ghidra/rel-d_basesNP/export/80771800_FUN_80771800.c; vtable 0x80817318; 0xC0-entry 0x54-stride pool at +0x04",src/game/bases.rs
+game::bases,80771870,fn_80771870,translated,high,"work/ghidra/rel-d_basesNP/export/80771870_FUN_80771870.c; guarded free 0x802B9280, returns this",src/game/bases.rs
+game::bases,807718b0,fn_807718b0,translated,high,"work/ghidra/rel-d_basesNP/export/807718b0_FUN_807718b0.c; 0x802DCA98(+4,0x80771870,0x54,0xC0) then optional free",src/game/bases.rs
+game::bases,80772180,fn_80772180,translated,medium,"work/ghidra/rel-d_basesNP/export/80772180_FUN_80772180.c; player id from 0x80429F7C+0x54; gates 0x800F9840/0x800FD310/0x800FAE80/0x800FAF70",src/game/bases.rs
+game::bases,80772280,fn_80772280,translated,medium,"work/ghidra/rel-d_basesNP/export/80772280_FUN_80772280.c; index +0x338C; 0x800F56B0 then 0x800F3270; returns (result != 0) as (-r|r)>>31",src/game/bases.rs
+game::bases,80772300,fn_80772300,translated,high,"work/ghidra/rel-d_basesNP/export/80772300_FUN_80772300.c; index +0x338C; 0x800F56B0 then 0x800F3270 with result discarded",src/game/bases.rs
+game::bases,807769f0,fn_807769f0,translated,high,"work/ghidra/rel-d_basesNP/export/807769f0_FUN_807769f0.c; peach/g3d_peach.brres; two Fly_wmap_B1 panes at +0x1E4; vtable slot +0x18",src/game/bases.rs
+game::bases,80776b50,fn_80776b50,translated,high,"work/ghidra/rel-d_basesNP/export/80776b50_FUN_80776b50.c; 0x801C0BD0 transform; 0x8016EF50 angles; model copies +0x1A4",src/game/bases.rs
+game::bases,80776c10,fn_80776c10,translated,high,"work/ghidra/rel-d_basesNP/export/80776c10_FUN_80776c10.c; single store +0x258 = 0",src/game/bases.rs
+game::bases,80776df0,fn_80776df0,translated,high,"work/ghidra/rel-d_basesNP/export/80776df0_FUN_80776df0.c; vtable 0x808176C0 at +0x60; 3-entry 0x38-stride pane pool at +0x1E8",src/game/bases.rs
+game::bases,80776f60,fn_80776f60,translated,high,"work/ghidra/rel-d_basesNP/export/80776f60_FUN_80776f60.c; calls 0x80777150/0x807772A0/0x807770B0; copies position to +0x128..+0x130",src/game/bases.rs
+game::bases,807770b0,fn_807770b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807770b0_FUN_807770b0.c; pane rebuild, model vtable +0x18, flag clear, event 9 via 0x801016B0",src/game/bases.rs
+game::bases,80777130,fn_80777130,translated,high,"work/ghidra/rel-d_basesNP/export/80777130_FUN_80777130.c; single store +0x2B8 = 0",src/game/bases.rs
+game::bases,80777150,fn_80777150,translated,high,"work/ghidra/rel-d_basesNP/export/80777150_FUN_80777150.c; cobPeachCastle/g3d/model.brres; three cobPeachCastleFlag panes at +0x1E8",src/game/bases.rs
+game::bases,807772a0,fn_807772a0,translated,high,"work/ghidra/rel-d_basesNP/export/807772a0_FUN_807772a0.c; 0x801C0BD0 transform; 0x8016EF50 angles; model copies +0x1A8",src/game/bases.rs
+game::bases,80777350,fn_80777350,translated,medium,"work/ghidra/rel-d_basesNP/export/80777350_FUN_80777350.c; door events 0x11/0x13/0x4E/0x14; sounds 0x31/0x32; done flag +0x139",src/game/bases.rs
+game::bases,807774d0,fn_807774d0,translated,high,"work/ghidra/rel-d_basesNP/export/807774d0_FUN_807774d0.c; FlagA0 pane index 0x0F at +0x1E8; bound as group slot 0",src/game/bases.rs
+game::bases,80777550,fn_80777550,translated,high,"work/ghidra/rel-d_basesNP/export/80777550_FUN_80777550.c; LeftDoor pane index 2 at +0x220; bound as group slot 1",src/game/bases.rs
+game::bases,807775e0,fn_807775e0,translated,high,"work/ghidra/rel-d_basesNP/export/807775e0_FUN_807775e0.c; LeftDoor pane index 2 at +0x258; bound as group slot 1",src/game/bases.rs
+game::bases,80777670,fn_80777670,translated,medium,"work/ghidra/rel-d_basesNP/export/80777670_FUN_80777670.c; gate check 0x800FD8A0; 0x800E0380/+0x800CE3F0 allocation; manager+0x60 = 2",src/game/bases.rs

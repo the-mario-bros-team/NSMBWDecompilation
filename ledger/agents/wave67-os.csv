@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80253cb0,fn_80253cb0,translated,high,"work/ghidra/main-gb/export/80253cb0_FUN_80253cb0.c; guarded 0x802384F0(object+0x30), then flags(+0x70) |= 0x80",src/runtime/os.rs
+runtime::os,80253d60,fn_80253d60,translated,medium,"work/ghidra/main-gb/export/80253d60_FUN_80253d60.c; four doubles narrowed to f32 at +0xDC..+0xE8, holder re-read, then 0x802DCC4C of the same four at +0xF4..+0x100",src/runtime/os.rs
+runtime::os,8025bf60,fn_8025bf60,translated,high,"work/ghidra/main-gb/export/8025bf60_FUN_8025bf60.c; +0xF8 base, +0x101 rows, +0x102 columns, 0x24 stride rounded to 32 bytes; base + rows*pitch or 0",src/runtime/os.rs
+runtime::os,8025bfa0,fn_8025bfa0,translated,high,"work/ghidra/main-gb/export/8025bfa0_FUN_8025bfa0.c; +0xFC base, 0x30 stride; same shape as fn_8025bf60",src/runtime/os.rs
+runtime::os,8025c420,fn_8025c420,translated,high,"work/ghidra/main-gb/export/8025c420_FUN_8025c420.c; descriptor slot +0x08, mark bit 0x01 at owner[+0x140][+0x04]",src/runtime/os.rs
+runtime::os,8025c470,fn_8025c470,translated,high,"work/ghidra/main-gb/export/8025c470_FUN_8025c470.c; descriptor slot +0x10, mark bit 0x04",src/runtime/os.rs
+runtime::os,8025c4c0,fn_8025c4c0,translated,high,"work/ghidra/main-gb/export/8025c4c0_FUN_8025c4c0.c; descriptor slot +0x18, mark bit 0x10",src/runtime/os.rs
+runtime::os,8025c510,fn_8025c510,translated,high,"work/ghidra/main-gb/export/8025c510_FUN_8025c510.c; descriptor slot +0x1C, mark bit 0x20",src/runtime/os.rs
+runtime::os,8025c560,fn_8025c560,translated,high,"work/ghidra/main-gb/export/8025c560_FUN_8025c560.c; descriptor slot +0x24, mark bit 0x100",src/runtime/os.rs
+runtime::os,8025c5b0,fn_8025c5b0,translated,high,"work/ghidra/main-gb/export/8025c5b0_FUN_8025c5b0.c; descriptor slot +0x30, mark bit 0x800",src/runtime/os.rs
+runtime::os,8025c600,fn_8025c600,translated,medium,"work/ghidra/main-gb/export/8025c600_FUN_8025c600.c; cached +0x08 else 0x8023B860(key = owner+0xE8, index) + 0x40",src/runtime/os.rs
+runtime::os,8025ec30,fn_8025ec30,translated,medium,"work/ghidra/main-gb/export/8025ec30_FUN_8025ec30.c; vtable slot +0x14, returns result + 4",src/runtime/os.rs
+runtime::os,8025f0c0,fn_8025f0c0,translated,medium,"work/ghidra/main-gb/export/8025f0c0_FUN_8025f0c0.c; 1<<(slot-1) tested against +0xCC; slot 5 calls vtable +0x0C, 6/7 call +0xEC with 1/0 after 0x8024D5E0(0x7FF), else 0x80257A40",src/runtime/os.rs
+runtime::os,8025f2c0,fn_8025f2c0,translated,high,"work/ghidra/main-gb/export/8025f2c0_FUN_8025f2c0.c; null-guarded reset: +0x00 = 0, +0x04..+0x10 = sda2(-0x48E8), bytes +0x14..+0x19 = 0, eleven u16 at +0x1A..+0x2E = 0",src/runtime/os.rs
+runtime::os,8025f390,fn_8025f390,translated,medium,"work/ghidra/main-gb/export/8025f390_FUN_8025f390.c; +0x1A = u16 mode, 0x801C8B50(block+0x1C, source, length)",src/runtime/os.rs
+runtime::os,8025f3b0,fn_8025f3b0,translated,medium,"work/ghidra/main-gb/export/8025f3b0_FUN_8025f3b0.c; 0x801C8CB0(+0x18,+0x1A,+0x1C) when *block != 0, then 0x801C8920 with four floats, *block and a scratch word from +0x14",src/runtime/os.rs
+runtime::os,8025f420,fn_8025f420,translated,medium,"work/ghidra/main-gb/export/8025f420_FUN_8025f420.c; *state = 0, then 0x8024A610(state+4, 0x40)",src/runtime/os.rs
+runtime::os,8025f440,fn_8025f440,translated,medium,"work/ghidra/main-gb/export/8025f440_FUN_8025f440.c; one-word copy of *source, 0x801C6870(owner+4, &word)",src/runtime/os.rs
+runtime::os,8025f4b0,fn_8025f4b0,translated,high,"work/ghidra/main-gb/export/8025f4b0_FUN_8025f4b0.c; 0x801C6710(state+4), state = (state & ~2) | 1",src/runtime/os.rs
+runtime::os,8025f4f0,fn_8025f4f0,translated,high,"work/ghidra/main-gb/export/8025f4f0_FUN_8025f4f0.c; 0x801C6470(state+4), state = (state & ~2) | 1",src/runtime/os.rs
+runtime::os,8025f530,fn_8025f530,translated,high,"work/ghidra/main-gb/export/8025f530_FUN_8025f530.c; 0x801C6450(state+4), state = (state & ~2) | 1",src/runtime/os.rs
+runtime::os,8025f570,fn_8025f570,translated,high,"work/ghidra/main-gb/export/8025f570_FUN_8025f570.c; 0x801C6610(state+4), state = (state & ~2) | 1",src/runtime/os.rs
+runtime::os,8025f5b0,fn_8025f5b0,translated,high,"work/ghidra/main-gb/export/8025f5b0_FUN_8025f5b0.c; 0x801C6460(state+4), state = (state & ~2) | 1",src/runtime/os.rs
+runtime::os,8025f5f0,fn_8025f5f0,translated,high,"work/ghidra/main-gb/export/8025f5f0_FUN_8025f5f0.c; 0x801C6710(state+4), state = (state & ~1) | 0x0A",src/runtime/os.rs
+runtime::os,8025f630,fn_8025f630,translated,medium,"work/ghidra/main-gb/export/8025f630_FUN_8025f630.c; scales from sda2(-0x48E0/-0x48D8/-0x48DC), 0x801C6430 with six doubles and state+4, state = (state & ~1) | 2",src/runtime/os.rs
+runtime::os,8025f6b0,fn_8025f6b0,translated,medium,"work/ghidra/main-gb/export/8025f6b0_FUN_8025f6b0.c; null-guarded 0x801C6730(owner+4, block, block+4, block+8)",src/runtime/os.rs
+runtime::os,8025fd50,fn_8025fd50,translated,high,"work/ghidra/main-gb/export/8025fd50_FUN_8025fd50.c; count and data guards, slot < 8, negative -> 0xFF, value < count -> byte at data+slot, returns 1/0",src/runtime/os.rs
+runtime::os,8025fdc0,fn_8025fdc0,translated,high,"work/ghidra/main-gb/export/8025fdc0_FUN_8025fdc0.c; same guards, fixed byte at data+8, returns 1/0",src/runtime/os.rs

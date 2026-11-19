@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ae0560,fn_80ae0560,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae0560_FUN_80ae0560.c; met_pata/met_pataBig binder; wait clip; +0x5B0 scale",src/game/enemies.rs
+game::enemies,80ae06d0,fn_80ae06d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae06d0_FUN_80ae06d0.c; wait/ridden/rise phase switch; GQR0 fiction only",src/game/enemies.rs
+game::enemies,80ae0880,fn_80ae0880,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae0880_FUN_80ae0880.c; per-player 0x227..0x22F sound ladder; BSS table 0x80B76E98",src/game/enemies.rs
+game::enemies,80ae0a20,fn_80ae0a20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae0a20_FUN_80ae0a20.c; four-slot contact sweep; clears +0x820 and 0x80429F10 counters",src/game/enemies.rs
+game::enemies,80ae0b30,fn_80ae0b30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae0b30_FUN_80ae0b30.c; contact reaction; speeds from 0x80B30D0C..D28; player flags 0x89/0x83",src/game/enemies.rs
+game::enemies,80ae0d30,fn_80ae0d30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae0d30_FUN_80ae0d30.c; contact lists +0x5D0/+0x62C/+0x688; height snap to +0x808; Wm_en_patametsweat",src/game/enemies.rs
+game::enemies,80ae1080,fn_80ae1080,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae1080_FUN_80ae1080.c; +0xEC speed clamp against +0xF8; base step; +0x588 slot 0x1C",src/game/enemies.rs
+game::enemies,80ae1430,fn_80ae1430,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae1430_FUN_80ae1430.c; 0x8015F800 release plus optional 0x802B9280 free",src/game/enemies.rs
+game::enemies,80ae1550,fn_80ae1550,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae1550_FUN_80ae1550.c; 48-byte 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80ae1580,fn_80ae1580,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae1580_FUN_80ae1580.c; second 48-byte 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80ae15b0,fn_80ae15b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae15b0_FUN_80ae15b0.c; 0xAB0-byte constructor; vtable 0x80B5B10C then 0x80B5FED4",src/game/enemies.rs
+game::enemies,80ae19b0,fn_80ae19b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae19b0_FUN_80ae19b0.c; 0x80AD0070 retire plus +0xA1C slot 0x14 release; returns 1",src/game/enemies.rs
+game::enemies,80ae1a00,fn_80ae1a00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae1a00_FUN_80ae1a00.c; releases +0xA5C then +0xA1C through slot 0x10",src/game/enemies.rs
+game::enemies,80ae1a50,fn_80ae1a50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae1a50_FUN_80ae1a50.c; 0x80AD0440 rebuild plus unit-scale +0xA1C commit",src/game/enemies.rs
+game::enemies,80ae1cc0,fn_80ae1cc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae1cc0_FUN_80ae1cc0.c; skl_root_shell node lookup; 0x80168180 frame read",src/game/enemies.rs
+game::enemies,80ae1d30,fn_80ae1d30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae1d30_FUN_80ae1d30.c; controller slot 0x28 name test against BSS 0x80B76F90",src/game/enemies.rs
+game::enemies,80ae22c0,fn_80ae22c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae22c0_FUN_80ae22c0.c; +0xE8 ramp by 0.015625 clamped at -1.0 / +1.0",src/game/enemies.rs
+game::enemies,80ae2330,fn_80ae2330,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae2330_FUN_80ae2330.c; +0xE8 ramp by 0.015625 clamped at 0.0",src/game/enemies.rs
+game::enemies,80ae23a0,fn_80ae23a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae23a0_FUN_80ae23a0.c; +0xEC ramp by 0.015625 clamped at -1.0 / +1.0",src/game/enemies.rs
+game::enemies,80ae2410,fn_80ae2410,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae2410_FUN_80ae2410.c; +0xEC ramp by 0.015625 clamped at 0.0",src/game/enemies.rs
+game::enemies,80ae2570,fn_80ae2570,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae2570_FUN_80ae2570.c; +0xA18 clip lookup into +0xA1C/+0xA5C; name argument inferred",src/game/enemies.rs
+game::enemies,80ae25e0,fn_80ae25e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae25e0_FUN_80ae25e0.c; flyA + wing_pata bind; +0x360 phase 1; bit 8 of +0x4",src/game/enemies.rs
+game::enemies,80ae26c0,fn_80ae26c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae26c0_FUN_80ae26c0.c; three-phase +0x360 machine with +0xA96/+0x500 timers",src/game/enemies.rs
+game::enemies,80ae2800,fn_80ae2800,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae2800_FUN_80ae2800.c; side flip +0xA94/+0x348; +0x102 from 0x80B3081C",src/game/enemies.rs
+game::enemies,80ae2910,fn_80ae2910,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae2910_FUN_80ae2910.c; phase machine plus 0x80AE2250 angle step called by address",src/game/enemies.rs
+game::enemies,80ae2a70,fn_80ae2a70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae2a70_FUN_80ae2a70.c; state 2 entry; +0xE8 from 0x80B30DB8; -4.0 / 8.0 seeds",src/game/enemies.rs
+game::enemies,80ae2b50,fn_80ae2b50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae2b50_FUN_80ae2b50.c; ground probe + landing smoke; 0x15 << side collision band",src/game/enemies.rs
+game::enemies,80ae2d00,fn_80ae2d00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae2d00_FUN_80ae2d00.c; idle step; side flip and +0xE8 mirror",src/game/enemies.rs

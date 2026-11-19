@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8064b1c0,fn_8064b1c0,translated,high,"work/ghidra/rel-d_basesNP/export/8064b1c0_FUN_8064b1c0.c; allocates 0x440 bytes, base ctor 0x80064110, vtable 0x807E3DC0, waterbubble family (adjacent loader)",src/game/bases.rs
+game::bases,8064b370,fn_8064b370,translated,high,"work/ghidra/rel-d_basesNP/export/8064b370_FUN_8064b370.c; loads waterbubble / g3d_waterbubble_brres, binds model +0x3B4 and animation +0x3F4",src/game/bases.rs
+game::bases,8064c3a0,fn_8064c3a0,translated,high,"work/ghidra/rel-d_basesNP/export/8064c3a0_FUN_8064c3a0.c; allocates 0x4A0 bytes, vtable 0x807E426C, MG_kinopio family",src/game/bases.rs
+game::bases,8064c460,fn_8064c460,translated,high,"work/ghidra/rel-d_basesNP/export/8064c460_FUN_8064c460.c; loads MG_kinopio with KDH_model/KDB_model/KB_trs_open bindings",src/game/bases.rs
+game::bases,8064d790,fn_8064d790,translated,high,"work/ghidra/rel-d_basesNP/export/8064d790_FUN_8064d790.c; loads lift_zen / g3d_lift_zen_brres and pane lift_togeU",src/game/bases.rs
+game::bases,8064e5f0,fn_8064e5f0,translated,high,"work/ghidra/rel-d_basesNP/export/8064e5f0_FUN_8064e5f0.c; allocates 0x398 bytes, vtable 0x807E483C, BGM_anim_dummy family",src/game/bases.rs
+game::bases,8064e870,fn_8064e870,translated,high,"work/ghidra/rel-d_basesNP/export/8064e870_FUN_8064e870.c; loads BGM_anim_dummy and builds RtoL +0x5BC / LtoR +0x584 clips selected by +0x600",src/game/bases.rs
+game::bases,80668670,fn_80668670,translated,high,"work/ghidra/rel-d_basesNP/export/80668670_FUN_80668670.c; loads lift_zen_kaiten and binds the caller-supplied pane at +0x40C",src/game/bases.rs
+game::bases,80674c00,fn_80674c00,translated,high,"work/ghidra/rel-d_basesNP/export/80674c00_FUN_80674c00.c; loads middle_flag and binds model, tag and two animated panes",src/game/bases.rs
+game::bases,80676e10,fn_80676e10,translated,high,"work/ghidra/rel-d_basesNP/export/80676e10_FUN_80676e10.c; loads houdai and binds mouth/body/root panes at +0x3F8/+0x438/+0x478",src/game/bases.rs
+game::bases,80677730,fn_80677730,translated,high,"work/ghidra/rel-d_basesNP/export/80677730_FUN_80677730.c; allocates 0x398 bytes, vtable 0x807EB404, obj_door_obake family",src/game/bases.rs
+game::bases,80677870,fn_80677870,translated,high,"work/ghidra/rel-d_basesNP/export/80677870_FUN_80677870.c; loads obj_door_obake / g3d_obj_door_obake_brres and pane obj_obake_door",src/game/bases.rs
+game::bases,80677dd0,fn_80677dd0,translated,high,"work/ghidra/rel-d_basesNP/export/80677dd0_FUN_80677dd0.c; loads block_slide, stores pane count byte +0x530 and binds count panes from +0x3F0",src/game/bases.rs
+game::bases,80687850,fn_80687850,translated,high,"work/ghidra/rel-d_basesNP/export/80687850_FUN_80687850.c; allocates 0x560 bytes, two 0x8016A2F0 subobjects, final vtable 0x807EE1E8",src/game/bases.rs
+game::bases,806901b0,fn_806901b0,translated,high,"work/ghidra/rel-d_basesNP/export/806901b0_FUN_806901b0.c; allocates 0x398 bytes, vtable 0x807EF9A4, Mask_flashlight_obake family",src/game/bases.rs
+game::bases,80690430,fn_80690430,translated,high,"work/ghidra/rel-d_basesNP/export/80690430_FUN_80690430.c; loads Mask_flashlight_obake, binds flashlight_obake pane +0x74 and clip +0xB4",src/game/bases.rs
+game::bases,806c0b70,fn_806c0b70,translated,high,"work/ghidra/rel-d_basesNP/export/806c0b70_FUN_806c0b70.c; allocates 0x528 bytes, vtable 0x807F7980, hashigo family, 0x11-entry table",src/game/bases.rs
+game::bases,806c0e10,fn_806c0e10,translated,high,"work/ghidra/rel-d_basesNP/export/806c0e10_FUN_806c0e10.c; loads hashigo / g3d_hashigo_brres and pane from table 0x807CAF5C",src/game/bases.rs
+game::bases,806cbc70,fn_806cbc70,translated,high,"work/ghidra/rel-d_basesNP/export/806cbc70_FUN_806cbc70.c; allocates 0x3F8 bytes, vtable 0x807F9DF4, lift_huriko family",src/game/bases.rs
+game::bases,806cbce0,fn_806cbce0,translated,high,"work/ghidra/rel-d_basesNP/export/806cbce0_FUN_806cbce0.c; loads lift_huriko / g3d_lift_huriko_brres and pane lift_huriko_tomegu",src/game/bases.rs
+game::bases,806f1cb0,fn_806f1cb0,translated,high,"work/ghidra/rel-d_basesNP/export/806f1cb0_FUN_806f1cb0.c; allocates 0x4A0 bytes, vtable 0x807FF0CC, 0x10-entry table at +0x39C",src/game/bases.rs
+game::bases,80705540,fn_80705540,translated,high,"work/ghidra/rel-d_basesNP/export/80705540_FUN_80705540.c; allocates 0x408 bytes, vtable 0x80804568, noboribou_obake family",src/game/bases.rs
+game::bases,80705710,fn_80705710,translated,high,"work/ghidra/rel-d_basesNP/export/80705710_FUN_80705710.c; loads noboribou_obake / g3d_noboribou_obake_brres",src/game/bases.rs
+game::bases,80711e90,fn_80711e90,translated,high,"work/ghidra/rel-d_basesNP/export/80711e90_FUN_80711e90.c; allocates 0x650 bytes, vtable 0x80806B9C, three callback tables at +0x3B4/+0x480/+0x504",src/game/bases.rs
+game::bases,8071ec20,fn_8071ec20,translated,high,"work/ghidra/rel-d_basesNP/export/8071ec20_FUN_8071ec20.c; allocates 0x560 bytes, vtable 0x80809A04, obj_yashi family",src/game/bases.rs
+game::bases,8071edb0,fn_8071edb0,translated,high,"work/ghidra/rel-d_basesNP/export/8071edb0_FUN_8071edb0.c; loads obj_yashi and obj_yashi_wait clip +0x3F4, playback constants 0x807CD050/0x807CD080",src/game/bases.rs
+game::bases,8072a8e0,fn_8072a8e0,translated,high,"work/ghidra/rel-d_basesNP/export/8072a8e0_FUN_8072a8e0.c; allocates 0x5A8 bytes, vtable 0x8080BA44, three 0x8008C200 subobjects",src/game/bases.rs
+game::bases,80745a80,fn_80745a80,translated,high,"work/ghidra/rel-d_basesNP/export/80745a80_FUN_80745a80.c; allocates 0x640 bytes, vtable 0x80810AFC, untei_rope family, two callback tables",src/game/bases.rs
+game::bases,80745b30,fn_80745b30,translated,high,"work/ghidra/rel-d_basesNP/export/80745b30_FUN_80745b30.c; loads untei_rope and two untei_rope_tomegu panes at +0x3F4/+0x434 (loop stops before +0x474)",src/game/bases.rs
+game::bases,807a6360,fn_807a6360,translated,high,"work/ghidra/rel-d_basesNP/export/807a6360_FUN_807a6360.c; allocates 0x5E0 bytes, final vtable 0x8081D0D4, three callback tables and 0x8007F7A0 helper",src/game/bases.rs

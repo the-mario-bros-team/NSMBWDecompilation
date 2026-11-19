@@ -1,0 +1,10 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,801502e0,fn_801502e0,translated,high,"work/ghidra/main-gb/export/801502e0_FUN_801502e0.c; pending-item display pass; guard +0x1558; phase +0x1560; 0x800FFDB0 setter",src/engine/display.rs
+engine::display,80151e50,fn_80151e50,translated,medium,"work/ghidra/main-gb/export/80151e50_FUN_80151e50.c; interaction request handler; action bytes +0x2C/+0x2D; +0x3F4 and +0x3FC slots",src/engine/display.rs
+engine::display,80152cf0,fn_80152cf0,translated,medium,"work/ghidra/main-gb/export/80152cf0_FUN_80152cf0.c; committed-target selector; +0x38C gate; layout 0x80376E88; animation 0x8035421C",src/engine/display.rs
+engine::display,801548a0,fn_801548a0,translated,medium,"work/ghidra/main-gb/export/801548a0_FUN_801548a0.c; route-HUD transform pass; section-4B bytes; 0x80078EB0 zoom getter",src/engine/display.rs
+engine::display,80154a70,fn_80154a70,translated,medium,"work/ghidra/main-gb/export/80154a70_FUN_80154a70.c; per-slot view rectangle; ratio clamp; eight-case orientation switch",src/engine/display.rs
+engine::display,80154e50,fn_80154e50,translated,high,"work/ghidra/main-gb/export/80154e50_FUN_80154e50.c; four-slot y-band player mask; 1 << player+1",src/engine/display.rs
+engine::display,80156930,fn_80156930,translated,medium,"work/ghidra/main-gb/export/80156930_FUN_80156930.c; x-band scan with y extent; flag bits 0x10000000/0x20000000/0x40000000",src/engine/display.rs
+engine::display,80156ab0,fn_80156ab0,translated,medium,"work/ghidra/main-gb/export/80156ab0_FUN_80156ab0.c; y-band scan with x extent; same three flag bits",src/engine/display.rs
+engine::display,8015f130,fn_8015f130,translated,high,"work/ghidra/main-gb/export/8015f130_thunk_FUN_801b8620.c; four-byte branch to the CRC-32 at 0x801B8620",src/engine/display.rs

@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,8011d450,fn_8011d450,translated,medium,"work/ghidra/main-gb/export/8011d450_FUN_8011d450.c; ground collider descriptors +0x554..+0x584",src/game/worldmap.rs
+game::worldmap,8011d590,fn_8011d590,translated,medium,"work/ghidra/main-gb/export/8011d590_FUN_8011d590.c; tall/short collider pair, player slot +0x38D",src/game/worldmap.rs
+game::worldmap,8011dbb0,fn_8011dbb0,translated,medium,"work/ghidra/main-gb/export/8011dbb0_FUN_8011dbb0.c; contact response word +0x5C0",src/game/worldmap.rs
+game::worldmap,8011dce0,fn_8011dce0,translated,high,"work/ghidra/main-gb/export/8011dce0_FUN_8011dce0.c; returns +0x61C",src/game/worldmap.rs
+game::worldmap,8011dcf0,fn_8011dcf0,translated,medium,"work/ghidra/main-gb/export/8011dcf0_FUN_8011dcf0.c; two name queries then event 0x11",src/game/worldmap.rs
+game::worldmap,8011de40,fn_8011de40,translated,high,"work/ghidra/main-gb/export/8011de40_FUN_8011de40.c; constant zero",src/game/worldmap.rs
+game::worldmap,8011de50,fn_8011de50,translated,medium,"work/ghidra/main-gb/export/8011de50_FUN_8011de50.c; 0x803759F8 name gate, event 3",src/game/worldmap.rs
+game::worldmap,8011df00,fn_8011df00,translated,medium,"work/ghidra/main-gb/export/8011df00_FUN_8011df00.c; ground probe, modes 7/2",src/game/worldmap.rs
+game::worldmap,8011df90,fn_8011df90,translated,medium,"work/ghidra/main-gb/export/8011df90_FUN_8011df90.c; ground probe, modes 7/3",src/game/worldmap.rs
+game::worldmap,8011e020,fn_8011e020,translated,medium,"work/ghidra/main-gb/export/8011e020_FUN_8011e020.c; +0x60C/+0x61C gate, 0x8011D380 or 0x8011EB00",src/game/worldmap.rs
+game::worldmap,8011e1a0,fn_8011e1a0,translated,medium,"work/ghidra/main-gb/export/8011e1a0_FUN_8011e1a0.c; four-name gate, 0x8011D2B0 response",src/game/worldmap.rs
+game::worldmap,8011e420,fn_8011e420,translated,medium,"work/ghidra/main-gb/export/8011e420_FUN_8011e420.c; kind 1/2 response tree",src/game/worldmap.rs
+game::worldmap,8011eb00,fn_8011eb00,translated,medium,"work/ghidra/main-gb/export/8011eb00_FUN_8011eb00.c; commits +0x459/+0x38D/+0x18/+0x60C",src/game/worldmap.rs
+game::worldmap,8011ebb0,fn_8011ebb0,translated,medium,"work/ghidra/main-gb/export/8011ebb0_FUN_8011ebb0.c; copies child +0x30, sets child +0x18=3",src/game/worldmap.rs
+game::worldmap,8011eda0,fn_8011eda0,translated,medium,"work/ghidra/main-gb/export/8011eda0_FUN_8011eda0.c; three contact scans, id==2 success",src/game/worldmap.rs
+game::worldmap,8011ee80,fn_8011ee80,translated,medium,"work/ghidra/main-gb/export/8011ee80_FUN_8011ee80.c; +0x46C list, +0x10D4 bit 1",src/game/worldmap.rs
+game::worldmap,8011eef0,fn_8011eef0,translated,medium,"work/ghidra/main-gb/export/8011eef0_FUN_8011eef0.c; +0x470 list, +0x10D4 bit 0, name id",src/game/worldmap.rs
+game::worldmap,8011efe0,fn_8011efe0,translated,medium,"work/ghidra/main-gb/export/8011efe0_FUN_8011efe0.c; +0x474 list, heights and attack bits",src/game/worldmap.rs
+game::worldmap,8011f130,fn_8011f130,translated,medium,"work/ghidra/main-gb/export/8011f130_FUN_8011f130.c; strength ladder -2/-1/0, calls 0x800569C0",src/game/worldmap.rs
+game::worldmap,8011f2e0,fn_8011f2e0,translated,medium,"work/ghidra/main-gb/export/8011f2e0_FUN_8011f2e0.c; +0x608 bit 1, +0x618<2, three names",src/game/worldmap.rs
+game::worldmap,8011f520,fn_8011f520,translated,medium,"work/ghidra/main-gb/export/8011f520_FUN_8011f520.c; channel 6 then sound event 0x283",src/game/worldmap.rs
+game::worldmap,8011f630,fn_8011f630,translated,medium,"work/ghidra/main-gb/export/8011f630_FUN_8011f630.c; post-hit reset, +0x604=3, +0x360=1",src/game/worldmap.rs
+game::worldmap,8011f700,fn_8011f700,translated,medium,"work/ghidra/main-gb/export/8011f700_FUN_8011f700.c; per-frame hit handler, event 0x26F",src/game/worldmap.rs
+game::worldmap,8011f8d0,fn_8011f8d0,translated,medium,"work/ghidra/main-gb/export/8011f8d0_FUN_8011f8d0.c; ground follow, height directions, magma effect",src/game/worldmap.rs
+game::worldmap,8011fc00,fn_8011fc00,translated,high,"work/ghidra/main-gb/export/8011fc00_FUN_8011fc00.c; three literal offset writes and one query",src/game/worldmap.rs
+game::worldmap,8011fed0,fn_8011fed0,translated,medium,"work/ghidra/main-gb/export/8011fed0_FUN_8011fed0.c; +0x360 state 1/2, slope and ground follow",src/game/worldmap.rs

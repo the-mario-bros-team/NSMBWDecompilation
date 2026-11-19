@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,801406f0,fn_801406f0,translated,medium,"work/ghidra/main-gb/export/801406f0_FUN_801406f0.c; slip-actor yaw/pitch rates + four-state warp countdown; Wm_mr_slipsmoke and Wm_ob_warpcannonkira",src/game/worldmap.rs
+game::worldmap,80140ff0,fn_80140ff0,translated,medium,"work/ghidra/main-gb/export/80140ff0_FUN_80140ff0.c; phase blend through the 0x802F4EF8 weights into the 0x802F4F18 pose records",src/game/worldmap.rs
+game::worldmap,80141a60,fn_80141a60,translated,medium,"work/ghidra/main-gb/export/80141a60_FUN_80141a60.c; two-record contact hand-off with the 0x8014EA30 carry link",src/game/worldmap.rs
+game::worldmap,80142030,fn_80142030,translated,medium,"work/ghidra/main-gb/export/80142030_FUN_80142030.c; motion-table index ladder plus the 0x80325260 four-float records",src/game/worldmap.rs
+game::worldmap,80142660,fn_80142660,translated,medium,"work/ghidra/main-gb/export/80142660_FUN_80142660.c; four motion-table groups flag ladder and eased commit to 0x1094/0x10B4/0x14EC",src/game/worldmap.rs
+game::worldmap,801430e0,fn_801430e0,translated,medium,"work/ghidra/main-gb/export/801430e0_FUN_801430e0.c; two 0x80075CA0 ground probes bounded by the 0x80142510 extents",src/game/worldmap.rs
+game::worldmap,80145650,fn_80145650,translated,medium,"work/ghidra/main-gb/export/80145650_FUN_80145650.c; position/angle/transform submit plus the 12-float pose matrix chain",src/game/worldmap.rs
+game::worldmap,801459b0,fn_801459b0,translated,medium,"work/ghidra/main-gb/export/801459b0_FUN_801459b0.c; three 0x80145980 x 0x800541C0 products",src/game/worldmap.rs
+game::worldmap,801468d0,fn_801468d0,translated,medium,"work/ghidra/main-gb/export/801468d0_FUN_801468d0.c; five flag gates then the +0x400 vtable forward",src/game/worldmap.rs
+game::worldmap,801472f0,fn_801472f0,translated,medium,"work/ghidra/main-gb/export/801472f0_FUN_801472f0.c; retires the two +0x27E8/+0x27F0 state slots",src/game/worldmap.rs
+game::worldmap,80147700,fn_80147700,translated,medium,"work/ghidra/main-gb/export/80147700_FUN_80147700.c; nearest live player under 1600.0 published through the out word",src/game/worldmap.rs
+game::worldmap,8014a690,fn_8014a690,translated,medium,"work/ghidra/main-gb/export/8014a690_FUN_8014a690.c; 0x802DCBFC dispatch wrapper",src/game/worldmap.rs
+game::worldmap,8014a6c0,fn_8014a6c0,translated,medium,"work/ghidra/main-gb/export/8014a6c0_FUN_8014a6c0.c; 0x802DCBFC dispatch wrapper",src/game/worldmap.rs
+game::worldmap,8014ac10,fn_8014ac10,translated,medium,"work/ghidra/main-gb/export/8014ac10_FUN_8014ac10.c; warp-cannon +0x514 flash step and 0x80139420 position copy",src/game/worldmap.rs
+game::worldmap,8014cdd0,fn_8014cdd0,translated,high,"work/ghidra/main-gb/export/8014cdd0_FUN_8014cdd0.c; +0x10C magnitude ladder selects the +0xEC scale",src/game/worldmap.rs
+game::worldmap,8014f630,fn_8014f630,translated,medium,"work/ghidra/main-gb/export/8014f630_FUN_8014f630.c; target +0x36D mode switch posts the four +0x64/+0x5C/+0x68 effects",src/game/worldmap.rs

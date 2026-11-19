@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b14680,fn_80b14680,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b14680_FUN_80b14680.c; deleting-destructor forwarder, call 0x802DCBFC(second,second,first); callee role unresolved",src/game/enemies.rs
+game::enemies,80b146b0,fn_80b146b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b146b0_FUN_80b146b0.c; byte-identical forwarder to 80b14680; callee role unresolved",src/game/enemies.rs
+game::enemies,80b14c70,fn_80b14c70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b14c70_FUN_80b14c70.c; guarded by +0x9D8, resolves 0x80162D00(+0x9D4) and copies +0x7F8/+0x7FC/+0x800 to +0xAC/+0xB0/+0xB4 plus +0x102 half-word",src/game/enemies.rs
+game::enemies,80b14db0,fn_80b14db0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b14db0_FUN_80b14db0.c; copies constant record 0x802EE810 into +0x5F0..+0x610, installs +0x148 and +0x1EC helpers, ORs 0x80000000 into +0x614/+0x620/+0x630",src/game/enemies.rs
+game::enemies,80b14f70,fn_80b14f70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b14f70_FUN_80b14f70.c; name predicate via slots +0x28/+0x14 against 0x80B78E78, returns the clz(x==0) idiom",src/game/enemies.rs
+game::enemies,80b152d0,fn_80b152d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b152d0_FUN_80b152d0.c; deleting-destructor forwarder, call 0x802DCBFC(second,second,first); callee role unresolved",src/game/enemies.rs
+game::enemies,80b15300,fn_80b15300,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b15300_FUN_80b15300.c; byte-identical forwarder to 80b152d0; callee role unresolved",src/game/enemies.rs
+game::enemies,80b15330,fn_80b15330,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b15330_FUN_80b15330.c; allocates 0x5E0, builds +0x524/+0x544/+0x584 holders and installs class vtable 0x80B698B0",src/game/enemies.rs
+game::enemies,80b15490,fn_80b15490,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b15490_FUN_80b15490.c; binds clip s_obj_door_torideboss (0x80B6989C) through 0x801651F0 and seeds the rate",src/game/enemies.rs
+game::enemies,80b155f0,fn_80b155f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b155f0_FUN_80b155f0.c; rate write on +0x584 then +0x5B8 = 3",src/game/enemies.rs
+game::enemies,80b15630,fn_80b15630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b15630_FUN_80b15630.c; 0x801680E0 and 0x80168FE0 on +0x584 with the 0x80B321DC constant",src/game/enemies.rs
+game::enemies,80b156e0,fn_80b156e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b156e0_FUN_80b156e0.c; copies +0xAC position into a 20-byte vector and requests sound 0x291",src/game/enemies.rs
+game::enemies,80b15730,fn_80b15730,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b15730_FUN_80b15730.c; same shape as 80b156e0 with sound id 0x28F",src/game/enemies.rs
+game::enemies,80b15780,fn_80b15780,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b15780_FUN_80b15780.c; name predicate via slots +0x28/+0x14 against 0x80353090, returns (cmp != 0)",src/game/enemies.rs
+game::enemies,80b157d0,fn_80b157d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b157d0_FUN_80b157d0.c; full destructor: +0x584, +0x544, +0x524 teardown and optional release",src/game/enemies.rs
+game::enemies,80b159a0,fn_80b159a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b159a0_FUN_80b159a0.c; loads test_lift / g3d_test_lift.brres from 0x8042A038 and binds it at +0x540/+0x544",src/game/enemies.rs
+game::enemies,80b15a50,fn_80b15a50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b15a50_FUN_80b15a50.c; 0x8007FA40 animator installer with 3 doubles + negated rate, then +0x628 = 1 and start",src/game/enemies.rs
+game::enemies,80b1c340,fn_80b1c340,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1c340_FUN_80b1c340.c; registration/dispose pair: 0x8015F800(state,0) then optional 0x802B9280",src/game/enemies.rs
+game::enemies,80b1c3a0,fn_80b1c3a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1c3a0_FUN_80b1c3a0.c; second copy of the registration/dispose pair",src/game/enemies.rs
+game::enemies,80b1c400,fn_80b1c400,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1c400_FUN_80b1c400.c; constant producer returning 0x80357BF4",src/game/enemies.rs
+game::enemies,80b1c4f0,fn_80b1c4f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1c4f0_FUN_80b1c4f0.c; five-link +0x30 chain walker testing vtable slot +0xC, then recursing",src/game/enemies.rs
+game::enemies,80b1c5d0,fn_80b1c5d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1c5d0_FUN_80b1c5d0.c; ':'-suffix name predicate using 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80b1c690,fn_80b1c690,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b1c690_FUN_80b1c690.c; deleting-destructor forwarder, call 0x802DCBFC(second,second,first); callee role unresolved",src/game/enemies.rs
+game::enemies,80b1c6c0,fn_80b1c6c0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b1c6c0_FUN_80b1c6c0.c; byte-identical forwarder to 80b1c690; callee role unresolved",src/game/enemies.rs
+game::enemies,80b1c6f0,fn_80b1c6f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1c6f0_FUN_80b1c6f0.c; allocates 0x528, runs base constructor and stores vtable 0x80B6B310",src/game/enemies.rs
+game::enemies,80b1c970,fn_80b1c970,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1c970_FUN_80b1c970.c; release path, bare 0x802B9280() with receiver inferred in r3",src/game/enemies.rs
+game::enemies,80b1c9b0,fn_80b1c9b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1c9b0_FUN_80b1c9b0.c; second copy of the release path",src/game/enemies.rs
+game::enemies,80b1c9f0,fn_80b1c9f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1c9f0_FUN_80b1c9f0.c; destructor: 0x8015F9F0(+0x18,0) then optional 0x802B9280",src/game/enemies.rs
+game::enemies,80b1ca50,fn_80b1ca50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1ca50_FUN_80b1ca50.c; second copy of the +0x18 destructor",src/game/enemies.rs

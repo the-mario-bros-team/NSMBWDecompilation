@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807045b0,fn_807045b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807045b0_FUN_807045b0.c; resets the four +0xDAC counters and the 0x5C-stride records through 0x80703D70/0x80703290; returns 1",src/game/bases.rs
+game::bases,80704630,fn_80704630,translated,medium,"work/ghidra/rel-d_basesNP/export/80704630_FUN_80704630.c; 0x80429CA0 <= 0x80703DC0() gate then interface +0x18 with 0x8082F220",src/game/bases.rs
+game::bases,807046b0,fn_807046b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807046b0_FUN_807046b0.c; 0x80703DC0 step; +0xE8 = 0x807CC588; 0x8006CD40",src/game/bases.rs
+game::bases,80704710,fn_80704710,translated,medium,"work/ghidra/rel-d_basesNP/export/80704710_FUN_80704710.c; same gate as 0x80704630 with event 0x8082F2A0",src/game/bases.rs
+game::bases,80707040,fn_80707040,translated,high,"work/ghidra/rel-d_basesNP/export/80707040_FUN_80707040.c; flag word +0x04 bit 9; sound 0x23B through 0x80429D60",src/game/bases.rs
+game::bases,80707400,fn_80707400,translated,high,"work/ghidra/rel-d_basesNP/export/80707400_FUN_80707400.c; one-shot gate +0x3DE/+0x3DF around 0x80707040",src/game/bases.rs
+game::bases,807078e0,fn_807078e0,translated,high,"work/ghidra/rel-d_basesNP/export/807078e0_FUN_807078e0.c; 0x800671B0 then optional 0x80162920; returns object",src/game/bases.rs
+game::bases,80707bc0,fn_80707bc0,translated,high,"work/ghidra/rel-d_basesNP/export/80707bc0_FUN_80707bc0.c; 0x8015F800 then optional 0x802B9280; returns object",src/game/bases.rs
+game::bases,80707d40,fn_80707d40,translated,high,"work/ghidra/rel-d_basesNP/export/80707d40_FUN_80707d40.c; alloc 0x3F0; 0x80066FC0; vtable 0x80804AF8 at +0x60",src/game/bases.rs
+game::bases,80707e20,fn_80707e20,translated,high,"work/ghidra/rel-d_basesNP/export/80707e20_FUN_80707e20.c; interface +0x10; 0x80064F50; clears +0x3E4; returns 1",src/game/bases.rs
+game::bases,80708450,fn_80708450,translated,high,"work/ghidra/rel-d_basesNP/export/80708450_FUN_80708450.c; alloc 0x5C0 sled actor; vtable 0x80804D48; holders +0x524/+0x544/+0x584",src/game/bases.rs
+game::bases,80708860,fn_80708860,translated,high,"work/ghidra/rel-d_basesNP/export/80708860_FUN_80708860.c; position and angle shorts into matrix +0x7C; three angle writers; two holder attaches; returns 1",src/game/bases.rs
+game::bases,807089d0,fn_807089d0,translated,high,"work/ghidra/rel-d_basesNP/export/807089d0_FUN_807089d0.c; tears down +0x584/+0x544/+0x524 then optional 0x80162920",src/game/bases.rs
+game::bases,8070c880,fn_8070c880,translated,high,"work/ghidra/rel-d_basesNP/export/8070c880_FUN_8070c880.c; 0x808056B0 bind table 0; scales 0x807CC96C and 0x807CC9A8; secondary clip +0x5C0",src/game/bases.rs
+game::bases,8070c970,fn_8070c970,translated,high,"work/ghidra/rel-d_basesNP/export/8070c970_FUN_8070c970.c; same bind with table 1 and scale 0x807CC900",src/game/bases.rs
+game::bases,8070ca60,fn_8070ca60,translated,high,"work/ghidra/rel-d_basesNP/export/8070ca60_FUN_8070ca60.c; same bind with primary scale 0x807CC9A8",src/game/bases.rs
+game::bases,8070cb50,fn_8070cb50,translated,high,"work/ghidra/rel-d_basesNP/export/8070cb50_FUN_8070cb50.c; same bind with primary scale 0x807CC900",src/game/bases.rs
+game::bases,8070cc40,fn_8070cc40,translated,high,"work/ghidra/rel-d_basesNP/export/8070cc40_FUN_8070cc40.c; same bind with primary scale 0x807CC95C",src/game/bases.rs
+game::bases,8070cd30,fn_8070cd30,translated,high,"work/ghidra/rel-d_basesNP/export/8070cd30_FUN_8070cd30.c; side +0x6DC and entry +0x6E0 select the cached limits +0x788/+0x78C",src/game/bases.rs
+game::bases,8070cda0,fn_8070cda0,translated,high,"work/ghidra/rel-d_basesNP/export/8070cda0_FUN_8070cda0.c; magic_body bind into +0x5F0 then velocity reset and +0x628 clear",src/game/bases.rs
+game::bases,8070ceb0,fn_8070ceb0,translated,high,"work/ghidra/rel-d_basesNP/export/8070ceb0_FUN_8070ceb0.c; three holder ticks; heading table 0x807CC910; +0x628 flip on ground contact",src/game/bases.rs
+game::bases,8070cf90,fn_8070cf90,translated,medium,"work/ghidra/rel-d_basesNP/export/8070cf90_FUN_8070cf90.c; 0x8070C7A0 rebind then velocity reset; +0x114 = -0x807CC968",src/game/bases.rs
+game::bases,8070d000,fn_8070d000,translated,high,"work/ghidra/rel-d_basesNP/export/8070d000_FUN_8070d000.c; 0x8070C410 and 0x8070C4F0 then the heading and +0x628 flip tail",src/game/bases.rs
+game::bases,8070d0d0,fn_8070d0d0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070d0d0_FUN_8070d0d0.c; 0x8070C880 rebind; countdown and tilt scaled by 0x807CC938 and 0x807CC97C",src/game/bases.rs
+game::bases,8070d6a0,fn_8070d6a0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070d6a0_FUN_8070d6a0.c; 0x8070C970 rebind; clears the timers; sound 0x562 or 0x563",src/game/bases.rs
+game::bases,8070d9e0,fn_8070d9e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070d9e0_FUN_8070d9e0.c; 0x8070CB50 rebind; +0x6E4 reset; state +0x360 = 1",src/game/bases.rs
+game::bases,8070da40,fn_8070da40,translated,high,"work/ghidra/rel-d_basesNP/export/8070da40_FUN_8070da40.c; three-state landing body; states 1/2/3 with events 0x8082F5F0 and 0x8082F6B0",src/game/bases.rs
+game::bases,8070dbd0,fn_8070dbd0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070dbd0_FUN_8070dbd0.c; 0x8070CA60 rebind; doubled tilt; +0x791 = 3",src/game/bases.rs
+game::bases,8070e120,fn_8070e120,translated,high,"work/ghidra/rel-d_basesNP/export/8070e120_FUN_8070e120.c; velocity reset; sound 0x56E from +0xAC",src/game/bases.rs
+game::bases,8070e1b0,fn_8070e1b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070e1b0_FUN_8070e1b0.c; three holder ticks and 0x8070C600; radius rescale; Wm_ig_wanwanbig dispatch",src/game/bases.rs

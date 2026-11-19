@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b175b0,fn_80b175b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b175b0_FUN_80b175b0.c; clamped i16 step with double-side test",src/game/enemies.rs
+game::enemies,80b17620,fn_80b17620,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b17620_FUN_80b17620.c; toggle-driven mirror step",src/game/enemies.rs
+game::enemies,80b17670,fn_80b17670,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b17670_FUN_80b17670.c; two-axis caller of the two helpers",src/game/enemies.rs
+game::enemies,80b1cc50,fn_80b1cc50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1cc50_FUN_80b1cc50.c; g3d/wanwan.brres node binder",src/game/enemies.rs
+game::enemies,80b1cda0,fn_80b1cda0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1cda0_FUN_80b1cda0.c; ground distances plus state-name retire test",src/game/enemies.rs
+game::enemies,80b1cfb0,fn_80b1cfb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1cfb0_FUN_80b1cfb0.c; timer reset and mode-gated animation release",src/game/enemies.rs
+game::enemies,80b1d210,fn_80b1d210,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1d210_FUN_80b1d210.c; matrix rebuild and X offset",src/game/enemies.rs
+game::enemies,80b1d290,fn_80b1d290,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1d290_FUN_80b1d290.c; latch clear; receiver inferred from r3",src/game/enemies.rs
+game::enemies,80b1d2e0,fn_80b1d2e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1d2e0_FUN_80b1d2e0.c; angle/offset step with wrapped compare",src/game/enemies.rs
+game::enemies,80b1d440,fn_80b1d440,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1d440_FUN_80b1d440.c; ground snap plus landsmoke and sound 0x1C7",src/game/enemies.rs
+game::enemies,80b1d680,fn_80b1d680,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1d680_FUN_80b1d680.c; XZ distance; return recovered from callers",src/game/enemies.rs
+game::enemies,80b1d9b0,fn_80b1d9b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1d9b0_FUN_80b1d9b0.c; territory test and +0x5F0 arm",src/game/enemies.rs
+game::enemies,80b1dc00,fn_80b1dc00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1dc00_FUN_80b1dc00.c; clip blend; dropped name passed explicitly",src/game/enemies.rs
+game::enemies,80b1dc70,fn_80b1dc70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1dc70_FUN_80b1dc70.c; second clip bind and vtable commit",src/game/enemies.rs
+game::enemies,80b1dcf0,fn_80b1dcf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1dcf0_FUN_80b1dcf0.c; height-band approach chooser 0..5",src/game/enemies.rs
+game::enemies,80b1ddb0,fn_80b1ddb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1ddb0_FUN_80b1ddb0.c; idle entry with default clip and angle seed",src/game/enemies.rs
+game::enemies,80b1ded0,fn_80b1ded0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1ded0_FUN_80b1ded0.c; speed seed and timer source",src/game/enemies.rs
+game::enemies,80b1e200,fn_80b1e200,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1e200_FUN_80b1e200.c; mode ring and side switch",src/game/enemies.rs
+game::enemies,80b1e320,fn_80b1e320,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1e320_FUN_80b1e320.c; three-state step and ground tail",src/game/enemies.rs
+game::enemies,80b1e480,fn_80b1e480,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1e480_FUN_80b1e480.c; attack clip and sound 0x1C6",src/game/enemies.rs
+game::enemies,80b1e6c0,fn_80b1e6c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1e6c0_FUN_80b1e6c0.c; hop speed via signed-int conversion",src/game/enemies.rs
+game::enemies,80b1e7b0,fn_80b1e7b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1e7b0_FUN_80b1e7b0.c; run-away distance and side flip",src/game/enemies.rs
+game::enemies,80b1e820,fn_80b1e820,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1e820_FUN_80b1e820.c; hop counter and landing entry",src/game/enemies.rs
+game::enemies,80b1e900,fn_80b1e900,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1e900_FUN_80b1e900.c; attack entry and collision install",src/game/enemies.rs
+game::enemies,80b1ea50,fn_80b1ea50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1ea50_FUN_80b1ea50.c; collision responder and contact record",src/game/enemies.rs
+game::enemies,80b1eeb0,fn_80b1eeb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1eeb0_FUN_80b1eeb0.c; turnaround entry and sound 0x1C8",src/game/enemies.rs
+game::enemies,80b1ef80,fn_80b1ef80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1ef80_FUN_80b1ef80.c; facing step with two clamps",src/game/enemies.rs

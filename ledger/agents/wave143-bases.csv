@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806d09b0,fn_806d09b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806d09b0_FUN_806d09b0.c; remo_lift_up execute; rider mask, lean +0xE8 and four-state settle","src/game/bases.rs"
+game::bases,806b8380,fn_806b8380,translated,medium,"work/ghidra/rel-d_basesNP/export/806b8380_FUN_806b8380.c; wendy ring-trail tick; five cursors, five nodes, ringhit/ringkira","src/game/bases.rs"
+game::bases,80664610,fn_80664610,translated,medium,"work/ghidra/rel-d_basesNP/export/80664610_FUN_80664610.c; thirteen-state link, camera zoom and emotes 165..168","src/game/bases.rs"
+game::bases,80792a20,fn_80792a20,translated,medium,"work/ghidra/rel-d_basesNP/export/80792a20_FUN_80792a20.c; world-map node start-up; states 0..6, 14, 15","src/game/bases.rs"
+game::bases,8067e640,fn_8067e640,translated,medium,"work/ghidra/rel-d_basesNP/export/8067e640_FUN_8067e640.c; seven-bit presence mask; layer nibble +0x3E0; retire 0x80162510","src/game/bases.rs"
+game::bases,8062b5c0,fn_8062b5c0,translated,medium,"work/ghidra/rel-d_basesNP/export/8062b5c0_FUN_8062b5c0.c; twenty-pane Layout_MultiCourseSelectContents bind; bit-5 pattern","src/game/bases.rs"
+game::bases,807b08b0,fn_807b08b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807b08b0_FUN_807b08b0.c; pane rect A +0xD4, rect B +0x1BC and +0x198 block","src/game/bases.rs"
+game::bases,807b23b0,fn_807b23b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807b23b0_FUN_807b23b0.c; row/audio selector; four 0x3B0 entries and 0x18-byte records","src/game/bases.rs"
+game::bases,807b27a0,fn_807b27a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807b27a0_FUN_807b27a0.c; player-slot mode table 0x80354E50..0x80354E8C","src/game/bases.rs"
+game::bases,807b7080,fn_807b7080,translated,medium,"work/ghidra/rel-d_basesNP/export/807b7080_FUN_807b7080.c; child-record spawner; handles +0x11E8..+0x1204","src/game/bases.rs"

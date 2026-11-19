@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ab2840,fn_80ab2840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab2840_FUN_80ab2840.c; four-sample trail init; A/B tables at 0x80B2FB5C/0x80B2FB74; 3 calls",src/game/enemies.rs
+game::enemies,80a34f80,fn_80a34f80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a34f80_FUN_80a34f80.c; 60-byte bubble record; bit 8 selects 0.5/-14.0 or 0.9/-25.2",src/game/enemies.rs
+game::enemies,80a2fd40,fn_80a2fd40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2fd40_FUN_80a2fd40.c; env_underwater/wmy_ef_bubble binder; twelve -999999.0 sentinels",src/game/enemies.rs
+game::enemies,80a77a50,fn_80a77a50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a77a50_FUN_80a77a50.c; lift spawn init; state 4 scale block; two fn-pointer tables at 0x80B2DD20..38",src/game/enemies.rs
+game::enemies,80b1d090,fn_80b1d090,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1d090_FUN_80b1d090.c; matrix refresh; +12 translate then Y then X then -12 then Z",src/game/enemies.rs
+game::enemies,80a39410,fn_80a39410,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a39410_FUN_80a39410.c; lift_rakka_ashiba model plus damage binder; 0x80169D90/0x80166830/0x80166BD0",src/game/enemies.rs
+game::enemies,80ad42e0,fn_80ad42e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad42e0_FUN_80ad42e0.c; 23-byte pad record; +0x850 state override after the +0x848 test",src/game/enemies.rs
+game::enemies,80b0dc40,fn_80b0dc40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0dc40_FUN_80b0dc40.c; 300-frame retry; two-phase +0x9DE flag; +0x9B8 forces dispatch",src/game/enemies.rs
+game::enemies,80a37560,fn_80a37560,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a37560_FUN_80a37560.c; Wm_en_landsmoke_s at literal z 5500.0; 1.4 scale; sound cue 0x21B",src/game/enemies.rs
+game::enemies,80ad0960,fn_80ad0960,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0960_FUN_80ad0960.c; x+/-dz ground probe; 0x400 bit and >=2 code; side byte 1/2/3",src/game/enemies.rs
+game::enemies,80a370d0,fn_80a370d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a370d0_FUN_80a370d0.c; state 1 -> 2; addi store before bgt; walk clip and 0.8 rate",src/game/enemies.rs
+game::enemies,80a628f0,fn_80a628f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a628f0_FUN_80a628f0.c; side-scaled speed; 0x8042C1A0 byte table read at run time; 2.2 multiplier",src/game/enemies.rs
+game::enemies,80a06480,fn_80a06480,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a06480_FUN_80a06480.c; s16 countdown at +0x115C; clamps to 0",src/game/enemies.rs
+game::enemies,80a07080,fn_80a07080,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a07080_FUN_80a07080.c; +0x30 owner chain walk; vtable slot +0x0C; tail recursion folded to a loop",src/game/enemies.rs
+game::enemies,80a07160,fn_80a07160,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a07160_FUN_80a07160.c; two ':' searches then 0x802E1AB4 compare",src/game/enemies.rs
+game::enemies,80a0ffd0,fn_80a0ffd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0ffd0_FUN_80a0ffd0.c; +0x544 chain; slot +0x24 per holder; +0x540 + 1 bound",src/game/enemies.rs
+game::enemies,80a0f8b0,fn_80a0f8b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0f8b0_FUN_80a0f8b0.c; five per-holder scales; slot +0x0C then 0x800B6A70; +0x238 link",src/game/enemies.rs
+game::enemies,80a0f970,fn_80a0f970,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0f970_FUN_80a0f970.c; +4 bit 0 selects 1.0/1.5; writes 0x80B35230 and its negation",src/game/enemies.rs
+game::enemies,80a0f5a0,fn_80a0f5a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0f5a0_FUN_80a0f5a0.c; 0x8016A960 reset then three binders and 0x8016A9B0",src/game/enemies.rs
+game::enemies,80a0f490,fn_80a0f490,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0f490_FUN_80a0f490.c; spawn store block; oris 0x100 sets +0x4FC bit 24; two main.dol float addends",src/game/enemies.rs
+game::enemies,80a06b00,fn_80a06b00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a06b00_FUN_80a06b00.c; 0x80A61A80(0.0,1.0,this,3,1); fctiwz+slwi 8 into +0x115E",src/game/enemies.rs
+game::enemies,80a06760,fn_80a06760,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a06760_FUN_80a06760.c; four +0x738 slots; 0x80162D00 query; +0x5BC gate; +0xD4 dispatch",src/game/enemies.rs
+game::enemies,80a06800,fn_80a06800,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a06800_FUN_80a06800.c; same four-slot sweep; releases through 0x80162510",src/game/enemies.rs
+game::enemies,80a03270,fn_80a03270,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a03270_FUN_80a03270.c; 802DCBFC swap forwarder (second second first); hidden r12 = second+0x18",src/game/enemies.rs
+game::enemies,80a032a0,fn_80a032a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a032a0_FUN_80a032a0.c; second 802DCBFC swap forwarder; hidden r12 = second+0x18",src/game/enemies.rs
+game::enemies,80a07220,fn_80a07220,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a07220_FUN_80a07220.c; third 802DCBFC swap forwarder; hidden r12 = second+0x18",src/game/enemies.rs
+game::enemies,80a07250,fn_80a07250,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a07250_FUN_80a07250.c; fourth 802DCBFC swap forwarder; hidden r12 = second+0x18",src/game/enemies.rs

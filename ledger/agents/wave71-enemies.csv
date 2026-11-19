@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a001e0,fn_80a001e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a001e0_FUN_80a001e0.c; empty 4-byte virtual stub",src/game/enemies.rs
+game::enemies,80a001f0,fn_80a001f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a001f0_FUN_80a001f0.c; empty 4-byte virtual stub",src/game/enemies.rs
+game::enemies,80a01040,fn_80a01040,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01040_FUN_80a01040.c; two-point probe, two-bit mask",src/game/enemies.rs
+game::enemies,80a01120,fn_80a01120,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01120_FUN_80a01120.c; mode-selected shell spawner at +0x8D8/+0x8DC",src/game/enemies.rs
+game::enemies,80a012f0,fn_80a012f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a012f0_FUN_80a012f0.c; releases both shell handles",src/game/enemies.rs
+game::enemies,80a01450,fn_80a01450,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01450_FUN_80a01450.c; re-enables both shell handles",src/game/enemies.rs
+game::enemies,80a015b0,fn_80a015b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a015b0_FUN_80a015b0.c; effect-list drain",src/game/enemies.rs
+game::enemies,80a01600,fn_80a01600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01600_FUN_80a01600.c; clip binder over table 0x80B32E30",src/game/enemies.rs
+game::enemies,80a01690,fn_80a01690,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01690_FUN_80a01690.c; four-player overlap test",src/game/enemies.rs
+game::enemies,80a01760,fn_80a01760,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a01760_FUN_80a01760.c; yaw rocking with +/-0x4FF limits",src/game/enemies.rs
+game::enemies,80a01830,fn_80a01830,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a01830_FUN_80a01830.c; pitch rocking with +/-0x1FF limits",src/game/enemies.rs
+game::enemies,80a01900,fn_80a01900,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01900_FUN_80a01900.c; roll-angle stepper at +0x104",src/game/enemies.rs
+game::enemies,80a019c0,fn_80a019c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a019c0_FUN_80a019c0.c; clip 1 plus eight field resets",src/game/enemies.rs
+game::enemies,80a01a90,fn_80a01a90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01a90_FUN_80a01a90.c; five-way launch frame handler",src/game/enemies.rs
+game::enemies,80a01d50,fn_80a01d50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01d50_FUN_80a01d50.c; stepper guard then state 0x80B6E698",src/game/enemies.rs
+game::enemies,80a01da0,fn_80a01da0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01da0_FUN_80a01da0.c; arms +0x900 from constant 0x80B32DD0",src/game/enemies.rs
+game::enemies,80a01e40,fn_80a01e40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a01e40_FUN_80a01e40.c; clip guard, state switch, holder slot +0x1C",src/game/enemies.rs
+game::enemies,80a01eb0,fn_80a01eb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a01eb0_FUN_80a01eb0.c; reset plus sound 0x205",src/game/enemies.rs
+game::enemies,80a01f40,fn_80a01f40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a01f40_FUN_80a01f40.c; closing-phase ramp and clip windows",src/game/enemies.rs
+game::enemies,80a020e0,fn_80a020e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a020e0_FUN_80a020e0.c; arms +0x900 from constant 0x80B32DD4",src/game/enemies.rs
+game::enemies,80a02150,fn_80a02150,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a02150_FUN_80a02150.c; roll unwind plus +0x900 countdown",src/game/enemies.rs
+game::enemies,80a02210,fn_80a02210,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a02210_FUN_80a02210.c; shell-open reset with Wm_shellopen effect",src/game/enemies.rs
+game::enemies,80a022d0,fn_80a022d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a022d0_FUN_80a022d0.c; open-phase ramp plus six frame windows",src/game/enemies.rs
+game::enemies,80a02530,fn_80a02530,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a02530_FUN_80a02530.c; ride reset and 0x8006D090 controller install",src/game/enemies.rs
+game::enemies,80a02600,fn_80a02600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a02600_FUN_80a02600.c; launch ramp with +0x924 counter",src/game/enemies.rs
+game::enemies,80a02760,fn_80a02760,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a02760_FUN_80a02760.c; ride frame with speed inversion",src/game/enemies.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80134de0,fn_80134de0,translated,medium,"work/ghidra/main-gb/export/80134de0_FUN_80134de0.c; two 0x800D5790 fills and two 0x8008FB60 spawns at modes 0xB/0xE",src/game/worldmap.rs
+game::worldmap,80135180,fn_80135180,translated,high,"work/ghidra/main-gb/export/80135180_FUN_80135180.c; empty function body; only return",src/game/worldmap.rs
+game::worldmap,80135190,fn_80135190,translated,high,"work/ghidra/main-gb/export/80135190_FUN_80135190.c; clamps +0x10C toward +0x110 and clears +0x14A4",src/game/worldmap.rs
+game::worldmap,80135220,fn_80135220,translated,medium,"work/ghidra/main-gb/export/80135220_FUN_80135220.c; sound 0x3E via controller slot +0x5C and event 0x22; sound doubles are BSS words",src/game/worldmap.rs
+game::worldmap,801352c0,fn_801352c0,translated,medium,"work/ghidra/main-gb/export/801352c0_FUN_801352c0.c; sound 0x46 plus 0x80134de0 and event 0x20; sound doubles are BSS words",src/game/worldmap.rs
+game::worldmap,80135350,fn_80135350,translated,medium,"work/ghidra/main-gb/export/80135350_FUN_80135350.c; sound 0x40 with three doubles and state 4",src/game/worldmap.rs
+game::worldmap,801353b0,fn_801353b0,translated,medium,"work/ghidra/main-gb/export/801353b0_FUN_801353b0.c; sound 0x3F plus event 0x21 and state 5",src/game/worldmap.rs
+game::worldmap,80135440,fn_80135440,translated,medium,"work/ghidra/main-gb/export/80135440_FUN_80135440.c; optional +0x2048 bit test then sound 0x46 and 0x80134de0",src/game/worldmap.rs
+game::worldmap,801354d0,fn_801354d0,translated,high,"work/ghidra/main-gb/export/801354d0_FUN_801354d0.c; sound 0x40 with doubles 0.5/0.0/0.0 and state 6",src/game/worldmap.rs
+game::worldmap,80135720,fn_80135720,translated,medium,"work/ghidra/main-gb/export/80135720_FUN_80135720.c; landing gate sets state 3 and sound 0x40",src/game/worldmap.rs
+game::worldmap,80135c20,fn_80135c20,translated,medium,"work/ghidra/main-gb/export/80135c20_FUN_80135c20.c; clears bit 0x37 then calls the two GQR probes and state 0/2",src/game/worldmap.rs
+game::worldmap,80135e70,fn_80135e70,translated,high,"work/ghidra/main-gb/export/80135e70_FUN_80135e70.c; sound 0x127 or 299 by +0x1DEC then event 0x1C",src/game/worldmap.rs
+game::worldmap,80135ef0,fn_80135ef0,translated,high,"work/ghidra/main-gb/export/80135ef0_FUN_80135ef0.c; sound 300 or 0x128 by +0x1DEC",src/game/worldmap.rs
+game::worldmap,80135f20,fn_80135f20,translated,high,"work/ghidra/main-gb/export/80135f20_FUN_80135f20.c; sound 0x12D or 0x129 by +0x1DEC",src/game/worldmap.rs
+game::worldmap,80135f50,fn_80135f50,translated,high,"work/ghidra/main-gb/export/80135f50_FUN_80135f50.c; 10.0 and 30.0 ground probes then sound 0xDD",src/game/worldmap.rs
+game::worldmap,80135fc0,fn_80135fc0,translated,high,"work/ghidra/main-gb/export/80135fc0_FUN_80135fc0.c; releases +0x14FC and clears +0x1529",src/game/worldmap.rs
+game::worldmap,80136000,fn_80136000,translated,medium,"work/ghidra/main-gb/export/80136000_FUN_80136000.c; two attach gates post 0x803764F0 with 0/1/2",src/game/worldmap.rs
+game::worldmap,80136190,fn_80136190,translated,medium,"work/ghidra/main-gb/export/80136190_FUN_80136190.c; clears three bits and branches on +0x14A0 into states 0/4/5",src/game/worldmap.rs
+game::worldmap,80136340,fn_80136340,translated,high,"work/ghidra/main-gb/export/80136340_FUN_80136340.c; clears bits 0x97/0x7F/0x36 and zeroes +0x2A6C/+0x2A70",src/game/worldmap.rs
+game::worldmap,80136650,fn_80136650,translated,medium,"work/ghidra/main-gb/export/80136650_FUN_80136650.c; shifts the halfword record and refreshes +0x1DD8 from +0x1508",src/game/worldmap.rs
+game::worldmap,801366e0,fn_801366e0,translated,medium,"work/ghidra/main-gb/export/801366e0_FUN_801366e0.c; forces controller mode 1 and sends sound 0x7E; Ghidra reports an unrecovered jump table",src/game/worldmap.rs
+game::worldmap,80136710,fn_80136710,translated,high,"work/ghidra/main-gb/export/80136710_FUN_80136710.c; two halfword tests then sound 0x7E and state 1",src/game/worldmap.rs
+game::worldmap,801367e0,fn_801367e0,translated,high,"work/ghidra/main-gb/export/801367e0_FUN_801367e0.c; opposite-facing test then sound 0x7E with 1.0/64.0 and state 7",src/game/worldmap.rs
+game::worldmap,801368f0,fn_801368f0,translated,medium,"work/ghidra/main-gb/export/801368f0_FUN_801368f0.c; ten-case +0x1DE4 state machine with explicit fallthrough",src/game/worldmap.rs
+game::worldmap,80136bb0,fn_80136bb0,translated,medium,"work/ghidra/main-gb/export/80136bb0_FUN_80136bb0.c; arms +0x14A4 and clears the four slide-history words",src/game/worldmap.rs
+game::worldmap,80136c90,fn_80136c90,translated,medium,"work/ghidra/main-gb/export/80136c90_FUN_80136c90.c; state 2 and sound 0x2D; Ghidra reports an unrecovered jump table",src/game/worldmap.rs
+game::worldmap,80136dd0,fn_80136dd0,translated,medium,"work/ghidra/main-gb/export/80136dd0_FUN_80136dd0.c; state 3 and sound 0x2E; Ghidra reports an unrecovered jump table",src/game/worldmap.rs
+game::worldmap,80136ea0,fn_80136ea0,translated,high,"work/ghidra/main-gb/export/80136ea0_FUN_80136ea0.c; single store of state 4",src/game/worldmap.rs
+game::worldmap,80137130,fn_80137130,translated,medium,"work/ghidra/main-gb/export/80137130_FUN_80137130.c; raises +0xB0 from an 0x800757B0 probe then enters state 6",src/game/worldmap.rs
+game::worldmap,80137230,fn_80137230,translated,medium,"work/ghidra/main-gb/export/80137230_FUN_80137230.c; three-state landing hand-off with sounds 0x3F/0x3B",src/game/worldmap.rs

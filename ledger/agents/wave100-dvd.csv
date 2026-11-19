@@ -1,0 +1,25 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c0020,fn_801c0020,translated,medium,"work/ghidra/main-gb/export/801c0020_FUN_801c0020.c; twelve 0xE0 command blocks; video class and limit packing; 0x801BFD40 notify",src/runtime/dvd.rs
+runtime::dvd,801c0540,fn_801c0540,translated,medium,"work/ghidra/main-gb/export/801c0540_FUN_801c0540.c; 3x4 concat; 0x804295A0/0x804295A4 scale the translation column",src/runtime/dvd.rs
+runtime::dvd,801c07a0,fn_801c07a0,translated,medium,"work/ghidra/main-gb/export/801c07a0_FUN_801c07a0.c; affine inverse; column-0 cofactors build the determinant; one Newton step",src/runtime/dvd.rs
+runtime::dvd,801c08a0,fn_801c08a0,translated,medium,"work/ghidra/main-gb/export/801c08a0_FUN_801c08a0.c; 3x3 inverse with the translation column zeroed; same Newton step",src/runtime/dvd.rs
+runtime::dvd,801c0aa0,fn_801c0aa0,translated,medium,"work/ghidra/main-gb/export/801c0aa0_FUN_801c0aa0.c; axis-angle rotation matrix; reciprocal-sqrt Newton step",src/runtime/dvd.rs
+runtime::dvd,801c1680,fn_801c1680,translated,medium,"work/ghidra/main-gb/export/801c1680_FUN_801c1680.c; quaternion from matrix; largest-diagonal branch via 0x802F6AD0",src/runtime/dvd.rs
+runtime::dvd,801c1850,fn_801c1850,translated,medium,"work/ghidra/main-gb/export/801c1850_FUN_801c1850.c; quaternion slerp; acos plus two sines; r2-0x4EFC blend threshold",src/runtime/dvd.rs
+runtime::dvd,801c19f0,fn_801c19f0,translated,medium,"work/ghidra/main-gb/export/801c19f0_FUN_801c19f0.c; texture block selector; index mod 8; offsets 0x258/0x2D8/0x358",src/runtime/dvd.rs
+runtime::dvd,801c1b10,fn_801c1b10,translated,medium,"work/ghidra/main-gb/export/801c1b10_FUN_801c1b10.c; retrace latch with 64-bit tick compare; teardown branch",src/runtime/dvd.rs
+runtime::dvd,801c1c80,fn_801c1c80,translated,high,"work/ghidra/main-gb/export/801c1c80_FUN_801c1c80.c; three blocks of 0x40000000/0x80000000 ors then 0x5800000F",src/runtime/dvd.rs
+runtime::dvd,801c1db0,fn_801c1db0,translated,medium,"work/ghidra/main-gb/export/801c1db0_FUN_801c1db0.c; GX bring-up; four register windows; channel and texcoord tables",src/runtime/dvd.rs
+runtime::dvd,801c2b80,fn_801c2b80,translated,medium,"work/ghidra/main-gb/export/801c2b80_FUN_801c2b80.c; three pending-bit services; status mirror at r13-0x4DEC",src/runtime/dvd.rs
+runtime::dvd,801c2e70,fn_801c2e70,translated,medium,"work/ghidra/main-gb/export/801c2e70_FUN_801c2e70.c; GP token publish; 0x80390224 block; 0x80390244 flags",src/runtime/dvd.rs
+runtime::dvd,801c3050,fn_801c3050,translated,medium,"work/ghidra/main-gb/export/801c3050_FUN_801c3050.c; CP token publish; 0x80390200 block; XF mirror at +0x20..+0x3A",src/runtime/dvd.rs
+runtime::dvd,801c5bc0,fn_801c5bc0,translated,medium,"work/ghidra/main-gb/export/801c5bc0_FUN_801c5bc0.c; 9-bit scale divisor search; two loops around the quotient limit",src/runtime/dvd.rs
+runtime::dvd,801c6470,fn_801c6470,translated,medium,"work/ghidra/main-gb/export/801c6470_FUN_801c6470.c; fog mode 0-6 arms; writes +0x10/+0x14/+0x18",src/runtime/dvd.rs
+runtime::dvd,801c6760,fn_801c6760,translated,medium,"work/ghidra/main-gb/export/801c6760_FUN_801c6760.c; normalised direction at +0x34 and scaled point at +0x28",src/runtime/dvd.rs
+runtime::dvd,801c6fa0,fn_801c6fa0,translated,medium,"work/ghidra/main-gb/export/801c6fa0_FUN_801c6fa0.c; forwards eight args to fn_801c6d90; stores +0x18; clears bit 1 of +0x1F",src/runtime/dvd.rs
+runtime::dvd,801c78d0,fn_801c78d0,translated,medium,"work/ghidra/main-gb/export/801c78d0_FUN_801c78d0.c; texture and indirect stage dirty-bit refresh via fn_801c7840",src/runtime/dvd.rs
+runtime::dvd,801c8b50,fn_801c8b50,translated,medium,"work/ghidra/main-gb/export/801c8b50_FUN_801c8b50.c; ten 12-bit depth words from a projection matrix",src/runtime/dvd.rs
+runtime::dvd,801c8cb0,fn_801c8cb0,translated,high,"work/ghidra/main-gb/export/801c8cb0_FUN_801c8cb0.c; 0xE8000000 command word plus marker clear",src/runtime/dvd.rs
+runtime::dvd,801c97f0,fn_801c97f0,translated,medium,"work/ghidra/main-gb/export/801c97f0_FUN_801c97f0.c; three floats at +0x530/+0x538/+0x540 then the +0x528 command",src/runtime/dvd.rs
+runtime::dvd,801c9940,fn_801c9940,translated,low,"work/ghidra/main-gb/export/801c9940_FUN_801c9940.c; five 16-bit+32-bit payload pairs then two words; store widths literal but quantised values not recoverable",src/runtime/dvd.rs
+runtime::dvd,801c99c0,fn_801c99c0,translated,medium,"work/ghidra/main-gb/export/801c99c0_FUN_801c99c0.c; three 0x10-strided floats then the +0x28 command",src/runtime/dvd.rs

@@ -1,0 +1,20 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,80051aa0,fn_80051aa0,translated,high,"work/ghidra/main-gb/export/80051aa0_FUN_80051aa0.c (12 bytes)",src/game/player.rs
+game::player,80051cb0,fn_80051cb0,translated,high,"work/ghidra/main-gb/export/80051cb0_FUN_80051cb0.c (56 bytes)",src/game/player.rs
+game::player,80051ef0,fn_80051ef0,translated,high,"work/ghidra/main-gb/export/80051ef0_FUN_80051ef0.c (64 bytes)",src/game/player.rs
+game::player,80051fd0,fn_80051fd0,translated,high,"work/ghidra/main-gb/export/80051fd0_FUN_80051fd0.c (96 bytes)",src/game/player.rs
+game::player,80052030,fn_80052030,translated,high,"work/ghidra/main-gb/export/80052030_FUN_80052030.c (80 bytes)",src/game/player.rs
+game::player,80051d00,fn_80051d00,translated,medium,"work/ghidra/main-gb/export/80051d00_FUN_80051d00.c (368 bytes)",src/game/player.rs
+game::player,80053040,fn_80053040,translated,high,"work/ghidra/main-gb/export/80053040_FUN_80053040.c (76 bytes)",src/game/player.rs
+game::player,80052ed0,fn_80052ed0,translated,high,"work/ghidra/main-gb/export/80052ed0_FUN_80052ed0.c (28 bytes)",src/game/player.rs
+game::player,80054280,fn_80054280,translated,high,"work/ghidra/main-gb/export/80054280_FUN_80054280.c (56 bytes)",src/game/player.rs
+game::player,800538e0,fn_800538e0,translated,high,"work/ghidra/main-gb/export/800538e0_FUN_800538e0.c (88 bytes)",src/game/player.rs
+game::player,80052650,fn_80052650,translated,medium,"work/ghidra/main-gb/export/80052650_FUN_80052650.c (104 bytes)",src/game/player.rs
+game::player,800526c0,fn_800526c0,translated,medium,"work/ghidra/main-gb/export/800526c0_FUN_800526c0.c (100 bytes)",src/game/player.rs
+game::player,80050d80,fn_80050d80,translated,high,"work/ghidra/main-gb/export/80050d80_FUN_80050d80.c (168 bytes)",src/game/player.rs
+game::player,80053490,fn_80053490,translated,high,"work/ghidra/main-gb/export/80053490_FUN_80053490.c (28 bytes)",src/game/player.rs
+game::player,800518a0,fn_800518a0,translated,high,"work/ghidra/main-gb/export/800518a0_FUN_800518a0.c (132 bytes)",src/game/player.rs
+game::player,80052290,fn_80052290,translated,high,"work/ghidra/main-gb/export/80052290_FUN_80052290.c (108 bytes)",src/game/player.rs
+game::player,80052300,fn_80052300,translated,medium,"work/ghidra/main-gb/export/80052300_FUN_80052300.c (144 bytes)",src/game/player.rs
+game::player,80052470,fn_80052470,translated,high,"work/ghidra/main-gb/export/80052470_FUN_80052470.c (132 bytes)",src/game/player.rs
+game::player,80051b40,fn_80051b40,translated,medium,"work/ghidra/main-gb/export/80051b40_FUN_80051b40.c (136 bytes)",src/game/player.rs

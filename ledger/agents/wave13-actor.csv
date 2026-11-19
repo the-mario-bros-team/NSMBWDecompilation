@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::actor,80014200,fn_80014200,translated,high,"work/ghidra/main-gb/export/80014200_FUN_80014200.c; release-if-positive; free 0x802B9280 only when this != 0 and release > 0.",src/game/actor.rs
+game::actor,80014240,fn_80014240,translated,high,"work/ghidra/main-gb/export/80014240_FUN_80014240.c; unconditional base teardown 0x8015F800(this,0) for non-null objects, then free 0x802B9280 when release > 0.",src/game/actor.rs
+game::actor,80014340,fn_80014340,translated,high,"work/ghidra/main-gb/export/80014340_FUN_80014340.c; second emitted copy of the release-if-positive helper.",src/game/actor.rs
+game::actor,80014380,fn_80014380,translated,medium,"work/ghidra/main-gb/export/80014380_FUN_80014380.c; 9-bit registration mask; calls 0x801C3FE0/0x801C4700/0x801C9900/0x801C9C40/0x801C5890/0x801C9CD0; copies bytes from 0x804248CC into +0x2D4..+0x2D6; ORs mask into +0x00.",src/game/actor.rs
+game::actor,80014480,fn_80014480,translated,medium,"work/ghidra/main-gb/export/80014480_FUN_80014480.c; teardown mirror of 0x80014380; calls 0x801C3A30/0x801C4250/0x801C5860/0x802D31D0/0x802D3200(f1..f13)/0x802D3230/0x802D2F20/0x802D2F80/0x802D2FE0; clears +0x00.",src/game/actor.rs
+game::actor,800145f0,fn_800145f0,translated,high,"work/ghidra/main-gb/export/800145f0_FUN_800145f0.c; third emitted copy of the release-if-positive helper.",src/game/actor.rs
+game::actor,80014640,fn_80014640,translated,high,"work/ghidra/main-gb/export/80014640_FUN_80014640.c; boolean view of byte +0x0B via lbz/neg/srwi 31.",src/game/actor.rs
+game::actor,800146b0,fn_800146b0,translated,high,"work/ghidra/main-gb/export/800146b0_FUN_800146b0.c; three f32 stores at +0x0C/+0x10/+0x14; Ghidra double spelling corrected to single precision.",src/game/actor.rs
+game::actor,800146f0,fn_800146f0,translated,high,"work/ghidra/main-gb/export/800146f0_FUN_800146f0.c; byte +0x0A=2, f32 +0x18, u16 +0x1C, byte +0x1E=0.",src/game/actor.rs
+game::actor,80014710,fn_80014710,translated,high,"work/ghidra/main-gb/export/80014710_FUN_80014710.c; calls 0x800146C0; states 1/2 return +0x18 else SDA 1.0 at 0x8042B184.",src/game/actor.rs
+game::actor,80014750,fn_80014750,translated,high,"work/ghidra/main-gb/export/80014750_FUN_80014750.c; calls 0x800147A0; signed i16 angle scaled by pi/32768 from 0x8042B188.",src/game/actor.rs
+game::actor,800147a0,fn_800147a0,translated,high,"work/ghidra/main-gb/export/800147a0_FUN_800147a0.c; calls 0x800146C0; states 2/3 return sign-extended i16 at +0x1C else 0.",src/game/actor.rs
+game::actor,800147e0,fn_800147e0,translated,high,"work/ghidra/main-gb/export/800147e0_FUN_800147e0.c; calls 0x800146C0; state 3 returns byte +0x1E else 0.",src/game/actor.rs
+game::actor,80014820,fn_80014820,translated,high,"work/ghidra/main-gb/export/80014820_FUN_80014820.c; intrusive list append; list count/head/tail at +0/+4/+8; node links at +0/+4.",src/game/actor.rs
+game::actor,80014860,fn_80014860,translated,high,"work/ghidra/main-gb/export/80014860_FUN_80014860.c; intrusive list unlink; repairs head/tail and decrements count.",src/game/actor.rs
+game::actor,800148b0,fn_800148b0,translated,high,"work/ghidra/main-gb/export/800148b0_FUN_800148b0.c; drains list by removing tail until +0x08 is zero; second argument recovered in r4.",src/game/actor.rs
+game::actor,80014910,fn_80014910,translated,high,"work/ghidra/main-gb/export/80014910_FUN_80014910.c; empties non-empty list via 0x800148B0 then frees when release > 0; returns this.",src/game/actor.rs
+game::actor,80014970,fn_80014970,translated,high,"work/ghidra/main-gb/export/80014970_FUN_80014970.c; vtable constructor: base 0x8016A010(this), vtable 0x802FF690 at +0x00, zero at +0x08; class identity not proven.",src/game/actor.rs
+game::actor,800156b0,fn_800156b0,translated,medium,"work/ghidra/main-gb/export/800156b0_FUN_800156b0.c; polls 0x801DD1D0 via thunk 0x800B54B0; reads counter pointer 0x8042A480 and u16 +0x06; writes f32 +0x94..+0xA0 and byte +0xA4. Branch polarity follows instruction stream, not Ghidra C.",src/game/actor.rs
+game::actor,80015c10,fn_80015c10,translated,medium,"work/ghidra/main-gb/export/80015c10_FUN_80015c10.c; coin-pane fade; pane +0x1D4, visibility bit +0xBB bit 0, step +0x1A8, offset +0x1B8, clamp +0x1F4, projection 0x800B33D0, pane stores +0x2C/+0x30/+0x34.",src/game/actor.rs
+game::actor,800190f0,fn_800190f0,translated,medium,"work/ghidra/main-gb/export/800190f0_FUN_800190f0.c; if enable byte +0x1E5 non-zero tail-calls global sorted-list insert 0x80163850(this+4) via thunk 0x80006EA0.",src/game/actor.rs
+game::actor,80019360,fn_80019360,translated,high,"work/ghidra/main-gb/export/80019360_FUN_80019360.c; stores u32 at +0x1E8 and sets bytes +0x1E5/+0x1E6 to 1.",src/game/actor.rs
+game::actor,80019380,fn_80019380,translated,high,"work/ghidra/main-gb/export/80019380_FUN_80019380.c; sets pending bytes +0x1E6/+0x1E7 to 1.",src/game/actor.rs
+game::actor,8001e0b0,fn_8001e0b0,translated,medium,"work/ghidra/main-gb/export/8001e0b0_FUN_8001e0b0.c; requires hit byte +0x2D == 3 then virtual call through actor vtable +0x60 slot +0x158 with (this,hit); returns 0/1.",src/game/actor.rs
+game::actor,8001e100,fn_8001e100,translated,medium,"work/ghidra/main-gb/export/8001e100_FUN_8001e100.c; second emitted copy of the kind-3 hit predicate with vtable slot +0x158.",src/game/actor.rs

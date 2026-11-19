@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807a13b0,fn_807a13b0,translated,high,"work/ghidra/rel-d_basesNP/export/807a13b0_FUN_807a13b0.c; base ctor 800F5FD0; vtable 8081C178; accessor +0x188; anim +0x1A8; 802DC9A0 table +0x1E8 0x38x2",src/game/bases.rs
+game::bases,807a14e0,fn_807a14e0,translated,high,"work/ghidra/rel-d_basesNP/export/807a14e0_FUN_807a14e0.c; FUN_807a1610 with r3; +0x128..+0x130 = +0xAC..+0xB4; +0x134 = 100.0f (807D02E0); FUN_807a17f0; 8016A2A0(+0x1A8 -1 0x81)",src/game/bases.rs
+game::bases,807a1610,fn_807a1610,translated,medium,"work/ghidra/rel-d_basesNP/export/807a1610_FUN_807a1610.c; cobSurrender + g3d/model.brres via 800DF180; 80239E30; 80169D90 +0x1A8; two 0x38 clip slots +0x1E8; 807D02D8 = 1 then 0; appear/flap select by 807A18A0",src/game/bases.rs
+game::bases,807a17f0,fn_807a17f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a17f0_FUN_807a17f0.c; 801C0BD0 +0x7C; 8016EF50 from angles +0x100..+0x104; 8016A170/8016A150/8016A1A0 on +0x1A8; three unused position locals omitted",src/game/bases.rs
+game::bases,807a18a0,fn_807a18a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a18a0_FUN_807a18a0.c; 800FD840/800FD820==2/800FD860==0 or 800FD8E0/800FD960==0 -> 1",src/game/bases.rs
+game::bases,807a1a90,fn_807a1a90,translated,medium,"work/ghidra/rel-d_basesNP/export/807a1a90_FUN_807a1a90.c; guard +0x258; clip from PTR table 8081C148; 801651F0 +0x1E8; 5.0f and 1.0f; 80105240 effect 0x23 at +0xAC",src/game/bases.rs
+game::bases,807a1b30,fn_807a1b30,translated,high,"work/ghidra/rel-d_basesNP/export/807a1b30_FUN_807a1b30.c; guard +0x258; 80169020 +0x1E8; cobSurrenderFlap 8081C14C into +0x220; +0x139 = 1; +0x258 = 0; sound 0x27 if 0xD else 0x28 with flag02",src/game/bases.rs
+game::bases,807a61e0,fn_807a61e0,translated,high,"work/ghidra/rel-d_basesNP/export/807a61e0_FUN_807a61e0.c; if state!=0 8015F800(state 0); if free>0 802B9280(state); returns state",src/game/bases.rs
+game::bases,807a6430,fn_807a6430,translated,high,"work/ghidra/rel-d_basesNP/export/807a6430_FUN_807a6430.c; 80063F80(actor 2); +0x320=0.0f +0x324=136.0f +0x318=32.0f +0x31C=272.0f; returns 1",src/game/bases.rs
+game::bases,807a6640,fn_807a6640,translated,high,"work/ghidra/rel-d_basesNP/export/807a6640_FUN_807a6640.c; 80063F80(actor 3); +0x320=0.0f +0x324=-136.0f +0x318=32.0f +0x31C=272.0f; returns 1",src/game/bases.rs
+game::bases,807a6780,fn_807a6780,translated,high,"work/ghidra/rel-d_basesNP/export/807a6780_FUN_807a6780.c; stores class table 8081D290 at +0x00",src/game/bases.rs
+game::bases,807a6790,fn_807a6790,translated,high,"work/ghidra/rel-d_basesNP/export/807a6790_FUN_807a6790.c; if object!=0 and free>0 802B9280(object); returns object",src/game/bases.rs
+game::bases,807a6f50,fn_807a6f50,translated,high,"work/ghidra/rel-d_basesNP/export/807a6f50_FUN_807a6f50.c; if object!=0 8006C490(object 0); then if free>0 80162920(object); returns object",src/game/bases.rs
+game::bases,807a7170,fn_807a7170,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7170_FUN_807a7170.c; compares +0x14C with 8016A5D0(); on mismatch 8016A880(+0x138); returns 1",src/game/bases.rs
+game::bases,807a71c0,fn_807a71c0,translated,high,"work/ghidra/rel-d_basesNP/export/807a71c0_FUN_807a71c0.c; returns 1; no memory access",src/game/bases.rs
+game::bases,807a7550,fn_807a7550,translated,high,"work/ghidra/rel-d_basesNP/export/807a7550_FUN_807a7550.c; stores 0 at +0x154",src/game/bases.rs
+game::bases,807a7860,fn_807a7860,translated,high,"work/ghidra/rel-d_basesNP/export/807a7860_FUN_807a7860.c; +0x165=0 +0x154=1; guards 8042A1A0 8042A18C 8042A284; calls 807A7CF0",src/game/bases.rs
+game::bases,807a78c0,fn_807a78c0,translated,high,"work/ghidra/rel-d_basesNP/export/807a78c0_FUN_807a78c0.c; stores 2 at +0x154",src/game/bases.rs
+game::bases,807a7cf0,fn_807a7cf0,translated,high,"work/ghidra/rel-d_basesNP/export/807a7cf0_FUN_807a7cf0.c; FUN_807a7e60 with r3 = owner; stores 6 at +0x154",src/game/bases.rs
+game::bases,807a7d70,fn_807a7d70,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7d70_FUN_807a7d70.c; walks 800F6020 list; virtual +0x64; returns 1 at end 0 on first zero answer",src/game/bases.rs
+game::bases,807a7df0,fn_807a7df0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7df0_FUN_807a7df0.c; walks 800F6020 list; dispatches argument-less virtual +0x6C with r3 = object",src/game/bases.rs
+game::bases,807a7e60,fn_807a7e60,translated,high,"work/ghidra/rel-d_basesNP/export/807a7e60_FUN_807a7e60.c; +0x158=0 +0x15C=0 +0x164=1; 807A7DF0; +0x165=1",src/game/bases.rs
+game::bases,807a7eb0,fn_807a7eb0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7eb0_FUN_807a7eb0.c; equal counters -> +0x164=0 else 801015E0 then 807A7DF0 then +0x164=1 and +0x15C=+0x158",src/game/bases.rs
+game::bases,807a7f10,fn_807a7f10,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7f10_FUN_807a7f10.c; event 5 -> 807A7550; event!=0x27 and 807A7D70 -> +0x158++",src/game/bases.rs
+game::bases,807a7f80,fn_807a7f80,translated,high,"work/ghidra/rel-d_basesNP/export/807a7f80_FUN_807a7f80.c; (-v-1 | v+1) >> 31 for v = 801015E0()",src/game/bases.rs
+game::bases,807a7fb0,fn_807a7fb0,translated,high,"work/ghidra/rel-d_basesNP/export/807a7fb0_FUN_807a7fb0.c; returns 1 if +0x168 +0x178 +0x188 or +0x198 is non-negative else 0",src/game/bases.rs
+game::bases,807a80c0,fn_807a80c0,translated,high,"work/ghidra/rel-d_basesNP/export/807a80c0_FUN_807a80c0.c; stores class table 8081D3C8 at +0x00",src/game/bases.rs
+game::bases,807a80d0,fn_807a80d0,translated,high,"work/ghidra/rel-d_basesNP/export/807a80d0_FUN_807a80d0.c; if object!=0 and free>0 802B9280(object); returns object",src/game/bases.rs

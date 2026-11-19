@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80213240,fn_80213240,translated,medium,"work/ghidra/main-gb/export/80213240_FUN_80213240.c; nine-state channel event machine; service callbacks at ccb + 0x30; 4916 bytes",src/runtime/bt.rs
+runtime::bt,80215cec,fn_80215cec,translated,medium,"work/ghidra/main-gb/export/80215cec_FUN_80215cec.c; 11-case L2CAP signalling command walk; option lists decode into the shared scratch struct; 2672 bytes",src/runtime/bt.rs

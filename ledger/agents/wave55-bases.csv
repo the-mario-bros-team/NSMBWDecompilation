@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806204d0,fn_806204d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806204d0_FUN_806204d0.c; null guard and free flag; 802B9280 argument dropped in the export",src/game/bases.rs
+game::bases,80620510,fn_80620510,translated,medium,"work/ghidra/rel-d_basesNP/export/80620510_FUN_80620510.c; destroys the member at +0x18 through 8015F9F0 then frees with 802B9280",src/game/bases.rs
+game::bases,806207a0,fn_806207a0,translated,high,"work/ghidra/rel-d_basesNP/export/806207a0_FUN_806207a0.c; miniGameWire archive plus miniGameWire_12.brlyt; panes +0x244..+0x34C",src/game/bases.rs
+game::bases,806209d0,fn_806209d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806209d0_FUN_806209d0.c; row base 807C6E28 + (row-1)*0x1C + slot*4; table role unknown",src/game/bases.rs
+game::bases,80620b60,fn_80620b60,translated,medium,"work/ghidra/rel-d_basesNP/export/80620b60_FUN_80620b60.c; seven slots; decimal width loop then 800CDDB0 and 800C9A60",src/game/bases.rs
+game::bases,80620c30,fn_80620c30,translated,high,"work/ghidra/rel-d_basesNP/export/80620c30_FUN_80620c30.c; four choice panes +0x32C..+0x338; selected index +0x350",src/game/bases.rs
+game::bases,80620d70,fn_80620d70,translated,high,"work/ghidra/rel-d_basesNP/export/80620d70_FUN_80620d70.c; fifteen pane visibility bytes; alpha 0xFF via +0x2C4; animation 0x11",src/game/bases.rs
+game::bases,80620ec0,fn_80620ec0,translated,high,"work/ghidra/rel-d_basesNP/export/80620ec0_FUN_80620ec0.c; animation-end guard then descriptor 808251C0 TitleDisp at slot +0x18",src/game/bases.rs
+game::bases,80620f30,fn_80620f30,translated,high,"work/ghidra/rel-d_basesNP/export/80620f30_FUN_80620f30.c; stops animation 0x12 and clears +0x37B and +0x37F",src/game/bases.rs
+game::bases,80620fb0,fn_80620fb0,translated,high,"work/ghidra/rel-d_basesNP/export/80620fb0_FUN_80620fb0.c; starts animation 0x13 and sets +0x37D",src/game/bases.rs
+game::bases,80620ff0,fn_80620ff0,translated,high,"work/ghidra/rel-d_basesNP/export/80620ff0_FUN_80620ff0.c; animation-end guard; clears +0x379 then descriptor 80825240 StartWait",src/game/bases.rs
+game::bases,806211e0,fn_806211e0,translated,high,"work/ghidra/rel-d_basesNP/export/806211e0_FUN_806211e0.c; layout restart; animations 3..9 and 0; three-mode pane groups; calls 80620B60",src/game/bases.rs
+game::bases,80621520,fn_80621520,translated,high,"work/ghidra/rel-d_basesNP/export/80621520_FUN_80621520.c; mode +0x354 selects 808252C0; 80825300; or 80825380",src/game/bases.rs
+game::bases,80621630,fn_80621630,translated,medium,"work/ghidra/rel-d_basesNP/export/80621630_FUN_80621630.c; seven slots; calls 80620A00 by address; starts animation i+3",src/game/bases.rs
+game::bases,806216d0,fn_806216d0,translated,high,"work/ghidra/rel-d_basesNP/export/806216d0_FUN_806216d0.c; animation-end guard then descriptor 80825340 ResultNowDisp",src/game/bases.rs
+game::bases,80621730,fn_80621730,translated,high,"work/ghidra/rel-d_basesNP/export/80621730_FUN_80621730.c; layout stop 800C9500 and +0x37D cleared",src/game/bases.rs
+game::bases,80621770,fn_80621770,translated,high,"work/ghidra/rel-d_basesNP/export/80621770_FUN_80621770.c; seven slots; starts animation i+10 when the count word is non-zero",src/game/bases.rs
+game::bases,80621870,fn_80621870,translated,high,"work/ghidra/rel-d_basesNP/export/80621870_FUN_80621870.c; seven pane bytes; alpha 0xFF via +0x2C4; animation 0x14; +0x37E and +0x37D",src/game/bases.rs
+game::bases,80621940,fn_80621940,translated,high,"work/ghidra/rel-d_basesNP/export/80621940_FUN_80621940.c; animation-end guard then descriptor 80825400 TurnOverFaceOpenAnimeEndWait",src/game/bases.rs
+game::bases,806219b0,fn_806219b0,translated,high,"work/ghidra/rel-d_basesNP/export/806219b0_FUN_806219b0.c; calls 80620C30 then starts animation 0x16",src/game/bases.rs
+game::bases,806219f0,fn_806219f0,translated,high,"work/ghidra/rel-d_basesNP/export/806219f0_FUN_806219f0.c; animation-end guard then descriptor 80825440 TurnOverFaceDisp",src/game/bases.rs
+game::bases,80621a60,fn_80621a60,translated,high,"work/ghidra/rel-d_basesNP/export/80621a60_FUN_80621a60.c; starts animations 0x15 and 0x17",src/game/bases.rs
+game::bases,80621aa0,fn_80621aa0,translated,high,"work/ghidra/rel-d_basesNP/export/80621aa0_FUN_80621aa0.c; flags +0x37E and +0x381 dispatch 80825480 and 808254C0",src/game/bases.rs
+game::bases,80621b80,fn_80621b80,translated,high,"work/ghidra/rel-d_basesNP/export/80621b80_FUN_80621b80.c; calls 80620C30 then clears +0x37D",src/game/bases.rs
+game::bases,80621bc0,fn_80621bc0,translated,high,"work/ghidra/rel-d_basesNP/export/80621bc0_FUN_80621bc0.c; starts animation 0x18 and sets +0x37D",src/game/bases.rs
+game::bases,80621c00,fn_80621c00,translated,high,"work/ghidra/rel-d_basesNP/export/80621c00_FUN_80621c00.c; animation-end guard then descriptor 80825500 TurnOverExitAnimeEndWait",src/game/bases.rs
+game::bases,80621c80,fn_80621c80,translated,high,"work/ghidra/rel-d_basesNP/export/80621c80_FUN_80621c80.c; +0x382 flag chooses 80825240 StartWait or 80825540 ExitAnimeEndWait",src/game/bases.rs
+game::bases,80621d20,fn_80621d20,translated,high,"work/ghidra/rel-d_basesNP/export/80621d20_FUN_80621d20.c; starts animation 0x1A and sets +0x37D",src/game/bases.rs
+game::bases,80621d60,fn_80621d60,translated,high,"work/ghidra/rel-d_basesNP/export/80621d60_FUN_80621d60.c; animation-end guard; clears +0x379 then descriptor 80825240 StartWait",src/game/bases.rs
+game::bases,80621dc0,fn_80621dc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80621dc0_FUN_80621dc0.c; three colour words from 807C6EEC; vtable +0x10 layout call; hides root pane",src/game/bases.rs

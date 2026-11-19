@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80630030,fn_80630030,translated,high,"work/ghidra/rel-d_basesNP/export/80630030_FUN_80630030.c; destructor twin: +0x18 8015F9F0 release, optional 802B9280 free, returns state",src/game/bases.rs
+game::bases,80630090,fn_80630090,translated,high,"work/ghidra/rel-d_basesNP/export/80630090_FUN_80630090.c; byte-identical twin of 80630030",src/game/bases.rs
+game::bases,80630360,fn_80630360,translated,high,"work/ghidra/rel-d_basesNP/export/80630360_FUN_80630360.c; MultiCourseSelectContents_03.brlyt loader; 7 P_enpty + 8 T_corseNum_00 + 2 N_courseInfo_00 panes; root +0x244",src/game/bases.rs
+game::bases,80630560,fn_80630560,translated,medium,"work/ghidra/rel-d_basesNP/export/80630560_FUN_80630560.c; decimal digit loop, 800CDDB0 format into 16-byte buffer, 800C9A60 draw",src/game/bases.rs
+game::bases,80630620,fn_80630620,translated,medium,"work/ghidra/rel-d_basesNP/export/80630620_FUN_80630620.c; +0x274 pane on, +0x278 off, label index+1 style 0x2A",src/game/bases.rs
+game::bases,80630660,fn_80630660,translated,medium,"work/ghidra/rel-d_basesNP/export/80630660_FUN_80630660.c; 0x807C7BA8[(index-0x14)]; index 0x17/0x18 in mode 8 returns 0x2F",src/game/bases.rs
+game::bases,806306c0,fn_806306c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806306c0_FUN_806306c0.c; wrap index over 9, 0x807C7BF0 threshold 0x14, number/name pane switch and five pane writes",src/game/bases.rs
+game::bases,80630800,fn_80630800,translated,medium,"work/ghidra/rel-d_basesNP/export/80630800_FUN_80630800.c; im_W1_1.tpl table at 0x807DD420, row*10+column",src/game/bases.rs
+game::bases,80630de0,fn_80630de0,translated,high,"work/ghidra/rel-d_basesNP/export/80630de0_FUN_80630de0.c; pending +0x2A4 kind 1 -> 800B44D0(+0x284), kind 2 -> 8010C780(0x8042A2C8), then clear",src/game/bases.rs
+game::bases,80630e60,fn_80630e60,translated,medium,"work/ghidra/rel-d_basesNP/export/80630e60_FUN_80630e60.c; build 16-word record from +0x288, 800B37E0, spawn Wm_2d_multiclear via 8016C890",src/game/bases.rs
+game::bases,80630f40,fn_80630f40,translated,high,"work/ghidra/rel-d_basesNP/export/80630f40_FUN_80630f40.c; 800C9500 + 800C93D0(+0x70,0,0); +0x293=1",src/game/bases.rs
+game::bases,806310a0,fn_806310a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806310a0_FUN_806310a0.c; 8010C780(0x8042A2C8,1); +0x292=0",src/game/bases.rs
+game::bases,806310e0,fn_806310e0,translated,high,"work/ghidra/rel-d_basesNP/export/806310e0_FUN_806310e0.c; 800C9500; 800C92F0(+0x70,0,0); +0x293=1",src/game/bases.rs
+game::bases,80631130,fn_80631130,translated,high,"work/ghidra/rel-d_basesNP/export/80631130_FUN_80631130.c; 800C9610(+0x70,-1)==0 -> vmethod +0x208 slot 0x18 descriptor 0x80826448",src/game/bases.rs
+game::bases,80631190,fn_80631190,translated,medium,"work/ghidra/rel-d_basesNP/export/80631190_FUN_80631190.c; 800B44D0(+0x284,1,0); +0x292=1; +0x293=0",src/game/bases.rs
+game::bases,806311e0,fn_806311e0,translated,high,"work/ghidra/rel-d_basesNP/export/806311e0_FUN_806311e0.c; 800C92F0(+0x70,1,0); +0x293=1",src/game/bases.rs
+game::bases,80631220,fn_80631220,translated,high,"work/ghidra/rel-d_basesNP/export/80631220_FUN_80631220.c; twin of 80631130 transition gate",src/game/bases.rs
+game::bases,806312a0,fn_806312a0,translated,high,"work/ghidra/rel-d_basesNP/export/806312a0_FUN_806312a0.c; third copy of the 80631130 transition gate",src/game/bases.rs
+game::bases,80631300,fn_80631300,translated,medium,"work/ghidra/rel-d_basesNP/export/80631300_FUN_80631300.c; +0x28C==5 and +0x294 != 0 -> 800B44D0(+0x284,1,0); +0x293=0",src/game/bases.rs
+game::bases,80631360,fn_80631360,translated,high,"work/ghidra/rel-d_basesNP/export/80631360_FUN_80631360.c; 800C92F0(+0x70,4,0); +0x293=1",src/game/bases.rs
+game::bases,806313a0,fn_806313a0,translated,high,"work/ghidra/rel-d_basesNP/export/806313a0_FUN_806313a0.c; fourth copy of the 80631130 transition gate",src/game/bases.rs
+game::bases,80631410,fn_80631410,translated,medium,"work/ghidra/rel-d_basesNP/export/80631410_FUN_80631410.c; mask 0x80429F80 bit 0x20; mode 1/3 pane groups; 80630E60 effect; animation 5; +0x2A8=0x4B; +0x7C=0x0D",src/game/bases.rs
+game::bases,80631520,fn_80631520,translated,medium,"work/ghidra/rel-d_basesNP/export/80631520_FUN_80631520.c; +0x2A8 countdown, sound 0xA6 via 80195380(0x8042A488), transition descriptor 0x80826448",src/game/bases.rs
+game::bases,80632100,fn_80632100,translated,high,"work/ghidra/rel-d_basesNP/export/80632100_FUN_80632100.c; null/positive guard -> 802B9280(state); returns state",src/game/bases.rs
+game::bases,80632140,fn_80632140,translated,high,"work/ghidra/rel-d_basesNP/export/80632140_FUN_80632140.c; byte-identical twin of 80632100",src/game/bases.rs
+game::bases,80632180,fn_80632180,translated,high,"work/ghidra/rel-d_basesNP/export/80632180_FUN_80632180.c; 8015F9F0(state+0x18,0), optional 802B9280(state), returns state",src/game/bases.rs
+game::bases,806321e0,fn_806321e0,translated,high,"work/ghidra/rel-d_basesNP/export/806321e0_FUN_806321e0.c; byte-identical twin of 80632180",src/game/bases.rs

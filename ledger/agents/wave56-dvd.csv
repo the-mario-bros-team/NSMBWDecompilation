@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c7d90,fn_801c7d90,translated,medium,"work/ghidra/main-gb/export/801c7d90_FUN_801c7d90.c; ten-field register packer used by 801c8130/801c8180",src/runtime/dvd.rs
+runtime::dvd,801c8110,fn_801c8110,translated,medium,"work/ghidra/main-gb/export/801c8110_FUN_801c8110.c; +0x254 bits 16-18 and +0x5FC flags",src/runtime/dvd.rs
+runtime::dvd,801c8130,fn_801c8130,translated,high,"work/ghidra/main-gb/export/801c8130_FUN_801c8130.c; packer call with nine zero fields",src/runtime/dvd.rs
+runtime::dvd,801c8180,fn_801c8180,translated,high,"work/ghidra/main-gb/export/801c8180_FUN_801c8180.c; two conditional 6/7 selectors into packer",src/runtime/dvd.rs
+runtime::dvd,801c81e0,fn_801c81e0,translated,high,"work/ghidra/main-gb/export/801c81e0_FUN_801c81e0.c; empty body",src/runtime/dvd.rs
+runtime::dvd,801c81f0,fn_801c81f0,translated,medium,"work/ghidra/main-gb/export/801c81f0_FUN_801c81f0.c; +0x174 low byte and FIFO emit",src/runtime/dvd.rs
+runtime::dvd,801c82f0,fn_801c82f0,translated,medium,"work/ghidra/main-gb/export/801c82f0_FUN_801c82f0.c; four nibbles into +0x180 + index*4",src/runtime/dvd.rs
+runtime::dvd,801c8330,fn_801c8330,translated,medium,"work/ghidra/main-gb/export/801c8330_FUN_801c8330.c; four 3-bit fields into +0x1C0 + index*4",src/runtime/dvd.rs
+runtime::dvd,801c8370,fn_801c8370,translated,medium,"work/ghidra/main-gb/export/801c8370_FUN_801c8370.c; mode-dependent selector bits of +0x180 word",src/runtime/dvd.rs
+runtime::dvd,801c83d0,fn_801c83d0,translated,medium,"work/ghidra/main-gb/export/801c83d0_FUN_801c83d0.c; mode-dependent selector bits of +0x1C0 word",src/runtime/dvd.rs
+runtime::dvd,801c8430,fn_801c8430,translated,medium,"work/ghidra/main-gb/export/801c8430_FUN_801c8430.c; 0xE1-based two-byte descriptor emit",src/runtime/dvd.rs
+runtime::dvd,801c8490,fn_801c8490,translated,medium,"work/ghidra/main-gb/export/801c8490_FUN_801c8490.c; 0xE1-based two 11-bit field emit",src/runtime/dvd.rs
+runtime::dvd,801c8500,fn_801c8500,translated,medium,"work/ghidra/main-gb/export/801c8500_FUN_801c8500.c; 0xE1 descriptor emit with bit 23 set",src/runtime/dvd.rs
+runtime::dvd,801c8560,fn_801c8560,translated,medium,"work/ghidra/main-gb/export/801c8560_FUN_801c8560.c; low-lane 5-bit field of +0x200 entry",src/runtime/dvd.rs
+runtime::dvd,801c85b0,fn_801c85b0,translated,medium,"work/ghidra/main-gb/export/801c85b0_FUN_801c85b0.c; high-lane 5-bit field of +0x200 entry",src/runtime/dvd.rs
+runtime::dvd,801c8600,fn_801c8600,translated,medium,"work/ghidra/main-gb/export/801c8600_FUN_801c8600.c; two 2-bit fields in low nibble of +0x1C0",src/runtime/dvd.rs
+runtime::dvd,801c8640,fn_801c8640,translated,medium,"work/ghidra/main-gb/export/801c8640_FUN_801c8640.c; two +0x200 words updated and second emitted",src/runtime/dvd.rs
+runtime::dvd,801c86c0,fn_801c86c0,translated,high,"work/ghidra/main-gb/export/801c86c0_FUN_801c86c0.c; five-field 0xF3 command packing",src/runtime/dvd.rs
+runtime::dvd,801c8700,fn_801c8700,translated,high,"work/ghidra/main-gb/export/801c8700_FUN_801c8700.c; 0xF5 command with 0x11/0x13/0x16 selector",src/runtime/dvd.rs
+runtime::dvd,801c88f0,fn_801c88f0,translated,medium,"work/ghidra/main-gb/export/801c88f0_FUN_801c88f0.c; (value-1)*0x400 into +0x254 and flags",src/runtime/dvd.rs
+runtime::dvd,801c9b40,fn_801c9b40,translated,medium,"work/ghidra/main-gb/export/801c9b40_FUN_801c9b40.c; +0x558*+0x560+0x55C emitted as float",src/runtime/dvd.rs
+runtime::dvd,801c9bd0,fn_801c9bd0,translated,medium,"work/ghidra/main-gb/export/801c9bd0_FUN_801c9bd0.c; six float stores with optional second-value bias",src/runtime/dvd.rs
+runtime::dvd,801c9c10,fn_801c9c10,translated,high,"work/ghidra/main-gb/export/801c9c10_FUN_801c9c10.c; six unconditional float stores",src/runtime/dvd.rs
+runtime::dvd,801c9c60,fn_801c9c60,translated,medium,"work/ghidra/main-gb/export/801c9c60_FUN_801c9c60.c; scissor words +0x148/+0x14C with 0x156 bias",src/runtime/dvd.rs
+runtime::dvd,801c9cd0,fn_801c9cd0,translated,high,"work/ghidra/main-gb/export/801c9cd0_FUN_801c9cd0.c; decodes +0x148/+0x14C into four outputs",src/runtime/dvd.rs
+runtime::dvd,801c9d20,fn_801c9d20,translated,high,"work/ghidra/main-gb/export/801c9d20_FUN_801c9d20.c; 0x59 biased offset command",src/runtime/dvd.rs
+runtime::dvd,801c9d60,fn_801c9d60,translated,high,"work/ghidra/main-gb/export/801c9d60_FUN_801c9d60.c; raw emit and marker set to one",src/runtime/dvd.rs
+runtime::dvd,801c9d90,fn_801c9d90,translated,high,"work/ghidra/main-gb/export/801c9d90_FUN_801c9d90.c; selector picks +0x80 or +0x84 then marker one",src/runtime/dvd.rs

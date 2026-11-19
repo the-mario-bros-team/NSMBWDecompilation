@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c55e0,fn_800c55e0,translated,high,"work/ghidra/main-gb/export/800c55e0_FUN_800c55e0.c; enter half; 0x800C3AD0 clamp then +100 = 0xE000 and +0x44 = (+0x54 - -0x6818) + (+0x40 - +0x50)",src/game/stage.rs
+game::stage,800c5650,fn_800c5650,translated,high,"work/ghidra/main-gb/export/800c5650_FUN_800c5650.c; update half; step = +0x60 * -0x67C8; 0x800C18B0 contact query; 0x800C4B50/0x800C4C50 retry; restores saved +0x40/+0x44",src/game/stage.rs
+game::stage,800c5740,fn_800c5740,translated,high,"work/ghidra/main-gb/export/800c5740_FUN_800c5740.c; mirrored enter half; 0x800C3AD0 clamp; +100 = 0xA000; +0x44 = +0x54 - (+0x40 - +0x50)",src/game/stage.rs
+game::stage,800c57a0,fn_800c57a0,translated,high,"work/ghidra/main-gb/export/800c57a0_FUN_800c57a0.c; update half; negated +0x3C; 0x800C18B0; 0x800C4D50/0x800C4E50 retry; restores saved words",src/game/stage.rs
+game::stage,800c5890,fn_800c5890,translated,high,"work/ghidra/main-gb/export/800c5890_FUN_800c5890.c; enter half; 0x800C3AD0 clamp; +100 = 0xC000; +0x44 = +0x54 - -0x6818",src/game/stage.rs
+game::stage,800c58f0,fn_800c58f0,translated,high,"work/ghidra/main-gb/export/800c58f0_FUN_800c58f0.c; +0x38 = +0x60 and +0x3C = 0; +0x40 += +0x60; 0x800C18B0; 0x800C4D50/0x800C4C50",src/game/stage.rs
+game::stage,800c59c0,fn_800c59c0,translated,high,"work/ghidra/main-gb/export/800c59c0_FUN_800c59c0.c; 0x800C3B10 clamp; +100 = 0; +0x40 = +0x50 + -0x6818",src/game/stage.rs
+game::stage,800c5a20,fn_800c5a20,translated,high,"work/ghidra/main-gb/export/800c5a20_FUN_800c5a20.c; +0x38 = 0 and +0x3C = +0x60; +0x44 += +0x60; +0x54 limit; 0x800C4B50 or 0x800C4D50(1)",src/game/stage.rs
+game::stage,800c5af0,fn_800c5af0,translated,high,"work/ghidra/main-gb/export/800c5af0_FUN_800c5af0.c; same enter half as 0x800C59C0; 0x800C3B10 clamp; +100 = 0; +0x40 = +0x50 + -0x6818",src/game/stage.rs
+game::stage,800c5b50,fn_800c5b50,translated,high,"work/ghidra/main-gb/export/800c5b50_FUN_800c5b50.c; +0x38 = 0 and +0x3C = +0x60; +0x44 += +0x60; low limit transitions to 0x80358FD0",src/game/stage.rs
+game::stage,800c5c30,fn_800c5c30,translated,high,"work/ghidra/main-gb/export/800c5c30_FUN_800c5c30.c; enter half; 0x800C3AD0 clamp; +100 = 0xC000; +0x44 = +0x54 - -0x6818",src/game/stage.rs
+game::stage,800c5c90,fn_800c5c90,translated,high,"work/ghidra/main-gb/export/800c5c90_FUN_800c5c90.c; +0x38 = +0x60 and +0x3C = 0; +0x40 += +0x60; high branch transitions to 0x80358F90",src/game/stage.rs
+game::stage,800c5d70,fn_800c5d70,translated,high,"work/ghidra/main-gb/export/800c5d70_FUN_800c5d70.c; enter half; +100 = 0xD333; +0x44 = (+0x54 - -0x6818) + f64(-0x67C0) * (+0x40 - +0x50)",src/game/stage.rs
+game::stage,800c5df0,fn_800c5df0,translated,medium,"work/ghidra/main-gb/export/800c5df0_FUN_800c5df0.c; step +0x60 * -0x67B8; shear -0x6804; 0x800C18B0 then 0x800C17A0 on the border point; types 8/10 transition 0x80359050/0x803590D0",src/game/stage.rs
+game::stage,800c5f80,fn_800c5f80,translated,high,"work/ghidra/main-gb/export/800c5f80_FUN_800c5f80.c; enter half; +100 = 0xD333; base uses -0x6800; f64(-0x67C0) slope term",src/game/stage.rs
+game::stage,800c6000,fn_800c6000,translated,medium,"work/ghidra/main-gb/export/800c6000_FUN_800c6000.c; y base uses -0x6800; shear -0x6804; 0x800C17A0 on border x; types 9/11 transition 0x80359010/0x80359090",src/game/stage.rs
+game::stage,800c6190,fn_800c6190,translated,high,"work/ghidra/main-gb/export/800c6190_FUN_800c6190.c; enter half; +100 = 0xACCC; +0x44 = f64(+0x54) - f64(-0x67C0) * (+0x40 - +0x50)",src/game/stage.rs
+game::stage,800c6200,fn_800c6200,translated,medium,"work/ghidra/main-gb/export/800c6200_FUN_800c6200.c; negated +0x3C; 0x800C18B0; 0x800C17A0 on border x; types 8/10 re-store +0x54 and transition",src/game/stage.rs
+game::stage,800c63a0,fn_800c63a0,translated,high,"work/ghidra/main-gb/export/800c63a0_FUN_800c63a0.c; enter half; +100 = 0xACCC; (+0x54 - -0x6800) - -0x6804 * (+0x40 - +0x50) all f32",src/game/stage.rs
+game::stage,800c6410,fn_800c6410,translated,medium,"work/ghidra/main-gb/export/800c6410_FUN_800c6410.c; negated +0x3C; y base -0x6800; 0x800C17A0 on border x; type 11 branch re-stores +0x54",src/game/stage.rs
+game::stage,800c65b0,fn_800c65b0,translated,high,"work/ghidra/main-gb/export/800c65b0_FUN_800c65b0.c; 0x800C3B10 clamp; +100 = 0xECCC; +0x40 = (+0x50 + -0x6818) - f64(-0x67C0) * (+0x54 - +0x44)",src/game/stage.rs
+game::stage,800c6630,fn_800c6630,translated,medium,"work/ghidra/main-gb/export/800c6630_FUN_800c6630.c; steps +0x44 by +0x60 * -0x67B8; shear -0x6804; 0x800C17A0 on border y; types 13/14 transition 0x80359150/0x80359190",src/game/stage.rs
+game::stage,800c67d0,fn_800c67d0,translated,high,"work/ghidra/main-gb/export/800c67d0_FUN_800c67d0.c; 0x800C3B10; +100 = 0xECCC; anchor (+0x50 + f64 -0x67B0) minus -0x67C0 * (+0x54 - +0x44)",src/game/stage.rs
+game::stage,800c6850,fn_800c6850,translated,medium,"work/ghidra/main-gb/export/800c6850_FUN_800c6850.c; anchor -0x67B0 and slope -0x67C0; 0x800C17A0 on border y; types 12/15 transition 0x80359110/0x803591D0",src/game/stage.rs
+game::stage,800c69f0,fn_800c69f0,translated,high,"work/ghidra/main-gb/export/800c69f0_FUN_800c69f0.c; 0x800C3B10; +100 = 0x9333; same anchors as 0x800C67D0 with an additive slope term",src/game/stage.rs
+game::stage,800c6a70,fn_800c6a70,translated,medium,"work/ghidra/main-gb/export/800c6a70_FUN_800c6a70.c; step scale -0x67A8; negated +0x38; anchors -0x67B0/-0x67C0; types 12/15 transition",src/game/stage.rs
+game::stage,800c6c10,fn_800c6c10,translated,high,"work/ghidra/main-gb/export/800c6c10_FUN_800c6c10.c; 0x800C3B10; +100 = 0x9333; +0x40 = f64(+0x50) + f64(-0x67C0) * (+0x54 - +0x44)",src/game/stage.rs
+game::stage,800c6c80,fn_800c6c80,translated,medium,"work/ghidra/main-gb/export/800c6c80_FUN_800c6c80.c; step scale -0x67A8; 0x800C4E50 low branch; 0x800C17A0 on border y; types 13/14 transition",src/game/stage.rs

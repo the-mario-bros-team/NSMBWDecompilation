@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d0610,fn_800d0610,translated,medium,"work/ghidra/main-gb/export/800d0610_FUN_800d0610.c; four-view effect transform; five SDA2 scale/offset words read by address",src/engine/display.rs
+engine::display,800d19e0,fn_800d19e0,translated,medium,"work/ghidra/main-gb/export/800d19e0_FUN_800d19e0.c; grid placement sweep; state/manager field roles inferred from 800d27b0 and 800d2690",src/engine/display.rs
+engine::display,800d2460,fn_800d2460,translated,medium,"work/ghidra/main-gb/export/800d2460_FUN_800d2460.c; angle projection; psq_l angle modelled as signed 16-bit",src/engine/display.rs
+engine::display,800d2690,fn_800d2690,translated,medium,"work/ghidra/main-gb/export/800d2690_FUN_800d2690.c; grid origin copy and per-column projection",src/engine/display.rs
+engine::display,800d27b0,fn_800d27b0,translated,medium,"work/ghidra/main-gb/export/800d27b0_FUN_800d27b0.c; linked grid records clamped to the four SDA2 screen bounds",src/engine/display.rs
+engine::display,800d3380,fn_800d3380,translated,medium,"work/ghidra/main-gb/export/800d3380_FUN_800d3380.c; four-player star-colour layout; widget builders called by address",src/engine/display.rs
+engine::display,800d6550,fn_800d6550,translated,medium,"work/ghidra/main-gb/export/800d6550_FUN_800d6550.c; two-row 80370DCC table selected by countLeadingZeros; vtable slot 0x64",src/engine/display.rs
+engine::display,800d9d70,fn_800d9d70,translated,medium,"work/ghidra/main-gb/export/800d9d70_FUN_800d9d70.c; ground band test and shadow placement; r3/r4 recovered from __savegprlr_24",src/engine/display.rs
+engine::display,800daa10,fn_800daa10,translated,medium,"work/ghidra/main-gb/export/800daa10_FUN_800daa10.c; actor-list ground sampler; dispatches 800dab40 and 800dac40",src/engine/display.rs
+engine::display,800dfdd0,fn_800dfdd0,translated,medium,"work/ghidra/main-gb/export/800dfdd0_FUN_800dfdd0.c; indexed +0x64 record walk; return recovered from 800dff30 call sites",src/engine/display.rs

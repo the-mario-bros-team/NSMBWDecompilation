@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d14e0,cursor_selection_active,translated,high,"work/ghidra/main-gb/export/800d14e0_FUN_800d14e0.c; null-guarded byte at selection+0x26D.",src/engine/display.rs
+engine::display,800d1500,cursor_set_target,translated,high,"work/ghidra/main-gb/export/800d1500_FUN_800d1500.c; word +4 and byte +0x2B stores.",src/engine/display.rs
+engine::display,800d1510,cursor_acquire_target,translated,medium,"work/ghidra/main-gb/export/800d1510_FUN_800d1510.c; list walk via r13-0x5698, 0x800D16B0(cursor,node,arg), five SDA2 clamp floats at 0x8042C9E8..0x8042C9F8; caller passes args the callee prints without.",src/engine/display.rs
+engine::display,800d1640,cursor_tick_lock,translated,high,"work/ghidra/main-gb/export/800d1640_FUN_800d1640.c; +0x2D lock timer, +0x10 clear, +0x28 countdown reload 2.",src/engine/display.rs
+engine::display,800d1f10,cursor_begin_track,translated,medium,"work/ghidra/main-gb/export/800d1f10_FUN_800d1f10.c; guard +0x0C, +0x2D=0x1E, +0x2F=+0x2E, 0x802DCBFC(cursor,0x802F1220) low byte to +0x2A.",src/engine/display.rs
+engine::display,800d2200,cursor_unlink,translated,high,"work/ghidra/main-gb/export/800d2200_FUN_800d2200.c; two-shape list unlink, clears +0x0C.",src/engine/display.rs
+engine::display,800d29f0,water_effect_construct,translated,high,"work/ghidra/main-gb/export/800d29f0_FUN_800d29f0.c; vtable 0x80317AFC, base ctor 0x802D7AA0, vtable 0x80308A80 at +4, clears +0x138.",src/engine/display.rs
+engine::display,800d2a50,water_effect_release,translated,medium,"work/ghidra/main-gb/export/800d2a50_FUN_800d2a50.c; 0x802D7B20(element+4,0), 0x802B9280(element) when free>0; release operand reconstructed.",src/engine/display.rs
+engine::display,800d2c20,water_effect_pool_construct,translated,high,"work/ghidra/main-gb/export/800d2c20_FUN_800d2c20.c; vtable 0x80317AF0, 0x802DC9A0(pool+4,0x800D29F0,0x800D2A50,0x13C,10), publishes r13-0x5690.",src/engine/display.rs
+engine::display,800d2c80,water_effect_pool_release,translated,high,"work/ghidra/main-gb/export/800d2c80_FUN_800d2c80.c; 0x802DCA98(pool+4,0x800D2A50,0x13C,10), frees pool when free>0.",src/engine/display.rs
+engine::display,800d2d80,water_effect_pool_update,translated,high,"work/ghidra/main-gb/export/800d2d80_FUN_800d2d80.c; ten iterations of 0x800D2B90 at stride 0x13C.",src/engine/display.rs
+engine::display,800d3030,water_node_construct,translated,medium,"work/ghidra/main-gb/export/800d3030_FUN_800d3030.c; 0x80169CD0(node) and 0x80169CD0(node+0x40); first operand reconstructed from r3.",src/engine/display.rs
+engine::display,800d3070,water_node_release,translated,high,"work/ghidra/main-gb/export/800d3070_FUN_800d3070.c; 0x80169D20(node+0x40,-1), 0x80169D20(node,-1), free when free>0.",src/engine/display.rs
+engine::display,800e0180,save_image_create,translated,high,"work/ghidra/main-gb/export/800e0180_FUN_800e0180.c; 0x8016E4F0 lock, 0x802B9230(0x3FC0,0x20), 0x800E01D0 construct, unlock.",src/engine/display.rs
+engine::display,800e01d0,save_image_construct,translated,high,"work/ghidra/main-gb/export/800e01d0_FUN_800e01d0.c; header 0x6A0 at +0x20, two 0x802DC9A0 arrays of 3 x 0x980 at +0x6C0/+0x2340, publishes r13-0x5640.",src/engine/display.rs
+engine::display,800e02d0,save_image_refresh,translated,high,"work/ghidra/main-gb/export/800e02d0_FUN_800e02d0.c; copies 0x6A0 and 2x3x0x980 from 0x8035DCC0, retags header and records with 0x0E.",src/engine/display.rs
+engine::display,800e0380,save_image_record_a,translated,high,"work/ghidra/main-gb/export/800e0380_FUN_800e0380.c; image + (slot==-1 ? s8[+0x26] : slot) * 0x980 + 0x6C0.",src/engine/display.rs
+engine::display,800e03b0,save_image_record_b,translated,high,"work/ghidra/main-gb/export/800e03b0_FUN_800e03b0.c; image + (slot==-1 ? s8[+0x26] : slot) * 0x980 + 0x2340.",src/engine/display.rs
+engine::display,800e0430,save_image_flag_get,translated,high,"work/ghidra/main-gb/export/800e0430_FUN_800e0430.c; clears the caller byte when manager+0x74==0, then returns it.",src/engine/display.rs
+engine::display,800e0470,save_image_update_header_checksum,translated,high,"work/ghidra/main-gb/export/800e0470_FUN_800e0470.c; 0x8015F130(image+0x24,0x698) stored at +0x6BC.",src/engine/display.rs
+engine::display,800e04b0,save_image_update_checksums,translated,high,"work/ghidra/main-gb/export/800e04b0_FUN_800e04b0.c; header then three records A/B hashed over 0x97C and stored at +0x97C.",src/engine/display.rs
+engine::display,800c9b00,display_object_mark_dirty,translated,medium,"work/ghidra/main-gb/export/800c9b00_FUN_800c9b00.c; 0x802AC480(name,r13-0x7A78), sets display+0x3DA=1 when the nested word is non-zero.",src/engine/display.rs
+engine::frame,800c9a10,fn_800c9a10,translated,high,"work/ghidra/main-gb/export/800c9a10_FUN_800c9a10.c; 0x800E5400(0x80359470) then 0x802DC780(0x80359470,0x800E5480,0x80359460).",src/engine/frame.rs
+engine::frame,800d08a0,fn_800d08a0,translated,high,"work/ghidra/main-gb/export/800d08a0_thunk_FUN_8016f410.c; vtable +0xC on *(r13-0x5220)+0x10.",src/engine/frame.rs
+engine::frame,800e2ad0,fn_800e2ad0,translated,high,"work/ghidra/main-gb/export/800e2ad0_FUN_800e2ad0.c; vtable 0x8031B010, two 0x802DC7E0 arrays with stride 0xC filled from 0x80377DC8..0x80377DD0.",src/engine/frame.rs

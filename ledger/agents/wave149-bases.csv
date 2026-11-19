@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806da520,fn_806da520,translated,high,"work/ghidra/rel-d_basesNP/export/806da520_FUN_806da520.c; daLiftScales_c rider tilt; presence gate 0x8042A078; cues 0x2B5 and messages 0x8082D9E8/0x8082DA28/0x8082DAE8",src/game/bases.rs
+game::bases,8071e130,fn_8071e130,translated,high,"work/ghidra/rel-d_basesNP/export/8071e130_FUN_8071e130.c; daObjWendy_c rail height; 216.0 ramp with 0x806601B0; cues 0x554; messages 0x80830000/0x80830040",src/game/bases.rs
+game::bases,80788cb0,fn_80788cb0,translated,high,"work/ghidra/rel-d_basesNP/export/80788cb0_FUN_80788cb0.c; broom four-state ride; 0.9/0.1 roll blend; spawns 0x8075F9E0; door 0x80785600; effect 0x17",src/game/bases.rs
+game::bases,80763290,fn_80763290,translated,high,"work/ghidra/rel-d_basesNP/export/80763290_FUN_80763290.c; World-6 ramp table 0x80815494 stride 0x18 via course_ramp_mean",src/game/bases.rs
+game::bases,80794c00,fn_80794c00,translated,high,"work/ghidra/rel-d_basesNP/export/80794c00_FUN_80794c00.c; World-7 ramp table 0x8081B4EC stride 0x1C via course_ramp_mean",src/game/bases.rs
+game::bases,8075f270,fn_8075f270,translated,medium,"work/ghidra/rel-d_basesNP/export/8075f270_FUN_8075f270.c; cobCastle gate state entry; 0x800FC0A0/0x800FBFB0 entered with the previous r3",src/game/bases.rs
+game::bases,8066ddc0,fn_8066ddc0,translated,high,"work/ghidra/rel-d_basesNP/export/8066ddc0_FUN_8066ddc0.c; daCastleBossKey_c per-player key heights; 96/(1+count) spacing; 0x80052080/0x80051F30/0x80052170",src/game/bases.rs
+game::bases,807727d0,fn_807727d0,translated,high,"work/ghidra/rel-d_basesNP/export/807727d0_FUN_807727d0.c; forest manager three-slot course sync; messages 0x28F..0x293 and 0x271; hand-decoded divw at 0x80772944",src/game/bases.rs
+game::bases,806c17f0,fn_806c17f0,translated,high,"work/ghidra/rel-d_basesNP/export/806c17f0_FUN_806c17f0.c; constant getter returning 0x80377A04",src/game/bases.rs
+game::bases,806c1800,fn_806c1800,translated,high,"work/ghidra/rel-d_basesNP/export/806c1800_FUN_806c1800.c; second copy of the 0x80377A04 getter",src/game/bases.rs
+game::bases,806c1810,fn_806c1810,translated,high,"work/ghidra/rel-d_basesNP/export/806c1810_FUN_806c1810.c; third copy of the 0x80377A04 getter",src/game/bases.rs
+game::bases,806c84c0,fn_806c84c0,translated,high,"work/ghidra/rel-d_basesNP/export/806c84c0_FUN_806c84c0.c; release wrapper for 0x802B9280 when free > 0",src/game/bases.rs
+game::bases,806c8500,fn_806c8500,translated,high,"work/ghidra/rel-d_basesNP/export/806c8500_FUN_806c8500.c; destroys +0x18 through 0x8015F9F0 then frees with 0x802B9280",src/game/bases.rs
+game::bases,806c8560,fn_806c8560,translated,high,"work/ghidra/rel-d_basesNP/export/806c8560_FUN_806c8560.c; twin of 806c8500 with a redundant null test at 0x806C8584",src/game/bases.rs
+game::bases,806c2cd0,fn_806c2cd0,translated,high,"work/ghidra/rel-d_basesNP/export/806c2cd0_FUN_806c2cd0.c; releases the object through 0x8015F800 then frees with 0x802B9280",src/game/bases.rs
+game::bases,806c12f0,fn_806c12f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806c12f0_FUN_806c12f0.c; +0x40C chain walk; ids 0..3 drive model slots +0x400 and +0x434 through 0x8005F900",src/game/bases.rs

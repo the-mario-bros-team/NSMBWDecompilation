@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a30cb0,fn_80a30cb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a30cb0_FUN_80a30cb0.c; calls +0x544 vtable slot +0x14, returns 1",src/game/enemies.rs
+game::enemies,80a30ce0,fn_80a30ce0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a30ce0_FUN_80a30ce0.c; compares +0x538 with 0x8016A5D0 and releases +0x544 slot +0x10",src/game/enemies.rs
+game::enemies,80a31190,fn_80a31190,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31190_FUN_80a31190.c; +0xAC/+0x100 matrix refresh through 0x80064AF0 and 0x801C0BD0 into +0x7C",src/game/enemies.rs
+game::enemies,80a313c0,fn_80a313c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a313c0_FUN_80a313c0.c; binds houdai_ball via 80239E30/80169D90 record 0x20",src/game/enemies.rs
+game::enemies,80a31800,fn_80a31800,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31800_FUN_80a31800.c; state-descriptor normaliser, 0x8015F800 then 0x802B9280 when mode > 0",src/game/enemies.rs
+game::enemies,80a31920,fn_80a31920,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a31920_FUN_80a31920.c; 48-byte deleting-destructor forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a31950,fn_80a31950,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a31950_FUN_80a31950.c; second copy of the 48-byte deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80a31980,fn_80a31980,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31980_FUN_80a31980.c; allocates 0x5E0, vtables 0x80303658 then 0x80B3CE88",src/game/enemies.rs
+game::enemies,80a31ae0,fn_80a31ae0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31ae0_FUN_80a31ae0.c; binds obj_door_shiroboss on +0x540 with 0.0 blends",src/game/enemies.rs
+game::enemies,80a31c40,fn_80a31c40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31c40_FUN_80a31c40.c; clip rate 1.0 and +0x5B8 = 3",src/game/enemies.rs
+game::enemies,80a31c80,fn_80a31c80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31c80_FUN_80a31c80.c; two 0.0 clip-rate calls on +0x584",src/game/enemies.rs
+game::enemies,80a31d60,fn_80a31d60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31d60_FUN_80a31d60.c; sound 0x291 at +0xAC through 0x80198C30",src/game/enemies.rs
+game::enemies,80a31db0,fn_80a31db0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a31db0_FUN_80a31db0.c; sound 0x28F at +0xAC through 0x80198C30",src/game/enemies.rs
+game::enemies,80a31e00,fn_80a31e00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a31e00_FUN_80a31e00.c; +0x394 slot +0x28 then result slot +0x14 against 0x80353090",src/game/enemies.rs
+game::enemies,80a31e50,fn_80a31e50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a31e50_FUN_80a31e50.c; releases +0x584/+0x544/+0x524 and frees when flag > 0",src/game/enemies.rs
+game::enemies,80a31f80,fn_80a31f80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a31f80_FUN_80a31f80.c; spawn init, 0x8007FB10 record at +0x5B4, class-0x18E search, 0x80B70110",src/game/enemies.rs
+game::enemies,80a32320,fn_80a32320,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a32320_FUN_80a32320.c; binds obj_chikuwa_block model/clip through 80169D90/80166830/80166BD0",src/game/enemies.rs
+game::enemies,80a32470,fn_80a32470,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a32470_FUN_80a32470.c; class byte 1/2 writes the +0x6BC slot and arms +0x6B4",src/game/enemies.rs
+game::enemies,80a324e0,fn_80a324e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a324e0_FUN_80a324e0.c; four-colour guard, +0x6B4 countdown, 0x80077860 landing call",src/game/enemies.rs
+game::enemies,80a32660,fn_80a32660,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a32660_FUN_80a32660.c; iterates class 0x18E matching +0xAC/+0xB0, caches first word into +0x5B0",src/game/enemies.rs
+game::enemies,80a326f0,fn_80a326f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a326f0_FUN_80a326f0.c; 80162D00 handle lookup writes byte +0x124",src/game/enemies.rs
+game::enemies,80a32750,fn_80a32750,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a32750_FUN_80a32750.c; controller bit 1 flips +0x6A4 and reads the 0x80B2BF38 table",src/game/enemies.rs
+game::enemies,80a327c0,fn_80a327c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a327c0_FUN_80a327c0.c; 0x80A324E0 plus +0x6AC countdown and +0x6B2 phase dispatch",src/game/enemies.rs
+game::enemies,80a328d0,fn_80a328d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a328d0_FUN_80a328d0.c; contact flag 2 restores +0x69C and dispatches 0x80B70190",src/game/enemies.rs
+game::enemies,80a329b0,fn_80a329b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a329b0_FUN_80a329b0.c; +0x6B8 0.05 timer with 1.0 clamp and landing effect",src/game/enemies.rs

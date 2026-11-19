@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,802418f0,fn_802418f0,translated,high,"work/ghidra/main-gb/export/802418f0_FUN_802418f0.c; four flag branches fill the 3x4 destination from the +0x1C matrix or the secondary triplet",src/runtime/os.rs
+runtime::os,80241aa0,fn_80241aa0,translated,medium,"work/ghidra/main-gb/export/80241aa0_FUN_80241aa0.c; uniform fast path sets 0x20/0x24/0x26 and nine neutral words; otherwise 0x802382B0 kernel plus restored rows",src/runtime/os.rs
+runtime::os,80241de0,fn_80241de0,translated,medium,"work/ghidra/main-gb/export/80241de0_FUN_80241de0.c; clamps a double to [sda2(-0x4AB8), u16 record+0x34] then resolves through 0x8023F140",src/runtime/os.rs
+runtime::os,80249470,fn_80249470,translated,medium,"work/ghidra/main-gb/export/80249470_FUN_80249470.c; vtable slot +0x14 result plus four",src/runtime/os.rs
+runtime::os,80249720,fn_80249720,translated,high,"work/ghidra/main-gb/export/80249720_FUN_80249720.c; halfword at (u32(+0x14) + index*2) & 0xC000, leading zeros >> 5",src/runtime/os.rs
+runtime::os,80249a70,fn_80249a70,translated,high,"work/ghidra/main-gb/export/80249a70_FUN_80249a70.c; stores vtable 0x8034E6E8 then 0x801D5550(child at +0x08, object)",src/runtime/os.rs
+runtime::os,80249b40,fn_80249b40,translated,medium,"work/ghidra/main-gb/export/80249b40_FUN_80249b40.c; notifies the +0x04 child through vtable slot +0x0C with event 0x10001",src/runtime/os.rs
+runtime::os,80249cb0,fn_80249cb0,translated,high,"work/ghidra/main-gb/export/80249cb0_FUN_80249cb0.c; single word store to the GX FIFO 0xCC008000",src/runtime/os.rs
+runtime::os,80249d30,fn_80249d30,translated,medium,"work/ghidra/main-gb/export/80249d30_FUN_80249d30.c; byte of sda2(-0x4A20) table shifted into bits 14..21 of a FIFO word",src/runtime/os.rs
+runtime::os,80249d60,fn_80249d60,translated,low,"work/ghidra/main-gb/export/80249d60_FUN_80249d60.c; packs r7/r8/r9 and index*2+0x31 into one FIFO word; the three trailing operands are untyped in the export",src/runtime/os.rs
+runtime::os,80249dd0,fn_80249dd0,translated,medium,"work/ghidra/main-gb/export/80249dd0_FUN_80249dd0.c; texture-scale exponent loop over six matrix magnitudes then command word with two 11-bit mantissas",src/runtime/os.rs
+runtime::os,8024a070,fn_8024a070,translated,high,"work/ghidra/main-gb/export/8024a070_FUN_8024a070.c; pushes the fixed 24-bit BP word 0x00F3CF3C",src/runtime/os.rs
+runtime::os,8024a0d0,fn_8024a0d0,translated,high,"work/ghidra/main-gb/export/8024a0d0_FUN_8024a0d0.c; packs record +0x1C/+0x18/+0x10/+0x14 into one FIFO word",src/runtime/os.rs
+runtime::os,8024a150,fn_8024a150,translated,high,"work/ghidra/main-gb/export/8024a150_FUN_8024a150.c; twelve-word stack record with sda2(-0x4A0C) at slots 3/7/11 then 0x801C9A80",src/runtime/os.rs
+runtime::os,8024a1d0,fn_8024a1d0,translated,medium,"work/ghidra/main-gb/export/8024a1d0_FUN_8024a1d0.c; installs callbacks 0x8024A2D0/0x8024A3A0; mode 2 registers eight slots from 0x803DEE00",src/runtime/os.rs
+runtime::os,8024a3d0,fn_8024a3d0,translated,medium,"work/ghidra/main-gb/export/8024a3d0_FUN_8024a3d0.c; walks 0x802F8710/0x802F8AD0 by (index-1)*0x140 and writes six 0x10-stride blocks",src/runtime/os.rs
+runtime::os,8024b610,fn_8024b610,translated,medium,"work/ghidra/main-gb/export/8024b610_FUN_8024b610.c; clears 0x20 entries of four strided arrays at +0x34/+0x634/+0xE34/+0x1434",src/runtime/os.rs
+runtime::os,8024b6b0,fn_8024b6b0,translated,medium,"work/ghidra/main-gb/export/8024b6b0_FUN_8024b6b0.c; latches the 0x8023D100 channel id at sda(-0x49B4) and raises the dirty byte",src/runtime/os.rs
+runtime::os,8024bec0,fn_8024bec0,translated,high,"work/ghidra/main-gb/export/8024bec0_FUN_8024bec0.c; pushes the packed state word when latch bit2 and low bits 2, then 0x8023CB00(record,dirty)",src/runtime/os.rs
+runtime::os,8024bf70,fn_8024bf70,translated,high,"work/ghidra/main-gb/export/8024bf70_FUN_8024bf70.c; same flush as 8024BEC0 with the final call 0x8023CB30",src/runtime/os.rs
+runtime::os,8024c020,fn_8024c020,translated,high,"work/ghidra/main-gb/export/8024c020_FUN_8024c020.c; same flush with the final call 0x8023D5B0(record,state byte 3,dirty)",src/runtime/os.rs
+runtime::os,8024c8d0,fn_8024c8d0,translated,medium,"work/ghidra/main-gb/export/8024c8d0_FUN_8024c8d0.c; 0x8023DDD0 flush then a five-argument 0x80249CB0 push and latch |= 3",src/runtime/os.rs
+runtime::os,8024d140,fn_8024d140,translated,high,"work/ghidra/main-gb/export/8024d140_FUN_8024d140.c; 0x24-stride table at 0x803DF174, else 0x30-stride source copied into 0x803E44C0",src/runtime/os.rs
+runtime::os,8024d220,fn_8024d220,translated,medium,"work/ghidra/main-gb/export/8024d220_FUN_8024d220.c; compares the object word with 0x803DF988 + slot*0x30 and resets through 0x8025F330",src/runtime/os.rs
+runtime::os,8024d4f0,fn_8024d4f0,translated,high,"work/ghidra/main-gb/export/8024d4f0_FUN_8024d4f0.c; copies twenty fields from 0x802DCD58 into the 0x803E43E8 block, two gaps preserved",src/runtime/os.rs
+runtime::os,8024d5e0,fn_8024d5e0,translated,high,"work/ghidra/main-gb/export/8024d5e0_FUN_8024d5e0.c; ten-bit reset switch over the render-state globals, raises sda(-0x49D0) last",src/runtime/os.rs

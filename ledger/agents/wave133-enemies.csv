@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ab9af0,fn_80ab9af0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab9af0_FUN_80ab9af0.c; lift_trampoline variant init + 0x8007FA40 layer emitter",src/game/enemies.rs
+game::enemies,80a7eb60,fn_80a7eb60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7eb60_FUN_80a7eb60.c; 1/240 ramp with two extent tables and +0xD4 clamp dispatch",src/game/enemies.rs
+game::enemies,80a0e450,fn_80a0e450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0e450_FUN_80a0e450.c; player height probe, pad requery and +0x5F4..+0x608 reset",src/game/enemies.rs
+game::enemies,80ab22d0,fn_80ab22d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab22d0_FUN_80ab22d0.c; fishbone step: cue 0x207, aim gate, two +0x14 pad slots",src/game/enemies.rs
+game::enemies,80a37700,fn_80a37700,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a37700_FUN_80a37700.c; +0x360 three-state machine with side-byte walk reset",src/game/enemies.rs
+game::enemies,80a36fc0,fn_80a36fc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a36fc0_FUN_80a36fc0.c; go_out_ed clip + Wm_en_landsmoke_s at z 5500 + cue 0x21B",src/game/enemies.rs
+game::enemies,80b1b3f0,fn_80b1b3f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1b3f0_FUN_80b1b3f0.c; 0x600 short step toward side*13653 - 0x80B32488[side]",src/game/enemies.rs
+game::enemies,80a368b0,fn_80a368b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a368b0_FUN_80a368b0.c; 4-slot 256x160 proximity test with 0x80429CA8 mask",src/game/enemies.rs
+game::enemies,80affaf0,fn_80affaf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80affaf0_FUN_80affaf0.c; g3d/ice.brres + ice_C1 node and AnmTexSrt group",src/game/enemies.rs
+game::enemies,80a2e970,fn_80a2e970,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2e970_FUN_80a2e970.c; 8-slot x-4+rand(8) respawn allocator with 1.2 scale",src/game/enemies.rs
+game::enemies,80a600b0,fn_80a600b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a600b0_FUN_80a600b0.c; side flip with lazily built 0x80B71E98 table",src/game/enemies.rs
+game::enemies,80a35370,fn_80a35370,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a35370_FUN_80a35370.c; run clip at (s32)+0x5AC/10 * rand(10)",src/game/enemies.rs
+game::enemies,80a18e30,fn_80a18e30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a18e30_FUN_80a18e30.c; two collision removals + 0x80B2B498 store to +0x10C",src/game/enemies.rs
+game::enemies,80a1e170,fn_80a1e170,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1e170_FUN_80a1e170.c; +0x70C state 10 gate, 0x800E76A0 result 2/3",src/game/enemies.rs
+game::enemies,80a1e200,fn_80a1e200,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1e200_FUN_80a1e200.c; +0x67D latch effect record and retire",src/game/enemies.rs
+game::enemies,80a1e2a0,fn_80a1e2a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1e2a0_FUN_80a1e2a0.c; +0x394 joint handler, controller modes, 20-byte record",src/game/enemies.rs
+game::enemies,80a1e7e0,fn_80a1e7e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1e7e0_FUN_80a1e7e0.c; 0x1A3/0x1A4 target search on +0x39C/+0x3E2",src/game/enemies.rs
+game::enemies,80a1e880,fn_80a1e880,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1e880_FUN_80a1e880.c; capture: distance 0x802BE470, yaw 0x80237ED0, two 0x807073D0",src/game/enemies.rs
+game::enemies,80a1edf0,fn_80a1edf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1edf0_FUN_80a1edf0.c; search + capture + 0x80A1E990 + 0x80B6F718 dispatch",src/game/enemies.rs
+game::enemies,80a1ee80,fn_80a1ee80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1ee80_FUN_80a1ee80.c; cardinal-angle gate over +0x710/+0x712",src/game/enemies.rs
+game::enemies,80a1ef30,fn_80a1ef30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1ef30_FUN_80a1ef30.c; unconditional +0x394 handler then 0x80021780",src/game/enemies.rs
+game::enemies,80a1f390,fn_80a1f390,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1f390_FUN_80a1f390.c; 0x8015F800 release + 0x802B9280 when count > 0",src/game/enemies.rs
+game::enemies,80a1f510,fn_80a1f510,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1f510_FUN_80a1f510.c; 0x7B0-byte block_cloud constructor",src/game/enemies.rs
+game::enemies,80a1f760,fn_80a1f760,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1f760_FUN_80a1f760.c; block_cloud frame step with +0x78C/+0x61C y and 0x80B6F7D8 retire",src/game/enemies.rs
+game::enemies,80a1f950,fn_80a1f950,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1f950_FUN_80a1f950.c; block_cloud model binder + wait clip",src/game/enemies.rs
+game::enemies,80a1fa70,fn_80a1fa70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1fa70_FUN_80a1fa70.c; impact step: Wm_en_blockcloud, cue 0x27A, splash nibbles",src/game/enemies.rs
+game::enemies,80a1fce0,fn_80a1fce0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a1fce0_FUN_80a1fce0.c; impact step then +0x6B8 holder slot +0x1C",src/game/enemies.rs
+game::enemies,80a1ffb0,fn_80a1ffb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1ffb0_FUN_80a1ffb0.c; second release helper, identical to 80a1f390",src/game/enemies.rs

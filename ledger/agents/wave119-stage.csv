@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c3ba0,fn_800c3ba0,translated,high,"work/ghidra/main-gb/export/800c3ba0_thunk_FUN_800c3bac.c; 4-byte b 0x800C3BAC verified in work/dol/main.elf (0x4800000C); one-call wrapper",src/game/stage.rs
+game::stage,800c8a90,fn_800c8a90,translated,high,"work/ghidra/main-gb/export/800c8a90_thunk_FUN_80007320.c; 4-byte b 0x80007320 verified in work/dol/main.elf (0x4BF3E890); one-call wrapper",src/game/stage.rs

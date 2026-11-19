@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ac2220,fn_80ac2220,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac2220_FUN_80ac2220.c; four-player contact report + three holder releases",src/game/enemies.rs
+game::enemies,80ac2370,fn_80ac2370,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac2370_FUN_80ac2370.c; player byte copy, three floats cleared, region switch",src/game/enemies.rs
+game::enemies,80ac2a50,fn_80ac2a50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac2a50_FUN_80ac2a50.c; pair-contact record at +0x414..+0x432",src/game/enemies.rs
+game::enemies,80ac2dc0,fn_80ac2dc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac2dc0_FUN_80ac2dc0.c; region-gated variant rebind + side speed",src/game/enemies.rs
+game::enemies,80ac2e70,fn_80ac2e70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac2e70_FUN_80ac2e70.c; +0x5FA countdown, 0x20E event, partner side test",src/game/enemies.rs
+game::enemies,80ac3020,fn_80ac3020,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac3020_FUN_80ac3020.c; +0x102 angle blend toward side table",src/game/enemies.rs
+game::enemies,80ac31a0,fn_80ac31a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac31a0_FUN_80ac31a0.c; holder release + 0x80AC1D50/0x80AC1E10 step",src/game/enemies.rs
+game::enemies,80ac3650,fn_80ac3650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac3650_FUN_80ac3650.c; side flip + speed negation + two exits",src/game/enemies.rs
+game::enemies,80ac3770,fn_80ac3770,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac3770_FUN_80ac3770.c; attack-state seed of +0xE8..+0x178",src/game/enemies.rs
+game::enemies,80ac3870,fn_80ac3870,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac3870_FUN_80ac3870.c; 0x20B event, side flip, 0xFF player marker",src/game/enemies.rs
+game::enemies,80ac39c0,fn_80ac39c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac39c0_FUN_80ac39c0.c; clears +0x120 bit 4, 0x20D event, binder variant 3",src/game/enemies.rs
+game::enemies,80ac3a60,fn_80ac3a60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac3a60_FUN_80ac3a60.c; +0x588 phase query gates the 0x80B759A0 switch",src/game/enemies.rs
+game::enemies,80ac4b50,fn_80ac4b50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac4b50_FUN_80ac4b50.c; g3d/met.brres binder for +0x7F8/+0x7FC/+0x83C",src/game/enemies.rs
+game::enemies,80ac4c40,fn_80ac4c40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac4c40_FUN_80ac4c40.c; knock-away seed, side pick, 0x80353A64 entry",src/game/enemies.rs
+game::enemies,80ac4ee0,fn_80ac4ee0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac4ee0_FUN_80ac4ee0.c; +0x3F4 contact gate + side-code turn",src/game/enemies.rs
+game::enemies,80ac5220,fn_80ac5220,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac5220_FUN_80ac5220.c; side ground probe, status 3 predicate",src/game/enemies.rs
+game::enemies,80ac53e0,fn_80ac53e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac53e0_FUN_80ac53e0.c; fifteen-word effect block over 0x80B75DA4",src/game/enemies.rs
+game::enemies,80ac5650,fn_80ac5650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac5650_FUN_80ac5650.c; four region tests gate the clip rebind",src/game/enemies.rs
+game::enemies,80ac57e0,fn_80ac57e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac57e0_FUN_80ac57e0.c; contact latch + +0x44C counter + 0x80B75C30",src/game/enemies.rs
+game::enemies,80ac5960,fn_80ac5960,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac5960_FUN_80ac5960.c; unconditional clip rebind + record index 2",src/game/enemies.rs
+game::enemies,80ac5a30,fn_80ac5a30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac5a30_FUN_80ac5a30.c; +0x874 latch, knock-away or 0x80B75C70",src/game/enemies.rs
+game::enemies,80ac5bc0,fn_80ac5bc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac5bc0_FUN_80ac5bc0.c; vertical-speed select + +0x2E4 hit switch",src/game/enemies.rs
+game::enemies,80ac5d00,fn_80ac5d00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac5d00_FUN_80ac5d00.c; mask clear of +0xEC + +0x2E4 hit switch",src/game/enemies.rs
+game::enemies,80acf450,fn_80acf450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acf450_FUN_80acf450.c; descriptor teardown, frees when mode > 0",src/game/enemies.rs
+game::enemies,80acf4b0,fn_80acf4b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acf4b0_FUN_80acf4b0.c; byte-identical copy of 0x80ACF450",src/game/enemies.rs
+game::enemies,80acf510,fn_80acf510,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acf510_FUN_80acf510.c; constant producer 0x803541CC",src/game/enemies.rs
+game::enemies,80acf600,fn_80acf600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acf600_FUN_80acf600.c; +0x30 chain walker, vtable slot +0xC",src/game/enemies.rs
+game::enemies,80acf6e0,fn_80acf6e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acf6e0_FUN_80acf6e0.c; colon-suffix name predicate",src/game/enemies.rs
+game::enemies,80acf7a0,fn_80acf7a0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80acf7a0_FUN_80acf7a0.c; 48-byte forwarder, hidden r12 not modelled",src/game/enemies.rs
+game::enemies,80acf7d0,fn_80acf7d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80acf7d0_FUN_80acf7d0.c; second 48-byte forwarder, hidden r12 not modelled",src/game/enemies.rs

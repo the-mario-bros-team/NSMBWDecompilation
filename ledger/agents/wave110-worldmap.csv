@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80103410,fn_80103410,translated,medium,"work/ghidra/main-gb/export/80103410_FUN_80103410.c; 16-byte register-transparent tail branch onto wm_effect_slot_alloc",src/game/worldmap.rs
+game::worldmap,8010b890,fn_8010b890,translated,medium,"work/ghidra/main-gb/export/8010b890_FUN_8010b890.c; eight dGoalManager_c state records, one bootstrap callback and four globals",src/game/worldmap.rs
+game::worldmap,8010e830,fn_8010e830,translated,medium,"work/ghidra/main-gb/export/8010e830_FUN_8010e830.c; eight dWarningManager_c state records plus the one-shot two-word seed",src/game/worldmap.rs

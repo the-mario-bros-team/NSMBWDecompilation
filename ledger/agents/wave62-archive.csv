@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802627e0,fn_802627e0,translated,high,"work/ghidra/main-gb/export/802627e0_FUN_802627e0.c; child+0x3A halfword store plus flag bit 3 under IRQ mask",src/resource/archive.rs
+resource::archive,80262840,fn_80262840,translated,high,"work/ghidra/main-gb/export/80262840_FUN_80262840.c; child+0xFE halfword store plus flag bit 23 under IRQ mask",src/resource/archive.rs
+resource::archive,802643d0,fn_802643d0,translated,high,"work/ghidra/main-gb/export/802643d0_FUN_802643d0.c; five-word descriptor initialiser with 0x8000 defaults",src/resource/archive.rs
+resource::archive,80264c00,fn_80264c00,translated,high,"work/ghidra/main-gb/export/80264c00_FUN_80264c00.c; row size (count + 0x10) * 0x48",src/resource/archive.rs
+resource::archive,80265f40,fn_80265f40,translated,high,"work/ghidra/main-gb/export/80265f40_FUN_80265f40.c; forwards this+4 to 0x80265DB0",src/resource/archive.rs
+resource::archive,80265f50,fn_80265f50,translated,high,"work/ghidra/main-gb/export/80265f50_FUN_80265f50.c; float array store at +0x34 + index*4",src/resource/archive.rs
+resource::archive,80265f60,fn_80265f60,translated,high,"work/ghidra/main-gb/export/80265f60_FUN_80265f60.c; float array load at +0x34 + index*4",src/resource/archive.rs
+resource::archive,80265f70,fn_80265f70,translated,high,"work/ghidra/main-gb/export/80265f70_FUN_80265f70.c; float +0x18 and byte +0x1C stores",src/resource/archive.rs
+resource::archive,80265f80,fn_80265f80,translated,high,"work/ghidra/main-gb/export/80265f80_FUN_80265f80.c; single byte store at +0x1D",src/resource/archive.rs
+resource::archive,80265f90,fn_80265f90,translated,high,"work/ghidra/main-gb/export/80265f90_FUN_80265f90.c; float array store at +0x40 + index*4",src/resource/archive.rs
+resource::archive,80265fa0,fn_80265fa0,translated,high,"work/ghidra/main-gb/export/80265fa0_FUN_80265fa0.c; float array load at +0x40 + index*4",src/resource/archive.rs
+resource::archive,80265fb0,fn_80265fb0,translated,high,"work/ghidra/main-gb/export/80265fb0_FUN_80265fb0.c; guarded heap delete returning this",src/resource/archive.rs
+resource::archive,80266230,fn_80266230,translated,high,"work/ghidra/main-gb/export/80266230_FUN_80266230.c; sets +0x84 unless +0x85 is already set",src/resource/archive.rs
+resource::archive,802666a0,fn_802666a0,translated,high,"work/ghidra/main-gb/export/802666a0_FUN_802666a0.c; word +0x90 store and +0x86 sign flag",src/resource/archive.rs
+resource::archive,80267390,fn_80267390,translated,high,"work/ghidra/main-gb/export/80267390_FUN_80267390.c; mode byte +0x98, child notify and vtable slot +0x2C",src/resource/archive.rs
+resource::archive,80267400,fn_80267400,translated,high,"work/ghidra/main-gb/export/80267400_FUN_80267400.c; clamp to r2-0x4834 then store at +0xB0",src/resource/archive.rs
+resource::archive,802674e0,fn_802674e0,translated,high,"work/ghidra/main-gb/export/802674e0_FUN_802674e0.c; copies child+0x34 to +0xC8",src/resource/archive.rs
+resource::archive,802674f0,fn_802674f0,translated,high,"work/ghidra/main-gb/export/802674f0_FUN_802674f0.c; clamp to r2-0x4834 then store at +0xCC",src/resource/archive.rs
+resource::archive,80267510,fn_80267510,translated,high,"work/ghidra/main-gb/export/80267510_FUN_80267510.c; clamp then store at +0xE0 + index*4",src/resource/archive.rs
+resource::archive,80267530,fn_80267530,translated,medium,"work/ghidra/main-gb/export/80267530_FUN_80267530.c; vtable slot +0x24 then fn_80265f80 on its result",src/resource/archive.rs
+resource::archive,80267570,fn_80267570,translated,medium,"work/ghidra/main-gb/export/80267570_FUN_80267570.c; vtable slot +0x24 then word store at result+0x2C",src/resource/archive.rs
+resource::archive,802675b0,fn_802675b0,translated,medium,"work/ghidra/main-gb/export/802675b0_FUN_802675b0.c; vtable slot +0x24 then word store at result+0x30",src/resource/archive.rs
+resource::archive,802675f0,fn_802675f0,translated,high,"work/ghidra/main-gb/export/802675f0_FUN_802675f0.c; binds one record into +0x1C..+0x2C and caps the channel count at 4",src/resource/archive.rs
+resource::archive,80267b40,fn_80267b40,translated,high,"work/ghidra/main-gb/export/80267b40_FUN_80267b40.c; guarded heap delete returning this",src/resource/archive.rs
+resource::archive,80267c40,fn_80267c40,translated,high,"work/ghidra/main-gb/export/80267c40_FUN_80267c40.c; lazy 0x18-byte list header at 0x803FC958 plus destructor registration",src/resource/archive.rs
+resource::archive,80267cc0,fn_80267cc0,translated,high,"work/ghidra/main-gb/export/80267cc0_FUN_80267cc0.c; unlink this+4 through 0x80229030 and optional free",src/resource/archive.rs
+resource::archive,80267d20,fn_80267d20,translated,high,"work/ghidra/main-gb/export/80267d20_FUN_80267d20.c; row size (count + 1) * 0xE0",src/resource/archive.rs
+resource::archive,80267d30,fn_80267d30,translated,medium,"work/ghidra/main-gb/export/80267d30_FUN_80267d30.c; guarded +0x10 initialisation through 0x8026D860 under IRQ mask",src/resource/archive.rs

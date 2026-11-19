@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807866a0,fn_807866a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807866a0_FUN_807866a0.c; 64 bytes; release wrapper; teardown receiver restored from r3",src/game/bases.rs
+game::bases,807866e0,fn_807866e0,translated,high,"work/ghidra/rel-d_basesNP/export/807866e0_FUN_807866e0.c; 64 bytes; byte-identical to 807866a0",src/game/bases.rs
+game::bases,80786720,fn_80786720,translated,high,"work/ghidra/rel-d_basesNP/export/80786720_FUN_80786720.c; 96 bytes; destroys +0x18 member then object",src/game/bases.rs
+game::bases,80786780,fn_80786780,translated,high,"work/ghidra/rel-d_basesNP/export/80786780_FUN_80786780.c; 100 bytes; byte-identical to 80786720",src/game/bases.rs
+game::bases,80786980,fn_80786980,translated,high,"work/ghidra/rel-d_basesNP/export/80786980_FUN_80786980.c; 360 bytes; firepillar init and two allocator records",src/game/bases.rs
+game::bases,80786c00,fn_80786c00,translated,high,"work/ghidra/rel-d_basesNP/export/80786c00_FUN_80786c00.c; 164 bytes; matrix rebuild from position and angle",src/game/bases.rs
+game::bases,80786cf0,fn_80786cf0,translated,medium,"work/ghidra/rel-d_basesNP/export/80786cf0_FUN_80786cf0.c; 288 bytes; g3d_model.brres and cobfirepillar loader",src/game/bases.rs
+game::bases,80786e10,fn_80786e10,translated,high,"work/ghidra/rel-d_basesNP/export/80786e10_FUN_80786e10.c; 136 bytes; per-player animation rates",src/game/bases.rs
+game::bases,80787330,fn_80787330,translated,high,"work/ghidra/rel-d_basesNP/export/80787330_FUN_80787330.c; 104 bytes; Wm_cs_magmasign spawn",src/game/bases.rs
+game::bases,807873a0,fn_807873a0,translated,high,"work/ghidra/rel-d_basesNP/export/807873a0_FUN_807873a0.c; 104 bytes; Wm_cs_firespillar spawn",src/game/bases.rs
+game::bases,80783400,fn_80783400,translated,medium,"work/ghidra/rel-d_basesNP/export/80783400_FUN_80783400.c; 284 bytes; cobHatenaSwitch variant setup",src/game/bases.rs
+game::bases,807836f0,fn_807836f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807836f0_FUN_807836f0.c; 244 bytes; skl_root bind and saved offset",src/game/bases.rs
+game::bases,807839d0,fn_807839d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807839d0_FUN_807839d0.c; 756 bytes; switch states 0..7 and 0x10",src/game/bases.rs
+game::bases,80783ce0,fn_80783ce0,translated,medium,"work/ghidra/rel-d_basesNP/export/80783ce0_FUN_80783ce0.c; 748 bytes; switch states 8..0x10",src/game/bases.rs
+game::bases,807883e0,fn_807883e0,translated,high,"work/ghidra/rel-d_basesNP/export/807883e0_FUN_807883e0.c; 20 bytes; mode 0 and active byte",src/game/bases.rs
+game::bases,807884d0,fn_807884d0,translated,high,"work/ghidra/rel-d_basesNP/export/807884d0_FUN_807884d0.c; 12 bytes; mode 1",src/game/bases.rs
+game::bases,80788530,fn_80788530,translated,high,"work/ghidra/rel-d_basesNP/export/80788530_FUN_80788530.c; 80 bytes; mode 2 and vtable reset",src/game/bases.rs
+game::bases,80788580,fn_80788580,translated,high,"work/ghidra/rel-d_basesNP/export/80788580_FUN_80788580.c; 80 bytes; grounded gate",src/game/bases.rs
+game::bases,807885d0,fn_807885d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807885d0_FUN_807885d0.c; 140 bytes; broom ride placement",src/game/bases.rs
+game::bases,80789a60,fn_80789a60,translated,high,"work/ghidra/rel-d_basesNP/export/80789a60_FUN_80789a60.c; 24 bytes; countLeadingZeros test",src/game/bases.rs
+game::bases,80789b10,fn_80789b10,translated,high,"work/ghidra/rel-d_basesNP/export/80789b10_FUN_80789b10.c; 100 bytes; nine-word placement table",src/game/bases.rs
+game::bases,80789b80,fn_80789b80,translated,medium,"work/ghidra/rel-d_basesNP/export/80789b80_FUN_80789b80.c; 224 bytes; part switch and duration rates",src/game/bases.rs
+game::bases,80789c60,fn_80789c60,translated,medium,"work/ghidra/rel-d_basesNP/export/80789c60_FUN_80789c60.c; 292 bytes; two-part ratio stepper",src/game/bases.rs
+game::bases,80789e60,fn_80789e60,translated,high,"work/ghidra/rel-d_basesNP/export/80789e60_FUN_80789e60.c; 100 bytes; slot release with 5 fallback",src/game/bases.rs
+game::bases,8078a170,fn_8078a170,translated,medium,"work/ghidra/rel-d_basesNP/export/8078a170_FUN_8078a170.c; 256 bytes; lean integrator with 2^52 conversion",src/game/bases.rs
+game::bases,8078a410,fn_8078a410,translated,high,"work/ghidra/rel-d_basesNP/export/8078a410_FUN_8078a410.c; 88 bytes; destructor and free",src/game/bases.rs

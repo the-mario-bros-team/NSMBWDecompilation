@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806d39e0,fn_806d39e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806d39e0_FUN_806d39e0.c; sets +0x75C, sound 0x2A6 via 0x80198C30, then calls 0x806D38D0 whose export is halt_baddata",src/game/bases.rs
+game::bases,806d3a60,fn_806d3a60,translated,high,"work/ghidra/rel-d_basesNP/export/806d3a60_FUN_806d3a60.c; two-tick counter +0x758 then 0x800B3720(slot, 0xD, 0) and clears +0x75C",src/game/bases.rs
+game::bases,806d3b60,fn_806d3b60,translated,medium,"work/ghidra/rel-d_basesNP/export/806d3b60_FUN_806d3b60.c; 0x800441E0 slot report, 0x806D3680 count, switches to 0x8082D610 when +0x76A is reached",src/game/bases.rs
+game::bases,806d4330,fn_806d4330,translated,high,"work/ghidra/rel-d_basesNP/export/806d4330_FUN_806d4330.c; null-gated 0x8015F800 and 0x802B9280 release helper returning the actor",src/game/bases.rs
+game::bases,806d44b0,fn_806d44b0,translated,high,"work/ghidra/rel-d_basesNP/export/806d44b0_FUN_806d44b0.c; allocates 0x5C8; base 0x80066FC0; vtable 0x807FAE94; +0x3F4 three 0x40 records; class unknown",src/game/bases.rs
+game::bases,806d4af0,fn_806d4af0,translated,high,"work/ghidra/rel-d_basesNP/export/806d4af0_FUN_806d4af0.c; 0x800BFFC0 over +0x57C and 0x800DAED0 over +0x508",src/game/bases.rs
+game::bases,806d4b50,fn_806d4b50,translated,high,"work/ghidra/rel-d_basesNP/export/806d4b50_FUN_806d4b50.c; input masks gate 0x800BFF90(+0x57C), state 0x8082D6D0, pose copy +0xAC and burst 0x806D4A20",src/game/bases.rs
+game::bases,806d4c10,fn_806d4c10,translated,medium,"work/ghidra/rel-d_basesNP/export/806d4c10_FUN_806d4c10.c; four-word command to 0x800C0260, two-slot cycle at +0x5A4, state 0x8082D690 and burst 0x806D4A20",src/game/bases.rs
+game::bases,806d6b70,fn_806d6b70,translated,medium,"work/ghidra/rel-d_basesNP/export/806d6b70_FUN_806d6b70.c; nine 0x5C records from +0xBB4 to +0xEF0 walked by 0x806D6950; weight plus live slots",src/game/bases.rs
+game::bases,806d6e90,fn_806d6e90,translated,high,"work/ghidra/rel-d_basesNP/export/806d6e90_FUN_806d6e90.c; prolog 0x8006CD40 then state 0x8082D7D0 when 806D6890 reports a rider",src/game/bases.rs
+game::bases,806d6f20,fn_806d6f20,translated,medium,"work/ghidra/rel-d_basesNP/export/806d6f20_FUN_806d6f20.c; recount via 806D6B70, redraw 0x806D6680, state 0x8082D810 on growth, caches +0xF0B",src/game/bases.rs
+game::bases,806d6fd0,fn_806d6fd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806d6fd0_FUN_806d6fd0.c; same recount and redraw, state 0x8082D7D0 when the count does not grow",src/game/bases.rs
+game::bases,806d7050,fn_806d7050,translated,high,"work/ghidra/rel-d_basesNP/export/806d7050_FUN_806d7050.c; destroys nine 0x5C records at +0xBB4 and five holders, base 0x800671B0, free 0x80162920",src/game/bases.rs
+game::bases,806d73f0,fn_806d73f0,translated,high,"work/ghidra/rel-d_basesNP/export/806d73f0_FUN_806d73f0.c; null-gated 0x8015F800 and 0x802B9280 release helper returning the actor",src/game/bases.rs
+game::bases,806d7570,fn_806d7570,translated,high,"work/ghidra/rel-d_basesNP/export/806d7570_FUN_806d7570.c; allocates 0x5A0; base 0x80066FC0; vtable 0x807FB32C; three 0x40 records at +0x3F4",src/game/bases.rs
+game::bases,806d7b00,fn_806d7b00,translated,high,"work/ghidra/rel-d_basesNP/export/806d7b00_FUN_806d7b00.c; 0x800BFFC0 over +0x56C and 0x800DAED0 over +0x508",src/game/bases.rs
+game::bases,806d7b70,fn_806d7b70,translated,high,"work/ghidra/rel-d_basesNP/export/806d7b70_FUN_806d7b70.c; input masks gate state 0x8082D8A8 and the 0x806D7A30 burst",src/game/bases.rs
+game::bases,806d7be0,fn_806d7be0,translated,high,"work/ghidra/rel-d_basesNP/export/806d7be0_FUN_806d7be0.c; 0x800DAE80(+0x508) and the 0x807CB768 copy into +0xE8/+0xEC/+0xF0",src/game/bases.rs
+game::bases,806d7c40,fn_806d7c40,translated,medium,"work/ghidra/rel-d_basesNP/export/806d7c40_FUN_806d7c40.c; four-word command to 0x800C0260 with output +0xB0, cycle at +0x584, state 0x8082D868",src/game/bases.rs
+game::bases,806d8140,fn_806d8140,translated,high,"work/ghidra/rel-d_basesNP/export/806d8140_FUN_806d8140.c; null-gated 0x8015F800 and 0x802B9280 release helper returning the actor",src/game/bases.rs
+game::bases,806d82c0,fn_806d82c0,translated,high,"work/ghidra/rel-d_basesNP/export/806d82c0_FUN_806d82c0.c; allocates 0x590; base 0x80066FC0; vtable 0x807FB53C; three 0x40 records at +0x3F4",src/game/bases.rs
+game::bases,806d8860,fn_806d8860,translated,high,"work/ghidra/rel-d_basesNP/export/806d8860_FUN_806d8860.c; rider chain +0x518; 0x80056370 attach when +0x58C is clear; bit 4 of +0x34A otherwise",src/game/bases.rs
+game::bases,806d89d0,fn_806d89d0,translated,high,"work/ghidra/rel-d_basesNP/export/806d89d0_FUN_806d89d0.c; 0x800DAE80, three words from 0x807FB530/34/38 and the 0x807CB768 velocity reset",src/game/bases.rs
+game::bases,806d8a40,fn_806d8a40,translated,medium,"work/ghidra/rel-d_basesNP/export/806d8a40_FUN_806d8a40.c; +0x588 and input masks choose 0x8082D928 or 0x8082D9A8 via 0x806D86E0, then +0x508 vtable +0xC",src/game/bases.rs
+game::bases,806d8db0,fn_806d8db0,translated,high,"work/ghidra/rel-d_basesNP/export/806d8db0_FUN_806d8db0.c; 0x800DAE00(+0x508), three 0x40 records at +0x3F4, base 0x800671B0, free 0x80162920",src/game/bases.rs
+game::bases,806d90e0,fn_806d90e0,translated,high,"work/ghidra/rel-d_basesNP/export/806d90e0_FUN_806d90e0.c; null-gated 0x8015F800 and 0x802B9280 release helper returning the actor",src/game/bases.rs
+game::bases,806d9260,fn_806d9260,translated,high,"work/ghidra/rel-d_basesNP/export/806d9260_FUN_806d9260.c; allocates 0x5C0; vtable 0x807FB7B0; arrays +0x3F0 two, +0x470 three 0x40 records and +0x53C/+0x560 three 0xC records",src/game/bases.rs
+game::bases,806daf30,fn_806daf30,translated,high,"work/ghidra/rel-d_basesNP/export/806daf30_FUN_806daf30.c; null-gated 0x8015F800 and 0x802B9280 release helper returning the actor",src/game/bases.rs
+game::bases,806db0b0,fn_806db0b0,translated,high,"work/ghidra/rel-d_basesNP/export/806db0b0_FUN_806db0b0.c; allocates 0x608 and calls the in-place constructor 806DB0E0",src/game/bases.rs

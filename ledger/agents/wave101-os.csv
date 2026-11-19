@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80250230,fn_80250230,translated,low,"work/ghidra/main-gb/export/80250230_FUN_80250230.c; chunked 0x28-entry draw; five-ring publish",src/runtime/os.rs
+runtime::os,80250710,fn_80250710,translated,low,"work/ghidra/main-gb/export/80250710_FUN_80250710.c; cached-ring variant; primes next chunk",src/runtime/os.rs
+runtime::os,802525a0,fn_802525a0,translated,low,"work/ghidra/main-gb/export/802525a0_FUN_802525a0.c; tagged-code gather into 12-byte records",src/runtime/os.rs
+runtime::os,80252710,fn_80252710,translated,low,"work/ghidra/main-gb/export/80252710_FUN_80252710.c; two-list install driver; flag bit 4 skips cache flush",src/runtime/os.rs
+runtime::os,80253570,fn_80253570,translated,medium,"work/ghidra/main-gb/export/80253570_FUN_80253570.c; 12-byte comparator swap ladder",src/runtime/os.rs
+runtime::os,80253ed0,fn_80253ed0,translated,medium,"work/ghidra/main-gb/export/80253ed0_FUN_80253ed0.c; matrix build plus 3-word upload",src/runtime/os.rs
+runtime::os,802544f0,fn_802544f0,translated,medium,"work/ghidra/main-gb/export/802544f0_FUN_802544f0.c; Euler and two-axis palette rebuild",src/runtime/os.rs
+runtime::os,80257a40,fn_80257a40,translated,medium,"work/ghidra/main-gb/export/80257a40_FUN_80257a40.c; event fan-out for codes 1/2/4/0x10002/0x10003",src/runtime/os.rs
+runtime::os,80257fc0,fn_80257fc0,translated,medium,"work/ghidra/main-gb/export/80257fc0_FUN_80257fc0.c; event ladder plus child-array dispatch",src/runtime/os.rs
+runtime::os,80258ce0,fn_80258ce0,translated,medium,"work/ghidra/main-gb/export/80258ce0_FUN_80258ce0.c; 0x20-slot palette pass",src/runtime/os.rs
+runtime::os,80258f10,fn_80258f10,translated,medium,"work/ghidra/main-gb/export/80258f10_FUN_80258f10.c; vtable-gated array stream",src/runtime/os.rs
+runtime::os,80259e60,fn_80259e60,translated,medium,"work/ghidra/main-gb/export/80259e60_FUN_80259e60.c; one-word comparator swap ladder",src/runtime/os.rs
+runtime::os,8025a520,fn_8025a520,translated,medium,"work/ghidra/main-gb/export/8025a520_FUN_8025a520.c; scene emitter and cache buffer switch",src/runtime/os.rs
+runtime::os,8025a7c0,fn_8025a7c0,translated,medium,"work/ghidra/main-gb/export/8025a7c0_FUN_8025a7c0.c; renderer select with three draw arms",src/runtime/os.rs
+runtime::os,8025b500,fn_8025b500,translated,medium,"work/ghidra/main-gb/export/8025b500_FUN_8025b500.c; five-class child attach ladder",src/runtime/os.rs
+runtime::os,8025c030,fn_8025c030,translated,medium,"work/ghidra/main-gb/export/8025c030_FUN_8025c030.c; palette-node constructor",src/runtime/os.rs
+runtime::os,8025c660,fn_8025c660,translated,high,"work/ghidra/main-gb/export/8025c660_FUN_8025c660.c; 13-word activation record gather",src/runtime/os.rs
+runtime::os,8025d5b0,fn_8025d5b0,translated,medium,"work/ghidra/main-gb/export/8025d5b0_FUN_8025d5b0.c; flag-order flush of 11 attributes",src/runtime/os.rs
+runtime::os,8025e060,fn_8025e060,translated,medium,"work/ghidra/main-gb/export/8025e060_FUN_8025e060.c; visibility bytes plus 11 table rebuilds",src/runtime/os.rs
+runtime::os,8025e400,fn_8025e400,translated,medium,"work/ghidra/main-gb/export/8025e400_FUN_8025e400.c; bit-driven attribute install",src/runtime/os.rs
+runtime::os,8025e8b0,fn_8025e8b0,translated,medium,"work/ghidra/main-gb/export/8025e8b0_FUN_8025e8b0.c; child detach and three array teardowns",src/runtime/os.rs
+runtime::os,8025ec70,fn_8025ec70,translated,medium,"work/ghidra/main-gb/export/8025ec70_FUN_8025ec70.c; three optional per-slot uploads",src/runtime/os.rs
+runtime::os,8025f6d0,fn_8025f6d0,translated,medium,"work/ghidra/main-gb/export/8025f6d0_FUN_8025f6d0.c; 0x44-byte palette record init",src/runtime/os.rs
+runtime::os,8025fad0,fn_8025fad0,translated,medium,"work/ghidra/main-gb/export/8025fad0_FUN_8025fad0.c; guarded block copy with bit-2 merge",src/runtime/os.rs
+runtime::os,8025fc30,fn_8025fc30,translated,medium,"work/ghidra/main-gb/export/8025fc30_FUN_8025fc30.c; 0x44-stride flagged record transform",src/runtime/os.rs

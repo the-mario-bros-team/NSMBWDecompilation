@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,800129a0,fn_800129a0,translated,medium,"work/ghidra/main-gb/export/800129a0_FUN_800129a0.c; 32 identical descriptor blocks at 0x803516B8 + i*0x40 from the 32x9-word table 0x802FEB48 + i*0x24 in order 6,7,8,3,4,5,0,1,2; vtable 0x802FF63C, callback 0x80014240, event = base-0x10 (entry 0 uses 0x803516AC); preamble fills 0x802FE4B4/0x802FE4C0..C8 and the guarded SDA pair at 0x80429C00",src/ui/hud.rs

@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d2270,cursor_target_value,translated,medium,"work/ghidra/main-gb/export/800d2270_FUN_800d2270.c; mode 1..3 table interpolation and mode-0 vtable +0xC; null target returns 0.",src/engine/display.rs
+engine::display,800d2510,cursor_position_sum,translated,high,"work/ghidra/main-gb/export/800d2510_FUN_800d2510.c; sums count floats from +0x2C and stores the total at +0x14.",src/engine/display.rs
+engine::display,800d2ac0,water_effect_spawn,translated,high,"work/ghidra/main-gb/export/800d2ac0_FUN_800d2ac0.c; +0x138 free guard; writes +0x118..+0x134; six-argument spawn by kind.",src/engine/display.rs
+engine::display,800d2b90,water_effect_update,translated,medium,"work/ghidra/main-gb/export/800d2b90_FUN_800d2b90.c; 0x80075270 ground lookup then base vtable +0xB0; clears +0x138 when finished.",src/engine/display.rs
+engine::display,800d2dd0,water_actor_construct,translated,medium,"work/ghidra/main-gb/export/800d2dd0_FUN_800d2dd0.c; base ctor plus embedded +0x218/+0x340; node array +0x468; six animation objects +0x668..+0x750; adapters +0x794/+0x79C.",src/engine/display.rs
+engine::display,800d2ff0,fn_800d2ff0,translated,high,"work/ghidra/main-gb/export/800d2ff0_FUN_800d2ff0.c; non-null and free>0 guard around 0x802B9280; returns the pointer.",src/engine/display.rs
+engine::display,800d30e0,water_actor_release,translated,high,"work/ghidra/main-gb/export/800d30e0_FUN_800d30e0.c; six animation releases; node-array destructor; +0x340/+0x218 blocks; embedded release; optional free.",src/engine/display.rs
+engine::display,800d3280,water_actor_update,translated,high,"work/ghidra/main-gb/export/800d3280_FUN_800d3280.c; four 0x80-byte nodes bound to +0x794; +0x5A8 bound to +0x79C; calls 0x800D3AD0.",src/engine/display.rs
+engine::display,800d32f0,water_actor_load_models,translated,high,"work/ghidra/main-gb/export/800d32f0_FUN_800d32f0.c; three 0x800DF180 loads into +0x20C/+0x210/+0x214 with g3d_model.brres.",src/engine/display.rs
+engine::display,800d3ad0,water_actor_update_model_position,translated,high,"work/ghidra/main-gb/export/800d3ad0_FUN_800d3ad0.c; 0x8023A200 handle then 0x800D3B20 with the same SDA2 float twice.",src/engine/display.rs
+engine::display,800d3b20,water_actor_apply_animation,translated,medium,"work/ghidra/main-gb/export/800d3b20_FUN_800d3b20.c; 0x80166BD0 then 0x80166F10/0x80166EF0 and node vtable +0x18; receiver reconstructed.",src/engine/display.rs
+engine::display,800d3bf0,water_actor_set_state,translated,high,"work/ghidra/main-gb/export/800d3bf0_FUN_800d3bf0.c; state guard; 0x10-byte table at 0x802F1250; clears +0x174 when the new state is 0.",src/engine/display.rs
+engine::display,800d3cb0,water_actor_model_node,translated,high,"work/ghidra/main-gb/export/800d3cb0_FUN_800d3cb0.c; +0x770==2 -> +0x6EC; ==3 -> +0x718; else +0x6C0.",src/engine/display.rs
+engine::display,800d4660,water_actor_set_mode,translated,high,"work/ghidra/main-gb/export/800d4660_FUN_800d4660.c; +0x770 copied to +0x774 then new mode stored.",src/engine/display.rs
+engine::display,800e0070,save_banner_set_slot_visible,translated,medium,"work/ghidra/main-gb/export/800e0070_FUN_800e0070.c; vtable +8 with 0x802F8FF0; 12-byte key and duplicate slot lookup; +0x14 bit 0x100.",src/engine/display.rs
+engine::display,800e0290,save_record_release,translated,high,"work/ghidra/main-gb/export/800e0290_FUN_800e0290.c; non-null and free>0 guard around 0x802B9280; returns the record.",src/engine/display.rs
+engine::display,800e0450,save_manager_busy,translated,high,"work/ghidra/main-gb/export/800e0450_FUN_800e0450.c; save-manager +0x74 tested with (-value | value) >> 31.",src/engine/display.rs
+engine::frame,800e22f0,scene_transition_position_a,translated,high,"work/ghidra/main-gb/export/800e22f0_FUN_800e22f0.c; object +0xAC/+0xB0 added to two doubles; vector constant from 0x8042CC90; calls 0x800E2220.",src/engine/frame.rs
+engine::frame,800e23c0,scene_transition_position_b,translated,high,"work/ghidra/main-gb/export/800e23c0_FUN_800e23c0.c; same body as 0x800E22F0 but calls 0x800E2340.",src/engine/frame.rs
+engine::frame,800e2c70,vertex_finalize_indices,translated,high,"work/ghidra/main-gb/export/800e2c70_FUN_800e2c70.c; 0x800E2DE0 fill then count*byte6+1 copies of source vertex +8.",src/engine/frame.rs
+engine::frame,800e2d00,vertex_set,translated,high,"work/ghidra/main-gb/export/800e2d00_FUN_800e2d00.c; three word stores at array+index*0xC.",src/engine/frame.rs
+engine::frame,800e2d30,vertex_count,translated,high,"work/ghidra/main-gb/export/800e2d30_FUN_800e2d30.c; count*byte6+1 when +7 is 0 else count*byte6.",src/engine/frame.rs
+engine::frame,800e2d60,vertex_at,translated,high,"work/ghidra/main-gb/export/800e2d60_FUN_800e2d60.c; +0xC array base plus index*0xC.",src/engine/frame.rs
+engine::frame,800e2d70,curve_weight_neg_square,translated,high,"work/ghidra/main-gb/export/800e2d70_FUN_800e2d70.c; (centre-value)^2*scale with f32 rounding.",src/engine/frame.rs
+engine::frame,800e2d90,curve_weight_product,translated,high,"work/ghidra/main-gb/export/800e2d90_FUN_800e2d90.c; (centre-value)*value+scale with the export cast order preserved.",src/engine/frame.rs

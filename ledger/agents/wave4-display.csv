@@ -1,0 +1,23 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,8015a910,pausewindow_update_hint_animation,translated,medium,work/ghidra/main-gb/export/8015a910_FUN_8015a910.c,src/engine/display.rs
+engine::display,8015ab20,pausewindow_update_button_slots,translated,high,work/ghidra/main-gb/export/8015ab20_FUN_8015ab20.c,src/engine/display.rs
+engine::display,8015ad80,pausewindow_start_open_animation,translated,high,work/ghidra/main-gb/export/8015ad80_FUN_8015ad80.c,src/engine/display.rs
+engine::display,8015ae70,pausewindow_start_button_animation,translated,high,work/ghidra/main-gb/export/8015ae70_FUN_8015ae70.c,src/engine/display.rs
+engine::display,8015ac30,pausewindow_play_selected_button,translated,medium,work/ghidra/main-gb/export/8015ac30_FUN_8015ac30.c,src/engine/display.rs
+engine::display,8015a470,fn_8015a470,translated,high,work/ghidra/main-gb/export/8015a470_FUN_8015a470.c,src/engine/display.rs
+engine::display,8015a4b0,fn_8015a4b0,translated,high,work/ghidra/main-gb/export/8015a4b0_FUN_8015a4b0.c,src/engine/display.rs
+engine::display,8015a510,fn_8015a510,translated,high,work/ghidra/main-gb/export/8015a510_FUN_8015a510.c,src/engine/display.rs
+engine::display,80159ac0,display_set_transform_value,translated,medium,work/ghidra/main-gb/export/80159ac0_FUN_80159ac0.c,src/engine/display.rs
+engine::display,80159cb0,display_set_large_value,translated,medium,work/ghidra/main-gb/export/80159cb0_FUN_80159cb0.c,src/engine/display.rs
+engine::display,80159f10,dgame_display_register_states,translated,high,work/ghidra/main-gb/export/80159f10_FUN_80159f10.c,src/engine/display.rs
+engine::display,8015b840,pausewindow_state_release,translated,high,work/ghidra/main-gb/export/8015b840_FUN_8015b840.c,src/engine/display.rs
+ui::menu,8017cca0,menu_confirm_pending,translated,medium,work/ghidra/main-gb/export/8017cca0_FUN_8017cca0.c,src/ui/menu.rs
+ui::menu,8017d1d0,dialog_begin_dismiss,translated,medium,work/ghidra/main-gb/export/8017d1d0_FUN_8017d1d0.c,src/ui/menu.rs
+ui::menu,8017d700,dialog_panel_construct,translated,medium,work/ghidra/main-gb/export/8017d700_FUN_8017d700.c,src/ui/menu.rs
+ui::menu,8017dfe0,dialog_find_named_entry,translated,medium,work/ghidra/main-gb/export/8017dfe0_FUN_8017dfe0.c,src/ui/menu.rs
+ui::menu,8017e5f0,dialog_vertex_buffer_free,translated,high,"work/ghidra/main-gb/export/8017e5f0_FUN_8017e5f0.c; lwz r4,[this+4]; lwz r3,[0x80378008]; bl 0x801D5550(heap,block); clears +4 and bytes +0/+1. The heap argument is the word stored at 0x80378008 (lwz at 0x8017E614), not its address; the body loads it with read_u32(0x80378008)",src/ui/menu.rs
+ui::menu,8017e640,dialog_vertex_buffer_reserve,translated,high,"work/ghidra/main-gb/export/8017e640_FUN_8017e640.c; when (u8)+0 < count: free [this+4] through 0x801D5550(heap,block), then 0x801D5540(heap,(count&0xFF)<<5) (rlwinm r4,r31,5,19,26), store +4 and byte +0. Both heap arguments are the word stored at 0x80378008 (lwz at 0x8017E678 and 0x8017E698); the body loads it with read_u32(0x80378008)",src/ui/menu.rs
+ui::menu,8017e870,dialog_record_has_value,translated,high,work/ghidra/main-gb/export/8017e870_FUN_8017e870.c,src/ui/menu.rs
+ui::menu,8017f6e0,dialog_list_insert,translated,high,work/ghidra/main-gb/export/8017f6e0_FUN_8017f6e0.c,src/ui/menu.rs
+ui::menu,8017f720,dialog_find_child_by_name,translated,high,work/ghidra/main-gb/export/8017f720_FUN_8017f720.c,src/ui/menu.rs
+ui::menu,8017f940,dialog_group_construct,translated,high,work/ghidra/main-gb/export/8017f940_FUN_8017f940.c,src/ui/menu.rs

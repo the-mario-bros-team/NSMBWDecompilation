@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807656b0,fn_807656b0,translated,high,"work/ghidra/rel-d_basesNP/export/807656b0_FUN_807656b0.c; four randomised three-float transforms into +0xAC, +0x454, +0x460, +0x46C",src/game/bases.rs
+game::bases,80765770,fn_80765770,translated,high,"work/ghidra/rel-d_basesNP/export/80765770_FUN_80765770.c; 200 x 0x0C record array at +0x484",src/game/bases.rs
+game::bases,807657f0,fn_807657f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807657f0_FUN_807657f0.c; random vector plus the 0x8081597C/80/84 biases; sampler argument recovered from 807656b0",src/game/bases.rs
+game::bases,80765860,fn_80765860,translated,medium,"work/ghidra/rel-d_basesNP/export/80765860_FUN_80765860.c; random vector plus the 0x80815970/74/78 biases; sampler argument recovered from 807656b0",src/game/bases.rs
+game::bases,80765960,fn_80765960,translated,high,"work/ghidra/rel-d_basesNP/export/80765960_FUN_80765960.c; copies +0xDF8..+0xE00 into +0xAC..+0xB4",src/game/bases.rs
+game::bases,80765ba0,fn_80765ba0,translated,high,"work/ghidra/rel-d_basesNP/export/80765ba0_FUN_80765ba0.c; five-pane stop (0x81/0x7F) then vtable +0x14 release over +0x440",src/game/bases.rs
+game::bases,80765d90,fn_80765d90,translated,high,"work/ghidra/rel-d_basesNP/export/80765d90_FUN_80765d90.c; WS actor constructor: vtable 0x80815BB8, animation slots +0x1BC/+0x1E8/+0x214",src/game/bases.rs
+game::bases,80766250,fn_80766250,translated,high,"work/ghidra/rel-d_basesNP/export/80766250_FUN_80766250.c; WS_W_X slot +0x1BC loader via 0x8023A270 and 0x80167420",src/game/bases.rs
+game::bases,80766340,fn_80766340,translated,high,"work/ghidra/rel-d_basesNP/export/80766340_FUN_80766340.c; WS_W_X slot +0x1E8 loader via 0x8023A190 and 0x80165C30",src/game/bases.rs
+game::bases,80766430,fn_80766430,translated,medium,"work/ghidra/rel-d_basesNP/export/80766430_FUN_80766430.c; WS_W_X slot +0x214 loader; 0x800B4600 character id maps to rate 1/2/3/7/8",src/game/bases.rs
+game::bases,807665a0,fn_807665a0,translated,high,"work/ghidra/rel-d_basesNP/export/807665a0_FUN_807665a0.c; WS_Select base loader plus nine-variant switch over +0x27C",src/game/bases.rs
+game::bases,807667c0,fn_807667c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807667c0_FUN_807667c0.c; pane table 0x80815BA4 and frame table 0x807CEF60 indexed by +0x268; writes +0x270",src/game/bases.rs
+game::bases,807668b0,fn_807668b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807668b0_FUN_807668b0.c; material walk through 0x8025C660/0x8025C510 with the 0x802F8FF0 token; latch +0x280/+0x284",src/game/bases.rs
+game::bases,807669b0,fn_807669b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807669b0_FUN_807669b0.c; rotated horizontal offset (scale*sin, 0, scale*cos) from the degree halfword",src/game/bases.rs
+game::bases,80766a70,fn_80766a70,translated,medium,"work/ghidra/rel-d_basesNP/export/80766a70_FUN_80766a70.c; rotated vertical offset (0, k*scale*sin, scale*cos); k = 0x807CEF78",src/game/bases.rs
+game::bases,80766b30,fn_80766b30,translated,high,"work/ghidra/rel-d_basesNP/export/80766b30_FUN_80766b30.c; lerp of +0x28C into the +0x290/+0x294/+0x298 corner",src/game/bases.rs
+game::bases,80766b70,fn_80766b70,translated,medium,"work/ghidra/rel-d_basesNP/export/80766b70_FUN_80766b70.c; (height - scale*sin(+0x2C8)) / height",src/game/bases.rs
+game::bases,80766be0,fn_80766be0,translated,medium,"work/ghidra/rel-d_basesNP/export/80766be0_FUN_80766be0.c; parks clip frames in +0x2B8/+0x2BC and the pane frame in +0x2B4",src/game/bases.rs
+game::bases,80766d20,fn_80766d20,translated,high,"work/ghidra/rel-d_basesNP/export/80766d20_FUN_80766d20.c; restores the three parked frames",src/game/bases.rs
+game::bases,80766df0,fn_80766df0,translated,high,"work/ghidra/rel-d_basesNP/export/80766df0_FUN_80766df0.c; 0x80600510 pause gate plus the +0x270 yaw states 1/2/3",src/game/bases.rs
+game::bases,80766f20,fn_80766f20,translated,medium,"work/ghidra/rel-d_basesNP/export/80766f20_FUN_80766f20.c; ladder transform: two rotated offsets, 80766B30 scale, 80766B70 ratio, trims and yaw matrix",src/game/bases.rs
+game::bases,80767210,fn_80767210,translated,high,"work/ghidra/rel-d_basesNP/export/80767210_FUN_80767210.c; allocates 0x210 then calls 80767240",src/game/bases.rs
+game::bases,80767240,fn_80767240,translated,high,"work/ghidra/rel-d_basesNP/export/80767240_FUN_80767240.c; I_kinoko constructor: vtable 0x80815DB8, variant nibble actor[+4]&0xF into +0x20C",src/game/bases.rs
+game::bases,80767300,fn_80767300,translated,high,"work/ghidra/rel-d_basesNP/export/80767300_FUN_80767300.c; releases +0x1C8/+0x184/+0x144/+0x128 and frees when the second argument is positive",src/game/bases.rs
+game::bases,80767390,fn_80767390,translated,high,"work/ghidra/rel-d_basesNP/export/80767390_FUN_80767390.c; start: constant position, 807675A0 loader, variant 5 tint, state/anim words",src/game/bases.rs
+game::bases,807675a0,fn_807675a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807675a0_FUN_807675a0.c; nine-variant I_kinoko loader with tables 0x80815C98/CC8/D38/DB0 and the 100-byte path buffer",src/game/bases.rs
+game::bases,80767840,fn_80767840,translated,high,"work/ghidra/rel-d_basesNP/export/80767840_FUN_80767840.c; latches +0x200 and rebinds the stok_wait clip from 0x80815DB0",src/game/bases.rs
+game::bases,807678c0,fn_807678c0,translated,high,"work/ghidra/rel-d_basesNP/export/807678c0_FUN_807678c0.c; colour +0xDC..+0xE4 from 0x807CEFAC and matrix with the 0x807CEFB0 bob",src/game/bases.rs
+game::bases,80767a60,fn_80767a60,translated,high,"work/ghidra/rel-d_basesNP/export/80767a60_FUN_80767a60.c; unnamed constructor: vtable 0x80815EE0, manager +0x18C, slot +0x1B4 vtable 0x807E3E98",src/game/bases.rs

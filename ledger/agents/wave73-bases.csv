@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807a6b20,fn_807a6b20,translated,medium,"work/ghidra/rel-d_basesNP/export/807a6b20_FUN_807a6b20.c; camera 0x80429E00 + stage 0x8042A008 projection into +0x354..+0x380",src/game/bases.rs
+game::bases,807a6e90,fn_807a6e90,translated,medium,"work/ghidra/rel-d_basesNP/export/807a6e90_FUN_807a6e90.c; 0x80164B20 handles into +0xF8/+0x1E0/+0x2C8 and layout slot +0x10",src/game/bases.rs
+game::bases,807a7030,fn_807a7030,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7030_FUN_807a7030.c; in-place constructor vtable 0x8081D360 and global 0x8042A1AC",src/game/bases.rs
+game::bases,807a7a20,fn_807a7a20,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7a20_FUN_807a7a20.c; guards 0x80834470+0x53E/+0x53F then 0x8078E690 and 0x807A7550",src/game/bases.rs
+game::bases,807a8440,fn_807a8440,translated,medium,"work/ghidra/rel-d_basesNP/export/807a8440_FUN_807a8440.c; two position triples from 0x8042A1B8 + 0x8042A008 with depth 0x807D0670",src/game/bases.rs
+game::bases,807a8920,fn_807a8920,translated,medium,"work/ghidra/rel-d_basesNP/export/807a8920_FUN_807a8920.c; 0x80164B20 handles into +0xF8/+0x1E0 and layout slot +0x10",src/game/bases.rs
+game::bases,807a89b0,fn_807a89b0,translated,high,"work/ghidra/rel-d_basesNP/export/807a89b0_FUN_807a89b0.c; 0x8006C490(object 0) and optional 0x80162920 free",src/game/bases.rs
+game::bases,807a8b40,fn_807a8b40,translated,high,"work/ghidra/rel-d_basesNP/export/807a8b40_FUN_807a8b40.c; null and free guards then 0x802B9280",src/game/bases.rs
+game::bases,807a8b80,fn_807a8b80,translated,high,"work/ghidra/rel-d_basesNP/export/807a8b80_FUN_807a8b80.c; duplicate of 807a8b40 free template",src/game/bases.rs
+game::bases,807a8bc0,fn_807a8bc0,translated,high,"work/ghidra/rel-d_basesNP/export/807a8bc0_FUN_807a8bc0.c; 0x8015F9F0(+0x18 0) then optional 0x802B9280",src/game/bases.rs
+game::bases,807a8c20,fn_807a8c20,translated,high,"work/ghidra/rel-d_basesNP/export/807a8c20_FUN_807a8c20.c; duplicate of 807a8bc0 release template",src/game/bases.rs
+game::bases,807a8db0,fn_807a8db0,translated,high,"work/ghidra/rel-d_basesNP/export/807a8db0_FUN_807a8db0.c; otasukeInfo.arc + otasukeInfo_18.brlyt with 7/12 animations and 2/6 panes",src/game/bases.rs
+game::bases,807a9020,fn_807a9020,translated,high,"work/ghidra/rel-d_basesNP/export/807a9020_FUN_807a9020.c; six message rows from 0x807D06E0 selected by 0x8042A204",src/game/bases.rs
+game::bases,807a90e0,fn_807a90e0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a90e0_FUN_807a90e0.c; 0x801020F0 pause byte 0x80429FD8+0x1C flag +0x26C descriptor 0x80833560",src/game/bases.rs
+game::bases,807a9150,fn_807a9150,translated,medium,"work/ghidra/rel-d_basesNP/export/807a9150_FUN_807a9150.c; colour copy into 0x80373D60 record and 0x80102260 fade",src/game/bases.rs
+game::bases,807a9220,fn_807a9220,translated,high,"work/ghidra/rel-d_basesNP/export/807a9220_FUN_807a9220.c; layout reset animations 1 2 0 pane +0xBB bit and descriptor 0x80833420",src/game/bases.rs
+game::bases,807a9310,fn_807a9310,translated,high,"work/ghidra/rel-d_basesNP/export/807a9310_FUN_807a9310.c; 0x800C9640 finished check animation 4 descriptor 0x80833460",src/game/bases.rs
+game::bases,807a93a0,fn_807a93a0,translated,high,"work/ghidra/rel-d_basesNP/export/807a93a0_FUN_807a93a0.c; 0x800C9610(-1) then descriptor 0x808334A0",src/game/bases.rs
+game::bases,807a9420,fn_807a9420,translated,medium,"work/ghidra/rel-d_basesNP/export/807a9420_FUN_807a9420.c; page buttons 4/8 0x900 virtual confirm and three descriptors",src/game/bases.rs
+game::bases,807a95c0,fn_807a95c0,translated,high,"work/ghidra/rel-d_basesNP/export/807a95c0_FUN_807a95c0.c; cue 0x78 and animations 9/4 versus 3/10 by page flag +0x26A",src/game/bases.rs
+game::bases,807a9660,fn_807a9660,translated,high,"work/ghidra/rel-d_basesNP/export/807a9660_FUN_807a9660.c; 0x800C9640 finished check then descriptor 0x808334A0",src/game/bases.rs
+game::bases,807a96d0,fn_807a96d0,translated,high,"work/ghidra/rel-d_basesNP/export/807a96d0_FUN_807a96d0.c; animation 8/7 by page flag and cue 0x79",src/game/bases.rs
+game::bases,807a9730,fn_807a9730,translated,high,"work/ghidra/rel-d_basesNP/export/807a9730_FUN_807a9730.c; exit routed by mode 0/1/4 through 807A90E0 and 807A9150",src/game/bases.rs
+game::bases,807a9840,fn_807a9840,translated,high,"work/ghidra/rel-d_basesNP/export/807a9840_FUN_807a9840.c; animation 0xB and cue 0x7A",src/game/bases.rs
+game::bases,807a98a0,fn_807a98a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a98a0_FUN_807a98a0.c; pane restore descriptor 0x808333E0 message refill and mode 4 clear",src/game/bases.rs
+game::bases,807a9960,fn_807a9960,translated,high,"work/ghidra/rel-d_basesNP/export/807a9960_FUN_807a9960.c; single store 0 to 0x80429FE0",src/game/bases.rs
+game::bases,807a9970,fn_807a9970,translated,high,"work/ghidra/rel-d_basesNP/export/807a9970_FUN_807a9970.c; mode 0 0x8019CC70 release and +0x26D clear",src/game/bases.rs

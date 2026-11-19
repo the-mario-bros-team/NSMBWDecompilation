@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80af20f0,fn_80af20f0,translated,high,work/ghidra/rel-d_enemiesNP/export/80af20f0_FUN_80af20f0.c; 0xB60-byte Wm_en_burst_m constructor,src/game/enemies.rs
+game::enemies,80af2290,fn_80af2290,translated,high,work/ghidra/rel-d_enemiesNP/export/80af2290_FUN_80af2290.c; 0x128-byte sub-object constructor,src/game/enemies.rs
+game::enemies,80af22f0,fn_80af22f0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af22f0_FUN_80af22f0.c; cannon sub-object binder with MG_remo_cannon_guide,src/game/enemies.rs
+game::enemies,80af2520,fn_80af2520,translated,high,work/ghidra/rel-d_enemiesNP/export/80af2520_FUN_80af2520.c; rebinds guide_wait clip with 1.0 rate,src/game/enemies.rs
+game::enemies,80af25a0,fn_80af25a0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af25a0_FUN_80af25a0.c; rebuilds and commits the guide matrix,src/game/enemies.rs
+game::enemies,80af2810,fn_80af2810,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af2810_FUN_80af2810.c; loads cannon model and binds change_mark,src/game/enemies.rs
+game::enemies,80af2bf0,fn_80af2bf0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af2bf0_FUN_80af2bf0.c; chooses rate by player colour and arms the ring head,src/game/enemies.rs
+game::enemies,80af2f60,fn_80af2f60,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af2f60_FUN_80af2f60.c; four-slot tail cleanup loop,src/game/enemies.rs
+game::enemies,80af2ff0,fn_80af2ff0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af2ff0_FUN_80af2ff0.c; all ring slots dead predicate,src/game/enemies.rs
+game::enemies,80af3060,fn_80af3060,translated,high,work/ghidra/rel-d_enemiesNP/export/80af3060_FUN_80af3060.c; no targetable player predicate,src/game/enemies.rs
+game::enemies,80af30c0,fn_80af30c0,translated,high,work/ghidra/rel-d_enemiesNP/export/80af30c0_FUN_80af30c0.c; x-band contact test with 6/2/14 constants,src/game/enemies.rs
+game::enemies,80af3130,fn_80af3130,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3130_FUN_80af3130.c; ring coverage predicate,src/game/enemies.rs
+game::enemies,80af3210,fn_80af3210,translated,high,work/ghidra/rel-d_enemiesNP/export/80af3210_FUN_80af3210.c; enumerates plugged controller bits,src/game/enemies.rs
+game::enemies,80af32b0,fn_80af32b0,translated,high,work/ghidra/rel-d_enemiesNP/export/80af32b0_FUN_80af32b0.c; inserts into the four-slot ring,src/game/enemies.rs
+game::enemies,80af3300,fn_80af3300,translated,high,work/ghidra/rel-d_enemiesNP/export/80af3300_FUN_80af3300.c; counts occupied ring slots,src/game/enemies.rs
+game::enemies,80af3350,fn_80af3350,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3350_FUN_80af3350.c; ring head live-player test,src/game/enemies.rs
+game::enemies,80af33a0,fn_80af33a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af33a0_FUN_80af33a0.c; retires ring head; 0x80AF33C8 bl 0x80AF3400 with r3 = this and r4 = [this+0x778] (loaded at 0x80AF33B4); fn_80af3400(this, slot) is translated and is called directly with both operands",src/game/enemies.rs
+game::enemies,80af3640,fn_80af3640,translated,high,work/ghidra/rel-d_enemiesNP/export/80af3640_FUN_80af3640.c; samples cannon node 2 into +0x798,src/game/enemies.rs
+game::enemies,80af3690,fn_80af3690,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af3690_FUN_80af3690.c; short-angle steer stepper, 13 by 3 probes",src/game/enemies.rs
+game::enemies,80af3950,fn_80af3950,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3950_FUN_80af3950.c; contact responder that records the controller id,src/game/enemies.rs
+game::enemies,80af3a90,fn_80af3a90,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3a90_FUN_80af3a90.c; wait and retire two-state step,src/game/enemies.rs
+game::enemies,80af3b40,fn_80af3b40,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3b40_FUN_80af3b40.c; sweep setup with 24/0.75 interval constants,src/game/enemies.rs
+game::enemies,80af3c00,fn_80af3c00,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3c00_FUN_80af3c00.c; forward spin step,src/game/enemies.rs
+game::enemies,80af3c80,fn_80af3c80,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3c80_FUN_80af3c80.c; enters the sweep and spawns Wm_en_burst_m,src/game/enemies.rs
+game::enemies,80af3d60,fn_80af3d60,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3d60_FUN_80af3d60.c; three-state main frame step,src/game/enemies.rs
+game::enemies,80af3f70,fn_80af3f70,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af3f70_FUN_80af3f70.c; spawns discharge and colour tail effects,src/game/enemies.rs
+game::enemies,80af4150,fn_80af4150,translated,high,work/ghidra/rel-d_enemiesNP/export/80af4150_FUN_80af4150.c; sweep-timer completion step,src/game/enemies.rs
+game::enemies,80af4210,fn_80af4210,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af4210_FUN_80af4210.c; resets cannon animation and rebinds change_mark,src/game/enemies.rs
+game::enemies,80af43c0,fn_80af43c0,translated,high,work/ghidra/rel-d_enemiesNP/export/80af43c0_FUN_80af43c0.c; reverse spin step,src/game/enemies.rs
+game::enemies,80af45b0,fn_80af45b0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80af45b0_FUN_80af45b0.c; samples the mark node into a vec3,src/game/enemies.rs

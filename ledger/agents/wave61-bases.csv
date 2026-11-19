@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80769620,fn_80769620,translated,high,work/ghidra/rel-d_basesNP/export/80769620_FUN_80769620.c; variant to projectile slot,src/game/bases.rs
+game::bases,80769640,fn_80769640,translated,medium,work/ghidra/rel-d_basesNP/export/80769640_FUN_80769640.c; ten-slot reset and wrap,src/game/bases.rs
+game::bases,807696d0,fn_807696d0,translated,medium,work/ghidra/rel-d_basesNP/export/807696d0_FUN_807696d0.c; zone gate and arm effect,src/game/bases.rs
+game::bases,807698a0,fn_807698a0,translated,medium,work/ghidra/rel-d_basesNP/export/807698a0_FUN_807698a0.c; six-float zone test,src/game/bases.rs
+game::bases,807699d0,fn_807699d0,translated,medium,work/ghidra/rel-d_basesNP/export/807699d0_FUN_807699d0.c; four-state throw meter,src/game/bases.rs
+game::bases,80769c70,fn_80769c70,translated,high,work/ghidra/rel-d_basesNP/export/80769c70_FUN_80769c70.c; meter accumulator wrap,src/game/bases.rs
+game::bases,80769cb0,fn_80769cb0,translated,medium,work/ghidra/rel-d_basesNP/export/80769cb0_FUN_80769cb0.c; throw button handler,src/game/bases.rs
+game::bases,80769e90,fn_80769e90,translated,medium,work/ghidra/rel-d_basesNP/export/80769e90_FUN_80769e90.c; projectile distance gate,src/game/bases.rs
+game::bases,80769f00,fn_80769f00,translated,medium,work/ghidra/rel-d_basesNP/export/80769f00_FUN_80769f00.c; pickup effect spawn,src/game/bases.rs
+game::bases,80769ff0,fn_80769ff0,translated,medium,work/ghidra/rel-d_basesNP/export/80769ff0_FUN_80769ff0.c; charge abort,src/game/bases.rs
+game::bases,8076a270,fn_8076a270,translated,high,work/ghidra/rel-d_basesNP/export/8076a270_FUN_8076a270.c; cobKinopio constructor,src/game/bases.rs
+game::bases,8076a3a0,fn_8076a3a0,translated,high,work/ghidra/rel-d_basesNP/export/8076a3a0_FUN_8076a3a0.c; start-up and variant,src/game/bases.rs
+game::bases,8076a530,fn_8076a530,translated,high,work/ghidra/rel-d_basesNP/export/8076a530_FUN_8076a530.c; animation release slot,src/game/bases.rs
+game::bases,8076a560,fn_8076a560,translated,medium,work/ghidra/rel-d_basesNP/export/8076a560_FUN_8076a560.c; cobKinopio.brres loader,src/game/bases.rs
+game::bases,8076a6a0,fn_8076a6a0,translated,high,work/ghidra/rel-d_basesNP/export/8076a6a0_FUN_8076a6a0.c; transform writer,src/game/bases.rs
+game::bases,8076a750,fn_8076a750,translated,medium,work/ghidra/rel-d_basesNP/export/8076a750_FUN_8076a750.c; variant model and colour,src/game/bases.rs
+game::bases,8076a890,fn_8076a890,translated,high,work/ghidra/rel-d_basesNP/export/8076a890_FUN_8076a890.c; clear pickup flag,src/game/bases.rs
+game::bases,8076a8b0,fn_8076a8b0,translated,medium,work/ghidra/rel-d_basesNP/export/8076a8b0_FUN_8076a8b0.c; player-position respawn,src/game/bases.rs
+game::bases,8076aa40,fn_8076aa40,translated,high,work/ghidra/rel-d_basesNP/export/8076aa40_FUN_8076aa40.c; release sound and state 2,src/game/bases.rs
+game::bases,8076ae20,fn_8076ae20,translated,medium,work/ghidra/rel-d_basesNP/export/8076ae20_FUN_8076ae20.c; restore character byte,src/game/bases.rs
+game::bases,8076ae80,fn_8076ae80,translated,medium,work/ghidra/rel-d_basesNP/export/8076ae80_FUN_8076ae80.c; type list search,src/game/bases.rs
+game::bases,8076aee0,fn_8076aee0,translated,medium,work/ghidra/rel-d_basesNP/export/8076aee0_FUN_8076aee0.c; release three kinds,src/game/bases.rs
+game::bases,8076af60,fn_8076af60,translated,medium,work/ghidra/rel-d_basesNP/export/8076af60_FUN_8076af60.c; reposition second trio,src/game/bases.rs
+game::bases,8076afe0,fn_8076afe0,translated,high,work/ghidra/rel-d_basesNP/export/8076afe0_FUN_8076afe0.c; charge effect create,src/game/bases.rs
+game::bases,8076b040,fn_8076b040,translated,high,work/ghidra/rel-d_basesNP/export/8076b040_FUN_8076b040.c; charge effect stop,src/game/bases.rs
+game::bases,8076b0a0,fn_8076b0a0,translated,medium,work/ghidra/rel-d_basesNP/export/8076b0a0_FUN_8076b0a0.c; clear all cue handles,src/game/bases.rs
+game::bases,8076b210,fn_8076b210,translated,high,work/ghidra/rel-d_basesNP/export/8076b210_FUN_8076b210.c; sibling constructor,src/game/bases.rs
+game::bases,8076b3f0,fn_8076b3f0,translated,high,work/ghidra/rel-d_basesNP/export/8076b3f0_FUN_8076b3f0.c; shared base constructor,src/game/bases.rs
+game::bases,8076b4a0,fn_8076b4a0,translated,high,work/ghidra/rel-d_basesNP/export/8076b4a0_FUN_8076b4a0.c; sibling destructor,src/game/bases.rs

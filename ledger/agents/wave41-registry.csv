@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,80160020,fn_80160020,translated,medium,"work/ghidra/main-gb/export/80160020_FUN_80160020.c; flag test then vtable +0x20 dispatch",src/resource/registry.rs
+resource::registry,80160080,fn_80160080,translated,high,"work/ghidra/main-gb/export/80160080_FUN_80160080.c; 0x48-byte handle constructor with vtable 0x80328AE8",src/resource/registry.rs
+resource::registry,80160110,fn_80160110,translated,high,"work/ghidra/main-gb/export/80160110_FUN_80160110.c; close lock at +0x34 then base dtor then optional free",src/resource/registry.rs
+resource::registry,80160190,fn_80160190,translated,medium,"work/ghidra/main-gb/export/80160190_FUN_80160190.c; publish handle and allocate 0xD0-byte buffer",src/resource/registry.rs
+resource::registry,80160240,fn_80160240,translated,medium,"work/ghidra/main-gb/export/80160240_FUN_80160240.c; lower the two SDA minima for the published handle",src/resource/registry.rs
+resource::registry,801602d0,fn_801602d0,translated,high,"work/ghidra/main-gb/export/801602d0_FUN_801602d0.c; sum a run of big-endian u16 half-words",src/resource/registry.rs
+resource::registry,80160930,fn_80160930,translated,high,"work/ghidra/main-gb/export/80160930_FUN_80160930.c; release lock then optional free",src/resource/registry.rs
+resource::registry,80160990,fn_80160990,translated,medium,"work/ghidra/main-gb/export/80160990_FUN_80160990.c; acquire lock word from +0x04",src/resource/registry.rs
+resource::registry,801609d0,fn_801609d0,translated,high,"work/ghidra/main-gb/export/801609d0_FUN_801609d0.c; release and clear the lock word",src/resource/registry.rs
+resource::registry,80160f10,fn_80160f10,translated,high,"work/ghidra/main-gb/export/80160f10_FUN_80160f10.c; insert node after previous with head fallback",src/resource/registry.rs
+resource::registry,80160f60,fn_80160f60,translated,high,"work/ghidra/main-gb/export/80160f60_FUN_80160f60.c; unlink node and clear both links",src/resource/registry.rs
+resource::registry,80160fe0,fn_80160fe0,translated,high,"work/ghidra/main-gb/export/80160fe0_FUN_80160fe0.c; append node at list tail",src/resource/registry.rs
+resource::registry,80161020,fn_80161020,translated,high,"work/ghidra/main-gb/export/80161020_FUN_80161020.c; insert node at list head",src/resource/registry.rs
+resource::registry,80164b10,fn_80164b10,translated,high,"work/ghidra/main-gb/export/80164b10_FUN_80164b10.c; read live context at r13-0x52B4",src/resource/registry.rs
+resource::registry,80164b20,fn_80164b20,translated,high,"work/ghidra/main-gb/export/80164b20_FUN_80164b20.c; read one context state by id",src/resource/registry.rs
+resource::registry,80164b30,fn_80164b30,translated,high,"work/ghidra/main-gb/export/80164b30_FUN_80164b30.c; read current context state",src/resource/registry.rs
+resource::registry,80164b40,fn_80164b40,translated,high,"work/ghidra/main-gb/export/80164b40_FUN_80164b40.c; read current slot index byte at +0xF4",src/resource/registry.rs
+resource::registry,80164b60,fn_80164b60,translated,high,"work/ghidra/main-gb/export/80164b60_FUN_80164b60.c; return context + 0x2878",src/resource/registry.rs
+resource::registry,80164b70,fn_80164b70,translated,high,"work/ghidra/main-gb/export/80164b70_FUN_80164b70.c; slot object by index",src/resource/registry.rs
+resource::registry,80164b90,fn_80164b90,translated,medium,"work/ghidra/main-gb/export/80164b90_FUN_80164b90.c; close slot vtable +0x28 and clear aux bit 2",src/resource/registry.rs
+resource::registry,80164c50,fn_80164c50,translated,medium,"work/ghidra/main-gb/export/80164c50_FUN_80164c50.c; key lookup through slot map at +0x14",src/resource/registry.rs
+resource::registry,80164cd0,fn_80164cd0,translated,medium,"work/ghidra/main-gb/export/80164cd0_FUN_80164cd0.c; shut down one slot then close context",src/resource/registry.rs
+resource::registry,80164d50,fn_80164d50,translated,high,"work/ghidra/main-gb/export/80164d50_FUN_80164d50.c; request context teardown",src/resource/registry.rs
+resource::registry,801662e0,fn_801662e0,translated,high,"work/ghidra/main-gb/export/801662e0_FUN_801662e0.c; element dispatch to +0x20 slot",src/resource/registry.rs
+resource::registry,801662f0,fn_801662f0,translated,medium,"work/ghidra/main-gb/export/801662f0_FUN_801662f0.c; element value set via 0x80168FE0",src/resource/registry.rs
+resource::registry,80166300,fn_80166300,translated,high,"work/ghidra/main-gb/export/80166300_FUN_80166300.c; element dispatch to +0x2C slot",src/resource/registry.rs
+resource::registry,80166310,fn_80166310,translated,high,"work/ghidra/main-gb/export/80166310_FUN_80166310.c; element dispatch to +0x28 slot",src/resource/registry.rs
+resource::registry,80166320,fn_80166320,translated,medium,"work/ghidra/main-gb/export/80166320_FUN_80166320.c; element range test via 0x80169020",src/resource/registry.rs
+resource::registry,80166340,fn_80166340,translated,high,"work/ghidra/main-gb/export/80166340_FUN_80166340.c; store element +0x34 byte",src/resource/registry.rs
+resource::registry,80166360,fn_80166360,translated,high,"work/ghidra/main-gb/export/80166360_FUN_80166360.c; read element +0x28 float",src/resource/registry.rs

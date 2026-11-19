@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e5820,fn_800e5820,translated,medium,"work/ghidra/main-gb/export/800e5820_FUN_800e5820.c; glyph quad emit; 0x64-byte record copy, +0x48 virtual step, colour helpers when the cursor high byte is 2",src/engine/dsys.rs
+engine::dsys,800e5ad0,fn_800e5ad0,translated,medium,"work/ghidra/main-gb/export/800e5ad0_FUN_800e5ad0.c; vertical window push, 0.6 swapped scale pair, two 0x802310D0 measures and two 0x80231870 rewinds",src/engine/dsys.rs
+engine::dsys,800e5dd0,fn_800e5dd0,translated,high,"work/ghidra/main-gb/export/800e5dd0_FUN_800e5dd0.c; text cell corner fit; four u16 metrics through 0x802DCC4C and one 0x801C9C60 draw; extra printed doubles are live f2..f6",src/engine/dsys.rs
+engine::dsys,800e6680,fn_800e6680,translated,high,"work/ghidra/main-gb/export/800e6680_FUN_800e6680.c; longer-of-two run advance, FLT_MAX +0x4C marker, two output float stores and one cursor advance",src/engine/dsys.rs

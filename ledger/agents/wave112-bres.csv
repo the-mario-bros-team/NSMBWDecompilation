@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::bres,802390d0,fn_802390d0,translated,medium,"work/ghidra/main-gb/export/802390d0_FUN_802390d0.c; 688 bytes; closest points of two 6-float segments; optional s/t out pointers; returns squared distance",src/resource/bres.rs

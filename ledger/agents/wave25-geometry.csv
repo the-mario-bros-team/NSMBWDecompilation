@@ -1,0 +1,9 @@
+module,address,name,status,confidence,evidence,rust_file
+render::geometry,80006790,fn_80006790,translated,high,"work/ghidra/main-gb/export/80006790_FUN_80006790.c (4 bytes); the whole body is blr (4E800020), no memory and no calls",src/render/geometry.rs
+render::geometry,800067a0,fn_800067a0,translated,high,"work/ghidra/main-gb/export/800067a0_thunk_FUN_80163280.c; raw word 4815CAE0 = b 0x80163280; forwarder calls FN_80163280, and the Ghidra export contains the target body",src/render/geometry.rs
+render::geometry,80006a40,fn_80006a40,translated,high,"work/ghidra/main-gb/export/80006a40_FUN_80006a40.c (12 bytes); addi r0,r3,0x0C then stw r0,4(r3); sets the inline-member pointer",src/render/geometry.rs
+render::geometry,80006be0,fn_80006be0,translated,high,"work/ghidra/main-gb/export/80006be0_FUN_80006be0.c; li r5,0 then b 0x80006B60; returns the target r3; two-argument wrapper around fn_80006b60",src/render/geometry.rs
+render::geometry,80006ea0,fn_80006ea0,translated,high,"work/ghidra/main-gb/export/80006ea0_thunk_FUN_80163850.c; raw word 4815C9B0 = b 0x80163850; sorted-list insert forwarder",src/render/geometry.rs
+render::geometry,80007220,fn_80007220,translated,high,"work/ghidra/main-gb/export/80007220_FUN_80007220.c (8 bytes); lwz r3,0x20(r3) then blr; returns the child pointer",src/render/geometry.rs
+render::geometry,80007230,fn_80007230,translated,high,"work/ghidra/main-gb/export/80007230_FUN_80007230.c (196 bytes); +0x20 child test, candidate +0x84 fallback, fn_80006a20 activation, virtual +0x0C of the +0x10 member, virtual +0x10 of the +8 member; raw words 0x80007230..0x800072F0",src/render/geometry.rs
+render::geometry,80007510,fn_80007510,translated,high,"work/ghidra/main-gb/export/80007510_thunk_FUN_80164fd0.c; raw word 4815DAC0 = b 0x80164FD0; three-register forwarder to the actor base initialiser",src/render/geometry.rs

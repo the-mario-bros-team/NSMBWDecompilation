@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,80024f60,fn_80024f60,translated,high,work/ghidra/main-gb/export/80024f60_FUN_80024f60.c,src/ui/hud.rs
+ui::hud,80025800,fn_80025800,translated,medium,"work/ghidra/main-gb/export/80025800_FUN_80025800.c; manifest size 16 is wrong, real extent 508 bytes to blr at 0x800259f8",src/ui/hud.rs
+ui::hud,80025f60,fn_80025f60,translated,high,work/ghidra/main-gb/export/80025f60_FUN_80025f60.c; twin 80032a30,src/ui/hud.rs
+ui::hud,80026080,fn_80026080,translated,high,work/ghidra/main-gb/export/80026080_FUN_80026080.c; twin 80024c20,src/ui/hud.rs
+ui::hud,800260c0,fn_800260c0,translated,high,work/ghidra/main-gb/export/800260c0_FUN_800260c0.c,src/ui/hud.rs
+ui::hud,80026850,fn_80026850,translated,high,work/ghidra/main-gb/export/80026850_FUN_80026850.c; twin 8001d710,src/ui/hud.rs
+ui::hud,800268b0,fn_800268b0,translated,high,work/ghidra/main-gb/export/800268b0_FUN_800268b0.c; returns 80357bf4 not 80377a04,src/ui/hud.rs
+ui::hud,800268c0,fn_800268c0,translated,high,work/ghidra/main-gb/export/800268c0_FUN_800268c0.c; returns 80357bb4 not 80377a04,src/ui/hud.rs
+ui::hud,800269b0,fn_800269b0,translated,high,work/ghidra/main-gb/export/800269b0_FUN_800269b0.c; twin 8001d850,src/ui/hud.rs
+ui::hud,80026a90,fn_80026a90,translated,medium,work/ghidra/main-gb/export/80026a90_FUN_80026a90.c; twin 8001d930,src/ui/hud.rs

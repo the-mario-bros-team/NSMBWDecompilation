@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b091f0,fn_80b091f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b091f0_FUN_80b091f0.c; free helper: 0x8015F800(this,0), heap release for mode > 0, returns this",src/game/enemies.rs
+game::enemies,80b09250,fn_80b09250,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b09250_FUN_80b09250.c; second copy of the free helper",src/game/enemies.rs
+game::enemies,80b092b0,fn_80b092b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b092b0_FUN_80b092b0.c; constant producer returning 0x80353C64",src/game/enemies.rs
+game::enemies,80b092c0,fn_80b092c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b092c0_FUN_80b092c0.c; constant producer returning 0x80353BE4",src/game/enemies.rs
+game::enemies,80b093b0,fn_80b093b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b093b0_FUN_80b093b0.c; five-link +0x30 chain walker over vtable slot +0x0C, then recursion",src/game/enemies.rs
+game::enemies,80b09490,fn_80b09490,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b09490_FUN_80b09490.c; colon-suffix name predicate via 0x802E1C40/0x802E1AB4; helper names inferred from call shape",src/game/enemies.rs
+game::enemies,80b09550,fn_80b09550,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b09550_FUN_80b09550.c; 48-byte 0x802DCBFC(second, second, first) forwarder; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b09580,fn_80b09580,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b09580_FUN_80b09580.c; second 48-byte 0x802DCBFC forwarder; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b095b0,fn_80b095b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b095b0_FUN_80b095b0.c; 0x6A8-byte constructor, class vtable 0x80B671AC, five embedded holders",src/game/enemies.rs
+game::enemies,80b09690,fn_80b09690,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b09690_FUN_80b09690.c; heading 0x4000, +0x148/+0x5F0 seeded from 0x80B31C70/0x80B31C94, +0x630 = 16/-16/1/-1, +0x588 phase 1.0",src/game/enemies.rs
+game::enemies,80b097d0,fn_80b097d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b097d0_FUN_80b097d0.c; sound 0x2E9 at random image-plane position; +0x2B0 virtual return type inferred",src/game/enemies.rs
+game::enemies,80b09870,fn_80b09870,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b09870_FUN_80b09870.c; sound 0x2EA through 0x801995A0 with actor word 0",src/game/enemies.rs
+game::enemies,80b099c0,fn_80b099c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b099c0_FUN_80b099c0.c; sound 0x2EC, third copy of the random-position wrapper",src/game/enemies.rs
+game::enemies,80b09dd0,fn_80b09dd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b09dd0_FUN_80b09dd0.c; destructor releases +0x5F0/+0x5B8/+0x588/+0x544/+0x524 with -1, base reset, heap release",src/game/enemies.rs
+game::enemies,80b0a050,fn_80b0a050,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0a050_FUN_80b0a050.c; free helper of the 0x5E0 family",src/game/enemies.rs
+game::enemies,80b0a0b0,fn_80b0a0b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0a0b0_FUN_80b0a0b0.c; second copy of the free helper",src/game/enemies.rs
+game::enemies,80b0a110,fn_80b0a110,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0a110_FUN_80b0a110.c; constant producer returning 0x80353C64",src/game/enemies.rs
+game::enemies,80b0a120,fn_80b0a120,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0a120_FUN_80b0a120.c; constant producer returning 0x80353BE4",src/game/enemies.rs
+game::enemies,80b0a210,fn_80b0a210,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0a210_FUN_80b0a210.c; five-link +0x30 chain walker of the 0x5E0 family",src/game/enemies.rs
+game::enemies,80b0a2f0,fn_80b0a2f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0a2f0_FUN_80b0a2f0.c; colon-suffix name predicate; helper names inferred from call shape",src/game/enemies.rs
+game::enemies,80b0a3b0,fn_80b0a3b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b0a3b0_FUN_80b0a3b0.c; 48-byte 0x802DCBFC forwarder; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0a3e0,fn_80b0a3e0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b0a3e0_FUN_80b0a3e0.c; second 48-byte 0x802DCBFC forwarder; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0a410,fn_80b0a410,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0a410_FUN_80b0a410.c; 0x5E0-byte constructor, class vtable 0x80B675AC, +0x584 holder word 0x80B330E0",src/game/enemies.rs
+game::enemies,80b0a4b0,fn_80b0a4b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0a4b0_FUN_80b0a4b0.c; +0x5DC visibility gate over 0x80429D18/0x80429D19 and 0x8042A078 high mask, then +0x320 = 0.0 and +0x324 = 24.0",src/game/enemies.rs
+game::enemies,80b0b450,fn_80b0b450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0b450_FUN_80b0b450.c; free helper of the 0x528 family",src/game/enemies.rs
+game::enemies,80b0b4b0,fn_80b0b4b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0b4b0_FUN_80b0b4b0.c; second copy of the free helper",src/game/enemies.rs
+game::enemies,80b0b510,fn_80b0b510,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0b510_FUN_80b0b510.c; constant producer returning BSS descriptor 0x80B6E994",src/game/enemies.rs
+game::enemies,80b0b520,fn_80b0b520,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0b520_FUN_80b0b520.c; constant producer returning BSS descriptor 0x80B6E954",src/game/enemies.rs
+game::enemies,80b0b610,fn_80b0b610,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0b610_FUN_80b0b610.c; five-link +0x30 chain walker of the 0x528 family",src/game/enemies.rs
+game::enemies,80b0b6f0,fn_80b0b6f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0b6f0_FUN_80b0b6f0.c; colon-suffix name predicate; helper names inferred from call shape",src/game/enemies.rs

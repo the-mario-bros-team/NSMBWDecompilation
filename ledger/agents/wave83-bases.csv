@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80641e10,fn_80641e10,translated,high,"work/ghidra/rel-d_basesNP/export/80641e10_FUN_80641e10.c; shared 0x114-byte element ctor; 0x802D7AA0 + vtable 0x807E2740",src/game/bases.rs
+game::bases,80641e50,fn_80641e50,translated,high,"work/ghidra/rel-d_basesNP/export/80641e50_FUN_80641e50.c; element dtor; 0x802D7B20 then 0x802B9280 when free > 0",src/game/bases.rs
+game::bases,80641ef0,fn_80641ef0,translated,high,"work/ghidra/rel-d_basesNP/export/80641ef0_FUN_80641ef0.c; plain release helper; 0x802B9280 only",src/game/bases.rs
+game::bases,806420b0,fn_806420b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806420b0_FUN_806420b0.c; one-shot stockItem init; 0x807C8264 item ids, 7 owned words, 8 pane clears",src/game/bases.rs
+game::bases,80642230,fn_80642230,translated,high,"work/ghidra/rel-d_basesNP/export/80642230_FUN_80642230.c; item-id table read at 0x807C8264 (values 0..6)",src/game/bases.rs
+game::bases,80642250,fn_80642250,translated,medium,"work/ghidra/rel-d_basesNP/export/80642250_FUN_80642250.c; stockItem.arc loader; stockItem_27.brlyt, 6 anims, 0xE + 0x18 panes",src/game/bases.rs
+game::bases,80642340,fn_80642340,translated,medium,"work/ghidra/rel-d_basesNP/export/80642340_FUN_80642340.c; free-player probe; count-leading-zeros of 0x800B3B50",src/game/bases.rs
+game::bases,80642380,fn_80642380,translated,medium,"work/ghidra/rel-d_basesNP/export/80642380_FUN_80642380.c; per-frame driver; interface +0x10, layout draw, 3 helper passes",src/game/bases.rs
+game::bases,80642470,fn_80642470,translated,medium,"work/ghidra/rel-d_basesNP/export/80642470_FUN_80642470.c; pane scale reset to 1.0 after animation; latch +0x8D4 = 0x1E",src/game/bases.rs
+game::bases,80642510,fn_80642510,translated,medium,"work/ghidra/rel-d_basesNP/export/80642510_FUN_80642510.c; message-id cell from 0x807C8308 rows indexed by player count",src/game/bases.rs
+game::bases,80642cc0,fn_80642cc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80642cc0_FUN_80642cc0.c; slot value store into +0x310 block; dirty byte +0x262",src/game/bases.rs
+game::bases,80643300,fn_80643300,translated,high,"work/ghidra/rel-d_basesNP/export/80643300_FUN_80643300.c; reopen: timer 0x1E, animation 0, dirty byte +0x261",src/game/bases.rs
+game::bases,80643350,fn_80643350,translated,medium,"work/ghidra/rel-d_basesNP/export/80643350_FUN_80643350.c; four-player seeding; 0x80354E60 remap, 7 block writes, transition 0x80827928",src/game/bases.rs
+game::bases,80643560,fn_80643560,translated,medium,"work/ghidra/rel-d_basesNP/export/80643560_FUN_80643560.c; first-owned-slot scan; transitions 0x808279A8 / 0x80827968",src/game/bases.rs
+game::bases,80643710,fn_80643710,translated,high,"work/ghidra/rel-d_basesNP/export/80643710_FUN_80643710.c; highlight move; animations +0x16/+1, sound cue 0x78",src/game/bases.rs
+game::bases,806437b0,fn_806437b0,translated,high,"work/ghidra/rel-d_basesNP/export/806437b0_FUN_806437b0.c; commit slot +0x8A0 to +0x8A4; transitions 0x808279A8 / 0x808279E8",src/game/bases.rs
+game::bases,80645200,fn_80645200,translated,medium,"work/ghidra/rel-d_basesNP/export/80645200_FUN_80645200.c; TheEnd.arc loader; TheEnd_00.brlyt, 2 anims, message 0x12F",src/game/bases.rs
+game::bases,806453e0,fn_806453e0,translated,high,"work/ghidra/rel-d_basesNP/export/806453e0_FUN_806453e0.c; out-animation reset; hide root pane, clear +0x249/+0x24B",src/game/bases.rs
+game::bases,80645480,fn_80645480,translated,high,"work/ghidra/rel-d_basesNP/export/80645480_FUN_80645480.c; show root pane and start animation 0; +0x24B = 1",src/game/bases.rs
+game::bases,806454e0,fn_806454e0,translated,high,"work/ghidra/rel-d_basesNP/export/806454e0_FUN_806454e0.c; draw-finished gate -> 0x80827B90",src/game/bases.rs
+game::bases,806455a0,fn_806455a0,translated,high,"work/ghidra/rel-d_basesNP/export/806455a0_FUN_806455a0.c; start animation 1; +0x24B = 1",src/game/bases.rs
+game::bases,806455e0,fn_806455e0,translated,high,"work/ghidra/rel-d_basesNP/export/806455e0_FUN_806455e0.c; exit-finished gate -> 0x80827B10",src/game/bases.rs
+game::bases,80645f90,fn_80645f90,translated,medium,"work/ghidra/rel-d_basesNP/export/80645f90_FUN_80645f90.c; timeUp.arc loader; timeUp_02.brlyt, 3 anims, 4 T_timeUP panes",src/game/bases.rs
+game::bases,80646050,fn_80646050,translated,medium,"work/ghidra/rel-d_basesNP/export/80646050_FUN_80646050.c; free-player probe via 0x80600510; compare with 80642340",src/game/bases.rs
+game::bases,80646180,fn_80646180,translated,medium,"work/ghidra/rel-d_basesNP/export/80646180_FUN_80646180.c; four player labels; ids 0x0A/0x0C/0x0D/0x0D, transition 0x80827C50",src/game/bases.rs
+game::bases,80646240,fn_80646240,translated,high,"work/ghidra/rel-d_basesNP/export/80646240_FUN_80646240.c; reopen animation 0 and show root pane +0x244",src/game/bases.rs
+game::bases,806462a0,fn_806462a0,translated,high,"work/ghidra/rel-d_basesNP/export/806462a0_FUN_806462a0.c; open-finished gate -> 0x80827C90",src/game/bases.rs
+game::bases,80646310,fn_80646310,translated,high,"work/ghidra/rel-d_basesNP/export/80646310_FUN_80646310.c; sound cue 0x364 via 0x80195380, animation 1, +0x25C = 0",src/game/bases.rs
+game::bases,806463b0,fn_806463b0,translated,high,"work/ghidra/rel-d_basesNP/export/806463b0_FUN_806463b0.c; +0x25A = 1 then transition 0x80827C10",src/game/bases.rs
+game::bases,80646cd0,fn_80646cd0,translated,high,"work/ghidra/rel-d_basesNP/export/80646cd0_FUN_80646cd0.c; array destructor 0x802DCA98 x 0x1130 at +0x48, 0x8016A030, optional free",src/game/bases.rs

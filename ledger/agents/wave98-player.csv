@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,800556f0,fn_800556f0,translated,medium,"work/ghidra/main-gb/export/800556f0_FUN_800556f0.c; +128 terrain probe at +0xAC; three +0x10D4 surface bits",src/game/player.rs
+game::player,80055810,fn_80055810,translated,medium,"work/ghidra/main-gb/export/80055810_FUN_80055810.c; carry-manager +0x94 guard; four event-flag gates; both edge clamps",src/game/player.rs
+game::player,80055a00,fn_80055a00,translated,medium,"work/ghidra/main-gb/export/80055a00_FUN_80055a00.c; +0x10D4 bit 0x80000; negative +0x10C clamped to -0.01f or 0.0f",src/game/player.rs
+game::player,80055a70,fn_80055a70,translated,medium,"work/ghidra/main-gb/export/80055a70_FUN_80055a70.c; +0x10D4 bit 0x100000; positive +0x10C clamped to +0.01f or 0.0f",src/game/player.rs
+game::player,80055ae0,fn_80055ae0,translated,medium,"work/ghidra/main-gb/export/80055ae0_FUN_80055ae0.c; two bounds from 0x80082240 and the scene +0x40 float; +0x140C/+0x140D hysteresis",src/game/player.rs
+game::player,80055d00,fn_80055d00,translated,medium,"work/ghidra/main-gb/export/80055d00_FUN_80055d00.c; latches +0x140C/+0x140D when the world +0x900C6 byte is clear",src/game/player.rs
+game::player,80055db0,fn_80055db0,translated,medium,"work/ghidra/main-gb/export/80055db0_FUN_80055db0.c; depth limit +0x3C-+0x44-24.0f; vtable +0xE0 gate and +0x278 reaction",src/game/player.rs
+game::player,80055ef0,fn_80055ef0,translated,medium,"work/ghidra/main-gb/export/80055ef0_FUN_80055ef0.c; three flag clears; 96.0f or 192.0f ceiling; +0x3B0 reset",src/game/player.rs
+game::player,80058280,fn_80058280,translated,high,"work/ghidra/main-gb/export/80058280_FUN_80058280.c; owner table word plus sign-extended +0x38D into 0x800D8BB0",src/game/player.rs
+game::player,800582a0,fn_800582a0,translated,medium,"work/ghidra/main-gb/export/800582a0_FUN_800582a0.c; +0x38D selects the +0x55-gated record; 0x80377C88 selector; 0x802BC980",src/game/player.rs
+game::player,800582f0,fn_800582f0,translated,medium,"work/ghidra/main-gb/export/800582f0_FUN_800582f0.c; two 0x800D5790 queries with selectors 4 and 7; midpoint scaled by 0.5f",src/game/player.rs
+game::player,8005c2b0,fn_8005c2b0,translated,high,"work/ghidra/main-gb/export/8005c2b0_FUN_8005c2b0.c; Wm_ob_fireworks model spawn; ring table 0x8030962C; cues 0x251 and 0x250",src/game/player.rs
+game::player,8005c410,fn_8005c410,translated,medium,"work/ghidra/main-gb/export/8005c410_FUN_8005c410.c; four-state celebration driver with delays 0x1C 0x1C 0x3C and bonus-stage test",src/game/player.rs
+game::player,8005c6d0,fn_8005c6d0,translated,medium,"work/ghidra/main-gb/export/8005c6d0_FUN_8005c6d0.c; averages the 0x65-flagged player positions into +0x30..+0x38",src/game/player.rs
+game::player,8005d100,fn_8005d100,translated,high,"work/ghidra/main-gb/export/8005d100_FUN_8005d100.c; compacts the four +0x60 ids and pads the tail with -1",src/game/player.rs
+game::player,8005d880,fn_8005d880,translated,medium,"work/ghidra/main-gb/export/8005d880_FUN_8005d880.c; copies one 0xF0-byte frame record from 0x80354C30 when index < 2",src/game/player.rs
+game::player,8005db00,fn_8005db00,translated,medium,"work/ghidra/main-gb/export/8005db00_FUN_8005db00.c; seeds -1.0f 1.0f 0.6f and 0xFF; resets +0x28 +0x874 and +0x940",src/game/player.rs
+game::player,8005ddc0,fn_8005ddc0,translated,medium,"work/ghidra/main-gb/export/8005ddc0_FUN_8005ddc0.c; copies the 0x10 and 0x20 stride constant records into a 0x44 block",src/game/player.rs
+game::player,8005e620,fn_8005e620,translated,high,"work/ghidra/main-gb/export/8005e620_thunk_FUN_8005e590.c; thunk to 0x8005E590 reading the +0x06 halfword",src/game/player.rs
+game::player,8005e680,fn_8005e680,translated,high,"work/ghidra/main-gb/export/8005e680_thunk_FUN_8005e5d0.c; thunk to 0x8005E5D0 reading the +0x04 halfword",src/game/player.rs
+game::player,8005ed90,fn_8005ed90,translated,medium,"work/ghidra/main-gb/export/8005ed90_FUN_8005ed90.c; area record halfwords plus the 0x802EF188 nudge tables",src/game/player.rs
+game::player,8005ee90,fn_8005ee90,translated,medium,"work/ghidra/main-gb/export/8005ee90_FUN_8005ee90.c; area from player +0x120E; selector +0x1211; returns record +0x0B",src/game/player.rs
+game::player,8005f4d0,fn_8005f4d0,translated,high,"work/ghidra/main-gb/export/8005f4d0_FUN_8005f4d0.c; first free of four slots; reserve plus 0x8005EEE0 insert",src/game/player.rs
+game::player,8005f570,fn_8005f570,translated,high,"work/ghidra/main-gb/export/8005f570_FUN_8005f570.c; presence bit; handle table = 1; character flag 8; SDA handle word",src/game/player.rs
+game::player,8005fdb0,fn_8005fdb0,translated,medium,"work/ghidra/main-gb/export/8005fdb0_FUN_8005fdb0.c; reserve slot and test vtable +0xE0; 0x8005FEB0 on failure",src/game/player.rs
+game::player,8005fe30,fn_8005fe30,translated,medium,"work/ghidra/main-gb/export/8005fe30_FUN_8005fe30.c; release slot; 0x8005FED0 on failure; tail call 0x8005F920",src/game/player.rs

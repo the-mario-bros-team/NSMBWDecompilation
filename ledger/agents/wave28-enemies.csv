@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a8f2f0,fn_80a8f2f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a8f2f0_FUN_80a8f2f0.c; unlinks +0x148, +0x5E8 and +0x68C through 0x8008C380.",src/game/enemies.rs
+game::enemies,80a8f330,fn_80a8f330,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a8f330_FUN_80a8f330.c; calls 0x8002F3F0 and 0x8002F540; first receiver is inferred from its main.dol body.",src/game/enemies.rs
+game::enemies,80a8f470,fn_80a8f470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a8f470_FUN_80a8f470.c; copies +0xAC through 0x8006A4B0 and submits sound 0x1AC through 0x80197F00.",src/game/enemies.rs
+game::enemies,80a8f590,fn_80a8f590,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a8f590_FUN_80a8f590.c; 0x780-byte constructor; vtable 0x80B4FDF0; u16 3 at +0x778.",src/game/enemies.rs
+game::enemies,80a8fbc0,fn_80a8fbc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a8fbc0_FUN_80a8fbc0.c; second copy of the sound-0x1AC request at the +0xAC position.",src/game/enemies.rs
+game::enemies,80a8fcd0,fn_80a8fcd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a8fcd0_FUN_80a8fcd0.c; 0x780-byte constructor; vtable 0x80B500F0; no variant store.",src/game/enemies.rs
+game::enemies,80a90030,fn_80a90030,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a90030_FUN_80a90030.c; 0x80064740 participant query; 224.0 X window and 1.5 * +0xD4 vertical look-ahead; returns 0xFFFFFFFF when no participant.",src/game/enemies.rs
+game::enemies,80a90110,fn_80a90110,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a90110_FUN_80a90110.c; facing byte ^ direction indexes 0x80B2E950/0x80B2E954 (+/-10012 and +/-640); clamp through 0x802DE514.",src/game/enemies.rs
+game::enemies,80a901b0,fn_80a901b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a901b0_FUN_80a901b0.c; stores facing and timer 0x78; 8.0 blend on fire_wait_up; switches to 0x80B73DF8.",src/game/enemies.rs
+game::enemies,80a90250,fn_80a90250,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a90250_FUN_80a90250.c; holder slot +0x1C release; base updates; countdown +0x770; switches to 0x80B73E38 at zero.",src/game/enemies.rs
+game::enemies,80a90330,fn_80a90330,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a90330_FUN_80a90330.c; attack selector: target query; fire_attack_down/up at 0.0 blend; +0x774 side; switches to 0x80B73E78.",src/game/enemies.rs
+game::enemies,80a909c0,fn_80a909c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a909c0_FUN_80a909c0.c; state callback 0x8015F800 plus optional 0x802B9280 for positive modes; returns the state.",src/game/enemies.rs
+game::enemies,80a90b40,fn_80a90b40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a90b40_FUN_80a90b40.c; 0x778-byte constructor; vtable 0x80B504F8 after the 0x80B504AC state vtable.",src/game/enemies.rs
+game::enemies,80a90c20,fn_80a90c20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a90c20_FUN_80a90c20.c; three 0x80078470 layers from the 12-byte records at 0x80B2E9C0 indexed by +0x774.",src/game/enemies.rs
+game::enemies,80a91280,fn_80a91280,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91280_FUN_80a91280.c; second copy of the 0x8015F800/0x802B9280 state callback.",src/game/enemies.rs
+game::enemies,80a912e0,fn_80a912e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a912e0_FUN_80a912e0.c; third copy of the 0x8015F800/0x802B9280 state callback.",src/game/enemies.rs
+game::enemies,80a91340,fn_80a91340,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91340_FUN_80a91340.c; returns the constant table address 0x803534AC.",src/game/enemies.rs
+game::enemies,80a91350,fn_80a91350,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91350_FUN_80a91350.c; returns the constant table address 0x8035346C.",src/game/enemies.rs
+game::enemies,80a91440,fn_80a91440,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91440_FUN_80a91440.c; five unrolled +0x30 parent tests through vtable +0xC then recursion.",src/game/enemies.rs
+game::enemies,80a91520,fn_80a91520,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91520_FUN_80a91520.c; strchr(0x3A) on the vtable +0x20 name and strcmp of the tails through 0x802E1C40/0x802E1AB4.",src/game/enemies.rs
+game::enemies,80a91640,fn_80a91640,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91640_FUN_80a91640.c; 0x728-byte Wm_en_movecloud-family constructor; vtable 0x80B50938; clears +0x6D4..+0x6E4.",src/game/enemies.rs
+game::enemies,80a91b40,fn_80a91b40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91b40_FUN_80a91b40.c; bit 4 of +0x4 gates 0x80162D00(+0x6E8); writes 0x00FF or 0 to child +0x500; returns 1.",src/game/enemies.rs
+game::enemies,80a91ea0,fn_80a91ea0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a91ea0_FUN_80a91ea0.c; null guard on event +0x4; forwards to untranslated 0x80A91DA0 with mode 0.",src/game/enemies.rs
+game::enemies,80a91ec0,fn_80a91ec0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a91ec0_FUN_80a91ec0.c; same null guard; forwards to untranslated 0x80A91DA0 with mode 1.",src/game/enemies.rs
+game::enemies,80a92050,fn_80a92050,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a92050_FUN_80a92050.c; configures and links +0x148 from 0x80B2EA80; clears +0xE8..+0xF0; switches to 0x80B74038.",src/game/enemies.rs
+game::enemies,80a920d0,fn_80a920d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a920d0_FUN_80a920d0.c; jugem/cloud_wait binder for +0x528/+0x544/+0x548/+0x588; resource g3d/jugem.brres; 1.0 blend.",src/game/enemies.rs

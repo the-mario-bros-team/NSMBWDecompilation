@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801d3260,fn_801d3260,translated,high,"work/ghidra/main-gb/export/801d3260_FUN_801d3260.c; returns word 0 of the 0x95 status image at 0x80395D60",src/runtime/dvd.rs
+runtime::dvd,801d3270,fn_801d3270,translated,high,"work/ghidra/main-gb/export/801d3270_FUN_801d3270.c; returns word 0 of the 0x96 control image at 0x80395D80",src/runtime/dvd.rs
+runtime::dvd,801d36d0,fn_801d36d0,translated,high,"work/ghidra/main-gb/export/801d36d0_FUN_801d36d0.c; returns word 0 of the shared 0x20-byte input block at 0x80395C60",src/runtime/dvd.rs
+runtime::dvd,801d3870,fn_801d3870,translated,high,"work/ghidra/main-gb/export/801d3870_FUN_801d3870.c; returns constant 0",src/runtime/dvd.rs
+runtime::dvd,801d8fd0,fn_801d8fd0,translated,medium,"work/ghidra/main-gb/export/801d8fd0_FUN_801d8fd0.c; ISFS-ready guard then 0x801D8E20(path, second, 0, 0, 0) and error mapper",src/runtime/dvd.rs
+runtime::dvd,801d90d0,fn_801d90d0,translated,high,"work/ghidra/main-gb/export/801d90d0_FUN_801d90d0.c; packs three two-bit permission groups into one attribute byte (0x10/0x20/0x04/0x08/0x01/0x02)",src/runtime/dvd.rs
+runtime::dvd,801d9130,fn_801d9130,translated,high,"work/ghidra/main-gb/export/801d9130_FUN_801d9130.c; unpacks the attribute byte back into owner/group/other words",src/runtime/dvd.rs
+runtime::dvd,801d93a0,fn_801d93a0,translated,medium,"work/ghidra/main-gb/export/801d93a0_FUN_801d93a0.c; ISFS-ready guard then 0x801D91C0(path, file, 0, 0, 1) and mapper",src/runtime/dvd.rs
+runtime::dvd,801d9410,fn_801d9410,translated,medium,"work/ghidra/main-gb/export/801d9410_FUN_801d9410.c; stores block+0x04 completion and block+0x14 file then 0x801D91C0(path, file, block, 1, 1)",src/runtime/dvd.rs
+runtime::dvd,801d95b0,fn_801d95b0,translated,medium,"work/ghidra/main-gb/export/801d95b0_FUN_801d95b0.c; sync open through 0x801D94A0 and stores fd plus file+0x8A=1",src/runtime/dvd.rs
+runtime::dvd,801d9640,fn_801d9640,translated,medium,"work/ghidra/main-gb/export/801d9640_FUN_801d9640.c; async open through 0x801D94A0(last word 1) and the same fd/state stores",src/runtime/dvd.rs
+runtime::dvd,801d9850,fn_801d9850,translated,medium,"work/ghidra/main-gb/export/801d9850_FUN_801d9850.c; requires file+0x8A==1, closes via 0x80224E60 and sets state 2",src/runtime/dvd.rs
+runtime::dvd,801d98c0,fn_801d98c0,translated,medium,"work/ghidra/main-gb/export/801d98c0_FUN_801d98c0.c; stores completion/file in the request block and submits 0x80227A50(fd, 0x801D9F00, ctx)",src/runtime/dvd.rs
+runtime::dvd,801da4b0,fn_801da4b0,translated,high,"work/ghidra/main-gb/export/801da4b0_FUN_801da4b0.c; strncmp(path, 0x80343690, 8) == 0 test",src/runtime/dvd.rs
+runtime::dvd,801da4f0,fn_801da4f0,translated,high,"work/ghidra/main-gb/export/801da4f0_FUN_801da4f0.c; strncmp(path, 0x8034369C, 9) == 0 plus non-empty entry test at +9",src/runtime/dvd.rs
+runtime::dvd,801da550,fn_801da550,translated,high,"work/ghidra/main-gb/export/801da550_FUN_801da550.c; returns (r13-0x4C40 == 2)",src/runtime/dvd.rs
+runtime::dvd,801da570,fn_801da570,translated,medium,"work/ghidra/main-gb/export/801da570_FUN_801da570.c; copies the 0x29-entry table at 0x802F6B34, maps negative ISFS codes and logs five of them",src/runtime/dvd.rs
+runtime::dvd,801da6e0,fn_801da6e0,translated,medium,"work/ghidra/main-gb/export/801da6e0_FUN_801da6e0.c; empty/absolute/relative path resolution with trailing-slash strip",src/runtime/dvd.rs
+runtime::dvd,801daa70,fn_801daa70,translated,medium,"work/ghidra/main-gb/export/801daa70_FUN_801daa70.c; interrupt-locked strcpy of the path prefix at 0x80343640",src/runtime/dvd.rs
+runtime::dvd,801daaf0,fn_801daaf0,translated,medium,"work/ghidra/main-gb/export/801daaf0_FUN_801daaf0.c; strcpy of the mounted home directory at 0x80395DE0",src/runtime/dvd.rs
+runtime::dvd,801dab50,fn_801dab50,translated,high,"work/ghidra/main-gb/export/801dab50_FUN_801dab50.c; maps the result then calls context+0x04(mapped, context)",src/runtime/dvd.rs
+runtime::dvd,801dc100,fn_801dc100,translated,high,"work/ghidra/main-gb/export/801dc100_FUN_801dc100.c; six-type record decoder writing the 0x20-byte descriptor fields +0x0C/+0x10/+0x14/+0x18/+0x1C",src/runtime/dvd.rs
+runtime::dvd,801dda90,fn_801dda90,translated,high,"work/ghidra/main-gb/export/801dda90_FUN_801dda90.c; returns constant 0",src/runtime/dvd.rs
+runtime::dvd,801ddaa0,fn_801ddaa0,translated,high,"work/ghidra/main-gb/export/801ddaa0_FUN_801ddaa0.c; returns constant 0",src/runtime/dvd.rs
+runtime::dvd,801ddab0,fn_801ddab0,translated,high,"work/ghidra/main-gb/export/801ddab0_FUN_801ddab0.c; returns constant 0",src/runtime/dvd.rs
+runtime::dvd,801dd1d0,fn_801dd1d0,translated,high,"work/ghidra/main-gb/export/801dd1d0_FUN_801dd1d0.c; item 1 equals 1",src/runtime/dvd.rs
+runtime::dvd,801dd230,fn_801dd230,translated,high,"work/ghidra/main-gb/export/801dd230_FUN_801dd230.c; item 5 clamped to [-0x20,0x20] with bit 0 cleared",src/runtime/dvd.rs
+runtime::dvd,801dd2b0,fn_801dd2b0,translated,high,"work/ghidra/main-gb/export/801dd2b0_FUN_801dd2b0.c; item 6 equals 1",src/runtime/dvd.rs
+runtime::dvd,801dd310,fn_801dd310,translated,high,"work/ghidra/main-gb/export/801dd310_FUN_801dd310.c; reads the two-byte variable item 9 through 0x801DC6A0",src/runtime/dvd.rs
+runtime::dvd,801dd6f0,fn_801dd6f0,translated,medium,"work/ghidra/main-gb/export/801dd6f0_FUN_801dd6f0.c; obfuscated key/value scan over the 256-byte block at 0x80003800 with mask 0x73B5DBFA",src/runtime/dvd.rs

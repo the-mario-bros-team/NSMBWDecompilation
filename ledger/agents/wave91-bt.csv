@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,8021040c,fn_8021040c,translated,high,work/ghidra/main-gb/export/8021040c_FUN_8021040c.c; six security-service registrations,src/runtime/bt.rs
+runtime::bt,80210830,fn_80210830,translated,high,work/ghidra/main-gb/export/80210830_FUN_80210830.c; control-channel security result,src/runtime/bt.rs
+runtime::bt,80210960,fn_80210960,translated,medium,work/ghidra/main-gb/export/80210960_FUN_80210960.c; HID L2CAP connect indication,src/runtime/bt.rs
+runtime::bt,80210bb8,fn_80210bb8,translated,high,work/ghidra/main-gb/export/80210bb8_FUN_80210bb8.c; HID control originate,src/runtime/bt.rs
+runtime::bt,80210d04,fn_80210d04,translated,medium,work/ghidra/main-gb/export/80210d04_FUN_80210d04.c; interrupt-channel security result,src/runtime/bt.rs
+runtime::bt,80210f18,fn_80210f18,translated,high,work/ghidra/main-gb/export/80210f18_FUN_80210f18.c; HID connection confirmation,src/runtime/bt.rs
+runtime::bt,80211260,fn_80211260,translated,high,work/ghidra/main-gb/export/80211260_FUN_80211260.c; HID configuration indication,src/runtime/bt.rs
+runtime::bt,80211508,fn_80211508,translated,medium,work/ghidra/main-gb/export/80211508_FUN_80211508.c; HID configuration confirmation,src/runtime/bt.rs
+runtime::bt,80211814,fn_80211814,translated,medium,work/ghidra/main-gb/export/80211814_FUN_80211814.c; HID disconnect indication,src/runtime/bt.rs
+runtime::bt,80211ad8,fn_80211ad8,translated,high,work/ghidra/main-gb/export/80211ad8_FUN_80211ad8.c; HID disconnect confirmation,src/runtime/bt.rs
+runtime::bt,80211d20,fn_80211d20,translated,high,work/ghidra/main-gb/export/80211d20_FUN_80211d20.c; HID congestion status,src/runtime/bt.rs
+runtime::bt,80211f18,fn_80211f18,translated,high,work/ghidra/main-gb/export/80211f18_FUN_80211f18.c; HID report dispatcher,src/runtime/bt.rs
+runtime::bt,80212674,fn_80212674,translated,high,work/ghidra/main-gb/export/80212674_FUN_80212674.c; L2CAP PSM callback registration,src/runtime/bt.rs
+runtime::bt,8021471c,fn_8021471c,translated,high,work/ghidra/main-gb/export/8021471c_FUN_8021471c.c; L2CAP connection request,src/runtime/bt.rs
+runtime::bt,80214870,fn_80214870,translated,high,work/ghidra/main-gb/export/80214870_FUN_80214870.c; L2CAP connection complete,src/runtime/bt.rs
+runtime::bt,80216d94,fn_80216d94,translated,high,work/ghidra/main-gb/export/80216d94_FUN_80216d94.c; L2CAP connect request signal,src/runtime/bt.rs
+runtime::bt,80216f30,fn_80216f30,translated,high,work/ghidra/main-gb/export/80216f30_FUN_80216f30.c; L2CAP connect response signal,src/runtime/bt.rs
+runtime::bt,80217928,fn_80217928,translated,high,work/ghidra/main-gb/export/80217928_FUN_80217928.c; L2CAP echo request,src/runtime/bt.rs
+runtime::bt,80217a98,fn_80217a98,translated,medium,work/ghidra/main-gb/export/80217a98_FUN_80217a98.c; clamped echo request,src/runtime/bt.rs
+runtime::bt,80217c34,fn_80217c34,translated,high,work/ghidra/main-gb/export/80217c34_FUN_80217c34.c; L2CAP disconnect request signal,src/runtime/bt.rs
+runtime::bt,80217cd8,fn_80217cd8,translated,medium,work/ghidra/main-gb/export/80217cd8_FUN_80217cd8.c; CCB free-list allocator,src/runtime/bt.rs
+runtime::bt,80218554,fn_80218554,translated,medium,work/ghidra/main-gb/export/80218554_FUN_80218554.c; L2CAP baseband connect start,src/runtime/bt.rs
+runtime::bt,802186b4,fn_802186b4,translated,high,work/ghidra/main-gb/export/802186b4_FUN_802186b4.c; busy-channel test,src/runtime/bt.rs
+runtime::bt,8021894c,fn_8021894c,translated,high,work/ghidra/main-gb/export/8021894c_FUN_8021894c.c; RFCOMM port start indication,src/runtime/bt.rs
+runtime::bt,80219a54,fn_80219a54,translated,medium,work/ghidra/main-gb/export/80219a54_FUN_80219a54.c; RFCOMM port close signal,src/runtime/bt.rs
+runtime::bt,80219d64,fn_80219d64,translated,high,work/ghidra/main-gb/export/80219d64_FUN_80219d64.c; RFCOMM port release,src/runtime/bt.rs
+runtime::bt,80219ff4,fn_80219ff4,translated,high,work/ghidra/main-gb/export/80219ff4_FUN_80219ff4.c; RFCOMM window accounting,src/runtime/bt.rs
+runtime::bt,8021b554,fn_8021b554,translated,high,work/ghidra/main-gb/export/8021b554_FUN_8021b554.c; RFCOMM mux config confirmation,src/runtime/bt.rs
+runtime::bt,8021b648,fn_8021b648,translated,high,work/ghidra/main-gb/export/8021b648_FUN_8021b648.c; RFCOMM mux config indication,src/runtime/bt.rs

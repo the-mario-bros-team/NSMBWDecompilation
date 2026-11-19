@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8077cd80,fn_8077cd80,translated,medium,"work/ghidra/rel-d_basesNP/export/8077cd80_FUN_8077cd80.c; target +0x1D8 and offset +0x2AC from args; 8077E410 slot 4; 8077CED0 spawn; +0x2C0 = count - 1",src/game/bases.rs
+game::bases,8077ce20,fn_8077ce20,translated,medium,"work/ghidra/rel-d_basesNP/export/8077ce20_FUN_8077ce20.c; vtable +0x60 slots 0x64/0x6C; 8077CF60 then 8077CED0; decrements +0x2C0",src/game/bases.rs
+game::bases,8077cf60,fn_8077cf60,translated,medium,"work/ghidra/rel-d_basesNP/export/8077cf60_FUN_8077cf60.c; 800F6AB0 gate; 8077E570; +0x1F4 = +0x1F8; 8079EE70; +0xDC..+0xE4 = +0x294+0x18; +0x139",src/game/bases.rs
+game::bases,8077cfe0,fn_8077cfe0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077cfe0_FUN_8077cfe0.c; 80780A40*15; 80775860 anchor; 8077E410 slot 2; 800F6410 delta; +0x200 = 5/3; 80775080; 80103410 hand",src/game/bases.rs
+game::bases,8077d170,fn_8077d170,translated,medium,"work/ghidra/rel-d_basesNP/export/8077d170_FUN_8077d170.c; countdown +0x2C0; 8079B300 sample; 800F6CD0; 807819B0 -> 8077F910 + vtable 0x68",src/game/bases.rs
+game::bases,8077d580,fn_8077d580,translated,high,"work/ghidra/rel-d_basesNP/export/8077d580_FUN_8077d580.c; mode 0/1/2 -> 8077E410 slot 0xC / 8077E570 / slot 0xD; 800F6410 with +1.0 and -1.0 z",src/game/bases.rs
+game::bases,8077d680,fn_8077d680,translated,medium,"work/ghidra/rel-d_basesNP/export/8077d680_FUN_8077d680.c; 8079B260; sound 5 and 1; 800F69F0 8 args; 800F6410 slot 0xC; +0x2C0 = +0x294+0x218",src/game/bases.rs
+game::bases,8077d7b0,fn_8077d7b0,translated,high,"work/ghidra/rel-d_basesNP/export/8077d7b0_FUN_8077d7b0.c; six-step +0x304 machine; 8079B260; 800F6AB0; 80101090/801010B0; returns 1 at step 6",src/game/bases.rs
+game::bases,8077d960,fn_8077d960,translated,high,"work/ghidra/rel-d_basesNP/export/8077d960_FUN_8077d960.c; in-place ctor; 800F5FD0; vtables 80818518 at +0x60 and 808185A0 at +0x214; -1 at +0x1AC/+0x1B0/+0x1C8",src/game/bases.rs
+game::bases,8077e150,fn_8077e150,translated,medium,"work/ghidra/rel-d_basesNP/export/8077e150_FUN_8077e150.c; character_SV + g3d/model.brres via 800F6710; 800D6CC0 player view; 0x15 slots at +0x28C",src/game/bases.rs
+game::bases,8077e570,fn_8077e570,translated,medium,"work/ghidra/rel-d_basesNP/export/8077e570_FUN_8077e570.c; 8077E410 slot 0; 800B2F10 model+0x50 - 1.0; model vtable 0x84",src/game/bases.rs
+game::bases,8077e5e0,fn_8077e5e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077e5e0_FUN_8077e5e0.c; model vtable 0x5C with +0x29C/+0x2A0; 800B2F10; vtable 0x84; clears +0x2F8",src/game/bases.rs
+game::bases,8077e680,fn_8077e680,translated,high,"work/ghidra/rel-d_basesNP/export/8077e680_FUN_8077e680.c; clears +0x20C/+0x18C/+0x2A4; 8077E570 + 800FDC80; state 0",src/game/bases.rs
+game::bases,8077e6d0,fn_8077e6d0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077e6d0_FUN_8077e6d0.c; +0x268 latch copies 80780BB0 position; 807811D0 selects 8077E760 or 80780010",src/game/bases.rs
+game::bases,8077e760,fn_8077e760,translated,medium,"work/ghidra/rel-d_basesNP/export/8077e760_FUN_8077e760.c; 80780E20; +0x210 = (members-1)*8; 80781880 predicate via 807811C0 tail call; 8077FB20/8077E9D0/8077EDE0",src/game/bases.rs
+game::bases,8077e9d0,fn_8077e9d0,translated,high,"work/ghidra/rel-d_basesNP/export/8077e9d0_FUN_8077e9d0.c; 807807E0 + 807806B0 + 80780510; +0x2A4 = 1; state 2; +0x2D4 = -1",src/game/bases.rs
+game::bases,8077ede0,fn_8077ede0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077ede0_FUN_8077ede0.c; vector to +0x2AC; 80780D00 with +0x294 scale/angle; 80104FD0/80105060 sounds 0 and 1; state 3",src/game/bases.rs
+game::bases,8077f0c0,fn_8077f0c0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077f0c0_FUN_8077f0c0.c; 8077F7E0 + 80780BD0 target; +0x2B8 = 10 when one member; +0x2BC; state 8",src/game/bases.rs
+game::bases,8077f270,fn_8077f270,translated,medium,"work/ghidra/rel-d_basesNP/export/8077f270_FUN_8077f270.c; 8077E570; +0x2B8 = +0x294+0xB8; 8079EE70; sound 7; state 9",src/game/bases.rs
+game::bases,8077f3c0,fn_8077f3c0,translated,high,"work/ghidra/rel-d_basesNP/export/8077f3c0_FUN_8077f3c0.c; +0x1FC = +0x1F4; args into +0x1F4/+0x1F8/+0x26C; +0x2B8 = 0; state 10",src/game/bases.rs
+game::bases,8077f4a0,fn_8077f4a0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077f4a0_FUN_8077f4a0.c; 8077E570; sound 7; 800F3330 -> +0x200; 800F9BE0 0x282; scale 0.01; +0x30C step; state 0xB",src/game/bases.rs
+game::bases,8077f5b0,fn_8077f5b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077f5b0_FUN_8077f5b0.c; +0x30C added to +0xDC..+0xE4; 80160D10; manager scale; ring pop; 8077F830 + 8077EDE0",src/game/bases.rs
+game::bases,8077f670,fn_8077f670,translated,medium,"work/ghidra/rel-d_basesNP/export/8077f670_FUN_8077f670.c; 80100200 anchor for +0x1F8; 50.0f offset per member by +0x200 quadrant 2..5; 2^52 magic",src/game/bases.rs
+game::bases,8077f7e0,fn_8077f7e0,translated,high,"work/ghidra/rel-d_basesNP/export/8077f7e0_FUN_8077f7e0.c; 80780A40 count passed to 8077F670",src/game/bases.rs
+game::bases,8077f830,fn_8077f830,translated,high,"work/ghidra/rel-d_basesNP/export/8077f830_FUN_8077f830.c; 80100200 anchor for +0x1F4; +0x294+0xBC reach by +0x200 quadrant 2..5",src/game/bases.rs
+game::bases,8077f910,fn_8077f910,translated,medium,"work/ghidra/rel-d_basesNP/export/8077f910_FUN_8077f910.c; manager +0x230/+0x22C; 800F57A0; 80100200; 80780BD0 -> +0x298..+0x2A0; state 4",src/game/bases.rs
+game::bases,8077fa10,fn_8077fa10,translated,medium,"work/ghidra/rel-d_basesNP/export/8077fa10_FUN_8077fa10.c; 807811D0; 80160AE0 0.1/10.0/1.0; FLT_EPSILON -> 8077E680 else 8077E760 or 80780010",src/game/bases.rs
+game::bases,8077fb20,fn_8077fb20,translated,high,"work/ghidra/rel-d_basesNP/export/8077fb20_FUN_8077fb20.c; +0x20C = 1; 807807E0; state 5",src/game/bases.rs
+game::bases,8077fd50,fn_8077fd50,translated,high,"work/ghidra/rel-d_basesNP/export/8077fd50_FUN_8077fd50.c; state 0xC; +0x18C = 0",src/game/bases.rs
+game::bases,8077fd80,fn_8077fd80,translated,high,"work/ghidra/rel-d_basesNP/export/8077fd80_FUN_8077fd80.c; 807806B0 + 80780510; state 6; +0x2D4 = -1",src/game/bases.rs

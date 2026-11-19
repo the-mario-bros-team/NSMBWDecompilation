@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,80275850,fn_80275850,translated,medium,"work/ghidra/main-gb/export/80275850_FUN_80275850.c; four-word header record, then 6/5-word records; vtable +0x18 single-stream or +0x1C two-stream loader",src/audio/seq.rs
+audio::seq,80276ce0,fn_80276ce0,translated,high,"work/ghidra/main-gb/export/80276ce0_FUN_80276ce0.c; info +0x18/+0x1C table, entry +0x14/+0x18 sub-table, two-word record",src/audio/seq.rs
+audio::seq,80276e00,fn_80276e00,translated,medium,"work/ghidra/main-gb/export/80276e00_FUN_80276e00.c; 5-word trie nodes, flag 0x10000, key bit 7-(k&7) of byte k>>3, strcmp at 0x802E1AB4",src/audio/seq.rs
+audio::seq,80276f50,fn_80276f50,translated,medium,"work/ghidra/main-gb/export/80276f50_FUN_80276f50.c; version<0x101 slot descriptor else entry +0x18..0x1F",src/audio/seq.rs
+audio::seq,80277090,fn_80277090,translated,high,"work/ghidra/main-gb/export/80277090_FUN_80277090.c; this!=0 and flag>0 frees via 0x802B9280",src/audio/seq.rs
+audio::seq,802770d0,fn_802770d0,translated,medium,"work/ghidra/main-gb/export/802770d0_FUN_802770d0.c; two loaders via 0x80275A80/0x80275BA0, sink reserve +0xC, chunked read +0x14, six-word record decides second stream",src/audio/seq.rs
+audio::seq,802776b0,fn_802776b0,translated,medium,"work/ghidra/main-gb/export/802776b0_FUN_802776b0.c; 6 vtable stores, 3 sentinel pairs, 3 0x801B2E20 mutex inits, 0x80268C60/0x80268D50 registration",src/audio/seq.rs
+audio::seq,802777d0,fn_802777d0,translated,high,"work/ghidra/main-gb/export/802777d0_FUN_802777d0.c; deleting destructor, guard plus 0x802B9280",src/audio/seq.rs
+audio::seq,80277810,fn_80277810,translated,high,"work/ghidra/main-gb/export/80277810_FUN_80277810.c; deleting destructor, byte-identical twin of 0x802777D0",src/audio/seq.rs
+audio::seq,80277870,fn_80277870,translated,high,"work/ghidra/main-gb/export/80277870_FUN_80277870.c; 0x80229030 list teardown then 0x802B9280 when flagged",src/audio/seq.rs
+audio::seq,802778f0,fn_802778f0,translated,high,"work/ghidra/main-gb/export/802778f0_FUN_802778f0.c; 0x80229030 list teardown then 0x802B9280 when flagged",src/audio/seq.rs
+audio::seq,80277970,fn_80277970,translated,high,"work/ghidra/main-gb/export/80277970_FUN_80277970.c; 0x80229030 list teardown then 0x802B9280 when flagged",src/audio/seq.rs
+audio::seq,802779d0,fn_802779d0,translated,high,"work/ghidra/main-gb/export/802779d0_FUN_802779d0.c; two vtable stores, 0x80268C60/0x80229190 unregister, three 0x80229030 destroys at +0x98/+0x70/+0x48",src/audio/seq.rs
+audio::seq,80277a90,fn_80277a90,translated,medium,"work/ghidra/main-gb/export/80277a90_FUN_80277a90.c; null handle guard then 0x802756B0 on the handle (argument inferred)",src/audio/seq.rs
+audio::seq,80277ab0,fn_80277ab0,translated,medium,"work/ghidra/main-gb/export/80277ab0_FUN_80277ab0.c; 0x8027B510 flag, 0x80277E90 builder, two 0x802757D0 info passes, budget vs word[4]*0xA000, 0x8027BBF0 cursor block",src/audio/seq.rs
+audio::seq,80277bc0,fn_80277bc0,translated,medium,"work/ghidra/main-gb/export/80277bc0_FUN_80277bc0.c; releases +0x40 bank entries, prunes three registries with 0x8026D9B0 and 0x8026F630, zeroes 0xC8 cursor",src/audio/seq.rs
+audio::seq,80277cf0,fn_80277cf0,translated,medium,"work/ghidra/main-gb/export/80277cf0_FUN_80277cf0.c; count*0x64 plus aligned records plus info blocks scaled 0x4B4/0x10B4/0x234/0xD0",src/audio/seq.rs
+audio::seq,80277e40,fn_80277e40,translated,medium,"work/ghidra/main-gb/export/80277e40_FUN_80277e40.c; info word[4] times 0xA000",src/audio/seq.rs
+audio::seq,80277e90,fn_80277e90,translated,medium,"work/ghidra/main-gb/export/80277e90_FUN_80277e90.c; 0x80278290 first pass, two id arrays, four 0x8026D860 block copies under mutexes, 0x8026F620 0xD0 block",src/audio/seq.rs
+audio::seq,802781c0,fn_802781c0,translated,high,"work/ghidra/main-gb/export/802781c0_FUN_802781c0.c; 0x8026FF00 vtable install and 0x80270000 cursor record with two alignment guards",src/audio/seq.rs
+audio::seq,80278290,fn_80278290,translated,medium,"work/ghidra/main-gb/export/80278290_FUN_80278290.c; count*100 slots at +0x40/+0x3C, per-slot 0x8027A560/0x8027AE20/0x802781C0/0x8027AFA0/0x8027AEB0",src/audio/seq.rs
+audio::seq,80278780,fn_80278780,translated,high,"work/ghidra/main-gb/export/80278780_FUN_80278780.c; array +0x40 plus index*100",src/audio/seq.rs
+audio::seq,80278790,fn_80278790,translated,medium,"work/ghidra/main-gb/export/80278790_FUN_80278790.c; bridge +0x1C slot 8, archive +0x10 slot 0xC, +0x18 table column 1, +0x14 table column 1 plus record word 1",src/audio/seq.rs
+audio::seq,80278920,fn_80278920,translated,medium,"work/ghidra/main-gb/export/80278920_FUN_80278920.c; bridge slot 0xC, archive slot 0x10, table columns 2 and record word 3",src/audio/seq.rs
+audio::seq,80279d50,fn_80279d50,translated,high,"work/ghidra/main-gb/export/80279d50_FUN_80279d50.c; +0x14 table slot non-zero test via (-u|u)>>31",src/audio/seq.rs
+audio::seq,8027a560,fn_8027a560,translated,high,"work/ghidra/main-gb/export/8027a560_FUN_8027a560.c; 25-word slot init with three sentinels, cursor 1/0x7FFFFFFF and two small-data defaults at 0x8042EAC8/0x8042EACC",src/audio/seq.rs
+audio::seq,8027ad90,fn_8027ad90,translated,high,"work/ghidra/main-gb/export/8027ad90_FUN_8027ad90.c; two manager-mutex sections, 0x80229190 inserts at +0x0C and +0x00, then 0x80267330",src/audio/seq.rs
+audio::seq,8027afa0,fn_8027afa0,translated,high,"work/ghidra/main-gb/export/8027afa0_FUN_8027afa0.c; back-pointer at +8 and 0x80229160 insert at +0x18 keyed by slot+0x1C",src/audio/seq.rs

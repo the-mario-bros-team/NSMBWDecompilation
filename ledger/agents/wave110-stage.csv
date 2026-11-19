@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b9a90,fn_800b9a90,translated,medium,"work/ghidra/main-gb/export/800b9a90_FUN_800b9a90.c; lift follow pass; rewrites each node +0x68..+0x7C",src/game/stage.rs
+game::stage,800bc2e0,fn_800bc2e0,translated,medium,"work/ghidra/main-gb/export/800bc2e0_FUN_800bc2e0.c; three animated lift nodes + 0xCC sub-objects; stores +0xC0",src/game/stage.rs
+game::stage,800bc5d0,fn_800bc5d0,translated,medium,"work/ghidra/main-gb/export/800bc5d0_FUN_800bc5d0.c; three plain lift nodes; stores +0xC0",src/game/stage.rs

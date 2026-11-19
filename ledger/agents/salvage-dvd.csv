@@ -1,0 +1,24 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801d00a0,fn_801d00a0,translated,medium,work/ghidra/main-gb/export/801d00a0_FUN_801d00a0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0190,fn_801d0190,translated,high,work/ghidra/main-gb/export/801d0190_FUN_801d0190.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0230,fn_801d0230,translated,high,work/ghidra/main-gb/export/801d0230_FUN_801d0230.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0330,fn_801d0330,translated,high,work/ghidra/main-gb/export/801d0330_FUN_801d0330.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0450,fn_801d0450,translated,high,work/ghidra/main-gb/export/801d0450_FUN_801d0450.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d04f0,fn_801d04f0,translated,high,work/ghidra/main-gb/export/801d04f0_FUN_801d04f0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0590,fn_801d0590,translated,medium,work/ghidra/main-gb/export/801d0590_FUN_801d0590.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0620,fn_801d0620,translated,medium,work/ghidra/main-gb/export/801d0620_FUN_801d0620.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d06a0,dvd_error_log_set_callback_801d06a0,translated,medium,work/ghidra/main-gb/export/801d06a0_FUN_801d06a0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0710,dvd_compare_disc_header_801d0710,translated,high,work/ghidra/main-gb/export/801d0710_FUN_801d0710.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0800,dvd_report_error_801d0800,translated,medium,work/ghidra/main-gb/export/801d0800_FUN_801d0800.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d08d0,dvd_set_error_reporter_801d08d0,translated,high,work/ghidra/main-gb/export/801d08d0_FUN_801d08d0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d0980,dvd_check_drive_authorization_801d0980,translated,medium,work/ghidra/main-gb/export/801d0980_FUN_801d0980.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d1b10,dvd_low_get_no_disc_buffer_sizes_801d1b10,translated,high,work/ghidra/main-gb/export/801d1b10_FUN_801d1b10.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d1d20,dvd_low_get_no_disc_open_partition_params_801d1d20,translated,medium,work/ghidra/main-gb/export/801d1d20_FUN_801d1d20.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d1fc0,dvd_low_close_partition_801d1fc0,translated,high,work/ghidra/main-gb/export/801d1fc0_FUN_801d1fc0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d2c20,dvd_low_read_disk_bca_801d2c20,translated,high,work/ghidra/main-gb/export/801d2c20_FUN_801d2c20.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d3250,dvd_cover_status_801d3250,translated,high,work/ghidra/main-gb/export/801d3250_FUN_801d3250.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d3280,dvd_low_prepare_cover_regs_801d3280,translated,high,work/ghidra/main-gb/export/801d3280_FUN_801d3280.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d33f0,dvd_low_prepare_status_regs_801d33f0,translated,high,work/ghidra/main-gb/export/801d33f0_FUN_801d33f0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d3560,dvd_low_prepare_control_regs_801d3560,translated,high,work/ghidra/main-gb/export/801d3560_FUN_801d3560.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d36e0,fn_801d36e0,translated,high,work/ghidra/main-gb/export/801d36e0_FUN_801d36e0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs
+runtime::dvd,801d36f0,fn_801d36f0,translated,high,work/ghidra/main-gb/export/801d36f0_FUN_801d36f0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/dvd.rs

@@ -1,0 +1,33 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802dcccc,fn_802dcccc,translated,medium,"work/ghidra/main-gb/export/802dcccc_FUN_802dcccc.c; saves f23..f31 at r11-0x48..-8; first five stfd, shared tail at 0x802DCCE0",src/runtime/cpp.rs
+runtime::cpp,802dcce0,fn_802dcce0,translated,medium,"work/ghidra/main-gb/export/802dcce0_FUN_802dcce0.c; saves f28..f31 at r11-0x20..-8 and returns through blr at 0x802DCCF0",src/runtime/cpp.rs
+runtime::cpp,802dcd18,fn_802dcd18,translated,medium,"work/ghidra/main-gb/export/802dcd18_FUN_802dcd18.c; restores f23..f31; exported C is only 'return;', target run read from raw lfd at 0x802DCD18..",src/runtime/cpp.rs
+runtime::cpp,802dcd2c,fn_802dcd2c,translated,medium,"work/ghidra/main-gb/export/802dcd2c_FUN_802dcd2c.c; restores f28..f31 at r11-0x20..-8 plus blr at 0x802DCD3C",src/runtime/cpp.rs
+runtime::cpp,802dcd40,fn_802dcd40,translated,medium,"work/ghidra/main-gb/export/802dcd40_FUN_802dcd40.c; __savegprlr_14, stw r14..r31 at r11-0x48..-4, shared blr at 0x802DCD88",src/runtime/cpp.rs
+runtime::cpp,802dcd44,fn_802dcd44,translated,medium,"work/ghidra/main-gb/export/802dcd44_FUN_802dcd44.c; __savegprlr_15, stw r15..r31 at r11-0x44..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd48,fn_802dcd48,translated,medium,"work/ghidra/main-gb/export/802dcd48_FUN_802dcd48.c; __savegprlr_16, stw r16..r31 at r11-0x40..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd4c,fn_802dcd4c,translated,medium,"work/ghidra/main-gb/export/802dcd4c_FUN_802dcd4c.c; __savegprlr_17, stw r17..r31 at r11-0x3C..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd50,fn_802dcd50,translated,medium,"work/ghidra/main-gb/export/802dcd50_FUN_802dcd50.c; __savegprlr_18, stw r18..r31 at r11-0x38..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd54,fn_802dcd54,translated,medium,"work/ghidra/main-gb/export/802dcd54_FUN_802dcd54.c; __savegprlr_19, stw r19..r31 at r11-0x34..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd58,fn_802dcd58,translated,medium,"work/ghidra/main-gb/export/802dcd58_FUN_802dcd58.c; __savegprlr_20, stw r20..r31 at r11-0x30..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd5c,fn_802dcd5c,translated,medium,"work/ghidra/main-gb/export/802dcd5c_FUN_802dcd5c.c; __savegprlr_21, stw r21..r31 at r11-0x2C..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd60,fn_802dcd60,translated,medium,"work/ghidra/main-gb/export/802dcd60_FUN_802dcd60.c; __savegprlr_22, stw r22..r31 at r11-0x28..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd64,fn_802dcd64,translated,medium,"work/ghidra/main-gb/export/802dcd64_FUN_802dcd64.c; __savegprlr_23, stw r23..r31 at r11-0x24..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd68,fn_802dcd68,translated,medium,"work/ghidra/main-gb/export/802dcd68_FUN_802dcd68.c; __savegprlr_24, stw r24..r31 at r11-0x20..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd6c,fn_802dcd6c,translated,medium,"work/ghidra/main-gb/export/802dcd6c_FUN_802dcd6c.c; __savegprlr_25, stw r25..r31 at r11-0x1C..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd70,fn_802dcd70,translated,medium,"work/ghidra/main-gb/export/802dcd70_FUN_802dcd70.c; __savegprlr_26, stw r26..r31 at r11-0x18..-4",src/runtime/cpp.rs
+runtime::cpp,802dcd74,fn_802dcd74,translated,medium,"work/ghidra/main-gb/export/802dcd74_FUN_802dcd74.c; __savegprlr_27, five stw plus blr at 0x802DCD88: the whole 24-byte routine",src/runtime/cpp.rs
+runtime::cpp,802dcd8c,fn_802dcd8c,translated,medium,"work/ghidra/main-gb/export/802dcd8c_FUN_802dcd8c.c; __restgprlr_14, lwz r14..r31 at r11-0x48..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcd90,fn_802dcd90,translated,medium,"work/ghidra/main-gb/export/802dcd90_FUN_802dcd90.c; __restgprlr_15, lwz r15..r31 at r11-0x44..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcd94,fn_802dcd94,translated,medium,"work/ghidra/main-gb/export/802dcd94_FUN_802dcd94.c; __restgprlr_16, lwz r16..r31 at r11-0x40..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcd98,fn_802dcd98,translated,medium,"work/ghidra/main-gb/export/802dcd98_FUN_802dcd98.c; __restgprlr_17, lwz r17..r31 at r11-0x3C..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcd9c,fn_802dcd9c,translated,medium,"work/ghidra/main-gb/export/802dcd9c_FUN_802dcd9c.c; __restgprlr_18, lwz r18..r31 at r11-0x38..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcda0,fn_802dcda0,translated,medium,"work/ghidra/main-gb/export/802dcda0_FUN_802dcda0.c; __restgprlr_19, lwz r19..r31 at r11-0x34..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcda4,fn_802dcda4,translated,medium,"work/ghidra/main-gb/export/802dcda4_FUN_802dcda4.c; __restgprlr_20, lwz r20..r31 at r11-0x30..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcda8,fn_802dcda8,translated,medium,"work/ghidra/main-gb/export/802dcda8_FUN_802dcda8.c; __restgprlr_21, lwz r21..r31 at r11-0x2C..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcdac,fn_802dcdac,translated,medium,"work/ghidra/main-gb/export/802dcdac_FUN_802dcdac.c; __restgprlr_22, lwz r22..r31 at r11-0x28..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcdb0,fn_802dcdb0,translated,medium,"work/ghidra/main-gb/export/802dcdb0_FUN_802dcdb0.c; __restgprlr_23, lwz r23..r31 at r11-0x24..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcdb4,fn_802dcdb4,translated,medium,"work/ghidra/main-gb/export/802dcdb4_FUN_802dcdb4.c; __restgprlr_24, lwz r24..r31 at r11-0x20..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcdb8,fn_802dcdb8,translated,medium,"work/ghidra/main-gb/export/802dcdb8_FUN_802dcdb8.c; __restgprlr_25, lwz r25..r31 at r11-0x1C..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcdbc,fn_802dcdbc,translated,medium,"work/ghidra/main-gb/export/802dcdbc_FUN_802dcdbc.c; __restgprlr_26, lwz r26..r31 at r11-0x18..-4; exported C is only 'return;'",src/runtime/cpp.rs
+runtime::cpp,802dcdc0,fn_802dcdc0,translated,medium,"work/ghidra/main-gb/export/802dcdc0_FUN_802dcdc0.c; __restgprlr_27, five lwz plus blr at 0x802DCDD4: the whole 24-byte routine",src/runtime/cpp.rs

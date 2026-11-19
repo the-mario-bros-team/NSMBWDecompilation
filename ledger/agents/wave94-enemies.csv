@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b20980,fn_80b20980,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b20980_FUN_80b20980.c; 48-byte argument-swapping forwarder through 0x802DCBFC",src/game/enemies.rs
+game::enemies,80b209b0,fn_80b209b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b209b0_FUN_80b209b0.c; second 48-byte argument-swapping forwarder of the same skeleton",src/game/enemies.rs
+game::enemies,80b209e0,fn_80b209e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b209e0_FUN_80b209e0.c; allocates 0x790 bytes for the block_help actor with class vtable 0x80B6BFC0 and three sub-objects",src/game/enemies.rs
+game::enemies,80b20de0,fn_80b20de0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b20de0_FUN_80b20de0.c; player-object probe 0x80064540 gates the stance update",src/game/enemies.rs
+game::enemies,80b20e60,fn_80b20e60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b20e60_FUN_80b20e60.c; resets the +0x534 helper object and returns 1",src/game/enemies.rs
+game::enemies,80b20e90,fn_80b20e90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b20e90_FUN_80b20e90.c; rebuilds +0x7C from +0xAC and the +0x100 angle triple then drives the +0x6B8 holder",src/game/enemies.rs
+game::enemies,80b20f80,fn_80b20f80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b20f80_FUN_80b20f80.c; binds g3d/block_help.brres and the block_help clip pair",src/game/enemies.rs
+game::enemies,80b210d0,fn_80b210d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b210d0_FUN_80b210d0.c; carried-object selector entering 0x80352A34 or 0x80352A74",src/game/enemies.rs
+game::enemies,80b214e0,fn_80b214e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b214e0_FUN_80b214e0.c; deleting destructor of the block_help actor",src/game/enemies.rs
+game::enemies,80b21600,fn_80b21600,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b21600_FUN_80b21600.c; 48-byte argument-swapping forwarder through 0x802DCBFC",src/game/enemies.rs
+game::enemies,80b21630,fn_80b21630,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b21630_FUN_80b21630.c; second 48-byte argument-swapping forwarder of the same skeleton",src/game/enemies.rs
+game::enemies,80b21660,fn_80b21660,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b21660_FUN_80b21660.c; allocates 0x600 bytes with class vtable 0x80B6C368 and the 0x80B330E0 animation holder",src/game/enemies.rs
+game::enemies,80b21ac0,fn_80b21ac0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b21ac0_FUN_80b21ac0.c; velocity tilt through 0x8012F810/0x8012F8E0 with the 10.0/4.0 divisor switch",src/game/enemies.rs
+game::enemies,80b21bd0,fn_80b21bd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b21bd0_FUN_80b21bd0.c; binds g3d/waterbubble.brres and the waterbubble clip pair",src/game/enemies.rs
+game::enemies,80b21cf0,fn_80b21cf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b21cf0_FUN_80b21cf0.c; rebuilds +0x7C and attaches it to the +0x544 holder",src/game/enemies.rs
+game::enemies,80b21df0,fn_80b21df0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b21df0_FUN_80b21df0.c; saves the +0xE8 velocity triple around the ground test and latches +0x5F8",src/game/enemies.rs
+game::enemies,80b21eb0,fn_80b21eb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b21eb0_FUN_80b21eb0.c; full destructor releasing +0x584 +0x544 +0x524 then the base actor",src/game/enemies.rs
+game::enemies,80b22050,fn_80b22050,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b22050_FUN_80b22050.c; deleting destructor of the waterbubble actor",src/game/enemies.rs
+game::enemies,80b22170,fn_80b22170,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b22170_FUN_80b22170.c; 48-byte argument-swapping forwarder through 0x802DCBFC",src/game/enemies.rs
+game::enemies,80b221a0,fn_80b221a0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b221a0_FUN_80b221a0.c; second 48-byte argument-swapping forwarder of the same skeleton",src/game/enemies.rs
+game::enemies,80b221d0,fn_80b221d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b221d0_FUN_80b221d0.c; allocates 0x558 bytes with class vtable 0x80B6C6A8 and the 0x8016A2F0 holder",src/game/enemies.rs
+game::enemies,80b222e0,fn_80b222e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b222e0_FUN_80b222e0.c; binds g3d/paipo.brres and the paipo clip",src/game/enemies.rs
+game::enemies,80b22540,fn_80b22540,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b22540_FUN_80b22540.c; fifteen-word effect block consumed by 0x800B8700 and started with 0x802DCA98",src/game/enemies.rs
+game::enemies,80b22680,fn_80b22680,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b22680_FUN_80b22680.c; clamps +0xB0 to the scene floor at 0x80429DD0+0x8FEC4 and enters 0x80B795F8",src/game/enemies.rs
+game::enemies,80b23200,fn_80b23200,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23200_FUN_80b23200.c; joint-2 transform promoted into the +0x5F4 world point",src/game/enemies.rs
+game::enemies,80b232b0,fn_80b232b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b232b0_FUN_80b232b0.c; forwards the record word at +4 to 0x80096CA0 and the +0x258 vtable slot",src/game/enemies.rs
+game::enemies,80b235d0,fn_80b235d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b235d0_FUN_80b235d0.c; sets +0x550 on the object resolved from the +0x5F0 handle",src/game/enemies.rs
+game::enemies,80b23610,fn_80b23610,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b23610_FUN_80b23610.c; sets +0x554 on the object resolved from the +0x5F0 handle",src/game/enemies.rs

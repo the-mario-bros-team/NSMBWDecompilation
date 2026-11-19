@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802dadd0,fn_802dadd0,translated,medium,"work/ghidra/main-gb/export/802dadd0_FUN_802dadd0.c; look-at angle recompute: 3x4 matrix at r1+0x20, basis matrix at r1+0x80, two PSMTXMultVec calls, PSVECNormalize, PSMTXInverse test, acos at +0x84 and atan2 at +0x88; GQR0 is 0 so the psq pairs are plain f32",src/runtime/cpp.rs
+runtime::cpp,802dcbfc,fn_802dcbfc,translated,medium,"work/ghidra/main-gb/export/802dcbfc_FUN_802dcbfc.c; pointer-to-member call thunk: lwz r0,0(r12) / lwz r11,4(r12) / lwz r12,8(r12) / add r3,r3,r0 / cmpwi r11,0 / two lwzx / mtctr + bctr",src/runtime/cpp.rs
+runtime::cpp,802dff64,fn_802dff64,translated,medium,"work/ghidra/main-gb/export/802dff64_FUN_802dff64.c; %a/%A hex-float formatter: decimal record via 802DE370, exponent via 802DFA74, nibble loop 0x802E01CC..0x802E0258, string table 0x802FD9C0, psq_st/psq_l pair is the f31 spill",src/runtime/cpp.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80723c30,fn_80723c30,translated,high,"work/ghidra/rel-d_basesNP/export/80723c30_FUN_80723c30.c; allocates 0x5B8 bytes; vtable 0x8080AC00; block_pow pairing inferred from 80723e00",src/game/bases.rs
+game::bases,80723e00,fn_80723e00,translated,high,"work/ghidra/rel-d_basesNP/export/80723e00_FUN_80723e00.c; g3d/block_pow.brres; pane block_pow; clip 0x8080ABD4",src/game/bases.rs
+game::bases,80726af0,fn_80726af0,translated,high,"work/ghidra/rel-d_basesNP/export/80726af0_FUN_80726af0.c; g3d/block_fly.brres; pane block_fly; parent 0x8016A000",src/game/bases.rs
+game::bases,80729fb0,fn_80729fb0,translated,high,"work/ghidra/rel-d_basesNP/export/80729fb0_FUN_80729fb0.c; allocates 0x438 bytes; vtable 0x8080B848; obj_door pairing inferred from 8072a020",src/game/bases.rs
+game::bases,8072a020,fn_8072a020,translated,high,"work/ghidra/rel-d_basesNP/export/8072a020_FUN_8072a020.c; g3d/obj_door.brres; pane obj_doorA",src/game/bases.rs
+game::bases,8072b8d0,fn_8072b8d0,translated,high,"work/ghidra/rel-d_basesNP/export/8072b8d0_FUN_8072b8d0.c; g3d/fire_rot_cannon.brres; panes fire_rot_cannon and fire_effect1x4_right; clip 0x80167420",src/game/bases.rs
+game::bases,8072c180,fn_8072c180,translated,high,"work/ghidra/rel-d_basesNP/export/8072c180_FUN_8072c180.c; pane fire_rot_cannon_gun; copies 60-byte transform to +0x4A8",src/game/bases.rs
+game::bases,8072c200,fn_8072c200,translated,medium,"work/ghidra/rel-d_basesNP/export/8072c200_FUN_8072c200.c; Wm_en_fireburner4ind/6ind and Wm_en_fireburner through virtual slot +0xA0; record layout inferred",src/game/bases.rs
+game::bases,8072cab0,fn_8072cab0,translated,high,"work/ghidra/rel-d_basesNP/export/8072cab0_FUN_8072cab0.c; g3d/lift_zen_chika_pori.brres; pane table 0x807CD500; clip time 0x807CD50C",src/game/bases.rs
+game::bases,8072cdb0,fn_8072cdb0,translated,high,"work/ghidra/rel-d_basesNP/export/8072cdb0_FUN_8072cdb0.c; allocates 19000 bytes; vtables 0x80309938/0x8080C794; 0x802DC9A0 arrays; motion 0x2290 x2; pairs with 8072cab0",src/game/bases.rs
+game::bases,8072d1c0,fn_8072d1c0,translated,high,"work/ghidra/rel-d_basesNP/export/8072d1c0_FUN_8072d1c0.c; allocates 0x510 bytes; vtables 0x80309938/0x8080C8E8; accessor +0x4E0",src/game/bases.rs
+game::bases,8072d270,fn_8072d270,translated,high,"work/ghidra/rel-d_basesNP/export/8072d270_FUN_8072d270.c; g3d/cube_kinoko.brres; pane table 0x807CD550; binder 0x8016A3A0",src/game/bases.rs
+game::bases,8072d7a0,fn_8072d7a0,translated,high,"work/ghidra/rel-d_basesNP/export/8072d7a0_FUN_8072d7a0.c; g3d/hikari.brres; pane hikari; clip time 0x807CD56C",src/game/bases.rs
+game::bases,8072e460,fn_8072e460,translated,high,"work/ghidra/rel-d_basesNP/export/8072e460_FUN_8072e460.c; g3d/houdai_rot.brres; pane houdai_rot; pairs with 807333c0",src/game/bases.rs
+game::bases,8072f250,fn_8072f250,translated,high,"work/ghidra/rel-d_basesNP/export/8072f250_FUN_8072f250.c; allocates 0x500 bytes; vtable 0x8080CE60; obj_dokan pairing inferred from 8072f430",src/game/bases.rs
+game::bases,8072f430,fn_8072f430,translated,high,"work/ghidra/rel-d_basesNP/export/8072f430_FUN_8072f430.c; g3d/obj_dokan.brres; panes obj_dokan_A/B; loop +0x3FC/+0x400 stride 0xC",src/game/bases.rs
+game::bases,80731550,fn_80731550,translated,high,"work/ghidra/rel-d_basesNP/export/80731550_FUN_80731550.c; g3d/houdai_rot_large.brres; pane houdai_rot_large",src/game/bases.rs
+game::bases,80731610,fn_80731610,translated,high,"work/ghidra/rel-d_basesNP/export/80731610_FUN_80731610.c; g3d/obj_dokan.brres; panes obj_dokan_A/B into +0x458/+0x498",src/game/bases.rs
+game::bases,807333c0,fn_807333c0,translated,high,"work/ghidra/rel-d_basesNP/export/807333c0_FUN_807333c0.c; allocates 0x660 bytes; vtables 0x8080D628/0x8080D708; houdai loader family",src/game/bases.rs
+game::bases,80733a40,fn_80733a40,translated,high,"work/ghidra/rel-d_basesNP/export/80733a40_FUN_80733a40.c; g3d/houdai_slope.brres; pane houdai_slope",src/game/bases.rs
+game::bases,80734950,fn_80734950,translated,high,"work/ghidra/rel-d_basesNP/export/80734950_FUN_80734950.c; allocates 0x540 bytes; vtable 0x8080D8F8; obj_Hgear pairing inferred from 80734d70",src/game/bases.rs
+game::bases,80734d70,fn_80734d70,translated,high,"work/ghidra/rel-d_basesNP/export/80734d70_FUN_80734d70.c; g3d/obj_Hgear.brres; pane table 0x8080D8C8 indexed by +0x514",src/game/bases.rs
+game::bases,80737f30,fn_80737f30,translated,high,"work/ghidra/rel-d_basesNP/export/80737f30_FUN_80737f30.c; g3d/ice.brres; pane ice_A1; clip time 0x807CDBE4",src/game/bases.rs
+game::bases,8073a2f0,fn_8073a2f0,translated,high,"work/ghidra/rel-d_basesNP/export/8073a2f0_FUN_8073a2f0.c; allocates 0x460 bytes; vtable 0x8080E490; penguin2 pairing inferred from 8073a360",src/game/bases.rs
+game::bases,8073a360,fn_8073a360,translated,high,"work/ghidra/rel-d_basesNP/export/8073a360_FUN_8073a360.c; g3d/penguin2.brres; pane penguin_glasses; finaliser 0x80064BD0",src/game/bases.rs
+game::bases,8073b020,fn_8073b020,translated,high,"work/ghidra/rel-d_basesNP/export/8073b020_FUN_8073b020.c; g3d/shinkai_light.brres; pane shinkai_light and obj_torch clip; accessor 0x8016A7F0",src/game/bases.rs
+game::bases,8073c2a0,fn_8073c2a0,translated,high,"work/ghidra/rel-d_basesNP/export/8073c2a0_FUN_8073c2a0.c; allocates 0x410 bytes; vtable 0x8080EB70; lift_turi_ashiba_wire pairing inferred from 8073c310",src/game/bases.rs
+game::bases,8073c310,fn_8073c310,translated,high,"work/ghidra/rel-d_basesNP/export/8073c310_FUN_8073c310.c; g3d/lift_turi_ashiba_wire.brres; single pane",src/game/bases.rs
+game::bases,8073c810,fn_8073c810,translated,high,"work/ghidra/rel-d_basesNP/export/8073c810_FUN_8073c810.c; g3d/poltergeist.brres; pane pol_shokudai",src/game/bases.rs
+game::bases,8073d340,fn_8073d340,translated,high,"work/ghidra/rel-d_basesNP/export/8073d340_FUN_8073d340.c; g3d/treasure_box.brres; shake/plain clip branches selected by +0x8E0",src/game/bases.rs

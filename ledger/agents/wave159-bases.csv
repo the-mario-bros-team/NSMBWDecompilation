@@ -1,0 +1,40 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807c39d0,fn_807c39d0,translated,high,"work/ghidra/rel-d_basesNP/export/807c39d0_FUN_807c39d0.c; gate +0x502, sets 502/504, clears 503/505, latch 4F0 from 8042B150",src/game/bases.rs
+game::bases,807c3a10,fn_807c3a10,translated,high,"work/ghidra/rel-d_basesNP/export/807c3a10_FUN_807c3a10.c; same gate, latch 4F0 = 0",src/game/bases.rs
+game::bases,807c3a40,fn_807c3a40,translated,high,"work/ghidra/rel-d_basesNP/export/807c3a40_FUN_807c3a40.c; same gate, 505 raised, latch 4F0 = 0",src/game/bases.rs
+game::bases,807c3a70,fn_807c3a70,translated,high,"work/ghidra/rel-d_basesNP/export/807c3a70_FUN_807c3a70.c; unguarded reset: 503=1, 505=0, 502=0",src/game/bases.rs
+game::bases,807c3a90,fn_807c3a90,translated,high,"work/ghidra/rel-d_basesNP/export/807c3a90_FUN_807c3a90.c; pair 2 gate 4FE, 4FE/500 set, 4FF/501 clear, 4EC latch",src/game/bases.rs
+game::bases,807c3ac0,fn_807c3ac0,translated,high,"work/ghidra/rel-d_basesNP/export/807c3ac0_FUN_807c3ac0.c; pair 2 variant with 501 raised",src/game/bases.rs
+game::bases,807c3af0,fn_807c3af0,translated,high,"work/ghidra/rel-d_basesNP/export/807c3af0_FUN_807c3af0.c; single store 4FF=1",src/game/bases.rs
+game::bases,807c3b00,fn_807c3b00,translated,high,"work/ghidra/rel-d_basesNP/export/807c3b00_FUN_807c3b00.c; getter lbz +0x500",src/game/bases.rs
+game::bases,807c3b10,fn_807c3b10,translated,high,"work/ghidra/rel-d_basesNP/export/807c3b10_FUN_807c3b10.c; opens 506/508/50E, clears 507/50F",src/game/bases.rs
+game::bases,807c3b30,fn_807c3b30,translated,high,"work/ghidra/rel-d_basesNP/export/807c3b30_FUN_807c3b30.c; raises 507 and 50F",src/game/bases.rs
+game::bases,807c3b40,fn_807c3b40,translated,high,"work/ghidra/rel-d_basesNP/export/807c3b40_FUN_807c3b40.c; raises 53D, clears 540",src/game/bases.rs
+game::bases,807c3b60,fn_807c3b60,translated,high,"work/ghidra/rel-d_basesNP/export/807c3b60_FUN_807c3b60.c; 80354E60 index -> +0x518 slot -> +0x238",src/game/bases.rs
+game::bases,807ac260,fn_807ac260,translated,high,"work/ghidra/rel-d_basesNP/export/807ac260_FUN_807ac260.c; vtable tail call slot +8",src/game/bases.rs
+game::bases,807ac270,fn_807ac270,translated,high,"work/ghidra/rel-d_basesNP/export/807ac270_FUN_807ac270.c; vtable tail call slot +8, byte-identical twin",src/game/bases.rs
+game::bases,807ac280,fn_807ac280,translated,high,"work/ghidra/rel-d_basesNP/export/807ac280_FUN_807ac280.c; vtable tail call slot +8, byte-identical twin",src/game/bases.rs
+game::bases,806a6a70,fn_806a6a70,translated,high,"work/ghidra/rel-d_basesNP/export/806a6a70_FUN_806a6a70.c; li 136/0 then tail 80162D50; export halt_baddata is the tail branch",src/game/bases.rs
+game::bases,806a6a80,fn_806a6a80,translated,high,"work/ghidra/rel-d_basesNP/export/806a6a80_FUN_806a6a80.c; two fmuls from +0x6FC record and +0xAC/+0xB0, tail 801611C0",src/game/bases.rs
+game::bases,806a6aa0,fn_806a6aa0,translated,medium,"work/ghidra/rel-d_basesNP/export/806a6aa0_FUN_806a6aa0.c; 806A6A70 -> vtable +0x718 slot 1C -> 806A8980 -> store through pointer",src/game/bases.rs
+game::bases,80606a10,fn_80606a10,translated,high,"work/ghidra/rel-d_basesNP/export/80606a10_FUN_80606a10.c; destructor wrapper, free when count > 0",src/game/bases.rs
+game::bases,80606a50,fn_80606a50,translated,high,"work/ghidra/rel-d_basesNP/export/80606a50_FUN_80606a50.c; destructor wrapper, byte-identical twin of 80606A10",src/game/bases.rs
+game::bases,80606a90,fn_80606a90,translated,high,"work/ghidra/rel-d_basesNP/export/80606a90_FUN_80606a90.c; 8015F9F0(+0x18) then free when count > 0, returns this",src/game/bases.rs
+game::bases,80608fd0,fn_80608fd0,translated,high,"work/ghidra/rel-d_basesNP/export/80608fd0_FUN_80608fd0.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,80609010,fn_80609010,translated,high,"work/ghidra/rel-d_basesNP/export/80609010_FUN_80609010.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,80609050,fn_80609050,translated,high,"work/ghidra/rel-d_basesNP/export/80609050_FUN_80609050.c; same destructor family as 80606A90",src/game/bases.rs
+game::bases,8061d790,fn_8061d790,translated,high,"work/ghidra/rel-d_basesNP/export/8061d790_FUN_8061d790.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,8061d7d0,fn_8061d7d0,translated,high,"work/ghidra/rel-d_basesNP/export/8061d7d0_FUN_8061d7d0.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,8061d810,fn_8061d810,translated,high,"work/ghidra/rel-d_basesNP/export/8061d810_FUN_8061d810.c; same destructor family as 80606A90",src/game/bases.rs
+game::bases,80668f60,fn_80668f60,translated,high,"work/ghidra/rel-d_basesNP/export/80668f60_FUN_80668f60.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,80668fa0,fn_80668fa0,translated,high,"work/ghidra/rel-d_basesNP/export/80668fa0_FUN_80668fa0.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,80668fe0,fn_80668fe0,translated,high,"work/ghidra/rel-d_basesNP/export/80668fe0_FUN_80668fe0.c; same destructor family as 80606A90",src/game/bases.rs
+game::bases,80757d30,fn_80757d30,translated,high,"work/ghidra/rel-d_basesNP/export/80757d30_FUN_80757d30.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,80757d70,fn_80757d70,translated,high,"work/ghidra/rel-d_basesNP/export/80757d70_FUN_80757d70.c; same destructor family as 80606A10",src/game/bases.rs
+game::bases,80757db0,fn_80757db0,translated,high,"work/ghidra/rel-d_basesNP/export/80757db0_FUN_80757db0.c; same destructor family as 80606A90",src/game/bases.rs
+game::bases,8071fb10,fn_8071fb10,translated,high,"work/ghidra/rel-d_basesNP/export/8071fb10_FUN_8071fb10.c; lwzu +0x6B8 then vtable slot +0x14 tail call",src/game/bases.rs
+game::bases,8071fb40,fn_8071fb40,translated,high,"work/ghidra/rel-d_basesNP/export/8071fb40_FUN_8071fb40.c; 8007F950(+0x534), returns 1",src/game/bases.rs
+game::bases,8071fb70,fn_8071fb70,translated,medium,"work/ghidra/rel-d_basesNP/export/8071fb70_FUN_8071fb70.c; position + i16 angles -> 801C0BD0 transform, 8016EDD0, three 8016A1xx updates",src/game/bases.rs
+game::bases,80699f80,fn_80699f80,translated,high,"work/ghidra/rel-d_basesNP/export/80699f80_FUN_80699f80.c; height outside D94/D98 band returns 1",src/game/bases.rs
+game::bases,80699fb0,fn_80699fb0,translated,high,"work/ghidra/rel-d_basesNP/export/80699fb0_FUN_80699fb0.c; height inside D9C/DA0 band returns 1",src/game/bases.rs
+game::bases,80699fe0,fn_80699fe0,translated,medium,"work/ghidra/rel-d_basesNP/export/80699fe0_FUN_80699fe0.c; timer +0xDDC scaled/clamped, 800B2EE0(100) roll, height split 0/1/2",src/game/bases.rs

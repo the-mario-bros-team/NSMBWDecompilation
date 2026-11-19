@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80119240,fn_80119240,translated,medium,"work/ghidra/main-gb/export/80119240_FUN_80119240.c; tile visibility/refresh pass; 3 groups x 9 records x 2 clips; nearest tile posts sound 0x2CD",src/game/worldmap.rs
+game::worldmap,801194a0,fn_801194a0,translated,low,"work/ghidra/main-gb/export/801194a0_FUN_801194a0.c; rebuilds the rail matrix at +0x5FC from the first non-empty cell of column +0x5F8; four 0x801C0BD0 operand triples are dropped by the export",src/game/worldmap.rs
+game::worldmap,80119c50,fn_80119c50,translated,medium,"work/ghidra/main-gb/export/80119c50_FUN_80119c50.c; on-screen tile binder; clears +0x14 on the 27 class records plus +0x430; walks the 66 x 34 grid",src/game/worldmap.rs

@@ -1,0 +1,21 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801a9af0,fn_801a9af0,translated,high,"work/ghidra/main-gb/export/801a9af0_FUN_801a9af0.c; stores JAS alloc/free hooks at r13-0x61C0/0x61BC",src/audio/ax.rs
+audio::ax,801a9b00,fn_801a9b00,translated,high,"work/ghidra/main-gb/export/801a9b00_FUN_801a9b00.c; reads both JAS hooks through two out pointers",src/audio/ax.rs
+audio::ax,801a9b80,fn_801a9b80,translated,high,"work/ghidra/main-gb/export/801a9b80_FUN_801a9b80.c; raw 7C7603A6 4E800020 = mtspr 22 (DEC),r3; blr",src/audio/ax.rs
+audio::ax,801a9c20,fn_801a9c20,translated,high,"work/ghidra/main-gb/export/801a9c20_FUN_801a9c20.c; mffs f31 + stfd/lwz r3,0xC(r1); returns the FPSCR image",src/audio/ax.rs
+audio::ax,801a9c40,fn_801a9c40,translated,high,"work/ghidra/main-gb/export/801a9c40_FUN_801a9c40.c; stw r3 into the double low word + mtfsf 255,f31; writes the FPSCR",src/audio/ax.rs
+audio::ax,801a9ca0,fn_801a9ca0,translated,medium,"work/ghidra/main-gb/export/801a9ca0_FUN_801a9ca0.c; raw 7C79E3A6 = mtspr 921,r3; SPR 921 has no documented mnemonic",src/audio/ax.rs
+audio::ax,801a9ee0,fn_801a9ee0,translated,medium,"work/ghidra/main-gb/export/801a9ee0_FUN_801a9ee0.c; OSGetConsoleType: board halfword selects the plain/kind/dev tables",src/audio/ax.rs
+audio::ax,801aa140,fn_801aa140,translated,medium,"work/ghidra/main-gb/export/801aa140_FUN_801aa140.c; MEM1 arena dcbst pass + 0x40000-byte dcbf tail",src/audio/ax.rs
+audio::ax,801aa320,fn_801aa320,translated,medium,"work/ghidra/main-gb/export/801aa320_FUN_801aa320.c; MEM2 twin of 801aa140 incl. the 0x8038E530 step",src/audio/ax.rs
+audio::ax,801aa550,fn_801aa550,translated,medium,"work/ghidra/main-gb/export/801aa550_FUN_801aa550.c; console/firmware/memory/arena banner, literals quoted from 0x80332300..",src/audio/ax.rs
+audio::ax,801aad60,fn_801aad60,translated,medium,"work/ghidra/main-gb/export/801aad60_FUN_801aad60.c; OSDBIntegrator copy + 15 exception vector slots + handler table at 0x80332688",src/audio/ax.rs
+audio::ax,801abf60,fn_801abf60,translated,medium,"work/ghidra/main-gb/export/801abf60_FUN_801abf60.c; 0xCD800180/1CC/1D0 writes with bus-clock delay loops",src/audio/ax.rs
+audio::ax,801acd30,fn_801acd30,translated,high,"work/ghidra/main-gb/export/801acd30_FUN_801acd30.c; addi r5,r3,0 + b 0x801ACC00 tail call",src/audio/ax.rs
+audio::ax,801ad070,fn_801ad070,translated,medium,"work/ghidra/main-gb/export/801ad070_FUN_801ad070.c; context dump: GPR pairs, LR/CR, SRR, GQR, FPR/PSF via scratch context",src/audio/ax.rs
+audio::ax,801adba0,fn_801adba0,translated,medium,"work/ghidra/main-gb/export/801adba0_FUN_801adba0.c; argv packer: strings below a 0x2000 scratch, offsets published at base+8",src/audio/ax.rs
+audio::ax,801ade80,fn_801ade80,translated,medium,"work/ghidra/main-gb/export/801ade80_FUN_801ade80.c; argv packer that stores even-indexed wide entries as hex text",src/audio/ax.rs
+audio::ax,801aefa0,fn_801aefa0,translated,medium,"work/ghidra/main-gb/export/801aefa0_FUN_801aefa0.c; sprintf into a 36-byte buffer, then 7-arg call to 0x801AE840",src/audio/ax.rs
+audio::ax,801af4b0,fn_801af4b0,translated,medium,"work/ghidra/main-gb/export/801af4b0_FUN_801af4b0.c; fills a GXRenderModeObj record, calls 0x801BD280 and 0x801BD950(0,0,640,480)",src/audio/ax.rs
+audio::ax,801af5d0,fn_801af5d0,translated,high,"work/ghidra/main-gb/export/801af5d0_FUN_801af5d0.c; 4 bytes, blr",src/audio/ax.rs
+audio::ax,801afef0,fn_801afef0,translated,medium,"work/ghidra/main-gb/export/801afef0_FUN_801afef0.c; flag-word LZ expander: literal bytes vs. 12-bit distance back references",src/audio/ax.rs

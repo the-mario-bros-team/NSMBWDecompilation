@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a23180,fn_80a23180,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a23180_FUN_80a23180.c; deleting destructor: 0x8015F800 then 0x802B9280 for a positive flag",src/game/enemies.rs
+game::enemies,80a232a0,fn_80a232a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a232a0_FUN_80a232a0.c; argument-swapping forwarder to 0x802DCBFC; hidden r12 receiver not modelled",src/game/enemies.rs
+game::enemies,80a232d0,fn_80a232d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a232d0_FUN_80a232d0.c; argument-swapping forwarder to 0x802DCBFC; hidden r12 receiver not modelled",src/game/enemies.rs
+game::enemies,80a23300,fn_80a23300,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a23300_FUN_80a23300.c; allocates 0x700; vtable 0x80B39D9C; holders +0x534/+0x698",src/game/enemies.rs
+game::enemies,80a23740,fn_80a23740,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a23740_FUN_80a23740.c; frame step: model seat then retire unless both owner-state compares return zero",src/game/enemies.rs
+game::enemies,80a23850,fn_80a23850,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a23850_FUN_80a23850.c; release: pops the +0x6BC render request from +0x698 and advances +0x534",src/game/enemies.rs
+game::enemies,80a238b0,fn_80a238b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a238b0_FUN_80a238b0.c; Wm_en_burst_s effect id 0x80B2B7F0[+0x6F8] and sound 0x289",src/game/enemies.rs
+game::enemies,80a23ec0,fn_80a23ec0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a23ec0_FUN_80a23ec0.c; deleting destructor: 0x8015F800 then 0x802B9280 for a positive flag",src/game/enemies.rs
+game::enemies,80a23fe0,fn_80a23fe0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a23fe0_FUN_80a23fe0.c; argument-swapping forwarder to 0x802DCBFC; hidden r12 receiver not modelled",src/game/enemies.rs
+game::enemies,80a24010,fn_80a24010,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a24010_FUN_80a24010.c; argument-swapping forwarder to 0x802DCBFC; hidden r12 receiver not modelled",src/game/enemies.rs
+game::enemies,80a24040,fn_80a24040,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a24040_FUN_80a24040.c; allocates 0x720; vtable 0x80B3A154; holders +0x534/+0x698",src/game/enemies.rs
+game::enemies,80a24490,fn_80a24490,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a24490_FUN_80a24490.c; +0x698 matrix placement (x-8.0 -(16.0+y) z) with the negated +0x104 roll",src/game/enemies.rs
+game::enemies,80a24500,fn_80a24500,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a24500_FUN_80a24500.c; +0x714 turn band step with the 0..0x100 clamp",src/game/enemies.rs
+game::enemies,80a24580,fn_80a24580,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a24580_FUN_80a24580.c; adds or subtracts the band on the roll and flips the +0x716 side",src/game/enemies.rs
+game::enemies,80a24600,fn_80a24600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a24600_FUN_80a24600.c; +0x67D vanish: 0x80088030 record then 0x80064D10 retire",src/game/enemies.rs
+game::enemies,80a248e0,fn_80a248e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a248e0_FUN_80a248e0.c; item/clip state step; records 0x80B6FA28 and 0x80B6FA68",src/game/enemies.rs
+game::enemies,80a24f20,fn_80a24f20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a24f20_FUN_80a24f20.c; deleting destructor: 0x8015F800 then 0x802B9280 for a positive flag",src/game/enemies.rs
+game::enemies,80a25040,fn_80a25040,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a25040_FUN_80a25040.c; argument-swapping forwarder to 0x802DCBFC; hidden r12 receiver not modelled",src/game/enemies.rs
+game::enemies,80a25070,fn_80a25070,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a25070_FUN_80a25070.c; argument-swapping forwarder to 0x802DCBFC; hidden r12 receiver not modelled",src/game/enemies.rs
+game::enemies,80a250a0,fn_80a250a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a250a0_FUN_80a250a0.c; allocates 0x940; vtables 0x80B3A828/0x80B3A53C; eleven holders",src/game/enemies.rs
+game::enemies,80a251c0,fn_80a251c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a251c0_FUN_80a251c0.c; deleting destructor of 0x80B3A828: both holders 0x80095130 then 0x80162920",src/game/enemies.rs
+game::enemies,80a256d0,fn_80a256d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a256d0_FUN_80a256d0.c; release: pops the +0x930 render request from +0x698 and advances +0x534",src/game/enemies.rs
+game::enemies,80a25730,fn_80a25730,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a25730_FUN_80a25730.c; binds g3d/obj_coin.brres node obj_coin_blue into model +0x8EC and holder +0x8F0",src/game/enemies.rs
+game::enemies,80a257e0,fn_80a257e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a257e0_FUN_80a257e0.c; credits +0x3E8 of the player whose +0x3D0 matches the coin owner +0x938",src/game/enemies.rs
+game::enemies,80a258a0,fn_80a258a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a258a0_FUN_80a258a0.c; 0x80081BA0 scene gate; +0x6A0 = 0x2F; 0x800777B0 position submit",src/game/enemies.rs
+game::enemies,80a25950,fn_80a25950,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a25950_FUN_80a25950.c; +0x93C = 0x1C; seeds 1.0/-8.0/0.0/-0.1875/3.0; sound 0x237",src/game/enemies.rs
+game::enemies,80a25a20,fn_80a25a20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a25a20_FUN_80a25a20.c; yaw +0x800; pays out through 0x80060250/0x800E20A0/0x80162510",src/game/enemies.rs
+game::enemies,80a25db0,fn_80a25db0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a25db0_FUN_80a25db0.c; deleting destructor: 0x8015F800 then 0x802B9280 for a positive flag",src/game/enemies.rs
+game::enemies,80a25ed0,fn_80a25ed0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a25ed0_FUN_80a25ed0.c; argument-swapping forwarder to 0x802DCBFC; hidden r12 receiver not modelled",src/game/enemies.rs
+game::enemies,80a25f30,fn_80a25f30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a25f30_FUN_80a25f30.c; allocates 0x540; vtable 0x80B3AC00; render-list holder +0x524",src/game/enemies.rs

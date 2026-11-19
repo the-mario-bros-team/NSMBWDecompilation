@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80669dc0,fn_80669dc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80669dc0_FUN_80669dc0.c; rider seat claim gate; ready byte +0x38C and seat virtual +0x6C",src/game/bases.rs
+game::bases,80669f70,fn_80669f70,translated,high,"work/ghidra/rel-d_basesNP/export/80669f70_FUN_80669f70.c; state leave or detach through interface +0x454",src/game/bases.rs
+game::bases,8066bb30,fn_8066bb30,translated,high,"work/ghidra/rel-d_basesNP/export/8066bb30_FUN_8066bb30.c; key actor destructor; 0x8015F800 and optional 0x802B9280",src/game/bases.rs
+game::bases,8066bc70,fn_8066bc70,translated,high,"work/ghidra/rel-d_basesNP/export/8066bc70_FUN_8066bc70.c; five-link +0x30 child walk with slot +0x0C test",src/game/bases.rs
+game::bases,8066bd50,fn_8066bd50,translated,high,"work/ghidra/rel-d_basesNP/export/8066bd50_FUN_8066bd50.c; colon-suffix class-name compare",src/game/bases.rs
+game::bases,8066bea0,fn_8066bea0,translated,medium,"work/ghidra/rel-d_basesNP/export/8066bea0_FUN_8066bea0.c; fall/wait contact handler; target +0x454/+0x458 and sound 0x56",src/game/bases.rs
+game::bases,8066bf80,fn_8066bf80,translated,high,"work/ghidra/rel-d_basesNP/export/8066bf80_FUN_8066bf80.c; in-place constructor; vtable 0x807E92D0 and 0x5F4 callback block",src/game/bases.rs
+game::bases,8066c2c0,fn_8066c2c0,translated,high,"work/ghidra/rel-d_basesNP/export/8066c2c0_FUN_8066c2c0.c; leave body; +0x394 slot +0x10 and class slot +0x288",src/game/bases.rs
+game::bases,8066c670,fn_8066c670,translated,medium,"work/ghidra/rel-d_basesNP/export/8066c670_FUN_8066c670.c; holder +0x544 slot +0x14 then return 1",src/game/bases.rs
+game::bases,8066c6a0,fn_8066c6a0,translated,medium,"work/ghidra/rel-d_basesNP/export/8066c6a0_FUN_8066c6a0.c; handle +0x5AC slot +0x50 then copy 0x5B0 into +0xAC",src/game/bases.rs
+game::bases,8066c720,fn_8066c720,translated,high,"work/ghidra/rel-d_basesNP/export/8066c720_FUN_8066c720.c; effect position x,y+const,z",src/game/bases.rs
+game::bases,8066c750,fn_8066c750,translated,high,"work/ghidra/rel-d_basesNP/export/8066c750_FUN_8066c750.c; one-shot sound 0x300 latched by +0x5F2",src/game/bases.rs
+game::bases,8066c7f0,fn_8066c7f0,translated,high,"work/ghidra/rel-d_basesNP/export/8066c7f0_FUN_8066c7f0.c; scale/spin reset and collision record 0x8008C330",src/game/bases.rs
+game::bases,8066c870,fn_8066c870,translated,medium,"work/ghidra/rel-d_basesNP/export/8066c870_FUN_8066c870.c; Wm_ob_keyfall and Wm_ob_keywait plus sound 0x2FE",src/game/bases.rs
+game::bases,8066cae0,fn_8066cae0,translated,high,"work/ghidra/rel-d_basesNP/export/8066cae0_FUN_8066cae0.c; height clamp +0x594 and spin step 0x400",src/game/bases.rs
+game::bases,8066cb40,fn_8066cb40,translated,medium,"work/ghidra/rel-d_basesNP/export/8066cb40_FUN_8066cb40.c; arm body; Wm_ob_keyget01 and sound 0x2FF",src/game/bases.rs
+game::bases,8066cc90,fn_8066cc90,translated,high,"work/ghidra/rel-d_basesNP/export/8066cc90_FUN_8066cc90.c; phase 1 latch on target band",src/game/bases.rs
+game::bases,8066cd70,fn_8066cd70,translated,high,"work/ghidra/rel-d_basesNP/export/8066cd70_FUN_8066cd70.c; Wm_ob_keyget02 plus timer and colour copy",src/game/bases.rs
+game::bases,8066d410,fn_8066d410,translated,high,"work/ghidra/rel-d_basesNP/export/8066d410_FUN_8066d410.c; 0x590 actor destructor",src/game/bases.rs
+game::bases,8066d590,fn_8066d590,translated,high,"work/ghidra/rel-d_basesNP/export/8066d590_FUN_8066d590.c; 0x590 allocation; vtable 0x807E9910 and +0x460 string object",src/game/bases.rs
+game::bases,8066d800,fn_8066d800,translated,high,"work/ghidra/rel-d_basesNP/export/8066d800_FUN_8066d800.c; four spawns and 0x1C-stride table 0x807E97D8",src/game/bases.rs
+game::bases,8066daf0,fn_8066daf0,translated,high,"work/ghidra/rel-d_basesNP/export/8066daf0_FUN_8066daf0.c; activity gate with state 0x17 and flag bit 4",src/game/bases.rs
+game::bases,8066dcf0,fn_8066dcf0,translated,medium,"work/ghidra/rel-d_basesNP/export/8066dcf0_FUN_8066dcf0.c; sprite ids 0x314..0x31A pushed through 0x80429D64",src/game/bases.rs
+game::bases,8066e2a0,fn_8066e2a0,translated,high,"work/ghidra/rel-d_basesNP/export/8066e2a0_FUN_8066e2a0.c; one bit of 0x80429CA8",src/game/bases.rs
+game::bases,8066e2d0,fn_8066e2d0,translated,high,"work/ghidra/rel-d_basesNP/export/8066e2d0_FUN_8066e2d0.c; sound 0x73 for each masked player slot",src/game/bases.rs
+game::bases,8066e350,fn_8066e350,translated,high,"work/ghidra/rel-d_basesNP/export/8066e350_FUN_8066e350.c; per-variant height from 0x807E97DC or 0x807E97E0",src/game/bases.rs
+game::bases,8066e3a0,fn_8066e3a0,translated,high,"work/ghidra/rel-d_basesNP/export/8066e3a0_FUN_8066e3a0.c; 0x69 and 0x68 actor list walks",src/game/bases.rs
+game::bases,8066f9d0,fn_8066f9d0,translated,high,"work/ghidra/rel-d_basesNP/export/8066f9d0_FUN_8066f9d0.c; 0x8001CD10 and 0x8005CA50(0x80429C94,1)",src/game/bases.rs
+game::bases,8066fc10,fn_8066fc10,translated,high,"work/ghidra/rel-d_basesNP/export/8066fc10_FUN_8066fc10.c; one bit of 0x80429CA8 (tail copy)",src/game/bases.rs
+game::bases,8066fd60,fn_8066fd60,translated,medium,"work/ghidra/rel-d_basesNP/export/8066fd60_FUN_8066fd60.c; timer +0x3D0 then sort pass 0x8066FA10",src/game/bases.rs

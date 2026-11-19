@@ -1,0 +1,20 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::menu,801704d0,fn_801704d0,translated,medium,"work/ghidra/main-gb/export/801704d0_FUN_801704d0.c; lock, allocate size+0x20, fill the record and append it to the list at +8",src/ui/menu.rs
+ui::menu,801707e0,fn_801707e0,translated,medium,"work/ghidra/main-gb/export/801707e0_FUN_801707e0.c; call 0x80170670 with the 8x8 literals then store the fourth argument at +0x24",src/ui/menu.rs
+ui::menu,80170980,fn_80170980,translated,medium,"work/ghidra/main-gb/export/80170980_FUN_80170980.c; scale a 3-float vector by SDA2-0x5328 / length above the SDA2-0x532C threshold",src/ui/menu.rs
+ui::menu,80170c50,fn_80170c50,translated,medium,"work/ghidra/main-gb/export/80170c50_FUN_80170c50.c; base constructor, vtable 0x80329C28, three cleared words and one of two SDA2 defaults",src/ui/menu.rs
+ui::menu,80172370,fn_80172370,translated,medium,"work/ghidra/main-gb/export/80172370_FUN_80172370.c; clear 0x80377DF8 then call vtable slot +0x5C with the node payload",src/ui/menu.rs
+ui::menu,80172660,fn_80172660,translated,high,"work/ghidra/main-gb/export/80172660_FUN_80172660.c; one store at +0x2C",src/ui/menu.rs
+ui::menu,80172910,fn_80172910,translated,medium,"work/ghidra/main-gb/export/80172910_FUN_80172910.c; project the point and compare it with the pane bounds; four literal comparisons",src/ui/menu.rs
+ui::menu,801734f0,fn_801734f0,translated,high,"work/ghidra/main-gb/export/801734f0_FUN_801734f0.c; empty four-byte body",src/ui/menu.rs
+ui::menu,80173500,fn_80173500,translated,high,"work/ghidra/main-gb/export/80173500_FUN_80173500.c; one stfs of the narrowed f64 at +4",src/ui/menu.rs
+ui::menu,80173870,fn_80173870,translated,medium,"work/ghidra/main-gb/export/80173870_FUN_80173870.c; four-byte return, the caller dereferences the returned r3",src/ui/menu.rs
+ui::menu,80174ae0,fn_80174ae0,translated,high,"work/ghidra/main-gb/export/80174ae0_FUN_80174ae0.c; empty four-byte body",src/ui/menu.rs
+ui::menu,80174de0,fn_80174de0,translated,high,"work/ghidra/main-gb/export/80174de0_thunk_FUN_80191250.c; four-byte branch to 0x80191250",src/ui/menu.rs
+ui::menu,80175510,fn_80175510,translated,medium,"work/ghidra/main-gb/export/80175510_FUN_80175510.c; build the pane tree, many small allocations and three named pane groups",src/ui/menu.rs
+ui::menu,80175f70,fn_80175f70,translated,medium,"work/ghidra/main-gb/export/80175f70_FUN_80175f70.c; first-run setup of the overlay panes, widgets and scroll timer",src/ui/menu.rs
+ui::menu,80178b10,fn_80178b10,translated,high,"work/ghidra/main-gb/export/80178b10_FUN_80178b10.c; manager query then fn_801738f0",src/ui/menu.rs
+ui::menu,8017da20,fn_8017da20,translated,medium,"work/ghidra/main-gb/export/8017da20_FUN_8017da20.c; loop over the document records, match the name and fill one 0x10-byte slot",src/ui/menu.rs
+ui::menu,8017dcc0,fn_8017dcc0,translated,medium,"work/ghidra/main-gb/export/8017dcc0_FUN_8017dcc0.c; RLMC, RLTS, RLTP and RLIM tag evaluation for one animation channel",src/ui/menu.rs
+ui::menu,8017ea10,fn_8017ea10,translated,high,"work/ghidra/main-gb/export/8017ea10_FUN_8017ea10.c; four quad vertices with the 0,1,3,2 colour order and four row offsets",src/ui/menu.rs
+ui::menu,8017ef70,fn_8017ef70,translated,high,"work/ghidra/main-gb/export/8017ef70_FUN_8017ef70.c; scale the alpha bytes of four colours then call fn_8017ea10",src/ui/menu.rs

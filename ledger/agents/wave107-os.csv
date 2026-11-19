@@ -1,0 +1,9 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80250e70,fn_80250e70,translated,medium,work/ghidra/main-gb/export/80250e70_FUN_80250e70.c; 0x05-byte command walk; three vertex-format kernels 0x80254A70/0x80255750/0x80256350; three hook slots,src/runtime/os.rs
+runtime::os,80251440,fn_80251440,translated,medium,work/ghidra/main-gb/export/80251440_FUN_80251440.c; 0x04/0x05/0x0C command walk; four-source weighted matrix blend; GQR arms collapsed to f32,src/runtime/os.rs
+runtime::os,80251930,fn_80251930,translated,low,work/ghidra/main-gb/export/80251930_FUN_80251930.c; three-channel emit; matrix build plus normalise; five-argument vtable +0x14 publish; several callees print no arguments,src/runtime/os.rs
+runtime::os,802529f0,fn_802529f0,translated,high,work/ghidra/main-gb/export/802529f0_FUN_802529f0.c; MSL qsort over 12-byte records with the comparator in a stack word; forwards to 0x80252FB0,src/runtime/os.rs
+runtime::os,80252fb0,fn_80252fb0,translated,high,work/ghidra/main-gb/export/80252fb0_FUN_80252fb0.c; MSL qsort loop over 12-byte records; rotating counter sda(-0x5c60); 0x80253570 shuffle,src/runtime/os.rs
+runtime::os,80259760,fn_80259760,translated,high,work/ghidra/main-gb/export/80259760_FUN_80259760.c; MSL qsort over 4-byte words with the comparator in a stack word; forwards to 0x80259AE0,src/runtime/os.rs
+runtime::os,80259ae0,fn_80259ae0,translated,high,work/ghidra/main-gb/export/80259ae0_FUN_80259ae0.c; MSL qsort loop over 4-byte words; rotating counter sda(-0x5c50); 0x80259E60 shuffle,src/runtime/os.rs
+runtime::os,8025ca20,fn_8025ca20,translated,medium,work/ghidra/main-gb/export/8025ca20_FUN_8025ca20.c; flag-masked block layout; three variant loops; 0x8025C030 construction plus 0x8025E060 fill,src/runtime/os.rs

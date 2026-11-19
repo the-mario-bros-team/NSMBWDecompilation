@@ -1,0 +1,21 @@
+module,address,name,status,confidence,evidence,rust_file
+game,8014ed00,wm_reset_attachment_phase,translated,high,"work/ghidra/main-gb/export/8014ed00_FUN_8014ed00.c; stw 0,+0x151C then lwzu r12,[wm+0x14E0] (r3 becomes wm+0x14E0), ctr = [r12+0x18], bcctr. r4 is forwarded untouched from the caller, so the body's vcall1(wm+0x14E0,0x18,event) is exact",src/game/interaction.rs
+game,8014ed90,wm_attach_target,translated,high,work/ghidra/main-gb/export/8014ed90_FUN_8014ed90.c,src/game/interaction.rs
+game,8014eef0,wm_confirm_if_target,translated,high,work/ghidra/main-gb/export/8014eef0_FUN_8014eef0.c,src/game/interaction.rs
+game,8014efb0,wm_commit_target,translated,high,work/ghidra/main-gb/export/8014efb0_FUN_8014efb0.c,src/game/interaction.rs
+game,8014f160,wm_settle_after_attach,translated,high,work/ghidra/main-gb/export/8014f160_FUN_8014f160.c,src/game/interaction.rs
+game,80142580,wm_motion_table,translated,high,work/ghidra/main-gb/export/80142580_FUN_80142580.c,src/game/worldmap.rs
+game,80144030,wm_update_held_item,translated,medium,work/ghidra/main-gb/export/80144030_FUN_80144030.c,src/game/worldmap.rs
+game,80145ac0,wm_set_controller_slot,translated,high,work/ghidra/main-gb/export/80145ac0_FUN_80145ac0.c,src/game/worldmap.rs
+game,80145bd0,wm_start_anim,translated,medium,work/ghidra/main-gb/export/80145bd0_FUN_80145bd0.c,src/game/worldmap.rs
+game,80145c50,wm_stop_anim,translated,medium,work/ghidra/main-gb/export/80145c50_FUN_80145c50.c,src/game/worldmap.rs
+game,80150150,wm_detach_target,translated,high,work/ghidra/main-gb/export/80150150_FUN_80150150.c,src/game/interaction.rs
+game,801501d0,wm_consider_candidate,translated,high,work/ghidra/main-gb/export/801501d0_FUN_801501d0.c,src/game/interaction.rs
+game,801503e0,wm_select_candidate,translated,high,work/ghidra/main-gb/export/801503e0_FUN_801503e0.c,src/game/interaction.rs
+game,80150650,wm_retry_exhausted,translated,high,work/ghidra/main-gb/export/80150650_FUN_80150650.c,src/game/interaction.rs
+game,801506a0,wm_notify_attached,translated,high,work/ghidra/main-gb/export/801506a0_FUN_801506a0.c,src/game/interaction.rs
+game,8015f200,step_angle_toward,translated,high,work/ghidra/main-gb/export/8015f200_FUN_8015f200.c,src/game/task.rs
+game,8015f620,run_task_list,translated,high,work/ghidra/main-gb/export/8015f620_FUN_8015f620.c,src/game/task.rs
+game,8015f850,keys_equal,translated,high,work/ghidra/main-gb/export/8015f850_FUN_8015f850.c,src/game/task.rs
+ui,8016c9e0,layout_set_transform,translated,medium,work/ghidra/main-gb/export/8016c9e0_FUN_8016c9e0.c,src/ui/lyt.rs
+ui,8016d180,layout_register,translated,high,"work/ghidra/main-gb/export/8016d180_FUN_8016d180.c; list insert at +0x114/+0x118, count 0x80377C38, flags +0x11C/+0x11D. 0x802E1AB4 is called at 0x8016D1B4 with r3=layout+4 while r4/r5 still hold the incoming a2/a3, so the lost operands are (a2,a3); the body passes them with call3(NAME_COMPARE, layout+4, a2, a3)",src/ui/lyt.rs

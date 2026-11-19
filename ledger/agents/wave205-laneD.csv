@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,8002cbb0,fn_8002cbb0,translated,high,work/ghidra/main-gb/export/8002cbb0_FUN_8002cbb0.c,src/ui/hud.rs
+ui::hud,8002cbc0,fn_8002cbc0,translated,high,work/ghidra/main-gb/export/8002cbc0_FUN_8002cbc0.c,src/ui/hud.rs
+ui::hud,8002cd10,fn_8002cd10,translated,medium,work/ghidra/main-gb/export/8002cd10_FUN_8002cd10.c; 0x800690C0 on the +0x524 buffer then virtual +0x2D4 of the +0x60 class then 0x8016A8E0 release - the +0x524 twin of fn_8001db30,src/ui/hud.rs
+ui::hud,8002cd70,fn_8002cd70,translated,medium,work/ghidra/main-gb/export/8002cd70_FUN_8002cd70.c; 0x800DF180 loads g3d/pakkun.brres into +0x540 0x80239E30 model 0x80169D90 flag 0x820 then dokan_attack bound through 0x801650D0,src/ui/hud.rs
+ui::hud,8002cf80,fn_8002cf80,translated,high,work/ghidra/main-gb/export/8002cf80_FUN_8002cf80.c; phase == 2 resets 0x8008C2C0 on +0x600 then 0x80095480(this phase),src/ui/hud.rs
+ui::hud,8002cfd0,fn_8002cfd0,translated,medium,work/ghidra/main-gb/export/8002cfd0_FUN_8002cfd0.c; 0x800954A0(this) gate then manager +0x28 + record query 0x8035324C returns 1 exactly when the answer is zero,src/ui/hud.rs
+ui::hud,8002d0c0,fn_8002d0c0,translated,medium,work/ghidra/main-gb/export/8002d0c0_FUN_8002d0c0.c; sprite transform: 0x80064AF0 normalise 0x801C0BD0 translate manager record 0x8035334C selects the 16.0/8.0 lift two +0xD4-style matrices four angle writes and 0x8002D260; TSV size 404 (the prompt 24 is wrong),src/ui/hud.rs
+ui::hud,8002d480,fn_8002d480,translated,medium,work/ghidra/main-gb/export/8002d480_FUN_8002d480.c; latch +0x6AC then flags bit 16 sound 0x80097E50 else class-gated 0x800E20A0(0.0 6.0) sound 0x17B side from player +0xE8 0x80066630 and 0x8002DB10,src/ui/hud.rs
+ui::hud,8002dab0,fn_8002dab0,translated,high,work/ghidra/main-gb/export/8002dab0_FUN_8002dab0.c; four slots probing 0x8005F900 then 0x8004DD00 on the answer returns 1 on the first slot that passes both,src/ui/hud.rs
+ui::hud,8002db10,fn_8002db10,translated,medium,work/ghidra/main-gb/export/8002db10_FUN_8002db10.c; sets +0x6AC class-gated 0x800CEA20 counter sound 0x1AA Wm_en_burst_m spawn and 0x8002DE80 stamp,src/ui/hud.rs

@@ -1,0 +1,25 @@
+[package]
+name = "game-recomp"
+version = "0.1.0"
+edition = "2021"
+description = "The recompiled guest functions ppc-recomp wrote to gen/ (docs/PORT_PLAN.md, P6)"
+
+[dependencies]
+guest-cpu = { path = "../guest-cpu" }
+guest-mem = { path = "../guest-mem" }
+recomp-s00 = { path = "shards/s00" }
+recomp-s01 = { path = "shards/s01" }
+recomp-s02 = { path = "shards/s02" }
+recomp-s03 = { path = "shards/s03" }
+recomp-s04 = { path = "shards/s04" }
+recomp-s05 = { path = "shards/s05" }
+recomp-s06 = { path = "shards/s06" }
+recomp-s07 = { path = "shards/s07" }
+recomp-s08 = { path = "shards/s08" }
+recomp-s09 = { path = "shards/s09" }
+recomp-s10 = { path = "shards/s10" }
+recomp-s11 = { path = "shards/s11" }
+recomp-s12 = { path = "shards/s12" }
+recomp-s13 = { path = "shards/s13" }
+recomp-s14 = { path = "shards/s14" }
+recomp-s15 = { path = "shards/s15" }

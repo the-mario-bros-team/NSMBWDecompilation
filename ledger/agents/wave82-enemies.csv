@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b068d0,fn_80b068d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b068d0_FUN_80b068d0.c; freeing helper: 8015F800(this,0) then 802B9280 when mode>0",src/game/enemies.rs
+game::enemies,80b069f0,fn_80b069f0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b069f0_FUN_80b069f0.c; 48-byte forwarder to 802DCBFC; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b06a20,fn_80b06a20,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b06a20_FUN_80b06a20.c; second copy of the 48-byte forwarder",src/game/enemies.rs
+game::enemies,80b06a50,fn_80b06a50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b06a50_FUN_80b06a50.c; 0x6E0 constructor; vtable 80B669D0; +0x528/+0x614/+0x634",src/game/enemies.rs
+game::enemies,80b071e0,fn_80b071e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b071e0_FUN_80b071e0.c; class-0x23C chain walk matching +0x438 byte against +0x6D8",src/game/enemies.rs
+game::enemies,80b07240,fn_80b07240,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07240_FUN_80b07240.c; stores the first word of the source at +0x6C8",src/game/enemies.rs
+game::enemies,80b07250,fn_80b07250,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07250_FUN_80b07250.c; +0x6D4 selects x/z and sign; +0x434*+0x6CC spread from +0x6D0",src/game/enemies.rs
+game::enemies,80b072f0,fn_80b072f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b072f0_FUN_80b072f0.c; 800C10F0(+0x528, +0xAC, f32 +0x69C) then 800C1580",src/game/enemies.rs
+game::enemies,80b07350,fn_80b07350,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07350_FUN_80b07350.c; 800C1230/800C12B0 read back into +0xAC/+0xB0",src/game/enemies.rs
+game::enemies,80b073a0,fn_80b073a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b073a0_FUN_80b073a0.c; slot != 4 test via (4-x)|(x-4) >> 31",src/game/enemies.rs
+game::enemies,80b073d0,fn_80b073d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b073d0_FUN_80b073d0.c; story flag 80315B98==0, player +0x120C<10, +0x120D<0x2A, 800CE210",src/game/enemies.rs
+game::enemies,80b07470,fn_80b07470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07470_FUN_80b07470.c; g3d/star_coin.brres + star_coin; clip from 80B66990[+0x6A8]",src/game/enemies.rs
+game::enemies,80b07530,fn_80b07530,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07530_FUN_80b07530.c; three slots != 4; clz(count-3)>>5",src/game/enemies.rs
+game::enemies,80b07580,fn_80b07580,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b07580_FUN_80b07580.c; scene probe over the 80B31B88 names then 802DCDB8(flag)",src/game/enemies.rs
+game::enemies,80b07650,fn_80b07650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b07650_FUN_80b07650.c; effect 800E20A0, 800B1100, sounds 0x24D/0x24E, rumble 800E41C0, switch 80B78708 or retire; 80B07C90 is halt_baddata",src/game/enemies.rs
+game::enemies,80b07880,fn_80b07880,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07880_FUN_80b07880.c; +0x6C2 != -1 runs 80b07650",src/game/enemies.rs
+game::enemies,80b078c0,fn_80b078c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b078c0_FUN_80b078c0.c; contact callback: player mode 1/2 copies the slot byte into +0x6C2",src/game/enemies.rs
+game::enemies,80b07c20,fn_80b07c20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b07c20_FUN_80b07c20.c; vertical overlap of the probe block against stage +0x3C/+0x44",src/game/enemies.rs
+game::enemies,80b07ce0,fn_80b07ce0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07ce0_FUN_80b07ce0.c; 80b071e0/80b07240/80b07250 then state 80B786C8",src/game/enemies.rs
+game::enemies,80b07ed0,fn_80b07ed0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b07ed0_FUN_80b07ed0.c; three-way +0x6C0 step; heading +7000; retire at speed/timer/floor",src/game/enemies.rs
+game::enemies,80b08020,fn_80b08020,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b08020_FUN_80b08020.c; installs +0x1EC from 80B31AD8 and seeds seven motion words",src/game/enemies.rs
+game::enemies,80b080b0,fn_80b080b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b080b0_FUN_80b080b0.c; four-frame ladder 80B31BC8..D4 at +0x694 and heading restore",src/game/enemies.rs
+game::enemies,80b085b0,fn_80b085b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b085b0_FUN_80b085b0.c; second freeing helper of the 0x6A8 sibling",src/game/enemies.rs
+game::enemies,80b086d0,fn_80b086d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b086d0_FUN_80b086d0.c; third 48-byte forwarder to 802DCBFC",src/game/enemies.rs
+game::enemies,80b08700,fn_80b08700,translated,low,"work/ghidra/rel-d_enemiesNP/export/80b08700_FUN_80b08700.c; fourth 48-byte forwarder to 802DCBFC",src/game/enemies.rs
+game::enemies,80b08730,fn_80b08730,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b08730_FUN_80b08730.c; 0x6A8 constructor; vtable 80B66DB4; +0x594/+0x5C4/+0x5F0",src/game/enemies.rs
+game::enemies,80b08810,fn_80b08810,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b08810_FUN_80b08810.c; heading 0xC000, controllers 80B31BE0/80B31C04, block +0x630",src/game/enemies.rs
+game::enemies,80b08950,fn_80b08950,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b08950_FUN_80b08950.c; sound 0x2E9 at the random image position; angle from vtable +0x2B0",src/game/enemies.rs
+game::enemies,80b089f0,fn_80b089f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b089f0_FUN_80b089f0.c; sound 0x2EA with the actor word 0 as owner",src/game/enemies.rs
+game::enemies,80b08b40,fn_80b08b40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b08b40_FUN_80b08b40.c; sound 0x2EC, third copy of the wrapper",src/game/enemies.rs

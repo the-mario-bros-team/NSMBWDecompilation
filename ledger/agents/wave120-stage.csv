@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800776f0,fn_800776f0,translated,high,"work/ghidra/main-gb/export/800776f0_thunk_FUN_80077650.c; 4-byte b 0x80077650 (word 0x4BFFFF60); tail-branch wrapper over fn_80077650",src/game/stage.rs

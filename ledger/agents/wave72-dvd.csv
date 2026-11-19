@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801dc6a0,fn_801dc6a0,translated,medium,"work/ghidra/main-gb/export/801dc6a0_FUN_801dc6a0.c; variable-length item reader: interrupt lock, TLV decode via 0x801DC100, stored-length == len test, memcpy(out, value, len)",src/runtime/dvd.rs
+runtime::dvd,801dc780,fn_801dc780,translated,medium,"work/ghidra/main-gb/export/801dc780_FUN_801dc780.c; variable-length item writer: memcmp-then-memcpy on a matching 0x40 record and dirty byte r13-0x4C1B, else remove 0x801DC280 + append 0x801DC420",src/runtime/dvd.rs
+runtime::dvd,801dc8b0,fn_801dc8b0,translated,high,"work/ghidra/main-gb/export/801dc8b0_FUN_801dc8b0.c; reads type 0x60 (one-byte) item id into out through 0x801DC100 under the 0x801B1140/0x801B1180 lock",src/runtime/dvd.rs
+runtime::dvd,801dc990,fn_801dc990,translated,high,"work/ghidra/main-gb/export/801dc990_FUN_801dc990.c; second one-byte reader, body identical to 0x801DC8B0 (type 0x60, interrupt-locked decode + copy)",src/runtime/dvd.rs
+runtime::dvd,801dca70,fn_801dca70,translated,high,"work/ghidra/main-gb/export/801dca70_FUN_801dca70.c; reads type 0xA0 (four-byte) item id into out through 0x801DC100 under the interrupt lock",src/runtime/dvd.rs
+runtime::dvd,801dcb50,fn_801dcb50,translated,medium,"work/ghidra/main-gb/export/801dcb50_FUN_801dcb50.c; one-byte writer: memcmp/memcpy on an existing 0x60 record plus dirty byte, else remove 0x801DC280 + append type 0x60 record via 0x801DC420",src/runtime/dvd.rs
+runtime::dvd,801dd320,fn_801dd320,translated,medium,"work/ghidra/main-gb/export/801dd320_FUN_801dd320.c; returns item 0x0B clamped to 1 above 9, falling back to the text-block probe 0x801DD860 on a miss",src/runtime/dvd.rs
+runtime::dvd,801dd390,fn_801dd390,translated,high,"work/ghidra/main-gb/export/801dd390_FUN_801dd390.c; returns 1 only when item 0x0E equals 1, else 0",src/runtime/dvd.rs
+runtime::dvd,801dd3f0,fn_801dd3f0,translated,high,"work/ghidra/main-gb/export/801dd3f0_FUN_801dd3f0.c; returns 1 when item 0x0F is missing or equals 1, else 0",src/runtime/dvd.rs
+runtime::dvd,801dd450,fn_801dd450,translated,high,"work/ghidra/main-gb/export/801dd450_FUN_801dd450.c; returns item 0x11 clamped to 1 above 2, defaulting to 1 on a miss",src/runtime/dvd.rs
+runtime::dvd,801dd4b0,fn_801dd4b0,translated,high,"work/ghidra/main-gb/export/801dd4b0_FUN_801dd4b0.c; returns four-byte item 0, defaulting to 0x0B49D800 when the read fails",src/runtime/dvd.rs
+runtime::dvd,801dd4f0,fn_801dd4f0,translated,high,"work/ghidra/main-gb/export/801dd4f0_FUN_801dd4f0.c; one call to the variable reader 0x801DC6A0 with (buffer, 0x461, 0x1C)",src/runtime/dvd.rs
+runtime::dvd,801dd500,fn_801dd500,translated,high,"work/ghidra/main-gb/export/801dd500_FUN_801dd500.c; one call to the variable writer 0x801DC780 with (buffer, 0x461, 0x1C)",src/runtime/dvd.rs
+runtime::dvd,801dd510,fn_801dd510,translated,high,"work/ghidra/main-gb/export/801dd510_FUN_801dd510.c; one call to the variable reader 0x801DC6A0 with (buffer, 0x205, 0x1D)",src/runtime/dvd.rs
+runtime::dvd,801dd520,fn_801dd520,translated,high,"work/ghidra/main-gb/export/801dd520_FUN_801dd520.c; one call to the variable writer 0x801DC780 with (buffer, 0x205, 0x1D)",src/runtime/dvd.rs
+runtime::dvd,801dd530,fn_801dd530,translated,high,"work/ghidra/main-gb/export/801dd530_FUN_801dd530.c; four-byte item 0x1E clamped to 1..5 with default 2 on a miss",src/runtime/dvd.rs
+runtime::dvd,801dd5a0,fn_801dd5a0,translated,high,"work/ghidra/main-gb/export/801dd5a0_FUN_801dd5a0.c; returns 1 when item 0x20 is missing or equals 1, else 0",src/runtime/dvd.rs
+runtime::dvd,801dd600,fn_801dd600,translated,high,"work/ghidra/main-gb/export/801dd600_FUN_801dd600.c; one call to the one-byte writer 0x801DCB50 with (value, 0x20)",src/runtime/dvd.rs
+runtime::dvd,801dd610,fn_801dd610,translated,high,"work/ghidra/main-gb/export/801dd610_FUN_801dd610.c; returns 1 only when item 0x21 equals 1, else 0",src/runtime/dvd.rs
+runtime::dvd,801dd670,fn_801dd670,translated,high,"work/ghidra/main-gb/export/801dd670_FUN_801dd670.c; returns item 0x1F clamped to 0x7F with default 0x59 on a miss",src/runtime/dvd.rs
+runtime::dvd,801dd6d0,fn_801dd6d0,translated,high,"work/ghidra/main-gb/export/801dd6d0_FUN_801dd6d0.c; one call to the one-byte writer 0x801DCB50 with (value, 0x1F)",src/runtime/dvd.rs
+runtime::dvd,801dd6e0,fn_801dd6e0,translated,high,"work/ghidra/main-gb/export/801dd6e0_FUN_801dd6e0.c; one call to the variable reader 0x801DC6A0 with (buffer, 0x16, 0x0C)",src/runtime/dvd.rs
+runtime::dvd,801dd860,fn_801dd860,translated,medium,"work/ghidra/main-gb/export/801dd860_FUN_801dd860.c; key r13-0x5EA8 scanned by 0x801DD6F0 (4 bytes), then strides the 5-byte id+code table 0x80343A08 with strcmp 0x802E1AB4; 0xFF terminates, miss returns 0xFFFFFFFF",src/runtime/dvd.rs
+runtime::dvd,801dd8f0,fn_801dd8f0,translated,medium,"work/ghidra/main-gb/export/801dd8f0_FUN_801dd8f0.c; key r13-0x5EA0 copied by 0x801DD6F0 into the 0x11-byte block 0x8039E2E0; returns the block address or 0",src/runtime/dvd.rs
+runtime::dvd,801dd940,fn_801dd940,translated,medium,"work/ghidra/main-gb/export/801dd940_FUN_801dd940.c; key r13-0x5E98 scanned by 0x801DD6F0 (3 bytes), then strides the 4-byte id+code table 0x80343A50 with strcmp 0x802E1AB4; miss returns 0xFFFFFFFF",src/runtime/dvd.rs
+runtime::dvd,801dd9d0,fn_801dd9d0,translated,high,"work/ghidra/main-gb/export/801dd9d0_FUN_801dd9d0.c; clears bit 6 of 0x800030E3 under the interrupt lock, re-sets it when the argument is non-zero, returns the old bit",src/runtime/dvd.rs
+runtime::dvd,801dda50,fn_801dda50,translated,high,"work/ghidra/main-gb/export/801dda50_FUN_801dda50.c; returns the small-data word at r13-0x4BE8 (called as a classic-controller sub-id probe by src/runtime/input.rs)",src/runtime/dvd.rs
+runtime::dvd,801dda60,fn_801dda60,translated,high,"work/ghidra/main-gb/export/801dda60_FUN_801dda60.c; returns the small-data word at r13-0x4BE4",src/runtime/dvd.rs
+runtime::dvd,801dda70,fn_801dda70,translated,high,"work/ghidra/main-gb/export/801dda70_FUN_801dda70.c; returns the small-data word at r13-0x4BE0",src/runtime/dvd.rs
+runtime::dvd,801dda80,fn_801dda80,translated,high,"work/ghidra/main-gb/export/801dda80_FUN_801dda80.c; returns the small-data word at r13-0x4BDC",src/runtime/dvd.rs

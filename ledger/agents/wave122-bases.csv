@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806d1670,fn_806d1670,translated,high,"work/ghidra/rel-d_basesNP/export/806d1670_FUN_806d1670.c; free-gated 0x802B9280 release helper returning the object",src/game/bases.rs
+game::bases,806d3510,fn_806d3510,translated,medium,"work/ghidra/rel-d_basesNP/export/806d3510_FUN_806d3510.c; six-argument +0x528 vtable +0xA0 call with Wm_ob_cmnsparkloop",src/game/bases.rs
+game::bases,806d3680,fn_806d3680,translated,medium,"work/ghidra/rel-d_basesNP/export/806d3680_FUN_806d3680.c; +0x3E0 rider count by +0x38C kind using vtable +0xE0, 0x80056C70, 0x8006EF40 and 0x800656C0",src/game/bases.rs
+game::bases,806d37d0,fn_806d37d0,translated,high,"work/ghidra/rel-d_basesNP/export/806d37d0_FUN_806d37d0.c; 0x800B3980(0x807CB5FC, 0x807CB600, slot) clamped to -3000..3000",src/game/bases.rs
+game::bases,806d3840,fn_806d3840,translated,high,"work/ghidra/rel-d_basesNP/export/806d3840_FUN_806d3840.c; 0x8015F2E0 halfword wrap of +0x104 with delta, 4 and 0x1AC",src/game/bases.rs
+game::bases,806d3890,fn_806d3890,translated,medium,"work/ghidra/rel-d_basesNP/export/806d3890_FUN_806d3890.c; window test between 0x80429E00 +0x38 and +0x38 plus +0x40",src/game/bases.rs
+game::bases,806d3900,fn_806d3900,translated,high,"work/ghidra/rel-d_basesNP/export/806d3900_FUN_806d3900.c; +0x750 latch, 0x800B3750(slot, 0xD, 0x14) and sound 0x2A7 through 0x80198C30",src/game/bases.rs
+game::bases,806d5970,fn_806d5970,translated,medium,"work/ghidra/rel-d_basesNP/export/806d5970_FUN_806d5970.c; resets 16 records at +0x4C4 stride 0x58 with six floats and seven halfwords then 0x80088DD0",src/game/bases.rs
+game::bases,806d5a90,fn_806d5a90,translated,medium,"work/ghidra/rel-d_basesNP/export/806d5a90_FUN_806d5a90.c; same 16-record reset as 806D5970 but finished with 0x80088E80",src/game/bases.rs
+game::bases,806d9fc0,fn_806d9fc0,translated,high,"work/ghidra/rel-d_basesNP/export/806d9fc0_FUN_806d9fc0.c; two rider-list heights from +0x5A8/+0x5AC assigned over 0x801625B0 and 0x801625D0",src/game/bases.rs
+game::bases,806db2c0,fn_806db2c0,translated,high,"work/ghidra/rel-d_basesNP/export/806db2c0_FUN_806db2c0.c; free-gated 0x802B9280 release helper returning the object",src/game/bases.rs
+game::bases,806dd510,fn_806dd510,translated,high,"work/ghidra/rel-d_basesNP/export/806dd510_FUN_806dd510.c; writes +0x6EC and +0x6E0 from phase +0x704 and four constants",src/game/bases.rs
+game::bases,806dda70,fn_806dda70,translated,high,"work/ghidra/rel-d_basesNP/export/806dda70_FUN_806dda70.c; kind 3 plus +0x4FC bit 0 gate then interface +0x28 and virtual +0x14(0x80353A64)",src/game/bases.rs
+game::bases,806ddaf0,fn_806ddaf0,translated,medium,"work/ghidra/rel-d_basesNP/export/806ddaf0_FUN_806ddaf0.c; 0x800DB2D0 plane call plus mirrored +0x668/+0x6C8 half-height from +0x710 and +0x71C",src/game/bases.rs
+game::bases,806ddba0,fn_806ddba0,translated,medium,"work/ghidra/rel-d_basesNP/export/806ddba0_FUN_806ddba0.c; two-list rider flagging, height rescale against +0x714 and new total",src/game/bases.rs
+game::bases,806ddd40,fn_806ddd40,translated,medium,"work/ghidra/rel-d_basesNP/export/806ddd40_FUN_806ddd40.c; four-slot presence map from virtual +0x6C compared at +0x6F4..+0x700",src/game/bases.rs
+game::bases,806ddf50,fn_806ddf50,translated,high,"work/ghidra/rel-d_basesNP/export/806ddf50_FUN_806ddf50.c; countdown +0x724, phase +0x720 step 0x2C8, sound 0x2C3 and state 0x8082DD28",src/game/bases.rs
+game::bases,806de1c0,fn_806de1c0,translated,high,"work/ghidra/rel-d_basesNP/export/806de1c0_FUN_806de1c0.c; same countdown with sound 0x2C4 and state 0x8082DE28",src/game/bases.rs
+game::bases,806de400,fn_806de400,translated,high,"work/ghidra/rel-d_basesNP/export/806de400_FUN_806de400.c; 0x700-byte teardown: three 0x60 records at +0x5BC, three 0x40 at +0x494 and holders +0x474/+0x434/+0x3F4/+0x3D4",src/game/bases.rs
+game::bases,806deb00,fn_806deb00,translated,high,"work/ghidra/rel-d_basesNP/export/806deb00_FUN_806deb00.c; 0x8015F800 teardown then free-gated 0x802B9280 release",src/game/bases.rs
+game::bases,806dec80,fn_806dec80,translated,high,"work/ghidra/rel-d_basesNP/export/806dec80_FUN_806dec80.c; 0x700-byte constructor with vtable 0x807FC428 and holders +0x3D4/+0x3F4/+0x434/+0x474/+0x6AC",src/game/bases.rs
+game::bases,806df1c0,fn_806df1c0,translated,high,"work/ghidra/rel-d_basesNP/export/806df1c0_FUN_806df1c0.c; +0x6AC transform from position +0xAC..+0xB4 plus offsets +0x6EC..+0x6F4",src/game/bases.rs
+game::bases,806df2c0,fn_806df2c0,translated,high,"work/ghidra/rel-d_basesNP/export/806df2c0_FUN_806df2c0.c; +0x3F4 transform from +0x608 and +0x5F6 minus 0x807CBA40",src/game/bases.rs
+game::bases,806df3b0,fn_806df3b0,translated,high,"work/ghidra/rel-d_basesNP/export/806df3b0_FUN_806df3b0.c; +0x434 transform from +0x608 and +0x638..+0x63C minus 0x807CBA70",src/game/bases.rs
+game::bases,806df4b0,fn_806df4b0,translated,high,"work/ghidra/rel-d_basesNP/export/806df4b0_FUN_806df4b0.c; g3d/bolt.brres bind into +0x6AC with pane 0x807FC3C4",src/game/bases.rs
+game::bases,806df570,fn_806df570,translated,high,"work/ghidra/rel-d_basesNP/export/806df570_FUN_806df570.c; g3d/lift_spin_kinoko.brres panes 0x807FC3FC and 0x807FC410 into +0x3F4 and +0x434",src/game/bases.rs
+game::bases,806df770,fn_806df770,translated,high,"work/ghidra/rel-d_basesNP/export/806df770_FUN_806df770.c; four +0x698 presence words tested against 0x8042A320 +0x381/+0x368 then 0x800B3600(slot, 9)",src/game/bases.rs
+game::bases,806dfc40,fn_806dfc40,translated,high,"work/ghidra/rel-d_basesNP/export/806dfc40_FUN_806dfc40.c; facing +0x348 steers +0x102 under the +0x654 lock and always +0x63A",src/game/bases.rs
+game::bases,806dfcc0,fn_806dfcc0,translated,high,"work/ghidra/rel-d_basesNP/export/806dfcc0_FUN_806dfcc0.c; virtual +0xE4 == 2 snaps by +0x6AA, copies +0x602 into +0x5F4 and enters 0x8082DF28",src/game/bases.rs
+game::bases,806dff70,fn_806dff70,translated,high,"work/ghidra/rel-d_basesNP/export/806dff70_FUN_806dff70.c; +0x664 countdown and height compare against +0x624 + +0x648 choosing 0x8082DFA8 or 0x8082DF28",src/game/bases.rs

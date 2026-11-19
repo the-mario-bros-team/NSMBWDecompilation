@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80681c50,fn_80681c50,translated,medium,"work/ghidra/rel-d_basesNP/export/80681c50_FUN_80681c50.c; gated pivot update; node walk plus four slot sines; one qr3 load",src/game/bases.rs
+game::bases,80688ba0,fn_80688ba0,translated,high,"work/ghidra/rel-d_basesNP/export/80688ba0_FUN_80688ba0.c; positive bob and lateral oscillation; four qr3 angle loads; cosine crossing trigger",src/game/bases.rs
+game::bases,80688e10,fn_80688e10,translated,high,"work/ghidra/rel-d_basesNP/export/80688e10_FUN_80688e10.c; negative-direction mirror of 80688ba0; four qr3 angle loads",src/game/bases.rs
+game::bases,8068ea10,fn_8068ea10,translated,medium,"work/ghidra/rel-d_basesNP/export/8068ea10_FUN_8068ea10.c; four gated pivots at +0xC50; 160.0 rate chain; one qr3 load",src/game/bases.rs
+game::bases,806b2bb0,fn_806b2bb0,translated,high,"work/ghidra/rel-d_basesNP/export/806b2bb0_FUN_806b2bb0.c; limp timer and bob; +0x506 angle; one qr3 load",src/game/bases.rs
+game::bases,806b9a30,fn_806b9a30,translated,medium,"work/ghidra/rel-d_basesNP/export/806b9a30_FUN_806b9a30.c; rotating actor update; two qr3 angle loads; two import-relocation callees and the 0x80429CA8 mask",src/game/bases.rs
+game::bases,8072bc40,fn_8072bc40,translated,high,"work/ghidra/rel-d_basesNP/export/8072bc40_FUN_8072bc40.c; two mount transforms from +0x4A0 angle; two qr3 loads; three matrices",src/game/bases.rs
+game::bases,8072c000,fn_8072c000,translated,medium,"work/ghidra/rel-d_basesNP/export/8072c000_FUN_8072c000.c; radial record offsets; eight-entry step table; two qr3 loads",src/game/bases.rs
+game::bases,8072e520,fn_8072e520,translated,medium,"work/ghidra/rel-d_basesNP/export/8072e520_FUN_8072e520.c; four-arm burst emitter; mask table 0x807CD608; two qr3 loads",src/game/bases.rs
+game::bases,8071bf20,fn_8071bf20,translated,high,"work/ghidra/rel-d_basesNP/export/8071bf20_FUN_8071bf20.c; channel record start via 0x800B3600; sets +0x02",src/game/bases.rs
+game::bases,8071bf70,fn_8071bf70,translated,high,"work/ghidra/rel-d_basesNP/export/8071bf70_FUN_8071bf70.c; channel record stop via 0x800B3750; forwards the third argument",src/game/bases.rs
+game::bases,8071bfc0,fn_8071bfc0,translated,high,"work/ghidra/rel-d_basesNP/export/8071bfc0_FUN_8071bfc0.c; clears one four-byte channel record",src/game/bases.rs
+game::bases,8071bfe0,fn_8071bfe0,translated,high,"work/ghidra/rel-d_basesNP/export/8071bfe0_FUN_8071bfe0.c; two-attempt channel state machine; start/stop/cancel; latches both request bits",src/game/bases.rs
+game::bases,8071c2b0,fn_8071c2b0,translated,high,"work/ghidra/rel-d_basesNP/export/8071c2b0_FUN_8071c2b0.c; clears the four channel records at +0x420",src/game/bases.rs
+game::bases,8071c300,fn_8071c300,translated,high,"work/ghidra/rel-d_basesNP/export/8071c300_FUN_8071c300.c; per-slot enable and gate bits; four fn_8071bfe0 calls",src/game/bases.rs
+game::bases,8071c380,fn_8071c380,translated,high,"work/ghidra/rel-d_basesNP/export/8071c380_FUN_8071c380.c; stops all four channel records with channel index and 0x3C",src/game/bases.rs
+game::bases,8071c620,fn_8071c620,translated,high,"work/ghidra/rel-d_basesNP/export/8071c620_FUN_8071c620.c; transform refresh for the +0x3B4 sub-object; +0x102 mount halfword",src/game/bases.rs
+game::bases,8071c6a0,fn_8071c6a0,translated,high,"work/ghidra/rel-d_basesNP/export/8071c6a0_FUN_8071c6a0.c; stops the channel array then resets +0x3C0",src/game/bases.rs
+game::bases,8071f290,fn_8071f290,translated,high,"work/ghidra/rel-d_basesNP/export/8071f290_FUN_8071f290.c; 0x800DAE80 over four 0x60-byte records",src/game/bases.rs
+game::bases,8071f2e0,fn_8071f2e0,translated,high,"work/ghidra/rel-d_basesNP/export/8071f2e0_FUN_8071f2e0.c; +0x0C virtual over four 0x60-byte records",src/game/bases.rs
+game::bases,8071f340,fn_8071f340,translated,high,"work/ghidra/rel-d_basesNP/export/8071f340_FUN_8071f340.c; 0x800DAED0 over four 0x60-byte records",src/game/bases.rs
+game::bases,8071f050,fn_8071f050,translated,high,"work/ghidra/rel-d_basesNP/export/8071f050_FUN_8071f050.c; places the transform and binds the +0x3B4 sub-object",src/game/bases.rs
+game::bases,8071b730,fn_8071b730,translated,high,"work/ghidra/rel-d_basesNP/export/8071b730_FUN_8071b730.c; stale frame-id check on +0x538 then +0x10 virtual",src/game/bases.rs
+game::bases,80717c10,fn_80717c10,translated,high,"work/ghidra/rel-d_basesNP/export/80717c10_FUN_80717c10.c; builds the +0x40 sub-object; vtable words 0x803295D8 then 0x80329548",src/game/bases.rs
+game::bases,80717c80,fn_80717c80,translated,high,"work/ghidra/rel-d_basesNP/export/80717c80_FUN_80717c80.c; destroys +0x40 and conditionally releases through 0x802B9280",src/game/bases.rs
+game::bases,80718120,fn_80718120,translated,high,"work/ghidra/rel-d_basesNP/export/80718120_FUN_80718120.c; environment mode 3 plus 0x807CCDA0 float block",src/game/bases.rs
+game::bases,80718330,fn_80718330,translated,high,"work/ghidra/rel-d_basesNP/export/80718330_FUN_80718330.c; environment mode 1 plus 0x807CCDB0 float block",src/game/bases.rs
+game::bases,80718540,fn_80718540,translated,high,"work/ghidra/rel-d_basesNP/export/80718540_FUN_80718540.c; environment mode 0 plus 0x807CCDC0 float block",src/game/bases.rs
+game::bases,80718750,fn_80718750,translated,high,"work/ghidra/rel-d_basesNP/export/80718750_FUN_80718750.c; environment mode 2 plus 0x807CCDD0 float block",src/game/bases.rs
+game::bases,8071faa0,fn_8071faa0,translated,high,"work/ghidra/rel-d_basesNP/export/8071faa0_FUN_8071faa0.c; five-call per-frame reset over +0x394 +0x534 +0x73C",src/game/bases.rs

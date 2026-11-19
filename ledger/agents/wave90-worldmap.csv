@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80140590,fn_80140590,translated,medium,"work/ghidra/main-gb/export/80140590_FUN_80140590.c; calls 0x8012E5A0 then 0x8013C3A0 when status bit 0x72 is set",src/game/worldmap.rs
+game::worldmap,80140670,fn_80140670,translated,medium,"work/ghidra/main-gb/export/80140670_FUN_80140670.c; +0x5C vtable call with three floats then writes +0x114/+0x118/+0x1550",src/game/worldmap.rs
+game::worldmap,80140af0,fn_80140af0,translated,medium,"work/ghidra/main-gb/export/80140af0_FUN_80140af0.c; two-mode contact dispatcher over +0x1EC/+0x3FC and the 0x8012DBE0 partner",src/game/worldmap.rs
+game::worldmap,80140cd0,fn_80140cd0,translated,high,"work/ghidra/main-gb/export/80140cd0_FUN_80140cd0.c; posts 0x80375E6C, releases the contact state and stores -1.0 at +0xEC",src/game/worldmap.rs
+game::worldmap,80140db0,fn_80140db0,translated,medium,"work/ghidra/main-gb/export/80140db0_FUN_80140db0.c; posts 0x803765B0 and calls 0x8004E290 with 0x80354BEC",src/game/worldmap.rs
+game::worldmap,80140e10,fn_80140e10,translated,medium,"work/ghidra/main-gb/export/80140e10_FUN_80140e10.c; ORs 9 into r13-0x5988 and runs the per-character contact path through 0x80354E60/0x80354E80",src/game/worldmap.rs
+game::worldmap,80140ee0,fn_80140ee0,translated,medium,"work/ghidra/main-gb/export/80140ee0_FUN_80140ee0.c; status bit 0x65 selects 0x8004E100 or 0x800511A0 then 0x8006A7F0",src/game/worldmap.rs
+game::worldmap,80141140,fn_80141140,translated,high,"work/ghidra/main-gb/export/80141140_FUN_80141140.c; 0x802F4FB8 height delta and 0x802F4FC4 class ladder drive sounds 0x111..0x115",src/game/worldmap.rs
+game::worldmap,80141460,fn_80141460,translated,high,"work/ghidra/main-gb/export/80141460_FUN_80141460.c; stores +0x153D then calls 0x802DCBFC, 0x801414C0 and 0x80142030",src/game/worldmap.rs
+game::worldmap,801414c0,fn_801414c0,translated,high,"work/ghidra/main-gb/export/801414c0_FUN_801414c0.c; +0x153E countdown and the 0x802DCBFC success path stores +0x124 = 1",src/game/worldmap.rs
+game::worldmap,80141580,fn_80141580,translated,medium,"work/ghidra/main-gb/export/80141580_FUN_80141580.c; stores +0x14E0 then dispatches the +0xE4 vtable slot",src/game/worldmap.rs
+game::worldmap,80141640,fn_80141640,translated,high,"work/ghidra/main-gb/export/80141640_FUN_80141640.c; three-way 0x2D/0x2E/0x35 event post plus 0x800D8BB0 sound 7",src/game/worldmap.rs
+game::worldmap,801416f0,fn_801416f0,translated,medium,"work/ghidra/main-gb/export/801416f0_FUN_801416f0.c; two-actor move ladder over +0x2D ids 0x13/1/7/0xD/8 with the 0x802DCDC0 tail",src/game/worldmap.rs
+game::worldmap,80141bf0,fn_80141bf0,translated,medium,"work/ghidra/main-gb/export/80141bf0_FUN_80141bf0.c; +0xE8 side pair selects the 0x802F510C height for 0x80053940",src/game/worldmap.rs
+game::worldmap,80141e30,fn_80141e30,translated,medium,"work/ghidra/main-gb/export/80141e30_FUN_80141e30.c; copies the 0x80325260 record (indexed through 0x802F50A8) into +0x164..+0x170",src/game/worldmap.rs
+game::worldmap,80141e90,fn_80141e90,translated,high,"work/ghidra/main-gb/export/80141e90_FUN_80141e90.c; scales the +0x1224 colour record by the 0x80370DA8 face factor",src/game/worldmap.rs
+game::worldmap,80141ee0,fn_80141ee0,translated,medium,"work/ghidra/main-gb/export/80141ee0_FUN_80141ee0.c; stretched colour record sets +0x1235 = 0x0B and clears bit 0xA of +0x17C",src/game/worldmap.rs
+game::worldmap,80141f40,fn_80141f40,translated,high,"work/ghidra/main-gb/export/80141f40_FUN_80141f40.c; default colour record 0.0/10.0/12.0/10.0 and 0x80053650(0x0D)",src/game/worldmap.rs
+game::worldmap,80141f70,fn_80141f70,translated,high,"work/ghidra/main-gb/export/80141f70_FUN_80141f70.c; fills a four-word colour record, 18.0/8.0/16.0 by player variant",src/game/worldmap.rs
+game::worldmap,80141fd0,fn_80141fd0,translated,high,"work/ghidra/main-gb/export/80141fd0_FUN_80141fd0.c; applies the record from 0x80141F70 and calls 0x8012E360",src/game/worldmap.rs
+game::worldmap,80142f20,fn_80142f20,translated,medium,"work/ghidra/main-gb/export/80142f20_FUN_80142f20.c; animation-table layout clamp over +0x1C/+0x28 and the 0x802F4FE8 offsets",src/game/worldmap.rs
+game::worldmap,801432f0,fn_801432f0,translated,medium,"work/ghidra/main-gb/export/801432f0_FUN_801432f0.c; +0x285 face copy then the 0x80142F20/0x801430E0 layout path",src/game/worldmap.rs
+game::worldmap,80143410,fn_80143410,translated,medium,"work/ghidra/main-gb/export/80143410_FUN_80143410.c; 0x8012DCC0 gate then table layout with the +0xC000 height bias",src/game/worldmap.rs
+game::worldmap,801434c0,fn_801434c0,translated,high,"work/ghidra/main-gb/export/801434c0_FUN_801434c0.c; single 0x800534B0 call with 0x802F50C4 and 0x802F50E8",src/game/worldmap.rs
+game::worldmap,801434e0,fn_801434e0,translated,high,"work/ghidra/main-gb/export/801434e0_FUN_801434e0.c; resets +0x1EC and clears +0x10D4..+0x10E0",src/game/worldmap.rs
+game::worldmap,80143530,fn_80143530,translated,high,"work/ghidra/main-gb/export/80143530_FUN_80143530.c; +0x118 receives -4.0 or -2.5 from the 0x80056BD0 test",src/game/worldmap.rs
+game::worldmap,801435e0,fn_801435e0,translated,medium,"work/ghidra/main-gb/export/801435e0_FUN_801435e0.c; effect attach kind 1/2 through 0x8008FCD0/0x8008FBF0 and 0x803252DC/0x80325328",src/game/worldmap.rs
+game::worldmap,801436f0,fn_801436f0,translated,medium,"work/ghidra/main-gb/export/801436f0_FUN_801436f0.c; the +0xB0 receiver slot updates the +0x27F8 effect and clears it on zero",src/game/worldmap.rs
+game::worldmap,801461d0,fn_801461d0,translated,medium,"work/ghidra/main-gb/export/801461d0_FUN_801461d0.c; +0x120/+0x450 slots guarded by +0x1090 == +0x14E0 and posts sound 4",src/game/worldmap.rs
+game::worldmap,801465d0,fn_801465d0,translated,medium,"work/ghidra/main-gb/export/801465d0_FUN_801465d0.c; seven-float 0x802F57A0 table with the +0x160 bit 0/2 scale ladder",src/game/worldmap.rs

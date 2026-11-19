@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b3750,fn_800b3750,translated,high,"work/ghidra/main-gb/export/800b3750_FUN_800b3750.c; null-guarded scene forward to 0x80157220 with three words",src/game/stage.rs
+game::stage,800b3a20,fn_800b3a20,translated,high,"work/ghidra/main-gb/export/800b3a20_FUN_800b3a20.c; clears r13-0x5738 status word",src/game/stage.rs
+game::stage,800b3b50,fn_800b3b50,translated,high,"work/ghidra/main-gb/export/800b3b50_FUN_800b3b50.c; status word masked by the caller's bits",src/game/stage.rs
+game::stage,800b3c50,fn_800b3c50,translated,high,"work/ghidra/main-gb/export/800b3c50_FUN_800b3c50.c; two 16-byte colour tables lazily filled then eight u16 written at record+0x10..0x1E",src/game/stage.rs
+game::stage,800b58e0,fn_800b58e0,translated,medium,"work/ghidra/main-gb/export/800b58e0_FUN_800b58e0.c; allocator lock around a 0x14-byte list construction; dropped args recovered",src/game/stage.rs
+game::stage,800b5930,fn_800b5930,translated,high,"work/ghidra/main-gb/export/800b5930_FUN_800b5930.c; vtable 0x80315600 plus four 0x94-byte children published at r13-0x5730",src/game/stage.rs
+game::stage,800b5ab0,fn_800b5ab0,translated,high,"work/ghidra/main-gb/export/800b5ab0_FUN_800b5ab0.c; walks the four child slots +0x04..+0x10 into 0x800B5C60 and returns 0",src/game/stage.rs
+game::stage,800b5b00,fn_800b5b00,translated,medium,"work/ghidra/main-gb/export/800b5b00_FUN_800b5b00.c; child constructor vtable 0x80315610 index at +0x04 then 0x800B5B90",src/game/stage.rs
+game::stage,800b5b90,fn_800b5b90,translated,high,"work/ghidra/main-gb/export/800b5b90_FUN_800b5b90.c; 38 literal stores filling a 0x94-byte child from three r2 words",src/game/stage.rs
+game::stage,800b5c50,fn_800b5c50,translated,high,"work/ghidra/main-gb/export/800b5c50_FUN_800b5c50.c; u16 at +0x8E shifted into the high halfword",src/game/stage.rs
+game::stage,800b6080,fn_800b6080,translated,high,"work/ghidra/main-gb/export/800b6080_FUN_800b6080.c; mode 1..2 only; low nibble cleared by 0x10000..0x80000 then packed into 0x9010/0x600/0x2200/0x100",src/game/stage.rs
+game::stage,800b63a0,fn_800b63a0,translated,medium,"work/ghidra/main-gb/export/800b63a0_FUN_800b63a0.c; descriptor +0x10 mode fixup then row +0x1C through 0x800B6080 and a mask test",src/game/stage.rs
+game::stage,800b6450,fn_800b6450,translated,high,"work/ghidra/main-gb/export/800b6450_FUN_800b6450.c; clears +0x00 and publishes the object at r13-0x5728",src/game/stage.rs
+game::stage,800b64e0,fn_800b64e0,translated,high,"work/ghidra/main-gb/export/800b64e0_FUN_800b64e0.c; calls the callback at +0x00 then 0x80163280",src/game/stage.rs
+game::stage,800b8a20,fn_800b8a20,translated,medium,"work/ghidra/main-gb/export/800b8a20_FUN_800b8a20.c; +0x34 handle array scanned via 0x80162D00 and compared by 0x8011C6E0",src/game/stage.rs
+game::stage,800b8ab0,fn_800b8ab0,translated,medium,"work/ghidra/main-gb/export/800b8ab0_FUN_800b8ab0.c; sets actor+0x5DC to 1 for every live handle",src/game/stage.rs
+game::stage,800b8b30,fn_800b8b30,translated,medium,"work/ghidra/main-gb/export/800b8b30_FUN_800b8b30.c; clears actor+0x5DC for every live handle",src/game/stage.rs
+game::stage,800b8bb0,fn_800b8bb0,translated,medium,"work/ghidra/main-gb/export/800b8bb0_FUN_800b8bb0.c; runs 0x8011DF00 on every live handle; dropped arg recovered as the actor",src/game/stage.rs
+game::stage,800b8c30,fn_800b8c30,translated,medium,"work/ghidra/main-gb/export/800b8c30_FUN_800b8c30.c; event 0x26C from +0x64+0xAC then vtable +0x18 against 0x80375A78 per actor",src/game/stage.rs
+game::stage,800b90c0,fn_800b90c0,translated,medium,"work/ghidra/main-gb/export/800b90c0_FUN_800b90c0.c; allocator init -1/80377C48/0x20 then 0x800B9300 0x800B94C0 and finish",src/game/stage.rs
+game::stage,800b9170,fn_800b9170,translated,high,"work/ghidra/main-gb/export/800b9170_FUN_800b9170.c; +0x1C count over the +0x20 head calling 0x800BACD0 and following +0x88",src/game/stage.rs
+game::stage,800b91d0,fn_800b91d0,translated,high,"work/ghidra/main-gb/export/800b91d0_FUN_800b91d0.c; same walk with 0x800BADC0",src/game/stage.rs
+game::stage,800b94c0,fn_800b94c0,translated,high,"work/ghidra/main-gb/export/800b94c0_FUN_800b94c0.c; same walk passing the owner to 0x800BABB0",src/game/stage.rs
+game::stage,800b9530,fn_800b9530,translated,high,"work/ghidra/main-gb/export/800b9530_FUN_800b9530.c; copies the +0x24 source's +0x102 halfword into node+0x5E",src/game/stage.rs
+game::stage,800baac0,fn_800baac0,translated,medium,"work/ghidra/main-gb/export/800baac0_FUN_800baac0.c; detach via 0x8015F800 then free via 0x802B9280 when the owner flag is positive",src/game/stage.rs
+game::stage,800badc0,fn_800badc0,translated,medium,"work/ghidra/main-gb/export/800badc0_FUN_800badc0.c; +0x80 guard then colour word rebuilt with the +0x40 byte and vtable +0x14",src/game/stage.rs
+game::stage,800bd1e0,fn_800bd1e0,translated,high,"work/ghidra/main-gb/export/800bd1e0_FUN_800bd1e0.c; mode +0x770 selects +0x824 +0x850 or +0x668",src/game/stage.rs

@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80608df0,fn_80608df0,translated,high,"work/ghidra/rel-d_basesNP/export/80608df0_FUN_80608df0.c; twelve-record render copy; 5 floats + orientation byte",src/game/bases.rs
+game::bases,807268c0,fn_807268c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807268c0_FUN_807268c0.c; plp yaw add to component 2 + x scale",src/game/bases.rs
+game::bases,80780a90,fn_80780a90,translated,medium,"work/ghidra/rel-d_basesNP/export/80780a90_FUN_80780a90.c; three distances + id/state selector",src/game/bases.rs
+game::bases,8069a6e0,fn_8069a6e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8069a6e0_FUN_8069a6e0.c; 128-unit 2-D player proximity test",src/game/bases.rs
+game::bases,80643470,fn_80643470,translated,high,"work/ghidra/rel-d_basesNP/export/80643470_FUN_80643470.c; channel reset; 7 record resets; cue 4",src/game/bases.rs
+game::bases,8068e440,fn_8068e440,translated,medium,"work/ghidra/rel-d_basesNP/export/8068e440_FUN_8068e440.c; pane reset + player regroup + landing probe",src/game/bases.rs
+game::bases,80747b30,fn_80747b30,translated,medium,"work/ghidra/rel-d_basesNP/export/80747b30_FUN_80747b30.c; effect 282 at camera-biased height",src/game/bases.rs
+game::bases,8069f560,fn_8069f560,translated,high,"work/ghidra/rel-d_basesNP/export/8069f560_FUN_8069f560.c; 3x3 basis rebuild + column normalise + flag",src/game/bases.rs
+game::bases,8069f9d0,fn_8069f9d0,translated,high,"work/ghidra/rel-d_basesNP/export/8069f9d0_FUN_8069f9d0.c; relocated copy of fn_8069f560 (delta 0x470)",src/game/bases.rs
+game::bases,806b4f90,fn_806b4f90,translated,medium,"work/ghidra/rel-d_basesNP/export/806b4f90_FUN_806b4f90.c; Wm_en_landsmoke_s emitter; 3 vtable 0x2AC getters",src/game/bases.rs
+game::bases,80781b60,fn_80781b60,translated,medium,"work/ghidra/rel-d_basesNP/export/80781b60_FUN_80781b60.c; mode-selected position copy; biased 0x7FFF/0x3FFF",src/game/bases.rs
+game::bases,80642d20,fn_80642d20,translated,medium,"work/ghidra/rel-d_basesNP/export/80642d20_FUN_80642d20.c; four-pane +26 unit position submit",src/game/bases.rs
+game::bases,8069e5f0,fn_8069e5f0,translated,high,"work/ghidra/rel-d_basesNP/export/8069e5f0_FUN_8069e5f0.c; 3x3 rebuild + 0xD98/0xB4 dispatch",src/game/bases.rs
+game::bases,80793e50,fn_80793e50,translated,medium,"work/ghidra/rel-d_basesNP/export/80793e50_FUN_80793e50.c; guarded 0x802B9280 bulk call returning buffer",src/game/bases.rs
+game::bases,807972e0,fn_807972e0,translated,high,"work/ghidra/rel-d_basesNP/export/807972e0_FUN_807972e0.c; +0x288 word to id 2..6",src/game/bases.rs
+game::bases,80798cc0,fn_80798cc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80798cc0_FUN_80798cc0.c; 0x80798D10 call + three halfword copies",src/game/bases.rs
+game::bases,8079af60,fn_8079af60,translated,high,"work/ghidra/rel-d_basesNP/export/8079af60_FUN_8079af60.c; +0x258 flag bits to id 2..6",src/game/bases.rs
+game::bases,8079b0c0,fn_8079b0c0,translated,high,"work/ghidra/rel-d_basesNP/export/8079b0c0_FUN_8079b0c0.c; any of bits 0..3 predicate",src/game/bases.rs
+game::bases,8079b120,fn_8079b120,translated,medium,"work/ghidra/rel-d_basesNP/export/8079b120_FUN_8079b120.c; 0x8079B160 and 0x800F9080 mask share a bit",src/game/bases.rs
+game::bases,8079b160,fn_8079b160,translated,medium,"work/ghidra/rel-d_basesNP/export/8079b160_FUN_8079b160.c; +0x2B8 activity byte with clear-on-inactive",src/game/bases.rs
+game::bases,8079b240,fn_8079b240,translated,high,"work/ghidra/rel-d_basesNP/export/8079b240_FUN_8079b240.c; manager +0x370 state == 3",src/game/bases.rs
+game::bases,8079b700,fn_8079b700,translated,high,"work/ghidra/rel-d_basesNP/export/8079b700_FUN_8079b700.c; manager +0x370 state == 2",src/game/bases.rs
+game::bases,8079bac0,fn_8079bac0,translated,medium,"work/ghidra/rel-d_basesNP/export/8079bac0_FUN_8079bac0.c; five-id table scan at 0x807D00B8 + filter",src/game/bases.rs
+game::bases,8079ed20,fn_8079ed20,translated,medium,"work/ghidra/rel-d_basesNP/export/8079ed20_FUN_8079ed20.c; variant sound table picker; sentinel 0x2EB",src/game/bases.rs
+game::bases,8079b060,fn_8079b060,translated,medium,"work/ghidra/rel-d_basesNP/export/8079b060_FUN_8079b060.c; states 5/6 use caller float else 0x800F6B50",src/game/bases.rs

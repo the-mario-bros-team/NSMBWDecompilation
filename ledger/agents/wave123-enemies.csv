@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a296e0,fn_80a296e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a296e0_FUN_80a296e0.c; Walk frame step: binds walk clip, selects side/spawn speed pair, seeds +0xE8..+0xF0",src/game/enemies.rs
+game::enemies,80a29830,fn_80a29830,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a29830_FUN_80a29830.c; holder tick plus +0x5F4 countdown, enters Walk at zero",src/game/enemies.rs
+game::enemies,80a298a0,fn_80a298a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a298a0_FUN_80a298a0.c; Walk entry variant: binds walk, uses 0x80B2BAB0/0x80B2BAA0 table pair, sets +0x360 = 1",src/game/enemies.rs
+game::enemies,80a299b0,fn_80a299b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a299b0_FUN_80a299b0.c; two-phase frame step, enters Turn or Walk at +0x360 = 2",src/game/enemies.rs
+game::enemies,80a29af0,fn_80a29af0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a29af0_FUN_80a29af0.c; entry binds walk at 0.0/1.0/2.0 blends, seeds +/-1.25 x speed",src/game/enemies.rs
+game::enemies,80a29bf0,fn_80a29bf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a29bf0_FUN_80a29bf0.c; byte-identical second copy of the two-phase frame step",src/game/enemies.rs
+game::enemies,80a29d30,fn_80a29d30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a29d30_FUN_80a29d30.c; resets the +0x5C0 clip position and sets +0x360 = 1",src/game/enemies.rs
+game::enemies,80a29d90,fn_80a29d90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a29d90_FUN_80a29d90.c; Turn frame step: probe wait, walk rebind, +0x102 ramp by 0x400, returns to Walk",src/game/enemies.rs
+game::enemies,80a2a020,fn_80a2a020,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2a020_FUN_80a2a020.c; Explode entry: Wm_en_explosion + Wm_en_bombheibreak, sound 0x1CC, +0x164..+0x184 blast record",src/game/enemies.rs
+game::enemies,80a2a180,fn_80a2a180,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2a180_FUN_80a2a180.c; spawn init: three random halfword angles from 0x800B2EE0(9), resets +0x148",src/game/enemies.rs
+game::enemies,80a2cde0,fn_80a2cde0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2cde0_FUN_80a2cde0.c; support-object teardown: 0x802BE7C0 on +0x0C and +0x00, release when mode > 0",src/game/enemies.rs
+game::enemies,80a2ce50,fn_80a2ce50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2ce50_FUN_80a2ce50.c; 0x76-byte descriptor constructor: clears +0x04/+0x08, writes 0x80B3BD54, inits +0x0C",src/game/enemies.rs
+game::enemies,80a2cea0,fn_80a2cea0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2cea0_FUN_80a2cea0.c; teardown variant through 0x802BE7C0(object, 0)",src/game/enemies.rs
+game::enemies,80a2cf80,fn_80a2cf80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2cf80_FUN_80a2cf80.c; teardown variant through 0x8015F800(object, 0)",src/game/enemies.rs
+game::enemies,80a2cfe0,fn_80a2cfe0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2cfe0_FUN_80a2cfe0.c; returns the shared class word 0x8082C47C",src/game/enemies.rs
+game::enemies,80a2d0d0,fn_80a2d0d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2d0d0_FUN_80a2d0d0.c; five-step +0x30 chain walker with recursion on the fifth owner",src/game/enemies.rs
+game::enemies,80a2d1b0,fn_80a2d1b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2d1b0_FUN_80a2d1b0.c; ':'-suffix name predicate over the +0x20 vtable slot",src/game/enemies.rs
+game::enemies,80a2d270,fn_80a2d270,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a2d270_FUN_80a2d270.c; 0x802DCBFC trampoline; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a2d2a0,fn_80a2d2a0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a2d2a0_FUN_80a2d2a0.c; second 0x802DCBFC trampoline; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a2dfe0,fn_80a2dfe0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2dfe0_FUN_80a2dfe0.c; 940-byte bubble binder: g3d/bubble.brres, 5 named holders and 8 bubble_tail slots",src/game/enemies.rs
+game::enemies,80a2e450,fn_80a2e450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2e450_FUN_80a2e450.c; rebuilds +0x54C/+0x58C/+0x5CC matrices, patches +0xB44..+0xB4C and the two tail fade bytes",src/game/enemies.rs
+game::enemies,80a2e710,fn_80a2e710,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2e710_FUN_80a2e710.c; per-node packed-colour patch through 0x8023D300/0x801685E0",src/game/enemies.rs
+game::enemies,80a2e7e0,fn_80a2e7e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2e7e0_FUN_80a2e7e0.c; refreshes the eight bubble_tail matrices from +0x770..+0x778",src/game/enemies.rs
+game::enemies,80a2e8f0,fn_80a2e8f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2e8f0_FUN_80a2e8f0.c; releases the +0x704 holder of every live tail slot",src/game/enemies.rs
+game::enemies,80a2ede0,fn_80a2ede0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2ede0_FUN_80a2ede0.c; releases the five bubble holders +0x610/+0x58C/+0x5CC/+0x63C/+0x668",src/game/enemies.rs
+game::enemies,80a2ee70,fn_80a2ee70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2ee70_FUN_80a2ee70.c; +0xB64..+0xB7A fade ramp with the 0x4001 midpoint split",src/game/enemies.rs
+game::enemies,80a2ef70,fn_80a2ef70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2ef70_FUN_80a2ef70.c; bubble main frame step, height-probe speed select and 0x1CF sound",src/game/enemies.rs
+game::enemies,80a2f170,fn_80a2f170,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2f170_FUN_80a2f170.c; selects -1.0/1.0 into +0xE8 after an argument-less 0x800A16A0 step",src/game/enemies.rs

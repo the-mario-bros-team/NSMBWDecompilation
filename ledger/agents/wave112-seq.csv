@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,80273560,fn_80273560,translated,medium,"work/ghidra/main-gb/export/80273560_FUN_80273560.c; 1400 B; per-track mixer refresh of the +0xC8 voice list; object arrives in r3 behind the 0x802DCD70 ABI save thunk",src/audio/seq.rs
+audio::seq,80274480,fn_80274480,translated,medium,"work/ghidra/main-gb/export/80274480_FUN_80274480.c; 432 B; two-edge cone gain from the axis and node-normal dot products; f32 arm of the GQR load ladder",src/audio/seq.rs

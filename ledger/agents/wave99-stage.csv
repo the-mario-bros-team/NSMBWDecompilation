@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800964a0,fn_800964a0,translated,high,"work/ghidra/main-gb/export/800964a0_FUN_800964a0.c; state query 0x800A29C0 on +0x514, then slots 0x24C..0x27C of the +0x60 vtable; answers 1/2/3 plus mode 0/1",src/game/stage.rs
+game::stage,80096780,fn_80096780,translated,medium,"work/ghidra/main-gb/export/80096780_FUN_80096780.c; tail-call to state-vtable slot +0x24C; arity (this, other) proven by 800964A0 and 80039B40",src/game/stage.rs
+game::stage,80096790,fn_80096790,translated,medium,"work/ghidra/main-gb/export/80096790_FUN_80096790.c; tail-call to state-vtable slot +0x250; arity (this, other) proven by 800964A0 and 80039B40",src/game/stage.rs
+game::stage,8009a320,fn_8009a320,translated,high,"work/ghidra/main-gb/export/8009a320_FUN_8009a320.c; seven dEnBoss state records at 0x803576B4, source 0x80312418 stride 0x24, record stride 0x40, registered through 0x802DC780",src/game/stage.rs
+game::stage,8009aca0,fn_8009aca0,translated,high,"work/ghidra/main-gb/export/8009aca0_FUN_8009aca0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009acb0,fn_8009acb0,translated,high,"work/ghidra/main-gb/export/8009acb0_FUN_8009acb0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009acc0,fn_8009acc0,translated,high,"work/ghidra/main-gb/export/8009acc0_FUN_8009acc0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009acd0,fn_8009acd0,translated,high,"work/ghidra/main-gb/export/8009acd0_FUN_8009acd0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009ace0,fn_8009ace0,translated,high,"work/ghidra/main-gb/export/8009ace0_FUN_8009ace0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009acf0,fn_8009acf0,translated,high,"work/ghidra/main-gb/export/8009acf0_FUN_8009acf0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009ad00,fn_8009ad00,translated,high,"work/ghidra/main-gb/export/8009ad00_FUN_8009ad00.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009ad10,fn_8009ad10,translated,high,"work/ghidra/main-gb/export/8009ad10_FUN_8009ad10.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009ad20,fn_8009ad20,translated,high,"work/ghidra/main-gb/export/8009ad20_FUN_8009ad20.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009af40,fn_8009af40,translated,high,"work/ghidra/main-gb/export/8009af40_FUN_8009af40.c; destroy_arr +0xA08 (0x114 x 2), two 0x80329958 sub-objects at +0x8E0/+0x7B8, six node resets, optional 0x80162920 free",src/game/stage.rs
+game::stage,8009b540,fn_8009b540,translated,high,"work/ghidra/main-gb/export/8009b540_FUN_8009b540.c; +0x394 interface slot +0x10, then +0x60 slot +0x3FC with this; returns 1",src/game/stage.rs
+game::stage,8009dd60,fn_8009dd60,translated,high,"work/ghidra/main-gb/export/8009dd60_FUN_8009dd60.c; eleven dEnBossKoopaJrBase state records at 0x80357874, source 0x80312D38 stride 0x24, record stride 0x40, registered through 0x802DC780",src/game/stage.rs
+game::stage,8009e730,fn_8009e730,translated,high,"work/ghidra/main-gb/export/8009e730_FUN_8009e730.c; return &DAT_803576f4",src/game/stage.rs
+game::stage,8009e740,fn_8009e740,translated,high,"work/ghidra/main-gb/export/8009e740_FUN_8009e740.c; return &DAT_803576b4",src/game/stage.rs
+game::stage,8009eaf0,fn_8009eaf0,translated,high,"work/ghidra/main-gb/export/8009eaf0_FUN_8009eaf0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009eb00,fn_8009eb00,translated,high,"work/ghidra/main-gb/export/8009eb00_FUN_8009eb00.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f6d0,fn_8009f6d0,translated,high,"work/ghidra/main-gb/export/8009f6d0_FUN_8009f6d0.c; word table 0x802F0508 indexed by the +0x00 id of the argument",src/game/stage.rs
+game::stage,8009f6f0,fn_8009f6f0,translated,high,"work/ghidra/main-gb/export/8009f6f0_FUN_8009f6f0.c; clamp the second argument to 8",src/game/stage.rs
+game::stage,8009f7c0,fn_8009f7c0,translated,high,"work/ghidra/main-gb/export/8009f7c0_FUN_8009f7c0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f7d0,fn_8009f7d0,translated,high,"work/ghidra/main-gb/export/8009f7d0_FUN_8009f7d0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f7e0,fn_8009f7e0,translated,high,"work/ghidra/main-gb/export/8009f7e0_FUN_8009f7e0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f7f0,fn_8009f7f0,translated,high,"work/ghidra/main-gb/export/8009f7f0_FUN_8009f7f0.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f800,fn_8009f800,translated,high,"work/ghidra/main-gb/export/8009f800_FUN_8009f800.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f810,fn_8009f810,translated,high,"work/ghidra/main-gb/export/8009f810_FUN_8009f810.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f820,fn_8009f820,translated,high,"work/ghidra/main-gb/export/8009f820_FUN_8009f820.c; return &DAT_80377a04",src/game/stage.rs
+game::stage,8009f830,fn_8009f830,translated,high,"work/ghidra/main-gb/export/8009f830_FUN_8009f830.c; return &DAT_80377a04",src/game/stage.rs

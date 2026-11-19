@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8062c5f0,fn_8062c5f0,translated,high,"work/ghidra/rel-d_basesNP/export/8062c5f0_FUN_8062c5f0.c; copies 11 availability bytes from save +0xAE0 into +0x515 and counts them at +0x504",src/game/bases.rs
+game::bases,8062c650,fn_8062c650,translated,high,"work/ghidra/rel-d_basesNP/export/8062c650_FUN_8062c650.c; forward scan of the +0x515 availability bytes",src/game/bases.rs
+game::bases,8062c690,fn_8062c690,translated,medium,"work/ghidra/rel-d_basesNP/export/8062c690_FUN_8062c690.c; ten-record 0x10-stride insertion shift at +0x440; four-record block unroll preserved",src/game/bases.rs
+game::bases,8062d1c0,fn_8062d1c0,translated,high,"work/ghidra/rel-d_basesNP/export/8062d1c0_FUN_8062d1c0.c; pane variant 1 plus layout animation 0",src/game/bases.rs
+game::bases,8062d200,fn_8062d200,translated,medium,"work/ghidra/rel-d_basesNP/export/8062d200_FUN_8062d200.c; reads saved slot word and picks ClearWaKuAnimeEndWait or ArrowOnStageExitAnimeEndWait",src/game/bases.rs
+game::bases,8062d370,fn_8062d370,translated,medium,"work/ghidra/rel-d_basesNP/export/8062d370_FUN_8062d370.c; left/right arrow visibility from page and available count",src/game/bases.rs
+game::bases,8062d540,fn_8062d540,translated,high,"work/ghidra/rel-d_basesNP/export/8062d540_FUN_8062d540.c; eight-clip idle gate then ChangeAnimeEndWait or SuccessionWorldSelect",src/game/bases.rs
+game::bases,8062d7e0,fn_8062d7e0,translated,high,"work/ghidra/rel-d_basesNP/export/8062d7e0_FUN_8062d7e0.c; previous pane mode 3 plus sound 0x78 and current pane mode 1",src/game/bases.rs
+game::bases,8062d8f0,fn_8062d8f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8062d8f0_FUN_8062d8f0.c; world-select key handler with page flip, cursor move and hit states",src/game/bases.rs
+game::bases,8062db40,fn_8062db40,translated,medium,"work/ghidra/rel-d_basesNP/export/8062db40_FUN_8062db40.c; held-dpad repeat loop with keyWait and pause states",src/game/bases.rs
+game::bases,8062dcc0,fn_8062dcc0,translated,high,"work/ghidra/rel-d_basesNP/export/8062dcc0_FUN_8062dcc0.c; mirrored pane switch with arrow offset save and clips 0x0F/0x10",src/game/bases.rs
+game::bases,8062ddd0,fn_8062ddd0,translated,high,"work/ghidra/rel-d_basesNP/export/8062ddd0_FUN_8062ddd0.c; four-arrow idle gate then StateID_WorldSelect",src/game/bases.rs
+game::bases,8062de90,fn_8062de90,translated,medium,"work/ghidra/rel-d_basesNP/export/8062de90_FUN_8062de90.c; pushes saved arrow float into the +0x2A8 and +0x2D0 channels",src/game/bases.rs
+game::bases,8062df50,fn_8062df50,translated,medium,"work/ghidra/rel-d_basesNP/export/8062df50_FUN_8062df50.c; first arrow press maps to arrow-exit or cross-mark state",src/game/bases.rs
+game::bases,8062e0e0,fn_8062e0e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8062e0e0_FUN_8062e0e0.c; held-arrow repeat with five-frame delay and flip states",src/game/bases.rs
+game::bases,8062e2b0,fn_8062e2b0,translated,high,"work/ghidra/rel-d_basesNP/export/8062e2b0_FUN_8062e2b0.c; saves second arrow offset and starts clips 0x11/0x12 plus 0x0B..0x0E",src/game/bases.rs
+game::bases,8062e3a0,fn_8062e3a0,translated,high,"work/ghidra/rel-d_basesNP/export/8062e3a0_FUN_8062e3a0.c; four-clip idle gate then ChangeAnimeEndWait",src/game/bases.rs
+game::bases,8062e440,fn_8062e440,translated,medium,"work/ghidra/rel-d_basesNP/export/8062e440_FUN_8062e440.c; pushes saved arrow float into the +0x258 and +0x280 channels",src/game/bases.rs
+game::bases,8062e500,fn_8062e500,translated,high,"work/ghidra/rel-d_basesNP/export/8062e500_FUN_8062e500.c; clips 0x16/0x15 idle gate then NextPageScroll",src/game/bases.rs
+game::bases,8062e580,fn_8062e580,translated,high,"work/ghidra/rel-d_basesNP/export/8062e580_FUN_8062e580.c; direction clip 0x14/0x13 and previous pane mode 3",src/game/bases.rs
+game::bases,8062e5f0,fn_8062e5f0,translated,high,"work/ghidra/rel-d_basesNP/export/8062e5f0_FUN_8062e5f0.c; target pane guard four slots away then NextPageScroll",src/game/bases.rs
+game::bases,8062e6a0,fn_8062e6a0,translated,medium,"work/ghidra/rel-d_basesNP/export/8062e6a0_FUN_8062e6a0.c; page-turn clips 0x1C/0x1B plus 0x8062C4B0/0x8062C800 and sound 0x7D",src/game/bases.rs
+game::bases,8062e740,fn_8062e740,translated,high,"work/ghidra/rel-d_basesNP/export/8062e740_FUN_8062e740.c; exit-after-page state selection from latches and page",src/game/bases.rs
+game::bases,8062e830,fn_8062e830,translated,medium,"work/ghidra/rel-d_basesNP/export/8062e830_FUN_8062e830.c; pane restore plus backward walk to a visible course",src/game/bases.rs
+game::bases,8062e990,fn_8062e990,translated,high,"work/ghidra/rel-d_basesNP/export/8062e990_FUN_8062e990.c; clears +0x291 on the twenty panes at +0x2DC",src/game/bases.rs
+game::bases,8062ed60,fn_8062ed60,translated,high,"work/ghidra/rel-d_basesNP/export/8062ed60_FUN_8062ed60.c; byte table read at 0x807C7AF0 + index",src/game/bases.rs
+game::bases,8062ed70,fn_8062ed70,translated,high,"work/ghidra/rel-d_basesNP/export/8062ed70_FUN_8062ed70.c; byte table read at 0x807C7AFC + column + row*10",src/game/bases.rs

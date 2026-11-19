@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,8016b440,mount_cmd_destroy_wait,translated,high,"work/ghidra/main-gb/export/8016b440_FUN_8016b440.c; vtable 0x8032977C, wait via 0x8016B4F0, conditional free via 0x8016B4B0",src/resource/registry.rs
+resource::registry,8016b4a0,mount_cmd_alloc,translated,high,"work/ghidra/main-gb/export/8016b4a0_FUN_8016b4a0.c; 0x802B8CC0(size, 0xFFFFFFFC, r13-0x5260); return value recovered from callers",src/resource/registry.rs
+resource::registry,8016b4b0,mount_cmd_free,translated,high,"work/ghidra/main-gb/export/8016b4b0_FUN_8016b4b0.c; 0x802B8F70(ptr, r13-0x5260)",src/resource/registry.rs
+resource::registry,8016b4d0,mount_cmd_mark_done,translated,high,"work/ghidra/main-gb/export/8016b4d0_FUN_8016b4d0.c; byte +8 = 1; wake queue+0x28 via 0x801B5D80",src/resource/registry.rs
+resource::registry,8016b4f0,mount_cmd_wait_done,translated,high,"work/ghidra/main-gb/export/8016b4f0_FUN_8016b4f0.c; sleep on queue+0x28 via 0x801B5C90 until byte +8 is nonzero",src/resource/registry.rs
+resource::registry,8016b540,mount_queue_init,translated,high,"work/ghidra/main-gb/export/8016b540_FUN_8016b540.c; clear +0x18/+0x1C, init mutex at +0, thread queues +0x20/+0x28, publish r13-0x5254",src/resource/registry.rs
+resource::registry,8016b590,mount_queue_wake,translated,high,"work/ghidra/main-gb/export/8016b590_FUN_8016b590.c; 0x801B5D80(queue+0x20)",src/resource/registry.rs
+resource::registry,8016b5a0,mount_queue_sleep,translated,high,"work/ghidra/main-gb/export/8016b5a0_FUN_8016b5a0.c; 0x801B5C90(queue+0x20)",src/resource/registry.rs
+resource::registry,8016b5b0,mount_queue_peek,translated,high,"work/ghidra/main-gb/export/8016b5b0_FUN_8016b5b0.c; return *(u32*)(queue+0x18)",src/resource/registry.rs
+resource::registry,8016b5c0,mount_queue_submit,translated,high,"work/ghidra/main-gb/export/8016b5c0_FUN_8016b5c0.c; current-thread == r13-0x5268 runs vtable+0xC inline; else lock, append at +0x1C, unlock, wake",src/resource/registry.rs
+resource::registry,8016b670,mount_queue_remove,translated,high,"work/ghidra/main-gb/export/8016b670_FUN_8016b670.c; +0x18 list walk via +4, single-node head/tail clear, tail relink, unlock and wake",src/resource/registry.rs
+resource::registry,8016b730,mount_cmd_run,translated,medium,"work/ghidra/main-gb/export/8016b730_FUN_8016b730.c; call vtable+0xC of *(slot); this argument inferred as the node",src/resource/registry.rs
+resource::registry,8016b770,mount_queue_drain,translated,high,"work/ghidra/main-gb/export/8016b770_FUN_8016b770.c; infinite wait/peek/remove/run loop; node argument to 0x8016B670 inferred from r4",src/resource/registry.rs
+resource::registry,8016b7c0,mount_cmd_base_construct,translated,high,"work/ghidra/main-gb/export/8016b7c0_FUN_8016b7c0.c; vtable 0x8032977C, +4 = 0, +8 byte = 0",src/resource/registry.rs
+resource::registry,8016b7e0,mount_cmd_destroying_delete,translated,high,"work/ghidra/main-gb/export/8016b7e0_FUN_8016b7e0.c; null guard, vtable+8(this, 1)",src/resource/registry.rs
+resource::registry,8016ba20,mount_mem_cmd_construct,translated,high,"work/ghidra/main-gb/export/8016ba20_FUN_8016ba20.c; base ctor, vtable 0x80329754, mode +9, zero +0xA, entry -1 at +0xC, clear +0x10..+0x18",src/resource/registry.rs
+resource::registry,8016bcc0,mount_mem_cmd_create,translated,high,"work/ghidra/main-gb/export/8016bcc0_FUN_8016bcc0.c; probe 0x8016BC30, alloc 0x1C, ctor 0x8016BA20, store entry/heap/tag, submit 0x8016B5C0",src/resource/registry.rs
+resource::registry,8016bd60,mount_mem_cmd_execute,translated,medium,"work/ghidra/main-gb/export/8016bd60_FUN_8016bd60.c; heap fallback r13-0x525C, 0x8016B2A0 eight args, 0x802B75B0 mount, free on failure, mark done; executor arg order inferred",src/resource/registry.rs
+resource::registry,8016be60,mount_mem_cmd_archive,translated,high,"work/ghidra/main-gb/export/8016be60_FUN_8016be60.c; return *(u32*)(*(u32*)(cmd+0x10)+0x18) or 0",src/resource/registry.rs
+resource::registry,8016bef0,mount_arc_cmd_construct,translated,high,"work/ghidra/main-gb/export/8016bef0_FUN_8016bef0.c; base ctor, vtable 0x80329740, mode +9, zero +0xA, entry -1, clear +0x10..+0x1C",src/resource/registry.rs
+resource::registry,8016bf70,mount_arc_cmd_create,translated,high,"work/ghidra/main-gb/export/8016bf70_FUN_8016bf70.c; probe 0x8016BC30, alloc 0x20, ctor 0x8016BEF0, store entry/extra/tag, submit",src/resource/registry.rs
+resource::archive,802b7ed0,arc_object_open_entry,translated,medium,"work/ghidra/main-gb/export/802b7ed0_FUN_802b7ed0.c; 0xF8 stack archive, 0x802B7B00/7C30/7F80/7B50(-1); entry/dst split recovered from the save-stub register pair",src/resource/archive.rs
+resource::archive,802b7f80,arc_object_read_entry,translated,medium,"work/ghidra/main-gb/export/802b7f80_FUN_802b7f80.c; vtable+0x1C size, 32-byte align, 0x802B8CC0 allocate, 0x801CAB20 retry loops, 0x801AC440 invalidate, hook r13-0x4878",src/resource/archive.rs
+resource::archive,802b8150,arc_object_load_member,translated,medium,"work/ghidra/main-gb/export/802b8150_FUN_802b8150.c; decoder slots +8/+0xC/+0x10/+0x14, allocator slots +0x14/+0x18, chunked 0x801CAB20 reads, produced-size output",src/resource/archive.rs
+resource::archive,801a0040,arc_close_dir_stub,translated,high,"work/ghidra/main-gb/export/801a0040_FUN_801a0040.c; literal return 1, no-op U8 directory-iterator close",src/resource/archive.rs

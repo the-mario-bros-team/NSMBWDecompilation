@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,8001b3a0,fn_8001b3a0,translated,medium,"work/ghidra/main-gb/export/8001b3a0_FUN_8001b3a0.c; wipeCircle constructor; base 0x8016DC00; two-operand call as exported",src/ui/hud.rs
+ui::hud,8001b470,fn_8001b470,translated,medium,"work/ghidra/main-gb/export/8001b470_FUN_8001b470.c; build wipeCircle layout; archive 0x8030120C; brlyt 0x80301228",src/ui/hud.rs
+ui::hud,8001bb90,fn_8001bb90,translated,medium,"work/ghidra/main-gb/export/8001bb90_FUN_8001bb90.c; wipeDokan constructor; vtable 0x8030134C; SDA slot 0x80429C38",src/ui/hud.rs
+ui::hud,8001bc60,fn_8001bc60,translated,medium,"work/ghidra/main-gb/export/8001bc60_FUN_8001bc60.c; build wipeDokan layout; archive 0x80301320; brlyt 0x80301338",src/ui/hud.rs
+ui::hud,8001c170,fn_8001c170,translated,medium,"work/ghidra/main-gb/export/8001c170_FUN_8001c170.c; wipeKuppa constructor; vtable 0x80301404; SDA slot 0x80429C40",src/ui/hud.rs
+ui::hud,8001c240,fn_8001c240,translated,medium,"work/ghidra/main-gb/export/8001c240_FUN_8001c240.c; build wipeKuppa layout; archive 0x803013D8; brlyt 0x803013F0",src/ui/hud.rs
+ui::hud,8001c690,fn_8001c690,translated,medium,"work/ghidra/main-gb/export/8001c690_FUN_8001c690.c; wipeMario constructor; vtable 0x803014BC; SDA slot 0x80429C48",src/ui/hud.rs
+ui::hud,8001c760,fn_8001c760,translated,medium,"work/ghidra/main-gb/export/8001c760_FUN_8001c760.c; build wipeMario layout; archive 0x80301490; brlyt 0x803014A8",src/ui/hud.rs
+ui::hud,8001cbb0,fn_8001cbb0,translated,high,"work/ghidra/main-gb/export/8001cbb0_FUN_8001cbb0.c; returns 0x80377A04; 12-byte accessor",src/ui/hud.rs
+ui::hud,8001cbc0,fn_8001cbc0,translated,high,"work/ghidra/main-gb/export/8001cbc0_FUN_8001cbc0.c; returns 0x80377A04; byte-identical twin",src/ui/hud.rs
+ui::hud,8001cbd0,fn_8001cbd0,translated,high,"work/ghidra/main-gb/export/8001cbd0_FUN_8001cbd0.c; returns 0x80377A04; byte-identical twin",src/ui/hud.rs
+ui::hud,8001cbe0,fn_8001cbe0,translated,high,"work/ghidra/main-gb/export/8001cbe0_FUN_8001cbe0.c; returns 0x80377A04; byte-identical twin",src/ui/hud.rs
+ui::hud,8001d710,fn_8001d710,translated,high,"work/ghidra/main-gb/export/8001d710_FUN_8001d710.c; 0x8015F800(this,0) then 0x802B9280 when flag > 0",src/ui/hud.rs
+ui::hud,8001d850,fn_8001d850,translated,high,"work/ghidra/main-gb/export/8001d850_FUN_8001d850.c; five virtual +0xC probes on the +0x30 chain then tail recursion",src/ui/hud.rs
+ui::hud,8001d930,fn_8001d930,translated,medium,"work/ghidra/main-gb/export/8001d930_FUN_8001d930.c; 0x802E1C40 colon split; vtable +0x20 current name; 0x802E1AB4 compare",src/ui/hud.rs
+ui::hud,8001d9f0,fn_8001d9f0,translated,medium,"work/ghidra/main-gb/export/8001d9f0_FUN_8001d9f0.c; 0x802DCBFC(b,b,a) forwarding thunk",src/ui/hud.rs
+ui::hud,8001da20,fn_8001da20,translated,medium,"work/ghidra/main-gb/export/8001da20_FUN_8001da20.c; 0x802DCBFC(b,b,a) twin thunk",src/ui/hud.rs
+ui::hud,8001da50,fn_8001da50,translated,high,"work/ghidra/main-gb/export/8001da50_FUN_8001da50.c; returns 0x80377A04; byte-identical twin",src/ui/hud.rs
+ui::hud,8001da60,fn_8001da60,translated,high,"work/ghidra/main-gb/export/8001da60_FUN_8001da60.c; returns 0x80377A04; byte-identical twin",src/ui/hud.rs
+ui::hud,8001da70,fn_8001da70,translated,high,"work/ghidra/main-gb/export/8001da70_FUN_8001da70.c; returns 0x80377A04; byte-identical twin",src/ui/hud.rs
+ui::hud,8001db30,fn_8001db30,translated,medium,"work/ghidra/main-gb/export/8001db30_FUN_8001db30.c; clear +0x3D0 with 0x800690C0; vtable +0x140; detach 0x8016A8E0",src/ui/hud.rs
+ui::hud,8001e5a0,fn_8001e5a0,translated,medium,"work/ghidra/main-gb/export/8001e5a0_FUN_8001e5a0.c; vtable +0x60 +0x98 then +0x394 +0x18 with 0x80352774",src/ui/hud.rs
+ui::hud,8001f380,fn_8001f380,translated,high,"work/ghidra/main-gb/export/8001f380_FUN_8001f380.c; byte-identical to 0x8001D710 release body",src/ui/hud.rs
+ui::hud,8001f4c0,fn_8001f4c0,translated,high,"work/ghidra/main-gb/export/8001f4c0_FUN_8001f4c0.c; second five-probe +0x30 chain walk with recursion",src/ui/hud.rs
+ui::hud,8001f5a0,fn_8001f5a0,translated,medium,"work/ghidra/main-gb/export/8001f5a0_FUN_8001f5a0.c; byte-identical to 0x8001D930 name comparison",src/ui/hud.rs
+ui::hud,8001f660,fn_8001f660,translated,medium,"work/ghidra/main-gb/export/8001f660_FUN_8001f660.c; 0x802DCBFC(b,b,a) twin thunk",src/ui/hud.rs
+ui::hud,8001f690,fn_8001f690,translated,medium,"work/ghidra/main-gb/export/8001f690_FUN_8001f690.c; 0x802DCBFC(b,b,a) twin thunk",src/ui/hud.rs
+ui::hud,8001f6c0,fn_8001f6c0,translated,high,"work/ghidra/main-gb/export/8001f6c0_FUN_8001f6c0.c; first-zero insert into 12 slots +0x0C..+0x38; count +0x04",src/ui/hud.rs
+ui::hud,8001f740,fn_8001f740,translated,high,"work/ghidra/main-gb/export/8001f740_FUN_8001f740.c; remove value from 12 slots; decrement +0x04; clear +0x00 at zero",src/ui/hud.rs
+ui::hud,8001f800,fn_8001f800,translated,medium,"work/ghidra/main-gb/export/8001f800_FUN_8001f800.c; probe 12 slots through vtable +0x280; publish +0x08 and +0x00",src/ui/hud.rs

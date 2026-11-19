@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802d9380,fn_802d9380,translated,high,"work/ghidra/main-gb/export/802d9380_FUN_802d9380.c (336 bytes); 32-byte alignment; whole/split threshold aligned+0x40; free and in-use list surgery",src/runtime/cpp.rs
+runtime::cpp,802d9500,fn_802d9500,translated,high,"work/ghidra/main-gb/export/802d9500_FUN_802d9500.c (112 bytes); count at +8; manager 80286630; 80286A30 and 80286AC0 per index",src/runtime/cpp.rs
+runtime::cpp,802d9780,fn_802d9780,translated,high,"work/ghidra/main-gb/export/802d9780_FUN_802d9780.c (36 bytes); shift count of *(object+4)-1",src/runtime/cpp.rs
+runtime::cpp,802d97b0,fn_802d97b0,translated,high,"work/ghidra/main-gb/export/802d97b0_FUN_802d97b0.c (252 bytes); pitch shift; strcpy 802E1938 from 80350880; 802B9270/802B9240; child 802DA970; manager +C064/+C068",src/runtime/cpp.rs
+runtime::cpp,802d9b40,fn_802d9b40,translated,high,"work/ghidra/main-gb/export/802d9b40_FUN_802d9b40.c (148 bytes); owner +0x20; pop list +4; vtable +8; unlink 80228F80/80228DF0",src/runtime/cpp.rs
+runtime::cpp,802d9cb0,fn_802d9cb0,translated,high,"work/ghidra/main-gb/export/802d9cb0_FUN_802d9cb0.c (148 bytes); owner +0x18; same pop and unlink sequence",src/runtime/cpp.rs
+runtime::cpp,802d9e20,fn_802d9e20,translated,high,"work/ghidra/main-gb/export/802d9e20_FUN_802d9e20.c (148 bytes); owner +0x10; same pop and unlink sequence",src/runtime/cpp.rs
+runtime::cpp,802d9f90,fn_802d9f90,translated,high,"work/ghidra/main-gb/export/802d9f90_FUN_802d9f90.c (148 bytes); owner +0x8; same pop and unlink sequence",src/runtime/cpp.rs
+runtime::cpp,802da310,fn_802da310,translated,high,"work/ghidra/main-gb/export/802da310_FUN_802da310.c (156 bytes); base 802BA2D0(this); vtable 80350928; optional slot +0xC; register 80424CE8",src/runtime/cpp.rs
+runtime::cpp,802da470,fn_802da470,translated,high,"work/ghidra/main-gb/export/802da470_FUN_802da470.c (140 bytes); manager 80294B20; 80294F50/80295160 acquire; 80295400 commit",src/runtime/cpp.rs
+runtime::cpp,802da500,fn_802da500,translated,high,"work/ghidra/main-gb/export/802da500_FUN_802da500.c (144 bytes); manager 80294B20; 80295640/802956E0(manager,handle) release; drop arguments from raw trace",src/runtime/cpp.rs
+runtime::cpp,802da5a0,fn_802da5a0,translated,high,"work/ghidra/main-gb/export/802da5a0_FUN_802da5a0.c (88 bytes); base 80285810(this); vtable 80350940; fn_802dbb70(+0xA0); slot +0x24",src/runtime/cpp.rs
+runtime::cpp,802da600,fn_802da600,translated,high,"work/ghidra/main-gb/export/802da600_FUN_802da600.c (104 bytes); fn_802dbc20(+0xA0,-1); 80285880(this,0); optional free 802B9280",src/runtime/cpp.rs
+runtime::cpp,802da970,fn_802da970,translated,high,"work/ghidra/main-gb/export/802da970_FUN_802da970.c (80 bytes); base 80287130(this); vtable 80350968; slot +0x2C",src/runtime/cpp.rs
+runtime::cpp,802da9c0,fn_802da9c0,translated,high,"work/ghidra/main-gb/export/802da9c0_FUN_802da9c0.c (88 bytes); 80287190(this,0); optional free 802B9280",src/runtime/cpp.rs
+runtime::cpp,802daf10,fn_802daf10,translated,high,"work/ghidra/main-gb/export/802daf10_FUN_802daf10.c (280 bytes); mode at +0x24; modes 0/1/5/7/8/10; lfs/stfs stores; clear bit 02000000",src/runtime/cpp.rs
+runtime::cpp,802db030,fn_802db030,translated,high,"work/ghidra/main-gb/export/802db030_FUN_802db030.c (80 bytes); base 802919A0(this); vtable 80350998; slot +0x18",src/runtime/cpp.rs
+runtime::cpp,802db080,fn_802db080,translated,high,"work/ghidra/main-gb/export/802db080_FUN_802db080.c (88 bytes); 802919B0(this,0); optional free 802B9280",src/runtime/cpp.rs
+runtime::cpp,802db0f0,fn_802db0f0,translated,high,"work/ghidra/main-gb/export/802db0f0_FUN_802db0f0.c (80 bytes); base 80292810(this); vtable 803509B8; slot +0x24",src/runtime/cpp.rs
+runtime::cpp,802db140,fn_802db140,translated,high,"work/ghidra/main-gb/export/802db140_FUN_802db140.c (88 bytes); 80292B20(this,0); optional free 802B9280",src/runtime/cpp.rs
+runtime::cpp,802dbb20,fn_802dbb20,translated,high,"work/ghidra/main-gb/export/802dbb20_FUN_802dbb20.c (72 bytes); +8 zero; five float defaults from 8042F674; bytes 0x20..0x29 except +0x26",src/runtime/cpp.rs
+runtime::cpp,802dbb70,fn_802dbb70,translated,high,"work/ghidra/main-gb/export/802dbb70_FUN_802dbb70.c (172 bytes); vtable 80350A08; one-word clear from raw loop count; +0x44=-1; fn_802dc9a0(+0x48,802AD910,800075D0,4,4); slot +0xC",src/runtime/cpp.rs
+runtime::cpp,802dbc20,fn_802dbc20,translated,high,"work/ghidra/main-gb/export/802dbc20_FUN_802dbc20.c (104 bytes); fn_802dca98(+0x48,800075D0,4,4); optional free 802B9280",src/runtime/cpp.rs
+runtime::cpp,802dc090,fn_802dc090,translated,medium,"work/ghidra/main-gb/export/802dc090_FUN_802dc090.c (92 bytes); fn_802dc5d0(object,0x1000,mode); four bytes to +0x44; third argument recovered from caller 802D8140",src/runtime/cpp.rs
+runtime::cpp,802dc620,fn_802dc620,translated,high,"work/ghidra/main-gb/export/802dc620_FUN_802dc620.c (124 bytes); mask/value/mode logic on words +4 and +8; disabled mode bit always clears",src/runtime/cpp.rs
+runtime::cpp,802ddaa0,fn_802ddaa0,translated,high,"work/ghidra/main-gb/export/802ddaa0_FUN_802ddaa0.c (220 bytes); u64 to decimal record; digits 0-9 least-significant first then reversed; exponent length-1",src/runtime/cpp.rs
+runtime::cpp,802ded7c,fn_802ded7c,translated,medium,"work/ghidra/main-gb/export/802ded7c_thunk_FUN_802ded94.c (24 bytes); locale *(80350E68)+0x20 tail call; arguments inherited from fn_802ded94 ABI",src/runtime/cpp.rs
+runtime::cpp,802df4b8,fn_802df4b8,translated,high,"work/ghidra/main-gb/export/802df4b8_FUN_802df4b8.c (1468 bytes); flags/width/precision/length/conversion parser; 4-word record; 32-bit locale digit class verified at 802DF654",src/runtime/cpp.rs

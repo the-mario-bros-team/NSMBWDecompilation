@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b0a8d0,fn_80b0a8d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0a8d0_FUN_80b0a8d0.c; deleting destructor forwarding to 0x802DCBFC with vtable 0x80B31D50",src/game/enemies.rs
+game::enemies,80b0abf0,fn_80b0abf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0abf0_FUN_80b0abf0.c; 0x4330 conversion of +0x39C seeds the +0x99C/+0x9A0/+0x9A4 timers",src/game/enemies.rs
+game::enemies,80b0ac50,fn_80b0ac50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0ac50_FUN_80b0ac50.c; recursive class-0x99 search matching +0x998 against +0x398",src/game/enemies.rs
+game::enemies,80b0b020,fn_80b0b020,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0b020_FUN_80b0b020.c; resets four embedded holders then six releases and the positive-mode free",src/game/enemies.rs
+game::enemies,80b0b7b0,fn_80b0b7b0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0b7b0_FUN_80b0b7b0.c; 48-byte forwarder to 0x802DCBFC, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0b7e0,fn_80b0b7e0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0b7e0_FUN_80b0b7e0.c; identical 48-byte forwarder, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0b810,fn_80b0b810,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0b810_FUN_80b0b810.c; 0x528-byte allocation and vtable 0x80B67CB0",src/game/enemies.rs
+game::enemies,80b0c890,fn_80b0c890,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0c890_FUN_80b0c890.c; clears +0x9E0 when the 0x80097B30 overlap test succeeds",src/game/enemies.rs
+game::enemies,80b0e310,fn_80b0e310,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0e310_FUN_80b0e310.c; 0x8015F800 detach plus positive-count 0x802B9280 free",src/game/enemies.rs
+game::enemies,80b0e430,fn_80b0e430,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0e430_FUN_80b0e430.c; 48-byte forwarder to 0x802DCBFC, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0e460,fn_80b0e460,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0e460_FUN_80b0e460.c; identical 48-byte forwarder, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0e490,fn_80b0e490,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0e490_FUN_80b0e490.c; 0x5C0-byte larry constructor, vtable 0x80B68448 and the +0x524/+0x544/+0x584 chain",src/game/enemies.rs
+game::enemies,80b0e5e0,fn_80b0e5e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0e5e0_FUN_80b0e5e0.c; opens g3d/larry.brres, resolves larry and attaches the clip pair",src/game/enemies.rs
+game::enemies,80b0e780,fn_80b0e780,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0e780_FUN_80b0e780.c; rebuilds +0x7C from the position/facing triple and submits both holders",src/game/enemies.rs
+game::enemies,80b0e8c0,fn_80b0e8c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0e8c0_FUN_80b0e8c0.c; binds demo_battleA and zeroes +0xE8/+0xEC/+0xF0",src/game/enemies.rs
+game::enemies,80b0e970,fn_80b0e970,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0e970_FUN_80b0e970.c; advances +0x544 and switches to state 0x80B78A48 on clip end",src/game/enemies.rs
+game::enemies,80b0ea10,fn_80b0ea10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0ea10_FUN_80b0ea10.c; binds demo_battleA_wait and zeroes the three speed words",src/game/enemies.rs
+game::enemies,80b0eab0,fn_80b0eab0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0eab0_FUN_80b0eab0.c; waiting frame step, no state switch",src/game/enemies.rs
+game::enemies,80b0ed70,fn_80b0ed70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0ed70_FUN_80b0ed70.c; second copy of the 0x8015F800/0x802B9280 detach helper",src/game/enemies.rs
+game::enemies,80b0ee90,fn_80b0ee90,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0ee90_FUN_80b0ee90.c; 48-byte forwarder to 0x802DCBFC, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0eec0,fn_80b0eec0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0eec0_FUN_80b0eec0.c; identical 48-byte forwarder, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0eef0,fn_80b0eef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0eef0_FUN_80b0eef0.c; 0x718-byte sibling constructor with +0x5CC holder and +0x604 member",src/game/enemies.rs
+game::enemies,80b0f4a0,fn_80b0f4a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0f4a0_FUN_80b0f4a0.c; met_toge matrix rebuild plus the +0x464 offset vector",src/game/enemies.rs
+game::enemies,80b0f760,fn_80b0f760,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0f760_FUN_80b0f760.c; three-entry run speed, side flip and the six speed stores",src/game/enemies.rs
+game::enemies,80b0fa30,fn_80b0fa30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0fa30_FUN_80b0fa30.c; releases five holders and frees when mode is positive",src/game/enemies.rs
+game::enemies,80b0fbf0,fn_80b0fbf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0fbf0_FUN_80b0fbf0.c; third copy of the 0x8015F800/0x802B9280 detach helper",src/game/enemies.rs
+game::enemies,80b0fd10,fn_80b0fd10,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0fd10_FUN_80b0fd10.c; 48-byte forwarder to 0x802DCBFC, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0fd40,fn_80b0fd40,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80b0fd40_FUN_80b0fd40.c; identical 48-byte forwarder, hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80b0fd70,fn_80b0fd70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0fd70_FUN_80b0fd70.c; 0x7F8-byte met_toge constructor with the 8x0x40 pool at +0x5EC",src/game/enemies.rs
+game::enemies,80b0ff50,fn_80b0ff50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0ff50_FUN_80b0ff50.c; opens g3d/met_toge.brres and binds met_toge plus met_toge_shell",src/game/enemies.rs

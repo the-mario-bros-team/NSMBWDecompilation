@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80223390,fn_80223390,translated,high,"work/ghidra/main-gb/export/80223390_FUN_80223390.c; attribute-id list builder; 0x35/0x36 sequence header; 3 bytes per u16 id; null ids writes 0x0000FFFF",src/runtime/bt.rs
+runtime::bt,80223560,fn_80223560,translated,high,"work/ghidra/main-gb/export/80223560_FUN_80223560.c; attribute-pair encoder; id as 0x09 uint16 then the value with the caller type nibble and compact size index",src/runtime/bt.rs
+runtime::bt,802236b4,fn_802236b4,translated,medium,"work/ghidra/main-gb/export/802236b4_FUN_802236b4.c; sdpu_build_n_send_error PDU; ccb and transaction recovered from the FUN_802dcd68 prologue and extraout_r4",src/runtime/bt.rs
+runtime::bt,802237f0,fn_802237f0,translated,high,"work/ghidra/main-gb/export/802237f0_FUN_802237f0.c; parses a sequence of 2/4/16-byte UUIDs into 16 entries of 0x12 bytes",src/runtime/bt.rs
+runtime::bt,80223b40,fn_80223b40,translated,high,"work/ghidra/main-gb/export/80223b40_FUN_80223b40.c; parses a sequence of uint16/uint32 attribute ids into 16 entries of two u16 halves",src/runtime/bt.rs
+runtime::bt,80223d90,fn_80223d90,translated,high,"work/ghidra/main-gb/export/80223d90_FUN_80223d90.c; decodes a data-element size index into a width or an inline byte/word value",src/runtime/bt.rs
+runtime::bt,80223e60,fn_80223e60,translated,high,"work/ghidra/main-gb/export/80223e60_FUN_80223e60.c; compares UUID bytes 4..15 with the base table at 0x802F7198",src/runtime/bt.rs
+runtime::bt,80223f40,fn_80223f40,translated,high,"work/ghidra/main-gb/export/80223f40_FUN_80223f40.c; compares 2/4/16-byte UUIDs; expands the short form into the base UUID at offset 2 or 0",src/runtime/bt.rs
+runtime::bt,802243c0,fn_802243c0,translated,medium,"work/ghidra/main-gb/export/802243c0_FUN_802243c0.c; IPC reply handler; kind 3/6/7 cache invalidation and bus address repair; callback then block free",src/runtime/bt.rs
+runtime::bt,80224620,fn_80224620,translated,medium,"work/ghidra/main-gb/export/80224620_FUN_80224620.c; 0xCD000004 interrupt handler; reply bit 0x14 forwards to fn_802243c0; window bit 0x22 dequeues one ring entry",src/runtime/bt.rs
+runtime::bt,80224910,fn_80224910,translated,medium,"work/ghidra/main-gb/export/80224910_FUN_80224910.c; submit one 0x40-byte request; 16-slot ring plus 32-slot wait table; -8 when the ring guard is full",src/runtime/bt.rs
+runtime::bt,80224b50,fn_80224b50,translated,medium,"work/ghidra/main-gb/export/80224b50_FUN_80224b50.c; asynchronous kind-1 open; path and context recovered from the FUN_802dcd74 half-pair",src/runtime/bt.rs
+runtime::bt,80225410,fn_80225410,translated,high,"work/ghidra/main-gb/export/80225410_FUN_80225410.c; synchronous kind-5 request; id at +8; value at +0xC; len at +0x10",src/runtime/bt.rs
+runtime::bt,80225500,fn_80225500,translated,medium,"work/ghidra/main-gb/export/80225500_FUN_80225500.c; kind-6 request with two buffers and a callback; both buffers biased and flushed",src/runtime/bt.rs
+runtime::bt,80225640,fn_80225640,translated,medium,"work/ghidra/main-gb/export/80225640_FUN_80225640.c; synchronous kind-6 request with two buffers",src/runtime/bt.rs
+runtime::bt,80225770,fn_80225770,translated,medium,"work/ghidra/main-gb/export/80225770_FUN_80225770.c; deflates a kind-7 vector table; two index runs then one whole-table flush",src/runtime/bt.rs
+runtime::bt,802258b0,fn_802258b0,translated,medium,"work/ghidra/main-gb/export/802258b0_FUN_802258b0.c; kind-7 request with a vector table and a callback",src/runtime/bt.rs
+runtime::bt,802259a0,fn_802259a0,translated,medium,"work/ghidra/main-gb/export/802259a0_FUN_802259a0.c; synchronous kind-7 request with a vector table",src/runtime/bt.rs
+runtime::bt,80225d80,fn_80225d80,translated,high,"work/ghidra/main-gb/export/80225d80_FUN_80225d80.c; attaches one of eight heaps; 32-byte alignment test; first block 0xBABE0000",src/runtime/bt.rs
+runtime::bt,80225eb0,fn_80225eb0,translated,medium,"work/ghidra/main-gb/export/80225eb0_FUN_80225eb0.c; first-fit aligned allocator over the 0xBABE0000 free list; splits and writes the pad header",src/runtime/bt.rs
+runtime::bt,802260c0,fn_802260c0,translated,high,"work/ghidra/main-gb/export/802260c0_FUN_802260c0.c; frees a payload; pad redirect; address-sorted insert; merge with next and previous",src/runtime/bt.rs
+runtime::bt,802262b0,fn_802262b0,translated,high,"work/ghidra/main-gb/export/802262b0_FUN_802262b0.c; clears both 32-slot tables and the in-flight/completion counters",src/runtime/bt.rs
+runtime::bt,80226370,fn_80226370,translated,high,"work/ghidra/main-gb/export/80226370_FUN_80226370.c; bumps both counters and stores the request/context pair in the first free slot",src/runtime/bt.rs
+runtime::bt,80226490,fn_80226490,translated,low,"work/ghidra/main-gb/export/80226490_FUN_80226490.c; second arena bring-up; kind-1 open at the aligned base; 0x1540-byte heap for the completion blocks",src/runtime/bt.rs
+runtime::bt,802265c0,fn_802265c0,translated,high,"work/ghidra/main-gb/export/802265c0_FUN_802265c0.c; shared completion callback; five copy-out modes then the block callback and free",src/runtime/bt.rs

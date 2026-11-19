@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a673d0,fn_80a673d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a673d0_FUN_80a673d0.c; g3d/goal_set.brres binder; five clip sets; 2^52 frame",src/game/enemies.rs
+game::enemies,80a85650,fn_80a85650,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85650_FUN_80a85650.c; one-shot resolver; six state arms; SE 0x116",src/game/enemies.rs
+game::enemies,80aa0c20,fn_80aa0c20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aa0c20_FUN_80aa0c20.c; approach latch; SE 470/467; four +0x844 clips",src/game/enemies.rs
+game::enemies,80aae520,fn_80aae520,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aae520_FUN_80aae520.c; 15-segment ring; three variant arms; Q12 records",src/game/enemies.rs
+game::enemies,80ac9870,fn_80ac9870,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac9870_FUN_80ac9870.c; breathe timer; haze/float/breath descriptor tables",src/game/enemies.rs
+game::enemies,80acc8f0,fn_80acc8f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acc8f0_FUN_80acc8f0.c; co-op follower; SE 0x1E7/0x1E8; clip switch",src/game/enemies.rs
+game::enemies,80accc00,fn_80accc00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80accc00_FUN_80accc00.c; breathe step; SE 0x1E8; walk latch arms",src/game/enemies.rs
+game::enemies,80acce20,fn_80acce20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acce20_FUN_80acce20.c; walk step; 264.0 x clamp; two token switches",src/game/enemies.rs
+game::enemies,80acdcc0,fn_80acdcc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acdcc0_FUN_80acdcc0.c; walk-clip selector; 2.0/1.5 rates; slot tables",src/game/enemies.rs
+game::enemies,80acdef0,fn_80acdef0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acdef0_FUN_80acdef0.c; 10.0/0.8 count divisor; s16 angle step",src/game/enemies.rs
+game::enemies,80ace900,fn_80ace900,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ace900_FUN_80ace900.c; walk start; 0x80B6AB9C pointer table; facing arms",src/game/enemies.rs
+game::enemies,80acee40,fn_80acee40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80acee40_FUN_80acee40.c; turn step; 0x4000 boundary; landing clip",src/game/enemies.rs
+game::enemies,80ae2250,fn_80ae2250,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae2250_FUN_80ae2250.c; qr3 u16 wing step; 0xC00 angle step; 1.5 amplitude",src/game/enemies.rs
+game::enemies,80b0c900,fn_80b0c900,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0c900_FUN_80b0c900.c; g3d/teresa.brres A/B/fog binder",src/game/enemies.rs
+game::enemies,80b147d0,fn_80b147d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b147d0_FUN_80b147d0.c; daEnTogeTekkyu 4 variants; descriptor + 11-word block",src/game/enemies.rs

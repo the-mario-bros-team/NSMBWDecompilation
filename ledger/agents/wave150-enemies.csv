@@ -1,0 +1,21 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a04d10,fn_80a04d10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a04d10_FUN_80a04d10.c; daEnBuku_c step; 120^2 contact latch to 0x80B6E7F8 SrcSwim; 0.5 clip rate on landing",src/game/enemies.rs
+game::enemies,80b28f90,fn_80b28f90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b28f90_FUN_80b28f90.c; 3x4 pivot build; Y/translate/X/translate/Z order with +-16.0*+0x6FC offsets",src/game/enemies.rs
+game::enemies,80a334d0,fn_80a334d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a334d0_FUN_80a334d0.c; ankou per-frame step; -5/+12 lane offsets; 185.0 timer clamp; 96.0 probe",src/game/enemies.rs
+game::enemies,80b05740,fn_80b05740,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b05740_FUN_80b05740.c; rail rebind; 16.0/{0.5,1.0,1.4,1.0} step; live count and cap recompute",src/game/enemies.rs
+game::enemies,80b25280,fn_80b25280,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b25280_FUN_80b25280.c; x-distance bucket; rows 13..16; lateral setter 0x8012F8E0; +0x524==3 flips sign",src/game/enemies.rs
+game::enemies,80b253d0,fn_80b253d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b253d0_FUN_80b253d0.c; y-distance twin; pitch setter 0x8012F810; +0x524==1 flips sign",src/game/enemies.rs
+game::enemies,80b2a360,fn_80b2a360,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b2a360_FUN_80b2a360.c; four-player x band; mode!=1 gate; scene byte +0x909CB; roles inferred",src/game/enemies.rs
+game::enemies,80ad5cd0,fn_80ad5cd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad5cd0_FUN_80ad5cd0.c; contact-mask gate; two s8 side offsets through vtable +0x280; two emitter states",src/game/enemies.rs
+game::enemies,80a62a30,fn_80a62a30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a62a30_FUN_80a62a30.c; gesso frame 18.0 crossing latches +0x114/+0x11C/+0xF4/+0xF8; side table 0x8042C1A0",src/game/enemies.rs
+game::enemies,80af16a0,fn_80af16a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af16a0_FUN_80af16a0.c; effect 60 per eligible player; parameter (i<<16)|0x2080|+0x68C",src/game/enemies.rs
+game::enemies,80a2fa30,fn_80a2fa30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2fa30_FUN_80a2fa30.c; 0x6950-byte constructor; vtable 0x80B3C838; six construct_array descriptors",src/game/enemies.rs
+game::enemies,80ac8850,fn_80ac8850,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac8850_FUN_80ac8850.c; +0x414..+0x432 hit record; multiplier reads other+0xE8 per raw stream",src/game/enemies.rs
+game::enemies,80b20010,fn_80b20010,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b20010_FUN_80b20010.c; effect 0xBD; record {x+table[i],y+12.0,1500.0}",src/game/enemies.rs
+game::enemies,80b22750,fn_80b22750,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b22750_FUN_80b22750.c; qr3 W=1 u16 angle widen; 0x300 step; stage surface +0x8FEC4",src/game/enemies.rs
+game::enemies,80b23890,fn_80b23890,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b23890_FUN_80b23890.c; per-index clip rebind; 0x80B328B0 pair table; rate 1.0",src/game/enemies.rs
+game::enemies,80b28100,fn_80b28100,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b28100_FUN_80b28100.c; 17-slot child placement; base angle in r4; +0x184 = 0x80095950",src/game/enemies.rs
+game::enemies,80a638f0,fn_80a638f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a638f0_FUN_80a638f0.c; left edge walk; clamp to +0x71C-4.0; probes 96.0/144.0; states 0x80B72210/0x80B722D0",src/game/enemies.rs
+game::enemies,80a63a30,fn_80a63a30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a63a30_FUN_80a63a30.c; right edge twin; clamp to +0x71C+4.0; miss state 0x80B72250",src/game/enemies.rs
+game::enemies,80aee850,fn_80aee850,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aee850_FUN_80aee850.c; 0x718-byte constructor; vtable 0x80B61E1C; two 0x8015FC90 animator records",src/game/enemies.rs
+game::enemies,80a390f0,fn_80a390f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a390f0_FUN_80a390f0.c; eight-band state init; ten-argument 0x800DB180; state 0x80B70618",src/game/enemies.rs

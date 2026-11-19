@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806c1040,fn_806c1040,translated,high,"work/ghidra/rel-d_basesNP/export/806c1040_FUN_806c1040.c; 32-slot s16 ring + triangular window + 3072 slew limit",src/game/bases.rs
+game::bases,806c7c20,fn_806c7c20,translated,medium,"work/ghidra/rel-d_basesNP/export/806c7c20_FUN_806c7c20.c; speed table 0x807CB114 + flash countdown + section-4b clamp -(raw+128.0)",src/game/bases.rs
+game::bases,8070b550,fn_8070b550,translated,high,"work/ghidra/rel-d_basesNP/export/8070b550_FUN_8070b550.c; 12-point vertex block at +0x6F8 + descriptor 0x8080565C patch",src/game/bases.rs
+game::bases,8065da00,fn_8065da00,translated,medium,"work/ghidra/rel-d_basesNP/export/8065da00_FUN_8065da00.c; category-2 radius sweep + type ladder 0x200/0x19B/0x33/0x69/0x68",src/game/bases.rs
+game::bases,807b87f0,fn_807b87f0,translated,high,"work/ghidra/rel-d_basesNP/export/807b87f0_FUN_807b87f0.c; twelve 0x80162B00 handles + subsystem starts + display fork",src/game/bases.rs
+game::bases,80682aa0,fn_80682aa0,translated,medium,"work/ghidra/rel-d_basesNP/export/80682aa0_FUN_80682aa0.c; two panes at radii 336/328 from a qr3 u16 angle",src/game/bases.rs
+game::bases,8068f220,fn_8068f220,translated,medium,"work/ghidra/rel-d_basesNP/export/8068f220_FUN_8068f220.c; 40-byte record table 0x8030A040 + four engine globals",src/game/bases.rs
+game::bases,80638120,fn_80638120,translated,high,"work/ghidra/rel-d_basesNP/export/80638120_FUN_80638120.c; four 0x3C-stride slots + spawn/despawn arms with cues 150/151",src/game/bases.rs
+game::bases,807be160,fn_807be160,translated,high,"work/ghidra/rel-d_basesNP/export/807be160_FUN_807be160.c; clears +0xBB bit 0 on four children then re-sets by frame index",src/game/bases.rs
+game::bases,807bc660,fn_807bc660,translated,medium,"work/ghidra/rel-d_basesNP/export/807bc660_FUN_807bc660.c; -0.2 per-frame timer on +0x2A0 + frame index advance + virtual +0x18",src/game/bases.rs

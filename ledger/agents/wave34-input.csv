@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801f8190,fn_801f8190,translated,high,"work/ghidra/main-gb/export/801f8190_FUN_801f8190.c; clears per-task alarm counters 0x803CDB48/0x803CDB28 (kind 0) or 0x803CDB88/0x803CDB68 (kind 1)",src/runtime/input.rs
+runtime::input,801f8220,fn_801f8220,translated,high,"work/ghidra/main-gb/export/801f8220_FUN_801f8220.c; zeroes {head,tail,ticks-left}",src/runtime/input.rs
+runtime::input,801f8240,fn_801f8240,translated,high,work/ghidra/main-gb/export/801f8240_FUN_801f8240.c; advance delta-timer list by n ticks,src/runtime/input.rs
+runtime::input,801f82d0,fn_801f82d0,translated,high,work/ghidra/main-gb/export/801f82d0_FUN_801f82d0.c; insert timer node into delta list,src/runtime/input.rs
+runtime::input,801f83c0,fn_801f83c0,translated,high,work/ghidra/main-gb/export/801f83c0_FUN_801f83c0.c; unlink timer node from delta list,src/runtime/input.rs
+runtime::input,801fa320,fn_801fa320,translated,medium,"work/ghidra/main-gb/export/801fa320_FUN_801fa320.c; restart timer on 0x803D1690 list (BTU list, inferred)",src/runtime/input.rs
+runtime::input,801fa390,fn_801fa390,translated,medium,work/ghidra/main-gb/export/801fa390_FUN_801fa390.c; remove timer from 0x803D1690 list,src/runtime/input.rs
+runtime::input,801fa3a4,fn_801fa3a4,translated,high,work/ghidra/main-gb/export/801fa3a4_FUN_801fa3a4.c; copy six-byte BD_ADDR,src/runtime/input.rs
+runtime::input,801fa3d8,fn_801fa3d8,translated,high,work/ghidra/main-gb/export/801fa3d8_FUN_801fa3d8.c; compare six-byte BD_ADDR; 0 means equal,src/runtime/input.rs
+runtime::input,801fa478,fn_801fa478,translated,high,work/ghidra/main-gb/export/801fa478_FUN_801fa478.c; store callback slot 0x803D1758,src/runtime/input.rs
+runtime::input,801fa488,fn_801fa488,translated,high,work/ghidra/main-gb/export/801fa488_FUN_801fa488.c; store callback slot 0x803D1760,src/runtime/input.rs
+runtime::input,801fa498,fn_801fa498,translated,high,work/ghidra/main-gb/export/801fa498_FUN_801fa498.c; store callback slot 0x803D175C,src/runtime/input.rs
+runtime::input,801fa4a8,fn_801fa4a8,translated,high,work/ghidra/main-gb/export/801fa4a8_FUN_801fa4a8.c; fan out to three callbacks with type 0,src/runtime/input.rs
+runtime::input,801fa56c,fn_801fa56c,translated,high,work/ghidra/main-gb/export/801fa56c_FUN_801fa56c.c; fan out to three callbacks with type 1,src/runtime/input.rs
+runtime::input,801fa630,fn_801fa630,translated,high,work/ghidra/main-gb/export/801fa630_FUN_801fa630.c; notify slot 0x803D175C with type 5,src/runtime/input.rs
+runtime::input,801fa664,fn_801fa664,translated,high,work/ghidra/main-gb/export/801fa664_FUN_801fa664.c; notify slot 0x803D175C with type 6,src/runtime/input.rs
+runtime::input,801fa698,fn_801fa698,translated,high,work/ghidra/main-gb/export/801fa698_FUN_801fa698.c; notify slot 0x803D175C with type 7,src/runtime/input.rs
+runtime::input,801fa6cc,fn_801fa6cc,translated,high,work/ghidra/main-gb/export/801fa6cc_FUN_801fa6cc.c; clears 0x8C bytes from 0x803D16D8; inits timer and task id,src/runtime/input.rs
+runtime::input,801fa730,fn_801fa730,translated,high,work/ghidra/main-gb/export/801fa730_FUN_801fa730.c; dispatch event msg via 0x803D16D8 table; shutdown path frees buffers,src/runtime/input.rs
+runtime::input,801fa81c,fn_801fa81c,translated,high,"work/ghidra/main-gb/export/801fa81c_FUN_801fa81c.c; gate 0x803D1754 then run expiry scan",src/runtime/input.rs
+runtime::input,801fa83c,fn_801fa83c,translated,high,work/ghidra/main-gb/export/801fa83c_FUN_801fa83c.c; register handler for event id,src/runtime/input.rs
+runtime::input,801fa850,fn_801fa850,translated,high,work/ghidra/main-gb/export/801fa850_FUN_801fa850.c; send buffer to HID-host queue (owner 0x803D1755),src/runtime/input.rs
+runtime::input,801fa86c,fn_801fa86c,translated,high,work/ghidra/main-gb/export/801fa86c_FUN_801fa86c.c; start timer on 0x803D1740 list,src/runtime/input.rs
+runtime::input,801fa88c,fn_801fa88c,translated,medium,work/ghidra/main-gb/export/801fa88c_FUN_801fa88c.c; stop timer on 0x803D1740 list,src/runtime/input.rs
+runtime::input,801fa8a0,fn_801fa8a0,translated,high,work/ghidra/main-gb/export/801fa8a0_FUN_801fa8a0.c; run per-module disable hooks for ids 0..0x1A,src/runtime/input.rs
+runtime::input,801fa910,fn_801fa910,translated,high,"work/ghidra/main-gb/export/801fa910_FUN_801fa910.c; init timer object: zero {head,tail,cur}, period +0xC, kind +0x10",src/runtime/input.rs
+runtime::input,801fa95c,fn_801fa95c,translated,medium,"work/ghidra/main-gb/export/801fa95c_FUN_801fa95c.c; drain expired timers, send event id or call node callback",src/runtime/input.rs
+runtime::input,801faa10,fn_801faa10,translated,high,"work/ghidra/main-gb/export/801faa10_FUN_801faa10.c; restart alarm when list empty (pending/10), then insert timer",src/runtime/input.rs
+runtime::input,801faab0,fn_801faab0,translated,medium,work/ghidra/main-gb/export/801faab0_FUN_801faab0.c; stop timer + clear task counters when list drains,src/runtime/input.rs
+runtime::input,801faaf0,fn_801faaf0,translated,high,work/ghidra/main-gb/export/801faaf0_FUN_801faaf0.c; free buffer pointed at by slot and clear slot,src/runtime/input.rs

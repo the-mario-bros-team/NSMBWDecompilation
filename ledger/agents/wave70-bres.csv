@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::bres,8023c610,mdl_buffer_word_emit,translated,medium,"work/ghidra/main-gb/export/8023c610_FUN_8023c610.c; record+0x18+*(+0x20) block, count +0x1C; sync -> 0x801C95E0 else FIFO store; skip_header drops 0x20",src/resource/bres.rs
+resource::bres,8023c6f0,mdl_aux_buffer_word_emit,translated,medium,"work/ghidra/main-gb/export/8023c6f0_FUN_8023c6f0.c; same emit from the +0x24/+0x28/+0x2C descriptor",src/resource/bres.rs
+resource::bres,8023c9b0,res_block_copy_200,translated,medium,"work/ghidra/main-gb/export/8023c9b0_FUN_8023c9b0.c; copies 0x200 bytes via 0x8024A530, rebases dst+4 by the move distance, cache-stores *(dst) bytes",src/resource/bres.rs
+resource::bres,8023ca20,res_cache_publish,translated,medium,"work/ghidra/main-gb/export/8023ca20_FUN_8023ca20.c; mode nonzero -> 0x801AC4A0 with unresolved args, else 0x801AC500 over *(*this) bytes",src/resource/bres.rs
+resource::bres,8023ca60,res_cache_publish_20,translated,high,"work/ghidra/main-gb/export/8023ca60_FUN_8023ca60.c; 0x801AC4A0 or 0x801AC500 over 0x20 bytes of *this",src/resource/bres.rs
+resource::bres,8023ca80,res_cache_publish_80,translated,high,"work/ghidra/main-gb/export/8023ca80_FUN_8023ca80.c; same pair over 0x80 bytes",src/resource/bres.rs
+resource::bres,8023caa0,res_cache_publish_40,translated,high,"work/ghidra/main-gb/export/8023caa0_FUN_8023caa0.c; same pair over 0x40 bytes",src/resource/bres.rs
+resource::bres,8023cac0,res_cache_publish_a0,translated,high,"work/ghidra/main-gb/export/8023cac0_FUN_8023cac0.c; same pair over 0xA0 bytes",src/resource/bres.rs
+resource::bres,8023cae0,res_cache_publish_alt,translated,medium,"work/ghidra/main-gb/export/8023cae0_FUN_8023cae0.c; byte-identical to 0x8023CA20",src/resource/bres.rs
+resource::bres,8023cb00,res_gx_word_emit_20,translated,high,"work/ghidra/main-gb/export/8023cb00_FUN_8023cb00.c; mode nonzero -> 0x801C95E0(*this,0x20), else FIFO store of 0x20",src/resource/bres.rs
+resource::bres,8023cb30,res_gx_word_emit_80,translated,high,"work/ghidra/main-gb/export/8023cb30_FUN_8023cb30.c; same with 0x80",src/resource/bres.rs
+resource::bres,8023cba0,res_block_copy_80,translated,medium,"work/ghidra/main-gb/export/8023cba0_FUN_8023cba0.c; 0x8024A530(dst,*this,0x80) and returns dst",src/resource/bres.rs
+resource::bres,8023cbe0,res_block_copy_40,translated,medium,"work/ghidra/main-gb/export/8023cbe0_FUN_8023cbe0.c; copy of 0x40 bytes and returns dst",src/resource/bres.rs
+resource::bres,8023cc20,res_block_copy_a0,translated,medium,"work/ghidra/main-gb/export/8023cc20_FUN_8023cc20.c; copy of 0xA0 bytes and returns dst",src/resource/bres.rs
+resource::bres,8023cc90,res_texture_object_ptr_alt,translated,high,"work/ghidra/main-gb/export/8023cc90_FUN_8023cc90.c; base+index*0x20+4 with null and index<8 guard; byte-identical to 0x8023CC60",src/resource/bres.rs
+resource::bres,8023cdc0,res_palette_object_ptr_alt,translated,high,"work/ghidra/main-gb/export/8023cdc0_FUN_8023cdc0.c; base+index*0xC+4 with null and index<8 guard; byte-identical to 0x8023CD90",src/resource/bres.rs
+resource::bres,8023d0a0,res_cache_set_size,translated,high,"work/ghidra/main-gb/export/8023d0a0_FUN_8023d0a0.c; null-guarded store of the size word at block+4",src/resource/bres.rs
+resource::bres,8023d0c0,res_record_copy_8,translated,high,"work/ghidra/main-gb/export/8023d0c0_FUN_8023d0c0.c; four byte copies then the word at +4; returns dst",src/resource/bres.rs
+resource::bres,8023d100,res_record_first_byte,translated,medium,"work/ghidra/main-gb/export/8023d100_FUN_8023d100.c; returns byte 0 of *this or 0 when null",src/resource/bres.rs
+resource::bres,8023d190,res_record_selector_byte,translated,high,"work/ghidra/main-gb/export/8023d190_FUN_8023d190.c; sign-extended byte at +2, -1 when null",src/resource/bres.rs
+resource::bres,8023d5b0,res_cache_emit_40,translated,high,"work/ghidra/main-gb/export/8023d5b0_FUN_8023d5b0.c; present flag gates the 0x40 emission; 0x801C95E0 or direct FIFO store",src/resource/bres.rs
+resource::bres,8023dc70,res_texcoord_variant_copy,translated,high,"work/ghidra/main-gb/export/8023dc70_FUN_8023dc70.c; *this+(selector&1)*0x14, copies bytes +4..+7, returns 1",src/resource/bres.rs
+resource::bres,8023dcb0,res_texcoord_variant_fields,translated,high,"work/ghidra/main-gb/export/8023dcb0_FUN_8023dcb0.c; decodes word +0xC or +0x10 of the selected variant into six optional outputs",src/resource/bres.rs
+resource::bres,8023ddd0,res_cache_publish_counted,translated,high,"work/ghidra/main-gb/export/8023ddd0_FUN_8023ddd0.c; count<2/4/8 selects 0x20/0x40/0x80 else 0xA0; sync -> 0x801C95E0 else FIFO store",src/resource/bres.rs
+resource::bres,8023ea20,res_entry_cache_sync_0,translated,medium,"work/ghidra/main-gb/export/8023ea20_FUN_8023ea20.c; mode nonzero -> 0x801AC4A0, else 0x801AC500 over *(*this) bytes; one of six identical thunks",src/resource/bres.rs
+resource::bres,8023ea40,res_entry_cache_sync_1,translated,medium,"work/ghidra/main-gb/export/8023ea40_FUN_8023ea40.c; same body as 0x8023EA20",src/resource/bres.rs
+resource::bres,8023ea60,res_entry_cache_sync_2,translated,medium,"work/ghidra/main-gb/export/8023ea60_FUN_8023ea60.c; same body as 0x8023EA20",src/resource/bres.rs
+resource::bres,8023ea80,res_entry_cache_sync_3,translated,medium,"work/ghidra/main-gb/export/8023ea80_FUN_8023ea80.c; same body as 0x8023EA20",src/resource/bres.rs
+resource::bres,8023eaa0,res_entry_cache_sync_4,translated,medium,"work/ghidra/main-gb/export/8023eaa0_FUN_8023eaa0.c; same body as 0x8023EA20",src/resource/bres.rs
+resource::bres,8023eac0,res_entry_cache_sync_5,translated,medium,"work/ghidra/main-gb/export/8023eac0_FUN_8023eac0.c; same body as 0x8023EA20; next address is res_palette_bind",src/resource/bres.rs

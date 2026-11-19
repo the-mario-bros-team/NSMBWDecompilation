@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d16b0,fn_800d16b0,translated,medium,"work/ghidra/main-gb/export/800d16b0_FUN_800d16b0.c; empty body tail-calls 0x802DCBFC; operands dropped by the export",src/engine/display.rs
+engine::display,800d38a0,fn_800d38a0,translated,medium,"work/ghidra/main-gb/export/800d38a0_FUN_800d38a0.c; releases four +0x14 interfaces + two animation records; +0x170/+0x174 timer; +0x780 -= +0x782",src/engine/display.rs
+engine::display,800d4cd0,fn_800d4cd0,translated,medium,"work/ghidra/main-gb/export/800d4cd0_FUN_800d4cd0.c; refreshes the +0x1E2..+0x1E4 interpolated triple from the +0x28 record scale and the +0xB8 value",src/engine/display.rs
+engine::display,800d5170,fn_800d5170,translated,medium,"work/ghidra/main-gb/export/800d5170_FUN_800d5170.c; +0x17C bit 0x200 star-sprite/tail spawn; three-way +0x180 mode dispatch",src/engine/display.rs
+engine::display,800d57f0,fn_800d57f0,translated,medium,"work/ghidra/main-gb/export/800d57f0_FUN_800d57f0.c; state-selected height plus X/Z rotation composition; stores +0x108 and +0xD8",src/engine/display.rs
+engine::display,800d5dd0,fn_800d5dd0,translated,medium,"work/ghidra/main-gb/export/800d5dd0_FUN_800d5dd0.c; +0x154 mode switch over the 0x802F1350 records; speed clamped to the row halfword span",src/engine/display.rs
+engine::display,800d6460,fn_800d6460,translated,medium,"work/ghidra/main-gb/export/800d6460_FUN_800d6460.c; selects one 0x802F2C38 effect row from the +0x160 0xC000/0x4000 bits",src/engine/display.rs
+engine::display,800d65e0,fn_800d65e0,translated,medium,"work/ghidra/main-gb/export/800d65e0_FUN_800d65e0.c; row start/replay; Rwait name resolved through 0x8023A0B0; three +0x70/+0x74/+0x80 calls",src/engine/display.rs
+engine::display,800d69b0,fn_800d69b0,translated,medium,"work/ghidra/main-gb/export/800d69b0_FUN_800d69b0.c; owner at +0x24; +0x160 bits 1/4/0xC000 choose the +0x64 copy path or the +0x68 path",src/engine/display.rs
+engine::display,800d9760,fn_800d9760,translated,medium,"work/ghidra/main-gb/export/800d9760_FUN_800d9760.c; builds the 0x80-byte packet with four 0x18 records from 0x80377C88 and submits it to 0x801B8620",src/engine/display.rs
+engine::display,800dab40,fn_800dab40,translated,high,"work/ghidra/main-gb/export/800dab40_FUN_800dab40.c; rectangular band test; height ramp from +0x20..+0x28; writes angle and depth",src/engine/display.rs
+engine::display,800dac40,fn_800dac40,translated,medium,"work/ghidra/main-gb/export/800dac40_FUN_800dac40.c; circular band test; arc window +0x40/+0x68/+0x6C; circle solve writes angle and depth",src/engine/display.rs
+engine::display,800dd1c0,fn_800dd1c0,translated,high,"work/ghidra/main-gb/export/800dd1c0_FUN_800dd1c0.c; 0x802DCBFC(second, second, first) thunk",src/engine/display.rs
+engine::display,800dd1f0,fn_800dd1f0,translated,high,"work/ghidra/main-gb/export/800dd1f0_FUN_800dd1f0.c; 0x802DCBFC(second, second, first) thunk",src/engine/display.rs
+engine::display,800dd220,fn_800dd220,translated,high,"work/ghidra/main-gb/export/800dd220_FUN_800dd220.c; 0x802DCBFC(second, second, first) thunk",src/engine/display.rs
+engine::display,800dd250,fn_800dd250,translated,high,"work/ghidra/main-gb/export/800dd250_FUN_800dd250.c; 0x802DCBFC(second, second, first) thunk",src/engine/display.rs
+engine::display,800dd280,fn_800dd280,translated,high,"work/ghidra/main-gb/export/800dd280_FUN_800dd280.c; 0x802DCBFC(second, second, first) thunk",src/engine/display.rs
+engine::display,800dd2b0,fn_800dd2b0,translated,high,"work/ghidra/main-gb/export/800dd2b0_FUN_800dd2b0.c; six dRemoconMng_c::dConnect_c descriptors from 0x80319048..0x803190FC; two vtables, two destructors",src/engine/display.rs
+engine::display,800dd7d0,fn_800dd7d0,translated,high,"work/ghidra/main-gb/export/800dd7d0_FUN_800dd7d0.c; 0x8015F800 destructor plus optional 0x802B9280 free; returns the object",src/engine/display.rs
+engine::display,800ddb50,fn_800ddb50,translated,high,"work/ghidra/main-gb/export/800ddb50_FUN_800ddb50.c; releases the +0x18 sub-object then optionally frees; returns the object",src/engine/display.rs
+engine::display,800de4b0,fn_800de4b0,translated,high,"work/ghidra/main-gb/export/800de4b0_FUN_800de4b0.c; 0x802DCBFC(second, second, first) thunk",src/engine/display.rs
+engine::display,800de4e0,fn_800de4e0,translated,high,"work/ghidra/main-gb/export/800de4e0_FUN_800de4e0.c; 0x802DCBFC(second, second, first) thunk",src/engine/display.rs
+engine::display,800de850,fn_800de850,translated,high,"work/ghidra/main-gb/export/800de850_FUN_800de850.c; destructor registered by 0x800DE510; 0x8015F800 plus optional free",src/engine/display.rs
+engine::display,800dfbe0,fn_800dfbe0,translated,medium,"work/ghidra/main-gb/export/800dfbe0_FUN_800dfbe0.c; +0x04 object type-tested against 0x802F86C8 then slot +0x34 dispatched",src/engine/display.rs
+engine::display,800dfce0,fn_800dfce0,translated,medium,"work/ghidra/main-gb/export/800dfce0_FUN_800dfce0.c; five-word record seeded by 0x80168400 and submitted through 0x800DFC70",src/engine/display.rs

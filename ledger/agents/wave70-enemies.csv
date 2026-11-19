@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a35b10,fn_80a35b10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a35b10_FUN_80a35b10.c; state-descriptor normaliser: 0x8015F800 reset then 0x802B9280 when mode > 0",src/game/enemies.rs
+game::enemies,80a35b70,fn_80a35b70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a35b70_FUN_80a35b70.c; byte-identical copy of fn_80a35b10",src/game/enemies.rs
+game::enemies,80a35bd0,fn_80a35bd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a35bd0_FUN_80a35bd0.c; returns the fixed state descriptor 0x80358004",src/game/enemies.rs
+game::enemies,80a35be0,fn_80a35be0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a35be0_FUN_80a35be0.c; returns the shared state descriptor 0x80357BF4",src/game/enemies.rs
+game::enemies,80a35cd0,fn_80a35cd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a35cd0_FUN_80a35cd0.c; +0x30 chain walker probing vtable slot +0xC; five probes unrolled plus self-recursion",src/game/enemies.rs
+game::enemies,80a35db0,fn_80a35db0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a35db0_FUN_80a35db0.c; colon-suffix name comparison through 0x802E1C40 and 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a35e70,fn_80a35e70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a35e70_FUN_80a35e70.c; 48-byte deleting-destructor forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a35ea0,fn_80a35ea0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a35ea0_FUN_80a35ea0.c; second copy of the 48-byte deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80a38c90,fn_80a38c90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a38c90_FUN_80a38c90.c; state-descriptor normaliser: 0x8015F800 reset then 0x802B9280 when mode > 0",src/game/enemies.rs
+game::enemies,80a38cf0,fn_80a38cf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a38cf0_FUN_80a38cf0.c; byte-identical copy of fn_80a38c90",src/game/enemies.rs
+game::enemies,80a38d50,fn_80a38d50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a38d50_FUN_80a38d50.c; returns the shared state descriptor 0x80357BB4",src/game/enemies.rs
+game::enemies,80a38d60,fn_80a38d60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a38d60_FUN_80a38d60.c; returns the shared state descriptor 0x80357BF4",src/game/enemies.rs
+game::enemies,80a38e50,fn_80a38e50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a38e50_FUN_80a38e50.c; +0x30 chain walker probing vtable slot +0xC; duplicates fn_80a35cd0",src/game/enemies.rs
+game::enemies,80a38f30,fn_80a38f30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a38f30_FUN_80a38f30.c; colon-suffix name comparison; duplicates fn_80a35db0",src/game/enemies.rs
+game::enemies,80a38ff0,fn_80a38ff0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a38ff0_FUN_80a38ff0.c; 48-byte deleting-destructor forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a39020,fn_80a39020,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a39020_FUN_80a39020.c; second copy of the 48-byte deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80a39050,fn_80a39050,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a39050_FUN_80a39050.c; alloc 0x630; vtable 0x80B3E428; holders at +0x524/+0x544/+0x584/+0x590/+0x5B0",src/game/enemies.rs
+game::enemies,80a39560,fn_80a39560,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a39560_FUN_80a39560.c; frame-gated toggle of +0x61C plus halfword table lookup into +0x628",src/game/enemies.rs
+game::enemies,80a395a0,fn_80a395a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a395a0_FUN_80a395a0.c; walks the +0x5C0 list for a child with class byte 1 or 2",src/game/enemies.rs
+game::enemies,80a39c60,fn_80a39c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a39c60_FUN_80a39c60.c; state-descriptor normaliser; duplicates fn_80a35b10",src/game/enemies.rs
+game::enemies,80a39d80,fn_80a39d80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a39d80_FUN_80a39d80.c; 48-byte deleting-destructor forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a39db0,fn_80a39db0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a39db0_FUN_80a39db0.c; second copy of the 48-byte deleting-destructor forwarder",src/game/enemies.rs
+game::enemies,80a3a000,fn_80a3a000,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3a000_FUN_80a3a000.c; sqrt-normalises three floats; zero guard compares against 0x80B2C314",src/game/enemies.rs
+game::enemies,80a3a0a0,fn_80a3a0a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3a0a0_FUN_80a3a0a0.c; builds the difference vector then calls fn_80a3a000",src/game/enemies.rs
+game::enemies,80a3cdd0,fn_80a3cdd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3cdd0_FUN_80a3cdd0.c; duplicate of fn_80a3a000 with zero guard constant 0x80B2C460",src/game/enemies.rs
+game::enemies,80a3ce70,fn_80a3ce70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3ce70_FUN_80a3ce70.c; builds the difference vector then calls fn_80a3cdd0",src/game/enemies.rs
+game::enemies,80a3ca30,fn_80a3ca30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3ca30_FUN_80a3ca30.c; compares owner +0x538 with 0x8016A5D0 and releases the +0x544 holder through slot +0x10",src/game/enemies.rs
+game::enemies,80a3db90,fn_80a3db90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3db90_FUN_80a3db90.c; byte-identical copy of fn_80a3ca30",src/game/enemies.rs
+game::enemies,80a3de90,fn_80a3de90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3de90_FUN_80a3de90.c; writes word 1 at +0xA90 and byte 1 at +0xA97",src/game/enemies.rs
+game::enemies,80a3fb30,fn_80a3fb30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a3fb30_FUN_80a3fb30.c; decrements the +0xA88 halfword timer and calls 0x80A3FAC0 when it reaches zero",src/game/enemies.rs

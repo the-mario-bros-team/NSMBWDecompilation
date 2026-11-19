@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800777b0,fn_800777b0,translated,medium,"work/ghidra/main-gb/export/800777b0_FUN_800777b0.c; 0x80077730 three-output cell decode then the 0x80082140 layer store; both dropped argument lists recovered from the code bytes at 0x800777BC..0x80077800",src/game/stage.rs
+game::stage,8007ac40,fn_8007ac40,translated,medium,"work/ghidra/main-gb/export/8007ac40_FUN_8007ac40.c; camera window rebuild; the 0x8007BD40 second float is the export's fVar3 (r2-0x7274/r2-0x7270), read from the code bytes at 0x8007AD8C..0x8007ADB0",src/game/stage.rs

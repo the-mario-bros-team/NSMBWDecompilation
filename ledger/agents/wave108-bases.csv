@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80672e20,fn_80672e20,translated,medium,"work/ghidra/rel-d_basesNP/export/80672e20_FUN_80672e20.c; five-link +0x30 walk with a virtual +0xC child probe, then recursion",src/game/bases.rs
+game::bases,80672f00,fn_80672f00,translated,medium,"work/ghidra/rel-d_basesNP/export/80672f00_FUN_80672f00.c; ':'-trimmed name compare via 0x802E1C40 and 0x802E1AB4; the vtable +0x20 name getter",src/game/bases.rs
+game::bases,80676d40,fn_80676d40,translated,high,"work/ghidra/rel-d_basesNP/export/80676d40_FUN_80676d40.c; 0x8007F950 on the +0x4D4 box, returns 1",src/game/bases.rs
+game::bases,80676f30,fn_80676f30,translated,medium,"work/ghidra/rel-d_basesNP/export/80676f30_FUN_80676f30.c; pane-indexed 0x15B emitter plus Wm_en_burst_m 0x2A3 / Wm_en_burst_s 0x2A2",src/game/bases.rs
+game::bases,80677090,fn_80677090,translated,high,"work/ghidra/rel-d_basesNP/export/80677090_FUN_80677090.c; four camera-window bounds at 0x80429E00 with the 4.0 margin",src/game/bases.rs
+game::bases,80677110,fn_80677110,translated,high,"work/ghidra/rel-d_basesNP/export/80677110_FUN_80677110.c; resets +0x624/+0x628/+0x634/+0x64C/+0x650/+0x654 and the five 1.0 slots",src/game/bases.rs
+game::bases,80677160,fn_80677160,translated,medium,"work/ghidra/rel-d_basesNP/export/80677160_FUN_80677160.c; grow-toward-limit / shrink-toward-1.0 step with a reached flag",src/game/bases.rs
+game::bases,806771c0,fn_806771c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806771c0_FUN_806771c0.c; mode 1 grow 1.5/0.08 and 0.75/0.04, mode 2 pulse 1.15/1.075, four-entry ring at +0x63C",src/game/bases.rs
+game::bases,80677390,fn_80677390,translated,medium,"work/ghidra/rel-d_basesNP/export/80677390_FUN_80677390.c; +0x630 countdown, reset at 3, burst and 0xB4 reload at 0",src/game/bases.rs
+game::bases,806775b0,fn_806775b0,translated,high,"work/ghidra/rel-d_basesNP/export/806775b0_FUN_806775b0.c; registered-state destructor 0x8015F800 plus optional 0x802B9280",src/game/bases.rs
+game::bases,80677970,fn_80677970,translated,medium,"work/ghidra/rel-d_basesNP/export/80677970_FUN_80677970.c; 1.0/0.0/24/32/48 seeds, track bind 0x8008C3E0 and start 0x8008C330, then fn_80677870",src/game/bases.rs
+game::bases,80677a00,fn_80677a00,translated,medium,"work/ghidra/rel-d_basesNP/export/80677a00_FUN_80677a00.c; 0x80064F50 idle gate, sound 0x295, Wm_en_obakedoor spawn, 0x80066630, 0x80064D10(actor,1)",src/game/bases.rs
+game::bases,80677eb0,fn_80677eb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80677eb0_FUN_80677eb0.c; 0x20A list walk comparing the byte at +0x3DC",src/game/bases.rs
+game::bases,80677f10,fn_80677f10,translated,medium,"work/ghidra/rel-d_basesNP/export/80677f10_FUN_80677f10.c; partner handle at +0x4A4, span/frames step at +0x4BC, four-way state select on 0x8082A258",src/game/bases.rs
+game::bases,80678060,fn_80678060,translated,high,"work/ghidra/rel-d_basesNP/export/80678060_FUN_80678060.c; fn_80677eb0 on the +0x52F id then fn_80677f10",src/game/bases.rs
+game::bases,806780c0,fn_806780c0,translated,medium,"work/ghidra/rel-d_basesNP/export/806780c0_FUN_806780c0.c; left approach: +0xB0 from +0x4C4 and +0x3D0/+0x3D4, +0xDC clamped between +0x4AC and +0x4B0",src/game/bases.rs
+game::bases,806781a0,fn_806781a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806781a0_FUN_806781a0.c; right approach, the sign mirror of fn_806780c0",src/game/bases.rs
+game::bases,80678280,fn_80678280,translated,medium,"work/ghidra/rel-d_basesNP/export/80678280_FUN_80678280.c; +4 owner state 3, +0x4FC bit 0 and the 0x80353A64 state query",src/game/bases.rs
+game::bases,80678a10,fn_80678a10,translated,medium,"work/ghidra/rel-d_basesNP/export/80678a10_FUN_80678a10.c; +0x4B4 gate, +0xDC step, else state 0x8082A018",src/game/bases.rs
+game::bases,80678b20,fn_80678b20,translated,medium,"work/ghidra/rel-d_basesNP/export/80678b20_FUN_80678b20.c; (0,-1,0) at +0xE8..+0xF0 and span divided by (int)+0x4C0",src/game/bases.rs
+game::bases,80678bb0,fn_80678bb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80678bb0_FUN_80678bb0.c; +0x4B8 gate, +0xDC step, else state 0x8082A098",src/game/bases.rs
+game::bases,80678cf0,fn_80678cf0,translated,high,"work/ghidra/rel-d_basesNP/export/80678cf0_FUN_80678cf0.c; 0x80162D00 resolves +0x4A4, else raises +0x52D, else fn_806780c0",src/game/bases.rs
+game::bases,80678d50,fn_80678d50,translated,medium,"work/ghidra/rel-d_basesNP/export/80678d50_FUN_80678d50.c; partner state 0x8082A258 selects 0x8082A158, else fn_806780c0",src/game/bases.rs
+game::bases,80678e10,fn_80678e10,translated,high,"work/ghidra/rel-d_basesNP/export/80678e10_FUN_80678e10.c; snaps +0xDC to +0x4AC and +0xB0 to +0x4C4 plus +0x3D0",src/game/bases.rs
+game::bases,80678e90,fn_80678e90,translated,high,"work/ghidra/rel-d_basesNP/export/80678e90_FUN_80678e90.c; partner state 0x8082A218 selects 0x8082A198",src/game/bases.rs
+game::bases,80678f30,fn_80678f30,translated,high,"work/ghidra/rel-d_basesNP/export/80678f30_FUN_80678f30.c; resolve +0x4A4 else raise +0x52D, else fn_806781a0",src/game/bases.rs
+game::bases,80678f90,fn_80678f90,translated,medium,"work/ghidra/rel-d_basesNP/export/80678f90_FUN_80678f90.c; partner state 0x8082A258 selects 0x8082A1D8, else fn_806781a0",src/game/bases.rs
+game::bases,80679050,fn_80679050,translated,high,"work/ghidra/rel-d_basesNP/export/80679050_FUN_80679050.c; snaps +0xDC to +0x4B0 and +0xB0 to +0x4C4 minus +0x3D0",src/game/bases.rs
+game::bases,806790d0,fn_806790d0,translated,high,"work/ghidra/rel-d_basesNP/export/806790d0_FUN_806790d0.c; partner state 0x8082A218 selects 0x8082A118",src/game/bases.rs

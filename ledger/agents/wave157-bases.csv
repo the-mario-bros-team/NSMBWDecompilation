@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80628f70,fn_80628f70,translated,medium,"work/ghidra/rel-d_basesNP/export/80628f70_FUN_80628f70.c; nine-row board cursor; 0x80628940 third argument is r5 = input nibble",src/game/bases.rs
+game::bases,806db340,fn_806db340,translated,high,"work/ghidra/rel-d_basesNP/export/806db340_FUN_806db340.c; daLiftScalesStep_c constructor; only qr0 f31 prologue save",src/game/bases.rs
+game::bases,806df820,fn_806df820,translated,high,"work/ghidra/rel-d_basesNP/export/806df820_FUN_806df820.c; lift_spin_kinoko four-player presence producer consumed by fn_806df770",src/game/bases.rs
+game::bases,807041b0,fn_807041b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807041b0_FUN_807041b0.c; boat_light_wood create body; 0x800D9130 placement record",src/game/bases.rs
+game::bases,80745dc0,fn_80745dc0,translated,high,"work/ghidra/rel-d_basesNP/export/80745dc0_FUN_80745dc0.c; untei_rope create body; two 0xE4 scroll layers and three d3d elements",src/game/bases.rs
+game::bases,8077d340,fn_8077d340,translated,medium,"work/ghidra/rel-d_basesNP/export/8077d340_FUN_8077d340.c; world-map walker countdown/effect/node transition",src/game/bases.rs
+game::bases,80788090,fn_80788090,translated,medium,"work/ghidra/rel-d_basesNP/export/80788090_FUN_80788090.c; World-7 Koopa BRRES binder; six 0x38-byte parts",src/game/bases.rs
+game::bases,8079b7c0,fn_8079b7c0,translated,high,"work/ghidra/rel-d_basesNP/export/8079b7c0_FUN_8079b7c0.c; XZ cosine of node 0x80832EB0 -> +0x22C -> +0x230",src/game/bases.rs
+game::bases,806566f0,fn_806566f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806566f0_FUN_806566f0.c; Wm_jr_bomb contact/explosion state machine; 0x806564A0 address-only",src/game/bases.rs
+game::bases,80657b30,fn_80657b30,translated,medium,"work/ghidra/rel-d_basesNP/export/80657b30_FUN_80657b30.c; fuse re-arm plus Wm_jr_bombfuse emit through +0x684",src/game/bases.rs
+game::bases,80657bb0,fn_80657bb0,translated,high,"work/ghidra/rel-d_basesNP/export/80657bb0_FUN_80657bb0.c; Wm_en_landsmoke puff one fuse radius below the actor",src/game/bases.rs
+game::bases,80657ea0,fn_80657ea0,translated,high,"work/ghidra/rel-d_basesNP/export/80657ea0_FUN_80657ea0.c; +0x680/+0x67C wall bounce, sound 0x5BE",src/game/bases.rs
+game::bases,80657fe0,fn_80657fe0,translated,high,"work/ghidra/rel-d_basesNP/export/80657fe0_FUN_80657fe0.c; fuse radius 24.0 * +0xDC",src/game/bases.rs
+game::bases,80658280,fn_80658280,translated,high,"work/ghidra/rel-d_basesNP/export/80658280_FUN_80658280.c; per-frame bomb body; fuse step, sound 0x5BD, two +0xD4 pushes",src/game/bases.rs
+game::bases,806584b0,fn_806584b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806584b0_FUN_806584b0.c; sibling frame body; sound 0x5BF through 0x80199390",src/game/bases.rs
+game::bases,806587b0,fn_806587b0,translated,high,"work/ghidra/rel-d_basesNP/export/806587b0_FUN_806587b0.c; three explosion effects, sound 0x5C2, callback 0x80656EB0",src/game/bases.rs

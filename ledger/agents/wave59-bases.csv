@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80640530,fn_80640530,translated,high,"work/ghidra/rel-d_basesNP/export/80640530_FUN_80640530.c; null/positive guard then 802B9280(state); returns state",src/game/bases.rs
+game::bases,80640570,fn_80640570,translated,high,"work/ghidra/rel-d_basesNP/export/80640570_FUN_80640570.c; byte-identical twin of fn_80640530",src/game/bases.rs
+game::bases,806405b0,fn_806405b0,translated,high,"work/ghidra/rel-d_basesNP/export/806405b0_FUN_806405b0.c; 8015F9F0(state+0x18,0); optional 802B9280(state); returns state",src/game/bases.rs
+game::bases,80640610,fn_80640610,translated,high,"work/ghidra/rel-d_basesNP/export/80640610_FUN_80640610.c; same body as fn_806405b0 with four bytes padding",src/game/bases.rs
+game::bases,80640890,fn_80640890,translated,medium,"work/ghidra/rel-d_basesNP/export/80640890_FUN_80640890.c; staffCredit.arc/staffCredit_00.brlyt; pane tables 807E1B18/807E1B58/807E1BE0/807E1C50; writes +0x244/+0x248/+0x260; 800C9A60 id 0x131",src/game/bases.rs
+game::bases,80640b40,fn_80640b40,translated,medium,"work/ghidra/rel-d_basesNP/export/80640b40_FUN_80640b40.c; four +0x288/+0x298 column latches; calls 80640AC0 which is truncated by bad instruction data",src/game/bases.rs
+game::bases,80640bb0,fn_80640bb0,translated,high,"work/ghidra/rel-d_basesNP/export/80640bb0_FUN_80640bb0.c; 800C9500(+0x70); clears pane+0xBB bit 0; eight score stores; fn_80640b40; +0x27E/+0x27F=0",src/game/bases.rs
+game::bases,80640c80,fn_80640c80,translated,high,"work/ghidra/rel-d_basesNP/export/80640c80_FUN_80640c80.c; animations 0..3 gated by +0x27A+i then animation 8; sets pane+0xBB bit 0",src/game/bases.rs
+game::bases,80640d10,fn_80640d10,translated,high,"work/ghidra/rel-d_basesNP/export/80640d10_FUN_80640d10.c; 800C9610(+0x70,-1)==0 then interface +0x208 slot +0x18 with 80827740",src/game/bases.rs
+game::bases,80640d80,fn_80640d80,translated,high,"work/ghidra/rel-d_basesNP/export/80640d80_FUN_80640d80.c; animations 4..7 gated by +0x27A+i",src/game/bases.rs
+game::bases,80640de0,fn_80640de0,translated,high,"work/ghidra/rel-d_basesNP/export/80640de0_FUN_80640de0.c; fn_80640b40 then 80827780/808277C0/80827800 ladder on +0x27E/+0x27F/+0x280",src/game/bases.rs
+game::bases,80640ea0,fn_80640ea0,translated,medium,"work/ghidra/rel-d_basesNP/export/80640ea0_FUN_80640ea0.c; 802DCD70 lock; four-column max scan; +0x2B4 winner; 80354E60 character table; sounds 9/10/12/11; +0x2AC max; 802DCDBC unlock",src/game/bases.rs
+game::bases,80641040,fn_80641040,translated,high,"work/ghidra/rel-d_basesNP/export/80641040_FUN_80641040.c; +0x2B4 < 0 or 800C9610==0 sends 80827740",src/game/bases.rs
+game::bases,806410d0,fn_806410d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806410d0_FUN_806410d0.c; +0x2B4>=0 and +0x2B0!=0; 800B3B60(+0x2AC,807E1CA0,+0x258,1); animation 0xD",src/game/bases.rs
+game::bases,80641140,fn_80641140,translated,high,"work/ghidra/rel-d_basesNP/export/80641140_FUN_80641140.c; guards +0x2B4/+0x2B0 then animation end check; sends 80827740",src/game/bases.rs
+game::bases,806411d0,fn_806411d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806411d0_FUN_806411d0.c; 800E0380(8042A040,-1) then 800CE120(player,+0x2AC & 0xFFFF); +0x27F=0",src/game/bases.rs
+game::bases,80641280,fn_80641280,translated,high,"work/ghidra/rel-d_basesNP/export/80641280_FUN_80641280.c; per marked +0x281 slot 8005F900(slot) then 80052290(player,2)",src/game/bases.rs
+game::bases,80641300,fn_80641300,translated,medium,"work/ghidra/rel-d_basesNP/export/80641300_FUN_80641300.c; player +0xDE8 -> +4 -> +0x154 busy scan; sends 80827880 when idle",src/game/bases.rs
+game::bases,8064b5e0,fn_8064b5e0,translated,high,"work/ghidra/rel-d_basesNP/export/8064b5e0_FUN_8064b5e0.c; 8023A0B0(waterbubble) then 801651F0/80169F80/801680E0 with 807C85D4/807C85D0",src/game/bases.rs
+game::bases,8064b910,fn_8064b910,translated,medium,"work/ghidra/rel-d_basesNP/export/8064b910_FUN_8064b910.c; three-band split of fn_8064baa0 result by +0x3A0/+0x3A4+10; literal dead half-condition preserved",src/game/bases.rs
+game::bases,8064baa0,fn_8064baa0,translated,high,"work/ghidra/rel-d_basesNP/export/8064baa0_FUN_8064baa0.c; +0x394 modulo (+0x3A0 + +0x3A4 + 10)",src/game/bases.rs
+game::bases,8064bc60,fn_8064bc60,translated,high,"work/ghidra/rel-d_basesNP/export/8064bc60_FUN_8064bc60.c; 80162D50(0x19A,index) walk then +0x628=1",src/game/bases.rs
+game::bases,8064bcd0,fn_8064bcd0,translated,medium,"work/ghidra/rel-d_basesNP/export/8064bcd0_FUN_8064bcd0.c; 8042A440 vtable +0x10; clz(value-1)>>5; 80429CF8 |= 9; +0x394 slot +0x18 with 80828050",src/game/bases.rs
+game::bases,8064bd80,fn_8064bd80,translated,high,"work/ghidra/rel-d_basesNP/export/8064bd80_FUN_8064bd80.c; +0x3D8/+0x3D4 countdown; fn_8064bc60 at 1; 8005CA50; 80429CF8 &= 0xF6; 80429D40+0x3C=0",src/game/bases.rs
+game::bases,8064c620,fn_8064c620,translated,medium,"work/ghidra/rel-d_basesNP/export/8064c620_FUN_8064c620.c; 801C0BD0 + 8016EF50 matrix; face_1 via 8023B200; 80168180 sample; copies into +0x3F4 and +0x3B4",src/game/bases.rs
+game::bases,8064c700,fn_8064c700,translated,high,"work/ghidra/rel-d_basesNP/export/8064c700_FUN_8064c700.c; two-word table 807C85F0/85F4; 801651F0 + 80169F80(807C8600); 80166BD0; model slot +0x18",src/game/bases.rs
+game::bases,8064c8d0,fn_8064c8d0,translated,high,"work/ghidra/rel-d_basesNP/export/8064c8d0_FUN_8064c8d0.c; virtual slot +0x14 on +0x3F4 and +0x3B4; returns 1",src/game/bases.rs
+game::bases,8064cc00,fn_8064cc00,translated,medium,"work/ghidra/rel-d_basesNP/export/8064cc00_FUN_8064cc00.c; virtual slot +0x10 on +0x394 with the dropped receiver restored; returns 1",src/game/bases.rs
+game::bases,8064cc30,fn_8064cc30,translated,medium,"work/ghidra/rel-d_basesNP/export/8064cc30_FUN_8064cc30.c; 801C0BD0 + three rotation writers; colour 807C860C/807C8610 triple; +0x3F0 slot +0x14; returns 1",src/game/bases.rs

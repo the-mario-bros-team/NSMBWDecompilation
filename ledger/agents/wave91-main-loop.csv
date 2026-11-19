@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e032c,fn_802e032c,translated,medium,"work/ghidra/main-gb/export/802e032c_FUN_802e032c.c; decimal digit-block rounding helper",src/engine/main_loop.rs
+engine::main_loop,802e149c,fn_802e149c,translated,medium,"work/ghidra/main-gb/export/802e149c_FUN_802e149c.c; stream append callback over the fwrite core",src/engine/main_loop.rs
+engine::main_loop,802e1560,fn_802e1560,translated,medium,"work/ghidra/main-gb/export/802e1560_FUN_802e1560.c; printf into stdout after the orientation test",src/engine/main_loop.rs
+engine::main_loop,802e15dc,fn_802e15dc,translated,high,"work/ghidra/main-gb/export/802e15dc_FUN_802e15dc.c; bounded snprintf with both terminator branches",src/engine/main_loop.rs
+engine::main_loop,802e1664,fn_802e1664,translated,medium,"work/ghidra/main-gb/export/802e1664_FUN_802e1664.c; unbounded sprintf through a -1 length descriptor",src/engine/main_loop.rs
+engine::main_loop,802e1cf4,fn_802e1cf4,translated,medium,"work/ghidra/main-gb/export/802e1cf4_FUN_802e1cf4.c; MSL integer parser state machine with overflow flags",src/engine/main_loop.rs
+engine::main_loop,802e278c,fn_802e278c,translated,medium,"work/ghidra/main-gb/export/802e278c_FUN_802e278c.c; 32-bit radix conversion with sign and zero padding",src/engine/main_loop.rs
+engine::main_loop,802e29d0,fn_802e29d0,translated,medium,"work/ghidra/main-gb/export/802e29d0_FUN_802e29d0.c; 64-bit radix conversion with sign and zero padding",src/engine/main_loop.rs
+engine::main_loop,802e30e0,fn_802e30e0,translated,high,"work/ghidra/main-gb/export/802e30e0_FUN_802e30e0.c; byte-identical twin of 0x802E032C",src/engine/main_loop.rs
+engine::main_loop,802e44f8,fn_802e44f8,translated,high,"work/ghidra/main-gb/export/802e44f8_FUN_802e44f8.c; stream orientation query and set",src/engine/main_loop.rs
+engine::main_loop,802e4570,fn_802e4570,translated,medium,"work/ghidra/main-gb/export/802e4570_FUN_802e4570.c; DMA pool reservation then cache flush forward",src/engine/main_loop.rs
+engine::main_loop,802e4648,fn_802e4648,translated,medium,"work/ghidra/main-gb/export/802e4648_FUN_802e4648.c; optional flush callback invoked through a global slot",src/engine/main_loop.rs
+engine::main_loop,802e942c,fn_802e942c,translated,high,"work/ghidra/main-gb/export/802e942c_thunk_FUN_802e9874.c; four-byte thunk to the breakpoint reset",src/engine/main_loop.rs
+engine::main_loop,802e9498,fn_802e9498,translated,medium,"work/ghidra/main-gb/export/802e9498_FUN_802e9498.c; 15-segment writeback and cache invalidate",src/engine/main_loop.rs
+engine::main_loop,802e96e4,fn_802e96e4,translated,high,"work/ghidra/main-gb/export/802e96e4_FUN_802e96e4.c; devkit selection and NDEV handler table install",src/engine/main_loop.rs
+engine::main_loop,802e981c,fn_802e981c,translated,high,"work/ghidra/main-gb/export/802e981c_FUN_802e981c.c; empty body - a single blr",src/engine/main_loop.rs
+engine::main_loop,802e99c0,fn_802e99c0,translated,high,"work/ghidra/main-gb/export/802e99c0_FUN_802e99c0.c; 0x90 or status reply dispatch plus buffer release",src/engine/main_loop.rs
+engine::main_loop,802e9d3c,fn_802e9d3c,translated,medium,"work/ghidra/main-gb/export/802e9d3c_FUN_802e9d3c.c; reply header plus payload read into a fresh buffer",src/engine/main_loop.rs
+engine::main_loop,802e9ea0,fn_802e9ea0,translated,medium,"work/ghidra/main-gb/export/802e9ea0_FUN_802e9ea0.c; D0 and D1 chunked block transfer loop",src/engine/main_loop.rs
+engine::main_loop,802ea094,fn_802ea094,translated,medium,"work/ghidra/main-gb/export/802ea094_FUN_802ea094.c; request send and reply poll with header checks",src/engine/main_loop.rs
+engine::main_loop,802ea1bc,fn_802ea1bc,translated,medium,"work/ghidra/main-gb/export/802ea1bc_FUN_802ea1bc.c; D2 request sender",src/engine/main_loop.rs
+engine::main_loop,802ea2d4,fn_802ea2d4,translated,medium,"work/ghidra/main-gb/export/802ea2d4_FUN_802ea2d4.c; D3 request sender",src/engine/main_loop.rs
+engine::main_loop,802ea3b8,fn_802ea3b8,translated,medium,"work/ghidra/main-gb/export/802ea3b8_FUN_802ea3b8.c; D4 request sender",src/engine/main_loop.rs
+engine::main_loop,802ec0e4,fn_802ec0e4,translated,medium,"work/ghidra/main-gb/export/802ec0e4_FUN_802ec0e4.c; eight-byte forward to the cache flush trampoline",src/engine/main_loop.rs
+engine::main_loop,802ec0ec,fn_802ec0ec,translated,medium,"work/ghidra/main-gb/export/802ec0ec_FUN_802ec0ec.c; eight-byte forward to the cache flush trampoline",src/engine/main_loop.rs

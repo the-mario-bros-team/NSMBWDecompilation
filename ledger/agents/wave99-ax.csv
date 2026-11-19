@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801955f0,fn_801955f0,translated,medium,"work/ghidra/main-gb/export/801955f0_FUN_801955f0.c; stage fade/countdown +0x91C..+0x92C; tick scale OSBusClock/4000",src/audio/ax.rs
+audio::ax,801962d0,fn_801962d0,translated,medium,"work/ghidra/main-gb/export/801962d0_FUN_801962d0.c; two stream slots +0x910/+0x908; level to sequence +0x44",src/audio/ax.rs
+audio::ax,801964f0,fn_801964f0,translated,medium,"work/ghidra/main-gb/export/801964f0_FUN_801964f0.c; cue name lookup 80275740/80278780 then 8027A8F0",src/audio/ax.rs
+audio::ax,80196690,fn_80196690,translated,medium,"work/ghidra/main-gb/export/80196690_FUN_80196690.c; slot guards +0x904/+0x910/+0x908; status via 80275760",src/audio/ax.rs
+audio::ax,80197bf0,fn_80197bf0,translated,medium,"work/ghidra/main-gb/export/80197bf0_FUN_80197bf0.c; 0x74/8 row scan; default 52B8; 8027B160 + 80196190",src/audio/ax.rs
+audio::ax,80197e30,fn_80197e30,translated,medium,"work/ghidra/main-gb/export/80197e30_FUN_80197e30.c; four-list token release; SDA 51F0/51EC",src/audio/ax.rs
+audio::ax,80198660,fn_80198660,translated,medium,"work/ghidra/main-gb/export/80198660_FUN_80198660.c; 0x14 row scan; tag +0x68; default 52B8",src/audio/ax.rs
+audio::ax,80198ae0,fn_80198ae0,translated,medium,"work/ghidra/main-gb/export/80198ae0_FUN_80198ae0.c; four-list token release twin of 80197e30",src/audio/ax.rs
+audio::ax,80198bb0,fn_80198bb0,translated,high,"work/ghidra/main-gb/export/80198bb0_FUN_80198bb0.c; 14x0x14 vector dtor at +0x64; 80197380; optional free",src/audio/ax.rs
+audio::ax,80199390,fn_80199390,translated,medium,"work/ghidra/main-gb/export/80199390_FUN_80199390.c; 0x14 row scan; tag +0x68; default 52B0",src/audio/ax.rs
+audio::ax,80199810,fn_80199810,translated,medium,"work/ghidra/main-gb/export/80199810_FUN_80199810.c; four-list release; SDA 51E8/51E4",src/audio/ax.rs
+audio::ax,8019a310,fn_8019a310,translated,medium,"work/ghidra/main-gb/export/8019a310_FUN_8019a310.c; 8-byte row; 8027B1C0; 80272C40/2A10 sequence pair",src/audio/ax.rs
+audio::ax,8019a490,fn_8019a490,translated,medium,"work/ghidra/main-gb/export/8019a490_FUN_8019a490.c; 8-byte row scan; default 52A8; 8027B160",src/audio/ax.rs
+audio::ax,8019a970,fn_8019a970,translated,medium,"work/ghidra/main-gb/export/8019a970_FUN_8019a970.c; cue table 802F5FA0 0x11C stride; vtable +0x1C/+0x24",src/audio/ax.rs
+audio::ax,8019aa70,fn_8019aa70,translated,medium,"work/ghidra/main-gb/export/8019aa70_FUN_8019aa70.c; cue table lookup; vtable +0x28; level 529C/52A8",src/audio/ax.rs
+audio::ax,8019ab20,fn_8019ab20,translated,medium,"work/ghidra/main-gb/export/8019ab20_FUN_8019ab20.c; PLAYER_SE_PLY_JUMP compare; release mode 7",src/audio/ax.rs
+audio::ax,8019abb0,fn_8019abb0,translated,medium,"work/ghidra/main-gb/export/8019abb0_FUN_8019abb0.c; four-list walk calling 8019ab20",src/audio/ax.rs
+audio::ax,8019baf0,fn_8019baf0,translated,high,"work/ghidra/main-gb/export/8019baf0_FUN_8019baf0.c; state +0x14; modes 1/4/8; 8019E9A0/8019E7E0",src/audio/ax.rs
+audio::ax,8019ca00,fn_8019ca00,translated,medium,"work/ghidra/main-gb/export/8019ca00_FUN_8019ca00.c; cue id switch; group volume 80278780/8027A850",src/audio/ax.rs
+audio::ax,8019d2d0,fn_8019d2d0,translated,medium,"work/ghidra/main-gb/export/8019d2d0_FUN_8019d2d0.c; group 0x12 list release; state +0x14/+0x3E",src/audio/ax.rs
+audio::ax,8019df40,fn_8019df40,translated,high,"work/ghidra/main-gb/export/8019df40_thunk_FUN_8019e800.c; 4-byte tail branch to 8019E800",src/audio/ax.rs
+audio::ax,8019e2e0,fn_8019e2e0,translated,medium,"work/ghidra/main-gb/export/8019e2e0_FUN_8019e2e0.c; slot guards; sequence start +0x1C; record +0x910",src/audio/ax.rs
+audio::ax,8019e4c0,fn_8019e4c0,translated,medium,"work/ghidra/main-gb/export/8019e4c0_FUN_8019e4c0.c; cue-mask byte +0x1F; cue ids 767/768/74A",src/audio/ax.rs
+audio::ax,8019e6f0,fn_8019e6f0,translated,medium,"work/ghidra/main-gb/export/8019e6f0_FUN_8019e6f0.c; volume gate 80196BD0; 8027F890 x2; byte +0x48",src/audio/ax.rs
+audio::ax,8019e800,fn_8019e800,translated,medium,"work/ghidra/main-gb/export/8019e800_FUN_8019e800.c; countdown +0x60; 8027F890 x2; byte +0x48",src/audio/ax.rs
+audio::ax,8019e8e0,fn_8019e8e0,translated,medium,"work/ghidra/main-gb/export/8019e8e0_FUN_8019e8e0.c; 80195510 eight-word call; 8019E080 state 0x11",src/audio/ax.rs
+audio::ax,8019ece0,fn_8019ece0,translated,medium,"work/ghidra/main-gb/export/8019ece0_FUN_8019ece0.c; flag complement; 8019EDB0/8019EF90; gain 51A0",src/audio/ax.rs

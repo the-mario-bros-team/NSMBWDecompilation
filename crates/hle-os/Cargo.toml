@@ -1,0 +1,10 @@
+[package]
+name = "hle-os"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+guest-mem = { path = "../guest-mem" }
+guest-cpu = { path = "../guest-cpu" }
+hle-ios = { path = "../hle-ios" }
+hw = { path = "../hw" }

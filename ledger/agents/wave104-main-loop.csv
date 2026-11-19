@@ -1,0 +1,6 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e55a4,fn_802e55a4,translated,medium,work/ghidra/main-gb/export/802e55a4_FUN_802e55a4.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/main_loop.rs
+engine::main_loop,802e861c,fn_802e861c,translated,high,work/ghidra/main-gb/export/802e861c_thunk_FUN_802e55a4.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/main_loop.rs
+engine::main_loop,802e0454,fn_802e0454,translated,medium,work/ghidra/main-gb/export/802e0454_FUN_802e0454.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/main_loop.rs
+engine::main_loop,802e3208,fn_802e3208,translated,medium,work/ghidra/main-gb/export/802e3208_FUN_802e3208.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/main_loop.rs
+engine::main_loop,802e0bf0,fn_802e0bf0,translated,medium,work/ghidra/main-gb/export/802e0bf0_FUN_802e0bf0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/engine/main_loop.rs

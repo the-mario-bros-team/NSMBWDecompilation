@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,802422a0,fn_802422a0,translated,medium,"work/ghidra/main-gb/export/802422a0_FUN_802422a0.c; key 0x8034E160 lookup through 0x80239CC0 plus the (-v|v)>>31 non-zero fold",src/runtime/os.rs
+runtime::os,80242300,fn_80242300,translated,medium,"work/ghidra/main-gb/export/80242300_FUN_80242300.c; same flow as 802422a0 with key 0x8034E180",src/runtime/os.rs
+runtime::os,80242360,fn_80242360,translated,medium,"work/ghidra/main-gb/export/80242360_FUN_80242360.c; chained two-level lookup: key 0x8034E160 table then the caller key word",src/runtime/os.rs
+runtime::os,802423f0,fn_802423f0,translated,medium,"work/ghidra/main-gb/export/802423f0_FUN_802423f0.c; sub-entry at 0x24+0x10*index of the 0x8034E160 hit and its relative-pointer fold",src/runtime/os.rs
+runtime::os,802424a0,fn_802424a0,translated,medium,"work/ghidra/main-gb/export/802424a0_FUN_802424a0.c; same chained lookup as 80242360 with key 0x8034E180",src/runtime/os.rs
+runtime::os,80242530,fn_80242530,translated,medium,"work/ghidra/main-gb/export/80242530_FUN_80242530.c; sub-entry read of the 0x8034E180 hit",src/runtime/os.rs
+runtime::os,80244800,fn_80244800,translated,medium,"work/ghidra/main-gb/export/80244800_FUN_80244800.c; vtable slot +0x14 result plus four",src/runtime/os.rs
+runtime::os,80244ab0,fn_80244ab0,translated,high,"work/ghidra/main-gb/export/80244ab0_FUN_80244ab0.c; clz(cell & 0xC000)>>5 at array +0x14 index*2",src/runtime/os.rs
+runtime::os,80244ad0,fn_80244ad0,translated,high,"work/ghidra/main-gb/export/80244ad0_FUN_80244ad0.c; fills +0x10 cells with 0x8000 then calls 0x80249C60(object 4 0)",src/runtime/os.rs
+runtime::os,80244b80,fn_80244b80,translated,medium,"work/ghidra/main-gb/export/80244b80_FUN_80244b80.c; stores vtable 0x8034E3D8 then slot +0x44 then free through 0x80249A70",src/runtime/os.rs
+runtime::os,80244e00,fn_80244e00,translated,high,"work/ghidra/main-gb/export/80244e00_FUN_80244e00.c; vtable slot +0x40 once per child index",src/runtime/os.rs
+runtime::os,80245e00,fn_80245e00,translated,medium,"work/ghidra/main-gb/export/80245e00_FUN_80245e00.c; family-B copy of 80244800",src/runtime/os.rs
+runtime::os,802460b0,fn_802460b0,translated,high,"work/ghidra/main-gb/export/802460b0_FUN_802460b0.c; family-B copy of the 0xC000 reserved-bit probe",src/runtime/os.rs
+runtime::os,802460d0,fn_802460d0,translated,high,"work/ghidra/main-gb/export/802460d0_FUN_802460d0.c; family-B copy of the 0x8000 cell fill",src/runtime/os.rs
+runtime::os,80246180,fn_80246180,translated,medium,"work/ghidra/main-gb/export/80246180_FUN_80246180.c; stores vtable 0x8034E4F8 then slot +0x44 then free",src/runtime/os.rs
+runtime::os,80246400,fn_80246400,translated,high,"work/ghidra/main-gb/export/80246400_FUN_80246400.c; family-B copy of the slot +0x40 child walk",src/runtime/os.rs
+runtime::os,80247450,fn_80247450,translated,medium,"work/ghidra/main-gb/export/80247450_FUN_80247450.c; family-C copy of 80244800",src/runtime/os.rs
+runtime::os,80247700,fn_80247700,translated,high,"work/ghidra/main-gb/export/80247700_FUN_80247700.c; family-C copy of the 0x8000 cell fill",src/runtime/os.rs
+runtime::os,802477d0,fn_802477d0,translated,medium,"work/ghidra/main-gb/export/802477d0_FUN_802477d0.c; stores vtable 0x8034E638 then slot +0x44 then free",src/runtime/os.rs
+runtime::os,8024b020,fn_8024b020,translated,high,"work/ghidra/main-gb/export/8024b020_FUN_8024b020.c; flag bits 1/2/4 select triples at +0x04 +0x34 +0x64 for ids 0 3 6",src/runtime/os.rs
+runtime::os,8024b090,fn_8024b090,translated,medium,"work/ghidra/main-gb/export/8024b090_FUN_8024b090.c; returns the pointer after a guarded 0x802B9280 call when count > 0",src/runtime/os.rs
+runtime::os,8024d0b0,fn_8024d0b0,translated,high,"work/ghidra/main-gb/export/8024d0b0_FUN_8024d0b0.c; three global stores then 0x801C4780 with ids 0x15 0x16 0x17 and sizes 0x30 0x24 0x30",src/runtime/os.rs
+runtime::os,8024d210,fn_8024d210,translated,high,"work/ghidra/main-gb/export/8024d210_FUN_8024d210.c; reads sda(-0x5C6C) = 0x80429A14",src/runtime/os.rs
+runtime::os,8024d380,fn_8024d380,translated,high,"work/ghidra/main-gb/export/8024d380_FUN_8024d380.c; tail forwards to 0x8024B0E0 on the fixed 0x803DFF88 descriptor",src/runtime/os.rs
+runtime::os,8024d3c0,fn_8024d3c0,translated,high,"work/ghidra/main-gb/export/8024d3c0_FUN_8024d3c0.c; seven-argument call to 0x8024B1E0 matching its own prototype",src/runtime/os.rs
+runtime::os,8024d4d0,fn_8024d4d0,translated,high,"work/ghidra/main-gb/export/8024d4d0_FUN_8024d4d0.c; 0x803E29E8 + halfword at 0x803E29B6 times 0x30",src/runtime/os.rs
+runtime::os,8024d5d0,fn_8024d5d0,translated,high,"work/ghidra/main-gb/export/8024d5d0_FUN_8024d5d0.c; returns the 0x803E43E8 data address",src/runtime/os.rs

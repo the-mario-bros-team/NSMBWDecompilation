@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,8027ba20,fn_8027ba20,translated,high,"work/ghidra/main-gb/export/8027ba20_FUN_8027ba20.c; manager lock + insert at +0x384 with key +0x388",src/audio/seq.rs
+audio::seq,8027ba90,fn_8027ba90,translated,high,"work/ghidra/main-gb/export/8027ba90_FUN_8027ba90.c; manager lock + unlink from +0x384",src/audio/seq.rs
+audio::seq,8027bbf0,fn_8027bbf0,translated,medium,"work/ghidra/main-gb/export/8027bbf0_FUN_8027bbf0.c; five header stores + 4-byte bitmap clear; stride inferred from bcc0/bdb0",src/audio/seq.rs
+audio::seq,8027bc70,fn_8027bc70,translated,high,"work/ghidra/main-gb/export/8027bc70_FUN_8027bc70.c; four header words cleared between the state lock pair",src/audio/seq.rs
+audio::seq,8027bcc0,fn_8027bcc0,translated,high,"work/ghidra/main-gb/export/8027bcc0_FUN_8027bcc0.c; bitmap scan, first clear bit, base + stride * index",src/audio/seq.rs
+audio::seq,8027bdb0,fn_8027bdb0,translated,high,"work/ghidra/main-gb/export/8027bdb0_FUN_8027bdb0.c; (address - base) / stride, clear bit, decrement used",src/audio/seq.rs
+audio::seq,8027be30,fn_8027be30,translated,high,"work/ghidra/main-gb/export/8027be30_FUN_8027be30.c; two zero stores",src/audio/seq.rs
+audio::seq,8027be40,fn_8027be40,translated,medium,"work/ghidra/main-gb/export/8027be40_FUN_8027be40.c; kind mapping, flag byte, 11 word copies; resolver base inferred",src/audio/seq.rs
+audio::seq,8027bf50,fn_8027bf50,translated,medium,"work/ghidra/main-gb/export/8027bf50_FUN_8027bf50.c; two table layouts decoded into a 0x28-byte record",src/audio/seq.rs
+audio::seq,8027c3e0,fn_8027c3e0,translated,high,"work/ghidra/main-gb/export/8027c3e0_FUN_8027c3e0.c; null handle returns 0 else first byte of resolved entry",src/audio/seq.rs
+audio::seq,8027c430,fn_8027c430,translated,high,"work/ghidra/main-gb/export/8027c430_FUN_8027c430.c; +0x04 presence flag gates the be40 decoder and is returned",src/audio/seq.rs
+audio::seq,8027c470,fn_8027c470,translated,medium,"work/ghidra/main-gb/export/8027c470_FUN_8027c470.c; +0x04 presence flag gates bf50; callee extra args not visible",src/audio/seq.rs
+audio::seq,8027c8b0,fn_8027c8b0,translated,high,"work/ghidra/main-gb/export/8027c8b0_FUN_8027c8b0.c; fd90 tear-down then free when flag > 0, returns this",src/audio/seq.rs
+audio::seq,8027c910,fn_8027c910,translated,high,"work/ghidra/main-gb/export/8027c910_FUN_8027c910.c; byte-identical twin of 8027c8b0",src/audio/seq.rs
+audio::seq,8027cc90,fn_8027cc90,translated,medium,"work/ghidra/main-gb/export/8027cc90_FUN_8027cc90.c; vtable +0x10 call, +0x100 flag, 0x680 block reset; virtual args inferred",src/audio/seq.rs
+audio::seq,8027cd20,fn_8027cd20,translated,high,"work/ghidra/main-gb/export/8027cd20_FUN_8027cd20.c; three caller stores, four state bytes, +0xB4 unlink, host element insert",src/audio/seq.rs
+audio::seq,8027eef0,fn_8027eef0,translated,medium,"work/ghidra/main-gb/export/8027eef0_FUN_8027eef0.c; mode 0/1 resets via 802810a0, modes 0..3 clear out+4",src/audio/seq.rs
+audio::seq,8027ef90,fn_8027ef90,translated,high,"work/ghidra/main-gb/export/8027ef90_FUN_8027ef90.c; mask-selected f32 store at +0xB88 with 0x38 stride",src/audio/seq.rs
+audio::seq,8027f020,fn_8027f020,translated,high,"work/ghidra/main-gb/export/8027f020_FUN_8027f020.c; index > 7 returns 0 else this + index*0x38 + 0xB58",src/audio/seq.rs
+audio::seq,8027f040,fn_8027f040,translated,high,"work/ghidra/main-gb/export/8027f040_FUN_8027f040.c; four-word lookup, zero result sets byte 1 at word0+0x104",src/audio/seq.rs
+audio::seq,8027f650,fn_8027f650,translated,medium,"work/ghidra/main-gb/export/8027f650_FUN_8027f650.c; vtable +0x20 then ca70 on +0x110 with 80267380 value; virtual args inferred",src/audio/seq.rs
+audio::seq,8027f6d0,fn_8027f6d0,translated,high,"work/ghidra/main-gb/export/8027f6d0_FUN_8027f6d0.c; cd20 with (third, first, second), cc90 on failure, result inverted",src/audio/seq.rs
+audio::seq,8027f730,fn_8027f730,translated,high,"work/ghidra/main-gb/export/8027f730_FUN_8027f730.c; eight-slot scan incrementing +0xE3C below +0xE38",src/audio/seq.rs
+audio::seq,8027fd50,fn_8027fd50,translated,high,"work/ghidra/main-gb/export/8027fd50_FUN_8027fd50.c; clears owner +0xE28 back pointer and the handle word",src/audio/seq.rs
+audio::seq,8027fd90,fn_8027fd90,translated,medium,"work/ghidra/main-gb/export/8027fd90_FUN_8027fd90.c; free when flag > 0, returns this; free argument inferred",src/audio/seq.rs
+audio::seq,8027fe70,fn_8027fe70,translated,high,"work/ghidra/main-gb/export/8027fe70_FUN_8027fe70.c; dca98(array, 8027fee0, 0xc, 3) then free when flag > 0",src/audio/seq.rs
+audio::seq,8027fee0,fn_8027fee0,translated,high,"work/ghidra/main-gb/export/8027fee0_FUN_8027fee0.c; 80229030 list teardown then free when flag > 0",src/audio/seq.rs
+audio::seq,8027ff60,fn_8027ff60,translated,high,"work/ghidra/main-gb/export/8027ff60_FUN_8027ff60.c; sets node+0xC, inserts into table+index*0xC, wakes table+0x2C",src/audio/seq.rs

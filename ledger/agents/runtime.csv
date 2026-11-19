@@ -1,0 +1,37 @@
+﻿module,address,name,status,confidence,evidence,rust_file
+runtime,801aa800,os_init,translated,high,"work/ghidra/main-gb/export/801aa800_FUN_801aa800.c; caller entry 80004050; r13=0x8042F680 from 800041c0 bytes","src/runtime/init.rs"
+runtime,801bb930,fn_801bb930,translated,medium,"work/ghidra/main-gb/export/801bb930_FUN_801bb930.c; bytes store 0x80000040 to r13-0x4EC8, 0x001BB9B0 to 0x80000048, 1 to r13-0x4EC4","src/runtime/init.rs"
+runtime,801ab150,init_hardware_paired_single,translated,high,"work/ghidra/main-gb/export/801ab150_FUN_801ab150.c; bytes mfhid2|0xA0000000, HID0|0x800, mtspr 912-919 = 0","src/runtime/init.rs"
+runtime,801a9d40,init_fpu_registers,partial,medium,"work/ghidra/main-gb/export/801a9d40_FUN_801a9d40.c; bytes mfmsr|0x2000, psq_l+ps_mr x31, lfd+fmr x31; FPR writes recorded only","src/runtime/init.rs"
+runtime,801ac990,init_cache,translated,high,"work/ghidra/main-gb/export/801ac990_FUN_801ac990.c; SPR 1017 L2 sequence; strings 0x803329A4 0x803329C0 0x803329DC 0x803329F4","src/runtime/init.rs"
+runtime,801b3cc0,os_reset_system,translated,high,"work/ghidra/main-gb/export/801b3cc0_FUN_801b3cc0.c; OSPanic(0x80333AF8 OSReset.c, 0x4A1, 0x80333CE4 obsoleted)","src/runtime/os.rs"
+runtime,801b8970,init_cpp,translated,high,"work/ghidra/main-gb/export/801b8970_FUN_801b8970.c; prologue + bl 801b8990","src/runtime/os.rs"
+runtime,801b8990,run_init_table,translated,high,"work/ghidra/main-gb/export/801b8990_FUN_801b8990.c; walks 0x802ED9E0 NULL-terminated code-pointer table","src/runtime/os.rs"
+runtime,801b89e0,exit_runtime,translated,medium,"work/ghidra/main-gb/export/801b89e0_FUN_801b89e0.c; walks 0x802EDCC0 then 801a9ba0 halt; last call of entry","src/runtime/os.rs"
+runtime,801a9ba0,halt,translated,high,"work/ghidra/main-gb/export/801a9ba0_FUN_801a9ba0.c; sync then intentional infinite loop","src/runtime/os.rs"
+runtime,801a9b20,get_msr,translated,high,"work/ghidra/main-gb/export/801a9b20_FUN_801a9b20.c; bytes mfmsr r3; dispatched to original address","src/runtime/os.rs"
+runtime,801a9b30,set_msr,translated,high,"work/ghidra/main-gb/export/801a9b30_FUN_801a9b30.c; bytes mtmsr r3; dispatched to original address","src/runtime/os.rs"
+runtime,801b1140,disable_interrupts,translated,high,"work/ghidra/main-gb/export/801b1140_FUN_801b1140.c; mfmsr, clear EE, mtmsr, return MSR&0x8000","src/runtime/os.rs"
+runtime,801b1180,restore_interrupts,translated,high,"work/ghidra/main-gb/export/801b1180_FUN_801b1180.c; conditionally set/clear EE then mtmsr","src/runtime/os.rs"
+runtime,801b1160,enable_interrupts,translated,high,"work/ghidra/main-gb/export/801b1160_FUN_801b1160.c; mfmsr, ori 0x8000, mtmsr","src/runtime/os.rs"
+runtime,801b5f80,read_time_base,translated,high,work/ghidra/main-gb/export/801b5f80_FUN_801b5f80.c; bytes mftbu/mftb/mftbu/cmpw/bne atomic read; dispatched to original address,src/runtime/os.rs
+runtime,801b5fb0,get_time,translated,high,"work/ghidra/main-gb/export/801b5fb0_FUN_801b5fb0.c; time base + u64 at 0x800030D8/0x800030DC under disabled interrupts","src/runtime/os.rs"
+runtime,801a9b40,get_hid0,translated,high,"work/ghidra/main-gb/export/801a9b40_FUN_801a9b40.c; bytes mfspr 1008; dispatched by address","src/runtime/os.rs"
+runtime,801a9b50,set_hid0,translated,high,"work/ghidra/main-gb/export/801a9b50_FUN_801a9b50.c; bytes mtspr 1008; dispatched by address","src/runtime/os.rs"
+runtime,801a9b60,get_l2_control,translated,high,"work/ghidra/main-gb/export/801a9b60_FUN_801a9b60.c; bytes mfspr 1017; dispatched by address","src/runtime/os.rs"
+runtime,801a9b70,set_l2_control,translated,high,"work/ghidra/main-gb/export/801a9b70_FUN_801a9b70.c; bytes mtspr 1017; dispatched to original address; one-instruction leaf, same class as get_msr/set_hid0",src/runtime/os.rs
+runtime,801a9c70,get_hid2,translated,high,work/ghidra/main-gb/export/801a9c70_FUN_801a9c70.c; bytes mfspr 920; name HID2 from 801ac840 report string; dispatched to original address,src/runtime/os.rs
+runtime,801a9c80,set_hid2,translated,high,work/ghidra/main-gb/export/801a9c80_FUN_801a9c80.c; bytes mtspr 920; dispatched to original address,src/runtime/os.rs
+runtime,801a9cb0,or_hid0_0x200,translated,high,"work/ghidra/main-gb/export/801a9cb0_FUN_801a9cb0.c; bytes mfhid0, ori 0x200, mthid0","src/runtime/os.rs"
+runtime,801a9cf0,set_spr_1011,translated,medium,"work/ghidra/main-gb/export/801a9cf0_FUN_801a9cf0.c; mtspr 1011 plus string 0x80332280 H4A invariant","src/runtime/os.rs"
+runtime,801ac5a0,invalidate_icache,translated,high,"work/ghidra/main-gb/export/801ac5a0_FUN_801ac5a0.c; bytes mfhid0, ori 0x800, mthid0","src/runtime/os.rs"
+runtime,801ac5b0,enable_icache,translated,high,"work/ghidra/main-gb/export/801ac5b0_FUN_801ac5b0.c; bytes isync, mfhid0, ori 0x8000, mthid0","src/runtime/os.rs"
+runtime,801ac420,enable_dcache,translated,high,"work/ghidra/main-gb/export/801ac420_FUN_801ac420.c; bytes sync, mfhid0, ori 0x4000, mthid0","src/runtime/os.rs"
+runtime,801ac440,dc_invalidate_range,translated,high,"work/ghidra/main-gb/export/801ac440_FUN_801ac440.c; size==0 early-out then dcbi 32-byte block loop","src/runtime/os.rs"
+runtime,801ac470,dc_flush_range,translated,high,"work/ghidra/main-gb/export/801ac470_FUN_801ac470.c; dcbf block loop ending with sc","src/runtime/os.rs"
+runtime,801ac530,dc_store_range,translated,high,"work/ghidra/main-gb/export/801ac530_FUN_801ac530.c; dcbst block loop","src/runtime/os.rs"
+runtime,801a9b90,syscall,translated,high,"work/ghidra/main-gb/export/801a9b90_FUN_801a9b90.c; single sc instruction (encoding 0x44000002, recorded, not executed); one-instruction leaf, same class as get_msr/set_hid0",src/runtime/os.rs
+runtime,801bb9e0,os_report,translated,high,"work/ghidra/main-gb/export/801bb9e0_FUN_801bb9e0.c; bytes are only the varargs save prologue then blr","src/runtime/os.rs"
+runtime,801ad610,set_exception_handler,stub,medium,"work/ghidra/main-gb/export/801ad610_FUN_801ad610.c; handler table 0x8038E590; 648-byte body dispatched by address","src/runtime/os.rs"
+runtime,801ad4e0,sdk_panic,stub,medium,"work/ghidra/main-gb/export/801ad4e0_FUN_801ad4e0.c; 300-byte variadic panic used by 801b3cc0 and os_init; called by address","src/runtime/init.rs"
+runtime,801ae0a0,fn_801ae0a0,translated,high,"work/ghidra/main-gb/export/801ae0a0_FUN_801ae0a0.c; bytes lis 0x8000/lwz 0x30F0/cmplw+blt/li 0x1C/bl 80004364 (memcpy)/li r0,0+stw 0(r3); copies 0x1C bytes from 0x800030F0 when it is a MEM1 pointer, else zeroes only the first word","src/runtime/init.rs"

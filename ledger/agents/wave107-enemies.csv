@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80aa95e0,fn_80aa95e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aa95e0_FUN_80aa95e0.c; shared probe tail of the four daEnKiller_c move handlers",src/game/enemies.rs
+game::enemies,80aa9630,fn_80aa9630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aa9630_FUN_80aa9630.c; player-lane predicate; section 71 calls it through W90_FN_80AA9630",src/game/enemies.rs
+game::enemies,80aa9720,fn_80aa9720,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aa9720_FUN_80aa9720.c; empty per-state hook",src/game/enemies.rs
+game::enemies,80aa9790,fn_80aa9790,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aa9790_FUN_80aa9790.c; 0x80B53D18 table; StateID_MagMove record +0x20 handler",src/game/enemies.rs
+game::enemies,80aa9900,fn_80aa9900,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aa9900_FUN_80aa9900.c; 0x80B53D3C table; StateID_Move record +0x20 handler",src/game/enemies.rs
+game::enemies,80aa9ae0,fn_80aa9ae0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aa9ae0_FUN_80aa9ae0.c; 0x80B53D60 table; StateID_SearchMove record +0x20 handler",src/game/enemies.rs
+game::enemies,80aa9c70,fn_80aa9c70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aa9c70_FUN_80aa9c70.c; 0x80B53D84 table; StateID_SearchMagM record +0x20 handler",src/game/enemies.rs
+game::enemies,80aa9e40,fn_80aa9e40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aa9e40_FUN_80aa9e40.c; class vtable 0x80B53A80 slot +0x184 bookkeeping and animation reset",src/game/enemies.rs
+game::enemies,80aaa330,fn_80aaa330,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaa330_FUN_80aaa330.c; spawn-slot test against the u16 at 0x80429F10+0x148",src/game/enemies.rs
+game::enemies,80aaa360,fn_80aaa360,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aaa360_FUN_80aaa360.c; object 0x7F spawner gated by the slot test",src/game/enemies.rs
+game::enemies,80aaa400,fn_80aaa400,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aaa400_FUN_80aaa400.c; object 0x80 spawner gated by the slot test",src/game/enemies.rs
+game::enemies,80aaae10,fn_80aaae10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaae10_FUN_80aaae10.c; arm callback at 0x80B53FFC +0x08 for the four move records",src/game/enemies.rs
+game::enemies,80aaae70,fn_80aaae70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaae70_FUN_80aaae70.c; arm callback at 0x80B53FC8 +0x08 for the six death records",src/game/enemies.rs
+game::enemies,80aaaed0,fn_80aaaed0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaaed0_FUN_80aaaed0.c; StateID_DieFall producer 0x80357BF4 at record 0x80B74E4C+0x30",src/game/enemies.rs
+game::enemies,80aaaee0,fn_80aaaee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaaee0_FUN_80aaaee0.c; StateID_DieFumi producer 0x80357BB4 at record 0x80B74E0C+0x30",src/game/enemies.rs
+game::enemies,80aaaef0,fn_80aaaef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaaef0_FUN_80aaaef0.c; StateID_DieOther producer 0x80357D74 at record 0x80B74DCC+0x30",src/game/enemies.rs
+game::enemies,80aaaf00,fn_80aaaf00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaaf00_FUN_80aaaf00.c; StateID_EatOut producer 0x80358104 at record 0x80B74D8C+0x30",src/game/enemies.rs
+game::enemies,80aaaf10,fn_80aaaf10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaaf10_FUN_80aaaf10.c; StateID_DieGoal producer 0x80357D34 at record 0x80B74D4C+0x30",src/game/enemies.rs
+game::enemies,80aaaf20,fn_80aaaf20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aaaf20_FUN_80aaaf20.c; StateID_DieBigFall producer 0x80357C34 at record 0x80B74D0C+0x30",src/game/enemies.rs
+game::enemies,80aab010,fn_80aab010,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aab010_FUN_80aab010.c; five-level owner walk over +0x30 with recursion",src/game/enemies.rs
+game::enemies,80aab0f0,fn_80aab0f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aab0f0_FUN_80aab0f0.c; colon-suffix name predicate at both state vtables +0x1C",src/game/enemies.rs
+game::enemies,80aab1b0,fn_80aab1b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80aab1b0_FUN_80aab1b0.c; 0x802DCBFC argument-swapping forwarder at 0x80B53FC8 +0x2C",src/game/enemies.rs
+game::enemies,80aab1e0,fn_80aab1e0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80aab1e0_FUN_80aab1e0.c; 0x802DCBFC argument-swapping forwarder at 0x80B53FC8 +0x30",src/game/enemies.rs
+game::enemies,80aabef0,fn_80aabef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aabef0_FUN_80aabef0.c; killer_houdai frame entry switching on +0xE18",src/game/enemies.rs
+game::enemies,80aabf70,fn_80aabf70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aabf70_FUN_80aabf70.c; multi-part killer_houdai binder with +0x54C and +0x60C node arrays",src/game/enemies.rs
+game::enemies,80aac110,fn_80aac110,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aac110_FUN_80aac110.c; single-part killer_houdai binder",src/game/enemies.rs
+game::enemies,80aac270,fn_80aac270,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aac270_FUN_80aac270.c; killer_mag_houdai binder",src/game/enemies.rs

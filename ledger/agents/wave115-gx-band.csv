@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80296260,fn_80296260,translated,medium,"work/ghidra/main-gb/export/80296260_FUN_80296260.c; three-angle sine/cosine table builder: 256/(2*pi) scale (0x8042ECF8), per-lane modulo 65536.0 (0x8042ECF0), 16-byte rows at 0x802F74A0, three ps_neg/ps_merge01 sign folds, 3-float result; GQR3 row index inferred as unsigned halfword / scale 0",src/render/gx_band.rs
+render::gx_band,802963b0,fn_802963b0,translated,medium,"work/ghidra/main-gb/export/802963b0_FUN_802963b0.c; same three-angle table sample expanded into a 12-float block stored at +0x00/+0x04/+0x0C/+0x14/+0x1C/+0x24/+0x2C with a zero homogeneous column; GQR3 row index inferred as unsigned halfword / scale 0",src/render/gx_band.rs

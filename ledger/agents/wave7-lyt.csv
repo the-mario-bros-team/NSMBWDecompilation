@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::lyt,80180020,fn_80180020,translated,high,"work/ghidra/main-gb/export/80180020_FUN_80180020.c; half-scale rotated transform record, byte +0x20 selects the branch",src/ui/lyt.rs
+ui::lyt,80180240,fn_80180240,translated,high,"work/ghidra/main-gb/export/80180240_FUN_80180240.c; pan1/pic1/txt1/wnd1/bnd1 factory with sizes 0xD4/0xEC/0x100/0x104/0xD4",src/ui/lyt.rs
+ui::lyt,80180560,fn_80180560,translated,high,"work/ghidra/main-gb/export/80180560_FUN_80180560.c; normalise six floats with 0.5/2.0 and exponent clamps 0x2D/-0x10, then 801C7E00",src/ui/lyt.rs
+ui::lyt,80183460,fn_80183460,translated,high,"work/ghidra/main-gb/export/80183460_FUN_80183460.c; vcall +0x14(object,0)",src/ui/lyt.rs
+ui::lyt,80183960,fn_80183960,translated,high,"work/ghidra/main-gb/export/80183960_FUN_80183960.c; fn_801845a0 pair + picture +0x4C/+0x50 and source +0x38/+0x40 flip test",src/ui/lyt.rs
+ui::lyt,801843d0,fn_801843d0,translated,high,"work/ghidra/main-gb/export/801843d0_FUN_801843d0.c; key/value to child node +0x0E, material vcall +0x24, optional child list walk vcall +0x58",src/ui/lyt.rs
+ui::lyt,801846a0,fn_801846a0,translated,medium,"work/ghidra/main-gb/export/801846a0_FUN_801846a0.c; Picture ctor: vtable 8032B378, 802DC9A0 at +0xD4, animation at +0xE4, 80180780 at +0x28",src/ui/lyt.rs
+ui::lyt,80184c40,fn_80184c40,translated,high,"work/ghidra/main-gb/export/80184c40_FUN_80184c40.c; stores vtable 8032B418",src/ui/lyt.rs
+ui::lyt,80184c60,fn_80184c60,translated,medium,"work/ghidra/main-gb/export/80184c60_FUN_80184c60.c; TextBox ctor: vtable 8032B434, +0xD8/+0xE4 helpers, font lookup 0x666F6E74, 8018A730/8018A7D0, 80180780",src/ui/lyt.rs
+ui::lyt,801860b0,fn_801860b0,translated,medium,"work/ghidra/main-gb/export/801860b0_FUN_801860b0.c; Window ctor: vtable 8032B51C, +0xE4/+0xF4 helpers, glyph table 8 bytes per entry, 80180780",src/ui/lyt.rs
+ui::lyt,801862c0,fn_801862c0,translated,high,"work/ghidra/main-gb/export/801862c0_FUN_801862c0.c; Window dtor: glyph entries + table, +0x28 text object, 8017E5F0, 802DCA98, 801837D0, optional 802B9280",src/ui/lyt.rs
+ui::lyt,80186950,fn_80186950,translated,medium,"work/ghidra/main-gb/export/80186950_FUN_80186950.c; 8017E870/8017E920 and two corner pairs into 8017EF70",src/ui/lyt.rs
+ui::lyt,80188440,fn_80188440,translated,medium,"work/ghidra/main-gb/export/80188440_FUN_80188440.c; kind 1/4/8 selects record +0x04/+0x1C and calls 801835A0 by address",src/ui/lyt.rs
+ui::lyt,80189740,fn_80189740,translated,high,"work/ghidra/main-gb/export/80189740_FUN_80189740.c; preloads four bytes from each source then writes eight bytes",src/ui/lyt.rs
+ui::lyt,80189790,fn_80189790,translated,high,"work/ghidra/main-gb/export/80189790_FUN_80189790.c; selector at +0x20 chooses +0x18/+0x1C blocks and scales four alpha bytes by +0x42/0xFF",src/ui/lyt.rs
+ui::lyt,80189b50,fn_80189b50,translated,medium,"work/ghidra/main-gb/export/80189b50_FUN_80189b50.c; f32 +0x24 times font vcall +0x0C, widened to f64",src/ui/lyt.rs
+ui::lyt,80189bc0,fn_80189bc0,translated,medium,"work/ghidra/main-gb/export/80189bc0_FUN_80189bc0.c; f32 +0x28 times font vcall +0x10, widened to f64",src/ui/lyt.rs
+ui::lyt,80189c30,fn_80189c30,translated,medium,"work/ghidra/main-gb/export/80189c30_FUN_80189c30.c; f32 +0x28 times font vcall +0x14, widened to f64",src/ui/lyt.rs
+ui::lyt,80189e30,fn_80189e30,translated,high,"work/ghidra/main-gb/export/80189e30_FUN_80189e30.c; adds f64 delta to f32 +0x2C and narrows",src/ui/lyt.rs
+ui::lyt,80189e40,fn_80189e40,translated,high,"work/ghidra/main-gb/export/80189e40_FUN_80189e40.c; adds f64 delta to f32 +0x30 and narrows",src/ui/lyt.rs
+ui::lyt,8018aea0,fn_8018aea0,translated,high,"work/ghidra/main-gb/export/8018aea0_FUN_8018aea0.c; mode 0 offset, mode 1 direct u16 table, mode 2 binary search over 4-byte records, else 0xFFFF",src/ui/lyt.rs
+ui::lyt,8018af70,fn_8018af70,translated,high,"work/ghidra/main-gb/export/8018af70_FUN_8018af70.c; TGLP +0x04/+0x0A/+0x0C/+0x0E/+0x10/+0x12/+0x14, CWDH chain at FINF+0x0C, 0x14-byte output",src/ui/lyt.rs
+ui::lyt,8018b080,fn_8018b080,translated,high,"work/ghidra/main-gb/export/8018b080_FUN_8018b080.c; stores vtable 8032C8F8",src/ui/lyt.rs
+ui::lyt,8018b090,fn_8018b090,translated,high,"work/ghidra/main-gb/export/8018b090_FUN_8018b090.c; optional 802B9280 when object non-null and delete flag positive",src/ui/lyt.rs
+ui::lyt,8018e500,fn_8018e500,translated,medium,"work/ghidra/main-gb/export/8018e500_FUN_8018e500.c; 80188A00 then +0x4C/+0x50 = 0.0, +0x54 = 4, +0x58 = 0, +0x5C = 8037806C",src/ui/lyt.rs

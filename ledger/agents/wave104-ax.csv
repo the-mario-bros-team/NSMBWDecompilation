@@ -1,0 +1,19 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,80195510,fn_80195510,translated,medium,"work/ghidra/main-gb/export/80195510_FUN_80195510.c; rewrites the +0x91C..+0x92C fade block after the +0xB0 vtable call",src/audio/ax.rs
+audio::ax,80195a20,fn_80195a20,translated,medium,"work/ghidra/main-gb/export/80195a20_FUN_80195a20.c; closes the +0x910 stream when its id differs from +0x938",src/audio/ax.rs
+audio::ax,80196190,fn_80196190,translated,medium,"work/ghidra/main-gb/export/80196190_FUN_80196190.c; publishes one cue record through 0x8019ECE0 and the three 0x802674xx pan pokes",src/audio/ax.rs
+audio::ax,80196600,fn_80196600,translated,medium,"work/ghidra/main-gb/export/80196600_FUN_80196600.c; registers the local 0x801965D0 match callback with 0x802D42D0",src/audio/ax.rs
+audio::ax,80196b30,fn_80196b30,translated,medium,"work/ghidra/main-gb/export/80196b30_FUN_80196b30.c; (param_2 * 1000) / param_3 through 0x802DCDD8, returns the low quotient word",src/audio/ax.rs
+audio::ax,80196bd0,fn_80196bd0,translated,medium,"work/ghidra/main-gb/export/80196bd0_FUN_80196bd0.c; tempo/tick conversion with three paths and the +0x948 latch",src/audio/ax.rs
+audio::ax,801974a0,fn_801974a0,translated,medium,"work/ghidra/main-gb/export/801974a0_FUN_801974a0.c; compares two four-word status records and bumps the counter byte",src/audio/ax.rs
+audio::ax,80197f00,fn_80197f00,translated,medium,"work/ghidra/main-gb/export/80197f00_FUN_80197f00.c; player-SE spawn twin using the 0x52B8/0x52B4 level pair",src/audio/ax.rs
+audio::ax,80198c30,fn_80198c30,translated,medium,"work/ghidra/main-gb/export/80198c30_FUN_80198c30.c; player-SE spawn twin using the 0x52B0/0x52AC level pair",src/audio/ax.rs
+audio::ax,8019a6d0,fn_8019a6d0,translated,medium,"work/ghidra/main-gb/export/8019a6d0_FUN_8019a6d0.c; FOOT cue spawn with two 0x8019F050 interpolations",src/audio/ax.rs
+audio::ax,8019b220,fn_8019b220,translated,medium,"work/ghidra/main-gb/export/8019b220_FUN_8019b220.c; splits the three 7-bit pan fields and rewrites four channels",src/audio/ax.rs
+audio::ax,8019bed0,fn_8019bed0,translated,medium,"work/ghidra/main-gb/export/8019bed0_FUN_8019bed0.c; sixteen-arm cue-state level/envelope table",src/audio/ax.rs
+audio::ax,8019c370,fn_8019c370,translated,medium,"work/ghidra/main-gb/export/8019c370_FUN_8019c370.c; 120-frame level curve with two 0x8019F050 clamps",src/audio/ax.rs
+audio::ax,8019d480,fn_8019d480,translated,medium,"work/ghidra/main-gb/export/8019d480_FUN_8019d480.c; eleven- and five-word scalar records plus ten PLAYER_SE level calls",src/audio/ax.rs
+audio::ax,8019e080,fn_8019e080,translated,medium,"work/ghidra/main-gb/export/8019e080_FUN_8019e080.c; cue-state transition over the 0x802DCD74 pair",src/audio/ax.rs
+audio::ax,8019ea20,fn_8019ea20,translated,medium,"work/ghidra/main-gb/export/8019ea20_FUN_8019ea20.c; stream-position window matcher with wrap arithmetic",src/audio/ax.rs
+audio::ax,8019edb0,fn_8019edb0,translated,medium,"work/ghidra/main-gb/export/8019edb0_FUN_8019edb0.c; level/pan ramp with two 0x8019F010 clamps",src/audio/ax.rs
+audio::ax,8019f420,fn_8019f420,translated,medium,"work/ghidra/main-gb/export/8019f420_FUN_8019f420.c; parks r1 in 0x8042A4E8 and calls the callback on the 0x8042A4EC stack",src/audio/ax.rs

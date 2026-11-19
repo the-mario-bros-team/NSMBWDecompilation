@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800bd970,fn_800bd970,translated,medium,"work/ghidra/main-gb/export/800bd970_FUN_800bd970.c; per-strip lift rows; 0x300/0x30 strides; 0x4000/0xC000 flag words",src/game/stage.rs
+game::stage,800bef00,fn_800bef00,translated,medium,"work/ghidra/main-gb/export/800bef00_FUN_800bef00.c; 3x3 lift cells at +0x6C, 0x84 stride; five fn_800be7b0 vectors",src/game/stage.rs

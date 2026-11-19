@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806e9e10,fn_806e9e10,translated,medium,"work/ghidra/rel-d_basesNP/export/806e9e10_FUN_806e9e10.c; 0x5D8-byte constructor, vtable 0x807FE0B8, four sub-object initialisers",src/game/bases.rs
+game::bases,806ec0d0,fn_806ec0d0,translated,high,"work/ghidra/rel-d_basesNP/export/806ec0d0_FUN_806ec0d0.c; two-entry 0x807CBEF0 name table; 0x801651F0, 0x80169F80 and 0x801680E0",src/game/bases.rs
+game::bases,806ec190,fn_806ec190,translated,high,"work/ghidra/rel-d_basesNP/export/806ec190_FUN_806ec190.c; WaitParent gate, flags +0x17A..+0x17E, sound 0x235",src/game/bases.rs
+game::bases,806ec420,fn_806ec420,translated,high,"work/ghidra/rel-d_basesNP/export/806ec420_FUN_806ec420.c; copies the +0x80 vector into +0x16C/+0x170 through 0x8015F140",src/game/bases.rs
+game::bases,806ec4a0,fn_806ec4a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806ec4a0_FUN_806ec4a0.c; two base virtuals, tag 0x80358E50 lookup, frame write and flag clear",src/game/bases.rs
+game::bases,806ec560,fn_806ec560,translated,medium,"work/ghidra/rel-d_basesNP/export/806ec560_FUN_806ec560.c; matrix from +0x16C/+0x174, +0x178 rotation, scale and model virtual +0x14",src/game/bases.rs
+game::bases,806ec830,fn_806ec830,translated,high,"work/ghidra/rel-d_basesNP/export/806ec830_FUN_806ec830.c; lift_torokkoA loader, 0x80165FD0 attach, model virtual +0x18",src/game/bases.rs
+game::bases,806ec8b0,fn_806ec8b0,translated,high,"work/ghidra/rel-d_basesNP/export/806ec8b0_FUN_806ec8b0.c; third orbit state, +0x1B1=3, sound 0x233",src/game/bases.rs
+game::bases,806ec930,fn_806ec930,translated,medium,"work/ghidra/rel-d_basesNP/export/806ec930_FUN_806ec930.c; probe 0x80075270, burst 0x800929F0, sound 0x284, +0x1B0 latch",src/game/bases.rs
+game::bases,806eceb0,fn_806eceb0,translated,high,"work/ghidra/rel-d_basesNP/export/806eceb0_FUN_806eceb0.c; lift_torokkoB loader and paired normal material through 0x801650D0",src/game/bases.rs
+game::bases,806ed010,fn_806ed010,translated,high,"work/ghidra/rel-d_basesNP/export/806ed010_FUN_806ed010.c; 0x80162D50(0x24D) walk testing +0x138C and +0x1392",src/game/bases.rs
+game::bases,806ed080,fn_806ed080,translated,high,"work/ghidra/rel-d_basesNP/export/806ed080_FUN_806ed080.c; stores +0x1380 and enters WaitParent 0x8082E768",src/game/bases.rs
+game::bases,806ed0f0,fn_806ed0f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806ed0f0_FUN_806ed0f0.c; cumulative +0x16C cart span, flags +0x17E",src/game/bases.rs
+game::bases,806ed310,fn_806ed310,translated,high,"work/ghidra/rel-d_basesNP/export/806ed310_FUN_806ed310.c; popcount of the low four +0x1393 rider bits",src/game/bases.rs
+game::bases,806ed460,fn_806ed460,translated,high,"work/ghidra/rel-d_basesNP/export/806ed460_FUN_806ed460.c; +0x1024..+0x1388 loop calling fn_806ec420",src/game/bases.rs
+game::bases,806ed4b0,fn_806ed4b0,translated,high,"work/ghidra/rel-d_basesNP/export/806ed4b0_FUN_806ed4b0.c; sets +0x17D on every cart pointer",src/game/bases.rs
+game::bases,806ed4e0,fn_806ed4e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806ed4e0_FUN_806ed4e0.c; slope mode 0x80004/0x80008, 0x800DB590 and virtual +0xC",src/game/bases.rs
+game::bases,806edcd0,fn_806edcd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806edcd0_FUN_806edcd0.c; rider count against 0x80429CA0, Move tag 0x8082E7A8",src/game/bases.rs
+game::bases,806edd80,fn_806edd80,translated,medium,"work/ghidra/rel-d_basesNP/export/806edd80_FUN_806edd80.c; follows the +0x1380 actor, probes Move 0x8082E7A8, fires own interface +0x18",src/game/bases.rs
+game::bases,806ede10,fn_806ede10,translated,high,"work/ghidra/rel-d_basesNP/export/806ede10_FUN_806ede10.c; 2^52 fixed-point conversion, +0x1384 scale and +0x138D latch",src/game/bases.rs
+game::bases,806ee8d0,fn_806ee8d0,translated,high,"work/ghidra/rel-d_basesNP/export/806ee8d0_FUN_806ee8d0.c; three-word copy from +0x6DC into +0x468",src/game/bases.rs
+game::bases,806ee8f0,fn_806ee8f0,translated,high,"work/ghidra/rel-d_basesNP/export/806ee8f0_FUN_806ee8f0.c; 0x20-byte record into the +0x6D8 block and +0x16C/+0x170",src/game/bases.rs
+game::bases,806eebc0,fn_806eebc0,translated,medium,"work/ghidra/rel-d_basesNP/export/806eebc0_FUN_806eebc0.c; in-place constructor, vtable 0x807FE7E0, clears +0x394..+0x3BC",src/game/bases.rs
+game::bases,806ef350,fn_806ef350,translated,high,"work/ghidra/rel-d_basesNP/export/806ef350_FUN_806ef350.c; 0x8015F800 teardown plus optional 0x802B9280 free",src/game/bases.rs
+game::bases,806ef3b0,fn_806ef3b0,translated,high,"work/ghidra/rel-d_basesNP/export/806ef3b0_FUN_806ef3b0.c; returns the shared descriptor 0x8082CB44",src/game/bases.rs
+game::bases,806ef4a0,fn_806ef4a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806ef4a0_FUN_806ef4a0.c; five-level +0x30 chain probe with a recursive tail",src/game/bases.rs
+game::bases,806ef580,fn_806ef580,translated,medium,"work/ghidra/rel-d_basesNP/export/806ef580_FUN_806ef580.c; strrchr suffix compare through 0x802E1C40 and 0x802E1AB4",src/game/bases.rs
+game::bases,806efa90,fn_806efa90,translated,medium,"work/ghidra/rel-d_basesNP/export/806efa90_FUN_806efa90.c; 0x8006CD40/0x8006CDE0 base, +0xB4 clamp, +0x104 angle step 0x800",src/game/bases.rs

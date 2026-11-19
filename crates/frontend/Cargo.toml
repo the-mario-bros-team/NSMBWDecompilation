@@ -1,0 +1,26 @@
+[package]
+name = "frontend"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "nsmbw-port"
+path = "src/main.rs"
+
+[dependencies]
+raw-window-handle = "0.6"
+winit = "0.30"
+toml = "0.8"
+miniz_oxide = "0.8"
+guest-mem = { path = "../guest-mem" }
+guest-cpu = { path = "../guest-cpu" }
+hle-os = { path = "../hle-os" }
+game-recomp = { path = "../game-recomp" }
+vk-render = { path = "../vk-render" }
+gx = { path = "../gx" }
+hle-ios = { path = "../hle-ios" }
+input = { path = "../input" }
+cpal = "0.15"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_System_Threading"] }

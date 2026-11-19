@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,80164e50,fn_80164e50,translated,high,"work/ghidra/main-gb/export/80164e50_FUN_80164e50.c; live-context vtable +0x34 with the +0xE4 count",src/resource/registry.rs
+resource::registry,80164e70,fn_80164e70,translated,high,"work/ghidra/main-gb/export/80164e70_FUN_80164e70.c; pops context objects through vtable +0x38",src/resource/registry.rs
+resource::registry,80164ec0,fn_80164ec0,translated,high,"work/ghidra/main-gb/export/80164ec0_FUN_80164ec0.c; unconditional 0x8025EFA0 then guarded 0x802D2E50",src/resource/registry.rs
+resource::registry,80164f00,fn_80164f00,translated,medium,"work/ghidra/main-gb/export/80164f00_FUN_80164f00.c; null tests then looked-up +0xC word or 0xFFFFFFFF",src/resource/registry.rs
+resource::registry,80164f50,fn_80164f50,translated,high,"work/ghidra/main-gb/export/80164f50_FUN_80164f50.c; reset channel 0 then sixteen channels",src/resource/registry.rs
+resource::registry,801693a0,fn_801693a0,translated,high,"work/ghidra/main-gb/export/801693a0_FUN_801693a0.c; release +0x24 through 0x802B8F70 and clear the pair",src/resource/registry.rs
+resource::registry,80169560,fn_80169560,translated,high,"work/ghidra/main-gb/export/80169560_FUN_80169560.c; vtable 0x80329658 plus nested construct and four zero words",src/resource/registry.rs
+resource::registry,801695c0,fn_801695c0,translated,high,"work/ghidra/main-gb/export/801695c0_FUN_801695c0.c; copy-on-success free through 0x802B9280",src/resource/registry.rs
+resource::registry,80169ac0,fn_80169ac0,translated,high,"work/ghidra/main-gb/export/80169ac0_FUN_80169ac0.c; one-word buffer into vtable +0x14 then 0x80168BB0",src/resource/registry.rs
+resource::registry,80169c20,fn_80169c20,translated,medium,"work/ghidra/main-gb/export/80169c20_FUN_80169c20.c; destroy +0x28 through the +0x30 owner chain",src/resource/registry.rs
+resource::registry,80169c90,fn_80169c90,translated,high,"work/ghidra/main-gb/export/80169c90_FUN_80169c90.c; advance nested object when 0x80168CB0 returns zero",src/resource/registry.rs
+resource::registry,80169cd0,fn_80169cd0,translated,high,"work/ghidra/main-gb/export/80169cd0_FUN_80169cd0.c; 0x80329638 vtable plus nested 0x80169560 at +0xC",src/resource/registry.rs
+resource::registry,80169d20,fn_80169d20,translated,high,"work/ghidra/main-gb/export/80169d20_FUN_80169d20.c; clear nested +0xC reset then 0x8016A340 and guarded free",src/resource/registry.rs
+resource::registry,8016a1a0,fn_8016a1a0,translated,medium,"work/ghidra/main-gb/export/8016a1a0_FUN_8016a1a0.c; 0x8016A0F0 twice around a +0xC virtual call",src/resource/registry.rs
+resource::registry,8016a2a0,fn_8016a2a0,translated,high,"work/ghidra/main-gb/export/8016a2a0_FUN_8016a2a0.c; handle +4 through 0x80257640 and 0x80257670 with the value",src/resource/registry.rs
+resource::registry,8016a2f0,fn_8016a2f0,translated,high,"work/ghidra/main-gb/export/8016a2f0_FUN_8016a2f0.c; base 0x8016A010 zero +8 and vtable 0x80329688",src/resource/registry.rs
+resource::registry,8016a340,fn_8016a340,translated,high,"work/ghidra/main-gb/export/8016a340_FUN_8016a340.c; guarded 0x80168100 reset then optional 0x802B9280 free",src/resource/registry.rs
+resource::registry,8016a3a0,fn_8016a3a0,translated,medium,"work/ghidra/main-gb/export/8016a3a0_FUN_8016a3a0.c; two factory modes into +4 then two 0x7F field writes",src/resource/registry.rs
+resource::registry,8016af90,fn_8016af90,translated,high,"work/ghidra/main-gb/export/8016af90_FUN_8016af90.c; copy-on-success free through 0x802B9280",src/resource/registry.rs
+resource::registry,8016afd0,fn_8016afd0,translated,high,"work/ghidra/main-gb/export/8016afd0_FUN_8016afd0.c; copy-on-success free through 0x802B9280",src/resource/registry.rs
+resource::registry,8016b010,fn_8016b010,translated,high,"work/ghidra/main-gb/export/8016b010_FUN_8016b010.c; copy-on-success free through 0x802B9280",src/resource/registry.rs
+resource::registry,8016b050,fn_8016b050,translated,high,"work/ghidra/main-gb/export/8016b050_FUN_8016b050.c; copy-on-success free through 0x802B9280",src/resource/registry.rs
+resource::registry,8016f150,fn_8016f150,translated,high,"work/ghidra/main-gb/export/8016f150_FUN_8016f150.c; twelve stores of the r2-0x5358 word",src/resource/registry.rs
+resource::registry,8016f500,fn_8016f500,translated,high,"work/ghidra/main-gb/export/8016f500_FUN_8016f500.c; clears one 0x18 slot at 0x80377D08 and its SDA byte",src/resource/registry.rs
+resource::registry,8016f550,fn_8016f550,translated,high,"work/ghidra/main-gb/export/8016f550_FUN_8016f550.c; four-iteration 0x8016F500 loop",src/resource/registry.rs
+resource::registry,8016f5d0,fn_8016f5d0,translated,medium,"work/ghidra/main-gb/export/8016f5d0_FUN_8016f5d0.c; 0x801E12C0 with a 0x18 slot and 0x8016F590 callback",src/resource/registry.rs
+resource::registry,8016f6e0,fn_8016f6e0,translated,high,"work/ghidra/main-gb/export/8016f6e0_FUN_8016f6e0.c; copy-on-success free through 0x802B9280",src/resource/registry.rs
+resource::registry,8016f7d0,fn_8016f7d0,translated,high,"work/ghidra/main-gb/export/8016f7d0_FUN_8016f7d0.c; init calls then +0x14 and +0x15 set to one",src/resource/registry.rs

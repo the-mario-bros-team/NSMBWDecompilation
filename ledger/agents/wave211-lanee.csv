@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,80065080,fn_80065080,translated,high,work/ghidra/main-gb/export/80065080_FUN_80065080.c,src/game/player.rs
+game::player,80065110,fn_80065110,translated,high,work/ghidra/main-gb/export/80065110_FUN_80065110.c,src/game/player.rs
+game::player,800651c0,fn_800651c0,translated,high,work/ghidra/main-gb/export/800651c0_FUN_800651c0.c,src/game/player.rs
+game::player,80065480,fn_80065480,translated,high,work/ghidra/main-gb/export/80065480_FUN_80065480.c,src/game/player.rs
+game::player,80065a00,fn_80065a00,translated,medium,work/ghidra/main-gb/export/80065a00_FUN_80065a00.c,src/game/player.rs
+game::player,80065a40,fn_80065a40,translated,high,work/ghidra/main-gb/export/80065a40_FUN_80065a40.c,src/game/player.rs
+game::player,80065ac0,fn_80065ac0,translated,high,work/ghidra/main-gb/export/80065ac0_FUN_80065ac0.c,src/game/player.rs
+game::player,80065b80,fn_80065b80,translated,high,work/ghidra/main-gb/export/80065b80_FUN_80065b80.c,src/game/player.rs
+game::player,80065cb0,fn_80065cb0,translated,high,work/ghidra/main-gb/export/80065cb0_FUN_80065cb0.c,src/game/player.rs
+game::player,80065fc0,fn_80065fc0,translated,high,work/ghidra/main-gb/export/80065fc0_FUN_80065fc0.c,src/game/player.rs

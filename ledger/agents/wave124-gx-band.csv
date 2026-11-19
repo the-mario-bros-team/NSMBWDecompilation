@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80292c90,fn_80292c90,partial,medium,"work/ghidra/main-gb/export/80292c90_FUN_80292c90.c; raw 0x80292C90..0x802941E4; node/key walks, five samplers, kind-2 trace record and post-trace matrix; case-4/case-7 direction builders marked partial",src/render/gx_band.rs

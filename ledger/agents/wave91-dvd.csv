@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801d6850,fn_801d6850,translated,medium,"work/ghidra/main-gb/export/801d6850_FUN_801d6850.c; decoder state init: tag +0x00; zero +0x04/+0x0C/+0x0E; bit counter +0x0F = 8",src/runtime/dvd.rs
+runtime::dvd,801d6880,fn_801d6880,translated,medium,"work/ghidra/main-gb/export/801d6880_FUN_801d6880.c; two-stream decoder state init; +0x10 = 3; +0x13 = 8",src/runtime/dvd.rs
+runtime::dvd,801d6f20,fn_801d6f20,translated,medium,"work/ghidra/main-gb/export/801d6f20_FUN_801d6f20.c; NAND error-log context init; self-pointer to +0x0E stored at +0x88C; state bytes +0x8A6/+0x8A7",src/runtime/dvd.rs
+runtime::dvd,801d8930,fn_801d8930,translated,medium,"work/ghidra/main-gb/export/801d8930_FUN_801d8930.c; builds path then calls 0x80226F70 with fixed completion 0x801DAB50",src/runtime/dvd.rs
+runtime::dvd,801d89f0,fn_801d89f0,translated,medium,"work/ghidra/main-gb/export/801d89f0_FUN_801d89f0.c; guard + 0x802278A0(handle[0] a b) + mapper",src/runtime/dvd.rs
+runtime::dvd,801d8ae0,fn_801d8ae0,translated,medium,"work/ghidra/main-gb/export/801d8ae0_FUN_801d8ae0.c; guard + 0x80227970(handle[0] a b) + mapper",src/runtime/dvd.rs
+runtime::dvd,801d8bd0,fn_801d8bd0,translated,medium,"work/ghidra/main-gb/export/801d8bd0_FUN_801d8bd0.c; guard + mode map 0/1/2 else -1 + thunk 0x80225410",src/runtime/dvd.rs
+runtime::dvd,801d9040,fn_801d9040,translated,medium,"work/ghidra/main-gb/export/801d9040_FUN_801d9040.c; 0x80227730 stat block; optional first word copied out",src/runtime/dvd.rs
+runtime::dvd,801d9320,fn_801d9320,translated,high,"work/ghidra/main-gb/export/801d9320_FUN_801d9320.c; attribute completion: mode byte +0x06; packer on +0x07; two-word callback",src/runtime/dvd.rs
+runtime::dvd,801d94a0,fn_801d94a0,translated,medium,"work/ghidra/main-gb/export/801d94a0_FUN_801d94a0.c; path build + shared2 test + mode map + 0x802275A0/0x80227670",src/runtime/dvd.rs
+runtime::dvd,801d96d0,fn_801d96d0,translated,medium,"work/ghidra/main-gb/export/801d96d0_FUN_801d96d0.c; stores callback +0x04 and file +0x08 then calls fn_801d94a0 async=0",src/runtime/dvd.rs
+runtime::dvd,801d9750,fn_801d9750,translated,medium,"work/ghidra/main-gb/export/801d9750_FUN_801d9750.c; stores callback +0x04 and file +0x08 then calls fn_801d94a0 async=1",src/runtime/dvd.rs
+runtime::dvd,801d9f00,fn_801d9f00,translated,medium,"work/ghidra/main-gb/export/801d9f00_FUN_801d9f00.c; directory-read completion sets file +0x89 = 7 and +0x8A = 2",src/runtime/dvd.rs
+runtime::dvd,801da860,fn_801da860,translated,medium,"work/ghidra/main-gb/export/801da860_FUN_801da860.c; ISFS mount: state 0->1->2; 0x80226490; home dir; hook table 0x80343680",src/runtime/dvd.rs
+runtime::dvd,801dae70,fn_801dae70,translated,medium,"work/ghidra/main-gb/export/801dae70_FUN_801dae70.c; state==2 guard + 0x801DAB90(path file 0 0 0) + mapper",src/runtime/dvd.rs
+runtime::dvd,801daec0,fn_801daec0,translated,medium,"work/ghidra/main-gb/export/801daec0_FUN_801daec0.c; stores callback + 0x801DAB90(path file ctx 1 1)",src/runtime/dvd.rs
+runtime::dvd,801daf10,fn_801daf10,translated,medium,"work/ghidra/main-gb/export/801daf10_FUN_801daf10.c; open/close completion: 0 and -0x66 close (-0x65 opens); two-word callback",src/runtime/dvd.rs
+runtime::dvd,801daf90,fn_801daf90,translated,high,"work/ghidra/main-gb/export/801daf90_FUN_801daf90.c; returns &DAT_80395de0 (ISFS home-directory buffer)",src/runtime/dvd.rs
+runtime::dvd,801dafa0,fn_801dafa0,translated,medium,"work/ghidra/main-gb/export/801dafa0_FUN_801dafa0.c; clears 0xF0A0 bytes; magic 0x5749424E at +0x00; two 0x20-byte names at +0x20/+0x60",src/runtime/dvd.rs
+runtime::dvd,801db080,fn_801db080,translated,medium,"work/ghidra/main-gb/export/801db080_FUN_801db080.c; sums (size blocks) over a NULL-terminated path list via 0x80227260",src/runtime/dvd.rs
+runtime::dvd,801db140,fn_801db140,translated,medium,"work/ghidra/main-gb/export/801db140_FUN_801db140.c; home stat + _meta tree; four threshold bits 0x400/0x21/0x4400/4000",src/runtime/dvd.rs
+runtime::dvd,801db250,fn_801db250,translated,high,"work/ghidra/main-gb/export/801db250_FUN_801db250.c; one-shot latch: r13-0x5FC0 == -1 -> 0xFFFFFF02; returns 1 first time",src/runtime/dvd.rs
+runtime::dvd,801db840,fn_801db840,translated,medium,"work/ghidra/main-gb/export/801db840_FUN_801db840.c; one-shot bring-up: NAND service 0x801AB1C0; boot flags bit 28; mount then settings",src/runtime/dvd.rs
+runtime::dvd,801db8e0,fn_801db8e0,translated,medium,"work/ghidra/main-gb/export/801db8e0_FUN_801db8e0.c; state 3 commit: 0x801DBEB0 image writer; copy to 0x803962E0; clear dirty",src/runtime/dvd.rs
+runtime::dvd,801dba00,fn_801dba00,translated,medium,"work/ghidra/main-gb/export/801dba00_FUN_801dba00.c; seeds 0x803962xx chunk lists; empty header at both ends; submits chunk 0",src/runtime/dvd.rs
+runtime::dvd,801dbb20,fn_801dbb20,translated,medium,"work/ghidra/main-gb/export/801dbb20_FUN_801dbb20.c; chunk 0 write via 0x801D8A60; on failure records result and advances",src/runtime/dvd.rs
+runtime::dvd,801dbbf0,fn_801dbbf0,translated,medium,"work/ghidra/main-gb/export/801dbbf0_FUN_801dbbf0.c; validates written size; then directory read 0x801DBCE0",src/runtime/dvd.rs
+runtime::dvd,801dbce0,fn_801dbce0,translated,medium,"work/ghidra/main-gb/export/801dbce0_FUN_801dbce0.c; directory-read completion; zero finishes else records result",src/runtime/dvd.rs
+runtime::dvd,801dbd70,fn_801dbd70,translated,medium,"work/ghidra/main-gb/export/801dbd70_FUN_801dbd70.c; advances chunk; rebuilds empty header; calls completion; state = 3",src/runtime/dvd.rs
+runtime::dvd,801dcc60,fn_801dcc60,translated,high,"work/ghidra/main-gb/export/801dcc60_FUN_801dcc60.c; one call 0x801B5D80(&DAT_80396140) releases the SYSCONF lock",src/runtime/dvd.rs

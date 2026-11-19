@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,800105b0,fn_800105b0,translated,high,"work/ghidra/main-gb/export/800105b0_FUN_800105b0.c; single lbu off r13-0x5433; flag role unknown",src/ui/hud.rs
+ui::hud,80010690,fn_80010690,translated,high,"work/ghidra/main-gb/export/80010690_FUN_80010690.c; four-channel widget copy into +0x3D4 panes; hides +0x3F0..+0x3FC",src/ui/hud.rs
+ui::hud,80010800,fn_80010800,translated,medium,"work/ghidra/main-gb/export/80010800_FUN_80010800.c; per-channel state cache +0x414; 0x800B3B60 animation restart",src/ui/hud.rs
+ui::hud,80010950,fn_80010950,translated,high,"work/ghidra/main-gb/export/80010950_FUN_80010950.c; panel close; +0x435/+0x441 guards; ten virtual +0x10 calls",src/ui/hud.rs
+ui::hud,80010b50,fn_80010b50,translated,medium,"work/ghidra/main-gb/export/80010b50_FUN_80010b50.c; message-kind switch on +0x410; 0x800C9A60 pane animations",src/ui/hud.rs
+ui::hud,80010dd0,fn_80010dd0,translated,medium,"work/ghidra/main-gb/export/80010dd0_FUN_80010dd0.c; three per-player panes +0x3D4/+0x3E0; alpha 0x46 highlight",src/ui/hud.rs
+ui::hud,80012940,fn_80012940,translated,medium,"work/ghidra/main-gb/export/80012940_FUN_80012940.c; 0x802DCBFC(b b a) forwarding thunk",src/ui/hud.rs
+ui::hud,80012970,fn_80012970,translated,medium,"work/ghidra/main-gb/export/80012970_FUN_80012970.c; twin of fn_80012940",src/ui/hud.rs
+ui::hud,80014330,fn_80014330,translated,high,"work/ghidra/main-gb/export/80014330_FUN_80014330.c; zero the first word of a record",src/ui/hud.rs
+ui::hud,80014630,fn_80014630,translated,high,"work/ghidra/main-gb/export/80014630_FUN_80014630.c; u16 field at +0x08",src/ui/hud.rs
+ui::hud,80014670,fn_80014670,translated,high,"work/ghidra/main-gb/export/80014670_FUN_80014670.c; f32 field at +0x0C",src/ui/hud.rs
+ui::hud,80014680,fn_80014680,translated,high,"work/ghidra/main-gb/export/80014680_FUN_80014680.c; f32 field at +0x10",src/ui/hud.rs
+ui::hud,80014690,fn_80014690,translated,high,"work/ghidra/main-gb/export/80014690_FUN_80014690.c; f32 field at +0x14",src/ui/hud.rs
+ui::hud,800146c0,fn_800146c0,translated,high,"work/ghidra/main-gb/export/800146c0_FUN_800146c0.c; u8 state byte at +0x0A; called from game::actor",src/ui/hud.rs
+ui::hud,800148f0,fn_800148f0,translated,high,"work/ghidra/main-gb/export/800148f0_FUN_800148f0.c; zero three words at +0x00..+0x08",src/ui/hud.rs
+ui::hud,8001b580,fn_8001b580,translated,medium,"work/ghidra/main-gb/export/8001b580_FUN_8001b580.c; wipe close; +0x1C0 flag and +0x1BC != 3; always returns 1",src/ui/hud.rs
+ui::hud,8001b920,fn_8001b920,translated,medium,"work/ghidra/main-gb/export/8001b920_FUN_8001b920.c; wipeCircle gate; animation -1 query; state word 3",src/ui/hud.rs
+ui::hud,8001ba20,fn_8001ba20,translated,high,"work/ghidra/main-gb/export/8001ba20_FUN_8001ba20.c; wipe mode 0/1; alpha +0x1B0 and animation set",src/ui/hud.rs
+ui::hud,8001bf20,fn_8001bf20,translated,medium,"work/ghidra/main-gb/export/8001bf20_FUN_8001bf20.c; fade window; f32 +0xB0 against 0x800B30E0 delta",src/ui/hud.rs
+ui::hud,8001cee0,fn_8001cee0,translated,medium,"work/ghidra/main-gb/export/8001cee0_FUN_8001cee0.c; pair test; 0x800FAE40 on +0x120C/+0x120D",src/ui/hud.rs
+ui::hud,8001da80,fn_8001da80,translated,high,"work/ghidra/main-gb/export/8001da80_FUN_8001da80.c; identical 0x80377A04 accessor",src/ui/hud.rs
+ui::hud,8001da90,fn_8001da90,translated,high,"work/ghidra/main-gb/export/8001da90_FUN_8001da90.c; identical 0x80377A04 accessor",src/ui/hud.rs
+ui::hud,8001daa0,fn_8001daa0,translated,high,"work/ghidra/main-gb/export/8001daa0_FUN_8001daa0.c; identical 0x80377A04 accessor",src/ui/hud.rs
+ui::hud,8001dab0,fn_8001dab0,translated,high,"work/ghidra/main-gb/export/8001dab0_FUN_8001dab0.c; identical 0x80377A04 accessor",src/ui/hud.rs
+ui::hud,8001dac0,fn_8001dac0,translated,high,"work/ghidra/main-gb/export/8001dac0_FUN_8001dac0.c; identical 0x80377A04 accessor; the body wave 96 deferred",src/ui/hud.rs
+ui::hud,8001ff90,fn_8001ff90,translated,medium,"work/ghidra/main-gb/export/8001ff90_FUN_8001ff90.c; +0x5E4 index into 0x802EE260/0x802EE278/0x802EE29C copies eight fields",src/ui/hud.rs

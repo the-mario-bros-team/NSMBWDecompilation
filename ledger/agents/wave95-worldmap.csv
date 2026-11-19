@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80146d00,fn_80146d00,translated,medium,"work/ghidra/main-gb/export/80146d00_FUN_80146d00.c; starts/continues the landing action; guards on action 0x9F and 0x10D4 bits; event 0x803762F0/0x80376230",src/game/worldmap.rs
+game::worldmap,80146e20,fn_80146e20,translated,high,"work/ghidra/main-gb/export/80146e20_FUN_80146e20.c; stores +0xEC/+0x10C/+0x110; +0x348 = param_2 <= 0.0f; posts 0x803764B0",src/game/worldmap.rs
+game::worldmap,80146f00,fn_80146f00,translated,high,"work/ghidra/main-gb/export/80146f00_FUN_80146f00.c; guard on +0x27C8, 0x10D4 bit 0x4000 and action 0x9F; clz(kind-1)>>5",src/game/worldmap.rs
+game::worldmap,80146fa0,fn_80146fa0,translated,medium,"work/ghidra/main-gb/export/80146fa0_FUN_80146fa0.c; classifies +0x1090 kind via 0x8012DC60/0x8012DBE0 and the +0x3CC slot; clz(kind-4)>>5",src/game/worldmap.rs
+game::worldmap,80147040,fn_80147040,translated,medium,"work/ghidra/main-gb/export/80147040_FUN_80147040.c; sub-controller events 2/2; action 0x8A; calls 0x80141FD0 and 0x8012E120",src/game/worldmap.rs
+game::worldmap,80147100,fn_80147100,translated,medium,"work/ghidra/main-gb/export/80147100_FUN_80147100.c; action 0x8A recovery; seeds +0x27C8 with 0x1E; 0x801299B0/0x8013C280/0x80129950",src/game/worldmap.rs
+game::worldmap,801474b0,fn_801474b0,translated,high,"work/ghidra/main-gb/export/801474b0_FUN_801474b0.c; writes 0x5A at +0x27FC and 0 at +0x2800",src/game/worldmap.rs
+game::worldmap,801474f0,fn_801474f0,translated,medium,"work/ghidra/main-gb/export/801474f0_FUN_801474f0.c; ticks +0x2804 and +0x292C effect slots; clears +0x27FC",src/game/worldmap.rs
+game::worldmap,80147560,fn_80147560,translated,medium,"work/ghidra/main-gb/export/80147560_FUN_80147560.c; Wm_mr_itemget01/02 effects; colour from r2-0x58FC or r2-0x58C0; alpha from +0x27FC",src/game/worldmap.rs
+game::worldmap,80147680,fn_80147680,translated,medium,"work/ghidra/main-gb/export/80147680_FUN_80147680.c; pickup gate over r13-0x5700 flags, r13-0x54B8 player and 0x800CE3C0",src/game/worldmap.rs
+game::worldmap,80147820,fn_80147820,translated,medium,"work/ghidra/main-gb/export/80147820_FUN_80147820.c; pickup distance tracker; +0x2A54/+0x2A58/+0x2A5C; 0x80147700 distance buffer",src/game/worldmap.rs
+game::worldmap,80147a80,fn_80147a80,translated,medium,"work/ghidra/main-gb/export/80147a80_FUN_80147a80.c; action 0x9F/0x65/4 guard plus +0x120D bit test; r13-0x5460",src/game/worldmap.rs
+game::worldmap,80147b60,fn_80147b60,translated,medium,"work/ghidra/main-gb/export/80147b60_FUN_80147b60.c; chains 0x80147A80, +0x1EC collision query and 0x80162D00",src/game/worldmap.rs
+game::worldmap,8014cd70,fn_8014cd70,translated,high,"work/ghidra/main-gb/export/8014cd70_FUN_8014cd70.c; clears 0x10D4 bit 0; 0x80057860, 0x8004C480 and +0x44C slot",src/game/worldmap.rs
+game::worldmap,8014ceb0,fn_8014ceb0,translated,medium,"work/ghidra/main-gb/export/8014ceb0_FUN_8014ceb0.c; picks sound ids 0x75/0x43/0x76/5 from actions 0xC/0xD/0xF; +0x14D8 slot +0x5C",src/game/worldmap.rs
+game::worldmap,8014cfd0,fn_8014cfd0,translated,medium,"work/ghidra/main-gb/export/8014cfd0_FUN_8014cfd0.c; Wm_mr_yssweat effect; 7-float matrix via 0x800D5790; rotation from +0x348",src/game/worldmap.rs
+game::worldmap,8014d070,fn_8014d070,translated,medium,"work/ghidra/main-gb/export/8014d070_FUN_8014d070.c; three-state +0x152C slide pose; speed clamp r2-0x5614; +0x11C/+0x114; controller +0x3C slot",src/game/worldmap.rs
+game::worldmap,8014d2d0,fn_8014d2d0,translated,medium,"work/ghidra/main-gb/export/8014d2d0_FUN_8014d2d0.c; +0x448 slot; 0x8014E4E0; action 0x8A1 branches; events 0x80376C84/0x80376CC4",src/game/worldmap.rs
+game::worldmap,8014d720,fn_8014d720,translated,high,"work/ghidra/main-gb/export/8014d720_FUN_8014d720.c; 0x80047D10 then action 0xB2",src/game/worldmap.rs
+game::worldmap,8014dab0,fn_8014dab0,translated,medium,"work/ghidra/main-gb/export/8014dab0_FUN_8014dab0.c; airborne slide step; action 0xAA and event 0x80376C04 record",src/game/worldmap.rs
+game::worldmap,8014def0,fn_8014def0,translated,high,"work/ghidra/main-gb/export/8014def0_FUN_8014def0.c; guard on +0x10C and 0x10D4 bit 0x4000; 0x800D5790/0x8004CFD0/0x8004CA60",src/game/worldmap.rs
+game::worldmap,8014df60,fn_8014df60,translated,medium,"work/ghidra/main-gb/export/8014df60_FUN_8014df60.c; action 0xA0; +0x394 slot fallback; event 0x80376D04",src/game/worldmap.rs
+game::worldmap,8014e0e0,fn_8014e0e0,translated,high,"work/ghidra/main-gb/export/8014e0e0_FUN_8014e0e0.c; 0x800D5790 kind 7, 0x8004CFD0, 0x8004D040",src/game/worldmap.rs
+game::worldmap,8014e130,fn_8014e130,translated,medium,"work/ghidra/main-gb/export/8014e130_FUN_8014e130.c; +0x110 speed from G_SIDE_TABLE_8042B840 and +0x11C facing record; 0x8004C0D0 state buffer",src/game/worldmap.rs
+game::worldmap,8014e7b0,fn_8014e7b0,translated,high,"work/ghidra/main-gb/export/8014e7b0_FUN_8014e7b0.c; action 0x51, controller id 0x15 and +0x14A4 = 2",src/game/worldmap.rs
+game::worldmap,8014e910,fn_8014e910,translated,high,"work/ghidra/main-gb/export/8014e910_FUN_8014e910.c; 0x8004A400 then action 0x91",src/game/worldmap.rs
+game::worldmap,8014ece0,fn_8014ece0,translated,low,"work/ghidra/main-gb/export/8014ece0_FUN_8014ece0.c; unrecovered jump table at 0x8014ECEC; indirect +0x14E0 slot +0x10 only",src/game/worldmap.rs

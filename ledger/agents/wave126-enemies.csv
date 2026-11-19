@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a407d0,fn_80a407d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a407d0_FUN_80a407d0.c; +0xA8C/+0xA8E re-arm countdown and 0x80027B00 request",src/game/enemies.rs
+game::enemies,80a40880,fn_80a40880,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a40880_FUN_80a40880.c; pattern-index speed tables 0x80B2C638/0x80B2C658 and 0x80B2C684 x scale",src/game/enemies.rs
+game::enemies,80a409d0,fn_80a409d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a409d0_FUN_80a409d0.c; 0x80A3FB30-gated re-arm and target switch 0x80027D00",src/game/enemies.rs
+game::enemies,80a40a60,fn_80a40a60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a40a60_FUN_80a40a60.c; 0x80B2C690 x-speed initialiser with +0xAA8 timer 8",src/game/enemies.rs
+game::enemies,80a40ba0,fn_80a40ba0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a40ba0_FUN_80a40ba0.c; +0xAA8 countdown and sound request 0x238 at +0xAC",src/game/enemies.rs
+game::enemies,80a40d90,fn_80a40d90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a40d90_FUN_80a40d90.c; +0x554 flag scan then scene rebind 0x80161800/0x80161750 and state 0x80B706E8",src/game/enemies.rs
+game::enemies,80a40f30,fn_80a40f30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a40f30_FUN_80a40f30.c; single store of the +0xA54 object handle",src/game/enemies.rs
+game::enemies,80a41e20,fn_80a41e20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a41e20_FUN_80a41e20.c; record clear 0x8015F800 and conditional release 0x802B9280",src/game/enemies.rs
+game::enemies,80a41e80,fn_80a41e80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a41e80_FUN_80a41e80.c; constant producer for 0x80357D34",src/game/enemies.rs
+game::enemies,80a41e90,fn_80a41e90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a41e90_FUN_80a41e90.c; constant producer for 0x80358104",src/game/enemies.rs
+game::enemies,80a42120,fn_80a42120,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a42120_FUN_80a42120.c; 0x802DCBFC argument swap; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a42150,fn_80a42150,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a42150_FUN_80a42150.c; 0x802DCBFC argument swap; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a43150,fn_80a43150,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a43150_FUN_80a43150.c; record clear 0x8015F800 and conditional release 0x802B9280",src/game/enemies.rs
+game::enemies,80a43270,fn_80a43270,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a43270_FUN_80a43270.c; 0x802DCBFC argument swap; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a432a0,fn_80a432a0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a432a0_FUN_80a432a0.c; 0x802DCBFC argument swap; hidden r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a435c0,fn_80a435c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a435c0_FUN_80a435c0.c; +0x394 holder +0x10 slot then return 1",src/game/enemies.rs
+game::enemies,80a43660,fn_80a43660,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a43660_FUN_80a43660.c; class-0x261 registry walk matching +0x912 against +0x4F4",src/game/enemies.rs
+game::enemies,80a4a8d0,fn_80a4a8d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4a8d0_FUN_80a4a8d0.c; g3d/crow.brres binder with the +0x544 and +0x584 holders",src/game/enemies.rs
+game::enemies,80a4ac00,fn_80a4ac00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4ac00_FUN_80a4ac00.c; 52-byte animation sample merged into the +0x5E0 sub-object",src/game/enemies.rs
+game::enemies,80a4b010,fn_80a4b010,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4b010_FUN_80a4b010.c; attack2 clip entry and the 0xD000/0xE800 angle pair",src/game/enemies.rs
+game::enemies,80a4b230,fn_80a4b230,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4b230_FUN_80a4b230.c; body clip entry and facing-speed triple",src/game/enemies.rs
+game::enemies,80a4b2b0,fn_80a4b2b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4b2b0_FUN_80a4b2b0.c; facing-gated swoop window and state 0x80B71070 after 0x80A4B140",src/game/enemies.rs
+game::enemies,80a4b3b0,fn_80a4b3b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4b3b0_FUN_80a4b3b0.c; attack1 clip entry and +0x10C facing speed",src/game/enemies.rs
+game::enemies,80a4b650,fn_80a4b650,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4b650_FUN_80a4b650.c; dive level clamp 0..7 and sound request 0x1EF",src/game/enemies.rs
+game::enemies,80a4b9a0,fn_80a4b9a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4b9a0_FUN_80a4b9a0.c; body clip and the 0x80B2CAA8/0x80B2CAB0 dive speeds",src/game/enemies.rs
+game::enemies,80a4ba20,fn_80a4ba20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4ba20_FUN_80a4ba20.c; signed side table 0x8042C1A0 steering with 0x801611C0 and 0x8015F2E0",src/game/enemies.rs
+game::enemies,80a4bb60,fn_80a4bb60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4bb60_FUN_80a4bb60.c; body clip and 0x80B2C9E0 facing speed into +0x10C",src/game/enemies.rs
+game::enemies,80a4bd00,fn_80a4bd00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4bd00_FUN_80a4bd00.c; body clip and 0x80B2C9E0 facing speed into +0x10C",src/game/enemies.rs
+game::enemies,80a4bd70,fn_80a4bd70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4bd70_FUN_80a4bd70.c; escape step restores +0xE8 from +0x10C and lands +0x104",src/game/enemies.rs

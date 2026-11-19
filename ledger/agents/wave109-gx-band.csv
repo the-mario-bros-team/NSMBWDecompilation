@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80290cf0,fn_80290cf0,translated,medium,"work/ghidra/main-gb/export/80290cf0_FUN_80290cf0.c; 1032 bytes; six-way hit sampler dispatch; GQR0 is float so the export's psq ladders collapse",src/render/gx_band.rs
+render::gx_band,80296820,fn_80296820,translated,medium,"work/ghidra/main-gb/export/80296820_FUN_80296820.c; 1216 bytes; six optional particle transform terms; GQR0 is float",src/render/gx_band.rs

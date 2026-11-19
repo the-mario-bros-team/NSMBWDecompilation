@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,801b63b0,fn_801b63b0,translated,high,"work/ghidra/main-gb/export/801b63b0_FUN_801b63b0.c; UTF-8 decoder: lead-byte length table, continuation prefix test, three overlong bounds and the surrogate hole",src/runtime/os.rs
+runtime::os,801b7ae0,fn_801b7ae0,translated,medium,"work/ghidra/main-gb/export/801b7ae0_FUN_801b7ae0.c; /dev/net/kd/time open + ioctl 0x17 (two 0x20 buffers at 0x8038F6A0/0x8038F6C0) + close, error mapping -0x1d/-0x2a",src/runtime/os.rs
+runtime::os,801b7c30,fn_801b7c30,translated,medium,"work/ghidra/main-gb/export/801b7c30_FUN_801b7c30.c; shared2/sys/NANDBOOTINFO check: 8-byte read, '?' marker, 0x801D8890 empty test, error -0xC, create with mode 0x3F",src/runtime/os.rs
+runtime::os,801b7e40,fn_801b7e40,translated,high,"work/ghidra/main-gb/export/801b7e40_FUN_801b7e40.c; non-zero test on sda(-0x4EFC) or sda(-0x4F00)",src/runtime/os.rs
+runtime::os,801b8020,fn_801b8020,translated,medium,"work/ghidra/main-gb/export/801b8020_FUN_801b8020.c; shared2/expired console-id match: 184-byte record, zeroed 0x20 id block, 0x801D8AE0 compare, -8 on a short read",src/runtime/os.rs
+runtime::os,801b8140,fn_801b8140,translated,high,"work/ghidra/main-gb/export/801b8140_FUN_801b8140.c; guarded forward to fn_801b8020 on sda(-0x4F0C), else 0",src/runtime/os.rs
+runtime::os,801b8a30,fn_801b8a30,translated,medium,"work/ghidra/main-gb/export/801b8a30_FUN_801b8a30.c; mode 0/1/2 -> mask 0x410000/0x80000/0x40, set via 0x801B1510 or clear via 0x801B1590, block[0] and block[3]&0x10 tests",src/runtime/os.rs
+runtime::os,801b9f50,fn_801b9f50,translated,medium,"work/ghidra/main-gb/export/801b9f50_FUN_801b9f50.c; forwards (param,0,8-byte stack buffer) to 0x801B9F80",src/runtime/os.rs
+runtime::os,801bb1c0,fn_801bb1c0,translated,medium,"work/ghidra/main-gb/export/801bb1c0_FUN_801bb1c0.c; signed /0x30 index into 0x8038F7D0 (0x20 stride), -1 sentinel, six-word call to 0x801BAFB0 then store -1",src/runtime/os.rs
+runtime::os,801bccf0,fn_801bccf0,translated,high,"work/ghidra/main-gb/export/801bccf0_FUN_801bccf0.c; sleeps on sda(-0x4E38) until the word at sda(-0x4E14) changes",src/runtime/os.rs
+runtime::os,801bde40,fn_801bde40,translated,high,"work/ghidra/main-gb/export/801bde40_FUN_801bde40.c; returns sda(-0x4E58)",src/runtime/os.rs
+runtime::os,801bded0,fn_801bded0,translated,high,"work/ghidra/main-gb/export/801bded0_FUN_801bded0.c; returns the sda(-0x4E14) sequence word sampled by fn_801bccf0",src/runtime/os.rs
+runtime::os,801be010,fn_801be010,translated,high,"work/ghidra/main-gb/export/801be010_FUN_801be010.c; switch on sda(-0x4E50): 0/3/6/7/8 -> 0, 1/4 -> 1, default passthrough, interrupts masked",src/runtime/os.rs
+runtime::os,801be070,fn_801be070,translated,medium,"work/ghidra/main-gb/export/801be070_FUN_801be070.c; masked read of the halfword at 0xCC00206E, returns bit 0",src/runtime/os.rs
+runtime::os,801be2f0,fn_801be2f0,translated,medium,"work/ghidra/main-gb/export/801be2f0_FUN_801be2f0.c; read/replace sda(-0x4E20), a new 1 is stored as 0 unless 0x801DD3F0 allows it",src/runtime/os.rs
+runtime::os,801be450,fn_801be450,translated,high,"work/ghidra/main-gb/export/801be450_FUN_801be450.c; stores 0 at 0x8038FB38 and returns 1",src/runtime/os.rs
+runtime::os,801be470,fn_801be470,translated,high,"work/ghidra/main-gb/export/801be470_FUN_801be470.c; stores 0 at sda(-0x4E2C) and returns 1",src/runtime/os.rs
+runtime::os,801beda0,fn_801beda0,translated,medium,"work/ghidra/main-gb/export/801beda0_FUN_801beda0.c; 0x800000CC mapped to 2/1/0, stored to sda(-0x4DF4), request {1, level<<5|mode}",src/runtime/os.rs
+runtime::os,801bee40,fn_801bee40,translated,high,"work/ghidra/main-gb/export/801bee40_FUN_801bee40.c; request {0x6E, value} to 0x801BE860(0xE0,...) then 0x801BE480(2)",src/runtime/os.rs
+runtime::os,801bee80,fn_801bee80,translated,high,"work/ghidra/main-gb/export/801bee80_FUN_801bee80.c; request {5, (sda-0x60EB&0xF)<<2|sda-0x60EC&3, sda-0x60EA}",src/runtime/os.rs
+runtime::os,801beee0,fn_801beee0,translated,high,"work/ghidra/main-gb/export/801beee0_FUN_801beee0.c; request {8, sda-0x60E8<<4|sda-0x60E9&0xF, (sda-0x60E6&7)<<3|sda-0x60E7&7}",src/runtime/os.rs
+runtime::os,801bef50,fn_801bef50,translated,high,"work/ghidra/main-gb/export/801bef50_FUN_801bef50.c; request {0x7A, four sda-0x60E5..-0x60E2 values masked to 7 bits}",src/runtime/os.rs
+runtime::os,801bfea0,fn_801bfea0,translated,high,"work/ghidra/main-gb/export/801bfea0_FUN_801bfea0.c; one-argument call to 0x801BFD40 with the fixed record 0x80340714",src/runtime/os.rs
+runtime::os,801bfeb0,fn_801bfeb0,translated,medium,"work/ghidra/main-gb/export/801bfeb0_FUN_801bfeb0.c; same call with 0x803405C0 + sda(-0x4DFC)*0x22",src/runtime/os.rs
+runtime::os,801bfed0,fn_801bfed0,translated,high,"work/ghidra/main-gb/export/801bfed0_FUN_801bfed0.c; request {3, sda-0x60E1 != 1}",src/runtime/os.rs
+runtime::os,801bff30,fn_801bff30,translated,high,"work/ghidra/main-gb/export/801bff30_FUN_801bff30.c; request {0x0A, (sda-0x4E00<<1)|1} when sda(-0x4DF4)==3, else the same with 0",src/runtime/os.rs
+runtime::os,801bffc0,fn_801bffc0,translated,high,"work/ghidra/main-gb/export/801bffc0_FUN_801bffc0.c; sets bit 0x80 of sda(-0x4E08)",src/runtime/os.rs
+runtime::os,801bffd0,fn_801bffd0,translated,high,"work/ghidra/main-gb/export/801bffd0_FUN_801bffd0.c; stores 3 at sda(-0x4DF4) then sends request {1, 3}",src/runtime/os.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802610b0,fn_802610b0,translated,high,"work/ghidra/main-gb/export/802610b0_FUN_802610b0.c; returns the word at +0x00",src/resource/archive.rs
+resource::archive,80261d60,fn_80261d60,translated,high,"work/ghidra/main-gb/export/80261d60_FUN_80261d60.c; descriptor init: halfwords 0x8000 at +0x08/+0x0E, tail zeroed",src/resource/archive.rs
+resource::archive,80261db0,fn_80261db0,translated,high,"work/ghidra/main-gb/export/80261db0_FUN_80261db0.c; deleting destructor: free when flag > 0 through 0x802B9280, return this",src/resource/archive.rs
+resource::archive,80261df0,fn_80261df0,translated,high,"work/ghidra/main-gb/export/80261df0_FUN_80261df0.c; three stores, 0x18-byte clear at +0x1E, +0x1C ready byte, IRQ mask",src/resource/archive.rs
+resource::archive,802652e0,fn_802652e0,translated,high,"work/ghidra/main-gb/export/802652e0_FUN_802652e0.c; release +0x00 handle through 0x801D4C10 then clear the slot",src/resource/archive.rs
+resource::archive,80265330,fn_80265330,translated,medium,"work/ghidra/main-gb/export/80265330_FUN_80265330.c; writes r13-0x4988 writer slot and r13-0x4984 counter, installs callback pair",src/resource/archive.rs
+resource::archive,80265390,fn_80265390,translated,medium,"work/ghidra/main-gb/export/80265390_FUN_80265390.c; detach writer, clear slot, return the byte counter",src/resource/archive.rs
+resource::archive,802653d0,fn_802653d0,translated,medium,"work/ghidra/main-gb/export/802653d0_FUN_802653d0.c; 4-byte length prefix, chunk count increment, aligned byte total",src/resource/archive.rs
+resource::archive,80265470,fn_80265470,translated,medium,"work/ghidra/main-gb/export/80265470_FUN_80265470.c; parse block through 0x802656F0, clear +0x0C, return this",src/resource/archive.rs
+resource::archive,802654b0,fn_802654b0,translated,high,"work/ghidra/main-gb/export/802654b0_FUN_802654b0.c; second copy of the deleting-destructor template",src/resource/archive.rs
+resource::archive,80267700,fn_80267700,translated,high,"work/ghidra/main-gb/export/80267700_FUN_80267700.c; non-null test for the pointer at +0x08",src/resource/archive.rs
+resource::archive,80267720,fn_80267720,translated,high,"work/ghidra/main-gb/export/80267720_FUN_80267720.c; non-null test for the pointer at +0x0C",src/resource/archive.rs
+resource::archive,80267740,fn_80267740,translated,high,"work/ghidra/main-gb/export/80267740_FUN_80267740.c; tail forward of +0x08 to 0x8027A200",src/resource/archive.rs
+resource::archive,80267750,fn_80267750,translated,high,"work/ghidra/main-gb/export/80267750_FUN_80267750.c; tail forward of +0x0C to 0x8027A200",src/resource/archive.rs
+resource::archive,80267760,fn_80267760,translated,medium,"work/ghidra/main-gb/export/80267760_FUN_80267760.c; store +0x9C, call vtable +0x24, mirror into child +0xB0",src/resource/archive.rs
+resource::archive,802677a0,fn_802677a0,translated,high,"work/ghidra/main-gb/export/802677a0_FUN_802677a0.c; third copy of the deleting-destructor template",src/resource/archive.rs
+resource::archive,80267b80,fn_80267b80,translated,high,"work/ghidra/main-gb/export/80267b80_FUN_80267b80.c; fourth copy of the deleting-destructor template",src/resource/archive.rs
+resource::archive,80267bc0,fn_80267bc0,translated,high,"work/ghidra/main-gb/export/80267bc0_FUN_80267bc0.c; fifth copy of the deleting-destructor template",src/resource/archive.rs
+resource::archive,80267c00,fn_80267c00,translated,high,"work/ghidra/main-gb/export/80267c00_FUN_80267c00.c; sixth copy of the deleting-destructor template",src/resource/archive.rs
+resource::archive,80267dd0,fn_80267dd0,translated,medium,"work/ghidra/main-gb/export/80267dd0_FUN_80267dd0.c; drains the 0xD8-byte entry ring at +0x08 through 0x80267F40",src/resource/archive.rs
+resource::archive,802688c0,fn_802688c0,translated,high,"work/ghidra/main-gb/export/802688c0_FUN_802688c0.c; accumulator add at +0x88 clamped to the +0x8C limit",src/resource/archive.rs
+resource::archive,802688e0,fn_802688e0,translated,medium,"work/ghidra/main-gb/export/802688e0_FUN_802688e0.c; target +0x84, limit +0x8C, mode +0x38, accumulator cleared",src/resource/archive.rs
+resource::archive,80268900,fn_80268900,translated,medium,"work/ghidra/main-gb/export/80268900_FUN_80268900.c; mode byte +0x3B and float +0x54",src/resource/archive.rs
+resource::archive,802696f0,fn_802696f0,translated,medium,"work/ghidra/main-gb/export/802696f0_FUN_802696f0.c; zero +0x00, scale * value at +0x04",src/resource/archive.rs
+resource::archive,80269710,fn_80269710,translated,medium,"work/ghidra/main-gb/export/80269710_FUN_80269710.c; sentinel compare at +0x10, otherwise rate / scale",src/resource/archive.rs
+resource::archive,802698a0,fn_802698a0,translated,high,"work/ghidra/main-gb/export/802698a0_FUN_802698a0.c; 0x802FA560 table word into +0x10",src/resource/archive.rs
+resource::archive,802698c0,fn_802698c0,translated,high,"work/ghidra/main-gb/export/802698c0_FUN_802698c0.c; (count+1)^2 / 4 stored at +0x16",src/resource/archive.rs
+resource::archive,80269980,fn_80269980,translated,high,"work/ghidra/main-gb/export/80269980_FUN_80269980.c; single byte store at +0x14",src/resource/archive.rs
+resource::archive,8026a650,fn_8026a650,translated,high,"work/ghidra/main-gb/export/8026a650_FUN_8026a650.c; returns the +0x04 count minus one",src/resource/archive.rs
+resource::archive,8026de10,fn_8026de10,translated,medium,"work/ghidra/main-gb/export/8026de10_FUN_8026de10.c; rebinds +0x108 base and reseeks both stream cursors",src/resource/archive.rs

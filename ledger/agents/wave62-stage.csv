@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b3540,fn_800b3540,translated,high,"work/ghidra/main-gb/export/800b3540_FUN_800b3540.c; colour row 0x80354E60 + two draw calls",src/game/stage.rs
+game::stage,800b35b0,fn_800b35b0,translated,high,"work/ghidra/main-gb/export/800b35b0_FUN_800b35b0.c; plain draw wrapper",src/game/stage.rs
+game::stage,800b3600,fn_800b3600,translated,medium,"work/ghidra/main-gb/export/800b3600_FUN_800b3600.c; four 0x23C-stride scene records + actor flags",src/game/stage.rs
+game::stage,800b3720,fn_800b3720,translated,high,"work/ghidra/main-gb/export/800b3720_FUN_800b3720.c; guarded forward to 0x801571B0",src/game/stage.rs
+game::stage,800b3780,fn_800b3780,translated,high,"work/ghidra/main-gb/export/800b3780_FUN_800b3780.c; guarded forward to 0x80157310",src/game/stage.rs
+game::stage,800b37b0,fn_800b37b0,translated,high,"work/ghidra/main-gb/export/800b37b0_FUN_800b37b0.c; guarded forward to 0x80157360",src/game/stage.rs
+game::stage,800b3a30,fn_800b3a30,translated,medium,"work/ghidra/main-gb/export/800b3a30_FUN_800b3a30.c; packed status word bits 0..3",src/game/stage.rs
+game::stage,800b3b20,fn_800b3b20,translated,high,"work/ghidra/main-gb/export/800b3b20_FUN_800b3b20.c; two ready bytes",src/game/stage.rs
+game::stage,800b3b60,fn_800b3b60,translated,medium,"work/ghidra/main-gb/export/800b3b60_FUN_800b3b60.c; 0x10-byte transform from two objects",src/game/stage.rs
+game::stage,800b3e50,fn_800b3e50,translated,medium,"work/ghidra/main-gb/export/800b3e50_FUN_800b3e50.c; effect list kind 3, two slots",src/game/stage.rs
+game::stage,800b3f50,fn_800b3f50,translated,medium,"work/ghidra/main-gb/export/800b3f50_FUN_800b3f50.c; effect list kind 1, two slots",src/game/stage.rs
+game::stage,800b4050,fn_800b4050,translated,medium,"work/ghidra/main-gb/export/800b4050_FUN_800b4050.c; effect list kind 5, four slots",src/game/stage.rs
+game::stage,800b4170,fn_800b4170,translated,medium,"work/ghidra/main-gb/export/800b4170_FUN_800b4170.c; effect list kind 4, six slots",src/game/stage.rs
+game::stage,800b42b0,fn_800b42b0,translated,medium,"work/ghidra/main-gb/export/800b42b0_FUN_800b42b0.c; effect list kind 2, four slots",src/game/stage.rs
+game::stage,800b44d0,fn_800b44d0,translated,high,"work/ghidra/main-gb/export/800b44d0_FUN_800b44d0.c; two text-object forwards",src/game/stage.rs
+game::stage,800b4540,fn_800b4540,translated,high,"work/ghidra/main-gb/export/800b4540_FUN_800b4540.c; event 0x2B9 cancel",src/game/stage.rs
+game::stage,800b45a0,fn_800b45a0,translated,high,"work/ghidra/main-gb/export/800b45a0_FUN_800b45a0.c; event 0x2B9 arm flag",src/game/stage.rs
+game::stage,800b4610,fn_800b4610,translated,high,"work/ghidra/main-gb/export/800b4610_FUN_800b4610.c; mode 3/4 classifier",src/game/stage.rs
+game::stage,800b4650,fn_800b4650,translated,medium,"work/ghidra/main-gb/export/800b4650_FUN_800b4650.c; 100-byte name build via memset/strncat",src/game/stage.rs
+game::stage,800b80e0,fn_800b80e0,translated,medium,"work/ghidra/main-gb/export/800b80e0_FUN_800b80e0.c; marker record init + 0x20-byte template fallback",src/game/stage.rs
+game::stage,800b81c0,fn_800b81c0,translated,high,"work/ghidra/main-gb/export/800b81c0_FUN_800b81c0.c; eight dwords into 24 fields",src/game/stage.rs
+game::stage,800b8110,fn_800b8110,translated,medium,"work/ghidra/main-gb/export/800b8110_FUN_800b8110.c; release loop over eight marker bits",src/game/stage.rs
+game::stage,800b8250,fn_800b8250,translated,medium,"work/ghidra/main-gb/export/800b8250_FUN_800b8250.c; marker slot activate + bit set",src/game/stage.rs
+game::stage,800b82d0,fn_800b82d0,translated,medium,"work/ghidra/main-gb/export/800b82d0_FUN_800b82d0.c; marker render submit",src/game/stage.rs
+game::stage,800b8440,fn_800b8440,translated,high,"work/ghidra/main-gb/export/800b8440_FUN_800b8440.c; marker constructor + count bump",src/game/stage.rs
+game::stage,800b84e0,fn_800b84e0,translated,medium,"work/ghidra/main-gb/export/800b84e0_FUN_800b84e0.c; marker release + count drop",src/game/stage.rs
+game::stage,800b86f0,fn_800b86f0,translated,high,"work/ghidra/main-gb/export/800b86f0_FUN_800b86f0.c; three timer stores",src/game/stage.rs
+game::stage,800b88d0,fn_800b88d0,translated,high,"work/ghidra/main-gb/export/800b88d0_FUN_800b88d0.c; variant timer table",src/game/stage.rs
+game::stage,800b8930,fn_800b8930,translated,medium,"work/ghidra/main-gb/export/800b8930_FUN_800b8930.c; variant timer floor + 0x800B8B30",src/game/stage.rs
+game::stage,800b89b0,fn_800b89b0,translated,medium,"work/ghidra/main-gb/export/800b89b0_FUN_800b89b0.c; variant limit comparison",src/game/stage.rs

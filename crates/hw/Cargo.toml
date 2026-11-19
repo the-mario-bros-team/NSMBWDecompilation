@@ -1,0 +1,9 @@
+[package]
+name = "hw"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+guest-mem = { path = "../guest-mem" }
+hle-ios = { path = "../hle-ios" }
+gx = { path = "../gx" }

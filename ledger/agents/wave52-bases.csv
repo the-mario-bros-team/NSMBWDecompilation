@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807a1fc0,fn_807a1fc0,translated,high,"work/ghidra/rel-d_basesNP/export/807a1fc0_FUN_807a1fc0.c; g3d/firepillar.brres + firepillar pane + firepillar_loop clip; +0x3D0/+0x3EC/+0x3F0/+0x46C",src/game/bases.rs
+game::bases,807a2320,fn_807a2320,translated,high,"work/ghidra/rel-d_basesNP/export/807a2320_FUN_807a2320.c; 80064AF0 + 801C0BD0 matrix, rotation writers and model bind; delegates to 807A2450",src/game/bases.rs
+game::bases,807a2410,fn_807a2410,translated,high,"work/ghidra/rel-d_basesNP/export/807a2410_FUN_807a2410.c; +0x164=807D0388, +0x16C=807D03A4, +0x168/+0x170=807D039C*(807D03A0*+0x498)",src/game/bases.rs
+game::bases,807a2450,fn_807a2450,translated,high,"work/ghidra/rel-d_basesNP/export/807a2450_FUN_807a2450.c; ef_firepillar node via 80168400/8023B200, transform via 80168180/8016F130, +0x4B4=807D03A8",src/game/bases.rs
+game::bases,807a24e0,fn_807a24e0,translated,high,"work/ghidra/rel-d_basesNP/export/807a24e0_FUN_807a24e0.c; steps +0x4A0 toward +0x4A8 by +0x4A4 and clamps both directions",src/game/bases.rs
+game::bases,807a2530,fn_807a2530,translated,high,"work/ghidra/rel-d_basesNP/export/807a2530_FUN_807a2530.c; 8008C380(+0x148); +0x16C=807D03AC; +0x170/+0xE0=807D0388; +0x49C=0x3C",src/game/bases.rs
+game::bases,807a25a0,fn_807a25a0,translated,high,"work/ghidra/rel-d_basesNP/export/807a25a0_FUN_807a25a0.c; timer +0x49C; at zero sound 0x309 via 80198C30 and state 0x80832FA0 on +0x394",src/game/bases.rs
+game::bases,807a2630,fn_807a2630,translated,high,"work/ghidra/rel-d_basesNP/export/807a2630_FUN_807a2630.c; 8008C380(+0x148); +0x49C=0x96; +0x4B8=0; +0x170/+0xE0=807D0388",src/game/bases.rs
+game::bases,807a26a0,fn_807a26a0,translated,high,"work/ghidra/rel-d_basesNP/export/807a26a0_FUN_807a26a0.c; same timer/state shape as 807A25A0; sound 0x309 and state 0x80832FA0",src/game/bases.rs
+game::bases,807a2730,fn_807a2730,translated,high,"work/ghidra/rel-d_basesNP/export/807a2730_FUN_807a2730.c; firepillar_loop clip; 80167800 + 80169F80(807D037C); +0x4A0/+0x4A8=807D0300",src/game/bases.rs
+game::bases,807a27d0,fn_807a27d0,translated,high,"work/ghidra/rel-d_basesNP/export/807a27d0_FUN_807a27d0.c; advances +0xE0 by +0x4A0, clamps to 807D0324, state 0x80832FE0, then 807A2410",src/game/bases.rs
+game::bases,807a2ac0,fn_807a2ac0,translated,high,"work/ghidra/rel-d_basesNP/export/807a2ac0_FUN_807a2ac0.c; model slot +0x1C, sound 0x30A, Wm_ob_firespillar01/02 panes, phase +0x360 and state 0x80833060",src/game/bases.rs
+game::bases,807a2ee0,fn_807a2ee0,translated,high,"work/ghidra/rel-d_basesNP/export/807a2ee0_FUN_807a2ee0.c; Wm_ob_firespillar01/02 panes, sound 0x30A, clamp at 807D0388, state 0x80832F60",src/game/bases.rs
+game::bases,807a3700,fn_807a3700,translated,high,"work/ghidra/rel-d_basesNP/export/807a3700_FUN_807a3700.c; standard registered-state destructor: 8015F800(state,0) and optional 802B9280(state)",src/game/bases.rs
+game::bases,807a3880,fn_807a3880,translated,high,"work/ghidra/rel-d_basesNP/export/807a3880_FUN_807a3880.c; alloc 0x610; 80094E80; vtable 8081C740; +0x524/+0x544/+0x584/+0x5CC setup; vtables 803295D8/80329548",src/game/bases.rs
+game::bases,807a3c00,fn_807a3c00,translated,high,"work/ghidra/rel-d_basesNP/export/807a3c00_FUN_807a3c00.c; 80064AF0 + 801C0BD0/801C0C60/801C0540, three rotation writers, model +0x544",src/game/bases.rs
+game::bases,807a3ec0,fn_807a3ec0,translated,high,"work/ghidra/rel-d_basesNP/export/807a3ec0_FUN_807a3ec0.c; pane table 8081C6D4 and blend table 807D0440 indexed by clip; 80169F80 time 807D0420; +0x5EC=index",src/game/bases.rs
+game::bases,807a3f60,fn_807a3f60,translated,high,"work/ghidra/rel-d_basesNP/export/807a3f60_FUN_807a3f60.c; colour byte +0x38F == 1 selects 807D044C else 807D0450",src/game/bases.rs
+game::bases,807a3f90,fn_807a3f90,translated,high,"work/ghidra/rel-d_basesNP/export/807a3f90_FUN_807a3f90.c; Wm_ob_eggbreak_* table 8081C730 indexed by +0x5F8; Y offset 807D041C; 8016C890 spawn",src/game/bases.rs
+game::bases,807a4000,fn_807a4000,translated,high,"work/ghidra/rel-d_basesNP/export/807a4000_FUN_807a4000.c; 807A3F90 + 8005E9A0 with 807D0458 table + 80162510",src/game/bases.rs
+game::bases,807a4070,fn_807a4070,translated,high,"work/ghidra/rel-d_basesNP/export/807a4070_FUN_807a4070.c; +0x600/+0x604 from 807D0468/807D047C; +0x1090 character mapping via 8005F900",src/game/bases.rs
+game::bases,807a4190,fn_807a4190,translated,high,"work/ghidra/rel-d_basesNP/export/807a4190_FUN_807a4190.c; 80064610(0x3C, +0x600|0x04000000, position, 0, 0)",src/game/bases.rs
+game::bases,807a41f0,fn_807a41f0,translated,high,"work/ghidra/rel-d_basesNP/export/807a41f0_FUN_807a41f0.c; 807A3F90 + 807A4190 + 80162510",src/game/bases.rs
+game::bases,807a4230,fn_807a4230,translated,high,"work/ghidra/rel-d_basesNP/export/807a4230_FUN_807a4230.c; 807A3F90 + 80066740(80429D40, position, 5, +0x38F) + 80162510",src/game/bases.rs
+game::bases,807a42b0,fn_807a42b0,translated,high,"work/ghidra/rel-d_basesNP/export/807a42b0_FUN_807a42b0.c; model slot +0x1C; clip +0x584 finished -> Y=807A3F60, anim 2, dispatch 0x80833220",src/game/bases.rs
+game::bases,807a4360,fn_807a4360,translated,high,"work/ghidra/rel-d_basesNP/export/807a4360_FUN_807a4360.c; timer +0x60C; input bits 1/2 via 80096E60; 807D0418/807D0488 and dispatch 0x80833220",src/game/bases.rs
+game::bases,807a4550,fn_807a4550,translated,medium,"work/ghidra/rel-d_basesNP/export/807a4550_FUN_807a4550.c; +0x5F4 branch; 800B2F10 sine plus 807D0498; table 807D04B0; 807D04B8/807D0418; +0x60C=0xD",src/game/bases.rs
+game::bases,807a4680,fn_807a4680,translated,high,"work/ghidra/rel-d_basesNP/export/807a4680_FUN_807a4680.c; 8006CDE0/8006CD40 + 80096E60 bit 1; 807D04C8 latch +0x60F; dispatch 0x80833220",src/game/bases.rs
+game::bases,807a4740,fn_807a4740,translated,high,"work/ghidra/rel-d_basesNP/export/807a4740_FUN_807a4740.c; 8006A4B0 position copy and 80198C30 sound 0x25E",src/game/bases.rs
+game::bases,807a47a0,fn_807a47a0,translated,high,"work/ghidra/rel-d_basesNP/export/807a47a0_FUN_807a47a0.c; input bit 1 spin word 807D04C8; clip finished selects 807A4000/807A41F0/807A4230 via +0x5FC/+0x604",src/game/bases.rs

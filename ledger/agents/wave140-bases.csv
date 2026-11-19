@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806b3770,fn_806b3770,translated,high,"work/ghidra/rel-d_basesNP/export/806b3770_FUN_806b3770.c; qr3 rail endpoints from +0x134C/+0x1350; two trig calls",src/game/bases.rs
+game::bases,806fb610,fn_806fb610,translated,high,"work/ghidra/rel-d_basesNP/export/806fb610_FUN_806fb610.c; slot lookup +0x6E8/0x884, child writes +0x102/+0xAC/+0xB4/+0xDC",src/game/bases.rs
+game::bases,80680e80,fn_80680e80,translated,medium,"work/ghidra/rel-d_basesNP/export/80680e80_FUN_80680e80.c; per-slot spawn around +0xAC; 0x80050D40 contract inferred",src/game/bases.rs
+game::bases,8066c9a0,fn_8066c9a0,translated,high,"work/ghidra/rel-d_basesNP/export/8066c9a0_FUN_8066c9a0.c; Wm_ob_keywait 0x807E92A0, bob -10.0, sound 0x2FE",src/game/bases.rs
+game::bases,806b2d10,fn_806b2d10,translated,medium,"work/ghidra/rel-d_basesNP/export/806b2d10_FUN_806b2d10.c; tri-float clear, vfunc +0x9C, sin/cos pair +0x3D0/+0x3D4",src/game/bases.rs
+game::bases,806de0b0,fn_806de0b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806de0b0_FUN_806de0b0.c; timer +0x724, interface reset 0x8082DDA8, phase +0x722",src/game/bases.rs
+game::bases,806de320,fn_806de320,translated,medium,"work/ghidra/rel-d_basesNP/export/806de320_FUN_806de320.c; twin of 806de0b0 with 0x8082DEA8",src/game/bases.rs
+game::bases,806d65a0,fn_806d65a0,translated,high,"work/ghidra/rel-d_basesNP/export/806d65a0_FUN_806d65a0.c; +0xF02 phase, quantised sine *128.0 into +0x104",src/game/bases.rs
+game::bases,807040c0,fn_807040c0,translated,high,"work/ghidra/rel-d_basesNP/export/807040c0_FUN_807040c0.c; +0xE02 phase, quantised sine *128.0 into +0x104",src/game/bases.rs
+game::bases,80704050,fn_80704050,translated,high,"work/ghidra/rel-d_basesNP/export/80704050_FUN_80704050.c; +0xE00 phase, height +0xB0 about +0xDFC, amplitude 2.0",src/game/bases.rs
+game::bases,806d6530,fn_806d6530,translated,high,"work/ghidra/rel-d_basesNP/export/806d6530_FUN_806d6530.c; +0xF00 phase, height +0xB0 about +0xEF8, amplitude 2.0",src/game/bases.rs
+game::bases,806dda10,fn_806dda10,translated,high,"work/ghidra/rel-d_basesNP/export/806dda10_FUN_806dda10.c; amp*(1-cos) from +0x70C",src/game/bases.rs
+game::bases,80624150,fn_80624150,translated,high,"work/ghidra/rel-d_basesNP/export/80624150_FUN_80624150.c; deleting destructor, 0x802B9280 release",src/game/bases.rs
+game::bases,806241d0,fn_806241d0,translated,high,"work/ghidra/rel-d_basesNP/export/806241d0_FUN_806241d0.c; deleting destructor with +0x18 clear via 0x8015F9F0",src/game/bases.rs
+game::bases,80624810,fn_80624810,translated,medium,"work/ghidra/rel-d_basesNP/export/80624810_FUN_80624810.c; two 0x800C9610 probes then +0x70 slot 0x18 with 0x80825748",src/game/bases.rs
+game::bases,806268c0,fn_806268c0,translated,high,"work/ghidra/rel-d_basesNP/export/806268c0_FUN_806268c0.c; deleting destructor, 0x802B9280 release",src/game/bases.rs
+game::bases,80626940,fn_80626940,translated,high,"work/ghidra/rel-d_basesNP/export/80626940_FUN_80626940.c; deleting destructor with +0x18 clear via 0x8015F9F0",src/game/bases.rs
+game::bases,80627080,fn_80627080,translated,medium,"work/ghidra/rel-d_basesNP/export/80627080_FUN_80627080.c; +0x27C gate, 16-word matrix, Wm_2d_movieopen 0x807DB238",src/game/bases.rs
+game::bases,80627bc0,fn_80627bc0,translated,high,"work/ghidra/rel-d_basesNP/export/80627bc0_FUN_80627bc0.c; +0x20C gate closes +0x70 layer via 0x80006EA0",src/game/bases.rs
+game::bases,80627db0,fn_80627db0,translated,high,"work/ghidra/rel-d_basesNP/export/80627db0_FUN_80627db0.c; deleting destructor with +0x18 clear via 0x8015F9F0",src/game/bases.rs
+game::bases,80627d70,fn_80627d70,translated,high,"work/ghidra/rel-d_basesNP/export/80627d70_FUN_80627d70.c; deleting destructor, 0x802B9280 release",src/game/bases.rs
+game::bases,80628790,fn_80628790,translated,high,"work/ghidra/rel-d_basesNP/export/80628790_FUN_80628790.c; nine-slot sum into +0xAAC via 0x800CE190",src/game/bases.rs
+game::bases,806291f0,fn_806291f0,translated,high,"work/ghidra/rel-d_basesNP/export/806291f0_FUN_806291f0.c; 0x800B44D0 on cell +0x25C, flag +0xA81",src/game/bases.rs
+game::bases,80629460,fn_80629460,translated,medium,"work/ghidra/rel-d_basesNP/export/80629460_FUN_80629460.c; owner +0x295/+0x28C/+0x290 from row +0x1D0/+0x1D4",src/game/bases.rs
+game::bases,8062a040,fn_8062a040,translated,high,"work/ghidra/rel-d_basesNP/export/8062a040_FUN_8062a040.c; board +0x284, cell +0x280, message 0x7A",src/game/bases.rs
+game::bases,8062b420,fn_8062b420,translated,high,"work/ghidra/rel-d_basesNP/export/8062b420_FUN_8062b420.c; deleting destructor, 0x802B9280 release",src/game/bases.rs
+game::bases,8062b460,fn_8062b460,translated,high,"work/ghidra/rel-d_basesNP/export/8062b460_FUN_8062b460.c; deleting destructor with +0x18 clear via 0x8015F9F0",src/game/bases.rs

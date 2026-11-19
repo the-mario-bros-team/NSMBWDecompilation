@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a15870,fn_80a15870,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a15870_FUN_80a15870.c; state-descriptor normaliser - name init 0x8015F800 then mode-gated 0x802B9280",src/game/enemies.rs
+game::enemies,80a158d0,fn_80a158d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a158d0_FUN_80a158d0.c; byte-identical second copy of the normaliser",src/game/enemies.rs
+game::enemies,80a15930,fn_80a15930,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a15930_FUN_80a15930.c; constant producer returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80a15a20,fn_80a15a20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a15a20_FUN_80a15a20.c; +0x30 chain walker until the child vtable slot +0xC reports ready",src/game/enemies.rs
+game::enemies,80a15b00,fn_80a15b00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a15b00_FUN_80a15b00.c; name-suffix predicate - strrchr 0x802E1C40 then strcmp 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a15bc0,fn_80a15bc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a15bc0_FUN_80a15bc0.c; 48-byte deleting-destructor forwarder to 0x802DCBFC with hidden r12 not modelled",src/game/enemies.rs
+game::enemies,80a15bf0,fn_80a15bf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a15bf0_FUN_80a15bf0.c; second 48-byte forwarder identical to 80a15bc0",src/game/enemies.rs
+game::enemies,80a15c20,fn_80a15c20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a15c20_FUN_80a15c20.c; alloc 0x820 - vtable 0x80B36478 - model block +0x698 - five-slot 0x40-byte container +0x6B8",src/game/enemies.rs
+game::enemies,80a15cb0,fn_80a15cb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a15cb0_FUN_80a15cb0.c; spawn word to brick type +0x814 and count +0x815 - model bind - scene gate - state 0x80B6F318 or 0x80B6F2D8",src/game/enemies.rs
+game::enemies,80a160d0,fn_80a160d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a160d0_FUN_80a160d0.c; binds g3d/big_renga_block.brres nodes big_renga_block and block_break1..4 into +0x6B8",src/game/enemies.rs
+game::enemies,80a161b0,fn_80a161b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a161b0_FUN_80a161b0.c; break probe - selection bytes +0x668..+0x66B - states 0x80B6F354 or 0x80B6F394 or retire via 0x80162510",src/game/enemies.rs
+game::enemies,80a16410,fn_80a16410,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a16410_FUN_80a16410.c; per-type effect id from 0x80B2B178 with height 0x80B2B1B8 - five 0x191 bursts for type 0x0A",src/game/enemies.rs
+game::enemies,80a16760,fn_80a16760,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a16760_FUN_80a16760.c; scene byte +0x81A plus player masks 0x8042A078/0x8042A07C - switch 0x80B6F318 or break path",src/game/enemies.rs
+game::enemies,80a16820,fn_80a16820,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a16820_FUN_80a16820.c; mask hit arms +0x810 then the 0x800B0FD0 lookup switches 0x80B6F2D8 or retires",src/game/enemies.rs
+game::enemies,80a16d90,fn_80a16d90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a16d90_FUN_80a16d90.c; state-descriptor normaliser of the 0x80A16D90 family",src/game/enemies.rs
+game::enemies,80a16df0,fn_80a16df0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a16df0_FUN_80a16df0.c; byte-identical second copy of the normaliser",src/game/enemies.rs
+game::enemies,80a16e50,fn_80a16e50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a16e50_FUN_80a16e50.c; constant producer returns 0x80352A74",src/game/enemies.rs
+game::enemies,80a16e60,fn_80a16e60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a16e60_FUN_80a16e60.c; constant producer returns 0x80352A34",src/game/enemies.rs
+game::enemies,80a16f50,fn_80a16f50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a16f50_FUN_80a16f50.c; +0x30 chain walker until the child vtable slot +0xC reports ready",src/game/enemies.rs
+game::enemies,80a17030,fn_80a17030,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a17030_FUN_80a17030.c; name-suffix predicate - strrchr 0x802E1C40 then strcmp 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a170f0,fn_80a170f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a170f0_FUN_80a170f0.c; 48-byte deleting-destructor forwarder to 0x802DCBFC with hidden r12 not modelled",src/game/enemies.rs
+game::enemies,80a17120,fn_80a17120,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a17120_FUN_80a17120.c; second 48-byte forwarder identical to 80a170f0",src/game/enemies.rs
+game::enemies,80a17150,fn_80a17150,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17150_FUN_80a17150.c; alloc 0x6D0 - vtable 0x80B368F8 - holders +0x588 and +0x5B8 - list +0x608",src/game/enemies.rs
+game::enemies,80a17230,fn_80a17230,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17230_FUN_80a17230.c; variant 1 init - records 0x80B2B208/0x80B2B22C - type 2 - floats 0x80B2B250",src/game/enemies.rs
+game::enemies,80a17550,fn_80a17550,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17550_FUN_80a17550.c; variant 1 destructor releases +0x608/+0x5B8/+0x588/+0x544/+0x524 then the base actor",src/game/enemies.rs
+game::enemies,80a176d0,fn_80a176d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a176d0_FUN_80a176d0.c; variant 2 init - records 0x80B2B298/0x80B2B2BC - type 2 - floats 0x80B2B2E0",src/game/enemies.rs
+game::enemies,80a17950,fn_80a17950,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17950_FUN_80a17950.c; variant 2 destructor identical to 80a17550",src/game/enemies.rs
+game::enemies,80a17ad0,fn_80a17ad0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17ad0_FUN_80a17ad0.c; variant 3 init - records 0x80B2B330/0x80B2B354 - type 3 - floats 0x80B2B378",src/game/enemies.rs
+game::enemies,80a17ca0,fn_80a17ca0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17ca0_FUN_80a17ca0.c; variant 3 destructor identical to 80a17550",src/game/enemies.rs
+game::enemies,80a17e20,fn_80a17e20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17e20_FUN_80a17e20.c; variant 4 init - records 0x80B2B3B0/0x80B2B3D4 - type 3 - floats 0x80B2B3F8",src/game/enemies.rs

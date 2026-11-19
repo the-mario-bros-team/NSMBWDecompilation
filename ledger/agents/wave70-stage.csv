@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80075090,fn_80075090,translated,high,"work/ghidra/main-gb/export/80075090_FUN_80075090.c; layer insert: +0x0C/+0x10 parent chains; clears +0x74..+0x84; children re-parented through 0x800751C0",src/game/stage.rs
+game::stage,80076dc0,fn_80076dc0,translated,high,"work/ghidra/main-gb/export/80076dc0_FUN_80076dc0.c; 100-entry kind scan over +0x190/+0x000; ordinal cached at +0x1F8; slot state +0x1F4",src/game/stage.rs
+game::stage,80076fd0,fn_80076fd0,translated,medium,"work/ghidra/main-gb/export/80076fd0_FUN_80076fd0.c; lazy heap through 0x8016E630(size=r13-0x58B8, root heap, 0x20)",src/game/stage.rs
+game::stage,80077020,fn_80077020,translated,high,"work/ghidra/main-gb/export/80077020_FUN_80077020.c; vtable +0x1C destroy of *(r13-0x58B4) then clear",src/game/stage.rs
+game::stage,800773a0,fn_800773a0,translated,high,"work/ghidra/main-gb/export/800773a0_FUN_800773a0.c; array-element deleter; 0x802B9280 only when element != 0 and flag > 0",src/game/stage.rs
+game::stage,800773e0,fn_800773e0,translated,high,"work/ghidra/main-gb/export/800773e0_FUN_800773e0.c; camera-owner destructor: r13-0x58B0 clear, 0x8016A960-array at +0x900AC destroyed, 0x8006C490 base",src/game/stage.rs
+game::stage,800774a0,fn_800774a0,translated,medium,"work/ghidra/main-gb/export/800774a0_FUN_800774a0.c; cell pair 0x80077470 -> 0x80081960; clears bit 0x400 when index & 0x3FF > 0x100",src/game/stage.rs
+game::stage,80077980,fn_80077980,translated,high,"work/ghidra/main-gb/export/80077980_FUN_80077980.c; kind 0 returns 1; kind 1/2 test manager + stage*0xC + 8/+0xC",src/game/stage.rs
+game::stage,80078410,fn_80078410,translated,high,"work/ghidra/main-gb/export/80078410_FUN_80078410.c; claims one of 20 slots at +0x901E4 and stores x/y at +0x90130/+0x90180 plus the tag",src/game/stage.rs
+game::stage,800784d0,fn_800784d0,translated,high,"work/ghidra/main-gb/export/800784d0_FUN_800784d0.c; +0x90AA8 from manager +0x380 and the 0x10 bit of r13-0x5700",src/game/stage.rs
+game::stage,80079710,fn_80079710,translated,medium,"work/ghidra/main-gb/export/80079710_FUN_80079710.c; per-frame scroll chain 0x80077B00/0x80079780/0x800799E0/0x80079AA0 for player *(r13-0x59DC)",src/game/stage.rs
+game::stage,800799e0,fn_800799e0,translated,medium,"work/ghidra/main-gb/export/800799e0_FUN_800799e0.c; yaw scroll smoothing: r2-0x72F8 step limit and r2-0x72F0/r2-0x72EC clamp into +0x8FE44",src/game/stage.rs
+game::stage,80079aa0,fn_80079aa0,translated,medium,"work/ghidra/main-gb/export/80079aa0_FUN_80079aa0.c; depth panel travel between +0x8FE54 and +0x8FE58 into +0x8FE48",src/game/stage.rs
+game::stage,80079b60,fn_80079b60,translated,high,"work/ghidra/main-gb/export/80079b60_FUN_80079b60.c; scroll-window seed from scene +0x38/+0x3C; 1/0x17/0 stage swaps in the r2-0x72E8 word",src/game/stage.rs
+game::stage,8007ca70,fn_8007ca70,translated,high,"work/ghidra/main-gb/export/8007ca70_FUN_8007ca70.c; two-word swap",src/game/stage.rs
+game::stage,8007e180,fn_8007e180,translated,high,"work/ghidra/main-gb/export/8007e180_FUN_8007e180.c; dBgActorManager ctor: vtable 0x8030FD58, base ctor 0x80069020, +0x38/+0x3C cleared",src/game/stage.rs
+game::stage,8007e1d0,fn_8007e1d0,translated,medium,"work/ghidra/main-gb/export/8007e1d0_FUN_8007e1d0.c; manager dtor: releases live entries at +0x38 (count +0x3C), clears both globals, 0x80069060 base",src/game/stage.rs
+game::stage,8007e2c0,fn_8007e2c0,translated,medium,"work/ghidra/main-gb/export/8007e2c0_FUN_8007e2c0.c; four Pa3_* strcmp calls -> kind 0..4 at +0x40 and (&PTR_DAT_8030fce0)[kind]",src/game/stage.rs
+game::stage,8007e3d0,fn_8007e3d0,translated,high,"work/ghidra/main-gb/export/8007e3d0_FUN_8007e3d0.c; 0x10000 entry array via 0x8016A960 named dBgActorManager::m_allocator then 0x8007E430 and 0x8016A9B0",src/game/stage.rs
+game::stage,8007e430,fn_8007e430,translated,high,"work/ghidra/main-gb/export/8007e430_FUN_8007e430.c; 0x8007E860(mode 0) count -> 0x802B9250(count*0xC+0x10) -> 0x802DC7E0 stride 0xC -> reset loop -> 0x8007E860(mode 1)",src/game/stage.rs
+game::stage,8007e7f0,fn_8007e7f0,translated,medium,"work/ghidra/main-gb/export/8007e7f0_FUN_8007e7f0.c; first entry with +0 == 0xFFFF filled by 0x8007EA60; the four forwarded fields come from the 0x8007E4E0 call site",src/game/stage.rs
+game::stage,8007ea30,fn_8007ea30,translated,high,"work/ghidra/main-gb/export/8007ea30_FUN_8007ea30.c; entry reset 0xFFFF/0/0/0",src/game/stage.rs
+game::stage,8007ea60,fn_8007ea60,translated,high,"work/ghidra/main-gb/export/8007ea60_FUN_8007ea60.c; entry fill kind/+2 cell_x/+4 cell_y/+6 state",src/game/stage.rs
+game::stage,8007ea80,fn_8007ea80,translated,medium,"work/ghidra/main-gb/export/8007ea80_FUN_8007ea80.c; state switch stores descriptor word 2 at out+8 and 0x8006CA80 creates the handle at +0x8",src/game/stage.rs
+game::stage,8007eb70,fn_8007eb70,translated,high,"work/ghidra/main-gb/export/8007eb70_FUN_8007eb70.c; 0x80162D00(+0x8) guarded 0x80162510 release then store 0",src/game/stage.rs
+game::stage,8007ebc0,fn_8007ebc0,translated,high,"work/ghidra/main-gb/export/8007ebc0_FUN_8007ebc0.c; descriptor +0x8/+0xC/+0x10 copied to the three-word out record",src/game/stage.rs
+game::stage,8007ebf0,fn_8007ebf0,translated,high,"work/ghidra/main-gb/export/8007ebf0_FUN_8007ebf0.c; descriptor +0x14/+0x18 copied to the two-word out record",src/game/stage.rs

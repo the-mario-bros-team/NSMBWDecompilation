@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8069a140,fn_8069a140,translated,high,work/ghidra/rel-d_basesNP/export/8069a140_FUN_8069a140.c; height test against +0x754 minus 0x807CA0B8,src/game/bases.rs
+game::bases,8069a230,fn_8069a230,translated,medium,work/ghidra/rel-d_basesNP/export/8069a230_FUN_8069a230.c; 0x80699F80 window gate then state 0x8082B5F0 via +0xD4,src/game/bases.rs
+game::bases,8069a290,fn_8069a290,translated,medium,work/ghidra/rel-d_basesNP/export/8069a290_FUN_8069a290.c; player interface +0x5F8 +0x14 picks 0x807F13E0 or 0x807F13E4,src/game/bases.rs
+game::bases,8069a300,fn_8069a300,translated,medium,work/ghidra/rel-d_basesNP/export/8069a300_FUN_8069a300.c; player interface +0x5F8 +0x14 picks 0x807F13F0 or 0x807F13F4,src/game/bases.rs
+game::bases,8069a370,fn_8069a370,translated,medium,work/ghidra/rel-d_basesNP/export/8069a370_FUN_8069a370.c; one-shot +0xDB8 then state 0x8082B6B0 and +0x394 +0x1C,src/game/bases.rs
+game::bases,8069a430,fn_8069a430,translated,medium,work/ghidra/rel-d_basesNP/export/8069a430_FUN_8069a430.c; pane 0x807F142C into +0x5E8 and clip times at +0x5EC/+0x61C,src/game/bases.rs
+game::bases,8069a680,fn_8069a680,translated,medium,work/ghidra/rel-d_basesNP/export/8069a680_FUN_8069a680.c; player mask 0x80429CA8 plus 0x80056CF0 tag 0x4F,src/game/bases.rs
+game::bases,8069a7d0,fn_8069a7d0,translated,medium,work/ghidra/rel-d_basesNP/export/8069a7d0_FUN_8069a7d0.c; interface +0xC/+0x10 or blend of 0x807F13D0 and 0x807F13D4,src/game/bases.rs
+game::bases,8069a8f0,fn_8069a8f0,translated,high,work/ghidra/rel-d_basesNP/export/8069a8f0_FUN_8069a8f0.c; zero test of +0xDBC,src/game/bases.rs
+game::bases,8069a910,fn_8069a910,translated,high,work/ghidra/rel-d_basesNP/export/8069a910_FUN_8069a910.c; countdown +0xDDC floored at 0x807CA08C,src/game/bases.rs
+game::bases,8069a940,fn_8069a940,translated,medium,work/ghidra/rel-d_basesNP/export/8069a940_FUN_8069a940.c; state 0x80357E9C and character scale at +0xD78/+0xE8,src/game/bases.rs
+game::bases,8069b200,fn_8069b200,translated,medium,work/ghidra/rel-d_basesNP/export/8069b200_FUN_8069b200.c; player query +0x378 then +0xD10 to +0x7A4 and +0x360=1,src/game/bases.rs
+game::bases,8069b650,fn_8069b650,translated,medium,work/ghidra/rel-d_basesNP/export/8069b650_FUN_8069b650.c; player query +0x378 then +0xDB8 and fn_8069a290 into +0x500,src/game/bases.rs
+game::bases,8069bce0,fn_8069bce0,translated,medium,work/ghidra/rel-d_basesNP/export/8069bce0_FUN_8069bce0.c; mode +0xDCC from 0x80699FE0 and +0x500 timer from fn_8069a7d0,src/game/bases.rs
+game::bases,8069d990,fn_8069d990,translated,medium,work/ghidra/rel-d_basesNP/export/8069d990_FUN_8069d990.c; five-link +0x30 child walk then recursion (twin of 806BE930),src/game/bases.rs
+game::bases,8069da70,fn_8069da70,translated,medium,work/ghidra/rel-d_basesNP/export/8069da70_FUN_8069da70.c; colon-trimmed name compare (twin of 806BEA10),src/game/bases.rs
+game::bases,8069dc70,fn_8069dc70,translated,high,work/ghidra/rel-d_basesNP/export/8069dc70_FUN_8069dc70.c; destructor: +0xD98 via 0x802D7B20 and base 0x800A2F40 then free 0x80162920,src/game/bases.rs
+game::bases,8069e370,fn_8069e370,translated,medium,work/ghidra/rel-d_basesNP/export/8069e370_FUN_8069e370.c; counts 0x130 actors via 0x80162D50,src/game/bases.rs
+game::bases,8069e3d0,fn_8069e3d0,translated,medium,work/ghidra/rel-d_basesNP/export/8069e3d0_FUN_8069e3d0.c; spawn gate: +0xD94/+0xD7C and fn_8069e370,src/game/bases.rs
+game::bases,8069e6c0,fn_8069e6c0,translated,medium,work/ghidra/rel-d_basesNP/export/8069e6c0_FUN_8069e6c0.c; mode 3 when interface +0x5F8 +0x14 else 2,src/game/bases.rs
+game::bases,8069e880,fn_8069e880,translated,medium,work/ghidra/rel-d_basesNP/export/8069e880_FUN_8069e880.c; 0x80064740 neighbour plus character table 0x8042C1A0 and +0x348 flag,src/game/bases.rs
+game::bases,8069e9b0,fn_8069e9b0,translated,medium,work/ghidra/rel-d_basesNP/export/8069e9b0_FUN_8069e9b0.c; 0x80168230 transform and 0x80064680 kind 0x130 spawn,src/game/bases.rs
+game::bases,8069ea30,fn_8069ea30,translated,medium,work/ghidra/rel-d_basesNP/export/8069ea30_FUN_8069ea30.c; interface +0x394 +0x28 name 0x8082B8B4 then state 0x80357E9C,src/game/bases.rs
+game::bases,8069eae0,fn_8069eae0,translated,medium,work/ghidra/rel-d_basesNP/export/8069eae0_FUN_8069eae0.c; 0x800A4E60 gate then ease +0xAC to +0x778 or +0x77C,src/game/bases.rs
+game::bases,8069f080,fn_8069f080,translated,medium,work/ghidra/rel-d_basesNP/export/8069f080_FUN_8069f080.c; alive switch via +0x378 plus +0xD7C=1 and +0x502=0x14,src/game/bases.rs
+game::bases,8069feb0,fn_8069feb0,translated,medium,work/ghidra/rel-d_basesNP/export/8069feb0_FUN_8069feb0.c; 0x80096240 byte to +0x348 plus +0x500=0x3C and fn_8069e6c0,src/game/bases.rs

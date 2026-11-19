@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::lyt,80180780,fn_80180780,translated,medium,"work/ghidra/main-gb/export/80180780_FUN_80180780.c; animation-object ctor: vtable 0x8032B2C8, six counts from pack word +0x3C, work buffer via fn_801819c0, timg patterns then A..F arrays",src/ui/lyt.rs
+ui::lyt,80185870,fn_80185870,translated,medium,"work/ghidra/main-gb/export/80185870_FUN_80185870.c; one-line measure: u16 cursor /2 budget, tag processor virtual +0x10, f1 width sets the overflow byte, returns characters that fit",src/ui/lyt.rs
+ui::lyt,80185f10,fn_80185f10,translated,medium,"work/ghidra/main-gb/export/80185f10_FUN_80185f10.c; whole-string measure: repeated 80185870 calls, overflow re-measure through 0x8032B430, rect union, *2 cursor advance",src/ui/lyt.rs

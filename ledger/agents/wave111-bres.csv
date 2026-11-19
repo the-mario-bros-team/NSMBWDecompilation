@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::bres,802382b0,fn_802382b0,translated,medium,"work/ghidra/main-gb/export/802382b0_FUN_802382b0.c; 360 bytes; 3x4 XYZ rotation matrix from three angles via the 0x802F74A0 table; GQR0 table/store format and GQR3 reduction scratch passed explicitly; element [8] is -sin_y (raw store at 0x80238404), not the export's zero",src/resource/bres.rs

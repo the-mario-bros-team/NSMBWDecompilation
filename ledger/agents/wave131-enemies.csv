@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ab2460,fn_80ab2460,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab2460_FUN_80ab2460.c; burst-water timer + rate ramp; f1 = 0.0 literal at the 8006CD40 call",src/game/enemies.rs
+game::enemies,80ab0c00,fn_80ab0c00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab0c00_FUN_80ab0c00.c; 60-byte particle record; three byte-identical state arms",src/game/enemies.rs
+game::enemies,80b0f5a0,fn_80b0f5a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0f5a0_FUN_80b0f5a0.c; pukupuku model + fly clip pair + damage binder",src/game/enemies.rs
+game::enemies,80ad4420,fn_80ad4420,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad4420_FUN_80ad4420.c; +0x854 dispatch; rlwinm. bit 22 selects the cleared bit",src/game/enemies.rs
+game::enemies,80a7fb50,fn_80a7fb50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7fb50_FUN_80a7fb50.c; icicle matrix + kind-test scale 10.0 / 2.0",src/game/enemies.rs
+game::enemies,80acc740,fn_80acc740,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80acc740_FUN_80acc740.c; temporary +0xAC floor 264.0; side flip via xoris",src/game/enemies.rs
+game::enemies,80ae63d0,fn_80ae63d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae63d0_FUN_80ae63d0.c; +0xE54 scale translate pair and three row read-backs",src/game/enemies.rs
+game::enemies,80ab1160,fn_80ab1160,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab1160_FUN_80ab1160.c; z+32 and z+64 mirrored holders",src/game/enemies.rs
+game::enemies,80a33630,fn_80a33630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33630_FUN_80a33630.c; (0 +10 -4) and (0 -10 +4) translates around X and Z",src/game/enemies.rs
+game::enemies,80b1e540,fn_80b1e540,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1e540_FUN_80b1e540.c; +0x360 two-state machine with the 8.0 speed ramp",src/game/enemies.rs
+game::enemies,80a7bd30,fn_80a7bd30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7bd30_FUN_80a7bd30.c; walk clip table index 0x90/0x48/0x18/8; +0xEA8 bit clear",src/game/enemies.rs
+game::enemies,80ac9aa0,fn_80ac9aa0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ac9aa0_FUN_80ac9aa0.c; mullw. yaw product gate and two effect records",src/game/enemies.rs
+game::enemies,80b16580,fn_80b16580,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b16580_FUN_80b16580.c; lwzu +0x54C slot +0x14 then returns 1",src/game/enemies.rs
+game::enemies,80b1a310,fn_80b1a310,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1a310_FUN_80b1a310.c; 802DCBFC swap forwarder; hidden r12 = first+0x24 not modelled",src/game/enemies.rs
+game::enemies,80b1fcd0,fn_80b1fcd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1fcd0_FUN_80b1fcd0.c; second 802DCBFC swap forwarder; hidden r12 = first+0x24",src/game/enemies.rs
+game::enemies,80b1fd00,fn_80b1fd00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b1fd00_FUN_80b1fd00.c; third 802DCBFC swap forwarder; hidden r12 = first+0x24",src/game/enemies.rs
+game::enemies,80b16ee0,fn_80b16ee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b16ee0_FUN_80b16ee0.c; +0x628 gate then +0x5C4 and +0x54C holder slots",src/game/enemies.rs
+game::enemies,80b177e0,fn_80b177e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b177e0_FUN_80b177e0.c; floor +0xB0 through 80B173B0 then holder refresh",src/game/enemies.rs
+game::enemies,80b17860,fn_80b17860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b17860_FUN_80b17860.c; floor +0xAC through 80B173B0 then holder refresh",src/game/enemies.rs
+game::enemies,80b17340,fn_80b17340,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b17340_FUN_80b17340.c; controller gate then +0x64C/+0x650/+0x668/+0x654 arming",src/game/enemies.rs
+game::enemies,80b19ee0,fn_80b19ee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b19ee0_FUN_80b19ee0.c; +0x528 timer re-arm to 0x80 or decrement",src/game/enemies.rs
+game::enemies,80b17cb0,fn_80b17cb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b17cb0_FUN_80b17cb0.c; 800A16A0 tick then +0xE8 damp and six constant stores",src/game/enemies.rs
+game::enemies,80b123d0,fn_80b123d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b123d0_FUN_80b123d0.c; post-hit field reset and +0x391 two-way +0xB4 select",src/game/enemies.rs
+game::enemies,80b15c60,fn_80b15c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b15c60_FUN_80b15c60.c; position + +0x550 planar offset then roll and holder copy",src/game/enemies.rs
+game::enemies,80b15de0,fn_80b15de0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b15de0_FUN_80b15de0.c; 0x670-byte constructor with 80B6A168 / 80B6A3E8 vtables",src/game/enemies.rs
+game::enemies,80b15ef0,fn_80b15ef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b15ef0_FUN_80b15ef0.c; same 0x670-byte constructor closing with vtable 80B69EE8",src/game/enemies.rs

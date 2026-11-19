@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806efef0,fn_806efef0,translated,high,"work/ghidra/rel-d_basesNP/export/806efef0_FUN_806efef0.c; allocates 0x968 bytes; vtables 0x807FED90/0x807FEF40/0x807E2740/0x807FEE70",src/game/bases.rs
+game::bases,806f0140,fn_806f0140,translated,medium,"work/ghidra/rel-d_basesNP/export/806f0140_FUN_806f0140.c; 0x802DCD6C save prolog; transform 0xAC..0x114; motion records 0x610..0x6C8",src/game/bases.rs
+game::bases,806f03e0,fn_806f03e0,translated,high,"work/ghidra/rel-d_basesNP/export/806f03e0_FUN_806f03e0.c; g3d/manjirou.brres; panes manjirou/ridden/glass; accessor 0x3D0",src/game/bases.rs
+game::bases,806f0c10,fn_806f0c10,translated,medium,"work/ghidra/rel-d_basesNP/export/806f0c10_FUN_806f0c10.c; pose pack 0x801C0BD0; unresolved tail 806F0F20",src/game/bases.rs
+game::bases,806ef6a0,fn_806ef6a0,translated,high,"work/ghidra/rel-d_basesNP/export/806ef6a0_FUN_806ef6a0.c; allocates 0x458 bytes; vtable 0x807FEB08; model slot 0x404",src/game/bases.rs
+game::bases,806f46a0,fn_806f46a0,translated,high,"work/ghidra/rel-d_basesNP/export/806f46a0_FUN_806f46a0.c; g3d/bros_mega.brres; pane mega_hammer",src/game/bases.rs
+game::bases,806f48a0,fn_806f48a0,translated,high,"work/ghidra/rel-d_basesNP/export/806f48a0_FUN_806f48a0.c; copies 12 words to 0x7C; applies model 0x404",src/game/bases.rs
+game::bases,806f6a50,fn_806f6a50,translated,high,"work/ghidra/rel-d_basesNP/export/806f6a50_FUN_806f6a50.c; pole_position marker; transform 0x6E4 to 0x714",src/game/bases.rs
+game::bases,806f7690,fn_806f7690,translated,high,"work/ghidra/rel-d_basesNP/export/806f7690_FUN_806f7690.c; g3d/MG_balloon.brres; pole/center selector 0x574",src/game/bases.rs
+game::bases,806f80d0,fn_806f80d0,translated,high,"work/ghidra/rel-d_basesNP/export/806f80d0_FUN_806f80d0.c; pole_end / MG_balloon_center_model marker",src/game/bases.rs
+game::bases,806fb3e0,fn_806fb3e0,translated,high,"work/ghidra/rel-d_basesNP/export/806fb3e0_FUN_806fb3e0.c; g3d/MG_RotatePanel.brres; number clip 0x8D0; motion 0x8008C440",src/game/bases.rs
+game::bases,806ff4c0,fn_806ff4c0,translated,high,"work/ghidra/rel-d_basesNP/export/806ff4c0_FUN_806ff4c0.c; g3d/mouse_hole.brres; accessor 0x394",src/game/bases.rs
+game::bases,806ffdb0,fn_806ffdb0,translated,high,"work/ghidra/rel-d_basesNP/export/806ffdb0_FUN_806ffdb0.c; g3d/boss_koopaJr_toge.brres; four 0x40-byte parts",src/game/bases.rs
+game::bases,80701f80,fn_80701f80,translated,high,"work/ghidra/rel-d_basesNP/export/80701f80_FUN_80701f80.c; g3d/Mask_flashlight.brres; accessor 0x8016A7F0; pane flashlight",src/game/bases.rs
+game::bases,80705fb0,fn_80705fb0,translated,high,"work/ghidra/rel-d_basesNP/export/80705fb0_FUN_80705fb0.c; g3d/obj_nut.brres; accessor 0x3D0",src/game/bases.rs
+game::bases,80701820,fn_80701820,translated,high,"work/ghidra/rel-d_basesNP/export/80701820_FUN_80701820.c; allocates 0xE18 bytes; vtables 0x80804114/0x808041F8; tables 0x574/0x744/0xB84",src/game/bases.rs
+game::bases,80702750,fn_80702750,translated,high,"work/ghidra/rel-d_basesNP/export/80702750_FUN_80702750.c; g3d/boat_light_wood.brres; light_fog_st; accessor 0x458",src/game/bases.rs
+game::bases,80709fc0,fn_80709fc0,translated,high,"work/ghidra/rel-d_basesNP/export/80709fc0_FUN_80709fc0.c; g3d/sled_boss_iggy.brres; clip sled_to_L",src/game/bases.rs
+game::bases,8070b7f0,fn_8070b7f0,translated,high,"work/ghidra/rel-d_basesNP/export/8070b7f0_FUN_8070b7f0.c; g3d/wanwan_boss_iggy.brres at 0x80805680; magic_body",src/game/bases.rs
+game::bases,8070f270,fn_8070f270,translated,high,"work/ghidra/rel-d_basesNP/export/8070f270_FUN_8070f270.c; allocates 0x1620 bytes; vtable 0x80806630; tables 0x7C0/0x8D4/0xA00",src/game/bases.rs
+game::bases,8070f630,fn_8070f630,translated,high,"work/ghidra/rel-d_basesNP/export/8070f630_FUN_8070f630.c; g3d/boss_kameck_block.brres; S/M/L panes; magic and mt parts",src/game/bases.rs
+game::bases,80712b90,fn_80712b90,translated,high,"work/ghidra/rel-d_basesNP/export/80712b90_FUN_80712b90.c; g3d/boss_larry_block.brres; M/L panes; magic and mt parts",src/game/bases.rs
+game::bases,807146f0,fn_807146f0,translated,high,"work/ghidra/rel-d_basesNP/export/807146f0_FUN_807146f0.c; g3d/lift_boss_ludwig.brres; magic_lift_boss_ludwig",src/game/bases.rs
+game::bases,80715930,fn_80715930,translated,high,"work/ghidra/rel-d_basesNP/export/80715930_FUN_80715930.c; g3d/boss_morton_ashiba.brres; magic_boss_morton_ashiba",src/game/bases.rs
+game::bases,80718e80,fn_80718e80,translated,high,"work/ghidra/rel-d_basesNP/export/80718e80_FUN_80718e80.c; g3d/boss_roy_dokan.brres; magic pane; mt byte 0xA04",src/game/bases.rs
+game::bases,8071a400,fn_8071a400,translated,high,"work/ghidra/rel-d_basesNP/export/8071a400_FUN_8071a400.c; g3d/env_snow.brres; six panes in two variants",src/game/bases.rs
+game::bases,8071aff0,fn_8071aff0,translated,high,"work/ghidra/rel-d_basesNP/export/8071aff0_FUN_8071aff0.c; g3d/obj_magmadeco.brres; wmy_sparkfire; variant 0x12F8",src/game/bases.rs
+game::bases,8071c0d0,fn_8071c0d0,translated,high,"work/ghidra/rel-d_basesNP/export/8071c0d0_FUN_8071c0d0.c; g3d/bolt.brres; pane at 0x8080945C",src/game/bases.rs
+game::bases,8071cc00,fn_8071cc00,translated,high,"work/ghidra/rel-d_basesNP/export/8071cc00_FUN_8071cc00.c; g3d/obj_waterscreen.brres and g3d/waterPlate_W4boss.brres",src/game/bases.rs
+game::bases,8071fc40,fn_8071fc40,translated,high,"work/ghidra/rel-d_basesNP/export/8071fc40_FUN_8071fc40.c; g3d/block_otehon.brres; magic pane 0x738",src/game/bases.rs

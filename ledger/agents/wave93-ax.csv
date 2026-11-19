@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,80194da0,fn_80194da0,translated,medium,"work/ghidra/main-gb/export/80194da0_FUN_80194da0.c; destroys +0xF8 sub-object; resets both SDA sound objects; applies default level",src/audio/ax.rs
+audio::ax,80195010,fn_80195010,translated,medium,"work/ghidra/main-gb/export/80195010_FUN_80195010.c; vtable slot +0xB0 dispatch; publishes status through 0x8019B220",src/audio/ax.rs
+audio::ax,80195090,fn_80195090,translated,medium,"work/ghidra/main-gb/export/80195090_FUN_80195090.c; vtable slot +0xB4 dispatch; sibling of fn_80195010",src/audio/ax.rs
+audio::ax,80195110,fn_80195110,translated,medium,"work/ghidra/main-gb/export/80195110_FUN_80195110.c; vtable slot +0xBC dispatch",src/audio/ax.rs
+audio::ax,80195190,fn_80195190,translated,medium,"work/ghidra/main-gb/export/80195190_FUN_80195190.c; vtable slot +0xC0 dispatch",src/audio/ax.rs
+audio::ax,80195490,fn_80195490,translated,medium,"work/ghidra/main-gb/export/80195490_FUN_80195490.c; sets +0x8F4 and calls 0x80195820",src/audio/ax.rs
+audio::ax,80195cb0,fn_80195cb0,translated,medium,"work/ghidra/main-gb/export/80195cb0_FUN_80195cb0.c; releases +0x900 handle; clears +0x91C..+0x92C stage block",src/audio/ax.rs
+audio::ax,80195f90,fn_80195f90,translated,medium,"work/ghidra/main-gb/export/80195f90_FUN_80195f90.c; guards +0x910 and calls 0x80266440",src/audio/ax.rs
+audio::ax,80196090,fn_80196090,translated,medium,"work/ghidra/main-gb/export/80196090_FUN_80196090.c; +0x904 presence probe; pokes 0x80267420",src/audio/ax.rs
+audio::ax,801960d0,fn_801960d0,translated,medium,"work/ghidra/main-gb/export/801960d0_FUN_801960d0.c; +0x910 presence probe with call-site float and word",src/audio/ax.rs
+audio::ax,80196110,fn_80196110,translated,medium,"work/ghidra/main-gb/export/80196110_FUN_80196110.c; +0x908 presence probe",src/audio/ax.rs
+audio::ax,80196150,fn_80196150,translated,medium,"work/ghidra/main-gb/export/80196150_FUN_80196150.c; +0x900 presence probe",src/audio/ax.rs
+audio::ax,80196550,fn_80196550,translated,medium,"work/ghidra/main-gb/export/80196550_FUN_80196550.c; arms fade record at +0x960 and +0x950",src/audio/ax.rs
+audio::ax,80196580,fn_80196580,translated,medium,"work/ghidra/main-gb/export/80196580_FUN_80196580.c; counts down +0x950 and applies mode 0x12",src/audio/ax.rs
+audio::ax,80197300,fn_80197300,translated,medium,"work/ghidra/main-gb/export/80197300_FUN_80197300.c; cue-object constructor; vtable 0x8032DFD0 and four fields",src/audio/ax.rs
+audio::ax,80197380,fn_80197380,translated,high,"work/ghidra/main-gb/export/80197380_FUN_80197380.c; cue-object destructor; releases +0x5C then bases",src/audio/ax.rs
+audio::ax,80197400,fn_80197400,translated,high,"work/ghidra/main-gb/export/80197400_FUN_80197400.c; two-branch publish through 0x8019B220",src/audio/ax.rs
+audio::ax,80199e60,fn_80199e60,translated,high,"work/ghidra/main-gb/export/80199e60_FUN_80199e60.c; returns 0 only when 7 < +0x14 < 0x12",src/audio/ax.rs
+audio::ax,8019b180,fn_8019b180,translated,medium,"work/ghidra/main-gb/export/8019b180_FUN_8019b180.c; lazy 0x10-byte companion word at r13-0x51E0/-0x51DC",src/audio/ax.rs
+audio::ax,8019b9f0,fn_8019b9f0,translated,high,"work/ghidra/main-gb/export/8019b9f0_FUN_8019b9f0.c; returns the constant 1",src/audio/ax.rs
+audio::ax,8019ce00,fn_8019ce00,translated,medium,"work/ghidra/main-gb/export/8019ce00_FUN_8019ce00.c; resets six cue flags and reapplies the default level",src/audio/ax.rs
+audio::ax,8019d470,fn_8019d470,translated,high,"work/ghidra/main-gb/export/8019d470_FUN_8019d470.c; stores one word at +0x24",src/audio/ax.rs
+audio::ax,8019e940,fn_8019e940,translated,medium,"work/ghidra/main-gb/export/8019e940_FUN_8019e940.c; reapplies +0x40/+0x44 levels and the +0x48 mode",src/audio/ax.rs
+audio::ax,8019e9a0,fn_8019e9a0,translated,medium,"work/ghidra/main-gb/export/8019e9a0_FUN_8019e9a0.c; selects the +0x908/+0x910 probe and stores +0x40",src/audio/ax.rs
+audio::ax,8019ec90,fn_8019ec90,translated,high,"work/ghidra/main-gb/export/8019ec90_FUN_8019ec90.c; empty 4-byte blr leaf",src/audio/ax.rs
+audio::ax,8019ef90,fn_8019ef90,translated,medium,"work/ghidra/main-gb/export/8019ef90_FUN_8019ef90.c; clamps one float against two sdata2 bounds",src/audio/ax.rs
+audio::ax,8019f010,fn_8019f010,translated,medium,"work/ghidra/main-gb/export/8019f010_FUN_8019f010.c; line interpolation with flat fallback",src/audio/ax.rs
+audio::ax,8019f050,fn_8019f050,translated,medium,"work/ghidra/main-gb/export/8019f050_FUN_8019f050.c; byte-identical twin of fn_8019f010",src/audio/ax.rs

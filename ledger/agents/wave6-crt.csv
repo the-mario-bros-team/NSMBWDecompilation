@@ -1,0 +1,52 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802dc69c,fn_802dc69c,translated,high,"work/ghidra/main-gb/export/802dc69c_FUN_802dc69c.c (28 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dc780,fn_802dc780,translated,high,"work/ghidra/main-gb/export/802dc780_FUN_802dc780.c (24 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dc798,fn_802dc798,translated,high,"work/ghidra/main-gb/export/802dc798_FUN_802dc798.c (72 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dca98,fn_802dca98,translated,high,"work/ghidra/main-gb/export/802dca98_FUN_802dca98.c (120 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dcb10,fn_802dcb10,translated,high,"work/ghidra/main-gb/export/802dcb10_FUN_802dcb10.c (128 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dd350,fn_802dd350,translated,high,"work/ghidra/main-gb/export/802dd350_FUN_802dd350.c (76 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dd39c,fn_802dd39c,translated,high,"work/ghidra/main-gb/export/802dd39c_FUN_802dd39c.c (40 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dd3c4,fn_802dd3c4,translated,medium,"work/ghidra/main-gb/export/802dd3c4_FUN_802dd3c4.c (184 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dd47c,fn_802dd47c,translated,high,"work/ghidra/main-gb/export/802dd47c_FUN_802dd47c.c (336 bytes)",src/runtime/cpp.rs
+runtime::cpp,802dd860,fn_802dd860,translated,high,"work/ghidra/main-gb/export/802dd860_FUN_802dd860.c (304 bytes)",src/runtime/cpp.rs
+runtime::cpp,802de55c,fn_802de55c,translated,high,"work/ghidra/main-gb/export/802de55c_FUN_802de55c.c (184 bytes)",src/runtime/cpp.rs
+runtime::cpp,802de91c,fn_802de91c,translated,high,"work/ghidra/main-gb/export/802de91c_FUN_802de91c.c (188 bytes)",src/runtime/cpp.rs
+runtime::cpp,802deb0c,fn_802deb0c,translated,high,"work/ghidra/main-gb/export/802deb0c_FUN_802deb0c.c (168 bytes)",src/runtime/cpp.rs
+runtime::cpp,802debb8,fn_802debb8,translated,high,"work/ghidra/main-gb/export/802debb8_FUN_802debb8.c (452 bytes)",src/runtime/cpp.rs
+runtime::cpp,802def74,fn_802def74,translated,high,"work/ghidra/main-gb/export/802def74_FUN_802def74.c (204 bytes)",src/runtime/cpp.rs
+runtime::cpp,802df040,fn_802df040,translated,high,"work/ghidra/main-gb/export/802df040_FUN_802df040.c (44 bytes)",src/runtime/cpp.rs
+runtime::cpp,802df06c,fn_802df06c,translated,high,"work/ghidra/main-gb/export/802df06c_FUN_802df06c.c (44 bytes)",src/runtime/cpp.rs
+runtime::cpp,802df098,fn_802df098,translated,high,"work/ghidra/main-gb/export/802df098_FUN_802df098.c (76 bytes)",src/runtime/cpp.rs
+runtime::cpp,802df0e4,fn_802df0e4,translated,high,"work/ghidra/main-gb/export/802df0e4_FUN_802df0e4.c (188 bytes)",src/runtime/cpp.rs
+runtime::cpp,802df1a0,fn_802df1a0,translated,high,"work/ghidra/main-gb/export/802df1a0_FUN_802df1a0.c (168 bytes)",src/runtime/cpp.rs
+runtime::cpp,802df248,fn_802df248,translated,high,"work/ghidra/main-gb/export/802df248_FUN_802df248.c (192 bytes)",src/runtime/cpp.rs
+runtime::cpp,802df308,fn_802df308,translated,high,"work/ghidra/main-gb/export/802df308_FUN_802df308.c (172 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d0800,fn_802d0800,translated,medium,"work/ghidra/main-gb/export/802d0800_FUN_802d0800.c (8 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d0830,fn_802d0830,translated,medium,"work/ghidra/main-gb/export/802d0830_FUN_802d0830.c (92 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d0cc0,fn_802d0cc0,translated,medium,"work/ghidra/main-gb/export/802d0cc0_FUN_802d0cc0.c (204 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d1250,fn_802d1250,translated,high,"work/ghidra/main-gb/export/802d1250_FUN_802d1250.c (48 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d19f0,fn_802d19f0,translated,medium,"work/ghidra/main-gb/export/802d19f0_FUN_802d19f0.c (176 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d1aa0,fn_802d1aa0,partial,low,"work/ghidra/main-gb/export/802d1aa0_FUN_802d1aa0.c (176 bytes); writes param_1 to r13-0x4778; when the object at r13-0x4774 is non-null it sets bit 0 of the u16 at +0x34 and stores two floats at +8/+0xC from the u16 pair at DAT_803504E0 + param_1*6 (scaled by the 0x43300000 f64 trick at r2-0x3B08), then calls the callback at r13-0x4770 with r13-0x476C when non-null. Partial: the wave-6 pass only catalogued the 176-byte extent, so the body is still a placeholder; r13/r2 are the SDA/SDA2 bases the crate models with sda()/sda2()",src/runtime/cpp.rs
+runtime::cpp,802d1b50,fn_802d1b50,translated,medium,"work/ghidra/main-gb/export/802d1b50_FUN_802d1b50.c (52 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d1b90,fn_802d1b90,partial,low,"work/ghidra/main-gb/export/802d1b90_FUN_802d1b90.c (332 bytes); sets local_28/local_24 from the two f64 arguments, calls 0x802D19F0() then 0x802C6CE0(local_28,local_24,param_3,&local_28,&local_24), picks an index (0 when flag 0x20 is set, else 2 or the r13-0x4778 selector) and rescales *param_4/*param_5 by the u16 ratios at DAT_803504E0/DAT_803504E2/0x8042E4xx. Partial: the wave-6 pass only catalogued the 332-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d1da0,fn_802d1da0,translated,medium,"work/ghidra/main-gb/export/802d1da0_FUN_802d1da0.c (120 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d21f0,fn_802d21f0,translated,medium,"work/ghidra/main-gb/export/802d21f0_FUN_802d21f0.c (124 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d2270,fn_802d2270,partial,low,"work/ghidra/main-gb/export/802d2270_FUN_802d2270.c (152 bytes); display-mode switch: param_1 == 0 and mode == 1 -> 0x802D21F0(0,DAT_80424824), then 0x802D1E20(1,0,param_2), mode = 0; param_1 == 1 and mode != 0 -> 0x802D1E20(0,0,param_2), mode = 1. Partial: the wave-6 pass only catalogued the 152-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d2c20,fn_802d2c20,translated,medium,"work/ghidra/main-gb/export/802d2c20_FUN_802d2c20.c (380 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d2e50,fn_802d2e50,translated,high,"work/ghidra/main-gb/export/802d2e50_FUN_802d2e50.c (64 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d2f20,fn_802d2f20,translated,high,"work/ghidra/main-gb/export/802d2f20_FUN_802d2f20.c (84 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d2f80,fn_802d2f80,translated,high,"work/ghidra/main-gb/export/802d2f80_FUN_802d2f80.c (84 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d2fe0,fn_802d2fe0,translated,high,"work/ghidra/main-gb/export/802d2fe0_FUN_802d2fe0.c (84 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d3040,fn_802d3040,translated,high,"work/ghidra/main-gb/export/802d3040_FUN_802d3040.c (76 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d3090,fn_802d3090,translated,medium,"work/ghidra/main-gb/export/802d3090_FUN_802d3090.c (264 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d32a0,fn_802d32a0,translated,medium,"work/ghidra/main-gb/export/802d32a0_FUN_802d32a0.c (80 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d3370,fn_802d3370,partial,low,"work/ghidra/main-gb/export/802d3370_FUN_802d3370.c (280 bytes); heap-node coalesce: clears +0x30, adds the node size +0x2C back into r13-0x4718, then merges with the +0x38 (next) and +0x34 (previous) neighbours, relinking the r13-0x4724/-0x4728 list and calling 0x802C0B40. Partial: the wave-6 pass only catalogued the 280-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d3490,fn_802d3490,partial,low,"work/ghidra/main-gb/export/802d3490_FUN_802d3490.c (252 bytes); heap initialise: 0x802B9270(param_1, param_2 or r13-0x4870, 0x20) -> r13-0x4720, publishes param_1 in r13-0x471C/-0x4718/-0x4714, then loops 0x80 times allocating 0x3C-byte nodes through 0x802B9210 + 0x802D32A0 and linking them; 0x802D3590 builds the head and 0x802C0B40 installs the range. Partial: the wave-6 pass only catalogued the 252-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d3590,fn_802d3590,translated,medium,"work/ghidra/main-gb/export/802d3590_FUN_802d3590.c (40 bytes)",src/runtime/cpp.rs
+runtime::cpp,802d31a0,fn_802d31a0,partial,low,"work/ghidra/main-gb/export/802d31a0_FUN_802d31a0.c (44 bytes); 0x801C9840() then OR 1 into the u16 at r13-0x472E. Partial: the wave-6 pass only catalogued the 44-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d31d0,fn_802d31d0,partial,low,"work/ghidra/main-gb/export/802d31d0_FUN_802d31d0.c (44 bytes); 0x801C98B0() then OR 1 into the u16 at r13-0x472E. Partial: the wave-6 pass only catalogued the 44-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d3200,fn_802d3200,partial,low,"work/ghidra/main-gb/export/802d3200_FUN_802d3200.c (44 bytes); 0x801C9C10() then OR 2 into the u16 at r13-0x472E. Partial: the wave-6 pass only catalogued the 44-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d3230,fn_802d3230,partial,low,"work/ghidra/main-gb/export/802d3230_FUN_802d3230.c (44 bytes); 0x801C9C60() then OR 4 into the u16 at r13-0x472E. Partial: the wave-6 pass only catalogued the 44-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d3270,fn_802d3270,partial,low,"work/ghidra/main-gb/export/802d3270_FUN_802d3270.c (44 bytes); 0x801C9D20() then OR 8 into the u16 at r13-0x472E. Partial: the wave-6 pass only catalogued the 44-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d2e90,fn_802d2e90,partial,low,"work/ghidra/main-gb/export/802d2e90_FUN_802d2e90.c (128 bytes); guard on the (param_1,param_2) pair cached in r13-0x473C/r13-0x4738; on change runs 0x801C8EE0(param_1,param_2), 0x801C8E10(DAT_804248CC) and 0x801C8E40(DAT_804248CD) and caches the pair. Partial: the wave-6 pass only catalogued the 128-byte extent, so the body is still a placeholder",src/runtime/cpp.rs
+runtime::cpp,802d2da0,fn_802d2da0,partial,low,"work/ghidra/main-gb/export/802d2da0_FUN_802d2da0.c (176 bytes); 2D state initialise: 0x801C8DC0(1,4,5,5), 0x801C86C0(7,0,0,7,0), 0x801C8700(0,0x16,0), 0x801C8E70(1,3,1), 0x801C8920(f0..f3 from r2-0x3AC0..-0x3AB4, local_8), 0x801C8CB0, 0x801C8EB0(1), 0x801C8FC0(0,0). Partial: the wave-6 pass only catalogued the 176-byte extent, so the body is still a placeholder",src/runtime/cpp.rs

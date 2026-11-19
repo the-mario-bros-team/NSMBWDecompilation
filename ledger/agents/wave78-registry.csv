@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,80161da0,fn_80161da0,translated,medium,"work/ghidra/main-gb/export/80161da0_FUN_80161da0.c; stage 1/2 bank transition; calls fn_80160f60 fn_80162b40 fn_80162510",src/resource/registry.rs
+resource::registry,80161e40,fn_80161e40,translated,medium,"work/ghidra/main-gb/export/80161e40_FUN_80161e40.c; nine global loads + 0x80161CC0 with three row pointers",src/resource/registry.rs
+resource::registry,80162020,fn_80162020,translated,medium,"work/ghidra/main-gb/export/80162020_FUN_80162020.c; second row block at 0x80329374..0x80329394",src/resource/registry.rs
+resource::registry,80162120,fn_80162120,translated,medium,"work/ghidra/main-gb/export/80162120_FUN_80162120.c; third row block at 0x80329398..0x803293B8",src/resource/registry.rs
+resource::registry,80162220,fn_80162220,translated,medium,"work/ghidra/main-gb/export/80162220_FUN_80162220.c; fourth row block at 0x803293BC..0x803293DC",src/resource/registry.rs
+resource::registry,80163d40,fn_80163d40,translated,medium,"work/ghidra/main-gb/export/80163d40_FUN_80163d40.c; recursive walk with leaf/filter callbacks and -4 payload bias",src/resource/registry.rs
+resource::registry,80164990,fn_80164990,translated,medium,"work/ghidra/main-gb/export/80164990_FUN_80164990.c; index guard on r13-0x52A8/0x52A4 then 0x802B9240 + 0x802C6550",src/resource/registry.rs
+resource::registry,80165520,fn_80165520,translated,medium,"work/ghidra/main-gb/export/80165520_FUN_80165520.c; 0x802481B0 twice plus fn_80167fa0; heap defaults to r13-0x52B8",src/resource/registry.rs
+resource::registry,801655e0,fn_801655e0,translated,medium,"work/ghidra/main-gb/export/801655e0_FUN_801655e0.c; cast to 0x802F86B4 then slots +0x48 and +0x3C",src/resource/registry.rs
+resource::registry,801656c0,fn_801656c0,translated,medium,"work/ghidra/main-gb/export/801656c0_FUN_801656c0.c; cast to 0x802F86C8 then forward to fn_801655e0",src/resource/registry.rs
+resource::registry,80165ee0,fn_80165ee0,translated,medium,"work/ghidra/main-gb/export/80165ee0_FUN_80165ee0.c; class-A array teardown; 0x38 stride slot +0x10; then fn_80167f30",src/resource/registry.rs
+resource::registry,80166110,fn_80166110,translated,medium,"work/ghidra/main-gb/export/80166110_FUN_80166110.c; class-A owner slot +0x40 then fn_80165a80 on the entry",src/resource/registry.rs
+resource::registry,80166ae0,fn_80166ae0,translated,medium,"work/ghidra/main-gb/export/80166ae0_FUN_80166ae0.c; class-B array teardown twin of fn_80165ee0",src/resource/registry.rs
+resource::registry,80166d10,fn_80166d10,translated,medium,"work/ghidra/main-gb/export/80166d10_FUN_80166d10.c; class-B owner slot +0x40 then fn_80166680 on the entry",src/resource/registry.rs
+resource::registry,80167710,fn_80167710,translated,medium,"work/ghidra/main-gb/export/80167710_FUN_80167710.c; class-C array teardown twin of fn_80165ee0",src/resource/registry.rs
+resource::registry,80167940,fn_80167940,translated,medium,"work/ghidra/main-gb/export/80167940_FUN_80167940.c; class-C owner slot +0x40 then fn_80167270 on the entry",src/resource/registry.rs
+resource::registry,80167fa0,fn_80167fa0,translated,medium,"work/ghidra/main-gb/export/80167fa0_FUN_80167fa0.c; three fn_8016e7d0 size queries; 0x8016E630 heap object; fn_8016a690 attach",src/resource/registry.rs
+resource::registry,80168280,fn_80168280,translated,medium,"work/ghidra/main-gb/export/80168280_FUN_80168280.c; kind-5 and generic branches; type words 0x802F8FF0 and 0x802F8FD8; slot +0x34",src/resource/registry.rs
+resource::registry,80168400,fn_80168400,translated,medium,"work/ghidra/main-gb/export/80168400_FUN_80168400.c; cast to 0x802F8FD8 then read +0xE8 without a null guard",src/resource/registry.rs
+resource::registry,80168520,fn_80168520,translated,medium,"work/ghidra/main-gb/export/80168520_FUN_80168520.c; clear +0x08 when value is zero; slot +0x3C",src/resource/registry.rs
+resource::registry,8016c4a0,fn_8016c4a0,translated,medium,"work/ghidra/main-gb/export/8016c4a0_FUN_8016c4a0.c; unlinks 0x80377C3C list and destroys the r13-0x524C owner",src/resource/registry.rs
+resource::registry,8016c850,fn_8016c850,translated,high,"work/ghidra/main-gb/export/8016c850_FUN_8016c850.c; 0x802D9630 with the r13-0x46B0 handle then 0x801C9D60(0)",src/resource/registry.rs
+resource::registry,8016cea0,fn_8016cea0,translated,high,"work/ghidra/main-gb/export/8016cea0_FUN_8016cea0.c; +0x74 descriptor gate; 0x8016C9E0 packet; slots +0x8C and +0x94",src/resource/registry.rs
+resource::registry,8016edd0,fn_8016edd0,translated,medium,"work/ghidra/main-gb/export/8016edd0_FUN_8016edd0.c; non-zero u16 id -> 0x8016ED10 packet -> 0x801C0540",src/resource/registry.rs
+resource::registry,8016eef0,fn_8016eef0,translated,medium,"work/ghidra/main-gb/export/8016eef0_FUN_8016eef0.c; twin of fn_8016edd0 using the 0x8016EE30 formatter",src/resource/registry.rs

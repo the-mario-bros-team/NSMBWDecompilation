@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,80016430,fn_80016430,translated,high,"work/ghidra/main-gb/export/80016430_FUN_80016430.c; lock 0x802DCD70; hide 2x10 bar panes +0x204..+0x250; four controller slots via 0x800B4710; copy +0x254/+0x258/+0x25C; level map 0x802EDEA8; present map 0x802EDE90; event 0x80351F78; unlock 0x802DCDBC.",src/ui/hud.rs
+ui::hud,80016a20,fn_80016a20,translated,medium,"work/ghidra/main-gb/export/80016a20_FUN_80016a20.c; 0x802DCBFC(b,b,a); indirect jump table not recovered.",src/ui/hud.rs
+ui::hud,80016a50,fn_80016a50,translated,medium,"work/ghidra/main-gb/export/80016a50_FUN_80016a50.c; 0x802DCBFC(b,b,a); indirect jump table not recovered.",src/ui/hud.rs
+ui::hud,80016a80,fn_80016a80,translated,high,"work/ghidra/main-gb/export/80016a80_FUN_80016a80.c; five dWarningBattery_c descriptors at 0x80351EF8/0x80351F38/0x80351F78/0x80351FB8/0x80351FF8; 0x8015F7C0 init; vtable 0x802FFD84; nine copies +0x0C..+0x2C; 0x802DC780 register with 0x80016E80.",src/ui/hud.rs
+ui::hud,80017100,fn_80017100,translated,high,"work/ghidra/main-gb/export/80017100_FUN_80017100.c; release +0x18 through 0x8015F9F0; free when flag > 0 through 0x802B9280.",src/ui/hud.rs
+ui::hud,80017630,fn_80017630,translated,high,"work/ghidra/main-gb/export/80017630_FUN_80017630.c; five pane visibility bytes from 0x802EDF80+answer*5; 0x802EDFA4+answer*12 animation triplets; six pane starts; alternate flag +0x22F; window animation 0x10/3/1+2.",src/ui/hud.rs
+ui::hud,80018d90,fn_80018d90,translated,medium,"work/ghidra/main-gb/export/80018d90_FUN_80018d90.c; null guard then 0x802B9280(this) when flag > 0; operand inferred from twin destructors.",src/ui/hud.rs
+ui::hud,80018e30,fn_80018e30,translated,high,"work/ghidra/main-gb/export/80018e30_FUN_80018e30.c; release +0x18 through 0x8015F9F0; free when flag > 0 through 0x802B9280.",src/ui/hud.rs
+ui::hud,80019110,fn_80019110,translated,high,"work/ghidra/main-gb/export/80019110_FUN_80019110.c; one 0x800C9930(this+4) layout teardown.",src/ui/hud.rs
+ui::menu,80171400,menu_item_recompute_current,translated,high,"work/ghidra/main-gb/export/80171400_FUN_80171400.c; mode +0x18 == 1 copies +4 else copies +8 into +0x0C.",src/ui/menu.rs
+ui::menu,80173880,fn_80173880,translated,medium,"work/ghidra/main-gb/export/80173880_FUN_80173880.c; index < 4 and byte +0x44; 0x801742E0(base at +0x20,index) == 0 then +0x1C = 1 and 0x801E14E0(index,1); index operand inferred.",src/ui/menu.rs
+ui::menu,80173920,fn_80173920,translated,high,"work/ghidra/main-gb/export/80173920_FUN_80173920.c; index < 4 and 0x801742E0 == 0 and +0x1C == 0 then 0x801E12C0(index,arg,0x801739B0); else 0xFFFFFFFE.",src/ui/menu.rs
+ui::menu,801739e0,fn_801739e0,translated,high,"work/ghidra/main-gb/export/801739e0_FUN_801739e0.c; index > 3 returns 0 else byte 0x80377E00+index.",src/ui/menu.rs
+ui::menu,80173a10,fn_80173a10,translated,high,"work/ghidra/main-gb/export/80173a10_FUN_80173a10.c; index > 3 returns else 0x80377E00+index = 0.",src/ui/menu.rs
+ui::menu,80173ca0,fn_80173ca0,translated,high,"work/ghidra/main-gb/export/80173ca0_FUN_80173ca0.c; eight stores: +0x50/+0x58 +0xB8/+0xC0 +0x120/+0x128 +0x188/+0x190 set to 0/-1.",src/ui/menu.rs
+ui::menu,80173f20,fn_80173f20,translated,high,"work/ghidra/main-gb/export/80173f20_FUN_80173f20.c; 0x801AB640(this+0x1A0) then four calls at this+0/0x68/0xD0/0x138.",src/ui/menu.rs
+ui::menu,80173f80,fn_80173f80,translated,high,"work/ghidra/main-gb/export/80173f80_FUN_80173f80.c; 0x801ABA80 manager then 0x801E1E20(manager,1,0x80173FB0).",src/ui/menu.rs
+ui::menu,80174090,fn_80174090,translated,high,"work/ghidra/main-gb/export/80174090_FUN_80174090.c; 0x801ABA80 manager then 0x801E1E20(manager,4,0x801740C0).",src/ui/menu.rs
+ui::menu,801742e0,fn_801742e0,translated,high,"work/ghidra/main-gb/export/801742e0_FUN_801742e0.c; (-u | u) >> 31 of word at base+index*0x68+0x50.",src/ui/menu.rs
+ui::menu,80174300,fn_80174300,translated,high,"work/ghidra/main-gb/export/80174300_FUN_80174300.c; word +0x50 != 0 and +0x58 == selector returns 1 else 0.",src/ui/menu.rs
+ui::menu,801744f0,fn_801744f0,translated,high,"work/ghidra/main-gb/export/801744f0_FUN_801744f0.c; if 0x80377FA0 non-zero: 0x801B23F0(manager+0x14680,1,0); optional callback at manager+0x14348.",src/ui/menu.rs
+ui::menu,80174f60,fn_80174f60,translated,medium,"work/ghidra/main-gb/export/80174f60_FUN_80174f60.c; 0x80175500 menu; 0x801769B0(menu,arg); getter again; result query without printed argument inferred from r3 retention.",src/ui/menu.rs
+ui::menu,80175040,fn_80175040,translated,high,"work/ghidra/main-gb/export/80175040_FUN_80175040.c; 0x80175500 menu then 0x8017D3C0(menu,a,b,c).",src/ui/menu.rs
+ui::menu,801754b0,fn_801754b0,translated,high,"work/ghidra/main-gb/export/801754b0_FUN_801754b0.c; 0x80174DF0(0x7A0); if non-zero 0x80175330(memory,arg) stored at 0x80377FB8.",src/ui/menu.rs
+ui::menu,80175500,fn_80175500,translated,high,"work/ghidra/main-gb/export/80175500_FUN_80175500.c; returns word at 0x80377FB8.",src/ui/menu.rs

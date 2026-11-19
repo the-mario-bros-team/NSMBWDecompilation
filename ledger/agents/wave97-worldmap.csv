@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,8010a9b0,fn_8010a9b0,translated,high,"work/ghidra/main-gb/export/8010a9b0_FUN_8010a9b0.c; scene mask 0x1FF + 0x400x400 texture format 5 + slot 0",src/game/worldmap.rs
+game::worldmap,8010aa30,fn_8010aa30,translated,high,"work/ghidra/main-gb/export/8010aa30_FUN_8010aa30.c; 0x80014480 teardown of 0x803749A0",src/game/worldmap.rs
+game::worldmap,8010aa40,fn_8010aa40,translated,high,"work/ghidra/main-gb/export/8010aa40_FUN_8010aa40.c; attribute 0x80 = (value & 0x3FFF) << 2",src/game/worldmap.rs
+game::worldmap,8010aa90,fn_8010aa90,translated,high,"work/ghidra/main-gb/export/8010aa90_FUN_8010aa90.c; empty four-byte body",src/game/worldmap.rs
+game::worldmap,8010acc0,fn_8010acc0,translated,high,"work/ghidra/main-gb/export/8010acc0_FUN_8010acc0.c; scene teardown + texture stage 0 + GX flush",src/game/worldmap.rs
+game::worldmap,8010af70,fn_8010af70,translated,high,"work/ghidra/main-gb/export/8010af70_FUN_8010af70.c; ctor vtable 0x803222F0, state manager at +0x8C, publish r13-0x53BC",src/game/worldmap.rs
+game::worldmap,8010b010,fn_8010b010,translated,high,"work/ghidra/main-gb/export/8010b010_FUN_8010b010.c; 0x802B9280 when this != 0 && n > 0",src/game/worldmap.rs
+game::worldmap,8010b050,fn_8010b050,translated,high,"work/ghidra/main-gb/export/8010b050_FUN_8010b050.c; byte-identical to 8010b010",src/game/worldmap.rs
+game::worldmap,8010b090,fn_8010b090,translated,high,"work/ghidra/main-gb/export/8010b090_FUN_8010b090.c; 0x8015F9F0(this+0x18, 0) + optional free",src/game/worldmap.rs
+game::worldmap,8010b0f0,fn_8010b0f0,translated,high,"work/ghidra/main-gb/export/8010b0f0_FUN_8010b0f0.c; byte-identical to 8010b090",src/game/worldmap.rs
+game::worldmap,8010b1f0,fn_8010b1f0,translated,medium,"work/ghidra/main-gb/export/8010b1f0_FUN_8010b1f0.c; interface slot +0x10 on +0x74, returns 1; receiver recovered from siblings",src/game/worldmap.rs
+game::worldmap,8010b2c0,fn_8010b2c0,translated,medium,"work/ghidra/main-gb/export/8010b2c0_FUN_8010b2c0.c; four-slot scan then KiMePose 0x80374CD0 and +0x375 = 1",src/game/worldmap.rs
+game::worldmap,8010b370,fn_8010b370,translated,medium,"work/ghidra/main-gb/export/8010b370_FUN_8010b370.c; mirrored scan then MessageOpen 0x80374D50",src/game/worldmap.rs
+game::worldmap,8010b420,fn_8010b420,translated,medium,"work/ghidra/main-gb/export/8010b420_FUN_8010b420.c; three animation queries skipping index 1, then ScoreCalc 0x80374D90",src/game/worldmap.rs
+game::worldmap,8010b570,fn_8010b570,translated,medium,"work/ghidra/main-gb/export/8010b570_FUN_8010b570.c; gated on owner +0x376, posts ClearWait 0x80374E50",src/game/worldmap.rs
+game::worldmap,8010b5f0,fn_8010b5f0,translated,medium,"work/ghidra/main-gb/export/8010b5f0_FUN_8010b5f0.c; mode 1/3 via 0x8005B7D0 then four pane binds",src/game/worldmap.rs
+game::worldmap,8010b830,fn_8010b830,translated,high,"work/ghidra/main-gb/export/8010b830_FUN_8010b830.c; 0x802DCBFC(second, second, first)",src/game/worldmap.rs
+game::worldmap,8010b860,fn_8010b860,translated,high,"work/ghidra/main-gb/export/8010b860_FUN_8010b860.c; byte-identical to 8010b830",src/game/worldmap.rs
+game::worldmap,8010bf30,fn_8010bf30,translated,high,"work/ghidra/main-gb/export/8010bf30_FUN_8010bf30.c; 0x8015F800(this, 0) + optional free",src/game/worldmap.rs
+game::worldmap,8010c050,fn_8010c050,translated,high,"work/ghidra/main-gb/export/8010c050_FUN_8010c050.c; ctor with five 0x264 records at +0x144, publish r13-0x53B8",src/game/worldmap.rs
+game::worldmap,8010c0c0,fn_8010c0c0,translated,high,"work/ghidra/main-gb/export/8010c0c0_FUN_8010c0c0.c; record ctor, layout + 0.0f at +0x228..+0x234; receiver fixed by the paired dtor 8010c110",src/game/worldmap.rs
+game::worldmap,8010c110,fn_8010c110,translated,high,"work/ghidra/main-gb/export/8010c110_FUN_8010c110.c; 0x800C89A0(this, -1) + optional free",src/game/worldmap.rs
+game::worldmap,8010c510,fn_8010c510,translated,medium,"work/ghidra/main-gb/export/8010c510_FUN_8010c510.c; five child quads, half extent 0.5f, timer -0x1A then 0x8010C780",src/game/worldmap.rs
+game::worldmap,8010c7f0,fn_8010c7f0,translated,medium,"work/ghidra/main-gb/export/8010c7f0_FUN_8010c7f0.c; record init, name copy, +0xBA mod 3 and div 3, timer 0xFF",src/game/worldmap.rs
+game::worldmap,8010db30,fn_8010db30,translated,medium,"work/ghidra/main-gb/export/8010db30_FUN_8010db30.c; +0xB8C = 1 and event 0x80374FC8 on +0xB0C",src/game/worldmap.rs
+game::worldmap,8010e670,fn_8010e670,translated,high,"work/ghidra/main-gb/export/8010e670_FUN_8010e670.c; vtable slot 0x0C validator, stores +0x0C and returns this+4",src/game/worldmap.rs
+game::worldmap,8010ee80,fn_8010ee80,translated,high,"work/ghidra/main-gb/export/8010ee80_FUN_8010ee80.c; byte-identical to 8010bf30",src/game/worldmap.rs
+game::worldmap,8010efa0,fn_8010efa0,translated,high,"work/ghidra/main-gb/export/8010efa0_FUN_8010efa0.c; overlay ctor vtable 0x80322DD0, layout at +0x70",src/game/worldmap.rs
+game::worldmap,8010f340,fn_8010f340,translated,high,"work/ghidra/main-gb/export/8010f340_FUN_8010f340.c; guards +0x208/+0x209, prepare then vtable slot 0x10",src/game/worldmap.rs
+game::worldmap,8010f3a0,fn_8010f3a0,translated,high,"work/ghidra/main-gb/export/8010f3a0_FUN_8010f3a0.c; guards +0x208/+0x209, 0x80163850(this+0x70)",src/game/worldmap.rs

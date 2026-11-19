@@ -1,0 +1,7 @@
+# The port needs a CPU with AVX2/FMA/BMI2 (x86-64-v3: Intel Haswell, AMD Excavator
+# or newer), like NSMB-Wii-Recompilation's builds. It speeds up the generated
+# guest code (crates/game-recomp) and everything else. Float results do not
+# change: Rust never fuses multiply-adds on its own, and the guest's fused ones
+# already use f64::mul_add.
+[build]
+rustflags = ["-C", "target-cpu=x86-64-v3"]

@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806333d0,fn_806333d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806333d0_FUN_806333d0.c; four-slot 3x4 sync through 0x800B32E0; sel==10 skip; matrix order literal",src/game/bases.rs
+game::bases,80656310,fn_80656310,translated,medium,"work/ghidra/rel-d_basesNP/export/80656310_FUN_80656310.c; sample cue: 0x8008E890 buffer +4/+0xC; 0x806561B0 steps; cues 0x202/0x191",src/game/bases.rs
+game::bases,80656d20,fn_80656d20,translated,medium,"work/ghidra/rel-d_basesNP/export/80656d20_FUN_80656d20.c; event 0x12A push-apart; clamp 2.0..6.0; 2-lane vs 4-lane callbacks",src/game/bases.rs
+game::bases,8066fa10,fn_8066fa10,translated,medium,"work/ghidra/rel-d_basesNP/export/8066fa10_FUN_8066fa10.c; slot fill with r25/r26 compaction asymmetry; 96-unit spread; 0x80052080 per entry",src/game/bases.rs
+game::bases,8069ab00,fn_8069ab00,translated,high,"work/ghidra/rel-d_basesNP/export/8069ab00_FUN_8069ab00.c; two +0x35C rates; 0x802BE470 magnitude; thresholds 5.0/2.5; +0xD28 latch",src/game/bases.rs
+game::bases,806a4ca0,fn_806a4ca0,translated,high,"work/ghidra/rel-d_basesNP/export/806a4ca0_FUN_806a4ca0.c; stomp tick: eleven virtual slots, two 0x8015F470 pairs, clamps 0.0/3.0",src/game/bases.rs
+game::bases,806a75b0,fn_806a75b0,translated,high,"work/ghidra/rel-d_basesNP/export/806a75b0_FUN_806a75b0.c; two-state lift; sampler is lbz+extsh (unsigned byte); state writes +0x360/+0x6D8",src/game/bases.rs
+game::bases,806b7340,fn_806b7340,translated,medium,"work/ghidra/rel-d_basesNP/export/806b7340_FUN_806b7340.c; per-entry emitter; 0.75/0.7/0.42 scale table; angle triple via 0x80064AF0",src/game/bases.rs
+game::bases,806b7b70,fn_806b7b70,translated,medium,"work/ghidra/rel-d_basesNP/export/806b7b70_FUN_806b7b70.c; ground probe 6500/32.0; packed player<<16|flag; sound slots 6/7",src/game/bases.rs
+game::bases,80749750,fn_80749750,translated,high,"work/ghidra/rel-d_basesNP/export/80749750_FUN_80749750.c; four-slot sentinel -500000.0; active mask 0x80429CA8; descending sort publishes +0x3DC",src/game/bases.rs
+game::bases,80758a70,fn_80758a70,translated,medium,"work/ghidra/rel-d_basesNP/export/80758a70_FUN_80758a70.c; snap onto +0x22C with state-1 polarity split; model +0x5C; message 0x808323C0",src/game/bases.rs
+game::bases,80758c60,fn_80758c60,translated,medium,"work/ghidra/rel-d_basesNP/export/80758c60_FUN_80758c60.c; spin start: rates +0xEC/+0x114, one-shot cue table 0x80832570, sound 0x47",src/game/bases.rs
+game::bases,80758d80,fn_80758d80,translated,high,"work/ghidra/rel-d_basesNP/export/80758d80_FUN_80758d80.c; angle +0x3000 wrap; 0x8006CC00/0x8006CD40; floor clamp + message 0x80832440",src/game/bases.rs
+game::bases,80758e00,fn_80758e00,translated,high,"work/ghidra/rel-d_basesNP/export/80758e00_FUN_80758e00.c; model slot 0x5C selector 0x48 then 0x80759A20 emit",src/game/bases.rs
+game::bases,80758e70,fn_80758e70,translated,medium,"work/ghidra/rel-d_basesNP/export/80758e70_FUN_80758e70.c; angle finish plus hit/flag ladder; player record bits 0x1C/0x14; 0x80832xxx messages",src/game/bases.rs
+game::bases,80759180,fn_80759180,translated,medium,"work/ghidra/rel-d_basesNP/export/80759180_FUN_80759180.c; direction 0/1/2 angle ramp with 0x8001/0x7FFF clamps; pane messages",src/game/bases.rs
+game::bases,80759430,fn_80759430,translated,medium,"work/ghidra/rel-d_basesNP/export/80759430_FUN_80759430.c; first spin start: 0x800D5D10 reset, selector 5, cue table 0x80832598",src/game/bases.rs
+game::bases,80759550,fn_80759550,translated,high,"work/ghidra/rel-d_basesNP/export/80759550_FUN_80759550.c; height clamp to +0x254; message 0x80832500",src/game/bases.rs
+game::bases,80759600,fn_80759600,translated,high,"work/ghidra/rel-d_basesNP/export/80759600_FUN_80759600.c; height clamp to +0x254; message 0x80832440",src/game/bases.rs
+game::bases,807596b0,fn_807596b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807596b0_FUN_807596b0.c; clears angle+height+seven flag bytes; model 0x5C; message 0x808322C0",src/game/bases.rs
+game::bases,80759770,fn_80759770,translated,high,"work/ghidra/rel-d_basesNP/export/80759770_FUN_80759770.c; stores +0x238 then bctr tail-calls model +0x30 with state in r4",src/game/bases.rs
+game::bases,80759790,fn_80759790,translated,high,"work/ghidra/rel-d_basesNP/export/80759790_FUN_80759790.c; Wm_mr_2dlandsmoke at +0xB0+0x25C; per-state scale 0x807CEAF0",src/game/bases.rs
+game::bases,80759860,fn_80759860,translated,medium,"work/ghidra/rel-d_basesNP/export/80759860_FUN_80759860.c; Wm_mr_normalspin start/renew; two 0x800D5790 samples; 7-arg 0x8008FBF0",src/game/bases.rs
+game::bases,807616e0,fn_807616e0,translated,medium,"work/ghidra/rel-d_basesNP/export/807616e0_FUN_807616e0.c; door gate +2 probes; three 0x80761260 slots; start value 2^31",src/game/bases.rs
+game::bases,80762ce0,fn_80762ce0,translated,medium,"work/ghidra/rel-d_basesNP/export/80762ce0_FUN_80762ce0.c; 24-byte record table 0x80815494; four-way facing; angle via 0x801611C0",src/game/bases.rs
+game::bases,80780010,fn_80780010,translated,medium,"work/ghidra/rel-d_basesNP/export/80780010_FUN_80780010.c; respawn init; course stride 0x16518; 0x80780BD0/0x807813F0 snapshots",src/game/bases.rs
+game::bases,807816b0,fn_807816b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807816b0_FUN_807816b0.c; 16-bit angle quantiser; 48-byte basis from 0x8016ED10; normalise+scale",src/game/bases.rs
+game::bases,807819b0,fn_807819b0,translated,high,"work/ghidra/rel-d_basesNP/export/807819b0_FUN_807819b0.c; countdown +0x2D4; distance test uses CR0.GT (opposite of Ghidra print); returns 0/1",src/game/bases.rs

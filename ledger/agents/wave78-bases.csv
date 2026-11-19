@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8075c930,fn_8075c930,translated,high,"work/ghidra/rel-d_basesNP/export/8075c930_FUN_8075c930.c; transform writer on node +0x1AC with angles +0x100..+0x104 and scale +0xDC",src/game/bases.rs
+game::bases,8075c9e0,fn_8075c9e0,translated,high,"work/ghidra/rel-d_basesNP/export/8075c9e0_FUN_8075c9e0.c; clears +0x124 for the live player and copies 0x807CEC34 into +0xDC..+0xE4 then calls 0x8075CA40",src/game/bases.rs
+game::bases,8075ca40,fn_8075ca40,translated,high,"work/ghidra/rel-d_basesNP/export/8075ca40_FUN_8075ca40.c; single store +0x1E8 = 0",src/game/bases.rs
+game::bases,8075cb90,fn_8075cb90,translated,high,"work/ghidra/rel-d_basesNP/export/8075cb90_FUN_8075cb90.c; vtable 0x80814A40; interface 0x80814AB0 at +0x188; four 0x802DC9A0 arrays at +0x1AC/+0x26C/+0x314/+0x3B8 with strides 0x40/0x38/0x2C/0x7C",src/game/bases.rs
+game::bases,8075ccb0,fn_8075ccb0,translated,high,"work/ghidra/rel-d_basesNP/export/8075ccb0_FUN_8075ccb0.c; 0x7C-byte ring record; vtable word +0x50 ends as 0x80329578 after the second store",src/game/bases.rs
+game::bases,8075cd20,fn_8075cd20,translated,high,"work/ghidra/rel-d_basesNP/export/8075cd20_FUN_8075cd20.c; null-guarded release of +0x50 and +0x10 with -1 and optional 0x802B9280 free",src/game/bases.rs
+game::bases,8075cef0,fn_8075cef0,translated,medium,"work/ghidra/rel-d_basesNP/export/8075cef0_FUN_8075cef0.c; anchors +0x3A0; 0x802B9210(0x40) effect record at +0x3B4 vtable 0x80814A34; calls the GQR-damaged 0x8075D5C0 by address",src/game/bases.rs
+game::bases,8075cff0,fn_8075cff0,translated,high,"work/ghidra/rel-d_basesNP/export/8075cff0_FUN_8075cff0.c; variants 1/2 republish flags with 0x80832610 and copy the player position from 0x8042A1A0",src/game/bases.rs
+game::bases,8075d300,fn_8075d300,translated,medium,"work/ghidra/rel-d_basesNP/export/8075d300_FUN_8075d300.c; loads g3d/bubble.brres; three 0x40 panes at +0x1AC from table 0x808149BC; ten bubble_tail records at +0x3C8; ends with character_SV loader 0x800F6710",src/game/bases.rs
+game::bases,8075da00,fn_8075da00,translated,high,"work/ghidra/rel-d_basesNP/export/8075da00_FUN_8075da00.c; single store +0x398 = 0",src/game/bases.rs
+game::bases,8075da30,fn_8075da30,translated,medium,"work/ghidra/rel-d_basesNP/export/8075da30_FUN_8075da30.c; variant 2 spawns through 0x800F69F0 with table 0x808147F4; stores +0x39C = 0xF and +0x398 = 2",src/game/bases.rs
+game::bases,8075dc40,fn_8075dc40,translated,medium,"work/ghidra/rel-d_basesNP/export/8075dc40_FUN_8075dc40.c; state 1 with per-variant record 0x808147E0 and a height-dependent swap of the two spawn floats",src/game/bases.rs
+game::bases,8075dd60,fn_8075dd60,translated,medium,"work/ghidra/rel-d_basesNP/export/8075dd60_FUN_8075dd60.c; per-frame attach/respawn and rise; effect ids 0x11/0x5E/0x5F through 0x80103390 and 0x80105240",src/game/bases.rs
+game::bases,8075def0,fn_8075def0,translated,high,"work/ghidra/rel-d_basesNP/export/8075def0_FUN_8075def0.c; +0x398 = 3 and effect ids 0x15/0x16 at the actor position",src/game/bases.rs
+game::bases,8075df70,fn_8075df70,translated,high,"work/ghidra/rel-d_basesNP/export/8075df70_FUN_8075df70.c; position = anchor +0x3A0 plus two table offsets from 0x808147F4 stride 0x2C",src/game/bases.rs
+game::bases,8075e010,fn_8075e010,translated,medium,"work/ghidra/rel-d_basesNP/export/8075e010_FUN_8075e010.c; box test 0x80832618 plus player height gate; emits effect 0xF or re-enters 0x8075DEF0",src/game/bases.rs
+game::bases,8075e170,fn_8075e170,translated,high,"work/ghidra/rel-d_basesNP/export/8075e170_FUN_8075e170.c; abs-difference box test with margins 0x808147A0/0x808147A4 scaled by 0x807CECA4",src/game/bases.rs
+game::bases,8075e430,fn_8075e430,translated,medium,"work/ghidra/rel-d_basesNP/export/8075e430_FUN_8075e430.c; pushes position into ring +0x3B8 ring index +0x890 modulo 10; jitter from 0x800B2EE0(8)",src/game/bases.rs
+game::bases,8075e530,fn_8075e530,translated,high,"work/ghidra/rel-d_basesNP/export/8075e530_FUN_8075e530.c; ages ten 0x7C records at +0xC by 0x807CEC88 clamped at 0x807CECB8 in two 0x26C passes",src/game/bases.rs
+game::bases,8075e900,fn_8075e900,translated,high,"work/ghidra/rel-d_basesNP/export/8075e900_FUN_8075e900.c; cobCannon constructor vtable 0x80814B58 with +0x184 = -1 and node +0x1A4",src/game/bases.rs
+game::bases,8075ea40,fn_8075ea40,translated,medium,"work/ghidra/rel-d_basesNP/export/8075ea40_FUN_8075ea40.c; vtable slot +0x60 with three arguments then 0x801006C0(scene +0x8042A18C; +0x184; position)",src/game/bases.rs
+game::bases,8075ead0,fn_8075ead0,translated,high,"work/ghidra/rel-d_basesNP/export/8075ead0_FUN_8075ead0.c; virtual slot +0x14 on node +0x1A4 and returns 1",src/game/bases.rs
+game::bases,8075eb10,fn_8075eb10,translated,high,"work/ghidra/rel-d_basesNP/export/8075eb10_FUN_8075eb10.c; copies +0xAC/+0xB0/+0xB4 to +0x128/+0x12C/+0x130 and stores 0x807CECD4 at +0x134",src/game/bases.rs
+game::bases,8075eb40,fn_8075eb40,translated,high,"work/ghidra/rel-d_basesNP/export/8075eb40_FUN_8075eb40.c; loads g3d/model.brres and binds cobCannon at pass 0x20 into node +0x1A4",src/game/bases.rs
+game::bases,8075ebf0,fn_8075ebf0,translated,high,"work/ghidra/rel-d_basesNP/export/8075ebf0_FUN_8075ebf0.c; transform writer identical to 0x8075C930 but on node +0x1A4",src/game/bases.rs
+game::bases,8075ede0,fn_8075ede0,translated,high,"work/ghidra/rel-d_basesNP/export/8075ede0_FUN_8075ede0.c; cobCastle constructor vtable 0x80814CA8 with four 0x38 door slots at +0x1B8",src/game/bases.rs
+game::bases,8075ef20,fn_8075ef20,translated,medium,"work/ghidra/rel-d_basesNP/export/8075ef20_FUN_8075ef20.c; calls the castle loader then 0x8075F1C0 and the untranslated 0x8075F270 by address",src/game/bases.rs
+game::bases,8075f040,fn_8075f040,translated,high,"work/ghidra/rel-d_basesNP/export/8075f040_FUN_8075f040.c; virtual slot +0x14 on model +0x1AC and returns 1",src/game/bases.rs
+game::bases,8075f080,fn_8075f080,translated,medium,"work/ghidra/rel-d_basesNP/export/8075f080_FUN_8075f080.c; loads g3d/model.brres; four cobCastleOpen doors at +0x1B8 with flag bytes from 0x807CECF8",src/game/bases.rs
+game::bases,8075f1c0,fn_8075f1c0,translated,high,"work/ghidra/rel-d_basesNP/export/8075f1c0_FUN_8075f1c0.c; transform writer identical to 0x8075C930 but on model +0x1AC",src/game/bases.rs

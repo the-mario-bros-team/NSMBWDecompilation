@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b0440,fn_800b0440,translated,high,"work/ghidra/main-gb/export/800b0440_FUN_800b0440.c; shared teardown: 0x8015F800 always, 0x802B9280 when release > 0",src/game/stage.rs
+game::stage,800b05b0,fn_800b05b0,translated,medium,"work/ghidra/main-gb/export/800b05b0_FUN_800b05b0.c; five +0x30 parent links, vtable +0x0C query, tail recursion",src/game/stage.rs
+game::stage,800b0690,fn_800b0690,translated,high,"work/ghidra/main-gb/export/800b0690_FUN_800b0690.c; compares the tails after the last 0x3A colon",src/game/stage.rs
+game::stage,800b0750,fn_800b0750,translated,high,"work/ghidra/main-gb/export/800b0750_FUN_800b0750.c; forwards 0x802DCBFC(second, second, first)",src/game/stage.rs
+game::stage,800b0780,fn_800b0780,translated,high,"work/ghidra/main-gb/export/800b0780_FUN_800b0780.c; identical sibling of 0x800B0750",src/game/stage.rs
+game::stage,800b07b0,fn_800b07b0,translated,high,"work/ghidra/main-gb/export/800b07b0_FUN_800b07b0.c; mode byte at +0x38C selects float +0x70/+0x74/+0x78",src/game/stage.rs
+game::stage,800b09e0,fn_800b09e0,translated,medium,"work/ghidra/main-gb/export/800b09e0_FUN_800b09e0.c; release guard; dropped 0x802B9280 argument restored from siblings",src/game/stage.rs
+game::stage,800b0a20,fn_800b0a20,translated,medium,"work/ghidra/main-gb/export/800b0a20_FUN_800b0a20.c; 0x8016DCE0 publish then vtable +0x14; receiver inferred",src/game/stage.rs
+game::stage,800b0a90,fn_800b0a90,translated,medium,"work/ghidra/main-gb/export/800b0a90_FUN_800b0a90.c; 0x8016DCE0 publish then vtable +0x18; receiver inferred",src/game/stage.rs
+game::stage,800b0b00,fn_800b0b00,translated,low,"work/ghidra/main-gb/export/800b0b00_FUN_800b0b00.c; vtable +0x1C dispatch; jump table not recovered",src/game/stage.rs
+game::stage,800b0b20,fn_800b0b20,translated,high,"work/ghidra/main-gb/export/800b0b20_FUN_800b0b20.c; calls 0x8016DAA0 then 0x80163280",src/game/stage.rs
+game::stage,800b0b50,fn_800b0b50,translated,high,"work/ghidra/main-gb/export/800b0b50_FUN_800b0b50.c; six archive handles 0x1BC x4, 0x1C4, 0x18, 0x58",src/game/stage.rs
+game::stage,800b0db0,fn_800b0db0,translated,high,"work/ghidra/main-gb/export/800b0db0_FUN_800b0db0.c; state 0..5 readiness polls and the +0x1C1 layout byte",src/game/stage.rs
+game::stage,800b0fd0,fn_800b0fd0,translated,high,"work/ghidra/main-gb/export/800b0fd0_FUN_800b0fd0.c; 32-entry x 16-byte table, returns the fourth u16",src/game/stage.rs
+game::stage,800b11d0,fn_800b11d0,translated,high,"work/ghidra/main-gb/export/800b11d0_FUN_800b11d0.c; two 4-slot containers at +0 and +0x70, clears +0xC0..+0xCC",src/game/stage.rs
+game::stage,800b1250,fn_800b1250,translated,high,"work/ghidra/main-gb/export/800b1250_FUN_800b1250.c; releases both containers and optionally frees",src/game/stage.rs
+game::stage,800b12d0,fn_800b12d0,translated,medium,"work/ghidra/main-gb/export/800b12d0_FUN_800b12d0.c; indexes 0x80358908 by 0x800B1410; dropped arg supplied as 0",src/game/stage.rs
+game::stage,800b1310,fn_800b1310,translated,high,"work/ghidra/main-gb/export/800b1310_FUN_800b1310.c; returns 0x80358848 + index * 0x1C",src/game/stage.rs
+game::stage,800b1330,fn_800b1330,translated,high,"work/ghidra/main-gb/export/800b1330_FUN_800b1330.c; four font loads under the 0x802DCD70 lock",src/game/stage.rs
+game::stage,800b1410,fn_800b1410,translated,medium,"work/ghidra/main-gb/export/800b1410_FUN_800b1410.c; first unloaded font slot; dropped 0x802E1AB4 argument restored",src/game/stage.rs
+game::stage,800b2e70,fn_800b2e70,translated,high,"work/ghidra/main-gb/export/800b2e70_FUN_800b2e70.c; 0x800D9760 result forwarded through 0x80161380",src/game/stage.rs
+game::stage,800b2f10,fn_800b2f10,translated,medium,"work/ghidra/main-gb/export/800b2f10_FUN_800b2f10.c; value * 0x80161490(r13-0x573C), rounded through f32",src/game/stage.rs
+game::stage,800b2fb0,fn_800b2fb0,translated,high,"work/ghidra/main-gb/export/800b2fb0_FUN_800b2fb0.c; two releases, three helpers, clears r13-0x5508/-0x5500",src/game/stage.rs
+game::stage,800b30c0,fn_800b30c0,translated,high,"work/ghidra/main-gb/export/800b30c0_FUN_800b30c0.c; camera +0x38 + +0x40 * r2-0x6B08",src/game/stage.rs
+game::stage,800b30e0,fn_800b30e0,translated,high,"work/ghidra/main-gb/export/800b30e0_FUN_800b30e0.c; camera +0x3C - +0x44 * r2-0x6B08",src/game/stage.rs

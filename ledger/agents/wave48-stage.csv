@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800ce190,fn_800ce190,translated,medium,"work/ghidra/main-gb/export/800ce190_FUN_800ce190.c; 0x2a stage x 3 slot flag scan; 0x802DCD74/0x802DCDC0 pair",src/game/stage.rs
+game::stage,800ce210,fn_800ce210,translated,high,"work/ghidra/main-gb/export/800ce210_FUN_800ce210.c; base + area*0xA8 + stage*4 + 0x6C, low-byte masked bit test",src/game/stage.rs
+game::stage,800ce330,fn_800ce330,translated,high,"work/ghidra/main-gb/export/800ce330_FUN_800ce330.c; clamped byte store at +9, clamp 0x63",src/game/stage.rs
+game::stage,800ce350,fn_800ce350,translated,high,"work/ghidra/main-gb/export/800ce350_FUN_800ce350.c; masked byte read at +0x32",src/game/stage.rs
+game::stage,800ce3a0,fn_800ce3a0,translated,high,"work/ghidra/main-gb/export/800ce3a0_FUN_800ce3a0.c; raw flag word read",src/game/stage.rs
+game::stage,800ce3c0,fn_800ce3c0,translated,high,"work/ghidra/main-gb/export/800ce3c0_FUN_800ce3c0.c; mask then (-v|v)>>31 non-zero test",src/game/stage.rs
+game::stage,800ce3f0,fn_800ce3f0,translated,high,"work/ghidra/main-gb/export/800ce3f0_FUN_800ce3f0.c; flag word OR",src/game/stage.rs
+game::stage,800ce410,fn_800ce410,translated,high,"work/ghidra/main-gb/export/800ce410_FUN_800ce410.c; flag word AND-NOT",src/game/stage.rs
+game::stage,800ce430,fn_800ce430,translated,high,"work/ghidra/main-gb/export/800ce430_FUN_800ce430.c; byte table +0x3C store",src/game/stage.rs
+game::stage,800ce450,fn_800ce450,translated,high,"work/ghidra/main-gb/export/800ce450_FUN_800ce450.c; byte table +0x3C load",src/game/stage.rs
+game::stage,800ce470,fn_800ce470,translated,high,"work/ghidra/main-gb/export/800ce470_FUN_800ce470.c; byte table +0x74C store",src/game/stage.rs
+game::stage,800ce490,fn_800ce490,translated,high,"work/ghidra/main-gb/export/800ce490_FUN_800ce490.c; byte table +0x74C load",src/game/stage.rs
+game::stage,800ce4b0,fn_800ce4b0,translated,high,"work/ghidra/main-gb/export/800ce4b0_FUN_800ce4b0.c; byte table +0x774 store",src/game/stage.rs
+game::stage,800ce4d0,fn_800ce4d0,translated,high,"work/ghidra/main-gb/export/800ce4d0_FUN_800ce4d0.c; byte table +0x774 load",src/game/stage.rs
+game::stage,800ce4f0,fn_800ce4f0,translated,high,"work/ghidra/main-gb/export/800ce4f0_FUN_800ce4f0.c; byte table +0x79C store",src/game/stage.rs
+game::stage,800ce510,fn_800ce510,translated,high,"work/ghidra/main-gb/export/800ce510_FUN_800ce510.c; byte table +0x79C load",src/game/stage.rs
+game::stage,800ce580,fn_800ce580,translated,high,"work/ghidra/main-gb/export/800ce580_FUN_800ce580.c; 0x6A0 reset, 4-byte tag, state +4 = 0xE",src/game/stage.rs
+game::stage,800ce680,fn_800ce680,translated,high,"work/ghidra/main-gb/export/800ce680_FUN_800ce680.c; u16 mask bit set at +0x698",src/game/stage.rs
+game::stage,800ce6c0,fn_800ce6c0,translated,medium,"work/ghidra/main-gb/export/800ce6c0_FUN_800ce6c0.c; reset-if-not-0xE; reset argument restored from 0x800E01D0",src/game/stage.rs
+game::stage,800ce800,fn_800ce800,translated,high,"work/ghidra/main-gb/export/800ce800_FUN_800ce800.c; vtable 0x803179B0 installed, registered at r13-0x56D0",src/game/stage.rs
+game::stage,800ce820,fn_800ce820,translated,medium,"work/ghidra/main-gb/export/800ce820_FUN_800ce820.c; guarded release; free argument restored",src/game/stage.rs
+game::stage,800ce860,fn_800ce860,translated,high,"work/ghidra/main-gb/export/800ce860_FUN_800ce860.c; sixteen word clears plus four byte clears at +0x18..+0x5B",src/game/stage.rs
+game::stage,800ce8c0,fn_800ce8c0,translated,medium,"work/ghidra/main-gb/export/800ce8c0_FUN_800ce8c0.c; camera-biased point, 0x8006A3F0 convert, 0xB7 draw",src/game/stage.rs
+game::stage,800ce940,fn_800ce940,translated,high,"work/ghidra/main-gb/export/800ce940_FUN_800ce940.c; per-player word store at +8+slot*4",src/game/stage.rs
+game::stage,800ce950,fn_800ce950,translated,high,"work/ghidra/main-gb/export/800ce950_FUN_800ce950.c; score add at +0x18 clamped to 1000000",src/game/stage.rs
+game::stage,800ce9d0,fn_800ce9d0,translated,high,"work/ghidra/main-gb/export/800ce9d0_FUN_800ce9d0.c; +0x28 counter increment after 0x80060170",src/game/stage.rs
+game::stage,800cea20,fn_800cea20,translated,high,"work/ghidra/main-gb/export/800cea20_FUN_800cea20.c; +0x38 counter increment after 0x80060170",src/game/stage.rs
+game::stage,800cea70,fn_800cea70,translated,high,"work/ghidra/main-gb/export/800cea70_FUN_800cea70.c; point tier ladder, +0x48 add, fukidashi 0x800B3540",src/game/stage.rs
+game::stage,800ceb80,fn_800ceb80,translated,high,"work/ghidra/main-gb/export/800ceb80_FUN_800ceb80.c; active player slot flags at +0x58..+0x5B",src/game/stage.rs

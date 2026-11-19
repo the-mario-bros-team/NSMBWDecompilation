@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::hud,80019a40,fn_80019a40,translated,high,"work/ghidra/main-gb/export/80019a40_FUN_80019a40.c; non-null and flag>0 guard; free through 0x802B9280; returns this.",src/ui/hud.rs
+ui::hud,80019a80,fn_80019a80,translated,high,"work/ghidra/main-gb/export/80019a80_FUN_80019a80.c; byte-identical twin of 0x80019A40; non-null and flag>0 guard; free through 0x802B9280.",src/ui/hud.rs
+ui::hud,80019b20,fn_80019b20,translated,high,"work/ghidra/main-gb/export/80019b20_FUN_80019b20.c; redundant this+0x18 guard; release +0x18 through 0x8015F9F0; free when flag>0 through 0x802B9280.",src/ui/hud.rs
+ui::hud,80019d70,fn_80019d70,translated,medium,"work/ghidra/main-gb/export/80019d70_FUN_80019d70.c; +0x1E5 gate; vtable +0x19C slot +0x10 with no printed operand; 0x800C9560 on +4; vtable +0x0C slot +0x10 with this+4.",src/ui/hud.rs
+ui::hud,80019de0,fn_80019de0,translated,high,"work/ghidra/main-gb/export/80019de0_FUN_80019de0.c; +0x1E5 gate; 0x80163850 insert of this+4.",src/ui/hud.rs
+ui::hud,80019e00,fn_80019e00,translated,high,"work/ghidra/main-gb/export/80019e00_FUN_80019e00.c; single 0x800C9930 teardown of this+4.",src/ui/hud.rs
+ui::hud,80019fc0,fn_80019fc0,translated,high,"work/ghidra/main-gb/export/80019fc0_FUN_80019fc0.c; start byte +0x1E6=1; 0x800C92F0(this+4,2,0); sound 0x82 through r13-0x51F8 via 0x80195380.",src/ui/hud.rs
+ui::menu,8016ffc0,fn_8016ffc0,translated,high,"work/ghidra/main-gb/export/8016ffc0_FUN_8016ffc0.c; single store of the second argument at +4.",src/ui/menu.rs
+ui::menu,80170630,fn_80170630,translated,medium,"work/ghidra/main-gb/export/80170630_FUN_80170630.c; 0x801D4380(a,b,0) result stored at +0; resource argument roles inferred.",src/ui/menu.rs
+ui::menu,80170cd0,fn_80170cd0,translated,high,"work/ghidra/main-gb/export/80170cd0_FUN_80170cd0.c; non-null guard; 0x8016DCA0(this,0) always; free when flag>0 through 0x802B9280.",src/ui/menu.rs
+ui::menu,80171de0,fn_80171de0,translated,high,"work/ghidra/main-gb/export/80171de0_FUN_80171de0.c; 0x8018A6E0(this+8,index) then return entry+4.",src/ui/menu.rs
+ui::menu,80172000,fn_80172000,translated,medium,"work/ghidra/main-gb/export/80172000_FUN_80172000.c; u16 count at +0x10; 0x8018A6E0 lookup; vtable slot +0x10 on entry+4 with no printed operand.",src/ui/menu.rs
+ui::menu,80172180,fn_80172180,translated,high,"work/ghidra/main-gb/export/80172180_FUN_80172180.c; single byte store at +0x24.",src/ui/menu.rs
+ui::menu,80172e70,fn_80172e70,translated,high,"work/ghidra/main-gb/export/80172e70_FUN_80172e70.c; single word store at +4.",src/ui/menu.rs
+ui::menu,80172e90,fn_80172e90,translated,high,"work/ghidra/main-gb/export/80172e90_FUN_80172e90.c; single word store at +0x24.",src/ui/menu.rs
+ui::menu,801731f0,fn_801731f0,translated,high,"work/ghidra/main-gb/export/801731f0_FUN_801731f0.c; channel 0 via 0x801E1060 with 0x80172EA0 stored +0x24; channel 1 via 0x801E10F0 with 0x80172FB0 stored +0x28; +0x44=1; 0x801E0F40 sets +0x40 for 0/-1.",src/ui/menu.rs
+ui::menu,801734a0,fn_801734a0,translated,high,"work/ghidra/main-gb/export/801734a0_FUN_801734a0.c; three zero stores at +0x10/+0x14/+0x18.",src/ui/menu.rs
+ui::menu,801734c0,fn_801734c0,translated,high,"work/ghidra/main-gb/export/801734c0_FUN_801734c0.c; copies 0x802F5A6C to +8 and 0x802F5A70 to +0xC.",src/ui/menu.rs
+ui::menu,801734e0,fn_801734e0,translated,high,"work/ghidra/main-gb/export/801734e0_FUN_801734e0.c; 0x801741B0(this[8],this[0]) record reset.",src/ui/menu.rs
+ui::menu,80173610,fn_80173610,translated,high,"work/ghidra/main-gb/export/80173610_FUN_80173610.c; clears hold bytes +0x42 and +0x43.",src/ui/menu.rs
+ui::menu,80174cc0,fn_80174cc0,translated,medium,"work/ghidra/main-gb/export/80174cc0_FUN_80174cc0.c; 0x80377FA0 guard; level threshold 0x802F5AA0; curve via 0x802E5490; scale 0x802F5AA4/0x802F5AA8; clamp -0x388..0x3C; two pools of 4+3 records through 0x801948C0.",src/ui/menu.rs
+ui::menu,80174f30,fn_80174f30,translated,medium,"work/ghidra/main-gb/export/80174f30_FUN_80174f30.c; 0x801AB1C0 with HBM release string 0x8032A300; 0x80175500; 0x80175F70.",src/ui/menu.rs
+ui::menu,80174fd0,fn_80174fd0,translated,high,"work/ghidra/main-gb/export/80174fd0_FUN_80174fd0.c; 0x80175500 menu then 0x8017CFE0(menu,arg).",src/ui/menu.rs
+ui::menu,801750a0,fn_801750a0,translated,high,"work/ghidra/main-gb/export/801750a0_FUN_801750a0.c; 0x80175500 menu then 0x8017D3D0(menu,arg).",src/ui/menu.rs
+ui::menu,801750e0,fn_801750e0,translated,high,"work/ghidra/main-gb/export/801750e0_FUN_801750e0.c; 0x80175500 then 0x801748E0(arg1,arg2,arg3).",src/ui/menu.rs

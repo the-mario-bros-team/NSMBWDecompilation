@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800a7690,fn_800a7690,translated,high,work/ghidra/main-gb/export/800a7690_FUN_800a7690.c,src/game/stage.rs
+game::stage,800a7bf0,fn_800a7bf0,translated,high,work/ghidra/main-gb/export/800a7bf0_FUN_800a7bf0.c,src/game/stage.rs
+game::stage,800a7de0,fn_800a7de0,translated,high,work/ghidra/main-gb/export/800a7de0_FUN_800a7de0.c,src/game/stage.rs
+game::stage,800a8770,fn_800a8770,translated,high,work/ghidra/main-gb/export/800a8770_FUN_800a8770.c,src/game/stage.rs
+game::stage,800a87c0,fn_800a87c0,translated,high,work/ghidra/main-gb/export/800a87c0_FUN_800a87c0.c,src/game/stage.rs
+game::stage,800a8830,fn_800a8830,translated,high,work/ghidra/main-gb/export/800a8830_FUN_800a8830.c,src/game/stage.rs
+game::stage,800a8880,fn_800a8880,translated,high,work/ghidra/main-gb/export/800a8880_FUN_800a8880.c,src/game/stage.rs
+game::stage,800a99d0,fn_800a99d0,translated,high,work/ghidra/main-gb/export/800a99d0_FUN_800a99d0.c,src/game/stage.rs
+game::stage,800aa150,fn_800aa150,translated,high,work/ghidra/main-gb/export/800aa150_FUN_800aa150.c,src/game/stage.rs
+game::stage,800aa620,fn_800aa620,translated,high,work/ghidra/main-gb/export/800aa620_FUN_800aa620.c,src/game/stage.rs

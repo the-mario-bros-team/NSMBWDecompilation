@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,801b3010,fn_801b3010,translated,medium,"work/ghidra/main-gb/export/801b3010_FUN_801b3010.c; thread-list detach loop; +0x2F4 head +0x10 next +0x2F8 tail",src/runtime/os.rs
+runtime::os,801b7280,fn_801b7280,translated,medium,"work/ghidra/main-gb/export/801b7280_FUN_801b7280.c; play-time state machine sda(-0x6140) cases 0/4/7/8/9; 500*(bus/4000) block",src/runtime/os.rs
+runtime::os,801b7750,fn_801b7750,translated,medium,"work/ghidra/main-gb/export/801b7750_FUN_801b7750.c; opens /dev/net/kd; callback 801B7A20 selector 0x6E; error map -0x1D/-0x2A",src/runtime/os.rs
+runtime::os,801b7ce0,fn_801b7ce0,translated,medium,"work/ghidra/main-gb/export/801b7ce0_FUN_801b7ce0.c; 0x407-word checksum then shared2/sys/NANDBOOTINFO read of 0x1020",src/runtime/os.rs
+runtime::os,801b7e60,fn_801b7e60,translated,medium,"work/ghidra/main-gb/export/801b7e60_FUN_801b7e60.c; scanline expand into +index*0x240; sample scale from sda2(-0x4F60/-0x4F68)",src/runtime/os.rs
+runtime::os,801b82f0,fn_801b82f0,translated,medium,"work/ghidra/main-gb/export/801b82f0_FUN_801b82f0.c; play-time record decoder; eight {kind,value} pairs at +0x98",src/runtime/os.rs
+runtime::os,801b8760,fn_801b8760,translated,medium,"work/ghidra/main-gb/export/801b8760_FUN_801b8760.c; disc worker boot; 0xE0 id block 0x2000 arena; key at +0xFF8 and 0xD8 record",src/runtime/os.rs
+runtime::os,801b8b20,fn_801b8b20,translated,medium,"work/ghidra/main-gb/export/801b8b20_FUN_801b8b20.c; queue command up to four bytes; control |2 and dir<<2|1",src/runtime/os.rs
+runtime::os,801b8da0,fn_801b8da0,translated,high,"work/ghidra/main-gb/export/801b8da0_FUN_801b8da0.c; four-byte chunk loop over 8B20 and 8F50; 1/0 to 802DCDC0",src/runtime/os.rs
+runtime::os,801b8f50,fn_801b8f50,translated,medium,"work/ghidra/main-gb/export/801b8f50_FUN_801b8f50.c; wait EXI CR start bit; unpack reply; three short answers and 0x800030E6",src/runtime/os.rs
+runtime::os,801b9260,fn_801b9260,translated,medium,"work/ghidra/main-gb/export/801b9260_FUN_801b9260.c; poll 0x800/0x1000; elapsed via two signed 64-bit divides; 3-unit gate",src/runtime/os.rs
+runtime::os,801b93e0,fn_801b93e0,translated,medium,"work/ghidra/main-gb/export/801b93e0_FUN_801b93e0.c; probe 9F80 then control |2 and interrupt 0x100000>>ch*3",src/runtime/os.rs
+runtime::os,801b98b0,fn_801b98b0,translated,medium,"work/ghidra/main-gb/export/801b98b0_FUN_801b98b0.c; channel (hi-10)/3 completion; unpacks reply; context swap around callback",src/runtime/os.rs
+runtime::os,801b9d70,fn_801b9d70,translated,medium,"work/ghidra/main-gb/export/801b9d70_FUN_801b9d70.c; device select bit 0x10 and 8-byte lock queue at +0x28",src/runtime/os.rs
+runtime::os,801b9f80,fn_801b9f80,translated,medium,"work/ghidra/main-gb/export/801b9f80_FUN_801b9f80.c; cached answer; select/probe/two data rounds; publishes length or 1/0",src/runtime/os.rs
+runtime::os,801ba330,fn_801ba330,translated,medium,"work/ghidra/main-gb/export/801ba330_FUN_801ba330.c; 0x20011300 command exchange; answer != -1",src/runtime/os.rs
+runtime::os,801ba4b0,fn_801ba4b0,translated,medium,"work/ghidra/main-gb/export/801ba4b0_FUN_801ba4b0.c; accepted-answer set; success stores channel/device and 0xA5FF005A pair",src/runtime/os.rs
+runtime::os,801ba670,fn_801ba670,translated,medium,"work/ghidra/main-gb/export/801ba670_FUN_801ba670.c; byte/half/word swap; command and value rounds; 9E70 release",src/runtime/os.rs
+runtime::os,801ba800,fn_801ba800,translated,medium,"work/ghidra/main-gb/export/801ba800_FUN_801ba800.c; receive words from 0xCD006480; tail bytes; status nibble",src/runtime/os.rs
+runtime::os,801bafb0,fn_801bafb0,translated,medium,"work/ghidra/main-gb/export/801bafb0_FUN_801bafb0.c; SI start; copies words to 0xCD006480; status <<1 | lengths | 0x80000001",src/runtime/os.rs
+runtime::os,801bb250,fn_801bb250,translated,medium,"work/ghidra/main-gb/export/801bb250_FUN_801bb250.c; descriptor store; deadline = start + param_7:param_8; alarm 8038F890+ch*0x30",src/runtime/os.rs
+runtime::os,801bb3c0,fn_801bb3c0,translated,medium,"work/ghidra/main-gb/export/801bb3c0_FUN_801bb3c0.c; completion states 0x08000000/0x40000000; command reply or four callbacks",src/runtime/os.rs
+runtime::os,801bb680,fn_801bb680,translated,medium,"work/ghidra/main-gb/export/801bb680_FUN_801bb680.c; 50 and 75 tick limits; re-arm BB250 with computed timeout",src/runtime/os.rs
+runtime::os,801bba30,fn_801bba30,translated,medium,"work/ghidra/main-gb/export/801bba30_FUN_801bba30.c; channels 1..3 drain two masks through 802DD1EC; 0/4..6 run 801BFEA0",src/runtime/os.rs
+runtime::os,801bab00,fn_801bab00,translated,medium,"work/ghidra/main-gb/export/801bab00_FUN_801bab00.c; SI interrupt: finishes via A800; descriptor search; status 0x18000000 stamps four channels",src/runtime/os.rs

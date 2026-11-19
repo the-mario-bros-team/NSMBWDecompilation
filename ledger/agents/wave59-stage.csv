@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c7550,fn_800c7550,translated,high,"work/ghidra/main-gb/export/800c7550_FUN_800c7550.c; forwards (first, second) to 0x802DCBFC with second duplicated",src/game/stage.rs
+game::stage,800c7580,fn_800c7580,translated,high,"work/ghidra/main-gb/export/800c7580_FUN_800c7580.c; second copy of the 0x802DCBFC forwarding pair",src/game/stage.rs
+game::stage,800c8860,fn_800c8860,translated,high,"work/ghidra/main-gb/export/800c8860_FUN_800c8860.c; 0x8015F800(this,0) then optional 0x802B9280 free; returns this",src/game/stage.rs
+game::stage,800c8950,fn_800c8950,translated,high,"work/ghidra/main-gb/export/800c8950_FUN_800c8950.c; base ctor plus vtable 0x80317438 at +0x08 plus accessor at +0xAC; clears +0x18C/+0x190",src/game/stage.rs
+game::stage,800c89a0,fn_800c89a0,translated,high,"work/ghidra/main-gb/export/800c89a0_FUN_800c89a0.c; accessor dtor with -1 then base dtor with 0 then optional free",src/game/stage.rs
+game::stage,800c8aa0,fn_800c8aa0,translated,medium,"work/ghidra/main-gb/export/800c8aa0_FUN_800c8aa0.c; recursive child walk filtering on r13-0x48A8 and resetting via vtable +0x74/+0x7C",src/game/stage.rs
+game::stage,800c8bb0,fn_800c8bb0,translated,medium,"work/ghidra/main-gb/export/800c8bb0_FUN_800c8bb0.c; builds the prefix or template path and loads it through 0x80006B60",src/game/stage.rs
+game::stage,800c8cb0,fn_800c8cb0,translated,high,"work/ghidra/main-gb/export/800c8cb0_FUN_800c8cb0.c; forwards to 0x800C8BB0 with alternate flag 0",src/game/stage.rs
+game::stage,800c8d60,fn_800c8d60,translated,medium,"work/ghidra/main-gb/export/800c8d60_FUN_800c8d60.c; resolves count ids through 0x80007300 into the output array",src/game/stage.rs
+game::stage,800c8dd0,fn_800c8dd0,translated,medium,"work/ghidra/main-gb/export/800c8dd0_FUN_800c8dd0.c; same loop through the r13-0x48A0 filtered lookup 0x80007470",src/game/stage.rs
+game::stage,800c8e40,fn_800c8e40,translated,medium,"work/ghidra/main-gb/export/800c8e40_FUN_800c8e40.c; same loop through the r13-0x48B0 filtered lookup 0x800073D0",src/game/stage.rs
+game::stage,800c8eb0,fn_800c8eb0,translated,medium,"work/ghidra/main-gb/export/800c8eb0_FUN_800c8eb0.c; same loop through the r13-0x48A8 filtered lookup 0x80007320",src/game/stage.rs
+game::stage,800c8f20,fn_800c8f20,translated,medium,"work/ghidra/main-gb/export/800c8f20_FUN_800c8f20.c; per id calls 0x800C9A60 with the DAT_80359CB4 kind word",src/game/stage.rs
+game::stage,800c8fb0,fn_800c8fb0,translated,high,"work/ghidra/main-gb/export/800c8fb0_FUN_800c8fb0.c; allocates the 0x1C table at +0x180 and starts one 0x80163E60 load per id",src/game/stage.rs
+game::stage,800c9060,fn_800c9060,translated,high,"work/ghidra/main-gb/export/800c9060_FUN_800c9060.c; installs vtable 0x80317450 and clears +0x04..+0x18",src/game/stage.rs
+game::stage,800c90b0,fn_800c90b0,translated,high,"work/ghidra/main-gb/export/800c90b0_FUN_800c90b0.c; optional free and return this; destructor slot of the 0x1C table",src/game/stage.rs
+game::stage,800c90f0,fn_800c90f0,translated,medium,"work/ghidra/main-gb/export/800c90f0_FUN_800c90f0.c; allocates the 0x28 table at +0x184 and the flag array at +0x188 then binds each entry with 0x801643B0",src/game/stage.rs
+game::stage,800c91f0,fn_800c91f0,translated,high,"work/ghidra/main-gb/export/800c91f0_FUN_800c91f0.c; optional free and return this",src/game/stage.rs
+game::stage,800c9230,fn_800c9230,translated,high,"work/ghidra/main-gb/export/800c9230_FUN_800c9230.c; optional free and return this; destructor slot of the 0x28 table",src/game/stage.rs
+game::stage,800c9270,fn_800c9270,translated,medium,"work/ghidra/main-gb/export/800c9270_FUN_800c9270.c; activates one entry writes the r2-0x6788 channel value applies the descriptor and sets the flag and cursor",src/game/stage.rs
+game::stage,800c92f0,fn_800c92f0,translated,medium,"work/ghidra/main-gb/export/800c92f0_FUN_800c92f0.c; start plus optional upper-edge realign then channel state 1",src/game/stage.rs
+game::stage,800c9380,fn_800c9380,translated,high,"work/ghidra/main-gb/export/800c9380_FUN_800c9380.c; start then clear the channel state byte",src/game/stage.rs
+game::stage,800c93d0,fn_800c93d0,translated,medium,"work/ghidra/main-gb/export/800c93d0_FUN_800c93d0.c; two-armed r2-0x6784 start then force channel state 3",src/game/stage.rs
+game::stage,800c9490,fn_800c9490,translated,high,"work/ghidra/main-gb/export/800c9490_FUN_800c9490.c; clears one active entry and its flag byte",src/game/stage.rs
+game::stage,800c9500,fn_800c9500,translated,high,"work/ghidra/main-gb/export/800c9500_FUN_800c9500.c; clears every entry and rewinds the +0x194 cursor",src/game/stage.rs
+game::stage,800c9560,fn_800c9560,translated,medium,"work/ghidra/main-gb/export/800c9560_FUN_800c9560.c; steps active channels via 0x801637F0/0x801636C0 and retires the finished ones",src/game/stage.rs
+game::stage,800c9610,fn_800c9610,translated,high,"work/ghidra/main-gb/export/800c9610_FUN_800c9610.c; flag byte by index or by the +0x194 cursor when the index is negative",src/game/stage.rs
+game::stage,800c9640,fn_800c9640,translated,high,"work/ghidra/main-gb/export/800c9640_FUN_800c9640.c; 1 when any of the +0x190 flag bytes is set",src/game/stage.rs
+game::stage,800c9930,fn_800c9930,translated,medium,"work/ghidra/main-gb/export/800c9930_FUN_800c9930.c; finishes each record deletes both tables frees the flags and closes the accessor",src/game/stage.rs

@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,801b0170,fn_801b0170,translated,medium,"work/ghidra/main-gb/export/801b0170_FUN_801b0170.c; chunked SRAM read of a Yay0 font into the caller buffer; 0x801AFEF0 expansion; mode 1 patches glyph 0x54",src/runtime/os.rs
+runtime::os,801b0860,fn_801b0860,translated,medium,"work/ghidra/main-gb/export/801b0860_FUN_801b0860.c; decodes one text byte via 0x801B05A0 then blits the 2 bpp cell into the 4 bpp destination bitmap; width byte to param_5",src/runtime/os.rs
+runtime::os,801b6080,fn_801b6080,translated,medium,"work/ghidra/main-gb/export/801b6080_FUN_801b6080.c; tick to calendar decode: 0x802DD0E0 remainder, 0x802DCEC4 divide, 400-year year loop, 0x80333D90/0x80333D60 month tables",src/runtime/os.rs
+runtime::os,801be860,fn_801be860,translated,medium,"work/ghidra/main-gb/export/801be860_FUN_801be860.c; multi-byte twin of 0x801BE510: first byte through 0x801BE510 then count bytes bit-banged on CD8000C0; result via 0x802DCDAC",src/runtime/os.rs

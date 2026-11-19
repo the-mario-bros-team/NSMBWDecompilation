@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,801501b0,fn_801501b0,translated,medium,"work/ghidra/main-gb/export/801501b0_FUN_801501b0.c; clears +0x1558, copies the r2-0x55BC default into +0x155C and sets +0x1560 to 1",src/engine/display.rs
+engine::display,801504d0,fn_801504d0,translated,medium,"work/ghidra/main-gb/export/801504d0_FUN_801504d0.c; gated by 0x80150650; installs the 0x80376E88 layout name and the 0xB3/3/199 channel ids",src/engine/display.rs
+engine::display,80150540,fn_80150540,translated,medium,"work/ghidra/main-gb/export/80150540_FUN_80150540.c; pane 8 matrix, 0x801C0BD0/0x801C0540/0x8016F130 chain, queues 0x800A7540 when +0x1564>4 else 0x800A7550 when +0x1568>0",src/engine/display.rs
+engine::display,80150700,fn_80150700,translated,high,"work/ghidra/main-gb/export/80150700_FUN_80150700.c; +0x1544 re-entry guard around the target's +0x60 slot +0x84",src/engine/display.rs
+engine::display,80150760,fn_80150760,translated,high,"work/ghidra/main-gb/export/80150760_FUN_80150760.c; +0x1544 re-entry guard around the target's +0x60 slot +0x88",src/engine/display.rs
+engine::display,80150830,fn_80150830,translated,high,"work/ghidra/main-gb/export/80150830_FUN_80150830.c; +0x1544 guard around slot +0x90 and (-r|r)>>31 normalisation",src/engine/display.rs
+engine::display,80151320,fn_80151320,translated,medium,"work/ghidra/main-gb/export/80151320_FUN_80151320.c; owner query slot +0x3F0 then +0x450; plays 0x800D8BB0 for the +0x38D route byte",src/engine/display.rs
+engine::display,801515c0,fn_801515c0,translated,high,"work/ghidra/main-gb/export/801515c0_FUN_801515c0.c; bit 0 of manager +0x160 selects 0x802F5868 or 0x802F5898",src/engine/display.rs
+engine::display,80151a70,fn_80151a70,translated,high,"work/ghidra/main-gb/export/80151a70_FUN_80151a70.c; registers channels 0xE and 0xA7 then sets +0x152D to 1",src/engine/display.rs
+engine::display,80151ac0,fn_80151ac0,translated,high,"work/ghidra/main-gb/export/80151ac0_FUN_80151ac0.c; one 0x80056C70(scene,0x7B) call",src/engine/display.rs
+engine::display,80151c20,fn_80151c20,translated,high,"work/ghidra/main-gb/export/80151c20_FUN_80151c20.c; one 0x80056C70(scene,0x7C) call",src/engine/display.rs
+engine::display,80151ad0,fn_80151ad0,translated,medium,"work/ghidra/main-gb/export/80151ad0_FUN_80151ad0.c; two 0x800D5790 pane reads, corner algebra with the r2-0x5658 scale, +0x122C/+0x1230 clamp and 0x42 latch",src/engine/display.rs
+engine::display,80151c30,fn_80151c30,translated,medium,"work/ghidra/main-gb/export/80151c30_FUN_80151c30.c; pane 0x11 matrix, 0x801C0BD0/0x801C0540/0x8016F130 chain, +0x122C/+0x1230 from r2-0x5610, byte +0x1235=0x10",src/engine/display.rs
+engine::display,80151d00,fn_80151d00,translated,medium,"work/ghidra/main-gb/export/80151d00_FUN_80151d00.c; selects 0x802F58C8/58D8/58E8 from manager +0x160, resolves model id 0x109/0x10D via +0x1464",src/engine/display.rs
+engine::display,80152020,fn_80152020,translated,medium,"work/ghidra/main-gb/export/80152020_FUN_80152020.c; 0x4D/4/0x80053C80 guards, 0x80053E60 impulse plus 0x80053DF0 reset, 0x80049C70 fallback",src/engine/display.rs
+engine::display,801527a0,fn_801527a0,translated,medium,"work/ghidra/main-gb/export/801527a0_FUN_801527a0.c; +0x1524 guard, 0x8014E9B0 view lookup then the view's +0x60 slot +0x120",src/engine/display.rs
+engine::display,80152b30,fn_80152b30,translated,medium,"work/ghidra/main-gb/export/80152b30_FUN_80152b30.c; 0x80050D80 mode and 0x8D guards, forwards to the 0x80162D00 scene and the 0x8014E9B0 view",src/engine/display.rs
+engine::display,801533a0,fn_801533a0,translated,high,"work/ghidra/main-gb/export/801533a0_FUN_801533a0.c; 0x802DCBFC(second,second,first) thunk",src/engine/display.rs
+engine::display,80154300,fn_80154300,translated,high,"work/ghidra/main-gb/export/80154300_FUN_80154300.c; 0x8015F800 destructor then optional 0x802B9280 free; returns the object",src/engine/display.rs
+engine::display,80156820,fn_80156820,translated,medium,"work/ghidra/main-gb/export/80156820_FUN_80156820.c; 0x8005FC70 mask walk over the 0x802F5918 byte table, ids resolved through 0x8005F900",src/engine/display.rs
+engine::display,80156d70,fn_80156d70,translated,medium,"work/ghidra/main-gb/export/80156d70_FUN_80156d70.c; counts players whose +0x153C byte is 4 and hands count==connected to 0x802DCDC0",src/engine/display.rs
+engine::display,8015c4c0,fn_8015c4c0,translated,high,"work/ghidra/main-gb/export/8015c4c0_FUN_8015c4c0.c; state 2 of the 0x8015F620 table releases the layout and requires resources 0x2C0 and 0x2E5",src/engine/display.rs
+engine::display,8015c680,fn_8015c680,translated,high,"work/ghidra/main-gb/export/8015c680_FUN_8015c680.c; layout +0x28==1 sets display +0x1D8 bit 0x40 and changes +0xB0 to 0x80377448",src/engine/display.rs
+engine::display,8015d7c0,fn_8015d7c0,translated,medium,"work/ghidra/main-gb/export/8015d7c0_FUN_8015d7c0.c; resource-manager +0x20 query for 0x900 or global flag 0x80000, then 0x80108160 and descriptor 0x80377908",src/engine/display.rs
+engine::display,8015fe40,fn_8015fe40,translated,high,"work/ghidra/main-gb/export/8015fe40_FUN_8015fe40.c; clears r13-0x5318 and r13-0x5314",src/engine/display.rs
+engine::display,8015f140,fn_8015f140,translated,medium,"work/ghidra/main-gb/export/8015f140_FUN_8015f140.c; rate/limit/dead-band f32 step with f32 truncations and a signed remaining distance",src/engine/display.rs

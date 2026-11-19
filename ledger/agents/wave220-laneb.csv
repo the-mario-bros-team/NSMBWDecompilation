@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802c6020,fn_802c6020,translated,high,"work/ghidra/main-gb/export/802c6020_FUN_802c6020.c; addi r3 r13 -0x5B30 then blr",src/resource/archive.rs
+resource::archive,802c64f0,fn_802c64f0,translated,high,"work/ghidra/main-gb/export/802c64f0_FUN_802c64f0.c; guarded free via 0x802B9280; blr at 0x802C652C",src/resource/archive.rs
+resource::archive,802c6ae0,fn_802c6ae0,translated,high,"work/ghidra/main-gb/export/802c6ae0_FUN_802c6ae0.c; six-float rect init; SDA2 0.0/1.0/-1.0/0.5; flag word +0x34 OR 1",src/resource/archive.rs
+resource::archive,802c6ce0,fn_802c6ce0,translated,high,"work/ghidra/main-gb/export/802c6ce0_FUN_802c6ce0.c; mode 0/1 point mapper; scale 0.5 from r2-0x3CB8",src/resource/archive.rs
+resource::archive,802c6d30,fn_802c6d30,translated,high,"work/ghidra/main-gb/export/802c6d30_FUN_802c6d30.c; fabs/fmuls/fdivs profile; mode guard at +0x00",src/resource/archive.rs
+resource::archive,802c6e20,fn_802c6e20,translated,high,"work/ghidra/main-gb/export/802c6e20_FUN_802c6e20.c; 0x802C6FF0 block then 0x802D31D0",src/resource/archive.rs
+resource::archive,802c6f60,fn_802c6f60,translated,high,"work/ghidra/main-gb/export/802c6f60_FUN_802c6f60.c; 0x802C6FF0 block then 0x40-byte fill; 0.0 and -1.0 defaults",src/resource/archive.rs
+resource::archive,802c7560,fn_802c7560,translated,medium,"work/ghidra/main-gb/export/802c7560_FUN_802c7560.c; record walk by name; two 0x8023CC90 transforms; ID pair refinement",src/resource/archive.rs
+resource::archive,802c7d30,fn_802c7d30,translated,high,"work/ghidra/main-gb/export/802c7d30_FUN_802c7d30.c; 127+128*v with both clamps; fctiwz to bytes +3/+2/+1",src/resource/archive.rs
+resource::archive,802c80c0,fn_802c80c0,translated,high,"work/ghidra/main-gb/export/802c80c0_FUN_802c80c0.c; u16 count at +4; 12-byte entries; virtual call at +0x34",src/resource/archive.rs

@@ -1,0 +1,10 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80070130,fn_80070130,translated,medium,work/ghidra/main-gb/export/80070130_FUN_80070130.c; cell walk through the 0x8006Dxxx tests and the direction bits,src/game/stage.rs
+game::stage,80071210,fn_80071210,translated,medium,work/ghidra/main-gb/export/80071210_FUN_80071210.c; +0x2C/+0x30 deltas clamped then the two flag passes and the slope nudge,src/game/stage.rs
+game::stage,80071a60,fn_80071a60,translated,medium,work/ghidra/main-gb/export/80071a60_FUN_80071a60.c; two ordered grid probes and nibble snapping before 0x800CFEA0,src/game/stage.rs
+game::stage,80073290,fn_80073290,translated,medium,work/ghidra/main-gb/export/80073290_FUN_80073290.c; circle and box arms plus the 0x802EF628 edge interpolation,src/game/stage.rs
+game::stage,80073670,fn_80073670,translated,medium,work/ghidra/main-gb/export/80073670_FUN_80073670.c; scroll-layer sweep with the +0xD0 attribute ladder and two virtual hooks,src/game/stage.rs
+game::stage,80073bc0,fn_80073bc0,translated,medium,work/ghidra/main-gb/export/80073bc0_FUN_80073bc0.c; 0x802EF638 edge walk keeping the lowest normal y,src/game/stage.rs
+game::stage,80077730,fn_80077730,translated,medium,work/ghidra/main-gb/export/80077730_FUN_80077730.c; packed tile index plus the layer read and the mask value,src/game/stage.rs
+game::stage,80077810,fn_80077810,translated,medium,work/ghidra/main-gb/export/80077810_FUN_80077810.c; tile and mask overlap test emitted as a shift,src/game/stage.rs
+game::stage,8007e4e0,fn_8007e4e0,translated,medium,work/ghidra/main-gb/export/8007e4e0_FUN_8007e4e0.c; terrain-list frame copy and rectangle settle loop,src/game/stage.rs

@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b4de0,fn_800b4de0,translated,high,"work/ghidra/main-gb/export/800b4de0_FUN_800b4de0.c; area-5 select prompt; busy word r13-0x5460, kind byte 0x80315B9D, bit 0x10 of r13-0x5700, then 0x800E0380 + 0x800CE3C0",src/game/stage.rs
+game::stage,800b4e80,fn_800b4e80,translated,high,"work/ghidra/main-gb/export/800b4e80_FUN_800b4e80.c; kind < 9; kind 8 walks eight 0x800CE3C0 emits, other kinds read the 0x802F0B0C table via 0x800FAE40",src/game/stage.rs
+game::stage,800b50f0,fn_800b50f0,translated,medium,"work/ghidra/main-gb/export/800b50f0_FUN_800b50f0.c; 0x801DD1D0 result 1 selects r2-0x6AE8 else r2-0x6AE4, both words stored at +0 and +4",src/game/stage.rs
+game::stage,800b5400,fn_800b5400,translated,high,"work/ghidra/main-gb/export/800b5400_FUN_800b5400.c; two eight-iteration flag sweeps over [r13-0x5640]+0x20, writes kind 8 when all read back",src/game/stage.rs
+game::stage,800b54c0,fn_800b54c0,translated,medium,"work/ghidra/main-gb/export/800b54c0_FUN_800b54c0.c; fill bytes 0..len with their index then len shuffle rounds swapping element 0 with the 0x800B2EE0 index",src/game/stage.rs
+game::stage,800b6be0,fn_800b6be0,translated,high,"work/ghidra/main-gb/export/800b6be0_FUN_800b6be0.c; 0x8015F4F0(this+0x90,0,0x800) reduced by (-r | r) >> 31",src/game/stage.rs
+game::stage,800b6df0,fn_800b6df0,translated,high,"work/ghidra/main-gb/export/800b6df0_FUN_800b6df0.c; reads 20 bytes from +0x248, rebinds Wm_en_hanasnort through the +0x2B0 slot 0xA0",src/game/stage.rs
+game::stage,800b6ef0,fn_800b6ef0,translated,high,"work/ghidra/main-gb/export/800b6ef0_FUN_800b6ef0.c; ticks +8 slot 0x1C, indexes r13-0x5720 with [[this+0x224]+0x348] and scans +0x8E",src/game/stage.rs
+game::stage,800b7a80,fn_800b7a80,translated,medium,"work/ghidra/main-gb/export/800b7a80_FUN_800b7a80.c; one +0x1C vtable tick on the +8 sub-object, returns 0; receiver recovered from r3",src/game/stage.rs
+game::stage,800b7c50,fn_800b7c50,translated,high,"work/ghidra/main-gb/export/800b7c50_FUN_800b7c50.c; clears +0x240, installs 0x803158D8, destroys/releases +0xC4 and +0x168, detaches +0x48, clears +8, optional delete",src/game/stage.rs
+game::stage,800b7db0,fn_800b7db0,translated,high,"work/ghidra/main-gb/export/800b7db0_FUN_800b7db0.c; resets the +0x2B0 sub-object to 0x80329958, releases/deletes it, detaches +0x278, then the 0x803158D8 chain",src/game/stage.rs
+game::stage,800ba240,fn_800ba240,translated,medium,"work/ghidra/main-gb/export/800ba240_FUN_800ba240.c; +0x638..+0x640 vector measured by 0x801C14C0 against r2-0x69F4, then 0x800B96A0 and the 0x80358C18 interface switch",src/game/stage.rs
+game::stage,800ba2e0,fn_800ba2e0,translated,high,"work/ghidra/main-gb/export/800ba2e0_FUN_800ba2e0.c; walks +0x1C count / +0x20 head / +0x88 next calling 0x800BAE50, then 0x800B9A90",src/game/stage.rs
+game::stage,800ba3b0,fn_800ba3b0,translated,high,"work/ghidra/main-gb/export/800ba3b0_FUN_800ba3b0.c; side starts at f32[+0x62C] <= f32[+0x638], alternates per node and calls fn_800bb010",src/game/stage.rs
+game::stage,800ba480,fn_800ba480,translated,high,"work/ghidra/main-gb/export/800ba480_FUN_800ba480.c; decrements the +0x1C count per settled fn_800baf50 node and sends 0x80358D18 when none remain",src/game/stage.rs
+game::stage,800ba580,fn_800ba580,translated,high,"work/ghidra/main-gb/export/800ba580_FUN_800ba580.c; forwards (b,b,a) to 0x802DCBFC",src/game/stage.rs
+game::stage,800ba5b0,fn_800ba5b0,translated,high,"work/ghidra/main-gb/export/800ba5b0_FUN_800ba5b0.c; duplicate of 800ba580, forwards (b,b,a) to 0x802DCBFC",src/game/stage.rs
+game::stage,800baf50,fn_800baf50,translated,high,"work/ghidra/main-gb/export/800baf50_FUN_800baf50.c; +0x80 retire guard, +0x54 clamp, +0x44/+0x48/+0x4C integration, +0x800/+0x400 angle steps and the scene bottom test",src/game/stage.rs
+game::stage,800bb010,fn_800bb010,translated,medium,"work/ghidra/main-gb/export/800bb010_FUN_800bb010.c; two 0x800B2F10 evaluations seed +0x50 from the two-row r2-0x6998 table and +0x54 from r2-0x698C",src/game/stage.rs
+game::stage,800bb3c0,fn_800bb3c0,translated,high,"work/ghidra/main-gb/export/800bb3c0_FUN_800bb3c0.c; unresolved first argument; 0x800E0380(r13-0x5640,-1) then 0x800CE330(record,kind,0)",src/game/stage.rs
+game::stage,800bbd30,fn_800bbd30,translated,high,"work/ghidra/main-gb/export/800bbd30_FUN_800bbd30.c; opens the +8 instance with tag 0x20, loads g3d_kanaami.brres into +0x24, binds kanaami_large at +0x28",src/game/stage.rs
+game::stage,800bbdd0,fn_800bbdd0,translated,high,"work/ghidra/main-gb/export/800bbdd0_FUN_800bbdd0.c; perspective divide by r2-0x6970, z copied to +8 and x/y scaled into the target",src/game/stage.rs
+game::stage,800bca40,fn_800bca40,translated,high,"work/ghidra/main-gb/export/800bca40_FUN_800bca40.c; +0xE00 halfword state, +0xDFC = time * r2-0x693C, then 0x8000D820(+4)",src/game/stage.rs
+game::stage,800bcb80,fn_800bcb80,translated,medium,"work/ghidra/main-gb/export/800bcb80_FUN_800bcb80.c; base ctor 0x800D2DD0, vtable 0x80315EE8, two 0x803295D8/0x80329548 interface pairs with 0x8016A5E0, Kinopio 0x802F0D80 at +0x778",src/game/stage.rs
+game::stage,800be340,fn_800be340,translated,high,"work/ghidra/main-gb/export/800be340_FUN_800be340.c; instance open on the object itself, 0x800BE000 grid build, instance close",src/game/stage.rs
+game::stage,800be7b0,fn_800be7b0,translated,high,"work/ghidra/main-gb/export/800be7b0_FUN_800be7b0.c; +4 node filtered with 0x802F8FF0 on slot +8, 0x8025C660/0x8025C470 draw list, 0x801C0C60 and 0x8023CFA0",src/game/stage.rs
+game::stage,800be880,fn_800be880,translated,high,"work/ghidra/main-gb/export/800be880_FUN_800be880.c; translation from +0x78..+0x80, 0x801C0540 multiply, 0x8016A170/0x8016A150 stores and the +0x14 vtable call",src/game/stage.rs
+game::stage,800be910,fn_800be910,translated,high,"work/ghidra/main-gb/export/800be910_FUN_800be910.c; (value + 1) / 3",src/game/stage.rs
+game::stage,800be930,fn_800be930,translated,high,"work/ghidra/main-gb/export/800be930_FUN_800be930.c; returns value >> 1 when below 10, else 0",src/game/stage.rs

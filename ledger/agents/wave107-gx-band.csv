@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802821e0,fn_802821e0,translated,medium,"work/ghidra/main-gb/export/802821e0_FUN_802821e0.c; 2988 bytes; texture-grid cell packer: four corners plus uv pairs in 32768.0 fixed point",src/render/gx_band.rs
+render::gx_band,802850f0,fn_802850f0,translated,medium,"work/ghidra/main-gb/export/802850f0_FUN_802850f0.c; 1028 bytes; animated draw-state commit: five transform fields and row copies under the render-manager lock",src/render/gx_band.rs
+render::gx_band,8028cee0,fn_8028cee0,translated,medium,"work/ghidra/main-gb/export/8028cee0_FUN_8028cee0.c; 3468 bytes; keyframe range walk: two index resolutions plus four walk arms over 0x0C-byte key entries",src/render/gx_band.rs

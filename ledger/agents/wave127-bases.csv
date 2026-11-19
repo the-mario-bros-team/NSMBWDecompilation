@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807a06b0,fn_807a06b0,translated,high,work/ghidra/rel-d_basesNP/export/807a06b0_FUN_807a06b0.c; 800F8230 guard; code 0x5B spawns 807A0BD0 or probes 807A0D30 and calls vtable +0x68,src/game/bases.rs
+game::bases,807a07a0,fn_807a07a0,translated,high,work/ghidra/rel-d_basesNP/export/807a07a0_FUN_807a07a0.c; 800F84C0 then +0x6C8 and +0x6CC = 1,src/game/bases.rs
+game::bases,807a0bd0,fn_807a0bd0,translated,medium,work/ghidra/rel-d_basesNP/export/807a0bd0_FUN_807a0bd0.c; vtable +0xAC offset plus 8081BEA4 bias; 800F69F0 rows 8081BEC4/8081BED8; handle stored at +0x780,src/game/bases.rs
+game::bases,807a0d30,fn_807a0d30,translated,high,"work/ghidra/rel-d_basesNP/export/807a0d30_FUN_807a0d30.c; 800F6AB0 then on hit release 801034E0(8042A26C,+0x780)",src/game/bases.rs
+game::bases,807a0d80,fn_807a0d80,translated,medium,work/ghidra/rel-d_basesNP/export/807a0d80_FUN_807a0d80.c; 800F69F0 row 8081BE68; vtable +0xB0 to +0x102; +0x6B0 block; +0x790 = 1,src/game/bases.rs
+game::bases,807a10b0,fn_807a10b0,translated,high,"work/ghidra/rel-d_basesNP/export/807a10b0_FUN_807a10b0.c; 80102DB0(+0x76C,+0x6D0) then 801680E0(+0x744)",src/game/bases.rs
+game::bases,807aa310,fn_807aa310,translated,high,work/ghidra/rel-d_basesNP/export/807aa310_FUN_807aa310.c; 8016 display-list prologue; font slots 0xB..0xE and 7..0xA when 80429F7C+0xAFC; slot 2 cleared,src/game/bases.rs
+game::bases,807aab10,fn_807aab10,translated,high,work/ghidra/rel-d_basesNP/export/807aab10_FUN_807aab10.c; null and free guards then 802B9280,src/game/bases.rs
+game::bases,807aab50,fn_807aab50,translated,high,"work/ghidra/rel-d_basesNP/export/807aab50_FUN_807aab50.c; 8015F9F0(+0x18,0) then optional 802B9280",src/game/bases.rs
+game::bases,807aabb0,fn_807aabb0,translated,high,work/ghidra/rel-d_basesNP/export/807aabb0_FUN_807aabb0.c; duplicate of the 807aab50 release template,src/game/bases.rs
+game::bases,807aadd0,fn_807aadd0,translated,medium,work/ghidra/rel-d_basesNP/export/807aadd0_FUN_807aadd0.c; four-player loop over +0xDC/+0xE8; block +0xE49; dest +0xDDC; five words; plane 807D0738,src/game/bases.rs
+game::bases,807aae80,fn_807aae80,translated,high,work/ghidra/rel-d_basesNP/export/807aae80_FUN_807aae80.c; clears +0xAE0..+0xAEA; 9 x 800CE6A0(8042A040+0x20); arms +0xAE0 and +0xAEA,src/game/bases.rs
+game::bases,807aaf40,fn_807aaf40,translated,medium,work/ghidra/rel-d_basesNP/export/807aaf40_FUN_807aaf40.c; 3 x 800B4710; factory +0x5C/+0x28; vtable +0x10 vs 80371870; words at +0x388,src/game/bases.rs
+game::bases,807ab010,fn_807ab010,translated,medium,work/ghidra/rel-d_basesNP/export/807ab010_FUN_807ab010.c; 8042A440 vtable +0x10; clz(x-1) test; descriptor 80833620,src/game/bases.rs
+game::bases,807ab0a0,fn_807ab0a0,translated,high,"work/ghidra/rel-d_basesNP/export/807ab0a0_FUN_807ab0a0.c; 8016F640(10); +0x2D9 = 1 and +0x2DB = 0; 8019BA20(8042A4A8,0)",src/game/bases.rs
+game::bases,807ab100,fn_807ab100,translated,medium,work/ghidra/rel-d_basesNP/export/807ab100_FUN_807ab100.c; 807AADD0 refresh; +0x2DB/+0x2DC; choice below 3 via 800E1940/800E1840 else four 5s at 80354E90 and 80060EF0,src/game/bases.rs
+game::bases,807ab290,fn_807ab290,translated,high,work/ghidra/rel-d_basesNP/export/807ab290_FUN_807ab290.c; 8042873C = 0; 800B0DB0(0); 800B0A90(0x1E),src/game/bases.rs
+game::bases,807ab2d0,fn_807ab2d0,translated,medium,work/ghidra/rel-d_basesNP/export/807ab2d0_FUN_807ab2d0.c; 8042A440 vtable +0x10; clz(x) test; descriptor 808336A0,src/game/bases.rs
+game::bases,807acca0,fn_807acca0,translated,high,work/ghidra/rel-d_basesNP/export/807acca0_FUN_807acca0.c; 8016 display-list prologue; font slots 3 and 2,src/game/bases.rs
+game::bases,807acd30,fn_807acd30,translated,high,work/ghidra/rel-d_basesNP/export/807acd30_FUN_807acd30.c; 8008F620 keys 0x2BD/0x2E3/0x2C0; clz(x-1) shr 5,src/game/bases.rs
+game::bases,807acd90,fn_807acd90,translated,high,work/ghidra/rel-d_basesNP/export/807acd90_FUN_807acd90.c; 8006A6F0 then returns 1,src/game/bases.rs
+game::bases,807acf30,fn_807acf30,translated,high,"work/ghidra/rel-d_basesNP/export/807acf30_FUN_807acf30.c; 80162B00(0x2CF,scene,0,0) stored at +0xB8; returns 1",src/game/bases.rs
+game::bases,807ad170,fn_807ad170,translated,high,work/ghidra/rel-d_basesNP/export/807ad170_FUN_807ad170.c; null and free guards then 802B9280,src/game/bases.rs
+game::bases,807ad1b0,fn_807ad1b0,translated,high,"work/ghidra/rel-d_basesNP/export/807ad1b0_FUN_807ad1b0.c; 8015F9F0(+0x18,0) then optional 802B9280",src/game/bases.rs
+game::bases,807ad420,fn_807ad420,translated,medium,work/ghidra/rel-d_basesNP/export/807ad420_FUN_807ad420.c; 10x10 8062ED90; +0x500 row swap; +0x770/+0x400 byte planes; 80429F80 bit 0x40,src/game/bases.rs
+game::bases,807ad4f0,fn_807ad4f0,translated,medium,work/ghidra/rel-d_basesNP/export/807ad4f0_FUN_807ad4f0.c; 8042A440 vtable +0x10; clz(x-1) test; descriptor 808338E0,src/game/bases.rs
+game::bases,807ad720,fn_807ad720,translated,medium,work/ghidra/rel-d_basesNP/export/807ad720_FUN_807ad720.c; owner +0x295/+0x297; row +0xD0 on bits 4/8; 900 confirm; +0x296/+0x298/+0x299,src/game/bases.rs
+game::bases,807ad8c0,fn_807ad8c0,translated,high,work/ghidra/rel-d_basesNP/export/807ad8c0_FUN_807ad8c0.c; gate +0x297; 80614D40(0x10); 800BB560; 800B0DB0(0); exit 10 arg 2 or 1 by 80429F80 bit 0x20,src/game/bases.rs

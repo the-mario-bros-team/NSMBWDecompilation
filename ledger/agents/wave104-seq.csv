@@ -1,0 +1,14 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,80271e30,fn_80271e30,translated,medium,"work/ghidra/main-gb/export/80271e30_FUN_80271e30.c; control fast-forward loop; SDA2 scale; FUN_80271bb0 status",src/audio/seq.rs
+audio::seq,802720a0,fn_802720a0,translated,medium,"work/ghidra/main-gb/export/802720a0_FUN_802720a0.c; control drain loop 0x300 cap; shared teardown",src/audio/seq.rs
+audio::seq,80274630,fn_80274630,translated,medium,"work/ghidra/main-gb/export/80274630_FUN_80274630.c; node +0x4C..+0x60 distance ramp",src/audio/seq.rs
+audio::seq,802746d0,fn_802746d0,translated,medium,"work/ghidra/main-gb/export/802746d0_FUN_802746d0.c; ten-segment fade plus cos mix",src/audio/seq.rs
+audio::seq,80274a10,fn_80274a10,translated,medium,"work/ghidra/main-gb/export/80274a10_FUN_80274a10.c; seven-segment fade over fn_80274b90 angle",src/audio/seq.rs
+audio::seq,80274b90,fn_80274b90,translated,medium,"work/ghidra/main-gb/export/80274b90_FUN_80274b90.c; atan2 and vector-length normalisation",src/audio/seq.rs
+audio::seq,80277050,fn_80277050,translated,medium,"work/ghidra/main-gb/export/80277050_FUN_80277050.c; loader +0x18/+0x21C plus mutex +0x54",src/audio/seq.rs
+audio::seq,8027b360,fn_8027b360,translated,medium,"work/ghidra/main-gb/export/8027b360_FUN_8027b360.c; first-time sequence start-up and thread start",src/audio/seq.rs
+audio::seq,8027b520,fn_8027b520,translated,medium,"work/ghidra/main-gb/export/8027b520_FUN_8027b520.c; manager word and time-base wait loop",src/audio/seq.rs
+audio::seq,8027d160,fn_8027d160,translated,medium,"work/ghidra/main-gb/export/8027d160_FUN_8027d160.c; element block full teardown",src/audio/seq.rs
+audio::seq,8027e6a0,fn_8027e6a0,translated,medium,"work/ghidra/main-gb/export/8027e6a0_FUN_8027e6a0.c; frame counters and per-element voice restart",src/audio/seq.rs
+audio::seq,8027e8a0,fn_8027e8a0,translated,medium,"work/ghidra/main-gb/export/8027e8a0_FUN_8027e8a0.c; column advance and slot restart",src/audio/seq.rs
+audio::seq,8027eaf0,fn_8027eaf0,translated,medium,"work/ghidra/main-gb/export/8027eaf0_FUN_8027eaf0.c; element record append and counter update",src/audio/seq.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8060d1b0,fn_8060d1b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d1b0_FUN_8060d1b0.c; null/free guards then release through 0x802B9280; release argument restored from 0x8060E390",src/game/bases.rs
+game::bases,8060d1f0,fn_8060d1f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d1f0_FUN_8060d1f0.c; null/free guards then release through 0x802B9280; same shape as 0x8060D1B0",src/game/bases.rs
+game::bases,8060d230,fn_8060d230,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d230_FUN_8060d230.c; tears down the +0x18 sub-object via 0x8015F9F0 then optionally frees",src/game/bases.rs
+game::bases,8060d290,fn_8060d290,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d290_FUN_8060d290.c; tears down the +0x18 sub-object via 0x8015F9F0 then optionally frees",src/game/bases.rs
+game::bases,8060d4f0,fn_8060d4f0,translated,high,"work/ghidra/rel-d_basesNP/export/8060d4f0_FUN_8060d4f0.c; corseSelectMenu_11.brlyt loader; binds inWindow/A00_Window/P_SBBase_01/T_corseSelectS03/T_corseSelectS01",src/game/bases.rs
+game::bases,8060d5e0,fn_8060d5e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d5e0_FUN_8060d5e0.c; scene check then 0x800B3B50(-1); countLeadingZeros>>5 fold",src/game/bases.rs
+game::bases,8060d620,fn_8060d620,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d620_FUN_8060d620.c; +0x271 guard; interface slot +0x10 and layout slot +0x10 resets; returns 1",src/game/bases.rs
+game::bases,8060d740,fn_8060d740,translated,high,"work/ghidra/rel-d_basesNP/export/8060d740_FUN_8060d740.c; stops panes 2..6; frame 0; clears +0x272; sets +0xBB bit; posts 0x80823710",src/game/bases.rs
+game::bases,8060d810,fn_8060d810,translated,high,"work/ghidra/rel-d_basesNP/export/8060d810_FUN_8060d810.c; 0x800C9610 gate then event 0x80823750",src/game/bases.rs
+game::bases,8060d890,fn_8060d890,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d890_FUN_8060d890.c; stops layout; cue 0x78 for previous slot; writes slot+0xE and slot+2 frames",src/game/bases.rs
+game::bases,8060d910,fn_8060d910,translated,high,"work/ghidra/rel-d_basesNP/export/8060d910_FUN_8060d910.c; 0x800C9610 gate then event 0x80823790",src/game/bases.rs
+game::bases,8060d990,fn_8060d990,translated,medium,"work/ghidra/rel-d_basesNP/export/8060d990_FUN_8060d990.c; pad-bit slot walk; 0x900 view allocation; events 0x80823750/0x80823810/0x808237D0; guard 0x8060D6F0 truncated",src/game/bases.rs
+game::bases,8060e5e0,fn_8060e5e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060e5e0_FUN_8060e5e0.c; null/free guards then release through 0x802B9280",src/game/bases.rs
+game::bases,8060e620,fn_8060e620,translated,medium,"work/ghidra/rel-d_basesNP/export/8060e620_FUN_8060e620.c; tears down the +0x18 sub-object via 0x8015F9F0 then optionally frees",src/game/bases.rs
+game::bases,8060e680,fn_8060e680,translated,medium,"work/ghidra/rel-d_basesNP/export/8060e680_FUN_8060e680.c; tears down the +0x18 sub-object via 0x8015F9F0 then optionally frees",src/game/bases.rs
+game::bases,8060e840,fn_8060e840,translated,high,"work/ghidra/rel-d_basesNP/export/8060e840_FUN_8060e840.c; timeUpinCourse_01.brlyt loader; binds timeUp animation, A00_timeUp and T_timeUP_00",src/game/bases.rs
+game::bases,8060e900,fn_8060e900,translated,medium,"work/ghidra/rel-d_basesNP/export/8060e900_FUN_8060e900.c; scene and input gates then fn_80600510 indicator check folded through countLeadingZeros",src/game/bases.rs
+game::bases,8060ea50,fn_8060ea50,translated,medium,"work/ghidra/rel-d_basesNP/export/8060ea50_FUN_8060ea50.c; builds 0x40-byte transform from model +0x84..+0xB0; spawns Wm_2d_timeup",src/game/bases.rs
+game::bases,8060eb50,fn_8060eb50,translated,medium,"work/ghidra/rel-d_basesNP/export/8060eb50_FUN_8060eb50.c; limit 0x50 or +0x384 override; starts animation 0x66/0x15; event 0x80823890",src/game/bases.rs
+game::bases,8060ec00,fn_8060ec00,translated,high,"work/ghidra/rel-d_basesNP/export/8060ec00_FUN_8060ec00.c; stops layout; frame 0; sets banner +0xBB visible bit",src/game/bases.rs
+game::bases,8060ec60,fn_8060ec60,translated,high,"work/ghidra/rel-d_basesNP/export/8060ec60_FUN_8060ec60.c; 0x800C9610 gate then event 0x808238D0",src/game/bases.rs
+game::bases,8060ecd0,fn_8060ecd0,translated,high,"work/ghidra/rel-d_basesNP/export/8060ecd0_FUN_8060ecd0.c; layout flag 1 then clears +0x37C",src/game/bases.rs
+game::bases,8060ed60,fn_8060ed60,translated,high,"work/ghidra/rel-d_basesNP/export/8060ed60_FUN_8060ed60.c; clears layout flag 1 and selects animation 2",src/game/bases.rs
+game::bases,8060edb0,fn_8060edb0,translated,high,"work/ghidra/rel-d_basesNP/export/8060edb0_FUN_8060edb0.c; 0x800C9610 gate; clears +0x379 and banner bit; sets +0x37A; event 0x80823850",src/game/bases.rs
+game::bases,8060f6d0,fn_8060f6d0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060f6d0_FUN_8060f6d0.c; tears down the +0x18 sub-object via 0x8015F9F0 then optionally frees",src/game/bases.rs
+game::bases,8060f8b0,fn_8060f8b0,translated,high,"work/ghidra/rel-d_basesNP/export/8060f8b0_FUN_8060f8b0.c; dateFile_09.brlyt loader; N_dateFile/W_select/T_worldNumber/P_Star panes; two count writes",src/game/bases.rs
+game::bases,8060fce0,fn_8060fce0,translated,medium,"work/ghidra/rel-d_basesNP/export/8060fce0_FUN_8060fce0.c; writes animation constants; +0xE4B gate selects animation 5 and sets the +0x1F8 channel float",src/game/bases.rs
+game::bases,8060fe20,fn_8060fe20,translated,high,"work/ghidra/rel-d_basesNP/export/8060fe20_FUN_8060fe20.c; seven-case transition dispatch with events 0x808239D8/0x80823A18/0x80823A98/0x80823AD8/0x80823958",src/game/bases.rs
+game::bases,8060ff70,fn_8060ff70,translated,high,"work/ghidra/rel-d_basesNP/export/8060ff70_FUN_8060ff70.c; frame 0 and +0xE4D set",src/game/bases.rs
+game::bases,8060ffb0,fn_8060ffb0,translated,high,"work/ghidra/rel-d_basesNP/export/8060ffb0_FUN_8060ffb0.c; 0x800C9610 gate then event 0x80823998",src/game/bases.rs

@@ -1,0 +1,9 @@
+[package]
+name = "ppc-recomp"
+version = "0.1.0"
+edition = "2021"
+description = "Writes Rust for the guest functions a run executed (docs/PORT_PLAN.md, P6)"
+
+[dependencies]
+guest-cpu = { path = "../guest-cpu" }
+hle-os = { path = "../hle-os" }

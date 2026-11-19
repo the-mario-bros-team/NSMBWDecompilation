@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a32d90,fn_80a32d90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a32d90_FUN_80a32d90.c; ankou deleting destructor; null guard, 0x8015F800 + 0x802B9280, returns object",src/game/enemies.rs
+game::enemies,80a32eb0,fn_80a32eb0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a32eb0_FUN_80a32eb0.c; 0x802DCBFC forwarder; r12 this-adjust not modelled",src/game/enemies.rs
+game::enemies,80a32ee0,fn_80a32ee0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a32ee0_FUN_80a32ee0.c; second 0x802DCBFC forwarder copy",src/game/enemies.rs
+game::enemies,80a32f10,fn_80a32f10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a32f10_FUN_80a32f10.c; 0x6E0-byte ankou constructor, vtable 0x80B3D558; return value inferred from epilogue",src/game/enemies.rs
+game::enemies,80a33230,fn_80a33230,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33230_FUN_80a33230.c; ankou model binder, g3d/ankou.brres + swim clip, builds +0x5BC fog animator",src/game/enemies.rs
+game::enemies,80a33350,fn_80a33350,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33350_FUN_80a33350.c; rewrites 0x80B3D510/0x80B3D518 side tables, bit 28 of +4 selects 0x80064F50 or leash test",src/game/enemies.rs
+game::enemies,80a33470,fn_80a33470,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a33470_FUN_80a33470.c; copies joint 3 to +0x6BC and joint 6 to +0x6CC",src/game/enemies.rs
+game::enemies,80a337e0,fn_80a337e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a337e0_FUN_80a337e0.c; rearms +0x67C with 0x1A when non-positive",src/game/enemies.rs
+game::enemies,80a33920,fn_80a33920,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33920_FUN_80a33920.c; 0x80097B30 range test with {10000,-10000} and 0x80B2BF90 {0x0400,0xFC00}, result normalised",src/game/enemies.rs
+game::enemies,80a33970,fn_80a33970,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33970_FUN_80a33970.c; per-side atan2 + 0x4000 offset written to +0x100 via 0x8015F4F0",src/game/enemies.rs
+game::enemies,80a339f0,fn_80a339f0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a339f0_FUN_80a339f0.c; leash test 96.0 + 0.5*global, 0x8042C1A0 sign, retires via 0x80162510",src/game/enemies.rs
+game::enemies,80a33ab0,fn_80a33ab0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33ab0_FUN_80a33ab0.c; clip lookup + 0x801651F0 attach + 0x80169F80 rate; clip-name arg recovered from call sites",src/game/enemies.rs
+game::enemies,80a33b20,fn_80a33b20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a33b20_FUN_80a33b20.c; swim clip at rate 0.0, +0x678 selects side table, stores +0xE8..+0xF0",src/game/enemies.rs
+game::enemies,80a33bd0,fn_80a33bd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33bd0_FUN_80a33bd0.c; three holder slots, 0x8006CD40, 0x80170A00 normalise, then fn_80a33970",src/game/enemies.rs
+game::enemies,80a33c70,fn_80a33c70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a33c70_FUN_80a33c70.c; holder slot +0x2C then name test against 0x80B70218, offsets, 16.0 angle pitch",src/game/enemies.rs
+game::enemies,80a33dc0,fn_80a33dc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a33dc0_FUN_80a33dc0.c; per-side bound test on +0xAC switches to 0x80B70258",src/game/enemies.rs
+game::enemies,80a33ef0,fn_80a33ef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a33ef0_FUN_80a33ef0.c; three holder slots + base steps, fn_80a33920 hit switches to 0x80B70218",src/game/enemies.rs
+game::enemies,80a33f90,fn_80a33f90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a33f90_FUN_80a33f90.c; wait clip at rate 0.0 and clears +0xE8..+0xF0",src/game/enemies.rs
+game::enemies,80a34000,fn_80a34000,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a34000_FUN_80a34000.c; three holder slots only",src/game/enemies.rs
+game::enemies,80a34240,fn_80a34240,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a34240_FUN_80a34240.c; ankou_fog animator in +0x5BC; export prints void(void), two args recovered from call site",src/game/enemies.rs
+game::enemies,80a343b0,fn_80a343b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a343b0_FUN_80a343b0.c; rebuilds +0x4 transform from position and commits +0xA0 offset",src/game/enemies.rs
+game::enemies,80a348c0,fn_80a348c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a348c0_FUN_80a348c0.c; second ankou deleting destructor, identical to fn_80a32d90",src/game/enemies.rs
+game::enemies,80a349e0,fn_80a349e0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a349e0_FUN_80a349e0.c; 0x802DCBFC forwarder copy",src/game/enemies.rs
+game::enemies,80a34a10,fn_80a34a10,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a34a10_FUN_80a34a10.c; third 0x802DCBFC forwarder copy",src/game/enemies.rs
+game::enemies,80a34a40,fn_80a34a40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a34a40_FUN_80a34a40.c; 0x6C0-byte chorobon constructor, vtable 0x80B3D998, returns actor",src/game/enemies.rs
+game::enemies,80a34c40,fn_80a34c40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a34c40_FUN_80a34c40.c; chorobon model binder, g3d/chorobon.brres + run clip",src/game/enemies.rs
+game::enemies,80a34f00,fn_80a34f00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a34f00_FUN_80a34f00.c; rebinds both holders when +0x538 differs from 0x8016A5D0",src/game/enemies.rs
+game::enemies,80a350e0,fn_80a350e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a350e0_FUN_80a350e0.c; spawn word selects 0x80B2C0A8 speed, 0x800C10F0 place + 0x800C1580 commit, clears run state",src/game/enemies.rs
+game::enemies,80a35470,fn_80a35470,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a35470_FUN_80a35470.c; holder slot +0x1C then 0x80A35170 (not translated in this lane)",src/game/enemies.rs
+game::enemies,80a35680,fn_80a35680,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a35680_FUN_80a35680.c; contact record +4 -> actor, class slot +0x3FC with 3.0 and +0xE8",src/game/enemies.rs

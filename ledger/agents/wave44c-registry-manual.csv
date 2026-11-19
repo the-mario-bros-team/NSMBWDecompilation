@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,801636a0,fn_801636a0,translated,medium,work/ghidra/main-gb/export/801636a0_FUN_801636a0.c,src/resource/registry.rs
+resource::registry,8016a0f0,fn_8016a0f0,translated,medium,work/ghidra/main-gb/export/8016a0f0_FUN_8016a0f0.c,src/resource/registry.rs
+resource::registry,8016a110,fn_8016a110,translated,medium,work/ghidra/main-gb/export/8016a110_FUN_8016a110.c,src/resource/registry.rs
+resource::registry,8016f410,fn_8016f410,translated,medium,work/ghidra/main-gb/export/8016f410_FUN_8016f410.c,src/resource/registry.rs

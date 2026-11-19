@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802c6a20,fn_802c6a20,translated,medium,work/ghidra/main-gb/export/802c6a20_FUN_802c6a20.c; vtable slot +0x14 tail branch; only r3 visible in the export,src/resource/archive.rs
+resource::archive,802c6dd0,fn_802c6dd0,translated,high,work/ghidra/main-gb/export/802c6dd0_FUN_802c6dd0.c; four stfs to r13-0x47C8..-0x47BC,src/resource/archive.rs
+resource::archive,802c6ef0,fn_802c6ef0,translated,medium,work/ghidra/main-gb/export/802c6ef0_FUN_802c6ef0.c; 0x802C7190 derives four corners; 0x80253C70 stores them plus +0x18/+0x1C,src/resource/archive.rs
+resource::archive,802c6ff0,fn_802c6ff0,translated,high,work/ghidra/main-gb/export/802c6ff0_FUN_802c6ff0.c; seven projection terms from +8/+0xC/+0x14..+0x2C then tail call 0x802C7B30,src/resource/archive.rs
+resource::archive,802c7370,fn_802c7370,translated,medium,work/ghidra/main-gb/export/802c7370_FUN_802c7370.c; nine-slot glyph row; 0x802DCD58 is __savegprlr_20 so its 64-bit return is r3/r4,src/resource/archive.rs
+resource::archive,802c7a50,fn_802c7a50,translated,medium,work/ghidra/main-gb/export/802c7a50_FUN_802c7a50.c; stores mode at 0x8042AED4 and target at 0x8042AED0; 0x801C0500 to 0x80424698; 0x802D1DA0 reset,src/resource/archive.rs
+resource::archive,802c7a90,fn_802c7a90,translated,medium,work/ghidra/main-gb/export/802c7a90_FUN_802c7a90.c; bits 0..2 of 0x8042AED8 through 0x802D2F20/802D2F80/802D2FE0; 0x802D3040; target +0x38 slot +0xC,src/resource/archive.rs
+resource::archive,802c7b30,fn_802c7b30,translated,high,work/ghidra/main-gb/export/802c7b30_FUN_802c7b30.c; +4 and +0xC multiplied by 1/a and 1/b; +8 and +0x10 offset by c and d,src/resource/archive.rs
+resource::archive,802c8450,fn_802c8450,translated,high,work/ghidra/main-gb/export/802c8450_FUN_802c8450.c; vtable 0x80350370; child +0x14 slot +0x18 with 1; 0x802DCB10 array delete at +8; frees +0x10/+0xC; delete this when flags > 0,src/resource/archive.rs
+resource::archive,802c84f0,fn_802c84f0,translated,high,work/ghidra/main-gb/export/802c84f0_FUN_802c84f0.c; 0xA4 record stride via 0x802C9AF0; 0xC row stride default 0x646464FF and 0x80429B5C; colour 000000FF; flags & 0xFFE0,src/resource/archive.rs

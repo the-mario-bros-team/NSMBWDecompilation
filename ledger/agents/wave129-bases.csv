@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80642540,fn_80642540,translated,high,"work/ghidra/rel-d_basesNP/export/80642540_FUN_80642540.c; four player + seven pane transform sync; 0x800B32E0 staging; +0x2E4/+0x2F4 objects",src/game/bases.rs
+game::bases,806822b0,fn_806822b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806822b0_FUN_806822b0.c; spawn word unpack; 12-arg 0x800DB740; nine panes via 0x8007FAD0",src/game/bases.rs
+game::bases,80686550,fn_80686550,translated,medium,"work/ghidra/rel-d_basesNP/export/80686550_FUN_80686550.c; 14-slot height probe; 0x80686A84 reconvergence written as nested loops with flag break",src/game/bases.rs
+game::bases,8069b750,fn_8069b750,translated,high,"work/ghidra/rel-d_basesNP/export/8069b750_FUN_8069b750.c; carried-object two-state update; 0x80699A30/0x806A3D60 + shared tail",src/game/bases.rs
+game::bases,8069f640,fn_8069f640,translated,high,"work/ghidra/rel-d_basesNP/export/8069f640_FUN_8069f640.c; jr-shot four states; sound 0x5BA + Wm_jr_shot",src/game/bases.rs
+game::bases,8069fab0,fn_8069fab0,translated,high,"work/ghidra/rel-d_basesNP/export/8069fab0_FUN_8069fab0.c; launch_big four states; sound 0x5BB; 0x807CA24C/0x807CA250",src/game/bases.rs
+game::bases,806a0290,fn_806a0290,translated,high,"work/ghidra/rel-d_basesNP/export/806a0290_FUN_806a0290.c; launch charge four states; sound 0x5AC; counter at 0xD8C",src/game/bases.rs
+game::bases,806b5e00,fn_806b5e00,translated,high,"work/ghidra/rel-d_basesNP/export/806b5e00_FUN_806b5e00.c; stomp two states; 0x8015F340 step 256 * +-1; sound 0x537/0x538",src/game/bases.rs
+game::bases,806f3350,fn_806f3350,translated,high,"work/ghidra/rel-d_basesNP/export/806f3350_FUN_806f3350.c; field panes; tri-state table 0x807FF870/0x80800718/0x80800C28; six-slot chains",src/game/bases.rs
+game::bases,806f7bb0,fn_806f7bb0,translated,high,"work/ghidra/rel-d_basesNP/export/806f7bb0_FUN_806f7bb0.c; three-mode oscillation; pool 0x807CC2E0..0x807CC328",src/game/bases.rs
+game::bases,806fd820,fn_806fd820,translated,medium,"work/ghidra/rel-d_basesNP/export/806fd820_FUN_806fd820.c; player cursor quad; four packed colour pairs; 0x8016F130 output layout inferred",src/game/bases.rs
+game::bases,8070d1f0,fn_8070d1f0,translated,high,"work/ghidra/rel-d_basesNP/export/8070d1f0_FUN_8070d1f0.c; six-arm digit selector; 0x2AAAAAAB %6 advance",src/game/bases.rs
+game::bases,80773ad0,fn_80773ad0,translated,high,"work/ghidra/rel-d_basesNP/export/80773ad0_FUN_80773ad0.c; four 0x800F queries on the +0x338C slot; mask 2/4/8",src/game/bases.rs
+game::bases,80773ca0,fn_80773ca0,translated,high,"work/ghidra/rel-d_basesNP/export/80773ca0_FUN_80773ca0.c; listener position via 0x800F92C0/0x80100270; main.dol defaults",src/game/bases.rs
+game::bases,80773bb0,fn_80773bb0,translated,high,"work/ghidra/rel-d_basesNP/export/80773bb0_FUN_80773bb0.c; listener position via 0x800F9270; [0x8042A1A0]+0xAC fallback",src/game/bases.rs
+game::bases,80775540,fn_80775540,translated,high,"work/ghidra/rel-d_basesNP/export/80775540_FUN_80775540.c; 0x800F0EC0 position; 0x80377DC8/C/D defaults",src/game/bases.rs
+game::bases,80775660,fn_80775660,translated,high,"work/ghidra/rel-d_basesNP/export/80775660_FUN_80775660.c; four short-circuited slot queries to a boolean",src/game/bases.rs
+game::bases,80777fe0,fn_80777fe0,translated,medium,"work/ghidra/rel-d_basesNP/export/80777fe0_FUN_80777fe0.c; binding state; three message cells; 0x807714F0 called as a parameterless accessor",src/game/bases.rs
+game::bases,8077a850,fn_8077a850,translated,high,"work/ghidra/rel-d_basesNP/export/8077a850_FUN_8077a850.c; cue selector 1..6 from 0x800FB330/0x800FC9C0",src/game/bases.rs
+game::bases,8077d230,fn_8077d230,translated,high,"work/ghidra/rel-d_basesNP/export/8077d230_FUN_8077d230.c; two vector writes; 0x8077E410 f1=0.0 mode 4; +0x2C0 counter",src/game/bases.rs
+game::bases,80777e10,fn_80777e10,translated,high,"work/ghidra/rel-d_basesNP/export/80777e10_FUN_80777e10.c; cobSandpillar loader; two panes + 1.0 rate",src/game/bases.rs
+game::bases,8077aa30,fn_8077aa30,translated,high,"work/ghidra/rel-d_basesNP/export/8077aa30_FUN_8077aa30.c; cobStart loader; spawn nibble selects 0.0/1.0 rate",src/game/bases.rs
+game::bases,80778500,fn_80778500,translated,high,"work/ghidra/rel-d_basesNP/export/80778500_FUN_80778500.c; height gauge clamps against 0x807CF534/0x807CF54C",src/game/bases.rs
+game::bases,8077e250,fn_8077e250,translated,high,"work/ghidra/rel-d_basesNP/export/8077e250_FUN_8077e250.c; mirror of [0x8042A1A0] fields; nine mode arms; 0x80775080 message id",src/game/bases.rs
+game::bases,80778320,fn_80778320,translated,high,"work/ghidra/rel-d_basesNP/export/80778320_FUN_80778320.c; height-gauge state machine; 0x807CF510 direction table",src/game/bases.rs

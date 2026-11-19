@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80281d80,fn_80281d80,translated,high,work/ghidra/main-gb/export/80281d80_FUN_80281d80.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80281e70,fn_80281e70,translated,high,work/ghidra/main-gb/export/80281e70_FUN_80281e70.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80282ef0,fn_80282ef0,translated,high,work/ghidra/main-gb/export/80282ef0_FUN_80282ef0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80282f70,fn_80282f70,translated,high,work/ghidra/main-gb/export/80282f70_FUN_80282f70.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80282ff0,fn_80282ff0,translated,high,work/ghidra/main-gb/export/80282ff0_FUN_80282ff0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80283260,fn_80283260,translated,high,work/ghidra/main-gb/export/80283260_FUN_80283260.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80283300,fn_80283300,translated,high,work/ghidra/main-gb/export/80283300_FUN_80283300.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802833b0,fn_802833b0,translated,high,work/ghidra/main-gb/export/802833b0_FUN_802833b0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80283530,fn_80283530,translated,high,work/ghidra/main-gb/export/80283530_FUN_80283530.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80287000,fn_80287000,translated,high,work/ghidra/main-gb/export/80287000_FUN_80287000.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,80289070,fn_80289070,translated,high,work/ghidra/main-gb/export/80289070_FUN_80289070.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802945e0,fn_802945e0,translated,high,work/ghidra/main-gb/export/802945e0_FUN_802945e0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802a1860,fn_802a1860,translated,high,work/ghidra/main-gb/export/802a1860_FUN_802a1860.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802a88e0,fn_802a88e0,translated,high,work/ghidra/main-gb/export/802a88e0_FUN_802a88e0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ab550,fn_802ab550,translated,high,work/ghidra/main-gb/export/802ab550_FUN_802ab550.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ab7c0,fn_802ab7c0,translated,high,work/ghidra/main-gb/export/802ab7c0_FUN_802ab7c0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ab810,fn_802ab810,translated,high,work/ghidra/main-gb/export/802ab810_FUN_802ab810.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ac080,fn_802ac080,translated,high,work/ghidra/main-gb/export/802ac080_FUN_802ac080.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ac1e0,fn_802ac1e0,translated,medium,work/ghidra/main-gb/export/802ac1e0_FUN_802ac1e0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ac460,fn_802ac460,translated,high,work/ghidra/main-gb/export/802ac460_FUN_802ac460.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ac480,fn_802ac480,translated,high,work/ghidra/main-gb/export/802ac480_FUN_802ac480.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ac7f0,fn_802ac7f0,translated,high,work/ghidra/main-gb/export/802ac7f0_FUN_802ac7f0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802ac830,fn_802ac830,translated,high,work/ghidra/main-gb/export/802ac830_FUN_802ac830.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802acb40,fn_802acb40,translated,high,work/ghidra/main-gb/export/802acb40_FUN_802acb40.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs
+render::gx_band,802aee70,fn_802aee70,translated,high,work/ghidra/main-gb/export/802aee70_FUN_802aee70.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/render/gx_band.rs

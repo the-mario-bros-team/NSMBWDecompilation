@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e624c,fn_802e624c,translated,medium,"work/ghidra/main-gb/export/802e624c_FUN_802e624c.c; __kernel_rem_pio2 Payne-Hanek tail; init_jk 0x802FE1B8 + PIo2 0x802FE1C8 + .sdata2 constants read from the image; called directly by fn_802e5db8",src/engine/main_loop.rs

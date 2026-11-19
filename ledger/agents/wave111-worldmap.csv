@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80107050,fn_80107050,partial,low,work/ghidra/main-gb/export/80107050_FUN_80107050.c; variadic bounded formatter (overflow arg area not modelled),src/game/worldmap.rs
+game::worldmap,80107170,fn_80107170,partial,low,work/ghidra/main-gb/export/80107170_FUN_80107170.c; variadic text measure plus clamped rect (overflow arg area not modelled),src/game/worldmap.rs
+game::worldmap,801097f0,fn_801097f0,translated,medium,work/ghidra/main-gb/export/801097f0_FUN_801097f0.c; 0x38-byte layout record plus white alpha quad,src/game/worldmap.rs

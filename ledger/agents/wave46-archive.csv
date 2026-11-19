@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b2720,fn_802b2720,translated,high,"work/ghidra/main-gb/export/802b2720_FUN_802b2720.c; copies four halfwords (8 bytes) dst <- src",src/resource/archive.rs
+resource::archive,802b2750,fn_802b2750,translated,high,"work/ghidra/main-gb/export/802b2750_FUN_802b2750.c; copies one word",src/resource/archive.rs
+resource::archive,802b2760,fn_802b2760,translated,high,"work/ghidra/main-gb/export/802b2760_FUN_802b2760.c; returns word & 0xF",src/resource/archive.rs
+resource::archive,802b2770,fn_802b2770,translated,high,"work/ghidra/main-gb/export/802b2770_FUN_802b2770.c; returns (word >> 4) & 0xF",src/resource/archive.rs
+resource::archive,802b2780,fn_802b2780,translated,high,"work/ghidra/main-gb/export/802b2780_FUN_802b2780.c; returns (word >> 8) & 0xF",src/resource/archive.rs
+resource::archive,802b2790,fn_802b2790,translated,high,"work/ghidra/main-gb/export/802b2790_FUN_802b2790.c; returns (word >> 0x19) & 1",src/resource/archive.rs
+resource::archive,802b27a0,fn_802b27a0,translated,high,"work/ghidra/main-gb/export/802b27a0_FUN_802b27a0.c; returns (word >> 0x1B) & 1",src/resource/archive.rs
+resource::archive,802b27b0,fn_802b27b0,translated,high,"work/ghidra/main-gb/export/802b27b0_FUN_802b27b0.c; returns (word >> 0xC) & 1",src/resource/archive.rs
+resource::archive,802b27c0,fn_802b27c0,translated,high,"work/ghidra/main-gb/export/802b27c0_FUN_802b27c0.c; returns (word >> 0x17) & 1",src/resource/archive.rs
+resource::archive,802b27d0,fn_802b27d0,translated,high,"work/ghidra/main-gb/export/802b27d0_FUN_802b27d0.c; returns (word >> 0x18) & 1",src/resource/archive.rs
+resource::archive,802b27e0,fn_802b27e0,translated,high,"work/ghidra/main-gb/export/802b27e0_FUN_802b27e0.c; returns (word >> 0xD) & 3",src/resource/archive.rs
+resource::archive,802b27f0,fn_802b27f0,translated,high,"work/ghidra/main-gb/export/802b27f0_FUN_802b27f0.c; returns (word >> 0xF) & 7",src/resource/archive.rs
+resource::archive,802b2800,fn_802b2800,translated,high,"work/ghidra/main-gb/export/802b2800_FUN_802b2800.c; returns (word >> 0x12) & 0x1F",src/resource/archive.rs
+resource::archive,802b2810,fn_802b2810,translated,high,"work/ghidra/main-gb/export/802b2810_FUN_802b2810.c; packs 2-bit fields at bits 25..26 and 23..24 of +0x18",src/resource/archive.rs
+resource::archive,802b2830,fn_802b2830,translated,high,"work/ghidra/main-gb/export/802b2830_FUN_802b2830.c; (byte at +0x02) & 3",src/resource/archive.rs
+resource::archive,802b2840,fn_802b2840,translated,high,"work/ghidra/main-gb/export/802b2840_FUN_802b2840.c; (byte at +0x03) & 3",src/resource/archive.rs
+resource::archive,802b2850,fn_802b2850,translated,high,"work/ghidra/main-gb/export/802b2850_FUN_802b2850.c; packs a 3-bit field at bits 20..22 and a 1-bit field at bit 19 of +0x18",src/resource/archive.rs
+resource::archive,802b2870,fn_802b2870,translated,high,"work/ghidra/main-gb/export/802b2870_FUN_802b2870.c; ((byte +0x02 >> 2) & 7) + 1 & 7",src/resource/archive.rs
+resource::archive,802b2890,fn_802b2890,translated,high,"work/ghidra/main-gb/export/802b2890_FUN_802b2890.c; ((byte +0x03 >> 2) & 1) + 1 & 1",src/resource/archive.rs
+resource::archive,802b28b0,fn_802b28b0,translated,high,"work/ghidra/main-gb/export/802b28b0_FUN_802b28b0.c; copies four bytes",src/resource/archive.rs
+resource::archive,802b28e0,fn_802b28e0,translated,high,"work/ghidra/main-gb/export/802b28e0_FUN_802b28e0.c; copies four bytes",src/resource/archive.rs
+resource::archive,802b2910,fn_802b2910,translated,high,"work/ghidra/main-gb/export/802b2910_FUN_802b2910.c; copies four bytes",src/resource/archive.rs
+resource::archive,802b2940,fn_802b2940,translated,high,"work/ghidra/main-gb/export/802b2940_FUN_802b2940.c; copies one byte",src/resource/archive.rs
+resource::archive,802b2950,fn_802b2950,translated,high,"work/ghidra/main-gb/export/802b2950_FUN_802b2950.c; copies five words",src/resource/archive.rs
+resource::archive,802b2bc0,fn_802b2bc0,translated,medium,"work/ghidra/main-gb/export/802b2bc0_FUN_802b2bc0.c; deleting destructor: vtable 0x8034FB38, +0x40 heap free, 0x802DCA98 array teardown, unlink +0x04, optional 0x802B9280 free",src/resource/archive.rs
+resource::archive,802b68b0,fn_802b68b0,translated,medium,"work/ghidra/main-gb/export/802b68b0_FUN_802b68b0.c; grows the 0x20-byte record array on the EGG root heap; free argument unresolved",src/resource/archive.rs
+resource::archive,802b6950,fn_802b6950,translated,high,"work/ghidra/main-gb/export/802b6950_FUN_802b6950.c; fills new records from the 0x80423840 defaults; lazy init at r13-0x4890",src/resource/archive.rs
+resource::archive,802b6a40,fn_802b6a40,translated,high,"work/ghidra/main-gb/export/802b6a40_FUN_802b6a40.c; copies 0x20-byte records and raises the count",src/resource/archive.rs

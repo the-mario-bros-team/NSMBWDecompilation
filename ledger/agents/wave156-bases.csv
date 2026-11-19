@@ -1,0 +1,18 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80695e00,fn_80695e00,translated,high,"work/ghidra/rel-d_basesNP/export/80695e00_FUN_80695e00.c; daIntermittent_c Splush climb and two-state phase word",src/game/bases.rs
+game::bases,8078f880,fn_8078f880,translated,medium,"work/ghidra/rel-d_basesNP/export/8078f880_FUN_8078f880.c; CS_W5_Ibara model plus variant clip and texture-SRT animation",src/game/bases.rs
+game::bases,807bac40,fn_807bac40,translated,medium,"work/ghidra/rel-d_basesNP/export/807bac40_FUN_807bac40.c; world RouteInfo point-file reader and per-world flag tables",src/game/bases.rs
+game::bases,807bbe20,fn_807bbe20,translated,high,"work/ghidra/rel-d_basesNP/export/807bbe20_FUN_807bbe20.c; dWorldSelect_c StateID_OnStageWait execute handler",src/game/bases.rs
+game::bases,807649b0,fn_807649b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807649b0_FUN_807649b0.c; hanachan four body segments plus head model/animation loader",src/game/bases.rs
+game::bases,807be750,fn_807be750,translated,medium,"work/ghidra/rel-d_basesNP/export/807be750_FUN_807be750.c; world-map ribbon create body with two ortho cameras",src/game/bases.rs
+game::bases,8075c6f0,fn_8075c6f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8075c6f0_FUN_8075c6f0.c; cobBoard model loader and eight group nodes",src/game/bases.rs
+game::bases,807c22c0,fn_807c22c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807c22c0_FUN_807c22c0.c; world-map request dispatcher and four-player resync",src/game/bases.rs
+game::bases,8064cf50,fn_8064cf50,translated,high,"work/ghidra/rel-d_basesNP/export/8064cf50_FUN_8064cf50.c; Wm_ob_treasureboxwait and treasureboxtail position emitter",src/game/bases.rs
+game::bases,8064d0a0,fn_8064d0a0,translated,high,"work/ghidra/rel-d_basesNP/export/8064d0a0_FUN_8064d0a0.c; treasure-box per-frame body and effect refresh",src/game/bases.rs
+game::bases,8064de60,fn_8064de60,translated,high,"work/ghidra/rel-d_basesNP/export/8064de60_FUN_8064de60.c; cursor grid extents from two float ranges and the 0.5/1.0 step table",src/game/bases.rs
+game::bases,80649fd0,fn_80649fd0,translated,high,"work/ghidra/rel-d_basesNP/export/80649fd0_FUN_80649fd0.c; destructor 0x8015F800 then conditional heap release",src/game/bases.rs
+game::bases,8064b040,fn_8064b040,translated,high,"work/ghidra/rel-d_basesNP/export/8064b040_FUN_8064b040.c; destructor 0x8015F800 then conditional heap release",src/game/bases.rs
+game::bases,8064b270,fn_8064b270,translated,high,"work/ghidra/rel-d_basesNP/export/8064b270_FUN_8064b270.c; destructor 0x80168D80 then conditional heap release",src/game/bases.rs
+game::bases,8064c220,fn_8064c220,translated,high,"work/ghidra/rel-d_basesNP/export/8064c220_FUN_8064c220.c; destructor 0x8015F800 then conditional heap release",src/game/bases.rs
+game::bases,8064d460,fn_8064d460,translated,high,"work/ghidra/rel-d_basesNP/export/8064d460_FUN_8064d460.c; destructor 0x8015F800 then conditional heap release",src/game/bases.rs
+game::bases,8064e470,fn_8064e470,translated,high,"work/ghidra/rel-d_basesNP/export/8064e470_FUN_8064e470.c; destructor 0x8015F800 then conditional heap release",src/game/bases.rs

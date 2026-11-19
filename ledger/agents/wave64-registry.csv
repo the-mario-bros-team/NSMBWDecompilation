@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,80161530,fn_80161530,translated,high,"work/ghidra/main-gb/export/80161530_FUN_80161530.c; forwards to fn_80161560(this) and returns this",src/resource/registry.rs
+resource::registry,80161580,fn_80161580,translated,high,"work/ghidra/main-gb/export/80161580_FUN_80161580.c; tree append: parent +0x00, first child +0x04, prev +0x08, next +0x0C",src/resource/registry.rs
+resource::registry,80161620,fn_80161620,translated,high,"work/ghidra/main-gb/export/80161620_FUN_80161620.c; unlink childless node and repair the four neighbour words",src/resource/registry.rs
+resource::registry,80161ef0,fn_80161ef0,translated,medium,"work/ghidra/main-gb/export/80161ef0_FUN_80161ef0.c; +0x50 queue gate via fn_80161a70 plus fn_801625b0 lookup",src/resource/registry.rs
+resource::registry,801622e0,fn_801622e0,translated,high,"work/ghidra/main-gb/export/801622e0_FUN_801622e0.c; +0x0B/+0x0A state machine with +0x0F flag masks and two published u16 key pairs",src/resource/registry.rs
+resource::registry,80162510,fn_80162510,translated,medium,"work/ghidra/main-gb/export/80162510_FUN_80162510.c; recursive +0x0B shutdown mark plus virtual +0x38 on the +0x60 vtable",src/resource/registry.rs
+resource::registry,80162b00,fn_80162b00,translated,medium,"work/ghidra/main-gb/export/80162b00_FUN_80162b00.c; null guard then resolver 0x80162A70(this, node+0x10)",src/resource/registry.rs
+resource::registry,80163850,fn_80163850,translated,medium,"work/ghidra/main-gb/export/80163850_FUN_80163850.c; ordered insert into SB_SORTED_LIST by the byte at +0x0C",src/resource/registry.rs
+resource::registry,801651f0,fn_801651f0,translated,medium,"work/ghidra/main-gb/export/801651f0_FUN_801651f0.c; virtual +0x0C value forwarded to 0x80168520 then entry rebuild 0x80165280",src/resource/registry.rs
+resource::registry,80165820,fn_80165820,translated,high,"work/ghidra/main-gb/export/80165820_FUN_80165820.c; class-A size query 0x80243D20 with +0x80 allowance and 0x20 align",src/resource/registry.rs
+resource::registry,80165a80,fn_80165a80,translated,high,"work/ghidra/main-gb/export/80165a80_FUN_80165a80.c; release +0x04 child via virtual +0x34 and heap class 3",src/resource/registry.rs
+resource::registry,80165b50,fn_80165b50,translated,high,"work/ghidra/main-gb/export/80165b50_FUN_80165b50.c; class-A counted size: 0x80243B30 plus count*0x38 plus per-element fn_80165820",src/resource/registry.rs
+resource::registry,80165e70,fn_80165e70,translated,medium,"work/ghidra/main-gb/export/80165e70_FUN_80165e70.c; class-A deleting destructor with vtable 0x80329518 and teardown 0x80165EE0",src/resource/registry.rs
+resource::registry,80166280,fn_80166280,translated,high,"work/ghidra/main-gb/export/80166280_FUN_80166280.c; +0x28 array entry at index*0x38, tag test via fn_80168060 then virtual +0x14",src/resource/registry.rs
+resource::registry,80166420,fn_80166420,translated,high,"work/ghidra/main-gb/export/80166420_FUN_80166420.c; class-B size query 0x80245500 with +0x80 allowance and 0x20 align",src/resource/registry.rs
+resource::registry,80166680,fn_80166680,translated,high,"work/ghidra/main-gb/export/80166680_FUN_80166680.c; class-B +0x04 child release and heap class 3",src/resource/registry.rs
+resource::registry,80166750,fn_80166750,translated,high,"work/ghidra/main-gb/export/80166750_FUN_80166750.c; class-B counted size: 0x80245300 plus count*0x38 plus fn_80166420",src/resource/registry.rs
+resource::registry,80166a70,fn_80166a70,translated,medium,"work/ghidra/main-gb/export/80166a70_FUN_80166a70.c; class-B deleting destructor with vtable 0x80329548 and teardown 0x80166AE0",src/resource/registry.rs
+resource::registry,80166e80,fn_80166e80,translated,high,"work/ghidra/main-gb/export/80166e80_FUN_80166e80.c; class-B +0x28 element release at index*0x38",src/resource/registry.rs
+resource::registry,80167000,fn_80167000,translated,high,"work/ghidra/main-gb/export/80167000_FUN_80167000.c; class-C size query 0x80246B00 with +0x80 allowance and 0x20 align",src/resource/registry.rs
+resource::registry,80167270,fn_80167270,translated,high,"work/ghidra/main-gb/export/80167270_FUN_80167270.c; class-C +0x04 child release and heap class 3",src/resource/registry.rs
+resource::registry,80167340,fn_80167340,translated,high,"work/ghidra/main-gb/export/80167340_FUN_80167340.c; class-C counted size: 0x80246900 plus count*0x38 plus fn_80167000",src/resource/registry.rs
+resource::registry,801676a0,fn_801676a0,translated,medium,"work/ghidra/main-gb/export/801676a0_FUN_801676a0.c; class-C deleting destructor with vtable 0x80329578 and teardown 0x80167710",src/resource/registry.rs
+resource::registry,80167ab0,fn_80167ab0,translated,high,"work/ghidra/main-gb/export/80167ab0_FUN_80167ab0.c; class-C +0x28 element release at index*0x38",src/resource/registry.rs
+resource::registry,80167ec0,fn_80167ec0,translated,high,"work/ghidra/main-gb/export/80167ec0_FUN_80167ec0.c; shared base destructor: vtable 0x803295D8, fn_80167f30, fn_8016a630(+0x0C,-1)",src/resource/registry.rs
+resource::registry,80167f30,fn_80167f30,translated,medium,"work/ghidra/main-gb/export/80167f30_FUN_80167f30.c; destroys +0x04 via 0x80249B40/0x80249AC0 and +0x08 via fn_8016e740",src/resource/registry.rs
+resource::registry,8016c6f0,fn_8016c6f0,translated,high,"work/ghidra/main-gb/export/8016c6f0_FUN_8016c6f0.c; free via HEAP_DELETE when this != 0 and count > 0, returns this",src/resource/registry.rs
+resource::registry,8016cfd0,fn_8016cfd0,translated,medium,"work/ghidra/main-gb/export/8016cfd0_FUN_8016cfd0.c; 0x802967B0/0x802967E0 descriptor checks then 0x802DA6F0 into +0x7C",src/resource/registry.rs
+resource::registry,8016dca0,fn_8016dca0,translated,high,"work/ghidra/main-gb/export/8016dca0_FUN_8016dca0.c; second conditional-free twin of fn_8016c6f0",src/resource/registry.rs
+resource::registry,8016ff60,fn_8016ff60,translated,medium,"work/ghidra/main-gb/export/8016ff60_FUN_8016ff60.c; inner ctor 0x80170630, +0x04 store 0x8016FFC0, 0x14-byte clear and two state bytes",src/resource/registry.rs

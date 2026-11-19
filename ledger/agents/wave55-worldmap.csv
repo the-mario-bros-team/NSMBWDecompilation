@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80108070,fn_80108070,translated,high,"work/ghidra/main-gb/export/80108070_FUN_80108070.c; clears +0x18..+0x1C and +0x2D..+0x30; mode 5 at +0x14; registers event callbacks",src/game/worldmap.rs
+game::worldmap,801080f0,fn_801080f0,translated,medium,"work/ghidra/main-gb/export/801080f0_FUN_801080f0.c; calls 0x801084E0 then child vtable +0x18",src/game/worldmap.rs
+game::worldmap,80108130,fn_80108130,translated,medium,"work/ghidra/main-gb/export/80108130_FUN_80108130.c; one indirect call through child vtable +0x1C",src/game/worldmap.rs
+game::worldmap,80108150,fn_80108150,translated,high,"work/ghidra/main-gb/export/80108150_FUN_80108150.c; byte 1 at +0x3C",src/game/worldmap.rs
+game::worldmap,80108160,fn_80108160,translated,high,"work/ghidra/main-gb/export/80108160_FUN_80108160.c; stores parameter at +0x3D",src/game/worldmap.rs
+game::worldmap,80108170,fn_80108170,translated,high,"work/ghidra/main-gb/export/80108170_FUN_80108170.c; stores parameter at +0x2C",src/game/worldmap.rs
+game::worldmap,80108180,fn_80108180,translated,medium,"work/ghidra/main-gb/export/80108180_FUN_80108180.c; three-part idle gate using 0x80109340 and 0x800E0430",src/game/worldmap.rs
+game::worldmap,80108230,fn_80108230,translated,medium,"work/ghidra/main-gb/export/80108230_FUN_80108230.c; stage 1 to 2 at +0x28; calls 0x80194DA0",src/game/worldmap.rs
+game::worldmap,80108260,fn_80108260,translated,medium,"work/ghidra/main-gb/export/80108260_FUN_80108260.c; idle gate then optional 0x800E1DD0; stage 1 at +0x28",src/game/worldmap.rs
+game::worldmap,801082d0,fn_801082d0,translated,medium,"work/ghidra/main-gb/export/801082d0_FUN_801082d0.c; releases the r13-0x53A8 object and clears +0x2D",src/game/worldmap.rs
+game::worldmap,80108330,fn_80108330,translated,medium,"work/ghidra/main-gb/export/80108330_FUN_80108330.c; child vtable +0x0C result tested via countLeadingZeros",src/game/worldmap.rs
+game::worldmap,80108380,fn_80108380,translated,high,"work/ghidra/main-gb/export/80108380_FUN_80108380.c; byte 1 at +0x19",src/game/worldmap.rs
+game::worldmap,80108390,fn_80108390,translated,high,"work/ghidra/main-gb/export/80108390_FUN_80108390.c; byte 1 at +0x18",src/game/worldmap.rs
+game::worldmap,801083a0,fn_801083a0,translated,high,"work/ghidra/main-gb/export/801083a0_FUN_801083a0.c; word 2 at +0x20",src/game/worldmap.rs
+game::worldmap,801083b0,fn_801083b0,translated,high,"work/ghidra/main-gb/export/801083b0_FUN_801083b0.c; word 2 at +0x24",src/game/worldmap.rs
+game::worldmap,801083c0,fn_801083c0,translated,high,"work/ghidra/main-gb/export/801083c0_FUN_801083c0.c; byte 1 at +0x1C",src/game/worldmap.rs
+game::worldmap,801083d0,fn_801083d0,translated,medium,"work/ghidra/main-gb/export/801083d0_FUN_801083d0.c; 0x80108C60 then optional +0x38 callback then 0x801AC6E0",src/game/worldmap.rs
+game::worldmap,80108420,fn_80108420,translated,medium,"work/ghidra/main-gb/export/80108420_FUN_80108420.c; mode word +0x14 dispatches five 0x801B3xxx handlers",src/game/worldmap.rs
+game::worldmap,80108470,fn_80108470,translated,medium,"work/ghidra/main-gb/export/80108470_FUN_80108470.c; polls 0x80107860 then arms or forces stage 2",src/game/worldmap.rs
+game::worldmap,801084d0,fn_801084d0,translated,high,"work/ghidra/main-gb/export/801084d0_FUN_801084d0.c; empty virtual hook",src/game/worldmap.rs
+game::worldmap,80108660,fn_80108660,translated,high,"work/ghidra/main-gb/export/80108660_FUN_80108660.c; stores parameter at +0x0C",src/game/worldmap.rs
+game::worldmap,80108670,fn_80108670,translated,high,"work/ghidra/main-gb/export/80108670_FUN_80108670.c; writes +0x14 then 0x80108660(this, 5) and 0x80108D00",src/game/worldmap.rs
+game::worldmap,801086b0,fn_801086b0,translated,high,"work/ghidra/main-gb/export/801086b0_FUN_801086b0.c; sets +0x2E then 0x80108660(this, 1) and 0x80108D00",src/game/worldmap.rs
+game::worldmap,801086f0,fn_801086f0,translated,medium,"work/ghidra/main-gb/export/801086f0_FUN_801086f0.c; two-word call to empty 0x801084D0 then mode 5 at +0x14",src/game/worldmap.rs
+game::worldmap,801087e0,fn_801087e0,translated,high,"work/ghidra/main-gb/export/801087e0_FUN_801087e0.c; clears the global byte at 0x8042A2DC",src/game/worldmap.rs
+game::worldmap,80108d00,fn_80108d00,translated,medium,"work/ghidra/main-gb/export/80108d00_FUN_80108d00.c; four notifications from the r13-0x5658 table",src/game/worldmap.rs
+game::worldmap,80108d60,fn_80108d60,translated,high,"work/ghidra/main-gb/export/80108d60_FUN_80108d60.c; empty virtual hook",src/game/worldmap.rs
+game::worldmap,80108d70,fn_80108d70,translated,high,"work/ghidra/main-gb/export/80108d70_FUN_80108d70.c; byte 1 at +0x2F",src/game/worldmap.rs
+game::worldmap,80108ea0,fn_80108ea0,translated,medium,"work/ghidra/main-gb/export/80108ea0_FUN_80108ea0.c; tests +0x74 and +0x78 of the r13-0x56C8 state object",src/game/worldmap.rs
+game::worldmap,801092e0,fn_801092e0,translated,medium,"work/ghidra/main-gb/export/801092e0_FUN_801092e0.c; forwards the r13-0x53D0 object and a word to 0x80108F70",src/game/worldmap.rs

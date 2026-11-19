@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800d5b90,fn_800d5b90,translated,high,"work/ghidra/main-gb/export/800d5b90_FUN_800d5b90.c; switches the display handle on the mode word at +0x180",src/engine/display.rs
+engine::display,800d5be0,fn_800d5be0,translated,high,"work/ghidra/main-gb/export/800d5be0_FUN_800d5be0.c; returns 1 when +0x158 differs from -1 and from the live action at +0x154",src/engine/display.rs
+engine::display,800d5d00,fn_800d5d00,translated,high,"work/ghidra/main-gb/export/800d5d00_FUN_800d5d00.c; forwards to 0x801680E0 on the interface at object+0x60",src/engine/display.rs
+engine::display,800d5d10,fn_800d5d10,translated,medium,"work/ghidra/main-gb/export/800d5d10_FUN_800d5d10.c; buckets the 0x800B2EE0(10) frame count against two SDA2 thresholds and clamps +0x168 to 2",src/engine/display.rs
+engine::display,800d6840,fn_800d6840,translated,high,"work/ghidra/main-gb/export/800d6840_FUN_800d6840.c; copies the 0x20-byte 2-jump record for kind 5/8/9 when mask bit 0x200 is set",src/engine/display.rs
+engine::display,800d6a30,fn_800d6a30,translated,medium,"work/ghidra/main-gb/export/800d6a30_FUN_800d6a30.c; interpolates +0x184 toward +0x188 over the remaining frames at +0x18C",src/engine/display.rs
+engine::display,800d6ab0,fn_800d6ab0,translated,medium,"work/ghidra/main-gb/export/800d6ab0_FUN_800d6ab0.c; tests the action at +0x154 against eight SDA2 animation windows via 0x801690E0",src/engine/display.rs
+engine::display,800d6cc0,fn_800d6cc0,translated,high,"work/ghidra/main-gb/export/800d6cc0_FUN_800d6cc0.c; installs vtable 0x80318A80 and builds the actor through 0x800D6D10",src/engine/display.rs
+engine::display,800d6d10,fn_800d6d10,translated,high,"work/ghidra/main-gb/export/800d6d10_FUN_800d6d10.c; allocates 0x87C/0x874/0x404 bytes for modes 2..4/0..1/5 and stores the actor at +0x04",src/engine/display.rs
+engine::display,800d7480,fn_800d7480,translated,high,"work/ghidra/main-gb/export/800d7480_FUN_800d7480.c; clamps the float at +0x5C into the interval spanned by +0x3C and +0x4C",src/engine/display.rs
+engine::display,800d80b0,fn_800d80b0,translated,high,"work/ghidra/main-gb/export/800d80b0_FUN_800d80b0.c; stores six doubles as floats at indices 2/3/5/0/1/4",src/engine/display.rs
+engine::display,800d80d0,fn_800d80d0,translated,medium,"work/ghidra/main-gb/export/800d80d0_FUN_800d80d0.c; deadzones and clamps the spin-jump motion words +0x00/+0x04 using +0x08/+0x0C/+0x10/+0x14",src/engine/display.rs
+engine::display,800d81e0,fn_800d81e0,translated,medium,"work/ghidra/main-gb/export/800d81e0_FUN_800d81e0.c; constructs the Wm_mr_spinjump display object with vtable 0x80318C20 and interface 0x80329958",src/engine/display.rs
+engine::display,800d8280,fn_800d8280,translated,high,"work/ghidra/main-gb/export/800d8280_FUN_800d8280.c; binds owner at +0x04 and owner+0x388 then stores mode 4 at +0x08",src/engine/display.rs
+engine::display,800d82a0,fn_800d82a0,translated,medium,"work/ghidra/main-gb/export/800d82a0_FUN_800d82a0.c; applies one of six motion presets to +0x0C/+0x10/+0x13C then refreshes via 0x800D8420",src/engine/display.rs
+engine::display,800d8420,fn_800d8420,translated,medium,"work/ghidra/main-gb/export/800d8420_FUN_800d8420.c; spawns Wm_mr_spinjump through interface slot +0xA0 or the player-aware 0x8008FBA0",src/engine/display.rs
+engine::display,800d84f0,fn_800d84f0,translated,high,"work/ghidra/main-gb/export/800d84f0_FUN_800d84f0.c; countLeadingZeros(value - mode)>>5 equality test against +0x08",src/engine/display.rs
+engine::display,800d8510,fn_800d8510,translated,high,"work/ghidra/main-gb/export/800d8510_FUN_800d8510.c; subtracts from the signed halfword at +0x0C, clamps to zero and stores mode 4",src/engine/display.rs
+engine::display,800d9ac0,fn_800d9ac0,translated,high,"work/ghidra/main-gb/export/800d9ac0_FUN_800d9ac0.c; single +0x14 = 0 store",src/engine/display.rs
+engine::display,800d9b60,fn_800d9b60,translated,high,"work/ghidra/main-gb/export/800d9b60_FUN_800d9b60.c; clears or stores the halfword at +0x2C depending on flag bit 0x10",src/engine/display.rs
+engine::display,800d9d00,fn_800d9d00,translated,high,"work/ghidra/main-gb/export/800d9d00_FUN_800d9d00.c; group-mask and team-byte match with distinct owners",src/engine/display.rs
+engine::display,800d9d40,fn_800d9d40,translated,high,"work/ghidra/main-gb/export/800d9d40_FUN_800d9d40.c; rejects flag 0x200 when the owner mode at +0x38C is neither 1 nor 2",src/engine/display.rs
+engine::display,800dadb0,fn_800dadb0,translated,medium,"work/ghidra/main-gb/export/800dadb0_FUN_800dadb0.c; installs vtable 0x80318E58 resets the node and clears +0x3C",src/engine/display.rs
+engine::display,800dae00,fn_800dae00,translated,medium,"work/ghidra/main-gb/export/800dae00_FUN_800dae00.c; reinstalls the vtable unlinks the node and frees it when requested",src/engine/display.rs
+engine::display,800dae60,fn_800dae60,translated,high,"work/ghidra/main-gb/export/800dae60_FUN_800dae60.c; clears +0x08/+0x0C/+0x10 and bytes +0x43/+0x44/+0x4A",src/engine/display.rs
+engine::display,800daed0,fn_800daed0,translated,high,"work/ghidra/main-gb/export/800daed0_FUN_800daed0.c; unlinks the node from the global head/tail pair at r13-0x5660/-0x5664",src/engine/display.rs
+engine::display,800da650,fn_800da650,translated,medium,"work/ghidra/main-gb/export/800da650_FUN_800da650.c; sqrt(a*a-b*b) through the 0x80237BA0 inverse square root above the SDA2 threshold",src/engine/display.rs
+engine::display,800dc990,fn_800dc990,translated,high,"work/ghidra/main-gb/export/800dc990_FUN_800dc990.c; sets the wave-38 slot route flag at +0x55",src/engine/display.rs
+engine::display,800df860,fn_800df860,translated,high,"work/ghidra/main-gb/export/800df860_FUN_800df860.c; stores eight halfwords in the order a7,a6,a3,a4,a5,a8,a9,a2",src/engine/display.rs
+engine::display,800df890,fn_800df890,translated,medium,"work/ghidra/main-gb/export/800df890_FUN_800df890.c; integer oscillator step over the halfwords at +0x00..+0x0C writing the flag at +0x10",src/engine/display.rs

@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806e20b0,fn_806e20b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806e20b0_FUN_806e20b0.c; lift_suisha plank reset; 0x80069020 this restored from sibling call shape",src/game/bases.rs
+game::bases,806e2100,fn_806e2100,translated,high,"work/ghidra/rel-d_basesNP/export/806e2100_FUN_806e2100.c; plank destructor with conditional free",src/game/bases.rs
+game::bases,806e2180,fn_806e2180,translated,medium,"work/ghidra/rel-d_basesNP/export/806e2180_FUN_806e2180.c; lift_suisha stage start; spawn height, tilt clear, state event select",src/game/bases.rs
+game::bases,806e2430,fn_806e2430,translated,medium,"work/ghidra/rel-d_basesNP/export/806e2430_FUN_806e2430.c; two-float ground probe through 0x80070BA0",src/game/bases.rs
+game::bases,806e2460,fn_806e2460,translated,medium,"work/ghidra/rel-d_basesNP/export/806e2460_FUN_806e2460.c; per-plank collision box and previous position",src/game/bases.rs
+game::bases,806e2510,fn_806e2510,translated,high,"work/ghidra/rel-d_basesNP/export/806e2510_FUN_806e2510.c; per-plank 0x800DAED0 reset loop",src/game/bases.rs
+game::bases,806e2560,fn_806e2560,translated,high,"work/ghidra/rel-d_basesNP/export/806e2560_FUN_806e2560.c; per-plank offset triple into 0x806E3380",src/game/bases.rs
+game::bases,806e25d0,fn_806e25d0,translated,high,"work/ghidra/rel-d_basesNP/export/806e25d0_FUN_806e25d0.c; motion virtual +0x0C then offset apply",src/game/bases.rs
+game::bases,806e2660,fn_806e2660,translated,high,"work/ghidra/rel-d_basesNP/export/806e2660_FUN_806e2660.c; per-plank 0x806E33A0 teardown loop",src/game/bases.rs
+game::bases,806e27a0,fn_806e27a0,translated,high,"work/ghidra/rel-d_basesNP/export/806e27a0_FUN_806e27a0.c; previous-position copy",src/game/bases.rs
+game::bases,806e27d0,fn_806e27d0,translated,high,"work/ghidra/rel-d_basesNP/export/806e27d0_FUN_806e27d0.c; angle quantiser with three thresholds",src/game/bases.rs
+game::bases,806e2830,fn_806e2830,translated,high,"work/ghidra/rel-d_basesNP/export/806e2830_FUN_806e2830.c; count of four occupancy bytes",src/game/bases.rs
+game::bases,806e2890,fn_806e2890,translated,high,"work/ghidra/rel-d_basesNP/export/806e2890_FUN_806e2890.c; first sign-matching plank angle",src/game/bases.rs
+game::bases,806e2b10,fn_806e2b10,translated,medium,"work/ghidra/rel-d_basesNP/export/806e2b10_FUN_806e2b10.c; per-plank ground probes at angle-shifted x",src/game/bases.rs
+game::bases,806e2c50,fn_806e2c50,translated,high,"work/ghidra/rel-d_basesNP/export/806e2c50_FUN_806e2c50.c; twin of 806e2510",src/game/bases.rs
+game::bases,806e2ca0,fn_806e2ca0,translated,high,"work/ghidra/rel-d_basesNP/export/806e2ca0_FUN_806e2ca0.c; per-plank 0x800DAE80 stop loop",src/game/bases.rs
+game::bases,806e2d00,fn_806e2d00,translated,medium,"work/ghidra/rel-d_basesNP/export/806e2d00_FUN_806e2d00.c; matrix writer with plank angle +0x8C4",src/game/bases.rs
+game::bases,806e2e10,fn_806e2e10,translated,high,"work/ghidra/rel-d_basesNP/export/806e2e10_FUN_806e2e10.c; tilt decay toward zero by four",src/game/bases.rs
+game::bases,806e2fd0,fn_806e2fd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806e2fd0_FUN_806e2fd0.c; spawn position restore and animation handle install",src/game/bases.rs
+game::bases,806e4330,fn_806e4330,translated,high,"work/ghidra/rel-d_basesNP/export/806e4330_FUN_806e4330.c; generic release plus conditional free",src/game/bases.rs
+game::bases,806e44b0,fn_806e44b0,translated,high,"work/ghidra/rel-d_basesNP/export/806e44b0_FUN_806e44b0.c; 0x5E0-byte lift_zen_hammer constructor vtable 0x807FCF88",src/game/bases.rs
+game::bases,806e4e90,fn_806e4e90,translated,high,"work/ghidra/rel-d_basesNP/export/806e4e90_FUN_806e4e90.c; lift_zen_kaihei clip bind and play",src/game/bases.rs
+game::bases,806e52a0,fn_806e52a0,translated,high,"work/ghidra/rel-d_basesNP/export/806e52a0_FUN_806e52a0.c; rider-axis position save into +0x584",src/game/bases.rs
+game::bases,806e52d0,fn_806e52d0,translated,high,"work/ghidra/rel-d_basesNP/export/806e52d0_FUN_806e52d0.c; rider-axis offset apply from +0x484",src/game/bases.rs
+game::bases,806e5300,fn_806e5300,translated,high,"work/ghidra/rel-d_basesNP/export/806e5300_FUN_806e5300.c; state event select from flags bits 0xC..0xF",src/game/bases.rs
+game::bases,806e5680,fn_806e5680,translated,medium,"work/ghidra/rel-d_basesNP/export/806e5680_FUN_806e5680.c; per-frame composite; jump-table switch 0x806E4F10 left as address call",src/game/bases.rs
+game::bases,806e5d60,fn_806e5d60,translated,medium,"work/ghidra/rel-d_basesNP/export/806e5d60_FUN_806e5d60.c; actor-list kind search on +0x592",src/game/bases.rs
+game::bases,806e5dc0,fn_806e5dc0,translated,high,"work/ghidra/rel-d_basesNP/export/806e5dc0_FUN_806e5dc0.c; descriptor copy and four-bit kind extract",src/game/bases.rs

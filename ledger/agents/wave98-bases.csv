@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807263d0,fn_807263d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807263d0_FUN_807263d0.c; state initialiser; block_fly load, collision +0x818/+0x824/+0x834, effect block +0x734; state 1",src/game/bases.rs
+game::bases,80726640,fn_80726640,translated,high,"work/ghidra/rel-d_basesNP/export/80726640_FUN_80726640.c; clears event 0x13 and contact kind 3; resets +0x734",src/game/bases.rs
+game::bases,807266b0,fn_807266b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807266b0_FUN_807266b0.c; places +0x734 at the carrier position; 0x8012DE80/0x801C0540/0x8016F130",src/game/bases.rs
+game::bases,80726750,fn_80726750,translated,medium,"work/ghidra/rel-d_basesNP/export/80726750_FUN_80726750.c; interface virtual chain then matrix +0x7C and model +0x54C rebind",src/game/bases.rs
+game::bases,80726c90,fn_80726c90,translated,medium,"work/ghidra/rel-d_basesNP/export/80726c90_FUN_80726c90.c; picks throw velocity from source kind 1/2/3; 0x800B2EE0 side select",src/game/bases.rs
+game::bases,80726fc0,fn_80726fc0,translated,high,"work/ghidra/rel-d_basesNP/export/80726fc0_FUN_80726fc0.c; copies holder character byte to +0x38D and stores +0x76C",src/game/bases.rs
+game::bases,80727030,fn_80727030,translated,medium,"work/ghidra/rel-d_basesNP/export/80727030_FUN_80727030.c; ceiling timer +0x870 stepped by 0x8015F4F0",src/game/bases.rs
+game::bases,80727190,fn_80727190,translated,medium,"work/ghidra/rel-d_basesNP/export/80727190_FUN_80727190.c; builds the +0x734 engine block once; size 0x800",src/game/bases.rs
+game::bases,80727220,fn_80727220,translated,medium,"work/ghidra/rel-d_basesNP/export/80727220_FUN_80727220.c; player-table check at 0x8042A320 then event 0x13",src/game/bases.rs
+game::bases,807272c0,fn_807272c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807272c0_FUN_807272c0.c; three contact probes; follows carrier when more than one is active",src/game/bases.rs
+game::bases,807274d0,fn_807274d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807274d0_FUN_807274d0.c; fall/bounce update; 0x80727180 is halt_baddata so address-only",src/game/bases.rs
+game::bases,80727670,fn_80727670,translated,high,"work/ghidra/rel-d_basesNP/export/80727670_FUN_80727670.c; clears the hit/timer state; motion byte 9",src/game/bases.rs
+game::bases,80727720,fn_80727720,translated,medium,"work/ghidra/rel-d_basesNP/export/80727720_FUN_80727720.c; carried versus thrown branch; 0x46/4 carrier kinds; sentinel 0x80830618",src/game/bases.rs
+game::bases,807278f0,fn_807278f0,translated,high,"work/ghidra/rel-d_basesNP/export/807278f0_FUN_807278f0.c; launch speed 2.5/-2.5 plus 0.75 carrier speed; 0x12-frame timer",src/game/bases.rs
+game::bases,80727a30,fn_80727a30,translated,medium,"work/ghidra/rel-d_basesNP/export/80727a30_FUN_80727a30.c; launch frame update; reuses the +0x864 timer and 0x80727180 call",src/game/bases.rs
+game::bases,8072dd00,fn_8072dd00,translated,medium,"work/ghidra/rel-d_basesNP/export/8072dd00_FUN_8072dd00.c; pedestal overshoot state; five 0xE4 effect records at +0x438",src/game/bases.rs
+game::bases,8072df90,fn_8072df90,translated,high,"work/ghidra/rel-d_basesNP/export/8072df90_FUN_8072df90.c; resets the five 0xE4-byte effect records",src/game/bases.rs
+game::bases,8072dfe0,fn_8072dfe0,translated,medium,"work/ghidra/rel-d_basesNP/export/8072dfe0_FUN_8072dfe0.c; model +0x3F8 transform then five bone positions +0x8D4..+0x90C",src/game/bases.rs
+game::bases,8072e800,fn_8072e800,translated,medium,"work/ghidra/rel-d_basesNP/export/8072e800_FUN_8072e800.c; steps one arm value toward its limit; direction byte +0x955",src/game/bases.rs
+game::bases,8072e860,fn_8072e860,translated,high,"work/ghidra/rel-d_basesNP/export/8072e860_FUN_8072e860.c; arm tween state machine +0x944..+0x956 and four-slot ring +0x918",src/game/bases.rs
+game::bases,8072f0d0,fn_8072f0d0,translated,high,"work/ghidra/rel-d_basesNP/export/8072f0d0_FUN_8072f0d0.c; registered destructor 0x8015F800 plus optional 0x802B9280",src/game/bases.rs
+game::bases,8072f370,fn_8072f370,translated,high,"work/ghidra/rel-d_basesNP/export/8072f370_FUN_8072f370.c; opens +0x3D0 range, builds arms, loads model, closes range",src/game/bases.rs
+game::bases,8072f3d0,fn_8072f3d0,translated,medium,"work/ghidra/rel-d_basesNP/export/8072f3d0_FUN_8072f3d0.c; allocates count*12+16 and initialises the arm array at +0x3FC",src/game/bases.rs
+game::bases,8072f520,fn_8072f520,translated,high,"work/ghidra/rel-d_basesNP/export/8072f520_FUN_8072f520.c; interface virtual +0x10 then releases the +0x404 range",src/game/bases.rs
+game::bases,8072fa90,fn_8072fa90,translated,medium,"work/ghidra/rel-d_basesNP/export/8072fa90_FUN_8072fa90.c; registers the +0x404 range through 0x8007FA40 with folded count conversion",src/game/bases.rs
+game::bases,8072fb30,fn_8072fb30,translated,medium,"work/ghidra/rel-d_basesNP/export/8072fb30_FUN_8072fb30.c; allocates 0x1A4 bytes and retries until variant byte +0x3E2 matches",src/game/bases.rs
+game::bases,8072fd90,fn_8072fd90,translated,medium,"work/ghidra/rel-d_basesNP/export/8072fd90_FUN_8072fd90.c; two-bit facing step toward the resolved target yaw",src/game/bases.rs

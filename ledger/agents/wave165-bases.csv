@@ -1,0 +1,40 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8061aff0,fn_8061aff0,translated,high,"work/ghidra/rel-d_basesNP/export/8061aff0_FUN_8061aff0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,8061e710,fn_8061e710,translated,high,"work/ghidra/rel-d_basesNP/export/8061e710_FUN_8061e710.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80624190,fn_80624190,translated,high,"work/ghidra/rel-d_basesNP/export/80624190_FUN_80624190.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80644fe0,fn_80644fe0,translated,high,"work/ghidra/rel-d_basesNP/export/80644fe0_FUN_80644fe0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80645d70,fn_80645d70,translated,high,"work/ghidra/rel-d_basesNP/export/80645d70_FUN_80645d70.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80646c90,fn_80646c90,translated,high,"work/ghidra/rel-d_basesNP/export/80646c90_FUN_80646c90.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,8064a210,fn_8064a210,translated,high,"work/ghidra/rel-d_basesNP/export/8064a210_FUN_8064a210.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,8064a250,fn_8064a250,translated,high,"work/ghidra/rel-d_basesNP/export/8064a250_FUN_8064a250.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80668ca0,fn_80668ca0,translated,high,"work/ghidra/rel-d_basesNP/export/80668ca0_FUN_80668ca0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,806ceac0,fn_806ceac0,translated,high,"work/ghidra/rel-d_basesNP/export/806ceac0_FUN_806ceac0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,806ceb00,fn_806ceb00,translated,high,"work/ghidra/rel-d_basesNP/export/806ceb00_FUN_806ceb00.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,806db300,fn_806db300,translated,high,"work/ghidra/rel-d_basesNP/export/806db300_FUN_806db300.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,806f1d30,fn_806f1d30,translated,high,"work/ghidra/rel-d_basesNP/export/806f1d30_FUN_806f1d30.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,806f2420,fn_806f2420,translated,high,"work/ghidra/rel-d_basesNP/export/806f2420_FUN_806f2420.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80705c20,fn_80705c20,translated,high,"work/ghidra/rel-d_basesNP/export/80705c20_FUN_80705c20.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,807208d0,fn_807208d0,translated,high,"work/ghidra/rel-d_basesNP/export/807208d0_FUN_807208d0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80730ba0,fn_80730ba0,translated,high,"work/ghidra/rel-d_basesNP/export/80730ba0_FUN_80730ba0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80764690,fn_80764690,translated,high,"work/ghidra/rel-d_basesNP/export/80764690_FUN_80764690.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,807ae8a0,fn_807ae8a0,translated,high,"work/ghidra/rel-d_basesNP/export/807ae8a0_FUN_807ae8a0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,807afb30,fn_807afb30,translated,high,"work/ghidra/rel-d_basesNP/export/807afb30_FUN_807afb30.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,807c1ae0,fn_807c1ae0,translated,high,"work/ghidra/rel-d_basesNP/export/807c1ae0_FUN_807c1ae0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,8078a3a0,fn_8078a3a0,translated,high,"work/ghidra/rel-d_basesNP/export/8078a3a0_FUN_8078a3a0.c; id 649: null -> 800F29F0(649,arg,0,0) else 800F2A00(649,this,arg,0,0)",src/game/bases.rs
+game::bases,8078a740,fn_8078a740,translated,high,"work/ghidra/rel-d_basesNP/export/8078a740_FUN_8078a740.c; id 653: null -> 800F29F0(653,arg,0,0) else 800F2A00(653,this,arg,0,0)",src/game/bases.rs
+game::bases,8078b5b0,fn_8078b5b0,translated,high,"work/ghidra/rel-d_basesNP/export/8078b5b0_FUN_8078b5b0.c; id 646: null -> 800F29F0(646,arg,0,0) else 800F2A00(646,this,arg,0,0)",src/game/bases.rs
+game::bases,8078b7d0,fn_8078b7d0,translated,high,"work/ghidra/rel-d_basesNP/export/8078b7d0_FUN_8078b7d0.c; id 650: null -> 800F29F0(650,arg,0,0) else 800F2A00(650,this,arg,0,0)",src/game/bases.rs
+game::bases,8078b9f0,fn_8078b9f0,translated,high,"work/ghidra/rel-d_basesNP/export/8078b9f0_FUN_8078b9f0.c; id 652: null -> 800F29F0(652,arg,0,0) else 800F2A00(652,this,arg,0,0)",src/game/bases.rs
+game::bases,8078bc10,fn_8078bc10,translated,high,"work/ghidra/rel-d_basesNP/export/8078bc10_FUN_8078bc10.c; id 651: null -> 800F29F0(651,arg,0,0) else 800F2A00(651,this,arg,0,0)",src/game/bases.rs
+game::bases,8078be30,fn_8078be30,translated,high,"work/ghidra/rel-d_basesNP/export/8078be30_FUN_8078be30.c; id 647: null -> 800F29F0(647,arg,0,0) else 800F2A00(647,this,arg,0,0)",src/game/bases.rs
+game::bases,8078c060,fn_8078c060,translated,high,"work/ghidra/rel-d_basesNP/export/8078c060_FUN_8078c060.c; id 648: null -> 800F29F0(648,arg,0,0) else 800F2A00(648,this,arg,0,0)",src/game/bases.rs
+game::bases,80656cf0,fn_80656cf0,translated,high,"work/ghidra/rel-d_basesNP/export/80656cf0_FUN_80656cf0.c; alloc 0x7B0 via 801628C0 then ctor 80656F60 when non-null",src/game/bases.rs
+game::bases,8066be70,fn_8066be70,translated,high,"work/ghidra/rel-d_basesNP/export/8066be70_FUN_8066be70.c; alloc 0x970 via 801628C0 then ctor 8066BF80 when non-null",src/game/bases.rs
+game::bases,80683720,fn_80683720,translated,high,"work/ghidra/rel-d_basesNP/export/80683720_FUN_80683720.c; alloc 0x8A8 via 801628C0 then ctor 80683750 when non-null",src/game/bases.rs
+game::bases,806856b0,fn_806856b0,translated,high,"work/ghidra/rel-d_basesNP/export/806856b0_FUN_806856b0.c; alloc 0x500 via 801628C0 then ctor 806856E0 when non-null",src/game/bases.rs
+game::bases,806beb30,fn_806beb30,translated,high,"work/ghidra/rel-d_basesNP/export/806beb30_FUN_806beb30.c; alloc 0x630 via 801628C0 then ctor 806BEB60 when non-null",src/game/bases.rs
+game::bases,806bf630,fn_806bf630,translated,high,"work/ghidra/rel-d_basesNP/export/806bf630_FUN_806bf630.c; alloc 0x948 via 801628C0 then ctor 806BF680 when non-null",src/game/bases.rs
+game::bases,806d2840,fn_806d2840,translated,high,"work/ghidra/rel-d_basesNP/export/806d2840_FUN_806d2840.c; alloc 0x778 via 801628C0 then ctor 806D2870 when non-null",src/game/bases.rs
+game::bases,80709e90,fn_80709e90,translated,high,"work/ghidra/rel-d_basesNP/export/80709e90_FUN_80709e90.c; alloc 0x828 via 801628C0 then ctor 80709EC0 when non-null",src/game/bases.rs
+game::bases,807262c0,fn_807262c0,translated,high,"work/ghidra/rel-d_basesNP/export/807262c0_FUN_807262c0.c; alloc 0x890 via 801628C0 then ctor 807262F0 when non-null",src/game/bases.rs
+game::bases,80757a80,fn_80757a80,translated,high,"work/ghidra/rel-d_basesNP/export/80757a80_FUN_80757a80.c; alloc 0x384 via 801628C0 then ctor 80757AB0 when non-null",src/game/bases.rs

@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a1c8f0,fn_80a1c8f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1c8f0_FUN_80a1c8f0.c; player-attack collision dispatcher; 31-entry table at 0x80B38334",src/game/enemies.rs
+game::enemies,80a1e990,fn_80a1e990,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1e990_FUN_80a1e990.c; qr3 aim/placement step; four (f32)(u16) sites",src/game/enemies.rs
+game::enemies,80a56620,fn_80a56620,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a56620_FUN_80a56620.c; multi-slot side classifier over +0x2484",src/game/enemies.rs
+game::enemies,80a56920,fn_80a56920,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a56920_FUN_80a56920.c; segment-table ring fill; four qr3 sites",src/game/enemies.rs
+game::enemies,80a584e0,fn_80a584e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a584e0_FUN_80a584e0.c; +0x780 facing step over 4544.0 radius",src/game/enemies.rs
+game::enemies,80a589a0,fn_80a589a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a589a0_FUN_80a589a0.c; four-player 96.0 distance predicate",src/game/enemies.rs
+game::enemies,80a58d70,fn_80a58d70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a58d70_FUN_80a58d70.c; +0x1146 wobble step with one qr3 site",src/game/enemies.rs
+game::enemies,80a5aef0,fn_80a5aef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a5aef0_FUN_80a5aef0.c; constant producer 0x80357BF4",src/game/enemies.rs
+game::enemies,80a84f10,fn_80a84f10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a84f10_FUN_80a84f10.c; I_kinoko brres/clip binder",src/game/enemies.rs
+game::enemies,80ab0570,fn_80ab0570,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab0570_FUN_80ab0570.c; 1532/16 lane ladder initialiser",src/game/enemies.rs
+game::enemies,80ab0ee0,fn_80ab0ee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab0ee0_FUN_80ab0ee0.c; five-slot world-matrix refresh",src/game/enemies.rs
+game::enemies,80ad98b0,fn_80ad98b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad98b0_FUN_80ad98b0.c; four-player overlap probe",src/game/enemies.rs
+game::enemies,80b0d6e0,fn_80b0d6e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0d6e0_FUN_80b0d6e0.c; turn-order heading/pitch governor",src/game/enemies.rs
+game::enemies,80b16060,fn_80b16060,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b16060_FUN_80b16060.c; 0x11D-variant initialiser; descriptors corrected to 0x80B78Exx",src/game/enemies.rs
+game::enemies,80b16f40,fn_80b16f40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b16f40_FUN_80b16f40.c; angle to travel-vector step with 150.0 gate",src/game/enemies.rs

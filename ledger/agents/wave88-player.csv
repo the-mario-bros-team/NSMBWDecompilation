@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,8005e2b0,fn_8005e2b0,translated,high,"work/ghidra/main-gb/export/8005e2b0_FUN_8005e2b0.c; clears +0x19 then copies frame +0x14/+0x1C into +0x04/+0x06",src/game/player.rs
+game::player,8005e300,fn_8005e300,translated,medium,"work/ghidra/main-gb/export/8005e300_FUN_8005e300.c; start/stop arc step with +0x14 counter and +0x16 flag; three callees print no argument",src/game/player.rs
+game::player,8005e3b0,fn_8005e3b0,translated,high,"work/ghidra/main-gb/export/8005e3b0_FUN_8005e3b0.c; mode 0..8 dispatch then OR of bit mode into the +0x12 mask",src/game/player.rs
+game::player,8005e4e0,fn_8005e4e0,translated,high,"work/ghidra/main-gb/export/8005e4e0_FUN_8005e4e0.c; low nibble of the +0x06 halfword",src/game/player.rs
+game::player,8005e590,fn_8005e590,translated,high,"work/ghidra/main-gb/export/8005e590_FUN_8005e590.c; frame +0x08 == 1 selects bit 0x400 of +0x06 else bit 0x200",src/game/player.rs
+game::player,8005e5d0,fn_8005e5d0,translated,high,"work/ghidra/main-gb/export/8005e5d0_FUN_8005e5d0.c; same choice as 8005e590 but on the +0x04 halfword",src/game/player.rs
+game::player,8005e630,fn_8005e630,translated,medium,"work/ghidra/main-gb/export/8005e630_FUN_8005e630.c; sets +0x19 when 8005e590 reports a bit; callee argument inferred",src/game/player.rs
+game::player,8005e690,fn_8005e690,translated,medium,"work/ghidra/main-gb/export/8005e690_FUN_8005e690.c; twin of 8005e630; export names 8005e590 although thunk 8005e680 targets 8005e5d0",src/game/player.rs
+game::player,8005ea60,fn_8005ea60,translated,high,"work/ghidra/main-gb/export/8005ea60_FUN_8005ea60.c; sixteen-word table reset with the {0 1 3 2} character-id map then calls 8005ece0",src/game/player.rs
+game::player,8005ec90,fn_8005ec90,translated,high,"work/ghidra/main-gb/export/8005ec90_FUN_8005ec90.c; returns the SDA byte at 0x8042A21C",src/game/player.rs
+game::player,8005ece0,fn_8005ece0,translated,high,"work/ghidra/main-gb/export/8005ece0_FUN_8005ece0.c; clears both four-entry id tables and the per-character arrays",src/game/player.rs
+game::player,8005ee70,fn_8005ee70,translated,high,"work/ghidra/main-gb/export/8005ee70_FUN_8005ee70.c; stage record by index with the +0x2C presence word",src/game/player.rs
+game::player,8005eee0,fn_8005eee0,translated,high,"work/ghidra/main-gb/export/8005eee0_FUN_8005eee0.c; slot handle test then spawner id 0x0D with a packed slot argument",src/game/player.rs
+game::player,8005f880,fn_8005f880,translated,high,"work/ghidra/main-gb/export/8005f880_FUN_8005f880.c; presence byte AND per-character mask word both carry the bit",src/game/player.rs
+game::player,8005f8c0,fn_8005f8c0,translated,high,"work/ghidra/main-gb/export/8005f8c0_FUN_8005f8c0.c; stages or clears one id in table 0x80354E10",src/game/player.rs
+game::player,8005f900,fn_8005f900,translated,medium,"work/ghidra/main-gb/export/8005f900_FUN_8005f900.c; resolves table A entry; wrapper typed void but its r3 is read by 8005FC70",src/game/player.rs
+game::player,8005f920,fn_8005f920,translated,high,"work/ghidra/main-gb/export/8005f920_FUN_8005f920.c; lowest presence bit maps to slot mode 0..3 at 0x80429CA0",src/game/player.rs
+game::player,8005f990,fn_8005f990,translated,high,"work/ghidra/main-gb/export/8005f990_FUN_8005f990.c; inserts an id into the first free table B entry",src/game/player.rs
+game::player,8005fa00,fn_8005fa00,translated,high,"work/ghidra/main-gb/export/8005fa00_FUN_8005fa00.c; removes the first matching id from table B",src/game/player.rs
+game::player,8005fa60,fn_8005fa60,translated,medium,"work/ghidra/main-gb/export/8005fa60_FUN_8005fa60.c; scans table B for an actor whose vtable +0x6C name starts with the id",src/game/player.rs
+game::player,8005fb00,fn_8005fb00,translated,high,"work/ghidra/main-gb/export/8005fb00_FUN_8005fb00.c; counts how many table B ids resolve",src/game/player.rs
+game::player,8005fb70,fn_8005fb70,translated,medium,"work/ghidra/main-gb/export/8005fb70_FUN_8005fb70.c; resolves one table B entry; wrapper typed void with the lookup result returned",src/game/player.rs
+game::player,8005fb90,fn_8005fb90,translated,medium,"work/ghidra/main-gb/export/8005fb90_FUN_8005fb90.c; resolves table A then prefers the event-flag 0x4B link",src/game/player.rs
+game::player,8005fbe0,fn_8005fbe0,translated,high,"work/ghidra/main-gb/export/8005fbe0_FUN_8005fbe0.c; character flag bit 8 gives 4 else the 0x802EF308 mode word",src/game/player.rs
+game::player,8005fc20,fn_8005fc20,translated,high,"work/ghidra/main-gb/export/8005fc20_FUN_8005fc20.c; per-index byte into 0x80429CAC and word into 0x80354E40",src/game/player.rs
+game::player,8005fc40,fn_8005fc40,translated,high,"work/ghidra/main-gb/export/8005fc40_FUN_8005fc40.c; reads the per-index byte at 0x80429CAC",src/game/player.rs
+game::player,8005fc50,fn_8005fc50,translated,high,"work/ghidra/main-gb/export/8005fc50_FUN_8005fc50.c; reads the low-byte-indexed word at 0x80354E40",src/game/player.rs
+game::player,8005fc70,fn_8005fc70,translated,high,"work/ghidra/main-gb/export/8005fc70_FUN_8005fc70.c; mask of occupied slots whose actor is missing or not at +0x153C == 1",src/game/player.rs

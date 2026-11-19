@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e14f4,fn_802e14f4,translated,high,"work/ghidra/main-gb/export/802e14f4_FUN_802e14f4.c; narrow buffer append callback {base limit cursor}",src/engine/main_loop.rs
+engine::main_loop,802e19f8,fn_802e19f8,translated,high,"work/ghidra/main-gb/export/802e19f8_FUN_802e19f8.c; strncpy copy then NUL pad",src/engine/main_loop.rs
+engine::main_loop,802e1a3c,fn_802e1a3c,translated,high,"work/ghidra/main-gb/export/802e1a3c_FUN_802e1a3c.c; strcat find end then copy through NUL",src/engine/main_loop.rs
+engine::main_loop,802e1a68,fn_802e1a68,translated,high,"work/ghidra/main-gb/export/802e1a68_FUN_802e1a68.c; strncat bounded append with terminator",src/engine/main_loop.rs
+engine::main_loop,802e1ab4,fn_802e1ab4,translated,high,"work/ghidra/main-gb/export/802e1ab4_FUN_802e1ab4.c; strcmp aligned word path collapsed to bytes",src/engine/main_loop.rs
+engine::main_loop,802e1bd0,fn_802e1bd0,translated,high,"work/ghidra/main-gb/export/802e1bd0_FUN_802e1bd0.c; strncmp bounded byte compare",src/engine/main_loop.rs
+engine::main_loop,802e1c10,fn_802e1c10,translated,high,"work/ghidra/main-gb/export/802e1c10_FUN_802e1c10.c; strchr first match and c==0 terminator rule",src/engine/main_loop.rs
+engine::main_loop,802e1c40,fn_802e1c40,translated,high,"work/ghidra/main-gb/export/802e1c40_FUN_802e1c40.c; strrchr last match accumulator",src/engine/main_loop.rs
+engine::main_loop,802e1c88,fn_802e1c88,translated,high,"work/ghidra/main-gb/export/802e1c88_FUN_802e1c88.c; strstr null/empty guards and substring scan",src/engine/main_loop.rs
+engine::main_loop,802e21cc,fn_802e21cc,translated,high,"work/ghidra/main-gb/export/802e21cc_FUN_802e21cc.c; 2-byte element memcpy wrapper count<<1",src/engine/main_loop.rs
+engine::main_loop,802e4324,fn_802e4324,translated,high,"work/ghidra/main-gb/export/802e4324_FUN_802e4324.c; wide buffer append callback {base limit cursor}",src/engine/main_loop.rs
+engine::main_loop,802e4390,fn_802e4390,translated,high,"work/ghidra/main-gb/export/802e4390_FUN_802e4390.c; bounded wide format via 0x802E3998 and terminator",src/engine/main_loop.rs
+engine::main_loop,802e441c,fn_802e441c,translated,high,"work/ghidra/main-gb/export/802e441c_FUN_802e441c.c; wcslen",src/engine/main_loop.rs
+engine::main_loop,802e4438,fn_802e4438,translated,high,"work/ghidra/main-gb/export/802e4438_FUN_802e4438.c; wcscpy",src/engine/main_loop.rs
+engine::main_loop,802e4454,fn_802e4454,translated,high,"work/ghidra/main-gb/export/802e4454_FUN_802e4454.c; wcsncpy copy and zero pad",src/engine/main_loop.rs
+engine::main_loop,802e4498,fn_802e4498,translated,high,"work/ghidra/main-gb/export/802e4498_FUN_802e4498.c; wcscmp unsigned 16-bit compare",src/engine/main_loop.rs
+engine::main_loop,802e44cc,fn_802e44cc,translated,high,"work/ghidra/main-gb/export/802e44cc_FUN_802e44cc.c; wcschr first match and c==0 terminator rule",src/engine/main_loop.rs
+engine::main_loop,802e9be4,fn_802e9be4,translated,high,"work/ghidra/main-gb/export/802e9be4_FUN_802e9be4.c; release buffer index at event+0x08",src/engine/main_loop.rs
+engine::main_loop,802eaa88,fn_802eaa88,translated,high,"work/ghidra/main-gb/export/802eaa88_FUN_802eaa88.c; read payload bytes and advance cursor 0x302 on short",src/engine/main_loop.rs
+engine::main_loop,802eab18,fn_802eab18,translated,high,"work/ghidra/main-gb/export/802eab18_FUN_802eab18.c; append one word in wire byte order 0x301 on truncation",src/engine/main_loop.rs
+engine::main_loop,802eacdc,fn_802eacdc,translated,high,"work/ghidra/main-gb/export/802eacdc_FUN_802eacdc.c; append byte string one byte at a time",src/engine/main_loop.rs
+engine::main_loop,802ead40,fn_802ead40,translated,high,"work/ghidra/main-gb/export/802ead40_FUN_802ead40.c; append word array with per-word byte order",src/engine/main_loop.rs
+engine::main_loop,802eae30,fn_802eae30,translated,high,"work/ghidra/main-gb/export/802eae30_FUN_802eae30.c; read 8 bytes and reverse in little-endian mode",src/engine/main_loop.rs
+engine::main_loop,802eaf10,fn_802eaf10,translated,high,"work/ghidra/main-gb/export/802eaf10_FUN_802eaf10.c; read bytes one per iteration 0x302 when empty",src/engine/main_loop.rs
+engine::main_loop,802eafa8,fn_802eafa8,translated,high,"work/ghidra/main-gb/export/802eafa8_FUN_802eafa8.c; read words and reverse in little-endian mode",src/engine/main_loop.rs
+engine::main_loop,802eb098,fn_802eb098,translated,medium,"work/ghidra/main-gb/export/802eb098_FUN_802eb098.c; 0x80 notification send and request-path flag set",src/engine/main_loop.rs
+engine::main_loop,802eb108,fn_802eb108,translated,medium,"work/ghidra/main-gb/export/802eb108_FUN_802eb108.c; 0x80 notification send flag clear and event 1 post",src/engine/main_loop.rs
+engine::main_loop,802eb190,fn_802eb190,translated,medium,"work/ghidra/main-gb/export/802eb190_FUN_802eb190.c; 0x80 notification send then 0x802E9614",src/engine/main_loop.rs
+engine::main_loop,802eb1fc,fn_802eb1fc,translated,medium,"work/ghidra/main-gb/export/802eb1fc_FUN_802eb1fc.c; 0x80 notification send then code flush 0x802E9498",src/engine/main_loop.rs

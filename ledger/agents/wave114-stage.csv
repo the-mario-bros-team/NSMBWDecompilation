@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b96a0,fn_800b96a0,translated,medium,"work/ghidra/main-gb/export/800b96a0_FUN_800b96a0.c; node-chain layout pass on the +0x24 source segment; alternating/extend/bend branches, one 0x30-byte rotation+translation build per bend, six +0x68..+0x7C stores per node",src/game/stage.rs
+game::stage,800bc140,fn_800bc140,translated,medium,"work/ghidra/main-gb/export/800bc140_FUN_800bc140.c; four-name lookup at 0x802F0D40, 0x800BBDD0 projection, 0x801C0C60 uniform scale, 0x801C0500 matrix copy in and out",src/game/stage.rs

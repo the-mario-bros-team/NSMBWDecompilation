@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80730be0,fn_80730be0,translated,medium,"work/ghidra/rel-d_basesNP/export/80730be0_FUN_80730be0.c; arm rebuild from the +0x04 flags; five 0x8007FB10 binds; switch to descriptor 0x80830C60",src/game/bases.rs
+game::bases,80731c60,fn_80731c60,translated,high,"work/ghidra/rel-d_basesNP/export/80731c60_FUN_80731c60.c; six 1.0f scale words plus the +0x9E4 countdown reset",src/game/bases.rs
+game::bases,80731cb0,fn_80731cb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80731cb0_FUN_80731cb0.c; twin of fn_8072e800; steps an f32 to the limit with a 1.0f floor; returns reached",src/game/bases.rs
+game::bases,80731f30,fn_80731f30,translated,high,"work/ghidra/rel-d_basesNP/export/80731f30_FUN_80731f30.c; camera-rect test of +0xAC/+0xB0 against scene 0x80429E00 offsets 0x38..0x44",src/game/bases.rs
+game::bases,80732010,fn_80732010,translated,high,"work/ghidra/rel-d_basesNP/export/80732010_FUN_80732010.c; countdown +0x9D0, reset at 3, burst 0x807318F0 then descriptor 0x80830CA0",src/game/bases.rs
+game::bases,807320f0,fn_807320f0,translated,high,"work/ghidra/rel-d_basesNP/export/807320f0_FUN_807320f0.c; +0x9E2 += 0x200 capped at 0x2600; four negated arm offsets; descriptor 0x80830CE0",src/game/bases.rs
+game::bases,80732230,fn_80732230,translated,high,"work/ghidra/rel-d_basesNP/export/80732230_FUN_80732230.c; +0x9E2 -= 0x200 floored at 0x2000; descriptor 0x80830C60; four negated arm offsets",src/game/bases.rs
+game::bases,80733790,fn_80733790,translated,high,"work/ghidra/rel-d_basesNP/export/80733790_FUN_80733790.c; releases +0x438 and +0x51C through 0x8007F950; returns 1",src/game/bases.rs
+game::bases,80734400,fn_80734400,translated,high,"work/ghidra/rel-d_basesNP/export/80734400_FUN_80734400.c; releases +0x51C/+0x438/+0x3F8/+0x3D8, 0x800671B0(actor,0), free 0x80162920",src/game/bases.rs
+game::bases,807347d0,fn_807347d0,translated,high,"work/ghidra/rel-d_basesNP/export/807347d0_FUN_807347d0.c; 0x8015F800(state,0) then 0x802B9280 when free > 0; returns state",src/game/bases.rs
+game::bases,8073b5c0,fn_8073b5c0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073b5c0_FUN_8073b5c0.c; allocates 0x468; vtables 0x803017D0 then 0x8080E900; +0x3D0/+0x404 sub-objects",src/game/bases.rs
+game::bases,8073b6a0,fn_8073b6a0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073b6a0_FUN_8073b6a0.c; +0x454 variant from flag bit 0; angle 0xE000/0x2000; area +0x410..+0x430; 0x8008C3E0 setup",src/game/bases.rs
+game::bases,8073b8b0,fn_8073b8b0,translated,high,"work/ghidra/rel-d_basesNP/export/8073b8b0_FUN_8073b8b0.c; position +0xAC..+0xB4 and angles +0x100..+0x104 into matrix +0x7C, copied to model +0x404",src/game/bases.rs
+game::bases,8073bb50,fn_8073bb50,translated,medium,"work/ghidra/rel-d_basesNP/export/8073bb50_FUN_8073bb50.c; rider +0x444 via 0x80162D00; release 0x80162510 or descriptor 0x80831228",src/game/bases.rs
+game::bases,8073bc00,fn_8073bc00,translated,medium,"work/ghidra/rel-d_basesNP/export/8073bc00_FUN_8073bc00.c; height 0x80068BC0 into +0xB4/+0x450; spawn +0x448/+0x44C; 1.2/-1.2 into +0xE8",src/game/bases.rs
+game::bases,8073bcc0,fn_8073bcc0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073bcc0_FUN_8073bcc0.c; sound 0x222 at +0xAC; 21.0 travel latch +0x458; camera-follow +0xB0; 3000.0 clamp",src/game/bases.rs
+game::bases,8073be40,fn_8073be40,translated,medium,"work/ghidra/rel-d_basesNP/export/8073be40_FUN_8073be40.c; 0x8006A4B0 copies +0xAC; sound 0x222 through 0x80198660 with context 0x80429D5C",src/game/bases.rs
+game::bases,8073c3c0,fn_8073c3c0,translated,high,"work/ghidra/rel-d_basesNP/export/8073c3c0_FUN_8073c3c0.c; 16.0/736.0/0.0/0.0 into +0x318..+0x324 from 0x807CDD38..0x807CDD40",src/game/bases.rs
+game::bases,8073c700,fn_8073c700,translated,high,"work/ghidra/rel-d_basesNP/export/8073c700_FUN_8073c700.c; releases +0x430 through 0x8007F950; returns 1",src/game/bases.rs
+game::bases,8073f7d0,fn_8073f7d0,translated,high,"work/ghidra/rel-d_basesNP/export/8073f7d0_FUN_8073f7d0.c; frees through 0x802B9280 when non-null and free > 0; returns object",src/game/bases.rs
+game::bases,8073f8e0,fn_8073f8e0,translated,high,"work/ghidra/rel-d_basesNP/export/8073f8e0_FUN_8073f8e0.c; g3d/tarzantsuta.brres into +0x3B8; pane tarzantsuta bound at +0x3BC",src/game/bases.rs
+game::bases,8073f990,fn_8073f990,translated,high,"work/ghidra/rel-d_basesNP/export/8073f990_FUN_8073f990.c; four 0xC-stride records; +0x0A and +0x0B set to 0xFF",src/game/bases.rs
+game::bases,8073f9b0,fn_8073f9b0,translated,high,"work/ghidra/rel-d_basesNP/export/8073f9b0_FUN_8073f9b0.c; shifts +0x0A into +0x0B and writes 0xFF into +0x0A over 0x30 bytes",src/game/bases.rs
+game::bases,8073f9e0,fn_8073f9e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073f9e0_FUN_8073f9e0.c; walks the +0x40C list; vtable +0x60 slot 0x6C id; fills the four lane records",src/game/bases.rs
+game::bases,8073faa0,fn_8073faa0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073faa0_FUN_8073faa0.c; sixteen tiles +0x480..+0x680; 0x800DF860 rect, +0x14/+0x18 = 0.0, +0x1C/+0x1D reset",src/game/bases.rs
+game::bases,8073fb40,fn_8073fb40,translated,high,"work/ghidra/rel-d_basesNP/export/8073fb40_FUN_8073fb40.c; clears +0x1D of tiles whose lane record id no longer matches",src/game/bases.rs
+game::bases,8073fb90,fn_8073fb90,translated,medium,"work/ghidra/rel-d_basesNP/export/8073fb90_FUN_8073fb90.c; occupies the first free tile per changed lane; 128.0-scaled y with a +/-0x40 bias",src/game/bases.rs
+game::bases,8073fcc0,fn_8073fcc0,translated,high,"work/ghidra/rel-d_basesNP/export/8073fcc0_FUN_8073fcc0.c; copies tile +0x14 into +0x18 over the sixteen tiles",src/game/bases.rs
+game::bases,8073fce0,fn_8073fce0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073fce0_FUN_8073fce0.c; steps +0x14 by 2.0 toward the lane x; retired tiles copied into +0x43C",src/game/bases.rs
+game::bases,8073fdd0,fn_8073fdd0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073fdd0_FUN_8073fdd0.c; occlusion scan over the sixteen tiles; clears +0x1C for the hidden set",src/game/bases.rs

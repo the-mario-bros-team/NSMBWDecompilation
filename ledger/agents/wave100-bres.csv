@@ -1,0 +1,25 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::bres,802337b0,fn_802337b0,translated,medium,"work/ghidra/main-gb/export/802337b0_FUN_802337b0.c; glyph blitter; 0x802F7268/0x802F7368 records and 0x8034CF30 expansion",src/resource/bres.rs
+resource::bres,80234a80,fn_80234a80,partial,low,"work/ghidra/main-gb/export/80234a80_FUN_80234a80.c; exception report sink; descriptor supplied by the caller",src/resource/bres.rs
+resource::bres,80236230,fn_80236230,partial,low,"work/ghidra/main-gb/export/80236230_FUN_80236230.c; heap A wide queue entry; heap/format/sink shared helper",src/resource/bres.rs
+resource::bres,802365e0,fn_802365e0,partial,low,"work/ghidra/main-gb/export/802365e0_FUN_802365e0.c; heap A wide queue entry; same body as 0x80236230",src/resource/bres.rs
+resource::bres,80236fc0,fn_80236fc0,partial,low,"work/ghidra/main-gb/export/80236fc0_FUN_80236fc0.c; heap B narrow queue entry; heap/format/sink shared helper",src/resource/bres.rs
+resource::bres,80237370,fn_80237370,partial,low,"work/ghidra/main-gb/export/80237370_FUN_80237370.c; heap B narrow queue entry; same body as 0x80236FC0",src/resource/bres.rs
+resource::bres,80237a60,fn_80237a60,translated,low,"work/ghidra/main-gb/export/80237a60_FUN_80237a60.c; sine plus quantisation-corrected table offset; 0x8034D538",src/resource/bres.rs
+resource::bres,80237b00,fn_80237b00,translated,medium,"work/ghidra/main-gb/export/80237b00_FUN_80237b00.c; log2 from exponent and 0x8034D640 mantissa table",src/resource/bres.rs
+resource::bres,80237ba0,fn_80237ba0,translated,low,"work/ghidra/main-gb/export/80237ba0_FUN_80237ba0.c; Newton reciprocal square root; hardware fsqrt modelled by sqrt64",src/resource/bres.rs
+resource::bres,80237bd0,fn_80237bd0,translated,medium,"work/ghidra/main-gb/export/80237bd0_FUN_80237bd0.c; angle reducer and 0x802F74A0 table interpolation",src/resource/bres.rs
+resource::bres,80237c40,fn_80237c40,translated,medium,"work/ghidra/main-gb/export/80237c40_FUN_80237c40.c; angle reducer and 0x802F74A4 table interpolation",src/resource/bres.rs
+resource::bres,80237ca0,fn_80237ca0,translated,medium,"work/ghidra/main-gb/export/80237ca0_FUN_80237ca0.c; sine/cosine pair with GQR3 scratch and GQR0 outputs",src/resource/bres.rs
+resource::bres,80237d10,fn_80237d10,translated,medium,"work/ghidra/main-gb/export/80237d10_FUN_80237d10.c; octant-reduced arctangent; 0x8034DE48 table",src/resource/bres.rs
+resource::bres,80237ed0,fn_80237ed0,translated,medium,"work/ghidra/main-gb/export/80237ed0_FUN_80237ed0.c; octant-reduced arctangent packed to 16-bit angle",src/resource/bres.rs
+resource::bres,80238200,fn_80238200,translated,medium,"work/ghidra/main-gb/export/80238200_FUN_80238200.c; 3x4 matrix times 4-vector; translation lanes written twice",src/resource/bres.rs
+resource::bres,802385d0,fn_802385d0,translated,medium,"work/ghidra/main-gb/export/802385d0_FUN_802385d0.c; plane from three points via 0x801C1530 and 0x801C1470",src/resource/bres.rs
+resource::bres,80239380,fn_80239380,translated,medium,"work/ghidra/main-gb/export/80239380_FUN_80239380.c; shape quadratic with 0x80237BA0 square root; near/far roots",src/resource/bres.rs
+resource::bres,802394e0,fn_802394e0,translated,medium,"work/ghidra/main-gb/export/802394e0_FUN_802394e0.c; segment clip around 0x80239380; length-normalised fractions",src/resource/bres.rs
+resource::bres,80239780,fn_80239780,translated,low,"work/ghidra/main-gb/export/80239780_FUN_80239780.c; box versus six planes; asymmetric x corner in the export",src/resource/bres.rs
+resource::bres,8023f000,fn_8023f000,translated,medium,"work/ghidra/main-gb/export/8023f000_FUN_8023f000.c; Hermite key sample; 12-byte time/value/tangent keys",src/resource/bres.rs
+resource::bres,8023f140,fn_8023f140,partial,medium,"work/ghidra/main-gb/export/8023f140_FUN_8023f140.c; four-byte colour lerp; split index/fraction supplied as arguments",src/resource/bres.rs
+resource::bres,8023f4e0,fn_8023f4e0,translated,medium,"work/ghidra/main-gb/export/8023f4e0_FUN_8023f4e0.c; key bracketing search; 8-byte time/value keys",src/resource/bres.rs
+resource::bres,8023fa30,fn_8023fa30,translated,medium,"work/ghidra/main-gb/export/8023fa30_FUN_8023fa30.c; two-mask key applicator; out/resource recovered from 0x802DCD5C",src/resource/bres.rs
+resource::bres,8023fe50,fn_8023fe50,translated,low,"work/ghidra/main-gb/export/8023fe50_FUN_8023fe50.c; three-component element reader; 0x80240100/0x80240240/0x802403C0 decoders",src/resource/bres.rs

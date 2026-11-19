@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801c90a0,fn_801c90a0,translated,medium,"work/ghidra/main-gb/export/801c90a0_FUN_801c90a0.c; 976 bytes; UV-sphere emitter: lat bands x (lon+1) longitudes, 6/8 FIFO floats per vertex, one 0x98 quad block per band",src/runtime/dvd.rs

@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80130f40,fn_80130f40,translated,medium,"work/ghidra/main-gb/export/80130f40_FUN_80130f40.c; per-frame steering/rate/ease pass over the 0x802F5748 table; writes +0x100/+0x102 +0x110 +0x114 +0x118 +0x11C +0x2064 +0x2068 +0x206C",src/game/worldmap.rs
+game::worldmap,80137320,fn_80137320,translated,medium,"work/ghidra/main-gb/export/80137320_FUN_80137320.c; 0x36 action gate; +0x1DEC < 2 pose branch; 0x801363C0 landing attempt; +0x14A4 x 12 animation table",src/game/worldmap.rs
+game::worldmap,80138510,fn_80138510,translated,medium,"work/ghidra/main-gb/export/80138510_FUN_80138510.c; mount/pose setup; three 30-frame timers; +0x10D4 bit 0x4000 selects the +0x410 or +0x3FC pose slot",src/game/worldmap.rs
+game::worldmap,8013b0b0,fn_8013b0b0,translated,medium,"work/ghidra/main-gb/export/8013b0b0_FUN_8013b0b0.c; 0x80152480 transform copy; dx divided by cos(+0x102 yaw) into +0x2774; dy into +0x2778",src/game/worldmap.rs

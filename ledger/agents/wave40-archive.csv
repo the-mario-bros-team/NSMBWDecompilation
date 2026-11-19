@@ -1,0 +1,19 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b63b0,fn_802b63b0,translated,high,"work/ghidra/main-gb/export/802b63b0_FUN_802b63b0.c; null + size guard, free 0x802B9280, returns this",src/resource/archive.rs
+resource::archive,802b63f0,fn_802b63f0,translated,high,"work/ghidra/main-gb/export/802b63f0_FUN_802b63f0.c; stores vtable 0x8034FBA0",src/resource/archive.rs
+resource::archive,802b6410,fn_802b6410,translated,high,"work/ghidra/main-gb/export/802b6410_FUN_802b6410.c; recursive U8 scan via 0x8019FF00/FF80/FEA0, strcmp 0x802E886C, -1 sentinel",src/resource/archive.rs
+resource::archive,802b6620,fn_802b6620,translated,medium,"work/ghidra/main-gb/export/802b6620_FUN_802b6620.c; base ctor call (argument dropped by Ghidra), vtable 0x8034FBB8, empty list at +0x28",src/resource/archive.rs
+resource::archive,802b6680,fn_802b6680,translated,high,"work/ghidra/main-gb/export/802b6680_FUN_802b6680.c; U8 handle at +0x04, image at +0x20, name copy 0x7F + terminator +0xAF",src/resource/archive.rs
+resource::archive,802b6700,fn_802b6700,translated,high,"work/ghidra/main-gb/export/802b6700_FUN_802b6700.c; take-and-clear +0x20",src/resource/archive.rs
+resource::archive,802b6740,fn_802b6740,translated,medium,"work/ghidra/main-gb/export/802b6740_FUN_802b6740.c; list walk from +0x28, key +0x08, payload +0x88",src/resource/archive.rs
+resource::archive,802b67b0,fn_802b67b0,translated,high,"work/ghidra/main-gb/export/802b67b0_FUN_802b67b0.c; strncmp 0x802E1BD0 length 0x10, returns ==0",src/resource/archive.rs
+resource::archive,802b67e0,fn_802b67e0,translated,high,"work/ghidra/main-gb/export/802b67e0_FUN_802b67e0.c; strncmp 0x802E1BD0 length 0x14, returns ==0",src/resource/archive.rs
+resource::archive,802b6810,fn_802b6810,translated,high,"work/ghidra/main-gb/export/802b6810_FUN_802b6810.c; first word equals magic and halfword at +4 is 0xFEFF",src/resource/archive.rs
+resource::archive,802b6840,fn_802b6840,translated,high,"work/ghidra/main-gb/export/802b6840_FUN_802b6840.c; clears bytes +0/+1 and word +4",src/resource/archive.rs
+resource::archive,802b6860,fn_802b6860,translated,medium,"work/ghidra/main-gb/export/802b6860_FUN_802b6860.c; guard +4, vtable-slot call 0x801D5550 on root heap r13-0x48B8, clears +0..+5",src/resource/archive.rs
+resource::archive,802b8420,fn_802b8420,translated,medium,"work/ghidra/main-gb/export/802b8420_FUN_802b8420.c; stores +4/+8, state init 0x801D6880 at +0xC with dropped second argument, returns 1",src/resource/archive.rs
+resource::archive,802b8450,fn_802b8450,translated,medium,"work/ghidra/main-gb/export/802b8450_FUN_802b8450.c; r3 = this+0xC only (addi r3,r3,12) then 0x801D6B60; the raw stream sets no r4/r5, so there are no src/len arguments; result tested via cntlzw>>5",src/resource/archive.rs
+resource::archive,802b84b0,fn_802b84b0,translated,medium,"work/ghidra/main-gb/export/802b84b0_FUN_802b84b0.c; r3 = this+0xC only (addi r3,r3,12) then 0x801D68C0; the raw stream sets no r4/r5, so there are no src/len arguments; result tested via cntlzw>>5",src/resource/archive.rs
+resource::archive,802b8510,fn_802b8510,translated,medium,"work/ghidra/main-gb/export/802b8510_FUN_802b8510.c; r3 = this+0xC only (addi r3,r3,12) then 0x801D6F60; the raw stream sets no r4/r5, so there are no src/len arguments; result tested via cntlzw>>5",src/resource/archive.rs
+resource::archive,802b8570,fn_802b8570,translated,medium,"work/ghidra/main-gb/export/802b8570_FUN_802b8570.c; r3 = this+0xC only (addi r3,r3,12) then 0x801D7D50; the raw stream sets no r4/r5, so there are no src/len arguments; result tested via cntlzw>>5",src/resource/archive.rs
+resource::archive,802ba870,fn_802ba870,translated,medium,"work/ghidra/main-gb/export/802ba870_FUN_802ba870.c; arena getters 0x801ABE60/70/90/A0, setters, 0x802B8B40, MEM1/MEM2/debug heaps via 0x802B9360, system heap 0x802B9430, swap 0x802B9170",src/resource/archive.rs

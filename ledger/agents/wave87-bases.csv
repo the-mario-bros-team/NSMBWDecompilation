@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80749510,fn_80749510,translated,high,"work/ghidra/rel-d_basesNP/export/80749510_FUN_80749510.c; screen rect refresh from 0x8008E890",src/game/bases.rs
+game::bases,807495b0,fn_807495b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807495b0_FUN_807495b0.c; any active player outside cached rect; 0x8005F900 result used as pointer",src/game/bases.rs
+game::bases,80749650,fn_80749650,translated,high,"work/ghidra/rel-d_basesNP/export/80749650_FUN_80749650.c; closed-rectangle point test; countLeadingZeros tail",src/game/bases.rs
+game::bases,807496b0,fn_807496b0,translated,high,"work/ghidra/rel-d_basesNP/export/807496b0_FUN_807496b0.c; five-word slot history shift",src/game/bases.rs
+game::bases,807496e0,fn_807496e0,translated,high,"work/ghidra/rel-d_basesNP/export/807496e0_FUN_807496e0.c; timer from parameter nibble halved",src/game/bases.rs
+game::bases,80749710,fn_80749710,translated,high,"work/ghidra/rel-d_basesNP/export/80749710_FUN_80749710.c; timer from parameter nibble plus RNG jitter",src/game/bases.rs
+game::bases,807498c0,fn_807498c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807498c0_FUN_807498c0.c; eight-index use count then 30-attempt table shuffle",src/game/bases.rs
+game::bases,80749c00,fn_80749c00,translated,high,"work/ghidra/rel-d_basesNP/export/80749c00_FUN_80749c00.c; copies player +0xAC..+0xB4 words",src/game/bases.rs
+game::bases,8074a1b0,fn_8074a1b0,translated,high,"work/ghidra/rel-d_basesNP/export/8074a1b0_FUN_8074a1b0.c; 0x8015F800 destructor plus optional 0x802B9280 free",src/game/bases.rs
+game::bases,8074a380,fn_8074a380,translated,high,"work/ghidra/rel-d_basesNP/export/8074a380_FUN_8074a380.c; returns constant 0x80377A04",src/game/bases.rs
+game::bases,8074a390,fn_8074a390,translated,high,"work/ghidra/rel-d_basesNP/export/8074a390_FUN_8074a390.c; returns constant 0x80377A04",src/game/bases.rs
+game::bases,8074e380,fn_8074e380,translated,high,"work/ghidra/rel-d_basesNP/export/8074e380_FUN_8074e380.c; recursive count of type 0x59 children",src/game/bases.rs
+game::bases,8074b1f0,fn_8074b1f0,translated,high,"work/ghidra/rel-d_basesNP/export/8074b1f0_FUN_8074b1f0.c; 0x8015F800 destructor plus optional 0x802B9280 free",src/game/bases.rs
+game::bases,8074b390,fn_8074b390,translated,medium,"work/ghidra/rel-d_basesNP/export/8074b390_FUN_8074b390.c; five +0x30 links then recurse; vtable slot +0xC stop test",src/game/bases.rs
+game::bases,8074b470,fn_8074b470,translated,medium,"work/ghidra/rel-d_basesNP/export/8074b470_FUN_8074b470.c; class-name compare after last colon",src/game/bases.rs
+game::bases,8074b590,fn_8074b590,translated,high,"work/ghidra/rel-d_basesNP/export/8074b590_FUN_8074b590.c; alloc 0x3F8 plus vtable 0x808116C0",src/game/bases.rs
+game::bases,8074b770,fn_8074b770,translated,medium,"work/ghidra/rel-d_basesNP/export/8074b770_FUN_8074b770.c; player-in-rect query at +0x3D0",src/game/bases.rs
+game::bases,8074b880,fn_8074b880,translated,high,"work/ghidra/rel-d_basesNP/export/8074b880_FUN_8074b880.c; sound cue 0x86 at copied position",src/game/bases.rs
+game::bases,8074ba10,fn_8074ba10,translated,medium,"work/ghidra/rel-d_basesNP/export/8074ba10_FUN_8074ba10.c; three recorded slot distances around candidate x",src/game/bases.rs
+game::bases,8074c0b0,fn_8074c0b0,translated,high,"work/ghidra/rel-d_basesNP/export/8074c0b0_FUN_8074c0b0.c; alloc 0x438 plus vtable 0x808118B0",src/game/bases.rs
+game::bases,8074c1f0,fn_8074c1f0,translated,high,"work/ghidra/rel-d_basesNP/export/8074c1f0_FUN_8074c1f0.c; duplicate character gate; 0x80064D10 release",src/game/bases.rs
+game::bases,8074c280,fn_8074c280,translated,medium,"work/ghidra/rel-d_basesNP/export/8074c280_FUN_8074c280.c; player-in-rect query at +0x433",src/game/bases.rs
+game::bases,8074c350,fn_8074c350,translated,medium,"work/ghidra/rel-d_basesNP/export/8074c350_FUN_8074c350.c; two-slot compaction through 0x80162D00",src/game/bases.rs
+game::bases,8074d1c0,fn_8074d1c0,translated,high,"work/ghidra/rel-d_basesNP/export/8074d1c0_FUN_8074d1c0.c; alloc 0x3D8 plus vtable 0x80811A70",src/game/bases.rs
+game::bases,8074d6a0,fn_8074d6a0,translated,high,"work/ghidra/rel-d_basesNP/export/8074d6a0_FUN_8074d6a0.c; alloc 0x3A8 plus vtable 0x80811BF0",src/game/bases.rs
+game::bases,8074d940,fn_8074d940,translated,high,"work/ghidra/rel-d_basesNP/export/8074d940_FUN_8074d940.c; duplicate character gate twin of fn_8074c1f0",src/game/bases.rs
+game::bases,8074d9d0,fn_8074d9d0,translated,high,"work/ghidra/rel-d_basesNP/export/8074d9d0_FUN_8074d9d0.c; scene +0x38 minus camera +0x8FEA8",src/game/bases.rs
+game::bases,8074da00,fn_8074da00,translated,medium,"work/ghidra/rel-d_basesNP/export/8074da00_FUN_8074da00.c; player-in-rect query at +0x3DC",src/game/bases.rs
+game::bases,8074db10,fn_8074db10,translated,high,"work/ghidra/rel-d_basesNP/export/8074db10_FUN_8074db10.c; eight-step counter wrap",src/game/bases.rs

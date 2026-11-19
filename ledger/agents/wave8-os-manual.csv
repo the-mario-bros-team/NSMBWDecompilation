@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,80243690,fn_80243690,translated,high,"work/ghidra/main-gb/export/80243690_FUN_80243690.c; count at +0x18, array at +0x1c, vtable+0x24 per non-null object",src/runtime/os.rs
+runtime::os,80244e60,fn_80244e60,translated,high,"work/ghidra/main-gb/export/80244e60_FUN_80244e60.c; byte-identical to 80243690; delegates to fn_80243690",src/runtime/os.rs
+runtime::os,80249ac0,fn_80249ac0,translated,high,"work/ghidra/main-gb/export/80249ac0_FUN_80249ac0.c; owner+0x04 vtable+0x0C(owner,0x10001,0,record), then record vtable+0x10(record,1)",src/runtime/os.rs
+
+runtime::os,80246460,fn_80246460,translated,high,"work/ghidra/main-gb/export/80246460_FUN_80246460.c; byte-identical to 80243690; delegates to fn_80243690",src/runtime/os.rs
+runtime::os,80247ab0,fn_80247ab0,translated,high,"work/ghidra/main-gb/export/80247ab0_FUN_80247ab0.c; byte-identical to 80243690; delegates to fn_80243690",src/runtime/os.rs

@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80084690,fn_80084690,translated,medium,"work/ghidra/main-gb/export/80084690_FUN_80084690.c; direction byte 0x80..0x93, three section tables in the nine-word descriptor; the two 3-argument 0x80083FC0 sites pass +0xC1A in r6",src/game/stage.rs

@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,8021c6d8,fn_8021c6d8,translated,high,"work/ghidra/main-gb/export/8021c6d8_FUN_8021c6d8.c; empty callback, 4-byte body",src/runtime/bt.rs
+runtime::bt,8021c6dc,fn_8021c6dc,translated,high,"work/ghidra/main-gb/export/8021c6dc_FUN_8021c6dc.c; forwards second argument to heap free 0x801F7240",src/runtime/bt.rs
+runtime::bt,8021c6e4,fn_8021c6e4,translated,high,"work/ghidra/main-gb/export/8021c6e4_FUN_8021c6e4.c; clears global 0x803D548C, calls 0x8021D358, guard byte +0x73",src/runtime/bt.rs
+runtime::bt,8021c748,fn_8021c748,translated,high,"work/ghidra/main-gb/export/8021c748_FUN_8021c748.c; sets global 0x803D548C, calls 0x8021D3DC, guard byte +0x73",src/runtime/bt.rs
+runtime::bt,8021c7ac,fn_8021c7ac,translated,high,"work/ghidra/main-gb/export/8021c7ac_FUN_8021c7ac.c; writes +0x73, drains via 0x8021EBC8, calls 0x8021982C",src/runtime/bt.rs
+runtime::bt,8021c834,fn_8021c834,translated,high,"work/ghidra/main-gb/export/8021c834_FUN_8021c834.c; nine mask-to-byte copies from +0x0A..+0x11",src/runtime/bt.rs
+runtime::bt,8021c8d8,fn_8021c8d8,translated,high,"work/ghidra/main-gb/export/8021c8d8_FUN_8021c8d8.c; u16 parameter block, command 7 to 0x8021AAF4",src/runtime/bt.rs
+runtime::bt,8021cabc,fn_8021cabc,translated,high,"work/ghidra/main-gb/export/8021cabc_FUN_8021cabc.c; state 0x05 guard then six-argument call to 0x8021D270",src/runtime/bt.rs
+runtime::bt,8021cba0,fn_8021cba0,translated,high,"work/ghidra/main-gb/export/8021cba0_FUN_8021cba0.c; state 0x05 guard then call to fn_8021d630",src/runtime/bt.rs
+runtime::bt,8021ceb4,fn_8021ceb4,translated,medium,"work/ghidra/main-gb/export/8021ceb4_FUN_8021ceb4.c; UIH builder type 0x73, inverted flag bit, checksum +0x14",src/runtime/bt.rs
+runtime::bt,8021cf64,fn_8021cf64,translated,medium,"work/ghidra/main-gb/export/8021cf64_FUN_8021cf64.c; UIH builder type 0x0F/0x1F, two unused arguments",src/runtime/bt.rs
+runtime::bt,8021d028,fn_8021d028,translated,medium,"work/ghidra/main-gb/export/8021d028_FUN_8021d028.c; UIH builder type 0x53, non-inverted flag bit",src/runtime/bt.rs
+runtime::bt,8021d0d8,fn_8021d0d8,translated,high,"work/ghidra/main-gb/export/8021d0d8_FUN_8021d0d8.c; shared frame finisher, header -3/-4, checksum over 2 bytes, two sinks",src/runtime/bt.rs
+runtime::bt,8021d358,fn_8021d358,translated,high,"work/ghidra/main-gb/export/8021d358_FUN_8021d358.c; 2-byte response 0xA1/0xA3 via fn_8021d0d8",src/runtime/bt.rs
+runtime::bt,8021d3dc,fn_8021d3dc,translated,high,"work/ghidra/main-gb/export/8021d3dc_FUN_8021d3dc.c; 2-byte response 0x61/0x63 via fn_8021d0d8",src/runtime/bt.rs
+runtime::bt,8021d460,fn_8021d460,translated,medium,"work/ghidra/main-gb/export/8021d460_FUN_8021d460.c; 0xE1 signal frame, packed V.24 bits from descriptor",src/runtime/bt.rs
+runtime::bt,8021d580,fn_8021d580,translated,high,"work/ghidra/main-gb/export/8021d580_FUN_8021d580.c; fixed 4-byte response 0x51/0x53",src/runtime/bt.rs
+runtime::bt,8021d630,fn_8021d630,translated,high,"work/ghidra/main-gb/export/8021d630_FUN_8021d630.c; 3-byte short and 10-byte modem-status forms of 0x91",src/runtime/bt.rs
+runtime::bt,8021e484,fn_8021e484,translated,medium,"work/ghidra/main-gb/export/8021e484_FUN_8021e484.c; receive checksum test, residue 0xCF over table 0x802F7098",src/runtime/bt.rs
+runtime::bt,8021e6b0,fn_8021e6b0,translated,high,"work/ghidra/main-gb/export/8021e6b0_FUN_8021e6b0.c; stores +0x10 and arms timer 0x0B at 0x801FA320",src/runtime/bt.rs
+runtime::bt,8021e724,fn_8021e724,translated,high,"work/ghidra/main-gb/export/8021e724_FUN_8021e724.c; cancels timer at 0x801FA390",src/runtime/bt.rs
+runtime::bt,8021e77c,fn_8021e77c,translated,high,"work/ghidra/main-gb/export/8021e77c_FUN_8021e77c.c; stores +0x80 and arms timer 0x0C at +0x70",src/runtime/bt.rs
+runtime::bt,8021e7fc,fn_8021e7fc,translated,high,"work/ghidra/main-gb/export/8021e7fc_FUN_8021e7fc.c; cancels port timer at +0x70",src/runtime/bt.rs
+runtime::bt,8021e854,fn_8021e854,translated,high,"work/ghidra/main-gb/export/8021e854_FUN_8021e854.c; 61-entry index scan at +0x24, re-arm or command 8",src/runtime/bt.rs
+runtime::bt,8021e918,fn_8021e918,translated,high,"work/ghidra/main-gb/export/8021e918_FUN_8021e918.c; window state 0x0C event 5 / 0x0B command 5",src/runtime/bt.rs
+runtime::bt,8021e954,fn_8021e954,translated,high,"work/ghidra/main-gb/export/8021e954_FUN_8021e954.c; event 0x0F with one-byte parameter, state 2 or 3",src/runtime/bt.rs
+runtime::bt,8021eb00,fn_8021eb00,translated,medium,"work/ghidra/main-gb/export/8021eb00_FUN_8021eb00.c; adds credit at +0x98, traces rfc_inc_credit",src/runtime/bt.rs
+runtime::bt,8021eb8c,fn_8021eb8c,translated,medium,"work/ghidra/main-gb/export/8021eb8c_FUN_8021eb8c.c; decrements credit at +0x98, sets flag +0x24 at zero",src/runtime/bt.rs

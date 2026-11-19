@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a56b10,fn_80a56b10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a56b10_FUN_80a56b10.c; firebar model emitter over the +0x1EF0 segment table and three holders",src/game/enemies.rs
+game::enemies,80a6fbc0,fn_80a6fbc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6fbc0_FUN_80a6fbc0.c; animation-gated sway ramp with the two-state +0x360 machine",src/game/enemies.rs
+game::enemies,80adde10,fn_80adde10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adde10_FUN_80adde10.c; bubble hurt-state entry with three state-token guards",src/game/enemies.rs
+game::enemies,80ad4000,fn_80ad4000,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad4000_FUN_80ad4000.c; +0x664/+0x662 kill gate with record and effect submit",src/game/enemies.rs
+game::enemies,80a1ebc0,fn_80a1ebc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a1ebc0_FUN_80a1ebc0.c; circle/offset position solve with six qr3 halfword widens",src/game/enemies.rs
+game::enemies,80a20900,fn_80a20900,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a20900_FUN_80a20900.c; four-player proximity damage emitter for effect 0x43B",src/game/enemies.rs
+game::enemies,80b0d4d0,fn_80b0d4d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0d4d0_FUN_80b0d4d0.c; turn-order verdict over the four player slots",src/game/enemies.rs
+game::enemies,80b04a90,fn_80b04a90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b04a90_FUN_80b04a90.c; chain-segment initialiser from the stage section table",src/game/enemies.rs
+game::enemies,80b16ce0,fn_80b16ce0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b16ce0_FUN_80b16ce0.c; unizo/unizoBig brres and clip binder",src/game/enemies.rs
+game::enemies,80a06560,fn_80a06560,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a06560_FUN_80a06560.c; four-slot attachment placement with two qr3 sites",src/game/enemies.rs
+game::enemies,80b115a0,fn_80b115a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b115a0_FUN_80b115a0.c; yaw-pitch-yaw spawn matrix and 1.15 render item",src/game/enemies.rs
+game::enemies,80a91d30,fn_80a91d30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91d30_FUN_80a91d30.c; Wm_en_movecloud tail emit gated by +0x708",src/game/enemies.rs
+game::enemies,80a9c690,fn_80a9c690,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a9c690_FUN_80a9c690.c; side-selected wait/throw/dead clip binder",src/game/enemies.rs
+game::enemies,80a99360,fn_80a99360,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a99360_FUN_80a99360.c; side-dependent hurt scale from the ground height",src/game/enemies.rs
+game::enemies,80a97180,fn_80a97180,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a97180_FUN_80a97180.c; twelve-frame collapse ladder over +0x630/+0x5F8",src/game/enemies.rs
+game::enemies,80a94d10,fn_80a94d10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a94d10_FUN_80a94d10.c; contact-driven lean with effect 0x1B9",src/game/enemies.rs

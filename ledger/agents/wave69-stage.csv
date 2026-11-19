@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800945d0,fn_800945d0,translated,high,"work/ghidra/main-gb/export/800945d0_FUN_800945d0.c; name 0x80311B40 Wm_ob_fallsmoke_s with descriptor 0x80356A80 through 0x8016D640",src/game/stage.rs
+game::stage,80094e80,fn_80094e80,translated,medium,"work/ghidra/main-gb/export/80094e80_FUN_80094e80.c; Wm actor base ctor: storage 0x802DCD60; vtables 0x80311EB8/0x8030EBB8 then 0x80311E78/0x80311BE0; two 0x8015FC90 sub-objects at +0x394/+0x3D4; marker +0x484 via 0x800B8440; 4-byte holder +0x51C; 0x802DCDAC publish",src/game/stage.rs
+game::stage,80095130,fn_80095130,translated,high,"work/ghidra/main-gb/export/80095130_FUN_80095130.c; destructor: +0x514 vtable 0x80311E60; +0x51C released through vtable slot +8; 0x800B84E0 on +0x484; 0x80067270; 0x80162920 when size>0",src/game/stage.rs
+game::stage,800951d0,fn_800951d0,translated,medium,"work/ghidra/main-gb/export/800951d0_FUN_800951d0.c; 0x80097F40 position cache then ground query 0x80075270 at +0xAC/+0xB0; +0x45D latch; 0x80161DA0 forward",src/game/stage.rs
+game::stage,80095240,fn_80095240,translated,medium,"work/ghidra/main-gb/export/80095240_FUN_80095240.c; frame update: 0x800643F0 guard; +0x394 interface slots +0x28/+0x14; +0x150/+0x218/+0x144 switches; +0x500..+0x50C timers; +0x390/+0x432 transition; +0x228 tail; returns +0x0B==0",src/game/stage.rs
+game::stage,80095480,fn_80095480,translated,medium,"work/ghidra/main-gb/export/80095480_FUN_80095480.c; mode 2 clears +0x34A unless 0x80429CFA bit 3; forwards to 0x80064490",src/game/stage.rs
+game::stage,800954a0,fn_800954a0,translated,medium,"work/ghidra/main-gb/export/800954a0_FUN_800954a0.c; 0x80064540 status reduced to a non-zero test",src/game/stage.rs
+game::stage,800954d0,fn_800954d0,translated,high,"work/ghidra/main-gb/export/800954d0_FUN_800954d0.c; three-word Wm_en_hit record from the input point plus 0x8042C1D8 then 0x8016C890",src/game/stage.rs
+game::stage,80095c20,fn_80095c20,translated,high,"work/ghidra/main-gb/export/80095c20_FUN_80095c20.c; event id at +4 tested by 0x800971F0 then virtual +0x220",src/game/stage.rs
+game::stage,80095c80,fn_80095c80,translated,high,"work/ghidra/main-gb/export/80095c80_FUN_80095c80.c; byte-identical to 80095C20",src/game/stage.rs
+game::stage,80096240,fn_80096240,translated,high,"work/ghidra/main-gb/export/80096240_FUN_80096240.c; probe 0x80064790 on the x/y pair then first output below 0.0f",src/game/stage.rs
+game::stage,80096300,fn_80096300,translated,medium,"work/ghidra/main-gb/export/80096300_FUN_80096300.c; scene +0x3C limit against angle + owner +0x20 - owner +0x28",src/game/stage.rs
+game::stage,80096330,fn_80096330,translated,high,"work/ghidra/main-gb/export/80096330_FUN_80096330.c; 0x8012E400 match then virtual +0x6C first byte copied to +0x38D",src/game/stage.rs
+game::stage,80096460,fn_80096460,translated,high,"work/ghidra/main-gb/export/80096460_FUN_80096460.c; delete 0x802B9280 when size>0; returns this",src/game/stage.rs
+game::stage,800967a0,fn_800967a0,translated,high,"work/ghidra/main-gb/export/800967a0_FUN_800967a0.c; mr r3,r4 makes the second argument the +0x3FC receiver; virtual call (receiver,1,0,2,f1,receiver[+0x10C]); then [0x80429F10]+0x138 = 1",src/game/stage.rs
+game::stage,800967f0,fn_800967f0,translated,medium,"work/ghidra/main-gb/export/800967f0_FUN_800967f0.c; index from 0x8009F5F0; position 0x8006CED0 with +0xB0 y and 0x8042CC8C offset; +0x510 selects 0x800E1F80 or 0x800E2220",src/game/stage.rs
+game::stage,80096ca0,fn_80096ca0,translated,high,"work/ghidra/main-gb/export/80096ca0_FUN_80096ca0.c; position 0x8006CED0 then 0x8006A4B0 packet and event 0x15F through 0x80197F00 with 0x80429D5C owner",src/game/stage.rs
+game::stage,80096d00,fn_80096d00,translated,high,"work/ghidra/main-gb/export/80096d00_FUN_80096d00.c; same as 80096CA0 with event 0x161",src/game/stage.rs
+game::stage,80096e60,fn_80096e60,translated,medium,"work/ghidra/main-gb/export/80096e60_FUN_80096e60.c; 0x80096F60 ground block + 0x8006EF40 bit 2 + 0x80097050 bit 4; +0x274/+0x23C guard around 0x800D9A30 and the 0x8000 bit clear",src/game/stage.rs
+game::stage,80096f60,fn_80096f60,translated,high,"work/ghidra/main-gb/export/80096f60_FUN_80096f60.c; +0x1F4 guard; 0x80072BC0 status; 0x80070CB0/0x80070720 ground branch; +0x440..+0x454 accumulators and +0x45C/+0x45E flags",src/game/stage.rs
+game::stage,80097050,fn_80097050,translated,medium,"work/ghidra/main-gb/export/80097050_FUN_80097050.c; +0x1FC guard; signed 0x8042C1A0 direction through 0x80072CB0 twice plus the +0x34A & 3 repeat; results ORed into +0x274",src/game/stage.rs
+game::stage,800971f0,fn_800971f0,translated,high,"work/ghidra/main-gb/export/800971f0_FUN_800971f0.c; +0xB4 height against 0.0f gated by the +0x391 mode byte; +0x10D8 bits 0x80000 and 0x100000",src/game/stage.rs
+game::stage,80097df0,fn_80097df0,translated,high,"work/ghidra/main-gb/export/80097df0_FUN_80097df0.c; 0x80065A40 position refresh then +0x478 = 0",src/game/stage.rs
+game::stage,80097e30,fn_80097e30,translated,high,"work/ghidra/main-gb/export/80097e30_FUN_80097e30.c; +0x431 slot above 3 returns; 0x800CEA20 with 0x80429FB0 and the sign-extended slot",src/game/stage.rs
+game::stage,80097e50,fn_80097e50,translated,high,"work/ghidra/main-gb/export/80097e50_FUN_80097e50.c; record 0x8006A4B0 from event[1]+0xAC then effect 0x266 through 0x80198C30 with 0x80429D60",src/game/stage.rs
+game::stage,80097f40,fn_80097f40,translated,high,"work/ghidra/main-gb/export/80097f40_FUN_80097f40.c; owner +0xDC/+0xE0/+0xE4 copied to +0x464/+0x468/+0x46C",src/game/stage.rs
+game::stage,800980b0,fn_800980b0,translated,medium,"work/ghidra/main-gb/export/800980b0_FUN_800980b0.c; virtual +0x38 query then either the +0x7C child slot +0x14 or the own slot +0x34",src/game/stage.rs
+game::stage,8009a960,fn_8009a960,translated,high,"work/ghidra/main-gb/export/8009a960_FUN_8009a960.c; release 0x8015F800 then delete 0x802B9280 when size>0; returns this",src/game/stage.rs
+game::stage,8009aaa0,fn_8009aaa0,translated,high,"work/ghidra/main-gb/export/8009aaa0_FUN_8009aaa0.c; five unrolled +0x30 parent links each queried through vtable slot +0x0C then the recursive tail",src/game/stage.rs
+game::stage,8009ab80,fn_8009ab80,translated,high,"work/ghidra/main-gb/export/8009ab80_FUN_8009ab80.c; both paths truncated after 0x3A and compared with 0x802E1AB4",src/game/stage.rs

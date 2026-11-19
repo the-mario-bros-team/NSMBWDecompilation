@@ -1,0 +1,14 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801f6480,fn_801f6480,translated,medium,"work/ghidra/main-gb/export/801f6480_FUN_801f6480.c (1408 bytes)",src/runtime/input.rs
+runtime::input,801fe174,fn_801fe174,translated,medium,"work/ghidra/main-gb/export/801fe174_FUN_801fe174.c (308 bytes)",src/runtime/input.rs
+runtime::input,801fe2a8,fn_801fe2a8,translated,medium,"work/ghidra/main-gb/export/801fe2a8_FUN_801fe2a8.c (404 bytes)",src/runtime/input.rs
+runtime::input,801fe43c,fn_801fe43c,translated,high,"work/ghidra/main-gb/export/801fe43c_FUN_801fe43c.c (360 bytes)",src/runtime/input.rs
+runtime::input,801fe5a4,fn_801fe5a4,translated,medium,"work/ghidra/main-gb/export/801fe5a4_FUN_801fe5a4.c (104 bytes)",src/runtime/input.rs
+runtime::input,801fe60c,fn_801fe60c,translated,high,"work/ghidra/main-gb/export/801fe60c_FUN_801fe60c.c (296 bytes)",src/runtime/input.rs
+runtime::input,801fe734,fn_801fe734,translated,high,"work/ghidra/main-gb/export/801fe734_FUN_801fe734.c (184 bytes)",src/runtime/input.rs
+runtime::input,801fe7ec,fn_801fe7ec,translated,medium,"work/ghidra/main-gb/export/801fe7ec_FUN_801fe7ec.c (88 bytes)",src/runtime/input.rs
+runtime::input,801fe844,fn_801fe844,translated,high,"work/ghidra/main-gb/export/801fe844_FUN_801fe844.c (616 bytes)",src/runtime/input.rs
+runtime::input,801feaac,fn_801feaac,translated,medium,"work/ghidra/main-gb/export/801feaac_FUN_801feaac.c (504 bytes)",src/runtime/input.rs
+runtime::input,801feca4,fn_801feca4,translated,medium,"work/ghidra/main-gb/export/801feca4_FUN_801feca4.c (512 bytes)",src/runtime/input.rs
+runtime::input,801ff024,fn_801ff024,translated,medium,"work/ghidra/main-gb/export/801ff024_FUN_801ff024.c (284 bytes)",src/runtime/input.rs
+runtime::input,801ff140,fn_801ff140,translated,medium,"work/ghidra/main-gb/export/801ff140_FUN_801ff140.c (452 bytes)",src/runtime/input.rs

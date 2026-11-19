@@ -1,0 +1,20 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80200080,fn_80200080,translated,medium,work/ghidra/main-gb/export/80200080_FUN_80200080.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,80204138,fn_80204138,translated,high,work/ghidra/main-gb/export/80204138_FUN_80204138.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020413c,fn_8020413c,translated,medium,work/ghidra/main-gb/export/8020413c_FUN_8020413c.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,80205088,fn_80205088,translated,high,work/ghidra/main-gb/export/80205088_FUN_80205088.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,80205570,fn_80205570,translated,medium,work/ghidra/main-gb/export/80205570_FUN_80205570.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,80205a3c,fn_80205a3c,translated,medium,work/ghidra/main-gb/export/80205a3c_FUN_80205a3c.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,80205cec,fn_80205cec,translated,medium,work/ghidra/main-gb/export/80205cec_FUN_80205cec.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,802072f4,fn_802072f4,translated,medium,work/ghidra/main-gb/export/802072f4_thunk_FUN_801f7240.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,802078c8,fn_802078c8,translated,medium,work/ghidra/main-gb/export/802078c8_FUN_802078c8.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,80207d90,fn_80207d90,translated,medium,work/ghidra/main-gb/export/80207d90_FUN_80207d90.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020815c,fn_8020815c,translated,medium,work/ghidra/main-gb/export/8020815c_FUN_8020815c.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,802085c0,fn_802085c0,translated,medium,work/ghidra/main-gb/export/802085c0_FUN_802085c0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,802090c4,fn_802090c4,translated,medium,work/ghidra/main-gb/export/802090c4_FUN_802090c4.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020a0b0,fn_8020a0b0,translated,medium,work/ghidra/main-gb/export/8020a0b0_FUN_8020a0b0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020a6c0,fn_8020a6c0,translated,medium,work/ghidra/main-gb/export/8020a6c0_FUN_8020a6c0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020f538,fn_8020f538,translated,medium,work/ghidra/main-gb/export/8020f538_FUN_8020f538.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020f710,fn_8020f710,translated,medium,work/ghidra/main-gb/export/8020f710_FUN_8020f710.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020f97c,fn_8020f97c,translated,medium,work/ghidra/main-gb/export/8020f97c_FUN_8020f97c.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs
+runtime::bt,8020ff70,fn_8020ff70,translated,medium,work/ghidra/main-gb/export/8020ff70_FUN_8020ff70.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/runtime/bt.rs

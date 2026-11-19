@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,80273dd0,fn_80273dd0,translated,medium,"work/ghidra/main-gb/export/80273dd0_FUN_80273dd0.c; voice start-up: nine-word request block, +0xC8 splice, band/pitch tail",src/audio/seq.rs
+audio::seq,802741e0,fn_802741e0,translated,medium,"work/ghidra/main-gb/export/802741e0_FUN_802741e0.c; node distance ramp: triple difference, pow/linear curve, negated counter",src/audio/seq.rs
+audio::seq,80274320,fn_80274320,translated,medium,"work/ghidra/main-gb/export/80274320_FUN_80274320.c; matrix fade dispatch to fn_802746d0 / fn_80274a10 by sequence mode",src/audio/seq.rs
+audio::seq,8027e080,fn_8027e080,translated,medium,"work/ghidra/main-gb/export/8027e080_FUN_8027e080.c; per-element voice burst: ten setters, 3+4 value arrays, 0x18-byte row loop",src/audio/seq.rs

@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e46a0,fn_802e46a0,translated,low,"work/ghidra/main-gb/export/802e46a0_FUN_802e46a0.c; acos kernel; GQR probe omitted as a decompiler paired-single artifact",src/engine/main_loop.rs
+engine::main_loop,802e51dc,fn_802e51dc,translated,medium,"work/ghidra/main-gb/export/802e51dc_FUN_802e51dc.c; log1p kernel; r2 coefficient pool resolved by address",src/engine/main_loop.rs
+engine::main_loop,802e5490,fn_802e5490,translated,medium,"work/ghidra/main-gb/export/802e5490_FUN_802e5490.c; log; exponent split plus 802E51DC",src/engine/main_loop.rs
+engine::main_loop,802e613c,fn_802e613c,translated,medium,"work/ghidra/main-gb/export/802e613c_FUN_802e613c.c; inverse-tangent tail polynomial",src/engine/main_loop.rs
+engine::main_loop,802e7904,fn_802e7904,translated,medium,"work/ghidra/main-gb/export/802e7904_FUN_802e7904.c; atan polynomial with residual correction",src/engine/main_loop.rs
+engine::main_loop,802e79c4,fn_802e79c4,translated,low,"work/ghidra/main-gb/export/802e79c4_FUN_802e79c4.c; atan2 tail; 0x802FE208..0x802FE268 coefficient pool plus GQR probe omitted",src/engine/main_loop.rs
+engine::main_loop,802e7c14,fn_802e7c14,translated,medium,"work/ghidra/main-gb/export/802e7c14_FUN_802e7c14.c; four-octant inverse-tangent polynomial and 0x802FE270 table",src/engine/main_loop.rs
+engine::main_loop,802e7e44,fn_802e7e44,translated,medium,"work/ghidra/main-gb/export/802e7e44_FUN_802e7e44.c; ceil",src/engine/main_loop.rs
+engine::main_loop,802e7f90,fn_802e7f90,translated,high,"work/ghidra/main-gb/export/802e7f90_FUN_802e7f90.c; copysign over the two high words",src/engine/main_loop.rs
+engine::main_loop,802e8084,fn_802e8084,translated,medium,"work/ghidra/main-gb/export/802e8084_FUN_802e8084.c; floor",src/engine/main_loop.rs
+engine::main_loop,802e81d4,fn_802e81d4,translated,medium,"work/ghidra/main-gb/export/802e81d4_FUN_802e81d4.c; frexp normalization and exponent out word",src/engine/main_loop.rs
+engine::main_loop,802e825c,fn_802e825c,translated,medium,"work/ghidra/main-gb/export/802e825c_FUN_802e825c.c; ldexp exponent rebase; calls 802DF42C",src/engine/main_loop.rs
+engine::main_loop,802e83c8,fn_802e83c8,translated,high,"work/ghidra/main-gb/export/802e83c8_FUN_802e83c8.c; modf integral/fraction split",src/engine/main_loop.rs
+engine::main_loop,802e8620,fn_802e8620,translated,medium,"work/ghidra/main-gb/export/802e8620_FUN_802e8620.c; software square root restoring loop",src/engine/main_loop.rs
+engine::main_loop,802ec014,fn_802ec014,translated,high,"work/ghidra/main-gb/export/802ec014_FUN_802ec014.c; 802ED9CC guard then 802EC0F4 flush with 0",src/engine/main_loop.rs
+engine::main_loop,802ec07c,fn_802ec07c,translated,high,"work/ghidra/main-gb/export/802ec07c_FUN_802ec07c.c; same guard and flush with 1",src/engine/main_loop.rs
+engine::main_loop,802ec0f4,fn_802ec0f4,translated,medium,"work/ghidra/main-gb/export/802ec0f4_FUN_802ec0f4.c; 802EB090 gate, 802E890C trap stub, byte result mapped to 0/1/2",src/engine/main_loop.rs
+engine::main_loop,802ec4c4,fn_802ec4c4,translated,medium,"work/ghidra/main-gb/export/802ec4c4_FUN_802ec4c4.c; GPR block transfer below 0x25 with 80351620..2C save/restore",src/engine/main_loop.rs
+engine::main_loop,802ec6f8,fn_802ec6f8,translated,medium,"work/ghidra/main-gb/export/802ec6f8_FUN_802ec6f8.c; SPR block transfer below 0x61 plus 804270C8/C9 overlap flags",src/engine/main_loop.rs
+engine::main_loop,802ecdcc,fn_802ecdcc,translated,high,"work/ghidra/main-gb/export/802ecdcc_FUN_802ecdcc.c; request type 3/4 status send",src/engine/main_loop.rs
+engine::main_loop,802ece28,fn_802ece28,translated,medium,"work/ghidra/main-gb/export/802ece28_FUN_802ece28.c; 0x90 status reply: header plus 0x20 GPRs plus 0x400 code window",src/engine/main_loop.rs
+engine::main_loop,802ed520,fn_802ed520,translated,medium,"work/ghidra/main-gb/export/802ed520_FUN_802ed520.c; ten-word mfspr/mtspr patch over 0x802FE320 constants",src/engine/main_loop.rs
+engine::main_loop,802ed5fc,fn_802ed5fc,translated,medium,"work/ghidra/main-gb/export/802ed5fc_FUN_802ed5fc.c; nine-word patch over 0x802FE344 constants",src/engine/main_loop.rs
+engine::main_loop,802e8618,fn_802e8618,translated,high,"work/ghidra/main-gb/export/802e8618_thunk_FUN_802e5490.c; four-byte tail branch to 802E5490",src/engine/main_loop.rs
+engine::main_loop,802e8868,fn_802e8868,translated,high,"work/ghidra/main-gb/export/802e8868_thunk_FUN_802e8620.c; four-byte tail branch to 802E8620",src/engine/main_loop.rs

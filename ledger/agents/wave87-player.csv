@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,80040600,fn_80040600,translated,high,"work/ghidra/main-gb/export/80040600_FUN_80040600.c; 12-byte getter, returns the constant descriptor 0x80353AE4",src/game/player.rs
+game::player,80040610,fn_80040610,translated,high,"work/ghidra/main-gb/export/80040610_FUN_80040610.c; 12-byte getter, returns the constant descriptor 0x80353B24",src/game/player.rs
+game::player,80040620,fn_80040620,translated,high,"work/ghidra/main-gb/export/80040620_FUN_80040620.c; 12-byte getter, returns the constant descriptor 0x80353AA4",src/game/player.rs
+game::player,80040630,fn_80040630,translated,high,"work/ghidra/main-gb/export/80040630_FUN_80040630.c; 12-byte getter, returns the constant descriptor 0x80353B64",src/game/player.rs
+game::player,80040920,fn_80040920,translated,high,"work/ghidra/main-gb/export/80040920_FUN_80040920.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80040930,fn_80040930,translated,high,"work/ghidra/main-gb/export/80040930_FUN_80040930.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80040940,fn_80040940,translated,high,"work/ghidra/main-gb/export/80040940_FUN_80040940.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80040950,fn_80040950,translated,high,"work/ghidra/main-gb/export/80040950_FUN_80040950.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80042ae0,fn_80042ae0,translated,high,"work/ghidra/main-gb/export/80042ae0_FUN_80042ae0.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80042af0,fn_80042af0,translated,high,"work/ghidra/main-gb/export/80042af0_FUN_80042af0.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80042b00,fn_80042b00,translated,high,"work/ghidra/main-gb/export/80042b00_FUN_80042b00.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80042b10,fn_80042b10,translated,high,"work/ghidra/main-gb/export/80042b10_FUN_80042b10.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80042b20,fn_80042b20,translated,high,"work/ghidra/main-gb/export/80042b20_FUN_80042b20.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80042b30,fn_80042b30,translated,high,"work/ghidra/main-gb/export/80042b30_FUN_80042b30.c; 12-byte getter, returns the shared handler 0x80377A04",src/game/player.rs
+game::player,800435d0,fn_800435d0,translated,medium,"work/ghidra/main-gb/export/800435d0_FUN_800435d0.c; twin of fn_80041a00: five unrolled +0x30 child probes, then recursion",src/game/player.rs
+game::player,800436b0,fn_800436b0,translated,high,"work/ghidra/main-gb/export/800436b0_FUN_800436b0.c; twin of fn_80041ae0: compare the text after the last ':' of the name and the path",src/game/player.rs
+game::player,80044e50,fn_80044e50,translated,high,"work/ghidra/main-gb/export/80044e50_FUN_80044e50.c; third copy of the fn_800418c0 release shape: 0x8015F800 then conditional 0x802B9280",src/game/player.rs
+game::player,80044eb0,fn_80044eb0,translated,high,"work/ghidra/main-gb/export/80044eb0_FUN_80044eb0.c; fourth copy of the fn_800418c0 release shape, textually identical to fn_80044e50",src/game/player.rs
+game::player,80045ef0,fn_80045ef0,translated,high,"work/ghidra/main-gb/export/80045ef0_FUN_80045ef0.c; call 0x8007F950 on the +0x3E0 sub-object, return 1",src/game/player.rs
+game::player,80046070,fn_80046070,translated,high,"work/ghidra/main-gb/export/80046070_FUN_80046070.c; reset through 0x800671B0 then free through 0x80162920 when destroy > 0",src/game/player.rs
+game::player,80046410,fn_80046410,translated,high,"work/ghidra/main-gb/export/80046410_FUN_80046410.c; reset through 0x802D7B20 then free through 0x802B9280 when destroy > 0",src/game/player.rs
+game::player,80046a50,fn_80046a50,translated,medium,"work/ghidra/main-gb/export/80046a50_FUN_80046a50.c; reset +0xEA4, force mode 8 when 0x8042A204 == 2, then virtual +0x424",src/game/player.rs
+game::player,80046ab0,fn_80046ab0,translated,high,"work/ghidra/main-gb/export/80046ab0_FUN_80046ab0.c; state test, then the flag 0x7D guard, three +0x1044 copies and the 0x83/0x82 swap",src/game/player.rs
+game::player,80047190,fn_80047190,translated,high,"work/ghidra/main-gb/export/80047190_FUN_80047190.c; store +0x6F4 = 1, raise flag 0xB5, virtual +0x14 on +0x1464",src/game/player.rs
+game::player,80047390,fn_80047390,translated,high,"work/ghidra/main-gb/export/80047390_FUN_80047390.c; guarded by event flag 3: clear the +0x14A4 block, store +0x14A0, virtual +0x18",src/game/player.rs
+game::player,80047440,fn_80047440,translated,medium,"work/ghidra/main-gb/export/80047440_FUN_80047440.c; age +0x14A8 then virtual +0x10 on +0x1464",src/game/player.rs
+game::player,80047800,fn_80047800,translated,medium,"work/ghidra/main-gb/export/80047800_FUN_80047800.c; four guards, sign-indexed rate table, clamp the +0x10C magnitude to [0x8042B898, 1.5]",src/game/player.rs
+game::player,80047920,fn_80047920,translated,high,"work/ghidra/main-gb/export/80047920_FUN_80047920.c; four guards then +0x11C *= 3.0",src/game/player.rs
+game::player,80047ee0,fn_80047ee0,translated,medium,"work/ghidra/main-gb/export/80047ee0_FUN_80047ee0.c; +0x10D4 bit 0 with +0x10D8 bit 1 clear returns 0, else the 0x80047F10 probe",src/game/player.rs
+game::player,8004a790,fn_8004a790,translated,high,"work/ghidra/main-gb/export/8004a790_FUN_8004a790.c; one store: +0x1008 = 0",src/game/player.rs

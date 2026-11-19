@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802c0450,fn_802c0450,translated,high,work/ghidra/main-gb/export/802c0450_FUN_802c0450.c,src/resource/archive.rs
+resource::archive,802c0b60,fn_802c0b60,translated,high,work/ghidra/main-gb/export/802c0b60_FUN_802c0b60.c,src/resource/archive.rs
+resource::archive,802c11e0,fn_802c11e0,translated,high,work/ghidra/main-gb/export/802c11e0_FUN_802c11e0.c,src/resource/archive.rs
+resource::archive,802c1270,fn_802c1270,translated,high,work/ghidra/main-gb/export/802c1270_thunk_FUN_802c11e0.c; single b 0x802C11E0,src/resource/archive.rs
+resource::archive,802c2300,fn_802c2300,translated,high,work/ghidra/main-gb/export/802c2300_FUN_802c2300.c,src/resource/archive.rs
+resource::archive,802c2f70,fn_802c2f70,translated,high,work/ghidra/main-gb/export/802c2f70_FUN_802c2f70.c,src/resource/archive.rs
+resource::archive,802c32b0,fn_802c32b0,translated,high,work/ghidra/main-gb/export/802c32b0_FUN_802c32b0.c; vtable +0x3C child count;  0xC-byte slots;  states 8/2/3/4/5 then 5 cleared;  +0xD4 back-pointer,src/resource/archive.rs
+resource::archive,802c34b0,fn_802c34b0,translated,high,work/ghidra/main-gb/export/802c34b0_FUN_802c34b0.c; deleting destructor;  0x802C7E30 on +0x08 then 0x802B9280,src/resource/archive.rs
+resource::archive,802c35f0,fn_802c35f0,translated,high,work/ghidra/main-gb/export/802c35f0_FUN_802c35f0.c; deleting destructor without the +0x08 release,src/resource/archive.rs
+resource::archive,802c3d80,fn_802c3d80,translated,medium,"work/ghidra/main-gb/export/802c3d80_FUN_802c3d80.c; 2424 bytes;  mode 0 builds and mode 2 tears down the pane set; all 606 instructions decoded from work/dol/main.elf;  owner/pane roles inferred",src/resource/archive.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80204008,fn_80204008,translated,high,"work/ghidra/main-gb/export/80204008_FUN_80204008.c; clears the 0x1020-byte discovery block, seeds attribute list 1/2/0x1002 and calls 0x8021EC2C",src/runtime/bt.rs
+runtime::bt,80204080,fn_80204080,translated,high,"work/ghidra/main-gb/export/80204080_FUN_80204080.c; cancels the timer, dispatches the pending write-mode callback and reinitialises the discovery block",src/runtime/bt.rs
+runtime::bt,802043c0,fn_802043c0,translated,high,"work/ghidra/main-gb/export/802043c0_FUN_802043c0.c; validates 0/1, tests capability bit 0x10, requires the controller ready and queues HCI 0x0C47 via 0x8020F1C4",src/runtime/bt.rs
+runtime::bt,80204470,fn_80204470,translated,high,"work/ghidra/main-gb/export/80204470_FUN_80204470.c; same shape as 0x802043C0 with capability bit 0x20, cache 0x803D321E and builder 0x8020F224",src/runtime/bt.rs
+runtime::bt,80204520,fn_80204520,translated,high,"work/ghidra/main-gb/export/80204520_FUN_80204520.c; capability bit 0x40, readiness check and builder 0x8020F1F4 with no value cache",src/runtime/bt.rs
+runtime::bt,80204740,fn_80204740,translated,high,"work/ghidra/main-gb/export/80204740_FUN_80204740.c; returns the inquiry state byte at 0x803D33C0",src/runtime/bt.rs
+runtime::bt,80204af4,fn_80204af4,translated,high,"work/ghidra/main-gb/export/80204af4_FUN_80204af4.c; checks bit 1 of 0x803D3226 and cancels the remote-name request through 0x8020D7D8",src/runtime/bt.rs
+runtime::bt,80204b6c,fn_80204b6c,translated,high,"work/ghidra/main-gb/export/80204b6c_FUN_80204b6c.c; scans 12 inquiry records at 0x803D325C stride 0x1C by BD_ADDR and returns record+8",src/runtime/bt.rs
+runtime::bt,80205b94,fn_80205b94,translated,medium,"work/ghidra/main-gb/export/80205b94_FUN_80205b94.c; forwards to 0x80205A3C(0,0,0,0x1F) and 0x80208A98(0,0,0x1F)",src/runtime/bt.rs
+runtime::bt,80205bd4,fn_80205bd4,translated,medium,"work/ghidra/main-gb/export/80205bd4_FUN_80205bd4.c; clears 0x27C4 bytes at 0x803D1B78, zeroes the trace level and calls five init routines",src/runtime/bt.rs
+runtime::bt,80205c30,fn_80205c30,translated,high,"work/ghidra/main-gb/export/80205c30_FUN_80205c30.c; claims/configures/releases one of three 8-byte service slots at 0x803D20CC",src/runtime/bt.rs
+runtime::bt,802070a8,fn_802070a8,translated,medium,"work/ghidra/main-gb/export/802070a8_FUN_802070a8.c; scans three connection slots and calls 0x80206FF0 with the matching index",src/runtime/bt.rs
+runtime::bt,8020712c,fn_8020712c,translated,medium,"work/ghidra/main-gb/export/8020712c_FUN_8020712c.c; counts active slots, stores the interval word, releases one slot by handle and invokes its callback",src/runtime/bt.rs
+runtime::bt,802075a4,fn_802075a4,translated,high,"work/ghidra/main-gb/export/802075a4_FUN_802075a4.c; returns 1 when any of three slots is state 4 with the given handle",src/runtime/bt.rs
+runtime::bt,80207614,fn_80207614,translated,high,"work/ghidra/main-gb/export/80207614_FUN_80207614.c; counts slots whose state is between 2 and 6",src/runtime/bt.rs
+runtime::bt,80207674,fn_80207674,translated,high,"work/ghidra/main-gb/export/80207674_FUN_80207674.c; finds a state-4 slot whose six-byte BD_ADDR matches",src/runtime/bt.rs
+runtime::bt,802076fc,fn_802076fc,translated,high,"work/ghidra/main-gb/export/802076fc_FUN_802076fc.c; copies six words to 0x803D3484, logs above level 3 and returns 1",src/runtime/bt.rs
+runtime::bt,80207774,fn_80207774,translated,high,"work/ghidra/main-gb/export/80207774_FUN_80207774.c; stores a handle in the first free of three words at 0x803D34A4",src/runtime/bt.rs
+runtime::bt,802077c4,fn_802077c4,translated,high,"work/ghidra/main-gb/export/802077c4_FUN_802077c4.c; clears the matching handle in the three-word table at 0x803D34A4",src/runtime/bt.rs
+runtime::bt,80207818,fn_80207818,translated,high,"work/ghidra/main-gb/export/80207818_FUN_80207818.c; stores PIN type/length at 0x803D1B98, copies the code and may queue HCI 0x0C0A",src/runtime/bt.rs
+runtime::bt,8020dbd0,fn_8020dbd0,translated,high,"work/ghidra/main-gb/export/8020dbd0_FUN_8020dbd0.c; builds HCI 0x042A with a reversed six-byte address and a trailing byte",src/runtime/bt.rs
+runtime::bt,8020dc30,fn_8020dc30,translated,high,"work/ghidra/main-gb/export/8020dc30_FUN_8020dc30.c; allocates a 2-class buffer and queues HCI 0x0801 with three 16-bit parameters",src/runtime/bt.rs
+runtime::bt,8020ddb0,fn_8020ddb0,translated,high,"work/ghidra/main-gb/export/8020ddb0_FUN_8020ddb0.c; allocates a 2-class buffer and queues HCI 0x0804 with one 16-bit parameter",src/runtime/bt.rs
+runtime::bt,8020de34,fn_8020de34,translated,high,"work/ghidra/main-gb/export/8020de34_FUN_8020de34.c; allocates a 2-class buffer and queues HCI 0x0805 with three 16-bit parameters",src/runtime/bt.rs
+runtime::bt,8020dee8,fn_8020dee8,translated,high,"work/ghidra/main-gb/export/8020dee8_FUN_8020dee8.c; allocates a 2-class buffer and queues HCI 0x0806 with one 16-bit parameter",src/runtime/bt.rs
+runtime::bt,8020e0b0,fn_8020e0b0,translated,high,"work/ghidra/main-gb/export/8020e0b0_FUN_8020e0b0.c; allocates and queues the parameterless HCI 0x0C03 reset command",src/runtime/bt.rs
+runtime::bt,8020e2c8,fn_8020e2c8,translated,high,"work/ghidra/main-gb/export/8020e2c8_FUN_8020e2c8.c; allocates and queues HCI 0x0C0A with one parameter byte",src/runtime/bt.rs
+runtime::bt,8020e33c,fn_8020e33c,translated,high,"work/ghidra/main-gb/export/8020e33c_FUN_8020e33c.c; builds HCI 0x0C0D with a reversed six-byte address and a trailing byte",src/runtime/bt.rs
+runtime::bt,8020fdcc,fn_8020fdcc,translated,high,"work/ghidra/main-gb/export/8020fdcc_FUN_8020fdcc.c; clears 0x404 bytes at 0x803D4838 and the trailing flag byte",src/runtime/bt.rs
+runtime::bt,8020fe10,fn_8020fe10,translated,medium,"work/ghidra/main-gb/export/8020fe10_FUN_8020fe10.c; enables the pool via 0x80210634 and stores the owner word at 0x803D4B78",src/runtime/bt.rs

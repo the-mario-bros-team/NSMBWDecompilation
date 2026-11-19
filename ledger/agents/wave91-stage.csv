@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80072db0,fn_80072db0,translated,medium,"work/ghidra/main-gb/export/80072db0_FUN_80072db0.c; trigger record at +8 decoded to three 20.12 coordinates; bit 0 of the record word selects square vs ordered span",src/game/stage.rs
+game::stage,80072f10,fn_80072f10,translated,medium,"work/ghidra/main-gb/export/80072f10_FUN_80072f10.c; same decoder as 80072db0 over the record at +0xC",src/game/stage.rs
+game::stage,80073070,fn_80073070,translated,medium,"work/ghidra/main-gb/export/80073070_FUN_80073070.c; record at +0x10 decoded with +0xC as third coordinate and optional -x - 1.0f mirror",src/game/stage.rs
+game::stage,80073b40,fn_80073b40,translated,medium,"work/ghidra/main-gb/export/80073b40_FUN_80073b40.c; three 0x80073FC0 probes at 0 then +0x8FEA0 then -0x8FEA0; first probe drops r4/r5 in the export",src/game/stage.rs
+game::stage,800743d0,fn_800743d0,translated,medium,"work/ghidra/main-gb/export/800743d0_FUN_800743d0.c; three 0x80074AF0 probes with the same 0 / +bound / -bound chain and one extra argument",src/game/stage.rs
+game::stage,80077060,fn_80077060,translated,high,"work/ghidra/main-gb/export/80077060_FUN_80077060.c; scene constructor: vtable 0x8030F490 at +0x60; 0x802DC9A0 block at +0x900AC; two 40-word -999999.0f rows at +0x8FECC; texture manager at +0x90A50; publishes r13-0x58B0",src/game/stage.rs
+game::stage,80077520,fn_80077520,translated,medium,"work/ghidra/main-gb/export/80077520_FUN_80077520.c; bg_unit_model(manager, stage, param_4) then bg_unit_model_tile_at; returns the callee r3 that the export models as void",src/game/stage.rs
+game::stage,80077650,fn_80077650,translated,medium,"work/ghidra/main-gb/export/80077650_FUN_80077650.c; index wrapped through 0x80101AA0; cell from 80077520; halfword handed to 800774A0",src/game/stage.rs
+game::stage,80077a00,fn_80077a00,translated,medium,"work/ghidra/main-gb/export/80077a00_FUN_80077a00.c; 0x2000-byte table at +0x70; four BG_chk_d_bgchk_%s.bin loads; 0x100 cell pairs copied per unit slot",src/game/stage.rs
+game::stage,80077b00,fn_80077b00,translated,high,"work/ghidra/main-gb/export/80077b00_FUN_80077b00.c; zoom at +0x9000C with 0 -> 1.0f guard; two BG colour globals divided into scene +0x40/+0x44",src/game/stage.rs
+game::stage,80078860,fn_80078860,translated,medium,"work/ghidra/main-gb/export/80078860_FUN_80078860.c; 23-case switch on +0x90114 selecting the start/target fit ratios; blend with +0x90110 and return in f1",src/game/stage.rs
+game::stage,80078d00,fn_80078d00,translated,medium,"work/ghidra/main-gb/export/80078d00_FUN_80078d00.c; mode byte +0x900FE selects tables 0x802EF658 / 0x802EF688 / 0x802EF6B0; index from +0x900FF",src/game/stage.rs
+game::stage,80078ef0,fn_80078ef0,translated,medium,"work/ghidra/main-gb/export/80078ef0_FUN_80078ef0.c; tables 0x802EF6D0 / 0x802EF700 with an 80078D00 fallback arm",src/game/stage.rs
+game::stage,80079060,fn_80079060,translated,medium,"work/ghidra/main-gb/export/80079060_FUN_80079060.c; tables 0x802EF720 / 0x802EF750 plus the two +0x8FEA0/+0x8FEA4 colour clamps",src/game/stage.rs
+game::stage,800791d0,fn_800791d0,translated,medium,"work/ghidra/main-gb/export/800791d0_FUN_800791d0.c; chains 80079060 into 80078860; clamps; stores 1.0/ratio at +0x90028",src/game/stage.rs
+game::stage,80079250,fn_80079250,translated,medium,"work/ghidra/main-gb/export/80079250_FUN_80079250.c; tables 0x802EF770 / 0x802EF7A0 or the +0.0f seed for unhandled modes",src/game/stage.rs
+game::stage,80079380,fn_80079380,translated,medium,"work/ghidra/main-gb/export/80079380_FUN_80079380.c; tables 0x802EF7C0 / 0x802EF7F0 with the same selector",src/game/stage.rs
+game::stage,800794b0,fn_800794b0,translated,medium,"work/ghidra/main-gb/export/800794b0_FUN_800794b0.c; tables 0x802EF810 / 0x802EF840 with the same selector",src/game/stage.rs
+game::stage,800795e0,fn_800795e0,translated,medium,"work/ghidra/main-gb/export/800795e0_FUN_800795e0.c; tables 0x802EF860 / 0x802EF890 (the sub-1.0 fraction table)",src/game/stage.rs
+game::stage,8007ab70,fn_8007ab70,translated,medium,"work/ghidra/main-gb/export/8007ab70_FUN_8007ab70.c; two 8007CA90 column sorts keyed on +0x90079/+0x9007A then the +0x909CA guard and the 8007CD70 / 802DCBFC pair",src/game/stage.rs
+game::stage,8007bba0,fn_8007bba0,translated,medium,"work/ghidra/main-gb/export/8007bba0_FUN_8007bba0.c; record +8 plus 64.0f; -6.0f snap against +0x8FE94; ceiling at +0x90038",src/game/stage.rs
+game::stage,8007bbf0,fn_8007bbf0,translated,medium,"work/ghidra/main-gb/export/8007bbf0_FUN_8007bbf0.c; record +0xC offset by scene +0x44 minus 32.0f; floor 6.0f above +0x8FE94; ceiling scene z + +0x9003C",src/game/stage.rs
+game::stage,8007e860,fn_8007e860,translated,medium,"work/ghidra/main-gb/export/8007e860_FUN_8007e860.c; visible-cell pass over the +0x8FE64..+0x8FE70 bounds; three layers per cell; r13-0x58A4 tile table walked to the 0x2EB sentinel",src/game/stage.rs
+game::stage,8007fad0,fn_8007fad0,translated,high,"work/ghidra/main-gb/export/8007fad0_FUN_8007fad0.c; widens two f32 pairs to four doubles and forwards 12 arguments to 8007FA40",src/game/stage.rs
+game::stage,8007fb10,fn_8007fb10,translated,high,"work/ghidra/main-gb/export/8007fb10_FUN_8007fb10.c; seven-word record split into two points plus three words and forwarded to 8007FAD0",src/game/stage.rs

@@ -1,0 +1,15 @@
+﻿module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80110b60,fn_80110b60,translated,medium,"work/ghidra/main-gb/export/80110b60_FUN_80110b60.c; four-probe rail gate writes +0x1E7 from +0x821",src/game/worldmap.rs
+game::worldmap,80110fa0,fn_80110fa0,translated,medium,"work/ghidra/main-gb/export/80110fa0_FUN_80110fa0.c; balloon contact response stores +0xE8..+0xF0 and posts 0x80375188",src/game/worldmap.rs
+game::worldmap,80111850,fn_80111850,translated,medium,"work/ghidra/main-gb/export/80111850_FUN_80111850.c; binds balloon/float and balloon_back/float_back plus the +0x7EC I_kinoko set",src/game/worldmap.rs
+game::worldmap,801126a0,fn_801126a0,translated,medium,"work/ghidra/main-gb/export/801126a0_FUN_801126a0.c; 4x2 probe fan returns the 1/2/4/8 mask and writes the out byte",src/game/worldmap.rs
+game::worldmap,80116430,fn_80116430,translated,medium,"work/ghidra/main-gb/export/80116430_FUN_80116430.c; builds one 0x240-byte tile record and the Effect0_d index list",src/game/worldmap.rs
+game::worldmap,801177b0,fn_801177b0,translated,medium,"work/ghidra/main-gb/export/801177b0_FUN_801177b0.c; lays out one 0x42-cell grid row through 80116C00",src/game/worldmap.rs
+game::worldmap,80117dc0,fn_80117dc0,translated,medium,"work/ghidra/main-gb/export/80117dc0_FUN_80117dc0.c; allocates and builds the 3x9 grid plus the optional tenth tile",src/game/worldmap.rs
+game::worldmap,80118760,fn_80118760,translated,medium,"work/ghidra/main-gb/export/80118760_FUN_80118760.c; emits the scene-extent quad through 8016DEC0",src/game/worldmap.rs
+game::worldmap,8011c750,fn_8011c750,translated,medium,"work/ghidra/main-gb/export/8011c750_FUN_8011c750.c; pad +0x148 quad band test against +0x5B4/+0x5B8",src/game/worldmap.rs
+game::worldmap,8011c8b0,fn_8011c8b0,translated,high,"work/ghidra/main-gb/export/8011c8b0_FUN_8011c8b0.c; 16.0-step box sweep through 800709C0",src/game/worldmap.rs
+game::worldmap,8011ca90,fn_8011ca90,translated,high,"work/ghidra/main-gb/export/8011ca90_FUN_8011ca90.c; 8.0-step height sampling with the -3.0e7 sentinel",src/game/worldmap.rs
+game::worldmap,8011d930,fn_8011d930,translated,medium,"work/ghidra/main-gb/export/8011d930_FUN_8011d930.c; state-5 spin step using the u16 GQR3 load and the signed +0x5E4 idiom",src/game/worldmap.rs
+game::worldmap,8011da30,fn_8011da30,translated,medium,"work/ghidra/main-gb/export/8011da30_FUN_8011da30.c; per-player -512/+512 spin offset through GQR3 and 768.0",src/game/worldmap.rs
+game::worldmap,8011dab0,fn_8011dab0,translated,medium,"work/ghidra/main-gb/export/8011dab0_FUN_8011dab0.c; speed clamp and the 80237BD0/80237C40 rotation pair",src/game/worldmap.rs

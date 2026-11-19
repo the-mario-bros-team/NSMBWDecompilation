@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806744c0,fn_806744c0,translated,high,"work/ghidra/rel-d_basesNP/export/806744c0_FUN_806744c0.c; vmethod0(this+0x394,0x10) then return 1",src/game/bases.rs
+game::bases,80683d40,fn_80683d40,translated,high,"work/ghidra/rel-d_basesNP/export/80683d40_FUN_80683d40.c; vmethod0(this+0x544,0x14) then return 1",src/game/bases.rs
+game::bases,806e7ef0,fn_806e7ef0,translated,high,"work/ghidra/rel-d_basesNP/export/806e7ef0_FUN_806e7ef0.c; vmethod0(this+0x544,0x14) then return 1",src/game/bases.rs
+game::bases,806f5a30,fn_806f5a30,translated,high,"work/ghidra/rel-d_basesNP/export/806f5a30_FUN_806f5a30.c; vmethod0(this+0x544,0x14) then return 1",src/game/bases.rs
+game::bases,8071b700,fn_8071b700,translated,high,"work/ghidra/rel-d_basesNP/export/8071b700_FUN_8071b700.c; vmethod0(this+0x544,0x14) then return 1",src/game/bases.rs
+game::bases,80720920,fn_80720920,translated,high,"work/ghidra/rel-d_basesNP/export/80720920_FUN_80720920.c; vmethod0(this+0x70,0x10) then return 1",src/game/bases.rs
+game::bases,807639f0,fn_807639f0,translated,high,"work/ghidra/rel-d_basesNP/export/807639f0_FUN_807639f0.c; vmethod0(this+0x1A8,0x14) then return 1",src/game/bases.rs
+game::bases,807769b0,fn_807769b0,translated,high,"work/ghidra/rel-d_basesNP/export/807769b0_FUN_807769b0.c; vmethod0(this+0x1A4,0x14) then return 1",src/game/bases.rs
+game::bases,8077a9f0,fn_8077a9f0,translated,high,"work/ghidra/rel-d_basesNP/export/8077a9f0_FUN_8077a9f0.c; vmethod0(this+0x1AC,0x14) then return 1",src/game/bases.rs
+game::bases,807a2200,fn_807a2200,translated,high,"work/ghidra/rel-d_basesNP/export/807a2200_FUN_807a2200.c; vmethod0(this+0x3F0,0x14) then return 1",src/game/bases.rs
+game::bases,80626900,fn_80626900,translated,high,"work/ghidra/rel-d_basesNP/export/80626900_FUN_80626900.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,8062fff0,fn_8062fff0,translated,high,"work/ghidra/rel-d_basesNP/export/8062fff0_FUN_8062fff0.c; A-type destructor: if this && count>0 then 802B9280(this,count); return this",src/game/bases.rs
+game::bases,80697840,fn_80697840,translated,high,"work/ghidra/rel-d_basesNP/export/80697840_FUN_80697840.c; 800A2D20(this) then store vtable 807F0E18 at +0x60; return this",src/game/bases.rs
+game::bases,806f0060,fn_806f0060,translated,high,"work/ghidra/rel-d_basesNP/export/806f0060_FUN_806f0060.c; 80168D10(this) then store vtable 807E3E98 at +0x00; return this",src/game/bases.rs
+game::bases,8076bec0,fn_8076bec0,translated,high,"work/ghidra/rel-d_basesNP/export/8076bec0_FUN_8076bec0.c; 8076B3F0(this) then store vtable 808166E0 at +0x60; return this",src/game/bases.rs
+game::bases,8076c270,fn_8076c270,translated,high,"work/ghidra/rel-d_basesNP/export/8076c270_FUN_8076c270.c; 800F5FD0(this) then store vtable 80816968 at +0x60; return this",src/game/bases.rs
+game::bases,806caa40,fn_806caa40,translated,high,"work/ghidra/rel-d_basesNP/export/806caa40_FUN_806caa40.c; 80169CD0(this) then return this",src/game/bases.rs
+game::bases,807c2810,fn_807c2810,translated,high,"work/ghidra/rel-d_basesNP/export/807c2810_FUN_807c2810.c; store byte 0 at +0x548 then 807C3A10(this) and 807C3A90(this)",src/game/bases.rs
+game::bases,8076d8e0,fn_8076d8e0,translated,high,"work/ghidra/rel-d_basesNP/export/8076d8e0_FUN_8076d8e0.c; 8076DA10(this) then store 1 at +0x33C",src/game/bases.rs
+game::bases,806e7450,fn_806e7450,translated,high,"work/ghidra/rel-d_basesNP/export/806e7450_FUN_806e7450.c; 800D7820(this+0x3FC) then 806E6FE0(this)",src/game/bases.rs
+game::bases,8072c500,fn_8072c500,translated,high,"work/ghidra/rel-d_basesNP/export/8072c500_FUN_8072c500.c; 8072BC40(this) then 8072C200(this)",src/game/bases.rs
+game::bases,8075b8e0,fn_8075b8e0,translated,high,"work/ghidra/rel-d_basesNP/export/8075b8e0_FUN_8075b8e0.c; if 8075C070(this) != 0 then 8075B8B0(this)",src/game/bases.rs
+game::bases,8078d0a0,fn_8078d0a0,translated,high,"work/ghidra/rel-d_basesNP/export/8078d0a0_FUN_8078d0a0.c; 801002C0(*0x8042A18C, 8078CFA0(this))",src/game/bases.rs
+game::bases,807c2970,fn_807c2970,translated,high,"work/ghidra/rel-d_basesNP/export/807c2970_FUN_807c2970.c; 800FD1F0(this) then latch +0x28C word and +0x295 byte on *(this+0x530)",src/game/bases.rs
+game::bases,8061f0f0,fn_8061f0f0,translated,high,"work/ghidra/rel-d_basesNP/export/8061f0f0_FUN_8061f0f0.c; 800C92F0(this+0x70,13,0) then store byte 1 at +0x2E1",src/game/bases.rs
+game::bases,8067b420,fn_8067b420,translated,high,"work/ghidra/rel-d_basesNP/export/8067b420_FUN_8067b420.c; vmethod0(this+0x60,0x98) then store 10 at +0x408",src/game/bases.rs
+game::bases,80731fb0,fn_80731fb0,translated,high,"work/ghidra/rel-d_basesNP/export/80731fb0_FUN_80731fb0.c; return 1 and call 80731780(this) when *(*(0x80429FC0)+0x18) != 0 else 0",src/game/bases.rs
+game::bases,807baf10,fn_807baf10,translated,high,"work/ghidra/rel-d_basesNP/export/807baf10_FUN_807baf10.c; handle = 800E0380(*0x8042A040,-1); *0x8042A250 = 800CE190(handle,*0x8042A24D)",src/game/bases.rs

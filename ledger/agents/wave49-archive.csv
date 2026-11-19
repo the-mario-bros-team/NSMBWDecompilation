@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,8026b640,fn_8026b640,translated,medium,"work/ghidra/main-gb/export/8026b640_FUN_8026b640.c; class D constructor, vtable 0x8034EB68",src/resource/archive.rs
+resource::archive,8026b6d0,fn_8026b6d0,translated,high,"work/ghidra/main-gb/export/8026b6d0_FUN_8026b6d0.c; class D size query, max of +0x30 and +0x88 sets",src/resource/archive.rs
+resource::archive,8026b740,fn_8026b740,translated,high,"work/ghidra/main-gb/export/8026b740_FUN_8026b740.c; class D guard mutex at +0x14",src/resource/archive.rs
+resource::archive,8026bcf0,fn_8026bcf0,translated,medium,"work/ghidra/main-gb/export/8026bcf0_FUN_8026bcf0.c; class E constructor, vtable 0x8034EB90",src/resource/archive.rs
+resource::archive,8026c2f0,fn_8026c2f0,translated,medium,"work/ghidra/main-gb/export/8026c2f0_FUN_8026c2f0.c; class F constructor, vtable 0x8034EBB8",src/resource/archive.rs
+resource::archive,8026c3c0,fn_8026c3c0,translated,high,"work/ghidra/main-gb/export/8026c3c0_FUN_8026c3c0.c; class F size query, max of +0x48 and +0x190 sets",src/resource/archive.rs
+resource::archive,8026c430,fn_8026c430,translated,high,"work/ghidra/main-gb/export/8026c430_FUN_8026c430.c; class F guard mutex at +0x14",src/resource/archive.rs
+resource::archive,8026c570,fn_8026c570,translated,medium,"work/ghidra/main-gb/export/8026c570_FUN_8026c570.c; class F release under guard mutex",src/resource/archive.rs
+resource::archive,8026c9f0,fn_8026c9f0,translated,high,"work/ghidra/main-gb/export/8026c9f0_FUN_8026c9f0.c; class F manager-count redispatch through vtable +0x10 then +0x0C",src/resource/archive.rs
+resource::archive,8026ca60,fn_8026ca60,translated,medium,"work/ghidra/main-gb/export/8026ca60_FUN_8026ca60.c; class F deleting destructor, vtable 0x8034EBB8",src/resource/archive.rs
+resource::archive,8026cae0,fn_8026cae0,translated,medium,"work/ghidra/main-gb/export/8026cae0_FUN_8026cae0.c; class G constructor, vtable 0x8034EBE0",src/resource/archive.rs
+resource::archive,8026cbb0,fn_8026cbb0,translated,high,"work/ghidra/main-gb/export/8026cbb0_FUN_8026cbb0.c; class G size query at +0x40",src/resource/archive.rs
+resource::archive,8026cbf0,fn_8026cbf0,translated,high,"work/ghidra/main-gb/export/8026cbf0_FUN_8026cbf0.c; class G guard mutex at +0x10",src/resource/archive.rs
+resource::archive,8026ccc0,fn_8026ccc0,translated,medium,"work/ghidra/main-gb/export/8026ccc0_FUN_8026ccc0.c; class G release under guard mutex",src/resource/archive.rs
+resource::archive,8026d0b0,fn_8026d0b0,translated,medium,"work/ghidra/main-gb/export/8026d0b0_FUN_8026d0b0.c; class H constructor, vtable 0x8034EC08",src/resource/archive.rs
+resource::archive,8026d180,fn_8026d180,translated,high,"work/ghidra/main-gb/export/8026d180_FUN_8026d180.c; class H size query, max of +0x44 and +0x12C sets",src/resource/archive.rs
+resource::archive,8026d1f0,fn_8026d1f0,translated,high,"work/ghidra/main-gb/export/8026d1f0_FUN_8026d1f0.c; class H guard mutex at +0x14",src/resource/archive.rs
+resource::archive,8026d330,fn_8026d330,translated,medium,"work/ghidra/main-gb/export/8026d330_FUN_8026d330.c; class H release under guard mutex",src/resource/archive.rs
+resource::archive,80267300,fn_80267300,translated,high,"work/ghidra/main-gb/export/80267300_FUN_80267300.c; sound-handle word store at +0x04",src/resource/archive.rs
+resource::archive,80267310,fn_80267310,translated,high,"work/ghidra/main-gb/export/80267310_FUN_80267310.c; clear word at +0x04",src/resource/archive.rs
+resource::archive,80267320,fn_80267320,translated,high,"work/ghidra/main-gb/export/80267320_FUN_80267320.c; sound-handle word store at +0x10",src/resource/archive.rs
+resource::archive,80267330,fn_80267330,translated,high,"work/ghidra/main-gb/export/80267330_FUN_80267330.c; clear word at +0x10",src/resource/archive.rs
+resource::archive,80267340,fn_80267340,translated,high,"work/ghidra/main-gb/export/80267340_FUN_80267340.c; sound-handle word store at +0x14",src/resource/archive.rs
+resource::archive,80267350,fn_80267350,translated,high,"work/ghidra/main-gb/export/80267350_FUN_80267350.c; clear word at +0x14",src/resource/archive.rs
+resource::archive,80267360,fn_80267360,translated,high,"work/ghidra/main-gb/export/80267360_FUN_80267360.c; sound-handle word store at +0x18",src/resource/archive.rs
+resource::archive,80267370,fn_80267370,translated,high,"work/ghidra/main-gb/export/80267370_FUN_80267370.c; clear word at +0x18",src/resource/archive.rs
+resource::archive,80267380,fn_80267380,translated,high,"work/ghidra/main-gb/export/80267380_FUN_80267380.c; read enable byte at +0x99",src/resource/archive.rs
+resource::archive,802674b0,fn_802674b0,translated,high,"work/ghidra/main-gb/export/802674b0_FUN_802674b0.c; sound-handle float store at +0xBC",src/resource/archive.rs
+resource::archive,802674c0,fn_802674c0,translated,high,"work/ghidra/main-gb/export/802674c0_FUN_802674c0.c; sound-handle float store at +0xB4",src/resource/archive.rs
+resource::archive,802674d0,fn_802674d0,translated,high,"work/ghidra/main-gb/export/802674d0_FUN_802674d0.c; sound-handle word store at +0xC8",src/resource/archive.rs

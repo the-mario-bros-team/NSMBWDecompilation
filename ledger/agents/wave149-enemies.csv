@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80b058a0,fn_80b058a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b058a0_FUN_80b058a0.c; rail probe/advance, sound 0x27C, +0x2B34 count cap, 16.0/table step, two state words",src/game/enemies.rs
+game::enemies,80a81150,fn_80a81150,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a81150_FUN_80a81150.c; four finalisers, squared vertical speed, -0.1875 latch, walk rate 2.0, state 0x80B734B8",src/game/enemies.rs
+game::enemies,80a5eb00,fn_80a5eb00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a5eb00_FUN_80a5eb00.c; two smoke emits at frames 55.0/104.0, five clip gates, sounds 534/533",src/game/enemies.rs
+game::enemies,80ae69e0,fn_80ae69e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae69e0_FUN_80ae69e0.c; contact record template B, 0x80B30F18 per-side word, 0x8009F630 slot",src/game/enemies.rs
+game::enemies,80a5c660,fn_80a5c660,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a5c660_FUN_80a5c660.c; complemented 0x80196660 id mask, bits 1/8/2, level record via 0x8019ECE0",src/game/enemies.rs
+game::enemies,80a94100,fn_80a94100,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a94100_FUN_80a94100.c; partner +0x134 counter clamp 8, 0x8009F710 slot, 0x8042C2D0..D8 geometry",src/game/enemies.rs
+game::enemies,80ab26a0,fn_80ab26a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab26a0_FUN_80ab26a0.c; element range test plus aim verdict, +-0.3 latch, +0x890 snapshot, 0x80B74FD0",src/game/enemies.rs
+game::enemies,80a84a00,fn_80a84a00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a84a00_FUN_80a84a00.c; ten-link scene emitter, strides 0xC/6/0x40, returns 1",src/game/enemies.rs
+game::enemies,80aa0530,fn_80aa0530,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aa0530_FUN_80aa0530.c; daEnKanon_c dash latches +0x86C/+0x86E, 0x80B2F240 speed table, gt|eq 0.1 test",src/game/enemies.rs
+game::enemies,80ab29c0,fn_80ab29c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab29c0_FUN_80ab29c0.c; four links, +0x400/+0x200 angle steps, velocity integration, timer -5",src/game/enemies.rs
+game::enemies,80a53850,fn_80a53850,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a53850_FUN_80a53850.c; 0x800EB930 record scan, stage +0x9002C/+0x8FEC4 (raw addis 9/-0x13C), half-open height test, effect 0x80065DC0",src/game/enemies.rs
+game::enemies,80a88bc0,fn_80a88bc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a88bc0_FUN_80a88bc0.c; two qr3 u16 sites, 0.25 scroll decay, 1/256 angle scale, ten solved positions",src/game/enemies.rs
+game::enemies,80a7ab90,fn_80a7ab90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7ab90_FUN_80a7ab90.c; per-state lift 0x80B2E0C0, +0xEA1 toggle, verdict -1/0/1 window, side flip tables",src/game/enemies.rs
+game::enemies,80a7b7c0,fn_80a7b7c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7b7c0_FUN_80a7b7c0.c; +0x148 slot guard, 0x800964A0 kind query, 0x800A0EA0 submit with 0x80357BB4",src/game/enemies.rs
+game::enemies,80a7f690,fn_80a7f690,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7f690_FUN_80a7f690.c; 48-byte 0x802DCBFC forwarder, hidden r12 adjust not modelled",src/game/enemies.rs
+game::enemies,80a7f6c0,fn_80a7f6c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7f6c0_FUN_80a7f6c0.c; 48-byte 0x802DCBFC forwarder, hidden r12 adjust not modelled",src/game/enemies.rs

@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801deb70,fn_801deb70,translated,medium,"work/ghidra/main-gb/export/801deb70_FUN_801deb70.c; 2524 bytes; WPAD/BT periodic tick: reconnect countdown, WiFi channel refresh, +0x5EC/+0x160 control-block rings, kind-0x10 status query; the kind-0x10 stack words are dead per 801ddd20",src/runtime/dvd.rs

@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802605d0,fn_802605d0,translated,medium,"work/ghidra/main-gb/export/802605d0_FUN_802605d0.c; manager constructor; two fill loops and the 0x803FC81C self-link",src/resource/archive.rs
+resource::archive,80260a80,fn_80260a80,translated,high,"work/ghidra/main-gb/export/80260a80_FUN_80260a80.c; reads the +0x1C/+0x20 ramp over +0x24/+0x28",src/resource/archive.rs
+resource::archive,802610c0,fn_802610c0,translated,medium,"work/ghidra/main-gb/export/802610c0_FUN_802610c0.c; stores the new ramp pair and schedules 0x80283530(.,8)",src/resource/archive.rs
+resource::archive,80261190,fn_80261190,translated,medium,"work/ghidra/main-gb/export/80261190_FUN_80261190.c; dispatches the 0x803FC81C inline list and the 0x803FC824 callback",src/resource/archive.rs
+resource::archive,80261b20,fn_80261b20,translated,medium,"work/ghidra/main-gb/export/80261b20_FUN_80261b20.c; collapses the ramp and arms 0x80261BF0 through 0x8019F0B0",src/resource/archive.rs
+resource::archive,80261bf0,fn_80261bf0,translated,medium,"work/ghidra/main-gb/export/80261bf0_FUN_80261bf0.c; per-frame tick, 0x803FC84C..0x803FC860 ramp and countdown",src/resource/archive.rs
+resource::archive,80264220,fn_80264220,translated,medium,"work/ghidra/main-gb/export/80264220_FUN_80264220.c; nearest +-0x60 note step and the +0x100 publish flag",src/resource/archive.rs
+resource::archive,80265b50,fn_80265b50,translated,medium,"work/ghidra/main-gb/export/80265b50_FUN_80265b50.c; three descriptor kinds and the 0x80-byte record copy",src/resource/archive.rs
+resource::archive,80266250,fn_80266250,translated,medium,"work/ghidra/main-gb/export/80266250_FUN_80266250.c; child +0x18/+0x1C/+0x20 gate then +0x64 ramp and +0x87 state",src/resource/archive.rs
+resource::archive,80266440,fn_80266440,translated,medium,"work/ghidra/main-gb/export/80266440_FUN_80266440.c; fade-in/fade-out arms over +0x74..+0x8C",src/resource/archive.rs
+resource::archive,802666c0,fn_802666c0,translated,medium,"work/ghidra/main-gb/export/802666c0_FUN_802666c0.c; guarded +0x64 ramp store with the 0x4838 ceiling",src/resource/archive.rs
+resource::archive,80267190,fn_80267190,translated,medium,"work/ghidra/main-gb/export/80267190_FUN_80267190.c; child release, four unlink calls and the +0x85/+0x87 clears",src/resource/archive.rs
+resource::archive,80267420,fn_80267420,translated,high,"work/ghidra/main-gb/export/80267420_FUN_80267420.c; clamp plus four stores at +0xA0..+0xAC",src/resource/archive.rs
+resource::archive,80268790,fn_80268790,translated,medium,"work/ghidra/main-gb/export/80268790_FUN_80268790.c; stream handle release and 0x803FC958 unlink",src/resource/archive.rs
+resource::archive,80268910,fn_80268910,translated,medium,"work/ghidra/main-gb/export/80268910_FUN_80268910.c; mode 0..3 maps to 2/3/1/1 and re-queues the stream",src/resource/archive.rs
+resource::archive,80269740,fn_80269740,translated,medium,"work/ghidra/main-gb/export/80269740_FUN_80269740.c; four-state envelope with the 0x802FA460 key table",src/resource/archive.rs
+resource::archive,802698e0,fn_802698e0,translated,high,"work/ghidra/main-gb/export/802698e0_FUN_802698e0.c; curve key to +0x08",src/resource/archive.rs
+resource::archive,80269990,fn_80269990,translated,high,"work/ghidra/main-gb/export/80269990_FUN_80269990.c; curve key to +0x0C",src/resource/archive.rs
+resource::archive,80269b50,fn_80269b50,translated,medium,"work/ghidra/main-gb/export/80269b50_FUN_80269b50.c; min-score queue pop under the 0x8027B5F0 mutex",src/resource/archive.rs
+resource::archive,80269d00,fn_80269d00,translated,medium,"work/ghidra/main-gb/export/80269d00_FUN_80269d00.c; budget loop over the same min-score queue",src/resource/archive.rs
+resource::archive,8026bf40,fn_8026bf40,translated,medium,"work/ghidra/main-gb/export/8026bf40_FUN_8026bf40.c; eleven-float copy, clamp set at +0x154..+0x188",src/resource/archive.rs
+resource::archive,8026c5f0,fn_8026c5f0,translated,medium,"work/ghidra/main-gb/export/8026c5f0_FUN_8026c5f0.c; mirrored clamp set at +0x158 and +0x2D0",src/resource/archive.rs
+resource::archive,8026cd30,fn_8026cd30,translated,medium,"work/ghidra/main-gb/export/8026cd30_FUN_8026cd30.c; ten-float copy and +0xF4 clamp set",src/resource/archive.rs
+resource::archive,8026d3b0,fn_8026d3b0,translated,medium,"work/ghidra/main-gb/export/8026d3b0_FUN_8026d3b0.c; ten-float copy and +0x1FC/+0xF8 clamp set",src/resource/archive.rs
+resource::archive,8026dba0,fn_8026dba0,translated,medium,"work/ghidra/main-gb/export/8026dba0_FUN_8026dba0.c; +0x10 position and +0x14 fractional accumulator",src/resource/archive.rs
+resource::archive,8026dc40,fn_8026dc40,translated,low,"work/ghidra/main-gb/export/8026dc40_FUN_8026dc40.c; four signed-byte quarter tables at 0x802FA720..0x802FA7E0",src/resource/archive.rs

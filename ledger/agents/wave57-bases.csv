@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80670030,fn_80670030,translated,high,"work/ghidra/rel-d_basesNP/export/80670030_FUN_80670030.c; four-slot gate, sound 0x93, +0x3D0=0x28 and +0x360 increment",src/game/bases.rs
+game::bases,80670300,fn_80670300,translated,high,"work/ghidra/rel-d_basesNP/export/80670300_FUN_80670300.c; 0x8015F800 teardown plus optional 0x802B9280 free",src/game/bases.rs
+game::bases,80670440,fn_80670440,translated,medium,"work/ghidra/rel-d_basesNP/export/80670440_FUN_80670440.c; unrolled +0x30 child-chain probe with virtual +0xC predicate",src/game/bases.rs
+game::bases,80670520,fn_80670520,translated,medium,"work/ghidra/rel-d_basesNP/export/80670520_FUN_80670520.c; strchr at ':' then strcmp of the trimmed names",src/game/bases.rs
+game::bases,80670640,fn_80670640,translated,high,"work/ghidra/rel-d_basesNP/export/80670640_FUN_80670640.c; 0xC20-byte constructor, three interface vtables at +0x60",src/game/bases.rs
+game::bases,806708e0,fn_806708e0,translated,high,"work/ghidra/rel-d_basesNP/export/806708e0_FUN_806708e0.c; base-part destructor, six sub-objects plus optional free",src/game/bases.rs
+game::bases,80671280,fn_80671280,translated,high,"work/ghidra/rel-d_basesNP/export/80671280_FUN_80671280.c; counts +0x8A0 to +0x8A4 steps of 0x807C90AC",src/game/bases.rs
+game::bases,80671620,fn_80671620,translated,medium,"work/ghidra/rel-d_basesNP/export/80671620_FUN_80671620.c; lemmy_ball binding and Wm_ob_ballgrowbig spawn",src/game/bases.rs
+game::bases,80671740,fn_80671740,translated,high,"work/ghidra/rel-d_basesNP/export/80671740_FUN_80671740.c; throw_ball_big_ed_wait state with sound 0x543",src/game/bases.rs
+game::bases,80671810,fn_80671810,translated,medium,"work/ghidra/rel-d_basesNP/export/80671810_FUN_80671810.c; two-phase grow/shrink of +0x89D with Wm_ob_ballgrowbig",src/game/bases.rs
+game::bases,806719f0,fn_806719f0,translated,high,"work/ghidra/rel-d_basesNP/export/806719f0_FUN_806719f0.c; idle reset and sound 0x541",src/game/bases.rs
+game::bases,80671bd0,fn_80671bd0,translated,medium,"work/ghidra/rel-d_basesNP/export/80671bd0_FUN_80671bd0.c; two +0x8AC/+0x8B0 tracks scaled by virtual +0x284",src/game/bases.rs
+game::bases,80671cd0,fn_80671cd0,translated,high,"work/ghidra/rel-d_basesNP/export/80671cd0_FUN_80671cd0.c; negative +0x114 seed, sound 0x541, state 1",src/game/bases.rs
+game::bases,80672390,fn_80672390,translated,high,"work/ghidra/rel-d_basesNP/export/80672390_FUN_80672390.c; full destructor of the four interfaces and five sub-objects",src/game/bases.rs
+game::bases,80673020,fn_80673020,translated,high,"work/ghidra/rel-d_basesNP/export/80673020_FUN_80673020.c; allocates 0x6F8 bytes, vtable 0x807EA610",src/game/bases.rs
+game::bases,806730d0,fn_806730d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806730d0_FUN_806730d0.c; player state 1/3 dispatch to 0x806B4A10 or virtual +0xD4",src/game/bases.rs
+game::bases,80673170,fn_80673170,translated,medium,"work/ghidra/rel-d_basesNP/export/80673170_FUN_80673170.c; player state 1/3 dispatch to 0x806B4B20 or virtual +0xD4",src/game/bases.rs
+game::bases,80673210,fn_80673210,translated,medium,"work/ghidra/rel-d_basesNP/export/80673210_FUN_80673210.c; player state 1/3 dispatch to 0x806B4BA0 or virtual +0xD4",src/game/bases.rs
+game::bases,806741e0,fn_806741e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806741e0_FUN_806741e0.c; masked input latch +0x398/+0x39C drives 0x80673F50 and +0x3B8",src/game/bases.rs
+game::bases,80674470,fn_80674470,translated,high,"work/ghidra/rel-d_basesNP/export/80674470_FUN_80674470.c; countLeadingZeros(0x80064F50 result) >> 5",src/game/bases.rs
+game::bases,806744f0,fn_806744f0,translated,high,"work/ghidra/rel-d_basesNP/export/806744f0_FUN_806744f0.c; g3d/choropoo.brres loader and choropoo_hole pane",src/game/bases.rs
+game::bases,806749c0,fn_806749c0,translated,high,"work/ghidra/rel-d_basesNP/export/806749c0_FUN_806749c0.c; allocates 0x4E0 bytes, vtable 0x807EAE90",src/game/bases.rs
+game::bases,80674e00,fn_80674e00,translated,high,"work/ghidra/rel-d_basesNP/export/80674e00_FUN_80674e00.c; virtual +0x14 on +0x3F0 then returns 1",src/game/bases.rs
+game::bases,80674e50,fn_80674e50,translated,medium,"work/ghidra/rel-d_basesNP/export/80674e50_FUN_80674e50.c; position/rotation matrix rebuild at +0x7C and +0x3F0 attach",src/game/bases.rs
+game::bases,80674f40,fn_80674f40,translated,high,"work/ghidra/rel-d_basesNP/export/80674f40_FUN_80674f40.c; frame 4 sample into +0x4C8",src/game/bases.rs
+game::bases,80674f90,fn_80674f90,translated,high,"work/ghidra/rel-d_basesNP/export/80674f90_FUN_80674f90.c; +0x4D8 scale from player speed, clamped to 0x807C9260",src/game/bases.rs
+game::bases,80674ff0,fn_80674ff0,translated,medium,"work/ghidra/rel-d_basesNP/export/80674ff0_FUN_80674ff0.c; abs(player +0x394) or 0x807C924C fallback",src/game/bases.rs
+game::bases,806751f0,fn_806751f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806751f0_FUN_806751f0.c; selects 0x80829F58 or 0x80829ED8 via tag 0x80829F18",src/game/bases.rs
+game::bases,806752a0,fn_806752a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806752a0_FUN_806752a0.c; flag capture timer +0x4D4, 0x800B1100 and 0x8008EF30",src/game/bases.rs
+game::bases,806753b0,fn_806753b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806753b0_FUN_806753b0.c; Wm_ob_flagget capture sequence and global flag +0x90124",src/game/bases.rs

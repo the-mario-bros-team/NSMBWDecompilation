@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,8028e890,fn_8028e890,translated,medium,"work/ghidra/main-gb/export/8028e890_FUN_8028e890.c; selector 0 segment sampler: axis at state+0x2A, FLT_EPSILON crossing guards, three-float lerp, state+0x2C flag 2 mirror, 0x801C1160 transform; every psq_l/psq_st operand decodes to I=0",src/render/gx_band.rs
+render::gx_band,8028ed30,fn_8028ed30,translated,medium,"work/ghidra/main-gb/export/8028ed30_FUN_8028ed30.c; selector 1: same body plus the unit-square guard 1+FLT_EPSILON (0x8042EC34) on the two in-plane components; six arms, six limit loads",src/render/gx_band.rs
+render::gx_band,8028f2d0,fn_8028f2d0,translated,medium,"work/ghidra/main-gb/export/8028f2d0_FUN_8028f2d0.c; selector 2: same body plus the unit-disc guard 1+2*FLT_EPSILON (0x8042EC38) on the squared in-plane length; six arms, six limit loads",src/render/gx_band.rs

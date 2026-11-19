@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80121280,fn_80121280,translated,medium,"work/ghidra/main-gb/export/80121280_FUN_80121280.c; +0xEC eased to r2-0x5A3C with the entry f4 dead-band 0.0; ground probe plus 0x80162590/0x80162510 release",src/game/worldmap.rs
+game::worldmap,80125d20,fn_80125d20,translated,medium,"work/ghidra/main-gb/export/80125d20_FUN_80125d20.c; pad mode 0x800CD240 and the r13-0x56E0 +0x20 byte gate the 0x80125F10 player result",src/game/worldmap.rs
+game::worldmap,80125fa0,fn_80125fa0,translated,medium,"work/ghidra/main-gb/export/80125fa0_FUN_80125fa0.c; forwards r3 to 0x80125F10 then calls the player's +0xE0 slot",src/game/worldmap.rs
+game::worldmap,8012de80,fn_8012de80,translated,medium,"work/ghidra/main-gb/export/8012de80_FUN_8012de80.c; distinct 0x0B/0x0E 12-byte animation records; midpoint at 0.5; 0x80101AA0 X wrap; +0x17C bit 2 lift",src/game/worldmap.rs

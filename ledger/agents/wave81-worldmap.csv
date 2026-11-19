@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80109350,fn_80109350,translated,medium,"work/ghidra/main-gb/export/80109350_FUN_80109350.c; HomeButton2 constructor; clears +0x7C..+0x9C and +0x1D0..+0x1F0 then runs the six record initialisers",src/game/worldmap.rs
+game::worldmap,80109480,fn_80109480,translated,medium,"work/ghidra/main-gb/export/80109480_FUN_80109480.c; loads the six resources through 0x8008F1B0 and starts the bank when all six handles are present",src/game/worldmap.rs
+game::worldmap,80109660,fn_80109660,translated,medium,"work/ghidra/main-gb/export/80109660_FUN_80109660.c; three-state load machine; state 3 teardown, state 1 flag pass, state 2 wait for 0x80107850",src/game/worldmap.rs
+game::worldmap,80109730,fn_80109730,translated,high,"work/ghidra/main-gb/export/80109730_FUN_80109730.c; state-2 guard submits a five-word command and pauses the bank",src/game/worldmap.rs
+game::worldmap,80109950,fn_80109950,translated,medium,"work/ghidra/main-gb/export/80109950_FUN_80109950.c; zeroes +0xA0..+0xDF; allocates 0x80000 bytes; writes the 2^52 region fraction at +0xD4",src/game/worldmap.rs
+game::worldmap,80109a40,fn_80109a40,translated,high,"work/ghidra/main-gb/export/80109a40_FUN_80109a40.c; memset of 0x40 bytes at +0xE0",src/game/worldmap.rs
+game::worldmap,80109a50,fn_80109a50,translated,medium,"work/ghidra/main-gb/export/80109a50_FUN_80109a50.c; stores the disc bank at +0xBC and posts 0x802E16E8 with the 0x802F4AC8 table entry",src/game/worldmap.rs
+game::worldmap,80109ad0,fn_80109ad0,translated,high,"work/ghidra/main-gb/export/80109ad0_FUN_80109ad0.c; stores the HomeButton2_SpeakerSe.arc pointer at +0x8C",src/game/worldmap.rs
+game::worldmap,80109ae0,fn_80109ae0,translated,high,"work/ghidra/main-gb/export/80109ae0_FUN_80109ae0.c; stores the HomeButton2_home.csv pointer at +0x90",src/game/worldmap.rs
+game::worldmap,80109af0,fn_80109af0,translated,high,"work/ghidra/main-gb/export/80109af0_FUN_80109af0.c; stores the HomeButton2_config.txt pointer at +0x94",src/game/worldmap.rs
+game::worldmap,80109b00,fn_80109b00,translated,high,"work/ghidra/main-gb/export/80109b00_FUN_80109b00.c; stores the HomeButton2_HomeBtnIcon.brtex pointer at +0x98",src/game/worldmap.rs
+game::worldmap,80109b10,fn_80109b10,translated,high,"work/ghidra/main-gb/export/80109b10_FUN_80109b10.c; stores the HomeButton2_HomeButtonSe.arc pointer at +0x9C",src/game/worldmap.rs
+game::worldmap,80109b20,fn_80109b20,translated,medium,"work/ghidra/main-gb/export/80109b20_FUN_80109b20.c; four-entry status refresh between 0x802DCD68 and 0x802DCDB4; writes +0xE0..+0xEC of each 0x10-byte record",src/game/worldmap.rs
+game::worldmap,80109c00,fn_80109c00,translated,medium,"work/ghidra/main-gb/export/80109c00_FUN_80109c00.c; walks the four 0x80377C88 entries through vtable slot 0x20 with 0x8000 and returns the boolean",src/game/worldmap.rs
+game::worldmap,80109c80,fn_80109c80,translated,medium,"work/ghidra/main-gb/export/80109c80_FUN_80109c80.c; teardown path with the +0x1E4 callback and the 0x8016F660/0x8016F640 pause snapshot",src/game/worldmap.rs
+game::worldmap,80109d10,fn_80109d10,translated,medium,"work/ghidra/main-gb/export/80109d10_FUN_80109d10.c; polls 0x80174F60 on +0xE0 and runs the +0x1E8/+0x1EC completion callbacks",src/game/worldmap.rs
+game::worldmap,80109e70,fn_80109e70,translated,high,"work/ghidra/main-gb/export/80109e70_FUN_80109e70.c; starts the fade timer from 0x801B5FA0 and the 0.0f constant",src/game/worldmap.rs
+game::worldmap,80109ec0,fn_80109ec0,translated,medium,"work/ghidra/main-gb/export/80109ec0_FUN_80109ec0.c; tick-to-float conversion plus the 250/1250/1500 fade curve and the 0x8010A010 reset",src/game/worldmap.rs
+game::worldmap,8010a010,fn_8010a010,translated,high,"work/ghidra/main-gb/export/8010a010_FUN_8010a010.c; clears +0x1DC and stores 0.0f at +0x1E0",src/game/worldmap.rs
+game::worldmap,8010a030,fn_8010a030,translated,high,"work/ghidra/main-gb/export/8010a030_FUN_8010a030.c; four 0x802BC9C0 releases over the 0x80377C88 table",src/game/worldmap.rs
+game::worldmap,8010a090,fn_8010a090,translated,high,"work/ghidra/main-gb/export/8010a090_FUN_8010a090.c; accepts a stop request when state is 2 and +0x1D4 is 0 then calls 0x80175010",src/game/worldmap.rs
+game::worldmap,8010a0f0,fn_8010a0f0,translated,medium,"work/ghidra/main-gb/export/8010a0f0_FUN_8010a0f0.c; rebuilds the +0x1D8 bits 0x1/0x2/0x4/0x10/0x80 from five independent tests",src/game/worldmap.rs
+game::worldmap,8010a2c0,fn_8010a2c0,translated,medium,"work/ghidra/main-gb/export/8010a2c0_FUN_8010a2c0.c; one-shot fill of the 16-byte palette at 0x80374970 then the 4-byte indexed copy",src/game/worldmap.rs
+game::worldmap,8010a350,fn_8010a350,translated,medium,"work/ghidra/main-gb/export/8010a350_FUN_8010a350.c; one-shot fill of the 16-byte palette at 0x80374980 then the 4-byte indexed copy",src/game/worldmap.rs
+game::worldmap,8010a6c0,fn_8010a6c0,translated,high,"work/ghidra/main-gb/export/8010a6c0_FUN_8010a6c0.c; two 0xCC008000 MMIO float writes scaling bits 5..9 of the argument by 1/1024",src/game/worldmap.rs
+game::worldmap,8010a7b0,fn_8010a7b0,translated,high,"work/ghidra/main-gb/export/8010a7b0_FUN_8010a7b0.c; byte-identical second emitter bank writer",src/game/worldmap.rs
+game::worldmap,8010a8a0,fn_8010a8a0,translated,medium,"work/ghidra/main-gb/export/8010a8a0_FUN_8010a8a0.c; emitter writer with the mode 2/3 offset branch; the two branches are printed identically",src/game/worldmap.rs
+game::worldmap,8010aa60,fn_8010aa60,translated,high,"work/ghidra/main-gb/export/8010aa60_thunk_FUN_8010a6c0.c; four-byte unconditional branch to 0x8010A6C0",src/game/worldmap.rs
+game::worldmap,8010aa70,fn_8010aa70,translated,high,"work/ghidra/main-gb/export/8010aa70_thunk_FUN_8010a7b0.c; four-byte unconditional branch to 0x8010A7B0",src/game/worldmap.rs
+game::worldmap,8010aa80,fn_8010aa80,translated,high,"work/ghidra/main-gb/export/8010aa80_thunk_FUN_8010a8a0.c; four-byte unconditional branch to 0x8010A8A0",src/game/worldmap.rs

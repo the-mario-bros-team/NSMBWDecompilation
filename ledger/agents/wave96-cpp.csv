@@ -1,0 +1,15 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802d0d90,fn_802d0d90,translated,high,"work/ghidra/main-gb/export/802d0d90_FUN_802d0d90.c; builds the four-float layout record; 0x802C6A30 init, vtable 0x80350504, +0x40/+0x44 scales",src/runtime/cpp.rs
+runtime::cpp,802d0f40,fn_802d0f40,translated,high,"work/ghidra/main-gb/export/802d0f40_FUN_802d0f40.c; saves/restores the SDA vector around 0x802C6D60 then feeds six floats and six words to 0x802D3200/3230/3270",src/runtime/cpp.rs
+runtime::cpp,802d1010,fn_802d1010,translated,high,"work/ghidra/main-gb/export/802d1010_FUN_802d1010.c; textured twin of 802d0f40; 0x802C6D80 word swap plus the four 0x80253D* rectangle writers",src/runtime/cpp.rs
+runtime::cpp,802d1850,fn_802d1850,translated,high,"work/ghidra/main-gb/export/802d1850_FUN_802d1850.c; fills one axis of a parent record; 0x801C0C60 placement, +0xC extent, relative +0x1C when parent[+4]==0",src/runtime/cpp.rs
+runtime::cpp,802d1900,fn_802d1900,translated,medium,"work/ghidra/main-gb/export/802d1900_FUN_802d1900.c; composes the stack-frame record with 802d0d90/0f40/1850 and submits via 0x802C1D10",src/runtime/cpp.rs
+runtime::cpp,802d2610,fn_802d2610,translated,medium,"work/ghidra/main-gb/export/802d2610_FUN_802d2610.c; panel size and widget bytes publication plus the AX mixer bring-up",src/runtime/cpp.rs
+runtime::cpp,802d48c0,fn_802d48c0,translated,medium,"work/ghidra/main-gb/export/802d48c0_FUN_802d48c0.c; republishes the 0x6C-stride view transform and hands record+0x60 to 0x802D4FD0",src/runtime/cpp.rs
+runtime::cpp,802d6f20,fn_802d6f20,translated,medium,"work/ghidra/main-gb/export/802d6f20_FUN_802d6f20.c; equal-tempered ratio 2^(abs(index)/12) from the 0x802FD2A0 table",src/runtime/cpp.rs
+runtime::cpp,802d7070,fn_802d7070,translated,medium,"work/ghidra/main-gb/export/802d7070_FUN_802d7070.c; fade tick: interpolates 0x80260860 +0x1C/+0x20/+0x24 and promotes +4/+8 to 2",src/runtime/cpp.rs
+runtime::cpp,802d9570,fn_802d9570,translated,medium,"work/ghidra/main-gb/export/802d9570_FUN_802d9570.c; forwards two floats to 0x80286CA0 then calls entry vtable +0x18 for each row",src/runtime/cpp.rs
+runtime::cpp,802d2f10,fn_802d2f10,translated,high,"work/ghidra/main-gb/export/802d2f10_thunk_FUN_801c76c0.c; four-byte b 0x801C76C0 tail call",src/runtime/cpp.rs
+runtime::cpp,802d3260,fn_802d3260,translated,high,"work/ghidra/main-gb/export/802d3260_thunk_FUN_801c9cd0.c; four-byte b 0x801C9CD0 tail call",src/runtime/cpp.rs
+runtime::cpp,802db0e0,fn_802db0e0,translated,high,"work/ghidra/main-gb/export/802db0e0_FUN_802db0e0.c; four-byte bare blr, no effect",src/runtime/cpp.rs
+runtime::cpp,802debb4,fn_802debb4,translated,high,"work/ghidra/main-gb/export/802debb4_thunk_FUN_802deb0c.c; four-byte b 0x802DEB0C tail call to the ftell body",src/runtime/cpp.rs

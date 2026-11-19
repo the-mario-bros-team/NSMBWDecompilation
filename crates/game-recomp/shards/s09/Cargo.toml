@@ -1,0 +1,13 @@
+[package]
+name = "recomp-s09"
+version = "0.1.0"
+edition = "2021"
+description = "Shard 9 of the recompiled guest functions (see crates/game-recomp)"
+build = "../build.rs"
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+guest-cpu = { path = "../../../guest-cpu" }
+guest-mem = { path = "../../../guest-mem" }

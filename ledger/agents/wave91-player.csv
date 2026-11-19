@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,80053940,fn_80053940,translated,medium,"work/ghidra/main-gb/export/80053940_FUN_80053940.c; accumulates entry+0x50/+0x70 into player+0x13F4..+0x1405, gated on fn_800538e0(player) and fn_800538e0(owner)",src/game/player.rs
+game::player,80053aa0,fn_80053aa0,translated,high,"work/ghidra/main-gb/export/80053aa0_FUN_80053aa0.c; clears +0x13F4/+0x13F8/+0x13FC/+0x1400 to the 0.0f at 0x8042B878 and zeroes bytes +0x1404/+0x1405",src/game/player.rs
+game::player,80053ad0,fn_80053ad0,translated,medium,"work/ghidra/main-gb/export/80053ad0_FUN_80053ad0.c; spends +0x13F8 through the 3.0/0x8042B8DC clamp, writes *out and may replace +0x10C; guard +0x1408",src/game/player.rs
+game::player,80053c80,fn_80053c80,translated,medium,"work/ghidra/main-gb/export/80053c80_FUN_80053c80.c; falling-landing predicate: flags 0x1C/0x1F, slot +0x3CC, +0x3A4 and the three 0x8008C4xx collider bounds",src/game/player.rs
+game::player,80053df0,fn_80053df0,translated,medium,"work/ghidra/main-gb/export/80053df0_FUN_80053df0.c; flag 0x3A clear -> clamp +0xEC to 0.0 then class slot +0x108; set -> +0xEC = 0x8042B8A8",src/game/player.rs
+game::player,80053e60,fn_80053e60,translated,medium,"work/ghidra/main-gb/export/80053e60_FUN_80053e60.c; hit effect through slot +0x3FC with two f32 args, owner effect 7 and +0xB0 += impulse",src/game/player.rs
+game::player,800564f0,fn_800564f0,translated,high,"work/ghidra/main-gb/export/800564f0_FUN_800564f0.c; class slot +0x450 with 0xB or 0, clears +0x1EC via 0x80075070 and sends owner effect 4 on the default branch",src/game/player.rs
+game::player,80056900,fn_80056900,translated,high,"work/ghidra/main-gb/export/80056900_FUN_80056900.c; +0xEC <= 0 and (flag 0x4E clear or linked actor +0x1008 missing or its +0xEC <= 0)",src/game/player.rs
+game::player,80056980,fn_80056980,translated,high,"work/ghidra/main-gb/export/80056980_FUN_80056980.c; fn_80056c70(player,0x5D) then +0x10D0 = value",src/game/player.rs
+game::player,80056bd0,fn_80056bd0,translated,high,"work/ghidra/main-gb/export/80056bd0_FUN_80056bd0.c; +0x1090 == 3 and class slot +0x3D0 returns 0",src/game/player.rs
+game::player,80056c30,fn_80056c30,translated,medium,"work/ghidra/main-gb/export/80056c30_FUN_80056c30.c; stores 1<<(flag&31) into the event-flag word (a plain store, not the OR of fn_80056c70)",src/game/player.rs
+game::player,80056d50,fn_80056d50,translated,high,"work/ghidra/main-gb/export/80056d50_FUN_80056d50.c; eleven fn_80052ed0 counters, +0x1074 0x3C/bit2/bit3 test raising flag 0xBC, then fn_800541f0 and fn_800542d0",src/game/player.rs
+game::player,80056e30,fn_80056e30,translated,high,"work/ghidra/main-gb/export/80056e30_FUN_80056e30.c; returns *(*(player+0xDE8)+4)",src/game/player.rs
+game::player,80057860,fn_80057860,translated,medium,"work/ghidra/main-gb/export/80057860_FUN_80057860.c; +0x10C4 + +0x10D0 (x0x8042B9C8 when flag 0x5D) handed to fn_80057820",src/game/player.rs
+game::player,8005c9d0,fn_8005c9d0,translated,high,"work/ghidra/main-gb/export/8005c9d0_FUN_8005c9d0.c; active-slot mask 0x80429CA8 and fn_8005fb90 actor without flag 0x72 -> 0",src/game/player.rs
+game::player,8005d7e0,fn_8005d7e0,translated,medium,"work/ghidra/main-gb/export/8005d7e0_FUN_8005d7e0.c; construct 0x8005D880 below two then increment 0x80429C98 and return the argument",src/game/player.rs
+game::player,8005d830,fn_8005d830,translated,medium,"work/ghidra/main-gb/export/8005d830_FUN_8005d830.c; decrement 0x80429C98 and free through 0x802B9280 when release > 0",src/game/player.rs
+game::player,8005dc20,fn_8005dc20,translated,high,"work/ghidra/main-gb/export/8005dc20_FUN_8005dc20.c; returns min(index,2); the first parameter is never read",src/game/player.rs
+game::player,8005dc80,fn_8005dc80,translated,high,"work/ghidra/main-gb/export/8005dc80_FUN_8005dc80.c; byte +0 = 0 and the 0x8042BA54 word at +4 and +8",src/game/player.rs
+game::player,8005dea0,fn_8005dea0,translated,medium,"work/ghidra/main-gb/export/8005dea0_FUN_8005dea0.c; calls fn_8005ded0 with the live r3 and returns the record",src/game/player.rs
+game::player,8005ded0,fn_8005ded0,translated,high,"work/ghidra/main-gb/export/8005ded0_FUN_8005ded0.c; copies the four words at 0x8042BA58..0x8042BA64 into record[0..4]",src/game/player.rs
+game::player,8005dfd0,fn_8005dfd0,translated,high,"work/ghidra/main-gb/export/8005dfd0_FUN_8005dfd0.c; u32 zero at +0 plus u16 zeros at +4,+6,+12,+14,+16",src/game/player.rs
+game::player,8005dff0,fn_8005dff0,translated,medium,"work/ghidra/main-gb/export/8005dff0_FUN_8005dff0.c; conditional 0x802B9280 free when value != 0 and release > 0",src/game/player.rs
+game::player,8005e030,fn_8005e030,translated,high,"work/ghidra/main-gb/export/8005e030_FUN_8005e030.c; stores 0xFFFFFFFF at +0",src/game/player.rs
+game::player,8005fd20,fn_8005fd20,translated,high,"work/ghidra/main-gb/export/8005fd20_FUN_8005fd20.c; counts occupied slots whose actor is missing or whose +0x153C != 1",src/game/player.rs
+game::player,8005feb0,fn_8005feb0,translated,high,"work/ghidra/main-gb/export/8005feb0_FUN_8005feb0.c; increment the 0x80429CA0 counter while <= 3",src/game/player.rs
+game::player,8005fed0,fn_8005fed0,translated,high,"work/ghidra/main-gb/export/8005fed0_FUN_8005fed0.c; decrement the 0x80429CA0 counter while >= 1",src/game/player.rs
+game::player,8005fef0,fn_8005fef0,translated,high,"work/ghidra/main-gb/export/8005fef0_FUN_8005fef0.c; counts handles whose 0x80354E90[0x80354E60[slot]] counter is positive",src/game/player.rs
+game::player,8005ffb0,fn_8005ffb0,translated,high,"work/ghidra/main-gb/export/8005ffb0_FUN_8005ffb0.c; counts the four non-zero 0x80354E50 handles",src/game/player.rs

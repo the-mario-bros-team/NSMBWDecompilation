@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,800534b0,fn_800534b0,translated,high,"work/ghidra/main-gb/export/800534b0_FUN_800534b0.c; five EFFECT_RECORD_BIND calls on slots 0x148/0x1164/0x1208/0x12AC/0x1350",src/game/player.rs
+game::player,80053600,fn_80053600,translated,high,"work/ghidra/main-gb/export/80053600_FUN_80053600.c; five EFFECT_RECORD_RESET calls on the same slots",src/game/player.rs
+game::player,800536a0,fn_800536a0,translated,high,"work/ghidra/main-gb/export/800536a0_FUN_800536a0.c; tail-calls fn_80053650 with mode 5",src/game/player.rs
+game::player,80053740,fn_80053740,translated,high,"work/ghidra/main-gb/export/80053740_FUN_80053740.c; writes +0x175=3, +0x1191=3, four-word copy +0x1224->+0x136C, flag 0x84",src/game/player.rs
+game::player,800537a0,fn_800537a0,translated,high,"work/ghidra/main-gb/export/800537a0_FUN_800537a0.c; tail-calls fn_80053650 with mode 0x11",src/game/player.rs
+game::player,800537b0,fn_800537b0,translated,high,"work/ghidra/main-gb/export/800537b0_FUN_800537b0.c; fn_80053490 byte mirrored into five records, XOR 3 when +0x1235==8, five EFFECT_RECORD_STOP gates",src/game/player.rs
+game::player,800540f0,fn_800540f0,translated,medium,"work/ghidra/main-gb/export/800540f0_FUN_800540f0.c; +0x394==1/2/3 dispatcher, 0x8015F480 with 0x802EEB60/70 tables, slot +0x114; callee roles unknown",src/game/player.rs
+game::player,800541c0,fn_800541c0,translated,high,"work/ghidra/main-gb/export/800541c0_FUN_800541c0.c; writes 1.0+f, 1.0-f, 1.0+f with f from +0x39C",src/game/player.rs
+game::player,800541e0,fn_800541e0,translated,high,"work/ghidra/main-gb/export/800541e0_FUN_800541e0.c; stores two words at +0x3A8/+0x3AC",src/game/player.rs
+game::player,800541f0,fn_800541f0,translated,high,"work/ghidra/main-gb/export/800541f0_FUN_800541f0.c; decrements +0x3AC, clears +0x3A8 at zero",src/game/player.rs
+game::player,80054230,fn_80054230,translated,high,"work/ghidra/main-gb/export/80054230_FUN_80054230.c; sets flag 0x23, stores *source at +0x1010",src/game/player.rs
+game::player,800542d0,fn_800542d0,translated,high,"work/ghidra/main-gb/export/800542d0_FUN_800542d0.c; counts down +0x1124, clears +0x240 at zero",src/game/player.rs
+game::player,80054300,fn_80054300,translated,high,"work/ghidra/main-gb/export/80054300_FUN_80054300.c; eleven-word history shift +0x10E8..+0x1108 plus snapshot and bit &1",src/game/player.rs
+game::player,80054370,fn_80054370,translated,high,"work/ghidra/main-gb/export/80054370_FUN_80054370.c; calls fn_80054300, zeroes flags, re-seeds 0.0 float block +0x10C4..",src/game/player.rs
+game::player,800543e0,fn_800543e0,translated,high,"work/ghidra/main-gb/export/800543e0_FUN_800543e0.c; clears flags 0x87/0x86/0x2C/0x5D, fn_80054370, counter +0x1134, gated 0x800544F0/0x80055330/0x80055810/slots 0xFC/0x100",src/game/player.rs
+game::player,80054ef0,fn_80054ef0,translated,medium,"work/ghidra/main-gb/export/80054ef0_FUN_80054ef0.c; +0x250 entry lookup, entry[0x28]-entry[0x2A] write to +0x1114, 0x800 flag plus 0x80065FC0; callee unknown",src/game/player.rs
+game::player,800552d0,fn_800552d0,translated,medium,"work/ghidra/main-gb/export/800552d0_FUN_800552d0.c; +0xB0 plus 0x802EEB80 scale via slot +0xE8; slot meaning inferred",src/game/player.rs
+game::player,80055530,fn_80055530,translated,high,"work/ghidra/main-gb/export/80055530_FUN_80055530.c; copies +0x2CC pair to +0x1148/+0x1149, forced 1/7 and 1/8 pairs",src/game/player.rs
+game::player,80055620,fn_80055620,translated,high,"work/ghidra/main-gb/export/80055620_FUN_80055620.c; consumes +0x1148/+0x1149 pair, byte-to-mode map 7/8/9, slots +0x3F0/+0x450",src/game/player.rs
+game::player,800557e0,fn_800557e0,translated,high,"work/ghidra/main-gb/export/800557e0_FUN_800557e0.c; +0x10D4 masked by 0x8042BAE8 table, (-v|v)>>31",src/game/player.rs
+game::player,8005d050,fn_8005d050,translated,high,"work/ghidra/main-gb/export/8005d050_FUN_8005d050.c; first empty +0x70 slot among four gets value",src/game/player.rs
+game::player,8005d090,fn_8005d090,translated,high,"work/ghidra/main-gb/export/8005d090_FUN_8005d090.c; 1 when +0x60 is 0xFFFFFFFF or equals value",src/game/player.rs
+game::player,8005e4c0,fn_8005e4c0,translated,high,"work/ghidra/main-gb/export/8005e4c0_FUN_8005e4c0.c; +0x06 halfword bit 0x800",src/game/player.rs
+game::player,8005e4d0,fn_8005e4d0,translated,high,"work/ghidra/main-gb/export/8005e4d0_FUN_8005e4d0.c; +0x04 halfword low nibble",src/game/player.rs
+game::player,8005e4f0,fn_8005e4f0,translated,high,"work/ghidra/main-gb/export/8005e4f0_FUN_8005e4f0.c; +0x04 halfword bit 2",src/game/player.rs
+game::player,8005e500,fn_8005e500,translated,high,"work/ghidra/main-gb/export/8005e500_FUN_8005e500.c; +0x04 halfword bit 1, thunk target of 0x8005E830",src/game/player.rs
+game::player,8005e510,fn_8005e510,translated,high,"work/ghidra/main-gb/export/8005e510_FUN_8005e510.c; +0x04 halfword bit 8",src/game/player.rs
+game::player,8005e520,fn_8005e520,translated,high,"work/ghidra/main-gb/export/8005e520_FUN_8005e520.c; +0x04 halfword bit 4",src/game/player.rs
+game::player,8005e540,fn_8005e540,translated,high,"work/ghidra/main-gb/export/8005e540_FUN_8005e540.c; +0x06 halfword bit 1",src/game/player.rs
+game::player,8005e550,fn_8005e550,translated,high,"work/ghidra/main-gb/export/8005e550_FUN_8005e550.c; +0x06 halfword bit 8",src/game/player.rs

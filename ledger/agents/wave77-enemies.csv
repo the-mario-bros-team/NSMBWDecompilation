@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a401d0,fn_80a401d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a401d0_FUN_80a401d0.c; holder release then motion re-arm with literal 1",src/game/enemies.rs
+game::enemies,80a40220,fn_80a40220,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a40220_FUN_80a40220.c; local guard 0x80A3F450 then four shared calls",src/game/enemies.rs
+game::enemies,80a40390,fn_80a40390,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a40390_FUN_80a40390.c; ammo table +0x6E8/+0x6EC position into effect 0x191",src/game/enemies.rs
+game::enemies,80a404a0,fn_80a404a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a404a0_FUN_80a404a0.c; +0xA54 lookup then vtable +0xD4 with 0x80B708A8",src/game/enemies.rs
+game::enemies,80a40530,fn_80a40530,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a40530_FUN_80a40530.c; +0x60C bit 0 gate, +0xA86 timer, two phase bytes",src/game/enemies.rs
+game::enemies,80a40630,fn_80a40630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a40630_FUN_80a40630.c; ride slot +0xA99, +0xA70 integrator, +0xA8A effect timer",src/game/enemies.rs
+game::enemies,80a40740,fn_80a40740,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a40740_FUN_80a40740.c; two-word speed table by +0x348, counters 6 and 0",src/game/enemies.rs
+game::enemies,80a46d10,fn_80a46d10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46d10_FUN_80a46d10.c; 0x8007FBF0 placement, +0xAC4/+0xAD0 limit record, face byte",src/game/enemies.rs
+game::enemies,80a46df0,fn_80a46df0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46df0_FUN_80a46df0.c; damping, two probes, ground speed and +0x102 yaw step",src/game/enemies.rs
+game::enemies,80a472d0,fn_80a472d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a472d0_FUN_80a472d0.c; null-guarded 0x8015F800 then 0x802B9280",src/game/enemies.rs
+game::enemies,80a473f0,fn_80a473f0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a473f0_FUN_80a473f0.c; 0x802DCBFC(param_2, param_2, param_1) forwarder",src/game/enemies.rs
+game::enemies,80a47420,fn_80a47420,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a47420_FUN_80a47420.c; second 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80a47450,fn_80a47450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a47450_FUN_80a47450.c; 0x6A8-byte constructor, vtable 0x80B42868, +0x584/+0x5BC pair",src/game/enemies.rs
+game::enemies,80a4a370,fn_80a4a370,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4a370_FUN_80a4a370.c; deleting destructor in front of alloc_crasher_actor",src/game/enemies.rs
+game::enemies,80a4a3d0,fn_80a4a3d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4a3d0_FUN_80a4a3d0.c; second deleting destructor, identical body",src/game/enemies.rs
+game::enemies,80a4a430,fn_80a4a430,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4a430_FUN_80a4a430.c; returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80a4a440,fn_80a4a440,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4a440_FUN_80a4a440.c; returns 0x80357BB4",src/game/enemies.rs
+game::enemies,80a4a530,fn_80a4a530,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4a530_FUN_80a4a530.c; five +0x30 owner steps then recursion",src/game/enemies.rs
+game::enemies,80a4a610,fn_80a4a610,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4a610_FUN_80a4a610.c; trim at 0x3A then compare object name with candidate",src/game/enemies.rs
+game::enemies,80a4a6d0,fn_80a4a6d0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4a6d0_FUN_80a4a6d0.c; 0x802DCBFC(param_2, param_2, param_1) forwarder",src/game/enemies.rs
+game::enemies,80a4a700,fn_80a4a700,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4a700_FUN_80a4a700.c; second 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80a4c7e0,fn_80a4c7e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4c7e0_FUN_80a4c7e0.c; deleting destructor of the closing skeleton",src/game/enemies.rs
+game::enemies,80a4c840,fn_80a4c840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4c840_FUN_80a4c840.c; second deleting destructor, identical body",src/game/enemies.rs
+game::enemies,80a4c8a0,fn_80a4c8a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4c8a0_FUN_80a4c8a0.c; returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80a4c8b0,fn_80a4c8b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4c8b0_FUN_80a4c8b0.c; returns 0x80357BB4",src/game/enemies.rs
+game::enemies,80a4c9a0,fn_80a4c9a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4c9a0_FUN_80a4c9a0.c; five +0x30 owner steps then recursion",src/game/enemies.rs
+game::enemies,80a4ca80,fn_80a4ca80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4ca80_FUN_80a4ca80.c; trim at 0x3A then compare object name with candidate",src/game/enemies.rs
+game::enemies,80a4cb40,fn_80a4cb40,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4cb40_FUN_80a4cb40.c; 0x802DCBFC(param_2, param_2, param_1) forwarder",src/game/enemies.rs
+game::enemies,80a4cb70,fn_80a4cb70,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a4cb70_FUN_80a4cb70.c; second 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80a4cba0,fn_80a4cba0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a4cba0_FUN_80a4cba0.c; 0x760-byte constructor, vtable 0x80B4338C at +0x60",src/game/enemies.rs

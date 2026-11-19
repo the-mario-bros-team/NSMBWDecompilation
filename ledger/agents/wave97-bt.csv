@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80227cc0,fn_80227cc0,translated,medium,"work/ghidra/main-gb/export/80227cc0_FUN_80227cc0.c; EXI debug-console writer; rewrites LF to CR then sends 0x30000100/0xB0000100 frames 0x20 bytes at a time",src/runtime/bt.rs
+runtime::bt,80227ef0,fn_80227ef0,translated,medium,"work/ghidra/main-gb/export/80227ef0_FUN_80227ef0.c; 4-bit differential sample encoder; step scaled by the eight doubles at 0x802F71A8; state is six words",src/runtime/bt.rs
+runtime::bt,802281d0,fn_802281d0,translated,high,"work/ghidra/main-gb/export/802281d0_FUN_802281d0.c; rebases an 0x20AF30 header table and each entry's +8 pointer, guarded by +0x23/+2",src/runtime/bt.rs
+runtime::bt,8022852c,fn_8022852c,translated,medium,"work/ghidra/main-gb/export/8022852c_FUN_8022852c.c; rotating EXI transfer tag selects 0xD10000/0xD10800 window, stages via 80228cf0, writes 0x1F000000 command",src/runtime/bt.rs
+runtime::bt,8022892c,fn_8022892c,translated,high,"work/ghidra/main-gb/export/8022892c_FUN_8022892c.c; 0x18000 delay then 0xB4000000/0xD4000000 immediate writes with 0xC0 control and 0x405 mask",src/runtime/bt.rs
+runtime::bt,80229ff0,fn_80229ff0,translated,high,"work/ghidra/main-gb/export/80229ff0_FUN_80229ff0.c; copy constructor of the 0x70-byte range object; 15-word field block plus range max from source+0x34",src/runtime/bt.rs
+runtime::bt,8022a590,fn_8022a590,translated,medium,"work/ghidra/main-gb/export/8022a590_FUN_8022a590.c; derived constructor over 80229f30, vtable 0x8034CCA8, one-time table registration",src/runtime/bt.rs
+runtime::bt,8022a620,fn_8022a620,translated,medium,"work/ghidra/main-gb/export/8022a620_FUN_8022a620.c; derived constructor over the copy constructor 80229ff0, same vtable and registration",src/runtime/bt.rs
+runtime::bt,8022ac40,fn_8022ac40,translated,medium,"work/ghidra/main-gb/export/8022ac40_FUN_8022ac40.c; copies 34 words into +0xD8, optional vertex-format bind at +0x14, sets +0x16B/+0x16C and returns 1/0",src/runtime/bt.rs
+runtime::bt,8022b5a0,fn_8022b5a0,translated,medium,"work/ghidra/main-gb/export/8022b5a0_FUN_8022b5a0.c; opens the object source through 801B0D60, caches the u16 id, queries vtable +0x24/+0x28/+0x58",src/runtime/bt.rs
+runtime::bt,8022c3a0,fn_8022c3a0,translated,low,"work/ghidra/main-gb/export/8022c3a0_FUN_8022c3a0.c; attaches a FINF payload to a render object; third argument of 8022bc20 is not printed by the caller",src/runtime/bt.rs
+runtime::bt,8022c4f0,fn_8022c4f0,translated,high,"work/ghidra/main-gb/export/8022c4f0_FUN_8022c4f0.c; walks FINF/PLGT/HDWC/PAMC/GLGR nodes, rebases their fields and flips the magic to RFNU",src/runtime/bt.rs
+runtime::bt,8022c600,fn_8022c600,translated,medium,"work/ghidra/main-gb/export/8022c600_FUN_8022c600.c; 0x4C-byte two-palette colour object; selector at +0x20 picks palettes, blend byte +0x42",src/runtime/bt.rs
+runtime::bt,8022d440,fn_8022d440,translated,high,"work/ghidra/main-gb/export/8022d440_FUN_8022d440.c; width at +0x24 times inner vtable slot +0x0C",src/runtime/bt.rs
+runtime::bt,8022d4a0,fn_8022d4a0,translated,high,"work/ghidra/main-gb/export/8022d4a0_FUN_8022d4a0.c; height at +0x28 times inner vtable slot +0x10",src/runtime/bt.rs
+runtime::bt,8022d500,fn_8022d500,translated,high,"work/ghidra/main-gb/export/8022d500_FUN_8022d500.c; height at +0x28 times inner vtable slot +0x14",src/runtime/bt.rs
+runtime::bt,8022d560,fn_8022d560,translated,high,"work/ghidra/main-gb/export/8022d560_FUN_8022d560.c; height at +0x28 times inner vtable slot +0x18",src/runtime/bt.rs
+runtime::bt,8022d5c0,fn_8022d5c0,translated,high,"work/ghidra/main-gb/export/8022d5c0_FUN_8022d5c0.c; stores (arg != 0) at +0x38 and +0x3C",src/runtime/bt.rs
+runtime::bt,8022d9a0,fn_8022d9a0,translated,high,"work/ghidra/main-gb/export/8022d9a0_FUN_8022d9a0.c; rebuilds the four corner colours from the two palettes and the +0x20 selector, alpha scaled by +0x42",src/runtime/bt.rs
+runtime::bt,8022daf0,fn_8022daf0,translated,medium,"work/ghidra/main-gb/export/8022daf0_FUN_8022daf0.c; literal 34-call render-state setup in 0x801C37C0..0x801C8DC0; two colour words as arguments",src/runtime/bt.rs
+runtime::bt,8022dde0,fn_8022dde0,translated,medium,"work/ghidra/main-gb/export/8022dde0_FUN_8022dde0.c; runs 8022c600 then stores +0x4C..+0x60 from two sdata2 floats and SDA1",src/runtime/bt.rs
+runtime::bt,8022de40,fn_8022de40,translated,high,"work/ghidra/main-gb/export/8022de40_FUN_8022de40.c; destructor 8022c980 with release 0, frees only when release > 0",src/runtime/bt.rs
+runtime::bt,8022df30,fn_8022df30,translated,high,"work/ghidra/main-gb/export/8022df30_FUN_8022df30.c; base level +0x54 plus inner vtable slot +0x34 times scale +0x28, zero when inner is null",src/runtime/bt.rs
+runtime::bt,8022e730,fn_8022e730,translated,medium,"work/ghidra/main-gb/export/8022e730_FUN_8022e730.c; copies the 0x44-byte object into a 0x90 stack frame, renders via 8022f960, returns third level minus first",src/runtime/bt.rs
+runtime::bt,8022f120,fn_8022f120,translated,medium,"work/ghidra/main-gb/export/8022f120_FUN_8022f120.c; formats into the SDA1 scratch buffer (stack fallback) and appends the clamped text via 8022fa70",src/runtime/bt.rs
+runtime::bt,8022f910,fn_8022f910,translated,high,"work/ghidra/main-gb/export/8022f910_FUN_8022f910.c; seeds a four-word record with 0 plus source +4/+8/+0xC",src/runtime/bt.rs

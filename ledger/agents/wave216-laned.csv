@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800f2f20,fn_800f2f20,translated,high,work/ghidra/main-gb/export/800f2f20_FUN_800f2f20.c,src/engine/dsys.rs
+engine::dsys,800f3460,fn_800f3460,translated,high,work/ghidra/main-gb/export/800f3460_FUN_800f3460.c,src/engine/dsys.rs
+engine::dsys,800f4870,fn_800f4870,translated,high,work/ghidra/main-gb/export/800f4870_FUN_800f4870.c,src/engine/dsys.rs
+engine::dsys,800f5050,fn_800f5050,translated,high,work/ghidra/main-gb/export/800f5050_FUN_800f5050.c,src/engine/dsys.rs
+engine::dsys,800f56b0,fn_800f56b0,translated,high,work/ghidra/main-gb/export/800f56b0_FUN_800f56b0.c,src/engine/dsys.rs
+engine::dsys,800f6320,fn_800f6320,translated,medium,work/ghidra/main-gb/export/800f6320_FUN_800f6320.c,src/engine/dsys.rs
+engine::dsys,800f64e0,fn_800f64e0,translated,high,work/ghidra/main-gb/export/800f64e0_FUN_800f64e0.c,src/engine/dsys.rs
+engine::dsys,800f6500,fn_800f6500,translated,medium,work/ghidra/main-gb/export/800f6500_FUN_800f6500.c,src/engine/dsys.rs
+engine::dsys,800f7020,fn_800f7020,translated,high,work/ghidra/main-gb/export/800f7020_FUN_800f7020.c,src/engine/dsys.rs
+engine::dsys,800f7270,fn_800f7270,translated,high,work/ghidra/main-gb/export/800f7270_FUN_800f7270.c,src/engine/dsys.rs

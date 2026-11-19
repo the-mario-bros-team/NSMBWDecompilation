@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80120cf0,fn_80120cf0,translated,high,work/ghidra/main-gb/export/80120cf0_FUN_80120cf0.c; clears +0x574 bit 0x40000000 then zeroes +0x2C of the 0x8011DCE0 record,src/game/worldmap.rs
+game::worldmap,80121440,fn_80121440,translated,medium,"work/ghidra/main-gb/export/80121440_FUN_80121440.c; resolves +0x5C4 through 0x8005F900 and hands the actor to 0x8012E510; clears +0x12C bits 0/1 and sets +0x178 bit 0x20",src/game/worldmap.rs
+game::worldmap,80125cc0,fn_80125cc0,translated,medium,work/ghidra/main-gb/export/80125cc0_FUN_80125cc0.c; 0x800CD250 gate then fn_80125f10 and the 0x80057CD0 input test,src/game/worldmap.rs
+game::worldmap,80125f10,fn_80125f10,translated,medium,work/ghidra/main-gb/export/80125f10_FUN_80125f10.c; +0x392 slot <4 uses 0x8005F900 and slots 4..7 use 0x8005FB70(index-4),src/game/worldmap.rs
+game::worldmap,80125ff0,fn_80125ff0,translated,medium,"work/ghidra/main-gb/export/80125ff0_FUN_80125ff0.c; two 0x80075FD0 probes with an 8-byte sink; +0x50C mode and the 0x19C hit record select the 0x801260F0 continuation",src/game/worldmap.rs
+game::worldmap,80126630,fn_80126630,translated,medium,"work/ghidra/main-gb/export/80126630_FUN_80126630.c; +0x10D4 bit 0x4000 selects 0x80048C70 or Wm_mr_sealandsmk_ss plus events 0x153 and 0x107/0x105",src/game/worldmap.rs
+game::worldmap,801266b0,fn_801266b0,translated,high,"work/ghidra/main-gb/export/801266b0_FUN_801266b0.c; input 0xA7 plus +0x10D4 bit 0 +0x10D8 bit 0x40 gates then posts 0x80375F70 or 0x80375E2C",src/game/worldmap.rs
+game::worldmap,80126e90,fn_80126e90,translated,high,"work/ghidra/main-gb/export/80126e90_FUN_80126e90.c; zeroes +0x17C0 clears nine inputs clears +0xEA4 state 4 and runs 0x80147250(object 0)",src/game/worldmap.rs
+game::worldmap,801270f0,fn_801270f0,translated,medium,"work/ghidra/main-gb/export/801270f0_FUN_801270f0.c; chain 0x80047D60 0x8004C4F0 slot 0x44C 0x8004B730 0x8004C450 then the 0x80134B10 gate",src/game/worldmap.rs
+game::worldmap,80127410,fn_80127410,translated,high,work/ghidra/main-gb/export/80127410_FUN_80127410.c; input 0xAB clear increments +0x1564 and wraps after 2,src/game/worldmap.rs
+game::worldmap,80127f10,fn_80127f10,translated,high,"work/ghidra/main-gb/export/80127f10_FUN_80127f10.c; input 0xAC scales +0xEC by 0x802F4E14[level-1] clamped to 0..4 then clears +0x10D4 bit 0",src/game/worldmap.rs
+game::worldmap,801287b0,fn_801287b0,translated,high,"work/ghidra/main-gb/export/801287b0_FUN_801287b0.c; clears inputs 0x13/0x9F/0x8F +0x2A8 bit 2 then copies the 0x3C4 slot word to +0x114",src/game/worldmap.rs
+game::worldmap,80128d20,fn_80128d20,translated,medium,work/ghidra/main-gb/export/80128d20_FUN_80128d20.c; copies the first word returned by vtable slot 0x3C4 to +0x114,src/game/worldmap.rs
+game::worldmap,80128fc0,fn_80128fc0,translated,high,"work/ghidra/main-gb/export/80128fc0_FUN_80128fc0.c; input 0x2B clear runs 0x801291F0 else resolves +0x2A78 and formats the actor or the 0x8012DBE0 link",src/game/worldmap.rs
+game::worldmap,80129790,fn_80129790,translated,medium,"work/ghidra/main-gb/export/80129790_FUN_80129790.c; zeroes +0x251C/+0x252C clears ten inputs and five +0xEA4 states then stores the 0x444 heading and clears 0x2B on the link",src/game/worldmap.rs
+game::worldmap,801299b0,fn_801299b0,translated,high,work/ghidra/main-gb/export/801299b0_FUN_801299b0.c; single halfword store at +0x2534,src/game/worldmap.rs
+game::worldmap,8012ab40,fn_8012ab40,translated,medium,work/ghidra/main-gb/export/8012ab40_FUN_8012ab40.c; 0x8004CF20 then 0x8012AB00 on the actor,src/game/worldmap.rs
+game::worldmap,8012bd20,fn_8012bd20,translated,high,"work/ghidra/main-gb/export/8012bd20_FUN_8012bd20.c; 0x8004CB30(actor 0) then event 0x164 when +0x111C == 5",src/game/worldmap.rs
+game::worldmap,8012c5e0,fn_8012c5e0,translated,high,"work/ghidra/main-gb/export/8012c5e0_FUN_8012c5e0.c; +0x10D4 bit 0x800000 plus 0x8005E7A0 zero plus +0x1090 != 5",src/game/worldmap.rs
+game::worldmap,8012cad0,fn_8012cad0,translated,high,work/ghidra/main-gb/export/8012cad0_FUN_8012cad0.c; signed halfword decrement with zero guard,src/game/worldmap.rs
+game::worldmap,8012d490,fn_8012d490,translated,high,"work/ghidra/main-gb/export/8012d490_FUN_8012d490.c; inputs 0x51/0x0F/0xBE +0x10D4 mask 0x18000000 and slot 0x3C8 gate the 0x8005E830 thunk then posts 0x80376330 or 0x80375D2C",src/game/worldmap.rs
+game::worldmap,8012e140,fn_8012e140,translated,medium,"work/ghidra/main-gb/export/8012e140_FUN_8012e140.c; nearest-target test over target+0x04 with slot 0x74 0x8012E400 and 0x8008C570; keeps the pick in +0x27D4/+0x27D8",src/game/worldmap.rs
+game::worldmap,8012e5a0,fn_8012e5a0,translated,high,"work/ghidra/main-gb/export/8012e5a0_FUN_8012e5a0.c; slot 0x3C8 then +0x2A78 via 0x80162D00; state +0x38C == 1 copies else slot 0x7C attach; ends with 0x8012E510",src/game/worldmap.rs
+game::worldmap,8012e6e0,fn_8012e6e0,translated,medium,"work/ghidra/main-gb/export/8012e6e0_FUN_8012e6e0.c; the 0x8005E680 thunk result becomes a boolean and a missing link releases through 0x8012E510(actor 0)",src/game/worldmap.rs
+game::worldmap,8012e760,fn_8012e760,translated,medium,"work/ghidra/main-gb/export/8012e760_FUN_8012e760.c; +0x1464 slot 0x28 then the 0x10 name compare against 0x80376230 selects 0x80376130 or 0x80376170",src/game/worldmap.rs
+game::worldmap,8012e990,fn_8012e990,translated,high,work/ghidra/main-gb/export/8012e990_FUN_8012e990.c; single input clear 0x18,src/game/worldmap.rs
+game::worldmap,8012f060,fn_8012f060,translated,medium,"work/ghidra/main-gb/export/8012f060_FUN_8012f060.c; +0x10D4 bit 0x4000 selects the 0x80131990 chain else 0x8004C480 slot 0x44C 0x8004B9A0 0x8004C450; ends with 0x8012EE20",src/game/worldmap.rs
+game::worldmap,8012f970,fn_8012f970,translated,medium,"work/ghidra/main-gb/export/8012f970_FUN_8012f970.c; +0x10D4 bit 0x4000 plus the +0x1464 name test against 0x80375E6C and +0x14A4 == 1 start state 1",src/game/worldmap.rs
+game::worldmap,8012fa00,fn_8012fa00,translated,high,"work/ghidra/main-gb/export/8012fa00_FUN_8012fa00.c; inputs 0x45/0xAA/0x3A and +0x10D4/+0x10DC bit 0x4000 choose event 0x80375E6C with argument 0/1/2",src/game/worldmap.rs
+game::worldmap,8012fef0,fn_8012fef0,translated,high,work/ghidra/main-gb/export/8012fef0_FUN_8012fef0.c; slot 0x10 on the embedded records at +0x2074 and +0x219C,src/game/worldmap.rs

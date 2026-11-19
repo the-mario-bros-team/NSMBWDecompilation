@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bosses,80c001f0,fn_80c001f0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c001f0_FUN_80c001f0.c,src/game/bosses.rs
+game::bosses,80c04ad0,fn_80c04ad0,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c04ad0_FUN_80c04ad0.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c04b00,fn_80c04b00,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c04b00_FUN_80c04b00.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c06b20,fn_80c06b20,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c06b20_FUN_80c06b20.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c06b50,fn_80c06b50,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c06b50_FUN_80c06b50.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c09d20,fn_80c09d20,translated,high,work/ghidra/rel-d_en_bossNP/export/80c09d20_FUN_80c09d20.c; 0x8015F800 teardown then optional 0x802B9280 release,src/game/bosses.rs
+game::bosses,80c0a070,fn_80c0a070,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c0a070_FUN_80c0a070.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c0a0a0,fn_80c0a0a0,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c0a0a0_FUN_80c0a0a0.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c0e2f0,fn_80c0e2f0,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c0e2f0_FUN_80c0e2f0.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c0e320,fn_80c0e320,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c0e320_FUN_80c0e320.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c11c10,fn_80c11c10,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c11c10_FUN_80c11c10.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c11c40,fn_80c11c40,partial,medium,"work/ghidra/rel-d_en_bossNP/export/80c11c40_FUN_80c11c40.c; 0x802DCBFC(param_2,param_2,param_1); hidden r12 this-adjust not modelled",src/game/bosses.rs
+game::bosses,80c189d0,fn_80c189d0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c189d0_FUN_80c189d0.c; returns constant 1,src/game/bosses.rs
+game::bosses,80c2c8d0,fn_80c2c8d0,translated,medium,work/ghidra/rel-d_en_bossNP/export/80c2c8d0_FUN_80c2c8d0.c; calls 0x80161E30 then returns 1; callee inputs not modelled,src/game/bosses.rs
+game::bosses,80c31f90,fn_80c31f90,translated,high,work/ghidra/rel-d_en_bossNP/export/80c31f90_FUN_80c31f90.c; 0x8015F800 teardown then optional 0x802B9280 release,src/game/bosses.rs
+game::bosses,80c31ff0,fn_80c31ff0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c31ff0_FUN_80c31ff0.c; 0x8015F800 teardown then optional 0x802B9280 release,src/game/bosses.rs
+game::bosses,80c348f0,fn_80c348f0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c348f0_FUN_80c348f0.c; 0x8015F800 teardown then optional 0x802B9280 release,src/game/bosses.rs
+game::bosses,80c34950,fn_80c34950,translated,high,work/ghidra/rel-d_en_bossNP/export/80c34950_FUN_80c34950.c; 0x8015F800 teardown then optional 0x802B9280 release,src/game/bosses.rs
+game::bosses,80c35140,fn_80c35140,translated,high,work/ghidra/rel-d_en_bossNP/export/80c35140_FUN_80c35140.c; returns constant 1,src/game/bosses.rs
+game::bosses,80c3d190,fn_80c3d190,translated,high,work/ghidra/rel-d_en_bossNP/export/80c3d190_FUN_80c3d190.c; 0x8015F800 teardown then optional 0x802B9280 release,src/game/bosses.rs
+game::bosses,80c3e360,fn_80c3e360,translated,high,work/ghidra/rel-d_en_bossNP/export/80c3e360_FUN_80c3e360.c; returns constant 1,src/game/bosses.rs
+game::bosses,80c428f0,fn_80c428f0,translated,high,work/ghidra/rel-d_en_bossNP/export/80c428f0_FUN_80c428f0.c; 0x8015F800 teardown then optional 0x802B9280 release,src/game/bosses.rs
+game::bosses,80c46d10,fn_80c46d10,translated,high,work/ghidra/rel-d_en_bossNP/export/80c46d10_FUN_80c46d10.c; returns constant 1,src/game/bosses.rs
+game::bosses,80c51450,fn_80c51450,translated,high,work/ghidra/rel-d_en_bossNP/export/80c51450_thunk_FUN_80c51460.c; 4-byte tail branch to 0x80C51460,src/game/bosses.rs
+game::bosses,80c51520,fn_80c51520,translated,medium,"work/ghidra/rel-d_en_bossNP/export/80c51520_FUN_80c51520.c; two-loop route population; uVar7 recovered as the incoming (owner,index) pair left by the 0x802DCD74 save thunk",src/game/bosses.rs

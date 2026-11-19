@@ -1,0 +1,12 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,800408f0,fn_800408f0,partial,low,"work/ghidra/main-gb/export/800408f0_FUN_800408f0.c; 0x802DCBFC forwarder; hidden r12 member-pointer descriptor not modelled",src/game/player.rs
+game::player,80041ba0,fn_80041ba0,partial,low,"work/ghidra/main-gb/export/80041ba0_FUN_80041ba0.c; byte-identical 0x802DCBFC forwarder; hidden r12 descriptor not modelled",src/game/player.rs
+game::player,80041bd0,fn_80041bd0,partial,low,"work/ghidra/main-gb/export/80041bd0_FUN_80041bd0.c; byte-identical 0x802DCBFC forwarder; hidden r12 descriptor not modelled",src/game/player.rs
+game::player,80043770,fn_80043770,partial,low,"work/ghidra/main-gb/export/80043770_FUN_80043770.c; byte-identical 0x802DCBFC forwarder; hidden r12 descriptor not modelled",src/game/player.rs
+game::player,800437a0,fn_800437a0,partial,low,"work/ghidra/main-gb/export/800437a0_FUN_800437a0.c; byte-identical 0x802DCBFC forwarder; hidden r12 descriptor not modelled",src/game/player.rs
+game::player,800441e0,fn_800441e0,translated,medium,"work/ghidra/main-gb/export/800441e0_FUN_800441e0.c; +0x3E0 chain walk; slot bit table 0x8042B7C8; 0x28-frame arm at +0x450; calls 0x800440C0(owner, mask)",src/game/player.rs
+game::player,80044550,fn_80044550,translated,medium,"work/ghidra/main-gb/export/80044550_FUN_80044550.c; nine 8-byte ring records at +0x404; psi_l s16 angles scaled 1/256; cos/sin sums at +0x394..+0x3A4",src/game/player.rs
+game::player,80045190,fn_80045190,partial,low,"work/ghidra/main-gb/export/80045190_FUN_80045190.c; byte-identical 0x802DCBFC forwarder; hidden r12 descriptor not modelled",src/game/player.rs
+game::player,800451c0,fn_800451c0,partial,low,"work/ghidra/main-gb/export/800451c0_FUN_800451c0.c; byte-identical 0x802DCBFC forwarder; hidden r12 descriptor not modelled",src/game/player.rs
+game::player,80048630,fn_80048630,translated,medium,"work/ghidra/main-gb/export/80048630_FUN_80048630.c; ground-angle speed damper; +0x112A/0x112C/0x112E angle record; landing 0x48C=3 / 0x14A8=8 pose",src/game/player.rs
+game::player,8004db00,fn_8004db00,partial,low,"work/ghidra/main-gb/export/8004db00_FUN_8004db00.c; 0x802DCBFC(first, 0x80308300); hidden r12 descriptor and r5 argument not modelled",src/game/player.rs

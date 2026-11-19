@@ -1,0 +1,25 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,802187ec,fn_802187ec,translated,high,"work/ghidra/main-gb/export/802187ec_FUN_802187ec.c; five-record scan; result 4 -> close reason 0x18",src/runtime/bt.rs
+runtime::bt,802189e8,fn_802189e8,translated,medium,"work/ghidra/main-gb/export/802189e8_FUN_802189e8.c; argument pair from the 0x802DCD70 fold",src/runtime/bt.rs
+runtime::bt,80218b98,fn_80218b98,translated,medium,"work/ghidra/main-gb/export/80218b98_FUN_80218b98.c; 0xE0 selects credit mode",src/runtime/bt.rs
+runtime::bt,80218c9c,fn_80218c9c,translated,high,"work/ghidra/main-gb/export/80218c9c_FUN_80218c9c.c; MTU clamp and two callbacks",src/runtime/bt.rs
+runtime::bt,80218ddc,fn_80218ddc,translated,medium,"work/ghidra/main-gb/export/80218ddc_FUN_80218ddc.c; channel from fold high half",src/runtime/bt.rs
+runtime::bt,80219070,fn_80219070,translated,high,"work/ghidra/main-gb/export/80219070_FUN_80219070.c; flag bit +0x64 bit 0 gate",src/runtime/bt.rs
+runtime::bt,80219188,fn_80219188,translated,high,"work/ghidra/main-gb/export/80219188_FUN_80219188.c; five status bytes and mask 0x40/0x200",src/runtime/bt.rs
+runtime::bt,80219300,fn_80219300,translated,medium,"work/ghidra/main-gb/export/80219300_FUN_80219300.c; arguments recovered from the caller 0x8021C4E0",src/runtime/bt.rs
+runtime::bt,802193c4,fn_802193c4,translated,high,"work/ghidra/main-gb/export/802193c4_FUN_802193c4.c; masks 0x2000/0x40/0x80",src/runtime/bt.rs
+runtime::bt,8021948c,fn_8021948c,translated,high,"work/ghidra/main-gb/export/8021948c_FUN_8021948c.c; reason 0x13",src/runtime/bt.rs
+runtime::bt,802194f4,fn_802194f4,translated,high,"work/ghidra/main-gb/export/802194f4_FUN_802194f4.c; reason 0x10 for every bound port",src/runtime/bt.rs
+runtime::bt,8021962c,fn_8021962c,translated,medium,"work/ghidra/main-gb/export/8021962c_FUN_8021962c.c; limits 0x2EE1 and +0xA0; packet layout inferred",src/runtime/bt.rs
+runtime::bt,8021982c,fn_8021982c,translated,medium,"work/ghidra/main-gb/export/8021982c_FUN_8021982c.c; clz idiom written as its value",src/runtime/bt.rs
+runtime::bt,8021c0ec,fn_8021c0ec,translated,high,"work/ghidra/main-gb/export/8021c0ec_FUN_8021c0ec.c; PN response/indication split",src/runtime/bt.rs
+runtime::bt,8021c1d4,fn_8021c1d4,translated,medium,"work/ghidra/main-gb/export/8021c1d4_FUN_8021c1d4.c; nine-byte descriptor mask at +0x12",src/runtime/bt.rs
+runtime::bt,8021c4e0,fn_8021c4e0,translated,medium,"work/ghidra/main-gb/export/8021c4e0_FUN_8021c4e0.c; five descriptor bits from the RLS status",src/runtime/bt.rs
+runtime::bt,8021c64c,fn_8021c64c,translated,high,"work/ghidra/main-gb/export/8021c64c_FUN_8021c64c.c; DLC flag bit 4",src/runtime/bt.rs
+runtime::bt,8021d7f4,fn_8021d7f4,translated,medium,"work/ghidra/main-gb/export/8021d7f4_FUN_8021d7f4.c; control byte and checksum at +0x15",src/runtime/bt.rs
+runtime::bt,8021e9a8,fn_8021e9a8,translated,high,"work/ghidra/main-gb/export/8021e9a8_FUN_8021e9a8.c; 61-entry index scan and timer pair",src/runtime/bt.rs
+runtime::bt,8021ec2c,fn_8021ec2c,translated,medium,"work/ghidra/main-gb/export/8021ec2c_FUN_8021ec2c.c; limits 3 UUIDs and 0x0C attributes",src/runtime/bt.rs
+runtime::bt,8021f158,fn_8021f158,translated,medium,"work/ghidra/main-gb/export/8021f158_FUN_8021f158.c; container walk with type nibbles 3 and 6",src/runtime/bt.rs
+runtime::bt,8021f260,fn_8021f260,translated,medium,"work/ghidra/main-gb/export/8021f260_FUN_8021f260.c; template at +8/+9/+0x59/+0xA9",src/runtime/bt.rs
+runtime::bt,8021fa94,fn_8021fa94,translated,medium,"work/ghidra/main-gb/export/8021fa94_FUN_8021fa94.c; every search entry must match",src/runtime/bt.rs
+runtime::bt,8021ff38,fn_8021ff38,translated,medium,"work/ghidra/main-gb/export/8021ff38_FUN_8021ff38.c; sorted insert with 0x15E-byte value budget",src/runtime/bt.rs

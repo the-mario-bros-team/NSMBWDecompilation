@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::lyt,801886a0,fn_801886a0,translated,medium,"work/ghidra/main-gb/export/801886a0_FUN_801886a0.c; table atan2 in 1/256-turn units, zero on +Y; quadrant bases +/-64/+128 and {angle,slope} table 0x8032C5D8; paired-single 8-bit quantisation modelled by the truncated index.",src/ui/lyt.rs
+ui::lyt,80190fb0,fn_80190fb0,translated,high,"work/ghidra/main-gb/export/80190fb0_FUN_80190fb0.c; index at +0x10, mirror 0x7f-index; mode 0x803780E8==2 selects signed-halfword tables 0x8032D2D0/0x8032D3D0 (lhax), otherwise word table 0x8032D0D0; +0x20=first halfword, +0x24=sign-extended bias at 0x8032D3CE (default word 0x8032D2CC); writes +0x18..0x2C.",src/ui/lyt.rs
+ui::lyt,80191bb0,fn_80191bb0,translated,high,"work/ghidra/main-gb/export/80191bb0_FUN_80191bb0.c; clears record at 0x803780EC + (char)table[message+0x18]*100.",src/ui/lyt.rs
+ui::lyt,80191be0,fn_80191be0,translated,high,"work/ghidra/main-gb/export/80191be0_FUN_80191be0.c; record+0x08=value and record+0x04 |= 0x10000000.",src/ui/lyt.rs
+ui::lyt,80191c20,fn_80191c20,translated,high,"work/ghidra/main-gb/export/80191c20_FUN_80191c20.c; record+0x0C=value and record+0x04 |= 0x40000000.",src/ui/lyt.rs
+ui::lyt,80191c60,fn_80191c60,translated,high,"work/ghidra/main-gb/export/80191c60_FUN_80191c60.c; clamp value to 0..0x7f, store +0x10, call 80190fb0, set dirty 0x40000000.",src/ui/lyt.rs
+ui::lyt,80191ce0,fn_80191ce0,translated,high,"work/ghidra/main-gb/export/80191ce0_FUN_80191ce0.c; record+0x14=value and record+0x04 |= 0x40000000.",src/ui/lyt.rs
+ui::lyt,80192900,fn_80192900,translated,high,"work/ghidra/main-gb/export/80192900_FUN_80192900.c; unlink node from singly-linked list at 0x80378738 between 801B1140 and 801B1180.",src/ui/lyt.rs
+ui::lyt,80192990,fn_80192990,translated,high,"work/ghidra/main-gb/export/80192990_FUN_80192990.c; guard at 0x80378C00; sets table 0x8037873C=0x80378740, clears +0x08 of sixteen 0x4C records, head=0.",src/ui/lyt.rs
+ui::lyt,80192a70,fn_80192a70,translated,high,"work/ghidra/main-gb/export/80192a70_FUN_80192a70.c; calls 80193F00 for 16 indices then walks 0x80378738 calling 801931B0.",src/ui/lyt.rs
+ui::lyt,80192ae0,fn_80192ae0,translated,medium,"work/ghidra/main-gb/export/80192ae0_FUN_80192ae0.c; rebases six table words, sets biased +0x1C/+0x20/+0x24, calls 80192D80, cursor +0x3FC, zeroes 0x2000 bytes at +0x408, pushes onto 0x80378738 under lock 801B1140/1180. Hidden this arg recovered.",src/ui/lyt.rs
+ui::lyt,80192c70,fn_80192c70,translated,medium,"work/ghidra/main-gb/export/80192c70_FUN_80192c70.c; for 16 0x4C records with +0x08==this: 80191BB0(record+4), 801928D0(window+0x18), 801A0300(window), +0x08=0; then 80192900(this). Hidden this from 802DCD6C.",src/ui/lyt.rs
+ui::lyt,80192d80,fn_80192d80,translated,medium,"work/ghidra/main-gb/export/80192d80_FUN_80192d80.c; two unrolled passes seed sixteen slots: +0x28=object+8, +0x6C=0x8032D860, +0xAC=0x8032D6D0, byte +0xEC=0x40.",src/ui/lyt.rs
+ui::lyt,80193090,fn_80193090,translated,high,"work/ghidra/main-gb/export/80193090_FUN_80193090.c; opcode 8 clears [column][row] at +0x408 after 80193EF0; 9 calls 80192E60; 0xB sets +0x6C/+0xEC/+0xAC by row 7/10/0x5B; 0xC sets +0x28=base+row*0x100.",src/ui/lyt.rs
+ui::lyt,801931b0,fn_801931b0,translated,high,"work/ghidra/main-gb/export/801931b0_FUN_801931b0.c; cursor object+0xFC, count +0x400, 80193090 per three bytes.",src/ui/lyt.rs
+ui::lyt,801934f0,fn_801934f0,translated,high,"work/ghidra/main-gb/export/801934f0_FUN_801934f0.c; four-state intro/outro machine at +0x30 with table 0x8032D8D0 and bounds 0x630000/-0x2CFFFFF/-0x2D00000.",src/ui/lyt.rs
+ui::lyt,80193600,fn_80193600,translated,high,"work/ghidra/main-gb/export/80193600_FUN_80193600.c; object+0x2C = block[+0x04] + table 0x8032D6D0[byte at +0x0E].",src/ui/lyt.rs
+ui::lyt,80193630,fn_80193630,translated,high,"work/ghidra/main-gb/export/80193630_FUN_80193630.c; object+0x0F = block[+0xEC + byte at +0x0C].",src/ui/lyt.rs
+ui::lyt,80193650,fn_80193650,translated,high,"work/ghidra/main-gb/export/80193650_FUN_80193650.c; return (i32[+0x2C]+i32[+0x34]) >> 16.",src/ui/lyt.rs
+ui::lyt,80193670,fn_80193670,translated,high,"work/ghidra/main-gb/export/80193670_FUN_80193670.c; return (block[+0x68]+block[+0x6C+column*4]) >> 16.",src/ui/lyt.rs
+ui::lyt,801936a0,fn_801936a0,translated,high,"work/ghidra/main-gb/export/801936a0_FUN_801936a0.c; publishes position/texture/depth/scale via 80191BE0/80191C20/80191CE0/80191C60 with >>16 fields.",src/ui/lyt.rs
+ui::lyt,80193740,fn_80193740,translated,medium,"work/ghidra/main-gb/export/80193740_FUN_80193740.c; signed 16.16 +0x28 split into 100/1200/100 remainders, product of tables 0x8032DA60/0x8032DBF0/0x8032DC20 or 0x8032DC50; zero returns 1.0.",src/ui/lyt.rs
+ui::lyt,80193850,fn_80193850,translated,medium,"work/ghidra/main-gb/export/80193850_FUN_80193850.c; (u16 block[+2])/32000.0 to f32 +0x24; two-step +0x28 = ((column-block[0])*100 + i16 block[+2])*0x10000.",src/ui/lyt.rs
+ui::lyt,80193e00,fn_80193e00,translated,high,"work/ghidra/main-gb/export/80193e00_FUN_80193e00.c; mode halfword *object[+0x18]: 0/1/2 calls 801939C0/80193BE0/80193CF0 with object in r3.",src/ui/lyt.rs
+ui::lyt,80193ef0,fn_80193ef0,translated,high,"work/ghidra/main-gb/export/80193ef0_FUN_80193ef0.c; record+0x30=3.",src/ui/lyt.rs

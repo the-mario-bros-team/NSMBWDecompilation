@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806d12f0,fn_806d12f0,translated,high,"work/ghidra/rel-d_basesNP/export/806d12f0_FUN_806d12f0.c; null-gated 0x8015F800 and 0x802B9280 release helper returning the actor",src/game/bases.rs
+game::bases,806d1470,fn_806d1470,translated,medium,"work/ghidra/rel-d_basesNP/export/806d1470_FUN_806d1470.c; allocates 0x3D0 bytes, base 0x80066FC0, vtable 0x807FA8D0; class role unknown",src/game/bases.rs
+game::bases,806d1570,fn_806d1570,translated,high,"work/ghidra/rel-d_basesNP/export/806d1570_FUN_806d1570.c; allocates 0x560 bytes and calls 806d15a0",src/game/bases.rs
+game::bases,806d15a0,fn_806d15a0,translated,high,"work/ghidra/rel-d_basesNP/export/806d15a0_FUN_806d15a0.c; base 0x80066FC0, vtables 0x803073C0/0x807FAA14, interface 0x807FAAF8, model 0x460/0x480/0x4C0/0x508",src/game/bases.rs
+game::bases,806d18c0,fn_806d18c0,translated,high,"work/ghidra/rel-d_basesNP/export/806d18c0_FUN_806d18c0.c; resets +0x3D0 through 0x800DAED0 and returns 1",src/game/bases.rs
+game::bases,806d1a90,fn_806d1a90,translated,high,"work/ghidra/rel-d_basesNP/export/806d1a90_FUN_806d1a90.c; 0x801C0BD0 transform, 0x8016EEF0 yaw, 0x8016A170/0x8016A150/0x8016A1A0 model updates",src/game/bases.rs
+game::bases,806d1b10,fn_806d1b10,translated,high,"work/ghidra/rel-d_basesNP/export/806d1b10_FUN_806d1b10.c; g3d_remo_lift_brres 0x807FA9D8, pane 0x807FA9EC, change_mark 0x807FA9F8, clip 0x4C0, animation 0x4FC",src/game/bases.rs
+game::bases,806d1cd0,fn_806d1cd0,translated,high,"work/ghidra/rel-d_basesNP/export/806d1cd0_FUN_806d1cd0.c; spawns Wm_en_burst_s 0x807FAA04 at +0xAC..+0xB4 with Z 0x807CB538",src/game/bases.rs
+game::bases,806d1d30,fn_806d1d30,translated,medium,"work/ghidra/rel-d_basesNP/export/806d1d30_FUN_806d1d30.c; rider count from player +0x14D4, transitions +0x538/+0x554, burst 806d1cd0, clip +0x4C0; 0x8005F900 slot argument dropped",src/game/bases.rs
+game::bases,806d1e70,fn_806d1e70,translated,medium,"work/ghidra/rel-d_basesNP/export/806d1e70_FUN_806d1e70.c; 0x800B3980 with 0x807CB4F0/0x807CB4F4 and rider byte, clamped to -0x1A2B..0x1A2C",src/game/bases.rs
+game::bases,806d21d0,fn_806d21d0,translated,high,"work/ghidra/rel-d_basesNP/export/806d21d0_FUN_806d21d0.c; timer +0x52C, 0x80043A30 gate, 0x800B3750(riders,0,0x14), sound 0x2A7",src/game/bases.rs
+game::bases,806d2330,fn_806d2330,translated,high,"work/ghidra/rel-d_basesNP/export/806d2330_FUN_806d2330.c; resets +0x3D0 via 0x800DAE80 and clears +0x556/+0x530/+0x54A/+0x555",src/game/bases.rs
+game::bases,806d2870,fn_806d2870,translated,high,"work/ghidra/rel-d_basesNP/export/806d2870_FUN_806d2870.c; 0x650-byte lift constructor, vtables 0x803073C0/0x807FAC38, interface 0x807FAD20, blocks +0x480/+0x4C0/+0x508/+0x528/+0x65C",src/game/bases.rs
+game::bases,806d2f80,fn_806d2f80,translated,high,"work/ghidra/rel-d_basesNP/export/806d2f80_FUN_806d2f80.c; transform chain then 0x80168180 and cached words +0x650..+0x658",src/game/bases.rs
+game::bases,806d31b0,fn_806d31b0,translated,high,"work/ghidra/rel-d_basesNP/export/806d31b0_FUN_806d31b0.c; g3d_remo_lift_line_brres 0x807FABDC, pane 0x807FABF8, change_mark 0x807FAC08, clip +0x4C0, animation +0x4FC",src/game/bases.rs
+game::bases,806d34b0,fn_806d34b0,translated,high,"work/ghidra/rel-d_basesNP/export/806d34b0_FUN_806d34b0.c; spawns Wm_en_burst_s 0x807FAC14 at +0xAC..+0xB4 with Z 0x807CB5F8",src/game/bases.rs
+game::bases,806d3540,fn_806d3540,translated,medium,"work/ghidra/rel-d_basesNP/export/806d3540_FUN_806d3540.c; rider transitions +0x754/+0x760, burst 806d34b0, clip +0x4C0; 0x8005F900 slot argument dropped",src/game/bases.rs
+game::bases,806d5680,fn_806d5680,translated,high,"work/ghidra/rel-d_basesNP/export/806d5680_FUN_806d5680.c; lift_number_ship 0x807FB0BC, ridden pointer 0x807CB6A8, number 0x807FB0D0, warning 0x807FB0E0",src/game/bases.rs
+game::bases,806d96a0,fn_806d96a0,translated,high,"work/ghidra/rel-d_basesNP/export/806d96a0_FUN_806d96a0.c; lift_tenbin 0x807FB74C with kassha 0x807FB758, lineA 0x807FB76C and lineB 0x807FB780 bindings",src/game/bases.rs
+game::bases,806dd650,fn_806dd650,translated,high,"work/ghidra/rel-d_basesNP/export/806dd650_FUN_806dd650.c; lift_kinoko_yoko 0x807FBFC8 with kuki_U 0x807FBFE0 and kuki_T 0x807FBFF8",src/game/bases.rs
+game::bases,806e2320,fn_806e2320,translated,high,"work/ghidra/rel-d_basesNP/export/806e2320_FUN_806e2320.c; lift_suisha 0x807FCBCC, 4line pane 0x807FCBD8 and hand-off to 806e23e0",src/game/bases.rs
+game::bases,806e23e0,fn_806e23e0,translated,high,"work/ghidra/rel-d_basesNP/export/806e23e0_FUN_806e23e0.c; do/while loop at +0x430 with 0xE0 stride up to +0x7B0 calling 806e3480",src/game/bases.rs
+game::bases,806e3480,fn_806e3480,translated,high,"work/ghidra/rel-d_basesNP/export/806e3480_FUN_806e3480.c; lift_suisha 0x807FCBCC, ashiba pane 0x807FCC04, accessor at block base and model +0x20",src/game/bases.rs
+game::bases,806e4540,fn_806e4540,translated,high,"work/ghidra/rel-d_basesNP/export/806e4540_FUN_806e4540.c; lift_zen_hammer 0x807FCF78 from g3d_lift_zen_hammer_brres 0x807FCF5C",src/game/bases.rs
+game::bases,806e4da0,fn_806e4da0,translated,high,"work/ghidra/rel-d_basesNP/export/806e4da0_FUN_806e4da0.c; lift_zen_kaihei 0x807FD208 from g3d_lift_zen_kaihei_brres 0x807FD1EC with clip +0x3FC",src/game/bases.rs
+game::bases,806e5df0,fn_806e5df0,translated,medium,"work/ghidra/rel-d_basesNP/export/806e5df0_FUN_806e5df0.c; lift_zen_shiro 0x807FD548, caller-selected pane and optional animation; constants 0x807CBD20/0x807CBD24",src/game/bases.rs
+game::bases,806e6f00,fn_806e6f00,translated,high,"work/ghidra/rel-d_basesNP/export/806e6f00_FUN_806e6f00.c; lift_zen_shiro_yogan 0x807FD7B4 from g3d_lift_zen_shiro_yogan_brres 0x807FD794",src/game/bases.rs
+game::bases,806e7900,fn_806e7900,translated,high,"work/ghidra/rel-d_basesNP/export/806e7900_FUN_806e7900.c; lift_zen_suisya 0x807FDAB8 from g3d_lift_zen_suisya_brres 0x807FDA9C",src/game/bases.rs
+game::bases,806e8140,fn_806e8140,translated,high,"work/ghidra/rel-d_basesNP/export/806e8140_FUN_806e8140.c; block_light 0x807FDC18 from g3d_block_light_brres 0x807FDC00, accessor +0x524",src/game/bases.rs
+game::bases,806e9e90,fn_806e9e90,translated,high,"work/ghidra/rel-d_basesNP/export/806e9e90_FUN_806e9e90.c; cube_kinoko 0x807FE09C from g3d_cube_kinoko_brres 0x807FE084 with M pane 0x807FE0A8",src/game/bases.rs

@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8072fe10,fn_8072fe10,translated,high,"work/ghidra/rel-d_basesNP/export/8072fe10_FUN_8072fe10.c; two lazy .bss matrices + 0x807CD680/0x807CD6A0 id pairs; two lines per count through 0x80077860",src/game/bases.rs
+game::bases,80642a20,fn_80642a20,translated,medium,"work/ghidra/rel-d_basesNP/export/80642a20_FUN_80642a20.c; mode 6 vs normal four-player refresh; 0x80354E60/70/80 tables are .bss",src/game/bases.rs
+game::bases,80673f50,fn_80673f50,translated,high,"work/ghidra/rel-d_basesNP/export/80673f50_FUN_80673f50.c; 16-pixel grid emitter, two 16-bit toggles, Wm_en_burst_ss sprite arm",src/game/bases.rs
+game::bases,806b5180,fn_806b5180,translated,high,"work/ghidra/rel-d_basesNP/export/806b5180_FUN_806b5180.c; nine virtual calls on +0x60 plus the 24-float six-record static block at 0x8082C340",src/game/bases.rs
+game::bases,8070d790,fn_8070d790,translated,high,"work/ghidra/rel-d_basesNP/export/8070d790_FUN_8070d790.c; speed ramp to 10.0, cell contact vector, snap-back through virtual +0xD4",src/game/bases.rs
+game::bases,807247d0,fn_807247d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807247d0_FUN_807247d0.c; five +0x394 query probes and the 0x807CD1C0 per-slot scale table; only indices 0..3 coherent",src/game/bases.rs
+game::bases,80781db0,fn_80781db0,translated,high,"work/ghidra/rel-d_basesNP/export/80781db0_FUN_80781db0.c; qr0 paired-single subtract, two (x,0,z) vectors, cosine through 0x801C14C0",src/game/bases.rs
+game::bases,80740370,fn_80740370,translated,medium,"work/ghidra/rel-d_basesNP/export/80740370_FUN_80740370.c; two 64-halfword rings at +0x74C/+0x76C with a -2-stride mirror fill",src/game/bases.rs
+game::bases,806fdd50,fn_806fdd50,translated,high,"work/ghidra/rel-d_basesNP/export/806fdd50_FUN_806fdd50.c; six literal state stores, timer 150/540 and sound ids 1498/1499",src/game/bases.rs
+game::bases,80748b20,fn_80748b20,translated,medium,"work/ghidra/rel-d_basesNP/export/80748b20_FUN_80748b20.c; four-entry x table 0x807CE4C0, mode/sub shifts and 14.0+d step; prop lanes inferred",src/game/bases.rs
+game::bases,80780fa0,fn_80780fa0,translated,high,"work/ghidra/rel-d_basesNP/export/80780fa0_FUN_80780fa0.c; 0.1/0.75/1.0/1.2 ladder plus the 0.9*x+0.1*x smoothing",src/game/bases.rs
+game::bases,80647e60,fn_80647e60,translated,high,"work/ghidra/rel-d_basesNP/export/80647e60_FUN_80647e60.c; four message strings, 8-entry direction table 0x807C8498, packed nibble unpacking",src/game/bases.rs
+game::bases,8061ec00,fn_8061ec00,translated,medium,"work/ghidra/rel-d_basesNP/export/8061ec00_FUN_8061ec00.c; per-player pane transform copy through 0x8061EBD0; panel roles inferred",src/game/bases.rs
+game::bases,8061ee50,fn_8061ee50,translated,high,"work/ghidra/rel-d_basesNP/export/8061ee50_FUN_8061ee50.c; four occupancy words at +0x2C4..+0x2D0",src/game/bases.rs
+game::bases,8061ef20,fn_8061ef20,translated,high,"work/ghidra/rel-d_basesNP/export/8061ef20_FUN_8061ef20.c; twelve pane flag bytes, animation 11, dirty byte +0x2E1",src/game/bases.rs
+game::bases,8061f030,fn_8061f030,translated,high,"work/ghidra/rel-d_basesNP/export/8061f030_FUN_8061f030.c; 0x800C9610 guard then message 0x80824F40",src/game/bases.rs
+game::bases,8061f130,fn_8061f130,translated,high,"work/ghidra/rel-d_basesNP/export/8061f130_FUN_8061f130.c; clears +0x2D9 and posts 0x80824FC0",src/game/bases.rs
+game::bases,8061f260,fn_8061f260,translated,high,"work/ghidra/rel-d_basesNP/export/8061f260_FUN_8061f260.c; four 0x800B4710 queries fill +0x2DB rows and the +0x2D4 count",src/game/bases.rs
+game::bases,8061f500,fn_8061f500,translated,high,"work/ghidra/rel-d_basesNP/export/8061f500_FUN_8061f500.c; three-way message select 0x80825040/80/C0",src/game/bases.rs
+game::bases,8061f620,fn_8061f620,translated,medium,"work/ghidra/rel-d_basesNP/export/8061f620_FUN_8061f620.c; applies row state through 0x800B4730 and 0x800C92F0(id+3)",src/game/bases.rs
+game::bases,8061f6f0,fn_8061f6f0,translated,high,"work/ghidra/rel-d_basesNP/export/8061f6f0_FUN_8061f6f0.c; 0x800C9640 guard then message 0x808250C0",src/game/bases.rs
+game::bases,8061f750,fn_8061f750,translated,high,"work/ghidra/rel-d_basesNP/export/8061f750_FUN_8061f750.c; 0x800C9500 then +0x2E1 = 0",src/game/bases.rs
+game::bases,8061f790,fn_8061f790,translated,high,"work/ghidra/rel-d_basesNP/export/8061f790_FUN_8061f790.c; row re-bind 0x800C9380 with id+7 per occupied slot",src/game/bases.rs
+game::bases,8061f840,fn_8061f840,translated,high,"work/ghidra/rel-d_basesNP/export/8061f840_FUN_8061f840.c; 0x8061EE50 guard then 0x800C9500",src/game/bases.rs
+game::bases,8061f880,fn_8061f880,translated,high,"work/ghidra/rel-d_basesNP/export/8061f880_FUN_8061f880.c; animation 14 and dirty byte +0x2E1",src/game/bases.rs
+game::bases,8061f8c0,fn_8061f8c0,translated,high,"work/ghidra/rel-d_basesNP/export/8061f8c0_FUN_8061f8c0.c; pane refresh then message 0x80824FC0",src/game/bases.rs

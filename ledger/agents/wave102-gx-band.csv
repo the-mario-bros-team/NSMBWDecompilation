@@ -1,0 +1,10 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802946f0,fn_802946f0,translated,medium,"work/ghidra/main-gb/export/802946f0_FUN_802946f0.c; mode 1/2 RGBA fog tint and 8.8 fixed-point near/far blend",src/render/gx_band.rs
+render::gx_band,80294b30,fn_80294b30,translated,medium,"work/ghidra/main-gb/export/80294b30_FUN_80294b30.c; name-table offset-to-pointer installer, two pointer arrays",src/render/gx_band.rs
+render::gx_band,802960f0,fn_802960f0,translated,medium,"work/ghidra/main-gb/export/802960f0_FUN_802960f0.c; VEC3 normalise with one Newton step, returns 0/1",src/render/gx_band.rs
+render::gx_band,80296530,fn_80296530,translated,medium,"work/ghidra/main-gb/export/80296530_FUN_80296530.c; 3x4 matrix scale by x/y/z with w times 1.0, zero guards",src/render/gx_band.rs
+render::gx_band,802965b0,fn_802965b0,translated,medium,"work/ghidra/main-gb/export/802965b0_FUN_802965b0.c; 3x4 matrix scale, one factor per row, zero guards",src/render/gx_band.rs
+render::gx_band,80296640,fn_80296640,translated,high,"work/ghidra/main-gb/export/80296640_FUN_80296640.c; three reciprocal components (zero becomes 100000.0) then one 802381a0 call",src/render/gx_band.rs
+render::gx_band,802966f0,fn_802966f0,translated,medium,"work/ghidra/main-gb/export/802966f0_FUN_802966f0.c; length of a 0x10-byte-strided 3-component column",src/render/gx_band.rs
+render::gx_band,80296ce0,fn_80296ce0,translated,medium,"work/ghidra/main-gb/export/80296ce0_FUN_80296ce0.c; 0x343FD LCG scaled 16-bit shrink with three clamps",src/render/gx_band.rs
+render::gx_band,8029cfc0,fn_8029cfc0,translated,medium,"work/ghidra/main-gb/export/8029cfc0_FUN_8029cfc0.c; billboard axis record, inverse matrix plus two normalised axes",src/render/gx_band.rs

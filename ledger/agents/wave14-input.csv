@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801de910,fn_801de910,translated,medium,"work/ghidra/main-gb/export/801de910_FUN_801de910.c (188 bytes); report families 3..5/6..8, +0x912 counter reset after 600",src/runtime/input.rs
+runtime::input,801ddb50,fn_801ddb50,translated,medium,"work/ghidra/main-gb/export/801ddb50_FUN_801ddb50.c (456 bytes); BT state 0/1/2/3/4, mode 0..6 enable/disable, alarm stop and four link-key clears",src/runtime/input.rs
+runtime::input,801ddf00,fn_801ddf00,translated,medium,"work/ghidra/main-gb/export/801ddf00_FUN_801ddf00.c (272 bytes); battery percentage from +0x983/+0x984, 75/80/85 hysteresis counters",src/runtime/input.rs
+runtime::input,801e4ec0,fn_801e4ec0,translated,high,"work/ghidra/main-gb/export/801e4ec0_FUN_801e4ec0.c (436 bytes); kind 0x16 one-byte register write, payload length 0x15, callback +0x2C",src/runtime/input.rs
+runtime::input,801e5080,fn_801e5080,translated,high,"work/ghidra/main-gb/export/801e5080_FUN_801e5080.c (440 bytes); kind 0x16 buffer write, len at +8, payload at +9, payload length 0x15",src/runtime/input.rs
+runtime::input,801e5240,fn_801e5240,translated,high,"work/ghidra/main-gb/export/801e5240_FUN_801e5240.c (428 bytes); kind 0x17 read, register +4/+0x24, length +8/+0x20, buffer +0x1C",src/runtime/input.rs
+runtime::input,801e53f0,fn_801e53f0,translated,high,"work/ghidra/main-gb/export/801e53f0_FUN_801e53f0.c (96 bytes); clears tail/head and capacity*0x30 slots under the lock",src/runtime/input.rs
+runtime::input,801e7960,fn_801e7960,translated,medium,"work/ghidra/main-gb/export/801e7960_FUN_801e7960.c (632 bytes); four load cells, 0xFF->0, <<3/*-8+0x2FF, pi*r^2 weight, neutral reset",src/runtime/input.rs
+runtime::input,801ea520,fn_801ea520,translated,medium,"work/ghidra/main-gb/export/801ea520_FUN_801ea520.c (720 bytes); 8-byte key tables +0x924/+0x92C, index (base+i)&7, out=keyA+(in^keyB)",src/runtime/input.rs
+runtime::input,801ea7f0,fn_801ea7f0,translated,high,"work/ghidra/main-gb/export/801ea7f0_FUN_801ea7f0.c (44 bytes); clears +0x998/+0x99C/+0x9A0/+0x9A4/+0x9A8",src/runtime/input.rs
+runtime::input,801ea820,fn_801ea820,translated,high,"work/ghidra/main-gb/export/801ea820_FUN_801ea820.c (204 bytes); link -1 / connected 0 gate, queues 0x16 via 0x801E5080 with register|0x4A40000",src/runtime/input.rs
+runtime::input,801f6160,fn_801f6160,translated,high,"work/ghidra/main-gb/export/801f6160_FUN_801f6160.c (84 bytes); word table 0x803A3EE0, index < 0x10",src/runtime/input.rs
+runtime::input,801f61c0,fn_801f61c0,translated,high,"work/ghidra/main-gb/export/801f61c0_FUN_801f61c0.c (88 bytes); u16 table 0x803A5288, index < 0x10",src/runtime/input.rs
+runtime::input,801f6220,fn_801f6220,translated,high,"work/ghidra/main-gb/export/801f6220_FUN_801f6220.c (88 bytes); u16 table 0x803A52A8, index < 0x10",src/runtime/input.rs
+runtime::input,801f6280,fn_801f6280,translated,high,"work/ghidra/main-gb/export/801f6280_FUN_801f6280.c (60 bytes); byte 0x803A3805 under the lock",src/runtime/input.rs
+runtime::input,801f62d0,fn_801f62d0,translated,high,"work/ghidra/main-gb/export/801f62d0_FUN_801f62d0.c (116 bytes); 0x46-byte record at 0x803A39D9+(ch+10)*0x46, clear or copy 6, latch r13-0x4B1C",src/runtime/input.rs
+runtime::input,801f6350,fn_801f6350,translated,high,"work/ghidra/main-gb/export/801f6350_FUN_801f6350.c (84 bytes); 6-byte compare of the same record, CLZ>>5 equality",src/runtime/input.rs
+runtime::input,801f63b0,fn_801f63b0,translated,medium,"work/ghidra/main-gb/export/801f63b0_FUN_801f63b0.c (76 bytes); pending-key latch + 0x801DD500(0x803A39D8), then 0x801DCC70(0)",src/runtime/input.rs
+runtime::input,801f6400,fn_801f6400,translated,high,"work/ghidra/main-gb/export/801f6400_FUN_801f6400.c (20 bytes); 0x803A3EE0[index&0xFF]=value",src/runtime/input.rs
+runtime::input,801f6420,fn_801f6420,translated,high,"work/ghidra/main-gb/export/801f6420_FUN_801f6420.c (20 bytes); returns 0x803A3EE0[index&0xFF]",src/runtime/input.rs
+runtime::input,801f6440,fn_801f6440,translated,high,"work/ghidra/main-gb/export/801f6440_FUN_801f6440.c (20 bytes); 0x803A5288[index&0xFF]=u16",src/runtime/input.rs
+runtime::input,801f6460,fn_801f6460,translated,high,"work/ghidra/main-gb/export/801f6460_FUN_801f6460.c (20 bytes); 0x803A52A8[index&0xFF]=u16",src/runtime/input.rs
+runtime::input,801ddac0,wbc_read_dummy_801ddac0,translated,high,"work/ghidra/main-gb/export/801ddac0_FUN_801ddac0.c (48 bytes); WBCReadDummy string, returns -1",src/runtime/input.rs
+runtime::input,801ddaf0,wbc_set_zero_point_dummy_801ddaf0,translated,high,"work/ghidra/main-gb/export/801ddaf0_FUN_801ddaf0.c (48 bytes); WBCSetZEROPointDummy string, returns -1",src/runtime/input.rs
+runtime::input,801ddb20,wbc_get_tgc_weight_dummy_801ddb20,translated,high,"work/ghidra/main-gb/export/801ddb20_FUN_801ddb20.c (48 bytes); WBCGetTGCWeightDummy string, returns -1",src/runtime/input.rs

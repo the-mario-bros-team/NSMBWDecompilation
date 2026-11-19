@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b2a20,fn_802b2a20,translated,high,"work/ghidra/main-gb/export/802b2a20_FUN_802b2a20.c; four byte loads then four byte stores at +0x00..+0x03",src/resource/archive.rs
+resource::archive,802b2a80,fn_802b2a80,translated,high,"work/ghidra/main-gb/export/802b2a80_FUN_802b2a80.c; single add, first of twelve record + offset helpers",src/resource/archive.rs
+resource::archive,802b2a90,fn_802b2a90,translated,high,"work/ghidra/main-gb/export/802b2a90_FUN_802b2a90.c; single add, second record + offset helper",src/resource/archive.rs
+resource::archive,802b2aa0,fn_802b2aa0,translated,high,"work/ghidra/main-gb/export/802b2aa0_FUN_802b2aa0.c; single add, third record + offset helper",src/resource/archive.rs
+resource::archive,802b2ab0,fn_802b2ab0,translated,high,"work/ghidra/main-gb/export/802b2ab0_FUN_802b2ab0.c; single add, fourth record + offset helper",src/resource/archive.rs
+resource::archive,802b2ac0,fn_802b2ac0,translated,high,"work/ghidra/main-gb/export/802b2ac0_FUN_802b2ac0.c; single add, fifth record + offset helper",src/resource/archive.rs
+resource::archive,802b2ad0,fn_802b2ad0,translated,high,"work/ghidra/main-gb/export/802b2ad0_FUN_802b2ad0.c; single add, sixth record + offset helper",src/resource/archive.rs
+resource::archive,802b2ae0,fn_802b2ae0,translated,high,"work/ghidra/main-gb/export/802b2ae0_FUN_802b2ae0.c; single add, seventh record + offset helper",src/resource/archive.rs
+resource::archive,802b2af0,fn_802b2af0,translated,high,"work/ghidra/main-gb/export/802b2af0_FUN_802b2af0.c; single add, eighth record + offset helper",src/resource/archive.rs
+resource::archive,802b2b00,fn_802b2b00,translated,high,"work/ghidra/main-gb/export/802b2b00_FUN_802b2b00.c; single add, ninth record + offset helper",src/resource/archive.rs
+resource::archive,802b2b20,fn_802b2b20,translated,high,"work/ghidra/main-gb/export/802b2b20_FUN_802b2b20.c; single add, tenth record + offset helper",src/resource/archive.rs
+resource::archive,802b2b30,fn_802b2b30,translated,high,"work/ghidra/main-gb/export/802b2b30_FUN_802b2b30.c; single add, eleventh record + offset helper",src/resource/archive.rs
+resource::archive,802b2b40,fn_802b2b40,translated,high,"work/ghidra/main-gb/export/802b2b40_FUN_802b2b40.c; single add, twelfth record + offset helper",src/resource/archive.rs
+resource::archive,802b49e0,fn_802b49e0,translated,medium,"work/ghidra/main-gb/export/802b49e0_FUN_802b49e0.c; one-word link array at +0x08 forwarded with +0x04 to 0x80229160",src/resource/archive.rs
+resource::archive,802b4c60,fn_802b4c60,translated,medium,"work/ghidra/main-gb/export/802b4c60_FUN_802b4c60.c; +0x18 bitfield keeps low 28 bits, 0x6000 field replaced, second descriptor gives 2-bit shift",src/resource/archive.rs
+resource::archive,802b6b90,fn_802b6b90,translated,medium,"work/ghidra/main-gb/export/802b6b90_FUN_802b6b90.c; attribute 9 plus optional 0xB plus 0xD+i loops through 0x801C37C0 and 0x801C40B0",src/resource/archive.rs
+resource::archive,802b9700,fn_802b9700,translated,high,"work/ghidra/main-gb/export/802b9700_thunk_FUN_801d4a90.c; returns the word at this - 0x0C",src/resource/archive.rs
+resource::archive,802bac70,fn_802bac70,translated,medium,"work/ghidra/main-gb/export/802bac70_FUN_802bac70.c; vtable 0x8034FEB8, mode byte at +0x08, 0x808080FF and 0x00FFFFFF defaults, callback 0x802BAC30",src/resource/archive.rs
+resource::archive,802bbdd0,fn_802bbdd0,translated,medium,"work/ghidra/main-gb/export/802bbdd0_FUN_802bbdd0.c; no-argument 0x801BC7A0 then three words to 0x802BBE30",src/resource/archive.rs
+resource::archive,802bc270,fn_802bc270,translated,high,"work/ghidra/main-gb/export/802bc270_FUN_802bc270.c; masked ring insert with +0x0C/+0x0D count bytes and 0x802BC230 membership test",src/resource/archive.rs
+resource::archive,802bc350,fn_802bc350,translated,medium,"work/ghidra/main-gb/export/802bc350_FUN_802bc350.c; cursor restore, channel bind, +0x08 state 1, next node with +0x08 == 0",src/resource/archive.rs
+resource::archive,802bc440,fn_802bc440,translated,medium,"work/ghidra/main-gb/export/802bc440_FUN_802bc440.c; pending node release, 0x80233420 word/halfword/halfword, +0x0D nesting above 2",src/resource/archive.rs
+resource::archive,802bc560,fn_802bc560,translated,medium,"work/ghidra/main-gb/export/802bc560_FUN_802bc560.c; 0x10-byte block from heap at r13-0x4870, result published at r13-0x4820",src/resource/archive.rs
+resource::archive,802bc6f0,fn_802bc6f0,translated,medium,"work/ghidra/main-gb/export/802bc6f0_FUN_802bc6f0.c; two float ladders against r2-0x3F20/1C/18/14 giving 0x40000/0x80000 and 0x20000/0x10000",src/resource/archive.rs
+resource::archive,802bd1e0,fn_802bd1e0,translated,high,"work/ghidra/main-gb/export/802bd1e0_FUN_802bd1e0.c; +0x24..+0x2C copied to +0xB20..+0xB28 then 0x802BC8C0 pair to +0xB2C/+0xB30",src/resource/archive.rs
+resource::archive,802bd360,fn_802bd360,translated,high,"work/ghidra/main-gb/export/802bd360_FUN_802bd360.c; clears the two SDA words at r13-0x4810 and r13-0x480C",src/resource/archive.rs
+resource::archive,802bd3f0,fn_802bd3f0,translated,high,"work/ghidra/main-gb/export/802bd3f0_FUN_802bd3f0.c; four-byte body that only returns",src/resource/archive.rs
+resource::archive,802be540,fn_802be540,translated,high,"work/ghidra/main-gb/export/802be540_FUN_802be540.c; twelve-word fill from r2-0x3EF0 with diagonal words from r2-0x3EEC at 0 5 10",src/resource/archive.rs

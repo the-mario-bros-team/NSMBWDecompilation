@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b38d0,fn_800b38d0,translated,medium,"work/ghidra/main-gb/export/800b38d0_FUN_800b38d0.c; scales the u16 sample above count, sign from param_2",src/game/stage.rs
+game::stage,800b53a0,fn_800b53a0,translated,medium,"work/ghidra/main-gb/export/800b53a0_FUN_800b53a0.c; slot +0x10 flag selects priority 0x200 or 0x600 through record +0x20",src/game/stage.rs
+game::stage,800b6460,fn_800b6460,translated,medium,"work/ghidra/main-gb/export/800b6460_FUN_800b6460.c; two initialisers, two limits, 0x802B9240 handle published by fn_800b6450",src/game/stage.rs
+game::stage,800b6830,fn_800b6830,translated,medium,"work/ghidra/main-gb/export/800b6830_FUN_800b6830.c; matrix build, u16 rotation, two +0xAC/+0xB8 vectors and six +0x80 stores",src/game/stage.rs
+game::stage,800b6e50,fn_800b6e50,translated,medium,"work/ghidra/main-gb/export/800b6e50_FUN_800b6e50.c; ticks +8 slot 0x1C then re-places from the +0x224 record",src/game/stage.rs
+game::stage,800b81b0,fn_800b81b0,translated,high,"work/ghidra/main-gb/export/800b81b0_FUN_800b81b0.c; empty body (single blr)",src/game/stage.rs
+game::stage,800b8700,fn_800b8700,translated,medium,"work/ghidra/main-gb/export/800b8700_FUN_800b8700.c; builds count render items, 6-arg create and two vector blocks, returns the 1/0 flag",src/game/stage.rs
+game::stage,800b9300,fn_800b9300,translated,medium,"work/ghidra/main-gb/export/800b9300_FUN_800b9300.c; allocates 0x8C nodes and links +0x84/+0x88 list with vtable 0x80329578",src/game/stage.rs
+game::stage,800b95e0,fn_800b95e0,translated,medium,"work/ghidra/main-gb/export/800b95e0_FUN_800b95e0.c; clamps the 0x638-0x62C / 0x63C-0x630 length ratio",src/game/stage.rs
+game::stage,800b9fc0,fn_800b9fc0,translated,medium,"work/ghidra/main-gb/export/800b9fc0_FUN_800b9fc0.c; pulls each node endpoint toward the +0x24 source at the r2-0x69B8 length",src/game/stage.rs
+game::stage,800ba5e0,fn_800ba5e0,translated,high,"work/ghidra/main-gb/export/800ba5e0_FUN_800ba5e0.c; six dIggyWanKusari_c state records, 9-word permutation, vtable 0x80315AD0",src/game/stage.rs
+game::stage,800bae50,fn_800bae50,translated,medium,"work/ghidra/main-gb/export/800bae50_FUN_800bae50.c; tail-calls interface +0x14 slot with the node",src/game/stage.rs
+game::stage,800bae60,fn_800bae60,translated,medium,"work/ghidra/main-gb/export/800bae60_FUN_800bae60.c; heading, endpoint length and midpoint at +0x44/+0x48/+0x5C/+0x5E",src/game/stage.rs
+game::stage,800bbf00,fn_800bbf00,translated,high,"work/ghidra/main-gb/export/800bbf00_FUN_800bbf00.c; empty body (single blr)",src/game/stage.rs
+game::stage,800bc4c0,fn_800bc4c0,translated,medium,"work/ghidra/main-gb/export/800bc4c0_FUN_800bc4c0.c; +0x44 node type test, draw-list build and scale matrix submit",src/game/stage.rs
+game::stage,800bc5a0,fn_800bc5a0,translated,medium,"work/ghidra/main-gb/export/800bc5a0_FUN_800bc5a0.c; splits the length into the +0xC4/+0xC8 half-extents and redraws",src/game/stage.rs
+game::stage,800bec00,fn_800bec00,translated,medium,"work/ghidra/main-gb/export/800bec00_FUN_800bec00.c; fills 0x84-byte lift cells from the two count helpers",src/game/stage.rs
+game::stage,800bf6e0,fn_800bf6e0,translated,high,"work/ghidra/main-gb/export/800bf6e0_FUN_800bf6e0.c; copies the 12-word template into every grid cell",src/game/stage.rs
+game::stage,800bf7d0,fn_800bf7d0,translated,medium,"work/ghidra/main-gb/export/800bf7d0_FUN_800bf7d0.c; 3x3 refresh with clz-based corner pruning and +0x228C expansion",src/game/stage.rs
+game::stage,800bf970,fn_800bf970,translated,high,"work/ghidra/main-gb/export/800bf970_FUN_800bf970.c; bit-mask copy of the template from +0x207C to +0x228C",src/game/stage.rs
+game::stage,800bfa40,fn_800bfa40,translated,medium,"work/ghidra/main-gb/export/800bfa40_FUN_800bfa40.c; forwards to 0x800BEA00 with five words then 0x800BEB50 with the mask",src/game/stage.rs
+game::stage,800bfaa0,fn_800bfaa0,translated,medium,"work/ghidra/main-gb/export/800bfaa0_FUN_800bfaa0.c; forwards four words to 0x800BEF00 and 0x800BF3F0",src/game/stage.rs
+game::stage,800bfb10,fn_800bfb10,translated,high,"work/ghidra/main-gb/export/800bfb10_FUN_800bfb10.c; translate+rotate matrix then 0x800BF7D0 and 0x800BF970",src/game/stage.rs
+game::stage,800bfd80,fn_800bfd80,translated,high,"work/ghidra/main-gb/export/800bfd80_FUN_800bfd80.c; places the lift at +0x453C and mirrors it at +0x22AC in mode 1",src/game/stage.rs
+game::stage,800bfe90,fn_800bfe90,translated,medium,"work/ghidra/main-gb/export/800bfe90_FUN_800bfe90.c; three-state vertical animation with the 0x80237C40 cosine",src/game/stage.rs

@@ -1,0 +1,32 @@
+NSMBWDecompilation License
+
+Copyright (c) 2026 WitherBlitz and the contributors to this repository.
+
+This license covers the original work in this repository: the source code,
+tools, scripts and documentation its authors wrote. It grants no rights in
+New Super Mario Bros. Wii or any other Nintendo property. This repository
+contains no game files, and you need your own legally obtained copy of the
+game to use it.
+
+1. Excluded party. Under no circumstances may the NSMBW Decomp project
+   (NSMBW-Decomp), its maintainers, or anyone contributing to it on its
+   behalf use, copy, modify, merge, port, translate, or incorporate any part
+   of this repository, in whole or in part, in any form. No other term of
+   this license overrides this section.
+
+2. Forks. Subject to section 1, anyone may fork this repository and do
+   whatever they want with their fork.
+
+3. Mods. Subject to section 1, anyone making a mod of New Super Mario Bros.
+   Wii may use all of the code in this repository, in full, in that mod.
+
+4. New repositories. Subject to section 1, anyone who publishes a new
+   repository or project (other than a fork) that uses code from this
+   repository must give explicit credit: a clearly visible statement in
+   that project's README or equivalent documentation that it uses code from
+   NSMBWDecompilation (https://github.com/the-mario-bros-team/NSMBWDecompilation)
+   by WitherBlitz and contributors.
+
+5. No warranty. This repository is provided "as is", without warranty of any
+   kind, express or implied. In no event shall the authors be liable for any
+   claim, damages or other liability arising from its use.

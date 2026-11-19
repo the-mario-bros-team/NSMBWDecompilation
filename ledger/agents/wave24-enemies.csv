@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a855a0,fn_80a855a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a855a0_FUN_80a855a0.c; Wm_ob_itemget 0x80B4E3A8 at +0xAC..+0xB4 plus offsets +0xD0/+0xD4/+0xD8; effect 0x8016C890",src/game/enemies.rs
+game::enemies,80a85a20,fn_80a85a20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85a20_FUN_80a85a20.c; Wm_en_burst_s 0x80B4E3B8 at y+8 z=5500; sound 0x259; retire 0x80162510",src/game/enemies.rs
+game::enemies,80a85ad0,fn_80a85ad0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85ad0_FUN_80a85ad0.c; 0x80070B10 guard; owner +0x148; four-slot rider release; burst + sound 0x259; 0x80064D10(actor,1)",src/game/enemies.rs
+game::enemies,80a85c70,fn_80a85c70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85c70_FUN_80a85c70.c; parent 0x80162D00(+0xBD0); y and +0xD50 minus parent +0x83C",src/game/enemies.rs
+game::enemies,80a85cd0,fn_80a85cd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85cd0_FUN_80a85cd0.c; parent 0x80162D00(+0xBD0); x plus parent +0x838",src/game/enemies.rs
+game::enemies,80a85d20,fn_80a85d20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85d20_FUN_80a85d20.c; returns -2600 / 4000 / 600 by +0x38F and +0xDCA",src/game/enemies.rs
+game::enemies,80a85d60,fn_80a85d60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85d60_FUN_80a85d60.c; +0x114=-0.1875; 0x80A89430; states 0x80B737F8/0x80B73778/0x80B737B8",src/game/enemies.rs
+game::enemies,80a85e10,fn_80a85e10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85e10_FUN_80a85e10.c; resets +0xF4/+0xF8/+0xFC/+0x114/+0xEC; y from 80a85d20; same state switch",src/game/enemies.rs
+game::enemies,80a85f10,fn_80a85f10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a85f10_FUN_80a85f10.c; +0xE02 delay; +0xD78 phase 0/1/2; Wm_ob_itemappear_ss/appear via +0xABC slots +0xA0/+0xB0",src/game/enemies.rs
+game::enemies,80a86070,fn_80a86070,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86070_FUN_80a86070.c; landing-smoke table 0x80B4E434; surfaces 3/0xC/0xF; player query; y+80",src/game/enemies.rs
+game::enemies,80a86160,fn_80a86160,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86160_FUN_80a86160.c; 0x8006CED0 then 0x80070BA0/0x80070BF0; surface 3 + bit 0x8000; splash 0x800943F0",src/game/enemies.rs
+game::enemies,80a861e0,fn_80a861e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a861e0_FUN_80a861e0.c; type 2; model root +0x394 slots +0x28/+0x14 against 0x803580C4; Wm_ob_startail 0x80B4E440 via +0x86C",src/game/enemies.rs
+game::enemies,80a86280,fn_80a86280,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a86280_FUN_80a86280.c; type 0xB and +0xE00==0; Wm_ob_itempropeller 0x80B4E450 via +0x86C",src/game/enemies.rs
+game::enemies,80a86330,fn_80a86330,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86330_FUN_80a86330.c; +0xDB0 selects Wm_ob_itemfall 0x80B4E47C or Wm_ob_redcioinitem02 0x80B4E464 via +0x994",src/game/enemies.rs
+game::enemies,80a86420,fn_80a86420,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86420_FUN_80a86420.c; 0x80097700(actor, actor+0xAC); +0x45D=1; returns hit",src/game/enemies.rs
+game::enemies,80a86470,fn_80a86470,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a86470_FUN_80a86470.c; 0x80097170(1.0); released -8.0/-0.1875; fresh hold scales by 0.5 and 0x8042C1B8",src/game/enemies.rs
+game::enemies,80a86540,fn_80a86540,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86540_FUN_80a86540.c; clip table 0x80B4E4B0 (out/out2/out3/wait/wait2); flags 0x80B2E62C; 0x801651F0/0x80169F80/0x801680E0; +0xD88",src/game/enemies.rs
+game::enemies,80a865e0,fn_80a865e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a865e0_FUN_80a865e0.c; ensures +0xD88==3 via 80a86540(actor,3)",src/game/enemies.rs
+game::enemies,80a86610,fn_80a86610,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86610_FUN_80a86610.c; steps +0xEC toward +0xF8 by +0x114; returns 1 on arrival",src/game/enemies.rs
+game::enemies,80a86680,fn_80a86680,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86680_FUN_80a86680.c; +0xDC8=5 +0xD7C=1 +0xD80=0; -1.4/0.03125; +0xDF2 picks 0.7/-0.7 or 0.5/1.8",src/game/enemies.rs
+game::enemies,80a86750,fn_80a86750,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86750_FUN_80a86750.c; +0xDC8 phase machine 0..5; pop tables 0x80B2E640/0x80B2E658; sound 0x25B; holder +0x544",src/game/enemies.rs
+game::enemies,80a869f0,fn_80a869f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a869f0_FUN_80a869f0.c; out clip 0; +0xE02=0x1A; +0xD78=0; +0xB0=+0xD50",src/game/enemies.rs
+game::enemies,80a86a50,fn_80a86a50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86a50_FUN_80a86a50.c; follow modes +0xDA4 1/2; holder +0x544; frame 26.0 landing; +0x804 finished",src/game/enemies.rs
+game::enemies,80a86b60,fn_80a86b60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86b60_FUN_80a86b60.c; follow modes; holder via 0x80A85590; landing guarded by +0xD94!=3",src/game/enemies.rs
+game::enemies,80a86bf0,fn_80a86bf0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a86bf0_FUN_80a86bf0.c; type 0xB side via 0x80429DD0/0x80429E00; else 0x80A85200(actor,1) + out2 clip",src/game/enemies.rs
+game::enemies,80a86d70,fn_80a86d70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86d70_FUN_80a86d70.c; type 0xB pop path; else first-frame arm + shared frame steps",src/game/enemies.rs
+game::enemies,80a86e40,fn_80a86e40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86e40_FUN_80a86e40.c; wait2 clip; +0xE08=0xE; owner position 48.0 above floor",src/game/enemies.rs
+game::enemies,80a86ed0,fn_80a86ed0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a86ed0_FUN_80a86ed0.c; owner snap; 14-frame ring timer; six wobble toggles; 600.0 and state 0x80B73738",src/game/enemies.rs
+game::enemies,80a87310,fn_80a87310,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a87310_FUN_80a87310.c; tilt from 0x80A84ED0; +0xDF4=1 +0xE04=1; halved twirl on contact",src/game/enemies.rs
+game::enemies,80a873c0,fn_80a873c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a873c0_FUN_80a873c0.c; input bits 1/2/4; collection 0x80065110; y step 80a85d20; state 3 exit; +0xDF4 latch",src/game/enemies.rs

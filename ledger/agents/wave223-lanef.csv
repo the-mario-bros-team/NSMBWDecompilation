@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800a1370,fn_800a1370,translated,high,work/ghidra/main-gb/export/800a1370_FUN_800a1370.c; 244 bytes prologue to 0x800A1460 bclr; seeds +0x414..+0x42C from 0x802F07A0 and snapshots +0x459/+0x38D into +0x430/+0x431,src/game/stage.rs
+game::stage,800a16a0,fn_800a16a0,translated,high,work/ghidra/main-gb/export/800a16a0_FUN_800a16a0.c; 380 bytes prologue to 0x800A1818 bclr; player-slot rebind then virtual slot 0x98 and the +0x274/+0xE8.. reset run,src/game/stage.rs
+game::stage,800a2750,fn_800a2750,translated,high,work/ghidra/main-gb/export/800a2750_FUN_800a2750.c; 136 bytes prologue to 0x800A27D4 bclr; two strrchr cuts on 0x3A then strcmp; the NULL+1 is unguarded in the original,src/game/stage.rs
+game::stage,800a29c0,fn_800a29c0,translated,high,work/ghidra/main-gb/export/800a29c0_FUN_800a29c0.c; 84 bytes prologue to 0x800A2A10 bclr; dispatch on candidate +0x38C byte to 0x800A2A20 or 0x800A2B20 with r3/r4/r5 passed through,src/game/stage.rs
+game::stage,800a2a20,fn_800a2a20,translated,high,work/ghidra/main-gb/export/800a2a20_FUN_800a2a20.c; 248 bytes prologue to 0x800A2B14 bclr; answers 0/1/2/3 from flags 0x45 0x1C 0x2B and mode +0x1090; 0x802DCD74 is the _savegpr helper not a 64-bit return,src/game/stage.rs
+game::stage,800a2b80,fn_800a2b80,translated,high,work/ghidra/main-gb/export/800a2b80_FUN_800a2b80.c; 12 bytes with no prologue; returns 0x80377A04,src/game/stage.rs
+game::stage,800a2b90,fn_800a2b90,translated,high,work/ghidra/main-gb/export/800a2b90_FUN_800a2b90.c; 12 bytes with no prologue; byte-identical alias returning 0x80377A04,src/game/stage.rs
+game::stage,800a3d30,fn_800a3d30,translated,high,work/ghidra/main-gb/export/800a3d30_FUN_800a3d30.c; 380 bytes prologue to 0x800A3EA8 bclr; |speed|>1 integrates with 0.95 decay else snaps +0x73C to 180*ceil(ratio) through 0x8015F480,src/game/stage.rs
+game::stage,800a4150,fn_800a4150,translated,high,work/ghidra/main-gb/export/800a4150_FUN_800a4150.c; 148 bytes prologue to 0x800A41E0 bclr; two fdivs by virtual slot 0x35C into +0xE8/+0xEC then slot 0x37C and 0x800A4740,src/game/stage.rs
+game::stage,800a4480,fn_800a4480,translated,high,work/ghidra/main-gb/export/800a4480_FUN_800a4480.c; 88 bytes prologue to 0x800A44D4 bclr; virtual slot 0x370 result extsh then s16 approach 0x8015F4F0 on +0x102,src/game/stage.rs

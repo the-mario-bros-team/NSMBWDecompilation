@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e1938,fn_802e1938,translated,high,"work/ghidra/main-gb/export/802e1938_FUN_802e1938.c; MSL strcpy; word-at-a-time fast path collapsed to a byte loop",src/engine/main_loop.rs
+engine::main_loop,802e2108,fn_802e2108,translated,medium,"work/ghidra/main-gb/export/802e2108_FUN_802e2108.c; atoi via 0x802E1CF4 base 10 clamp LONG_MAX; ERANGE store on overflow",src/engine/main_loop.rs
+engine::main_loop,802e21d4,fn_802e21d4,translated,high,"work/ghidra/main-gb/export/802e21d4_FUN_802e21d4.c; MSL wmemchr; counted 16-bit scan",src/engine/main_loop.rs
+engine::main_loop,802e8ae8,fn_802e8ae8,translated,medium,"work/ghidra/main-gb/export/802e8ae8_FUN_802e8ae8.c; calls 0x8022863C then returns 0; callee body outside this bucket",src/engine/main_loop.rs
+engine::main_loop,802e8f7c,fn_802e8f7c,translated,high,"work/ghidra/main-gb/export/802e8f7c_FUN_802e8f7c.c; unaligned byte copy used as the TRK memcpy",src/engine/main_loop.rs
+engine::main_loop,802e90b8,fn_802e90b8,translated,high,"work/ghidra/main-gb/export/802e90b8_FUN_802e90b8.c; unaligned byte fill; value masked to 8 bits",src/engine/main_loop.rs
+engine::main_loop,802e91e0,fn_802e91e0,translated,high,"work/ghidra/main-gb/export/802e91e0_FUN_802e91e0.c; command dispatcher; 12 cases, default 0x500",src/engine/main_loop.rs
+engine::main_loop,802eabe8,fn_802eabe8,translated,high,"work/ghidra/main-gb/export/802eabe8_FUN_802eabe8.c; appends one 64-bit value in wire byte order; clamp 0x880",src/engine/main_loop.rs
+engine::main_loop,802ea4c4,fn_802ea4c4,translated,high,"work/ghidra/main-gb/export/802ea4c4_FUN_802ea4c4.c; clears step hook, runs both trampolines and the exception prologue",src/engine/main_loop.rs
+engine::main_loop,802ec1b0,fn_802ec1b0,translated,high,"work/ghidra/main-gb/export/802ec1b0_FUN_802ec1b0.c; cache window containment test; recursive edge trim, 0x700 on miss",src/engine/main_loop.rs
+engine::main_loop,802ed028,fn_802ed028,translated,medium,"work/ghidra/main-gb/export/802ed028_FUN_802ed028.c; sends 0x91 support reply with context PC and status halfword",src/engine/main_loop.rs
+engine::main_loop,802ed0c4,fn_802ed0c4,translated,high,"work/ghidra/main-gb/export/802ed0c4_FUN_802ed0c4.c; data-breakpoint re-arm decision; control masks 0x400/0x8000",src/engine/main_loop.rs
+engine::main_loop,802ed1e8,fn_802ed1e8,translated,high,"work/ghidra/main-gb/export/802ed1e8_FUN_802ed1e8.c; arms step-countdown breakpoint; 0x703 on reject",src/engine/main_loop.rs
+engine::main_loop,802ed270,fn_802ed270,translated,high,"work/ghidra/main-gb/export/802ed270_FUN_802ed270.c; arms watched address range; 0x703 on reject",src/engine/main_loop.rs
+engine::main_loop,802ed2f4,fn_802ed2f4,translated,medium,"work/ghidra/main-gb/export/802ed2f4_FUN_802ed2f4.c; pending-request state machine for D0..D4; advances saved PC by 4",src/engine/main_loop.rs
+engine::main_loop,802ed8b4,fn_802ed8b4,translated,high,"work/ghidra/main-gb/export/802ed8b4_FUN_802ed8b4.c; writes blr (0x4E800020) at +0x24, flushes 0x28, indirect call",src/engine/main_loop.rs
+engine::main_loop,802ed934,fn_802ed934,translated,medium,"work/ghidra/main-gb/export/802ed934_FUN_802ed934.c; walks thread queue, 0x2FC stride, reports count and index",src/engine/main_loop.rs
+engine::main_loop,802eb268,fn_802eb268,translated,medium,"work/ghidra/main-gb/export/802eb268_FUN_802eb268.c; 0x10 read-memory handler; header plus data or mapped error",src/engine/main_loop.rs
+engine::main_loop,802eb49c,fn_802eb49c,translated,medium,"work/ghidra/main-gb/export/802eb49c_FUN_802eb49c.c; 0x11 write-memory handler; payload copy into target",src/engine/main_loop.rs
+engine::main_loop,802eb6ac,fn_802eb6ac,translated,medium,"work/ghidra/main-gb/export/802eb6ac_FUN_802eb6ac.c; 0x12 read-registers handler; 0x24/0x21/0x60/0x1F blocks",src/engine/main_loop.rs
+engine::main_loop,802eb8a8,fn_802eb8a8,translated,medium,"work/ghidra/main-gb/export/802eb8a8_FUN_802eb8a8.c; 0x13 write-registers handler; set byte selects one of four blocks",src/engine/main_loop.rs
+engine::main_loop,802ebb48,fn_802ebb48,translated,high,"work/ghidra/main-gb/export/802ebb48_FUN_802ebb48.c; 0x18 continue handler; 0x16 reply or re-arm",src/engine/main_loop.rs
+engine::main_loop,802ebc0c,fn_802ebc0c,translated,medium,"work/ghidra/main-gb/export/802ebc0c_FUN_802ebc0c.c; 0x19 breakpoint set/clear; arms step or range",src/engine/main_loop.rs
+engine::main_loop,802ebe90,fn_802ebe90,translated,high,"work/ghidra/main-gb/export/802ebe90_FUN_802ebe90.c; 0x1A breakpoint status reply; four-way code map",src/engine/main_loop.rs
+engine::main_loop,802ebf48,fn_802ebf48,translated,high,"work/ghidra/main-gb/export/802ebf48_FUN_802ebf48.c; 0x17 serial-option handler; prints then applies value",src/engine/main_loop.rs

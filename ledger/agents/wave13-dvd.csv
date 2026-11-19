@@ -1,0 +1,22 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,0x801CDD30,dvd_state_step_801cdd30,translated,high,work/ghidra/main-gb/export/801cdd30_FUN_801cdd30.c; state-step dispatcher with all command arms,src/runtime/dvd.rs
+runtime::dvd,0x801CE2E0,dvd_completion_801ce2e0,translated,high,work/ghidra/main-gb/export/801ce2e0_FUN_801ce2e0.c; full completion tree incl. 0x24/0x26/0x28/0x29 arms,src/runtime/dvd.rs
+runtime::dvd,0x801CEDB0,dvd_queue_inquiry_801cedb0,translated,high,work/ghidra/main-gb/export/801cedb0_FUN_801cedb0.c; five field stores plus ring-2 insert,src/runtime/dvd.rs
+runtime::dvd,0x801CEE90,dvd_descriptor_state_801cee90,translated,medium,work/ghidra/main-gb/export/801cee90_FUN_801cee90.c; step-to-code mapping; queue comparison,src/runtime/dvd.rs
+runtime::dvd,0x801CEF60,dvd_current_state_801cef60,translated,high,work/ghidra/main-gb/export/801cef60_FUN_801cef60.c; fatal/restart/idle guards,src/runtime/dvd.rs
+runtime::dvd,0x801CF4B0,fn_801cf4b0,translated,medium,work/ghidra/main-gb/export/801cf4b0_FUN_801cf4b0.c; cover poll plus 64-bit settle timeout,src/runtime/dvd.rs
+runtime::dvd,0x801CF580,dvd_begin_transfer_801cf580,translated,medium,work/ghidra/main-gb/export/801cf580_FUN_801cf580.c; value mapping and ring-2 arm,src/runtime/dvd.rs
+runtime::dvd,0x801CF7C0,dvd_abort_transfers_801cf7c0,translated,high,work/ghidra/main-gb/export/801cf7c0_FUN_801cf7c0.c; ring reset and drain with nested locks,src/runtime/dvd.rs
+runtime::dvd,0x801CF8F0,dvd_abort_transfers_sync_801cf8f0,translated,high,work/ghidra/main-gb/export/801cf8f0_FUN_801cf8f0.c; sync drain plus enable/spin tail,src/runtime/dvd.rs
+runtime::dvd,0x801CFA30,fn_801cfa30,translated,low,work/ghidra/main-gb/export/801cfa30_FUN_801cfa30.c; sentinel test and unknown 0x801D3870 predicate,src/runtime/dvd.rs
+runtime::dvd,0x801CFA70,dvd_queue_list_init_801cfa70,translated,high,work/ghidra/main-gb/export/801cfa70_FUN_801cfa70.c; eight ring head/tail stores,src/runtime/dvd.rs
+runtime::dvd,0x801CFAB0,dvd_queue_insert_801cfab0,translated,high,work/ghidra/main-gb/export/801cfab0_FUN_801cfab0.c; four link stores under the interrupt lock,src/runtime/dvd.rs
+runtime::dvd,0x801CFC20,dvd_queue_first_801cfc20,translated,high,work/ghidra/main-gb/export/801cfc20_FUN_801cfc20.c; four-ring first-node scan,src/runtime/dvd.rs
+runtime::dvd,0x801CFD20,dvd_error_log_cb_sync_801cfd20,translated,high,work/ghidra/main-gb/export/801cfd20_FUN_801cfd20.c; sync call plus error callback,src/runtime/dvd.rs
+runtime::dvd,0x801CFD80,dvd_error_log_cb_write_801cfd80,translated,high,work/ghidra/main-gb/export/801cfd80_FUN_801cfd80.c; expected-count check flush write sync,src/runtime/dvd.rs
+runtime::dvd,0x801CFE80,dvd_error_log_cb_seek_801cfe80,translated,high,work/ghidra/main-gb/export/801cfe80_FUN_801cfe80.c; seek to next slot plus wrap rewrite,src/runtime/dvd.rs
+runtime::dvd,0x801CFFE0,dvd_error_log_cb_slot_801cffe0,translated,high,work/ghidra/main-gb/export/801cffe0_FUN_801cffe0.c; modulo-7 slot advance and secondary write,src/runtime/dvd.rs
+runtime::dvd,0x801D0930,dvd_error_reporter_active_801d0930,translated,high,work/ghidra/main-gb/export/801d0930_FUN_801d0930.c; non-zero reporter test,src/runtime/dvd.rs
+runtime::dvd,0x801D0950,dvd_error_reporter_call_801d0950,translated,high,work/ghidra/main-gb/export/801d0950_FUN_801d0950.c; guarded indirect call,src/runtime/dvd.rs
+runtime::dvd,0x801D6230,fn_801d6230,translated,medium,work/ghidra/main-gb/export/801d6230_FUN_801d6230.c; lazy IOS_Open with fd latch,src/runtime/dvd.rs
+runtime::dvd,0x801D6290,fn_801d6290,translated,medium,work/ghidra/main-gb/export/801d6290_FUN_801d6290.c; IOS_Close and fd clear,src/runtime/dvd.rs

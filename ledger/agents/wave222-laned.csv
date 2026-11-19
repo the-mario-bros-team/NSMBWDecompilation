@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802cef70,fn_802cef70,translated,high,work/ghidra/main-gb/export/802cef70_FUN_802cef70.c,src/resource/archive.rs
+resource::archive,802cf050,fn_802cf050,translated,high,work/ghidra/main-gb/export/802cf050_FUN_802cf050.c,src/resource/archive.rs
+resource::archive,802cf1e0,fn_802cf1e0,translated,medium,work/ghidra/main-gb/export/802cf1e0_FUN_802cf1e0.c,src/resource/archive.rs

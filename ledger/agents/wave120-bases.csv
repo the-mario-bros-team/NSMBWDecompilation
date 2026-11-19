@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80655da0,fn_80655da0,translated,high,"work/ghidra/rel-d_basesNP/export/80655da0_FUN_80655da0.c; destructor: 0x8015F800(object,0) then 0x802B9280 when free > 0",src/game/bases.rs
+game::bases,80656040,fn_80656040,translated,high,"work/ghidra/rel-d_basesNP/export/80656040_FUN_80656040.c; +0x394 interface slot +0x10 then return 1",src/game/bases.rs
+game::bases,806561b0,fn_806561b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806561b0_FUN_806561b0.c; 0x800B2EE0 sample accumulated into +0x3E4 with equal-sample tick",src/game/bases.rs
+game::bases,80656f50,fn_80656f50,translated,high,"work/ghidra/rel-d_basesNP/export/80656f50_FUN_80656f50.c; returns constant 0x80377A04",src/game/bases.rs
+game::bases,80656f60,fn_80656f60,translated,medium,"work/ghidra/rel-d_basesNP/export/80656f60_FUN_80656f60.c; in-place ctor: vtable 0x807E6144 +0x60; sub-objects +0x544 +0x584 +0x684; arrays +0x634/+0x618",src/game/bases.rs
+game::bases,806571a0,fn_806571a0,translated,high,"work/ghidra/rel-d_basesNP/export/806571a0_FUN_806571a0.c; element destructor via 0x802BE7C0 then 0x802B9280 when free > 0",src/game/bases.rs
+game::bases,80657200,fn_80657200,translated,medium,"work/ghidra/rel-d_basesNP/export/80657200_FUN_80657200.c; vtable 0x80329958 at +0 then 0x8016D4B0 and 0x802D7B20 teardown",src/game/bases.rs
+game::bases,80657390,fn_80657390,translated,medium,"work/ghidra/rel-d_basesNP/export/80657390_FUN_80657390.c; class vtable +0xD4 dispatch with descriptor 0x80828AA0",src/game/bases.rs
+game::bases,806573b0,fn_806573b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806573b0_FUN_806573b0.c; queries 0x80828AA0/0x80828ADC on +0x394 interface then tests +0x5F8",src/game/bases.rs
+game::bases,8065a6f0,fn_8065a6f0,translated,high,"work/ghidra/rel-d_basesNP/export/8065a6f0_FUN_8065a6f0.c; destructor twin of 0x80655DA0",src/game/bases.rs
+game::bases,8065a870,fn_8065a870,translated,high,"work/ghidra/rel-d_basesNP/export/8065a870_FUN_8065a870.c; 1000-byte ctor; vtable 0x807E69C0 at +0x60; zero at +0x3D8",src/game/bases.rs
+game::bases,8065b160,fn_8065b160,translated,high,"work/ghidra/rel-d_basesNP/export/8065b160_FUN_8065b160.c; destructor twin of 0x80655DA0",src/game/bases.rs
+game::bases,8065b1c0,fn_8065b1c0,translated,high,"work/ghidra/rel-d_basesNP/export/8065b1c0_FUN_8065b1c0.c; destructor twin of 0x80655DA0",src/game/bases.rs
+game::bases,8065b220,fn_8065b220,translated,high,"work/ghidra/rel-d_basesNP/export/8065b220_FUN_8065b220.c; returns constant 0x80352730",src/game/bases.rs
+game::bases,8065b230,fn_8065b230,translated,high,"work/ghidra/rel-d_basesNP/export/8065b230_FUN_8065b230.c; returns constant 0x803526B0",src/game/bases.rs
+game::bases,8065b320,fn_8065b320,translated,medium,"work/ghidra/rel-d_basesNP/export/8065b320_FUN_8065b320.c; +0x30 child walk probing child slot +0x0C; C unrolls five probes then recurses",src/game/bases.rs
+game::bases,8065b400,fn_8065b400,translated,medium,"work/ghidra/rel-d_basesNP/export/8065b400_FUN_8065b400.c; colon-trimmed class-name compare via 0x802E1C40/0x802E1AB4",src/game/bases.rs
+game::bases,8065b520,fn_8065b520,translated,high,"work/ghidra/rel-d_basesNP/export/8065b520_FUN_8065b520.c; 0x400-byte ctor; vtable 0x807E6C88 at +0x60; +0x3D0 interface and +0x3F0 transform",src/game/bases.rs
+game::bases,8065b590,fn_8065b590,translated,high,"work/ghidra/rel-d_basesNP/export/8065b590_FUN_8065b590.c; returns constant 0x80377A04",src/game/bases.rs
+game::bases,8065b7d0,fn_8065b7d0,translated,high,"work/ghidra/rel-d_basesNP/export/8065b7d0_FUN_8065b7d0.c; +0x394 slot +0x10 then fn_8065b820 transform and return 1",src/game/bases.rs
+game::bases,8065b820,fn_8065b820,translated,high,"work/ghidra/rel-d_basesNP/export/8065b820_FUN_8065b820.c; scale 0x807C8AD0; 0x80064AF0 angle fixup; 0x801C0BD0 matrix at +0x7C; 0x8016A170 apply",src/game/bases.rs
+game::bases,8065b8c0,fn_8065b8c0,translated,high,"work/ghidra/rel-d_basesNP/export/8065b8c0_FUN_8065b8c0.c; +0x3F0 sub-object slot +0x14 then return 1",src/game/bases.rs
+game::bases,8065bb40,fn_8065bb40,translated,high,"work/ghidra/rel-d_basesNP/export/8065bb40_FUN_8065bb40.c; destructor twin of 0x80655DA0",src/game/bases.rs
+game::bases,8065bc80,fn_8065bc80,translated,medium,"work/ghidra/rel-d_basesNP/export/8065bc80_FUN_8065bc80.c; +0x30 child walk; twin of 0x8065B320",src/game/bases.rs
+game::bases,8065bd60,fn_8065bd60,translated,medium,"work/ghidra/rel-d_basesNP/export/8065bd60_FUN_8065bd60.c; colon-trimmed class-name compare; twin of 0x8065B400",src/game/bases.rs
+game::bases,8065be80,fn_8065be80,translated,medium,"work/ghidra/rel-d_basesNP/export/8065be80_FUN_8065be80.c; 0x9CE8-byte ctor; vtable 0x807E7410; arrays +0x99E4 +0x9AF8 +0x9C20 +0x9C54",src/game/bases.rs
+game::bases,8065bf50,fn_8065bf50,translated,high,"work/ghidra/rel-d_basesNP/export/8065bf50_FUN_8065bf50.c; 0x128-byte element ctor: 0x802D7AA0 then vtable 0x80310ED8 at +0",src/game/bases.rs
+game::bases,8065c210,fn_8065c210,translated,medium,"work/ghidra/rel-d_basesNP/export/8065c210_FUN_8065c210.c; clamps t against 0x807C8AE8/0x807C8AF4 and lerps two floats in f64",src/game/bases.rs

@@ -1,0 +1,12 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c0570,fn_800c0570,translated,medium,"work/ghidra/main-gb/export/800c0570_FUN_800c0570.c; heading push: x = point.x + r2-0x687C*+0x128, distance = base + (raw - r2-0x6870), cos/sin stores with sign by flag",src/game/stage.rs
+game::stage,800c07b0,fn_800c07b0,translated,medium,"work/ghidra/main-gb/export/800c07b0_FUN_800c07b0.c; three child models +0x20/+0x60/+0xA0: position sums, 0x800C0570 push, 0x80064AF0 rotate, 0x801C0BD0 translation, three axis rotations, +0x14 virtual",src/game/stage.rs
+game::stage,800c18b0,fn_800c18b0,translated,medium,"work/ghidra/main-gb/export/800c18b0_FUN_800c18b0.c; seven 8-byte nodes queried through 0x800C17A0, kind 0x22 flips via 0x800C1780 and sets +0x6A",src/game/stage.rs
+game::stage,800c1a90,fn_800c1a90,translated,medium,"work/ghidra/main-gb/export/800c1a90_FUN_800c1a90.c; rebase on anchor, 0x800C19E0 slope/intercept, vertical and slope crossings, -0x6814/-0x6810 window, 0x800C1A40 span test, anchor add-back",src/game/stage.rs
+game::stage,800c3a10,fn_800c3a10,translated,medium,"work/ghidra/main-gb/export/800c3a10_FUN_800c3a10.c; place at +0x50/+0x54 + offset into +0x58/+0x5C/+0x40/+0x44 then step by cos/sin of the +100 heading",src/game/stage.rs
+game::stage,800c4f50,fn_800c4f50,translated,high,"work/ghidra/main-gb/export/800c4f50_FUN_800c4f50.c; turn +100 by +0x60*rate, +0x38 = -speed*sin, +0x3C = speed*cos, reload +0x58/+0x5C and step both axes",src/game/stage.rs
+game::stage,800c51a0,fn_800c51a0,translated,medium,"work/ghidra/main-gb/export/800c51a0_FUN_800c51a0.c; save +0x40/+0x44/+100, 0x800C4F50, 0x800C18B0 contact; below 0x4000 retries 0x800C4B50, 0x4000..0x7FFF retries 0x800C4C50, else restore and negate",src/game/stage.rs
+game::stage,800cb670,fn_800cb670,translated,medium,"work/ghidra/main-gb/export/800cb670_FUN_800cb670.c; 0x80164FD0 render object; +0xC id, +8 texture, +0x10 alpha, +0x14 clear, 6/7 flags on negative sizes, 0x8016A2A0",src/game/stage.rs
+game::stage,800cb740,fn_800cb740,translated,low,"work/ghidra/main-gb/export/800cb740_FUN_800cb740.c; forwards every register to 0x800CB670 with the r2-0x6738 alpha",src/game/stage.rs
+game::stage,800cb760,fn_800cb760,translated,low,"work/ghidra/main-gb/export/800cb760_FUN_800cb760.c; forwards every register to 0x800CB670 with the r2-0x670C alpha",src/game/stage.rs
+game::stage,800cb780,fn_800cb780,translated,low,"work/ghidra/main-gb/export/800cb780_FUN_800cb780.c; 0x800CB670 with the r2-0x6738 alpha, then +0x14 = 1 and the truth value returned",src/game/stage.rs

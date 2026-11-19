@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::menu,801769b0,fn_801769b0,translated,medium,"work/ghidra/main-gb/export/801769b0_FUN_801769b0.c; page state machine (states 0..0x13); r3 menu, r4 optional records; four helper bodies called by address",src/ui/menu.rs
+ui::menu,80178c50,fn_80178c50,translated,medium,"work/ghidra/main-gb/export/80178c50_FUN_80178c50.c; four-player scrolling-text/battery update; records stride 0x10; FUN_80180020 rectangle",src/ui/menu.rs
+ui::menu,801795b0,fn_801795b0,translated,medium,"work/ghidra/main-gb/export/801795b0_FUN_801795b0.c; one-player scroll input; +0x84 index, 0x802F5B18 pane pairs, sound ids 1..15",src/ui/menu.rs
+ui::menu,8017a120,fn_8017a120,translated,medium,"work/ghidra/main-gb/export/8017a120_FUN_8017a120.c; button-release page transition; sound id 4; selection pointer at param_3",src/ui/menu.rs
+ui::menu,8017af70,fn_8017af70,translated,medium,"work/ghidra/main-gb/export/8017af70_FUN_8017af70.c; dialog page transition; +0x0C button count; 0x802F5B18 lookups",src/ui/menu.rs
+ui::menu,8017ba40,fn_8017ba40,translated,medium,"work/ghidra/main-gb/export/8017ba40_FUN_8017ba40.c; option/dialog page machine; dialog text line and four widget updates",src/ui/menu.rs

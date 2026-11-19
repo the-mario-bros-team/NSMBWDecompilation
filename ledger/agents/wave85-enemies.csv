@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a10170,fn_80a10170,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a10170_FUN_80a10170.c; trail block +0x928/+0x92C; 400 x 0x1C records",src/game/enemies.rs
+game::enemies,80a101e0,fn_80a101e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a101e0_FUN_80a101e0.c; two guards + heap release, returns its argument",src/game/enemies.rs
+game::enemies,80a10410,fn_80a10410,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a10410_FUN_80a10410.c; 400-record ring shift + head record seed",src/game/enemies.rs
+game::enemies,80a10590,fn_80a10590,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a10590_FUN_80a10590.c; per-segment collision descriptors and walk clips",src/game/enemies.rs
+game::enemies,80a10630,fn_80a10630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a10630_FUN_80a10630.c; two offset pairs per segment",src/game/enemies.rs
+game::enemies,80a106c0,fn_80a106c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a106c0_FUN_80a106c0.c; two 0x8008C380 block resets per segment",src/game/enemies.rs
+game::enemies,80a10730,fn_80a10730,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a10730_FUN_80a10730.c; walk_normal clip + +0x48 animation per segment",src/game/enemies.rs
+game::enemies,80a107b0,fn_80a107b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a107b0_FUN_80a107b0.c; clears +0xE8..+0xF0, seeds five per-segment angles",src/game/enemies.rs
+game::enemies,80a17ff0,fn_80a17ff0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a17ff0_FUN_80a17ff0.c; five holder releases + base teardown, returns this",src/game/enemies.rs
+game::enemies,80a18170,fn_80a18170,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a18170_FUN_80a18170.c; constant producer 0x80377A04",src/game/enemies.rs
+game::enemies,80a18180,fn_80a18180,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a18180_FUN_80a18180.c; constant producer 0x80377A04",src/game/enemies.rs
+game::enemies,80a18190,fn_80a18190,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a18190_FUN_80a18190.c; constant producer 0x80377A04",src/game/enemies.rs
+game::enemies,80a181a0,fn_80a181a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a181a0_FUN_80a181a0.c; constant producer 0x80377A04",src/game/enemies.rs
+game::enemies,80a181b0,fn_80a181b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a181b0_FUN_80a181b0.c; constant producer 0x80377A04",src/game/enemies.rs
+game::enemies,80a181c0,fn_80a181c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a181c0_FUN_80a181c0.c; constant producer 0x80377A04",src/game/enemies.rs
+game::enemies,80a18280,fn_80a18280,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a18280_FUN_80a18280.c; g3d/daikonbou.brres binder: +0x524/+0x540/+0x544/+0x5B4/+0x5B8/+0x584/+0x588",src/game/enemies.rs
+game::enemies,80a184a0,fn_80a184a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a184a0_FUN_80a184a0.c; +0x544 vtable slot +0x14, returns 1",src/game/enemies.rs
+game::enemies,80a18560,fn_80a18560,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a18560_FUN_80a18560.c; +0x7C matrix refresh with the 0x80B2B49C height bias",src/game/enemies.rs
+game::enemies,80a18650,fn_80a18650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a18650_FUN_80a18650.c; clamped pitch integration into +0x102",src/game/enemies.rs
+game::enemies,80a186a0,fn_80a186a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a186a0_FUN_80a186a0.c; two parking arms + four-word height block",src/game/enemies.rs
+game::enemies,80a18790,fn_80a18790,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a18790_FUN_80a18790.c; effect 0x2DE from the two height probes",src/game/enemies.rs
+game::enemies,80a18800,fn_80a18800,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a18800_FUN_80a18800.c; Wm_ob_cmnspark effect at the actor position",src/game/enemies.rs
+game::enemies,80a18860,fn_80a18860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a18860_FUN_80a18860.c; countLeadingZeros idiom for state == 1",src/game/enemies.rs
+game::enemies,80a18880,fn_80a18880,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a18880_FUN_80a18880.c; countLeadingZeros idiom for state == 2",src/game/enemies.rs
+game::enemies,80a194b0,fn_80a194b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a194b0_FUN_80a194b0.c; state normaliser pair 0x8015F800/0x802B9280",src/game/enemies.rs
+game::enemies,80a19510,fn_80a19510,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a19510_FUN_80a19510.c; byte-identical second normaliser",src/game/enemies.rs
+game::enemies,80a19650,fn_80a19650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a19650_FUN_80a19650.c; +0x30 chain walker, unrolled five-link form",src/game/enemies.rs
+game::enemies,80a19730,fn_80a19730,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a19730_FUN_80a19730.c; colon-suffix name predicate via 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80a19850,fn_80a19850,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a19850_FUN_80a19850.c; 0x730-byte constructor, vtable 0x80B37918, holder chain",src/game/enemies.rs

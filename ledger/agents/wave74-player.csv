@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,8005b0f0,fn_8005b0f0,translated,high,"work/ghidra/main-gb/export/8005b0f0_FUN_8005b0f0.c; 0x8015F800(this,0) then 0x802B9280 when destroy>0; returns this",src/game/player.rs
+game::player,8005b230,fn_8005b230,translated,medium,"work/ghidra/main-gb/export/8005b230_FUN_8005b230.c; five +0x30 probes through vtable slot +0x0C, then recurses one level",src/game/player.rs
+game::player,8005b310,fn_8005b310,translated,high,"work/ghidra/main-gb/export/8005b310_FUN_8005b310.c; strrchr ':' on both strings, strcmp of the suffixes; name from vtable +0x20",src/game/player.rs
+game::player,8005b3a0,fn_8005b3a0,translated,high,"work/ghidra/main-gb/export/8005b3a0_FUN_8005b3a0.c; vtable DAT_80309718 at +0x00, SDA 0x80429C94 = this, init via 0x8005B4A0",src/game/player.rs
+game::player,8005b3e0,fn_8005b3e0,translated,high,"work/ghidra/main-gb/export/8005b3e0_FUN_8005b3e0.c; clears SDA 0x80429C94 then 0x802B9280 when destroy>0",src/game/player.rs
+game::player,8005b430,fn_8005b430,translated,high,"work/ghidra/main-gb/export/8005b430_FUN_8005b430.c; 0x8005B4A0(this) then +0x80 = -1",src/game/player.rs
+game::player,8005b470,fn_8005b470,translated,high,"work/ghidra/main-gb/export/8005b470_FUN_8005b470.c; +0x42 = 0, +0x88 = 0, four slot ids +0x20..+0x2C = -1",src/game/player.rs
+game::player,8005b4a0,fn_8005b4a0,translated,high,"work/ghidra/main-gb/export/8005b4a0_FUN_8005b4a0.c; 40 stores over +0x04..+0x94; six words seeded from SDA 0x8042BA18",src/game/player.rs
+game::player,8005b550,fn_8005b550,translated,medium,"work/ghidra/main-gb/export/8005b550_FUN_8005b550.c; age +0x54/+0x0C then state +0x04 selects 0x8005C090/0x8005C410/0x8005CED0/0x8005CFB0",src/game/player.rs
+game::player,8005b5c0,fn_8005b5c0,translated,high,"work/ghidra/main-gb/export/8005b5c0_FUN_8005b5c0.c; stores the two-word state pair at +0x04/+0x08",src/game/player.rs
+game::player,8005b5d0,fn_8005b5d0,translated,high,"work/ghidra/main-gb/export/8005b5d0_FUN_8005b5d0.c; 0x8005CA50 then +0x04 = 0",src/game/player.rs
+game::player,8005b610,fn_8005b610,translated,high,"work/ghidra/main-gb/export/8005b610_FUN_8005b610.c; clz(state - +0x04) >> 5, i.e. equality",src/game/player.rs
+game::player,8005b630,fn_8005b630,translated,high,"work/ghidra/main-gb/export/8005b630_FUN_8005b630.c; 0x8005B610(this,state) and phase == +0x08",src/game/player.rs
+game::player,8005b690,fn_8005b690,translated,high,"work/ghidra/main-gb/export/8005b690_FUN_8005b690.c; +0x3C = 0x50",src/game/player.rs
+game::player,8005b6a0,fn_8005b6a0,translated,medium,"work/ghidra/main-gb/export/8005b6a0_FUN_8005b6a0.c; +0x3C countdown, SDA byte 0x80429CF8 &= 0xF0, two four-slot loops calling vtable +0x12C",src/game/player.rs
+game::player,8005b780,fn_8005b780,translated,high,"work/ghidra/main-gb/export/8005b780_FUN_8005b780.c; first -1 slot id at +0x20..+0x2C gets the id; returns index or -1",src/game/player.rs
+game::player,8005b7d0,fn_8005b7d0,translated,medium,"work/ghidra/main-gb/export/8005b7d0_FUN_8005b7d0.c; clz(0x8005FFB0() - +0x1C) >> 5",src/game/player.rs
+game::player,8005b810,fn_8005b810,translated,high,"work/ghidra/main-gb/export/8005b810_FUN_8005b810.c; guard +0x43, set it, 0x8019BD20(SDA 0x8042A4A8,1)",src/game/player.rs
+game::player,8005b840,fn_8005b840,translated,high,"work/ghidra/main-gb/export/8005b840_FUN_8005b840.c; finds id in the +0x20 array and returns the entry before it, else -1",src/game/player.rs
+game::player,8005bcf0,fn_8005bcf0,translated,high,"work/ghidra/main-gb/export/8005bcf0_FUN_8005bcf0.c; phase +0x08 = 2 and flag 0x67 on every reserved slot",src/game/player.rs
+game::player,8005bd60,fn_8005bd60,translated,high,"work/ghidra/main-gb/export/8005bd60_FUN_8005bd60.c; gate +0x10 & 2; scan mask 0x80429CA8 for slot with 0x65 and not 0x68; else +0x08=3, +0x18=+0x1C-1, +0x0C=10",src/game/player.rs
+game::player,8005be30,fn_8005be30,translated,high,"work/ghidra/main-gb/export/8005be30_FUN_8005be30.c; cursor +0x18 walk, 0x8019C1E0 sound at cursor 0, actor +0x434 = +0x1C-(i+1), flag 0x69",src/game/player.rs
+game::player,8005bf10,fn_8005bf10,translated,high,"work/ghidra/main-gb/export/8005bf10_FUN_8005bf10.c; when every present slot with 0x65 also has 0x6A -> +0x08=5 and +0x10 |= 8",src/game/player.rs
+game::player,8005c090,fn_8005c090,translated,medium,"work/ghidra/main-gb/export/8005c090_FUN_8005c090.c; six-way dispatch on +0x08 then 0x8005B6A0 and 0x8005C6D0",src/game/player.rs
+game::player,8005c1a0,fn_8005c1a0,translated,high,"work/ghidra/main-gb/export/8005c1a0_FUN_8005c1a0.c; 0x8005B5C0(this,0,0) then flag 0x6D on every reserved slot",src/game/player.rs
+game::player,8005c210,fn_8005c210,translated,high,"work/ghidra/main-gb/export/8005c210_FUN_8005c210.c; returns 0 when a present slot has 0x65 and not 0x6E, else 1",src/game/player.rs

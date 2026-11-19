@@ -1,0 +1,18 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a0e580,fn_80a0e580,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0e580_FUN_80a0e580.c; hop ping-pong + 8.0 orbit; two qr3 u16 loads",src/game/enemies.rs
+game::enemies,80b0c540,fn_80b0c540,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0c540_FUN_80b0c540.c; two-node matrix commit; one qr3 u16 load; z drop 24.0",src/game/enemies.rs
+game::enemies,80aeb450,fn_80aeb450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aeb450_FUN_80aeb450.c; chain solver; three qr3 u16 loads; mode tables read from 0x80B31150",src/game/enemies.rs
+game::enemies,80ae4a50,fn_80ae4a50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ae4a50_FUN_80ae4a50.c; hover/steer step; three qr3 u16 loads; 8.0 bob amplitude",src/game/enemies.rs
+game::enemies,80a4b740,fn_80a4b740,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4b740_FUN_80a4b740.c; circle steer; two qr3 u16 loads; 0x10000000/0x8000000 phase bounds",src/game/enemies.rs
+game::enemies,80a4b420,fn_80a4b420,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4b420_FUN_80a4b420.c; dive + landing probe; two qr3 u16 loads; 0xC000000 landing gate",src/game/enemies.rs
+game::enemies,80a635d0,fn_80a635d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a635d0_FUN_80a635d0.c; two-phase bob; one qr3 u16 load; 1024.0 sine",src/game/enemies.rs
+game::enemies,80a63ff0,fn_80a63ff0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a63ff0_FUN_80a63ff0.c; drifting jet; two qr3 u16 loads; f31 qr0 spill pair",src/game/enemies.rs
+game::enemies,80a641f0,fn_80a641f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a641f0_FUN_80a641f0.c; coast stop; two qr3 u16 loads; 0.0 speed floor",src/game/enemies.rs
+game::enemies,80aba080,fn_80aba080,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aba080_FUN_80aba080.c; hit splash; two qr3 u16 loads; 5.2 impulse and 0.5 blend",src/game/enemies.rs
+game::enemies,80a4bbd0,fn_80a4bbd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a4bbd0_FUN_80a4bbd0.c; climb + level-off; two qr3 u16 loads; 0x10000000 clamp",src/game/enemies.rs
+game::enemies,80a46200,fn_80a46200,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46200_FUN_80a46200.c; vertical ping-pong; one qr3 u16 load; 0x8000 wrap",src/game/enemies.rs
+game::enemies,80b0d380,fn_80b0d380,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0d380_FUN_80b0d380.c; four-slot nearest-target search; side mask 0x80429CA8",src/game/enemies.rs
+game::enemies,80b0d2a0,fn_80b0d2a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0d2a0_FUN_80b0d2a0.c; neighbour x/y anchor; table 0x80B31E68 +0x9E6",src/game/enemies.rs
+game::enemies,80b0d9a0,fn_80b0d9a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b0d9a0_FUN_80b0d9a0.c; tail follow step; Wm_en_teresatail vtable +0xA0",src/game/enemies.rs
+game::enemies,80b0db50,fn_80b0db50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0db50_FUN_80b0db50.c; frame forwarder; +0x588 node slot 0x1C",src/game/enemies.rs
+game::enemies,80b07d70,fn_80b07d70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80b07d70_FUN_80b07d70.c; ground glide; one qr3 u16 load; 4.0 sine",src/game/enemies.rs

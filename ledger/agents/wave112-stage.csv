@@ -1,0 +1,4 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c9a60,fn_800c9a60,translated,low,"work/ghidra/main-gb/export/800c9a60_FUN_800c9a60.c; 160 bytes; variadic message front-end: 8 GPR + 8 FPR save words, va_list 0x05000000 (gpr 5), frame words to state +0x3D0/+0x3D4, forwards 8 words to 0x800C9B50",src/game/stage.rs
+game::stage,800c9df0,fn_800c9df0,translated,medium,"work/ghidra/main-gb/export/800c9df0_FUN_800c9df0.c; 144 bytes; variadic text-line front-end: 8 GPR + 8 FPR save words, va_list 0x03000000 (gpr 3), forwards r5/r6/r7 to fn_800c9e80",src/game/stage.rs
+game::stage,800cb490,fn_800cb490,translated,medium,"work/ghidra/main-gb/export/800cb490_FUN_800cb490.c; 280 bytes; variant 0 allocates two 0x18 objects (vtables 0x803177BC/0x80317798) and calls 0x800CB740/0x800CB760, variant 1 allocates one (0x80317774) and calls 0x800CB780",src/game/stage.rs

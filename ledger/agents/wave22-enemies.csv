@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a61180,fn_80a61180,translated,high,work/ghidra/rel-d_enemiesNP/export/80a61180_FUN_80a61180.c; returns 80357bb4,src/game/enemies.rs
+game::enemies,80a61d60,fn_80a61d60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a61d60_FUN_80a61d60.c; +0x168 = (+0x714 - 2.0) - +0xB0; +0x164 = +0x710 - +0xAC",src/game/enemies.rs
+game::enemies,80a63480,fn_80a63480,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a63480_FUN_80a63480.c; 8042a078 mask pair; +0x72D latch; +0x708 += 0.0625; scale +0xDC..+0xE4; switch 80b71f90 at 1.0",src/game/enemies.rs
+game::enemies,80a63b70,fn_80a63b70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a63b70_FUN_80a63b70.c; 8015f4f0(+0x104, (s16)+0x728, 0x80); arrival -> 80b72290",src/game/enemies.rs
+game::enemies,80a63c10,fn_80a63c10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a63c10_FUN_80a63c10.c; +0xAC += 0.5 clamped by +0x71C; arrival and limit -> 80b72290",src/game/enemies.rs
+game::enemies,80a63ce0,fn_80a63ce0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a63ce0_FUN_80a63ce0.c; +0xAC -= 0.5 clamped by +0x71C; arrival and limit -> 80b72290",src/game/enemies.rs
+game::enemies,80a63dd0,fn_80a63dd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a63dd0_FUN_80a63dd0.c; +0x733 -= 1; zero -> 80b720d0",src/game/enemies.rs
+game::enemies,80a63e60,fn_80a63e60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a63e60_FUN_80a63e60.c; 8015f4f0(+0x104, (s16)+0x728, 0x80); arrival -> 80b72310",src/game/enemies.rs
+game::enemies,80a63ee0,fn_80a63ee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a63ee0_FUN_80a63ee0.c; bind clip 4 frame 2.0 blend 0.0; 80168fe0 16.0; +0x733=0xC; +0x10C=4.0; +0x70C=4.0/48.0; slots +0x2B4/+0x2B0; +0x360=1; +0x72F=1",src/game/enemies.rs
+game::enemies,80a64180,fn_80a64180,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a64180_FUN_80a64180.c; bind clip 5 frame 0.0 blend 1.0; +0x360=1; slot +0x2B0",src/game/enemies.rs
+game::enemies,80a65350,fn_80a65350,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a65350_FUN_80a65350.c; null guard; 8015f800(state,0), 802b9280 when mode > 0",src/game/enemies.rs
+game::enemies,80a653b0,fn_80a653b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a653b0_FUN_80a653b0.c; byte-identical to 80a65350",src/game/enemies.rs
+game::enemies,80a65410,fn_80a65410,translated,high,work/ghidra/rel-d_enemiesNP/export/80a65410_FUN_80a65410.c; returns 80357bf4,src/game/enemies.rs
+game::enemies,80a65500,fn_80a65500,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a65500_FUN_80a65500.c; five +0x30 child links; child vtable +0x0C predicate; recursive tail",src/game/enemies.rs
+game::enemies,80a655e0,fn_80a655e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a655e0_FUN_80a655e0.c; 802e1c40 strrchr; 802e1ab4 strcmp of suffixes",src/game/enemies.rs
+game::enemies,80a65700,fn_80a65700,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a65700_FUN_80a65700.c; 801628c0(0x5C8); vtable 80b48c98; holders +0x524/+0x544/+0x584; +0x5BC=1; +0x5BD=1; +0x5C1=0xFF",src/game/enemies.rs
+game::enemies,80a65850,fn_80a65850,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a65850_FUN_80a65850.c; gessoMini/g3d/gessoMini.brres/swim; 800690c0/800df180/80239e30/80169d90/80064bd0/8023a0b0/801650d0/800690e0",src/game/enemies.rs
+game::enemies,80a65ce0,fn_80a65ce0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a65ce0_FUN_80a65ce0.c; copies two words; z = pos.z - 10.0*(+0x5C0+1)",src/game/enemies.rs
+game::enemies,80a65d40,fn_80a65d40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a65d40_FUN_80a65d40.c; dead clip; 801651f0/80169f80/801680e0",src/game/enemies.rs
+game::enemies,80a65e80,fn_80a65e80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a65e80_FUN_80a65e80.c; swim clip; 801651f0/80169f80/801680e0; +0x5BD=1",src/game/enemies.rs
+game::enemies,80a65f90,fn_80a65f90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a65f90_FUN_80a65f90.c; 8042a200 & 7 gate; tables 80b2d4b8/80b2d4c0; direction bytes +0x5BE/+0x5BF; 8006cd40; +0x102 angle; +0x5C1 timer; 80162510",src/game/enemies.rs
+game::enemies,80a66110,fn_80a66110,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a66110_FUN_80a66110.c; 80168d80/80169d20/80069060/80095130; 80162920 when mode > 0",src/game/enemies.rs
+game::enemies,80a665c0,fn_80a665c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a665c0_FUN_80a665c0.c; byte-identical to 80a65350",src/game/enemies.rs
+game::enemies,80a66620,fn_80a66620,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a66620_FUN_80a66620.c; byte-identical to 80a65350",src/game/enemies.rs
+game::enemies,80a66680,fn_80a66680,translated,high,work/ghidra/rel-d_enemiesNP/export/80a66680_FUN_80a66680.c; returns 80357c74,src/game/enemies.rs
+game::enemies,80a66690,fn_80a66690,translated,high,work/ghidra/rel-d_enemiesNP/export/80a66690_FUN_80a66690.c; returns 80357bf4,src/game/enemies.rs
+game::enemies,80a66980,fn_80a66980,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a66980_FUN_80a66980.c; 801628c0(0x528); 80094e80; vtable 80b49110",src/game/enemies.rs
+game::enemies,80a66a70,fn_80a66a70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a66a70_FUN_80a66a70.c; in-place; vtable 80b49418; tables 80b49698/80b496c8/80b354b8; containers +0x54C 0x40x3 and +0x60C 0x38x2; five 8016a5e0 holders",src/game/enemies.rs
+game::enemies,80a66c00,fn_80a66c00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a66c00_FUN_80a66c00.c; null and mode guard; 802b9280",src/game/enemies.rs
+game::enemies,80a66c40,fn_80a66c40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a66c40_FUN_80a66c40.c; 80168d10; vtable 80b330e0",src/game/enemies.rs

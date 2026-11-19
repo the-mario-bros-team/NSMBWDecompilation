@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8069be20,fn_8069be20,translated,high,"work/ghidra/rel-d_basesNP/export/8069be20_FUN_8069be20.c; +0x544 rider tick, +0x5F8 clip pair, five +0xD30..+0xD34 latches, +0x360 two-state gate, shared orientation tail",src/game/bases.rs
+game::bases,807373b0,fn_807373b0,translated,high,"work/ghidra/rel-d_basesNP/export/807373b0_FUN_807373b0.c; six 0x807CDBxx tile tables, 0x80077860 16.4 blits, 0x80070BF0 probe, bottom-tested 16-unit strip",src/game/bases.rs
+game::bases,80705c60,fn_80705c60,translated,medium,"work/ghidra/rel-d_basesNP/export/80705c60_FUN_80705c60.c; obj_nut init: bitfield extents, 0x807CC648 collision template, +0x41C/+0x428 motion records, animator clip 0x8082F360",src/game/bases.rs
+game::bases,80782f60,fn_80782f60,translated,high,"work/ghidra/rel-d_basesNP/export/80782f60_FUN_80782f60.c; teresa BRRES: 3 panes, 3 chr/clr/tex animation families, frame seed, model parenting",src/game/bases.rs
+game::bases,80775190,fn_80775190,translated,medium,"work/ghidra/rel-d_basesNP/export/80775190_FUN_80775190.c; digit-prefix scan, five 0x800F0xxx camera-key helpers, Rstone midpoint effect 30",src/game/bases.rs
+game::bases,8079a930,fn_8079a930,translated,medium,"work/ghidra/rel-d_basesNP/export/8079a930_FUN_8079a930.c; mask/layer toggle, 0x80799A50/0x80799B00 sibling walk, two 0x80C56xxx effect layers",src/game/bases.rs
+game::bases,807a7220,fn_807a7220,translated,medium,"work/ghidra/rel-d_basesNP/export/807a7220_FUN_807a7220.c; child 0x298 spawn, four message records, world/save/group cue picker, cue 0x35 suppressed",src/game/bases.rs
+game::bases,807b84c0,fn_807b84c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807b84c0_FUN_807b84c0.c; scene words, four player panes, stage frame offset, eight owner-slot allocations",src/game/bases.rs
+game::bases,8079ef10,fn_8079ef10,translated,high,"work/ghidra/rel-d_basesNP/export/8079ef10_FUN_8079ef10.c; constant predicate, li r3,1; blr",src/game/bases.rs
+game::bases,807982b0,fn_807982b0,translated,high,"work/ghidra/rel-d_basesNP/export/807982b0_FUN_807982b0.c; +0x254 countdown, zero re-seeds +0x102/+0x108 from +0x1DA then 0x80797810",src/game/bases.rs
+game::bases,80793bc0,fn_80793bc0,translated,high,"work/ghidra/rel-d_basesNP/export/80793bc0_FUN_80793bc0.c; 0x291 actor chain, low-nibble match against *(node+4) & 0xF",src/game/bases.rs
+game::bases,8079bce0,fn_8079bce0,translated,high,"work/ghidra/rel-d_basesNP/export/8079bce0_FUN_8079bce0.c; 0x8042A1A0 reset via 0x80799960 then +0x184 child release walk",src/game/bases.rs
+game::bases,8079c2c0,fn_8079c2c0,translated,high,"work/ghidra/rel-d_basesNP/export/8079c2c0_FUN_8079c2c0.c; optional 0x8079C330 step plus vtable +0x64 gate over 0x8079D3C0",src/game/bases.rs
+game::bases,80796a10,fn_80796a10,translated,high,"work/ghidra/rel-d_basesNP/export/80796a10_FUN_80796a10.c; +0x18C clear, +0x29C/+0x74 mode 4, +0x259 bit 0x10 split",src/game/bases.rs
+game::bases,8079bdf0,fn_8079bdf0,translated,high,"work/ghidra/rel-d_basesNP/export/8079bdf0_FUN_8079bdf0.c; 0x80354E60 slot bit OR-accumulated with 0x80781C50 over the +0x184 chain",src/game/bases.rs
+game::bases,80799c20,fn_80799c20,translated,high,"work/ghidra/rel-d_basesNP/export/80799c20_FUN_80799c20.c; 0x278 lookup, bit 16 selects 0x807BA810/0x807BA830, posts cue 0x2A",src/game/bases.rs

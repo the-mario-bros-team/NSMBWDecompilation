@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801da990,fn_801da990,translated,medium,"work/ghidra/main-gb/export/801da990_FUN_801da990.c; bounded wait around the 0x80227AE0 IOS submission with the 0x801DAA60 latch callback and a 500-period cutoff",src/runtime/dvd.rs
+runtime::dvd,801db2b0,fn_801db2b0,translated,medium,"work/ghidra/main-gb/export/801db2b0_FUN_801db2b0.c; vsnprintf front end for the NAND error log; stores the callback and step 1 then opens /shared2/test2/nanderr.log",src/runtime/dvd.rs
+runtime::dvd,801db3b0,fn_801db3b0,translated,medium,"work/ghidra/main-gb/export/801db3b0_FUN_801db3b0.c; nine-step asynchronous completion for the NAND error log: open seek read build line write read back close",src/runtime/dvd.rs
+runtime::dvd,801de010,fn_801de010,translated,medium,"work/ghidra/main-gb/export/801de010_FUN_801de010.c; two-record comparator with three debounce counter pairs and per-state thresholds",src/runtime/dvd.rs

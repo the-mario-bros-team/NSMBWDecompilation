@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,802418b0,fn_802418b0,translated,high,"work/ghidra/main-gb/export/802418b0_FUN_802418b0.c; flag 0x40 fills out[0..3] from sda2(-0x4ae8), otherwise copies secondary triplet +0x28/+0x38/+0x48",src/runtime/os.rs
+runtime::os,80241a00,fn_80241a00,translated,high,"work/ghidra/main-gb/export/80241a00_FUN_80241a00.c; neutral sda2(-0x4ae4) sets 0x18 or 0x1a, otherwise clears 0x1a and sets 0x10 when the three components are equal; then copies to +0x04/+0x08/+0x0C",src/runtime/os.rs
+runtime::os,80241be0,fn_80241be0,translated,high,"work/ghidra/main-gb/export/80241be0_FUN_80241be0.c; neutral sda2(-0x4ae8) sets 0x40/0x44/0x46 from bits 0x20/0x08, otherwise clears 0x46; then copies to +0x28/+0x38/+0x48",src/runtime/os.rs
+runtime::os,802425e0,fn_802425e0,translated,high,"work/ghidra/main-gb/export/802425e0_FUN_802425e0.c; u16 count +0x3C, relative body offset +0x14, stride 0x4C, entry tag +0x0C < count",src/runtime/os.rs
+runtime::os,80242630,fn_80242630,translated,high,"work/ghidra/main-gb/export/80242630_FUN_80242630.c; u16 count +0x3E, relative body offset +0x18, stride 0x1C, entry tag +0x0C < count",src/runtime/os.rs
+runtime::os,80242680,fn_80242680,translated,high,"work/ghidra/main-gb/export/80242680_FUN_80242680.c; u16 count +0x40, relative body offset +0x1C, stride 0x5C, entry tag +0x0C < count",src/runtime/os.rs
+runtime::os,80242b50,fn_80242b50,translated,high,"work/ghidra/main-gb/export/80242b50_FUN_80242b50.c; writes u16 0x8000 to count(+0x10) slots at base(+0x14), then 0x80249C60(container,4,0)",src/runtime/os.rs
+runtime::os,80242bf0,fn_80242bf0,translated,high,"work/ghidra/main-gb/export/80242bf0_FUN_80242bf0.c; guarded 0x80249A70(object,0), returns object",src/runtime/os.rs
+runtime::os,80243210,fn_80243210,translated,medium,"work/ghidra/main-gb/export/80243210_FUN_80243210.c; vtable[0x14]() result + 4; C drops the virtual-call argument registers",src/runtime/os.rs
+runtime::os,802432e0,fn_802432e0,translated,high,"work/ghidra/main-gb/export/802432e0_FUN_802432e0.c; countLeadingZeros(u16(base(+0x14)[index*2]) & 0xC000) >> 5",src/runtime/os.rs
+runtime::os,802433b0,fn_802433b0,translated,high,"work/ghidra/main-gb/export/802433b0_FUN_802433b0.c; writes vtable 0x8034E2B8, calls pointer at 0x8034E2FC, then 0x80249A70(object,0)",src/runtime/os.rs
+runtime::os,80243630,fn_80243630,translated,high,"work/ghidra/main-gb/export/80243630_FUN_80243630.c; vtable[0x40](container,index) for index < i32(+0x18)",src/runtime/os.rs
+runtime::os,8024a2d0,fn_8024a2d0,translated,high,"work/ghidra/main-gb/export/8024a2d0_FUN_8024a2d0.c; mode 0x801C7220 + flag 0x801C7250 select one of 0x803DEB00/803DEB80/803DEC00/803DEC80/803DED00/803DED80, + index*0x10",src/runtime/os.rs
+runtime::os,8024a530,fn_8024a530,translated,high,"work/ghidra/main-gb/export/8024a530_FUN_8024a530.c; copies len>>5 32-byte units, 16-unit 0x80 blocks first then 4-unit 0x20 units",src/runtime/os.rs
+runtime::os,80253990,fn_80253990,translated,high,"work/ghidra/main-gb/export/80253990_FUN_80253990.c; guarded copy of object +0x74/+0x78/+0x7C to out[0..3]",src/runtime/os.rs
+runtime::os,80253be0,fn_80253be0,translated,medium,"work/ghidra/main-gb/export/80253be0_FUN_80253be0.c; 0x801C0500(source,object) then flags(+0x70) |= 8",src/runtime/os.rs
+runtime::os,80253c70,fn_80253c70,translated,high,"work/ghidra/main-gb/export/80253c70_FUN_80253c70.c; +0xA8=1, six doubles narrowed to f32 at +0xBC/+0xC0/+0xC4/+0xC8/+0xB4/+0xB8, flags 0x40",src/runtime/os.rs
+runtime::os,80253d00,fn_80253d00,translated,high,"work/ghidra/main-gb/export/80253d00_FUN_80253d00.c; four doubles narrowed to f32 at +0xCC/+0xD0/+0xD4/+0xD8",src/runtime/os.rs
+runtime::os,80253d20,fn_80253d20,translated,high,"work/ghidra/main-gb/export/80253d20_FUN_80253d20.c; stores four words at +0xF4/+0xF8/+0xFC/+0x100",src/runtime/os.rs
+runtime::os,80253d40,fn_80253d40,translated,high,"work/ghidra/main-gb/export/80253d40_FUN_80253d40.c; stores two words at +0x104/+0x108",src/runtime/os.rs
+runtime::os,80253e00,fn_80253e00,translated,high,"work/ghidra/main-gb/export/80253e00_FUN_80253e00.c; two doubles narrowed to f32 at +0xEC/+0xF0",src/runtime/os.rs
+runtime::os,802544a0,fn_802544a0,translated,medium,"work/ghidra/main-gb/export/802544a0_FUN_802544a0.c; 0x801C9C60 with the four words at +0xF4/+0xF8/+0xFC/+0x100",src/runtime/os.rs
+runtime::os,802544d0,fn_802544d0,translated,medium,"work/ghidra/main-gb/export/802544d0_FUN_802544d0.c; 0x801C9D20 with the two words at +0x104/+0x108",src/runtime/os.rs
+runtime::os,8025f470,fn_8025f470,translated,high,"work/ghidra/main-gb/export/8025f470_FUN_8025f470.c; 0x801C66E0(state+4), then clears state bit 2",src/runtime/os.rs
+runtime::os,8025f690,fn_8025f690,translated,medium,"work/ghidra/main-gb/export/8025f690_FUN_8025f690.c; null-guarded 0x801C66F0(owner+4,block,block+4,block+8)",src/runtime/os.rs

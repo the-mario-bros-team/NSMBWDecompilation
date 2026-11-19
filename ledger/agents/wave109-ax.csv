@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801a9bc0,fn_801a9bc0,translated,high,"work/ghidra/main-gb/export/801a9bc0_FUN_801a9bc0.c; empty body; 0x7C78EBA6 = mtspr 952 (MMCR0),r3; blr",src/audio/ax.rs
+audio::ax,801a9bd0,fn_801a9bd0,translated,high,"work/ghidra/main-gb/export/801a9bd0_FUN_801a9bd0.c; empty body; 0x7C7CEBA6 = mtspr 956 (MMCR1),r3; blr",src/audio/ax.rs
+audio::ax,801a9be0,fn_801a9be0,translated,high,"work/ghidra/main-gb/export/801a9be0_FUN_801a9be0.c; empty body; 0x7C79EBA6 = mtspr 953 (PMC1),r3; blr",src/audio/ax.rs
+audio::ax,801a9bf0,fn_801a9bf0,translated,high,"work/ghidra/main-gb/export/801a9bf0_FUN_801a9bf0.c; empty body; 0x7C7AEBA6 = mtspr 954 (PMC2),r3; blr",src/audio/ax.rs
+audio::ax,801a9c00,fn_801a9c00,translated,high,"work/ghidra/main-gb/export/801a9c00_FUN_801a9c00.c; empty body; 0x7C7DEBA6 = mtspr 957 (PMC3),r3; blr",src/audio/ax.rs
+audio::ax,801a9c10,fn_801a9c10,translated,high,"work/ghidra/main-gb/export/801a9c10_FUN_801a9c10.c; empty body; 0x7C7EEBA6 = mtspr 958 (PMC4),r3; blr",src/audio/ax.rs

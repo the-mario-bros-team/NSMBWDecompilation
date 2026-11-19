@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a2ae10,fn_80a2ae10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2ae10_FUN_80a2ae10.c; 0x8015F800(state,0) plus 0x802B9280 when mode>0; the destructor the bomhei registration passes",src/game/enemies.rs
+game::enemies,80a2ae70,fn_80a2ae70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2ae70_FUN_80a2ae70.c; same literal sequence as 80a2ae10 at 92 bytes",src/game/enemies.rs
+game::enemies,80a2aed0,fn_80a2aed0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2aed0_FUN_80a2aed0.c; returns the shared state word 0x80358104",src/game/enemies.rs
+game::enemies,80a2aee0,fn_80a2aee0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2aee0_FUN_80a2aee0.c; returns 0x80352DB4; the extra word of the Carry record",src/game/enemies.rs
+game::enemies,80a2afd0,fn_80a2afd0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2afd0_FUN_80a2afd0.c; five +0x30 owner checks then recursion on the fifth owner",src/game/enemies.rs
+game::enemies,80a2b0b0,fn_80a2b0b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2b0b0_FUN_80a2b0b0.c; ':' trim with 0x802E1C40 plus compare 0x802E1AB4",src/game/enemies.rs
+game::enemies,80a2b170,fn_80a2b170,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a2b170_FUN_80a2b170.c; 48-byte 0x802DCBFC argument reshuffle",src/game/enemies.rs
+game::enemies,80a2b1a0,fn_80a2b1a0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a2b1a0_FUN_80a2b1a0.c; same 48-byte reshuffle as 80a2b170",src/game/enemies.rs
+game::enemies,80a2b1d0,fn_80a2b1d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2b1d0_FUN_80a2b1d0.c; 0x858-byte constructor; vtable 0x80B3B604 at +0x60",src/game/enemies.rs
+game::enemies,80a2b4c0,fn_80a2b4c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2b4c0_FUN_80a2b4c0.c; copies +0x5EC onto the child with a 4.0 Y drop",src/game/enemies.rs
+game::enemies,80a2b570,fn_80a2b570,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2b570_FUN_80a2b570.c; heading from +0x5EC to +0x61C via 0x801611C0 plus 0x4000",src/game/enemies.rs
+game::enemies,80a2b630,fn_80a2b630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2b630_FUN_80a2b630.c; +0x718 guard plus 0x80162D00 lookup plus +0x410 test",src/game/enemies.rs
+game::enemies,80a2b6d0,fn_80a2b6d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2b6d0_FUN_80a2b6d0.c; vtable +0xD4 to 0x80352BB4 then halves +0x6E0/+0x6DC",src/game/enemies.rs
+game::enemies,80a2b780,fn_80a2b780,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2b780_FUN_80a2b780.c; effect 0x6C with side|0xE0000 at +0x5EC minus 4.0",src/game/enemies.rs
+game::enemies,80a2bae0,fn_80a2bae0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2bae0_FUN_80a2bae0.c; +0x38C==1 contact report through +0x3FC with +0x298/+0x29C getters",src/game/enemies.rs
+game::enemies,80a2bbc0,fn_80a2bbc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2bbc0_FUN_80a2bbc0.c; mode 1 walks into 0x80A2BC50 with a clz-derived flag; mode 3 sets the +0x6F7 latch",src/game/enemies.rs
+game::enemies,80a2c100,fn_80a2c100,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2c100_FUN_80a2c100.c; 0x80198C30 positional sound 0x537",src/game/enemies.rs
+game::enemies,80a2c150,fn_80a2c150,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2c150_FUN_80a2c150.c; 0x80198C30 positional sound 0x538",src/game/enemies.rs
+game::enemies,80a2c1a0,fn_80a2c1a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2c1a0_FUN_80a2c1a0.c; byte-identical copy of 80a2c150",src/game/enemies.rs
+game::enemies,80a2c210,fn_80a2c210,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2c210_FUN_80a2c210.c; sets +0x6F7=1 and stores the word at +0x6F8",src/game/enemies.rs
+game::enemies,80a2c300,fn_80a2c300,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2c300_FUN_80a2c300.c; Carry entry: side bit 28; 1.0/-6.0/-0.15 seeds; (1-2*side)*0.8 weight",src/game/enemies.rs
+game::enemies,80a2d940,fn_80a2d940,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2d940_FUN_80a2d940.c; embedded model record at +0x40; vtable 0x803295D8 rewritten to 0x80329578",src/game/enemies.rs
+game::enemies,80a2d9b0,fn_80a2d9b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2d9b0_FUN_80a2d9b0.c; 0x801676A0(+0x40,-1) and 0x80169D20(this,-1) plus the free",src/game/enemies.rs
+game::enemies,80a2dc00,fn_80a2dc00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2dc00_FUN_80a2dc00.c; forwards id to the child's +0x3F4 slot",src/game/enemies.rs
+game::enemies,80a2dc30,fn_80a2dc30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2dc30_FUN_80a2dc30.c; byte-identical copy of 80a2dc00",src/game/enemies.rs
+game::enemies,80a2dcc0,fn_80a2dcc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a2dcc0_FUN_80a2dcc0.c; Wm_en_firesnk_icehit_h/icehitsmk_h at +0xB44 plus sound 0x1D1",src/game/enemies.rs

@@ -1,0 +1,18 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80070530,fn_80070530,translated,medium,"work/ghidra/main-gb/export/80070530_FUN_80070530.c; actor tag choice by +0x98/+0x99 and player +0xB0 ceiling; dead GQR prologue",src/game/stage.rs
+game::stage,800709c0,fn_800709c0,translated,medium,"work/ghidra/main-gb/export/800709c0_FUN_800709c0.c; tile scan unless param_5 & 0x80070BA0 mask; argument swap (param_4,param_3)",src/game/stage.rs
+game::stage,80070ef0,fn_80070ef0,translated,medium,"work/ghidra/main-gb/export/80070ef0_FUN_80070ef0.c; two-direction ground state into +0x88 with 0x400 blocked flag and +0xAC step",src/game/stage.rs
+game::stage,80071060,fn_80071060,translated,medium,"work/ghidra/main-gb/export/80071060_FUN_80071060.c; grid-end probe loop accumulating 1<<dir / 0x10<<dir bits",src/game/stage.rs
+game::stage,800717a0,fn_800717a0,translated,medium,"work/ghidra/main-gb/export/800717a0_FUN_800717a0.c; column tolerance + kind ladder 2/3/0x12 then 0x800CFEA0 area probe",src/game/stage.rs
+game::stage,80071dc0,fn_80071dc0,translated,medium,"work/ghidra/main-gb/export/80071dc0_FUN_80071dc0.c; six-point ground block + 0x802EF610 masks + +0xD0/+0xD4 stores",src/game/stage.rs
+game::stage,800722c0,fn_800722c0,translated,medium,"work/ghidra/main-gb/export/800722c0_FUN_800722c0.c; direction-dependent +0xA0 window walk of the scroll-layer list",src/game/stage.rs
+game::stage,80072440,fn_80072440,translated,medium,"work/ghidra/main-gb/export/80072440_FUN_80072440.c; slope walk with >>3/>>4 cell compares and 0x800789A0 camera start",src/game/stage.rs
+game::stage,80072790,fn_80072790,translated,medium,"work/ghidra/main-gb/export/80072790_FUN_80072790.c; +0xA4 height filter walk of the scroll-layer list with grid snap",src/game/stage.rs
+game::stage,800766f0,fn_800766f0,translated,medium,"work/ghidra/main-gb/export/800766f0_FUN_800766f0.c; mask/area walk returning the matched entry word",src/game/stage.rs
+game::stage,800768d0,fn_800768d0,translated,medium,"work/ghidra/main-gb/export/800768d0_FUN_800768d0.c; grid march + four-quad sweep + entry method at +0x40",src/game/stage.rs
+game::stage,80077860,fn_80077860,translated,medium,"work/ghidra/main-gb/export/80077860_FUN_80077860.c; tile command kind 2 to 4 upgrade and 0x8A/0x8B bit patches",src/game/stage.rs
+game::stage,80077b40,fn_80077b40,translated,medium,"work/ghidra/main-gb/export/80077b40_FUN_80077b40.c; three BG tile maps from the +0x8FE64 bounds plus 0x28-byte overlay node",src/game/stage.rs
+game::stage,80077eb0,fn_80077eb0,translated,medium,"work/ghidra/main-gb/export/80077eb0_FUN_80077eb0.c; BG tile map fill with Pa1_nohara effect remap into +0x8F480/+0x8F930",src/game/stage.rs
+game::stage,80078300,fn_80078300,translated,medium,"work/ghidra/main-gb/export/80078300_FUN_80078300.c; 256-entry 0x10-byte effect timer table and 0x239 effect spawn",src/game/stage.rs
+game::stage,80078670,fn_80078670,translated,medium,"work/ghidra/main-gb/export/80078670_FUN_80078670.c; four-player mask and near-camera z test with 0x7348/0x7344/0x7340 offsets",src/game/stage.rs
+game::stage,8007ca90,fn_8007ca90,translated,medium,"work/ghidra/main-gb/export/8007ca90_FUN_8007ca90.c; four-actor selector sorting through 0x802EF8B0 and table arms 0/1/2/3",src/game/stage.rs

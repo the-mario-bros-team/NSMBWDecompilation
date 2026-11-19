@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,8020885c,fn_8020885c,translated,medium,"work/ghidra/main-gb/export/8020885c_FUN_8020885c.c; BTM security connect gate, cache + originate or reject 0x0F",src/runtime/bt.rs
+runtime::bt,802089e4,fn_802089e4,translated,medium,"work/ghidra/main-gb/export/802089e4_FUN_802089e4.c; name report, clears state 1/4 and owner word",src/runtime/bt.rs
+runtime::bt,80208a98,fn_80208a98,translated,medium,"work/ghidra/main-gb/export/80208a98_FUN_80208a98.c; remote-name complete, 64-byte copy + deferred completion",src/runtime/bt.rs
+runtime::bt,80208d80,fn_80208d80,translated,medium,"work/ghidra/main-gb/export/80208d80_FUN_80208d80.c; auth complete, mode restore + queued pairing retry",src/runtime/bt.rs
+runtime::bt,802091c0,fn_802091c0,translated,medium,"work/ghidra/main-gb/export/802091c0_FUN_802091c0.c; encryption change, 0x23 arms collision timer",src/runtime/bt.rs
+runtime::bt,802092fc,fn_802092fc,translated,high,"work/ghidra/main-gb/export/802092fc_FUN_802092fc.c; authenticated-link test, record +0x81 bit 6",src/runtime/bt.rs
+runtime::bt,8020933c,fn_8020933c,translated,medium,"work/ghidra/main-gb/export/8020933c_FUN_8020933c.c; connect complete, record fill + procedure executor",src/runtime/bt.rs
+runtime::bt,802097bc,fn_802097bc,translated,medium,"work/ghidra/main-gb/export/802097bc_FUN_802097bc.c; start pairing, state 5 save/restore, returns 5/1/3/0",src/runtime/bt.rs
+runtime::bt,80209878,fn_80209878,translated,medium,"work/ghidra/main-gb/export/80209878_FUN_80209878.c; cancel procedure, timer cancel + five record clears",src/runtime/bt.rs
+runtime::bt,802099b4,fn_802099b4,translated,medium,"work/ghidra/main-gb/export/802099b4_FUN_802099b4.c; link-key notification, 16-byte key + deferred flag",src/runtime/bt.rs
+runtime::bt,80209b60,fn_80209b60,translated,medium,"work/ghidra/main-gb/export/80209b60_FUN_80209b60.c; link-key request, 0x040B reply or 0x040C negative",src/runtime/bt.rs
+runtime::bt,80209c90,fn_80209c90,translated,high,"work/ghidra/main-gb/export/80209c90_FUN_80209c90.c; PIN timeout, clear key slot + 0x040E",src/runtime/bt.rs
+runtime::bt,80209d04,fn_80209d04,translated,medium,"work/ghidra/main-gb/export/80209d04_FUN_80209d04.c; PIN request, default-PIN scan and bonding path",src/runtime/bt.rs
+runtime::bt,8020a060,fn_8020a060,translated,high,"work/ghidra/main-gb/export/8020a060_FUN_8020a060.c; u16 | 0x8000 into record +0x1A and inquiry entry",src/runtime/bt.rs
+runtime::bt,8020a490,fn_8020a490,translated,medium,"work/ghidra/main-gb/export/8020a490_FUN_8020a490.c; authorization step, 6-arg callback or name procedure",src/runtime/bt.rs
+runtime::bt,8020a5ac,fn_8020a5ac,translated,medium,"work/ghidra/main-gb/export/8020a5ac_FUN_8020a5ac.c; collision timeout, resume executor + pending callback",src/runtime/bt.rs
+runtime::bt,8020a68c,fn_8020a68c,translated,medium,"work/ghidra/main-gb/export/8020a68c_FUN_8020a68c.c; record +0x10 accessor, 0 when absent",src/runtime/bt.rs
+runtime::bt,8020cd34,fn_8020cd34,translated,medium,"work/ghidra/main-gb/export/8020cd34_FUN_8020cd34.c; HCI 0x0403 periodic inquiry, 9 params, reversed LAP",src/runtime/bt.rs
+runtime::bt,8020cdf4,fn_8020cdf4,translated,medium,"work/ghidra/main-gb/export/8020cdf4_FUN_8020cdf4.c; HCI 0x0405 create connection, 13 params",src/runtime/bt.rs
+runtime::bt,8020d0a4,fn_8020d0a4,translated,high,"work/ghidra/main-gb/export/8020d0a4_FUN_8020d0a4.c; HCI 0x040B link key reply, 22 params",src/runtime/bt.rs
+runtime::bt,8020d2e4,fn_8020d2e4,translated,high,"work/ghidra/main-gb/export/8020d2e4_FUN_8020d2e4.c; HCI 0x040D PIN code reply, length + 16-byte pad",src/runtime/bt.rs
+runtime::bt,8020d9ec,fn_8020d9ec,translated,medium,"work/ghidra/main-gb/export/8020d9ec_FUN_8020d9ec.c; HCI 0x0428 setup synchronous connection, 17 params",src/runtime/bt.rs
+runtime::bt,8020dae8,fn_8020dae8,translated,medium,"work/ghidra/main-gb/export/8020dae8_FUN_8020dae8.c; HCI 0x0429 accept synchronous connection, caller buffer",src/runtime/bt.rs
+runtime::bt,8020dce4,fn_8020dce4,translated,medium,"work/ghidra/main-gb/export/8020dce4_FUN_8020dce4.c; HCI 0x0803, ten params, optional caller buffer",src/runtime/bt.rs
+runtime::bt,8020e39c,fn_8020e39c,translated,medium,"work/ghidra/main-gb/export/8020e39c_FUN_8020e39c.c; HCI 0x0C11 write stored link key, 22-byte records",src/runtime/bt.rs

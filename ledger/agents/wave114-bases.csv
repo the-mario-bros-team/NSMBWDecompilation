@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80760070,fn_80760070,translated,medium,"work/ghidra/rel-d_basesNP/export/80760070_FUN_80760070.c; CS_W7 archive mount; CS_W7_Cloud model at +0x1A8/+0x1AC and clip +0x1B8; byte +0x1EC",src/game/bases.rs
+game::bases,807601a0,fn_807601a0,translated,high,"work/ghidra/rel-d_basesNP/export/807601a0_FUN_807601a0.c; 0x801C0BD0 + 0x8016EF50 rebuild +0x7C; writes part +0x1AC",src/game/bases.rs
+game::bases,80760250,fn_80760250,translated,high,"work/ghidra/rel-d_basesNP/export/80760250_FUN_80760250.c; origin reset from 0x80377DC8/CC/D0; tail call to 807602D0",src/game/bases.rs
+game::bases,807602d0,fn_807602d0,translated,high,"work/ghidra/rel-d_basesNP/export/807602d0_FUN_807602d0.c; clears the counter at +0x1F4",src/game/bases.rs
+game::bases,80760340,fn_80760340,translated,medium,"work/ghidra/rel-d_basesNP/export/80760340_FUN_80760340.c; twenty group01.. entries from 0x80814E60 into +0x1F8",src/game/bases.rs
+game::bases,807603d0,fn_807603d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807603d0_FUN_807603d0.c; slot walk 0x800FC560/0x8023B2A0/0x800FE040; bit 0x100 of clip +0x14",src/game/bases.rs
+game::bases,807605c0,fn_807605c0,translated,high,"work/ghidra/rel-d_basesNP/export/807605c0_FUN_807605c0.c; cobCourse door constructor; vtable 0x808150A0; 3 x 0x2C slots at +0x1B4",src/game/bases.rs
+game::bases,80760a80,fn_80760a80,translated,medium,"work/ghidra/rel-d_basesNP/export/80760a80_FUN_80760a80.c; class callback +0x60 slot 0x60; 0x80761880 called by address; slot +0x238",src/game/bases.rs
+game::bases,80760b50,fn_80760b50,translated,high,"work/ghidra/rel-d_basesNP/export/80760b50_FUN_80760b50.c; vtable +0x14 of part +0x1A8; returns 1",src/game/bases.rs
+game::bases,80760b90,fn_80760b90,translated,medium,"work/ghidra/rel-d_basesNP/export/80760b90_FUN_80760b90.c; cobCourse + g3d_model mount; cobCourseClear table 0x80815070; three slots",src/game/bases.rs
+game::bases,80760f40,fn_80760f40,translated,high,"work/ghidra/rel-d_basesNP/export/80760f40_FUN_80760f40.c; transform writer onto part +0x1A8",src/game/bases.rs
+game::bases,80760ff0,fn_80760ff0,translated,high,"work/ghidra/rel-d_basesNP/export/80760ff0_FUN_80760ff0.c; +0x240 state 0->1->2->3 gated by +0x23C",src/game/bases.rs
+game::bases,80761040,fn_80761040,translated,high,"work/ghidra/rel-d_basesNP/export/80761040_FUN_80761040.c; events 3/0x5E/0x93; delays 10 and 0x1F; effect 0x21 + cue 0x1F",src/game/bases.rs
+game::bases,80761260,fn_80761260,translated,medium,"work/ghidra/rel-d_basesNP/export/80761260_FUN_80761260.c; three-slot animation switch; 0x80168520 + part vtable +0x18; slot to +0x238",src/game/bases.rs
+game::bases,80761310,fn_80761310,translated,medium,"work/ghidra/rel-d_basesNP/export/80761310_FUN_80761310.c; open sequence 0->1->3->4; effect 0x21; 0x20C timer; 0x80761510 by address",src/game/bases.rs
+game::bases,80761480,fn_80761480,translated,medium,"work/ghidra/rel-d_basesNP/export/80761480_FUN_80761480.c; scan of 0xC0 type-0x27E actors; predicates 0x800FD7E0/0x800FD8A0",src/game/bases.rs
+game::bases,80761680,fn_80761680,translated,medium,"work/ghidra/rel-d_basesNP/export/80761680_FUN_80761680.c; type below 10 and 0x800FC470==0 selects animation slot 0",src/game/bases.rs
+game::bases,80761930,fn_80761930,translated,high,"work/ghidra/rel-d_basesNP/export/80761930_FUN_80761930.c; type byte 3 and world byte 0x8042A24D==2",src/game/bases.rs
+game::bases,80761a60,fn_80761a60,translated,high,"work/ghidra/rel-d_basesNP/export/80761a60_FUN_80761a60.c; pakkun constructor; vtable 0x80815248; parts +0x1AC/+0x1EC; 0x38 array +0x22C",src/game/bases.rs
+game::bases,80761b40,fn_80761b40,translated,high,"work/ghidra/rel-d_basesNP/export/80761b40_FUN_80761b40.c; seven releases then 0x80162920 when the second argument is positive",src/game/bases.rs
+game::bases,80761e60,fn_80761e60,translated,high,"work/ghidra/rel-d_basesNP/export/80761e60_FUN_80761e60.c; releases +0x2DC through vtable slot +8 with flag 1",src/game/bases.rs
+game::bases,80761eb0,fn_80761eb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80761eb0_FUN_80761eb0.c; pakkun + g3d_pakkun_brres mount; cs_wait clip; 0x80169D90 sizes 0x224 and 0x20",src/game/bases.rs
+game::bases,80762000,fn_80762000,translated,medium,"work/ghidra/rel-d_basesNP/export/80762000_FUN_80762000.c; single vtable +0x1C call on part +0x1AC",src/game/bases.rs
+game::bases,807621b0,fn_807621b0,translated,high,"work/ghidra/rel-d_basesNP/export/807621b0_FUN_807621b0.c; offset add 0x80815210..18; heading 0x4000; tint 0x808151D0",src/game/bases.rs
+game::bases,80762240,fn_80762240,translated,high,"work/ghidra/rel-d_basesNP/export/80762240_FUN_80762240.c; clears the counter at +0x2BC",src/game/bases.rs
+game::bases,807623d0,fn_807623d0,translated,high,"work/ghidra/rel-d_basesNP/export/807623d0_FUN_807623d0.c; minimal constructor; vtable 0x808153A8; holder +0x188 and part +0x1A4",src/game/bases.rs
+game::bases,807626a0,fn_807626a0,translated,high,"work/ghidra/rel-d_basesNP/export/807626a0_FUN_807626a0.c; constructor vtable 0x80815560; 0x38 array +0x1EC and 0x2C array +0x224",src/game/bases.rs
+game::bases,80762890,fn_80762890,translated,medium,"work/ghidra/rel-d_basesNP/export/80762890_FUN_80762890.c; per-frame body; 0x802DCBFC stub; 0x80762CE0 and 0x80762B20 by address",src/game/bases.rs
+game::bases,80762b30,fn_80762b30,translated,high,"work/ghidra/rel-d_basesNP/export/80762b30_FUN_80762b30.c; transform writer with the part passed in",src/game/bases.rs

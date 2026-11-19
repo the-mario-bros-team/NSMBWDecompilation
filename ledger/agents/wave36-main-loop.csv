@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e8e54,fn_802e8e54,translated,high,"work/ghidra/main-gb/export/802e8e54_FUN_802e8e54.c; debugger main wrapper init then banner then dispatch loop",src/engine/main_loop.rs
+engine::main_loop,802e8e90,fn_802e8e90,translated,low,"work/ghidra/main-gb/export/802e8e90_FUN_802e8e90.c; dispatch loop until type 1 event uninitialised local_10 and no-arg 91e0 call",src/engine/main_loop.rs
+engine::main_loop,802e9430,fn_802e9430,translated,medium,"work/ghidra/main-gb/export/802e9430_FUN_802e9430.c; address map via r13-0x4658 window and 80427478 flag",src/engine/main_loop.rs
+engine::main_loop,802e95cc,fn_802e95cc,translated,low,"work/ghidra/main-gb/export/802e95cc_FUN_802e95cc.c; sets 80427230 and address base void callee return is indeterminate",src/engine/main_loop.rs
+engine::main_loop,802e9614,fn_802e9614,translated,high,"work/ghidra/main-gb/export/802e9614_FUN_802e9614.c; calls 801B3CC0 with three zeros",src/engine/main_loop.rs
+engine::main_loop,802e9624,fn_802e9624,translated,medium,"work/ghidra/main-gb/export/802e9624_FUN_802e9624.c; flag-gated snapshot then eight-arg call to 802EC9CC",src/engine/main_loop.rs
+engine::main_loop,802e96ac,fn_802e96ac,translated,medium,"work/ghidra/main-gb/export/802e96ac_FUN_802e96ac.c; calls 801B4BB0 then 802E9624 with 0x500",src/engine/main_loop.rs
+engine::main_loop,802e9820,fn_802e9820,translated,medium,"work/ghidra/main-gb/export/802e9820_FUN_802e9820.c; invokes handler slots 804256D0 and 804256E8",src/engine/main_loop.rs
+engine::main_loop,802e9874,fn_802e9874,translated,medium,"work/ghidra/main-gb/export/802e9874_FUN_802e9874.c; guard byte then indirect call via 804256D4 jumptable",src/engine/main_loop.rs
+engine::main_loop,802e98a0,fn_802e98a0,translated,medium,"work/ghidra/main-gb/export/802e98a0_FUN_802e98a0.c; unconditional indirect call via 804256DC",src/engine/main_loop.rs
+engine::main_loop,802e98b4,fn_802e98b4,translated,medium,"work/ghidra/main-gb/export/802e98b4_FUN_802e98b4.c; poll via 804256E0 returns 0 or -1",src/engine/main_loop.rs
+engine::main_loop,802e98f0,fn_802e98f0,translated,medium,"work/ghidra/main-gb/export/802e98f0_FUN_802e98f0.c; poll via 804256E4 returns 0 or -1",src/engine/main_loop.rs
+engine::main_loop,802e992c,fn_802e992c,translated,medium,"work/ghidra/main-gb/export/802e992c_FUN_802e992c.c; unconditional indirect call via 804256F4",src/engine/main_loop.rs
+engine::main_loop,802e9940,fn_802e9940,translated,medium,"work/ghidra/main-gb/export/802e9940_FUN_802e9940.c; unconditional indirect call via 804256F0",src/engine/main_loop.rs
+engine::main_loop,802e9954,fn_802e9954,translated,high,"work/ghidra/main-gb/export/802e9954_FUN_802e9954.c; print via 8015F730 with format 803514D5",src/engine/main_loop.rs
+engine::main_loop,802e996c,fn_802e996c,translated,medium,"work/ghidra/main-gb/export/802e996c_FUN_802e996c.c; copies r2-0x34C0 word then services 801AC560 and 801AC470",src/engine/main_loop.rs
+engine::main_loop,802e9a50,fn_802e9a50,translated,high,"work/ghidra/main-gb/export/802e9a50_FUN_802e9a50.c; zeroes event count and head sets sequence 0x100",src/engine/main_loop.rs
+engine::main_loop,802e9a74,fn_802e9a74,translated,high,"work/ghidra/main-gb/export/802e9a74_FUN_802e9a74.c; dequeues 12-byte head slot advances ring",src/engine/main_loop.rs
+engine::main_loop,802e9b00,fn_802e9b00,translated,high,"work/ghidra/main-gb/export/802e9b00_FUN_802e9b00.c; enqueues at head plus count mod 2 with sequence stamp",src/engine/main_loop.rs
+engine::main_loop,802e9bcc,fn_802e9bcc,translated,high,"work/ghidra/main-gb/export/802e9bcc_FUN_802e9bcc.c; fills 12-byte task triple value 0 -1",src/engine/main_loop.rs
+engine::main_loop,802e9bec,fn_802e9bec,translated,high,"work/ghidra/main-gb/export/802e9bec_FUN_802e9bec.c; seven-step init sequence with unconditional 996C step",src/engine/main_loop.rs
+engine::main_loop,802e9c98,fn_802e9c98,translated,high,"work/ghidra/main-gb/export/802e9c98_FUN_802e9c98.c; calls 9E7C stub then returns 0",src/engine/main_loop.rs
+engine::main_loop,802e9cbc,fn_802e9cbc,translated,high,"work/ghidra/main-gb/export/802e9cbc_FUN_802e9cbc.c; prints MetroTRK for Revolution v0.4 banner",src/engine/main_loop.rs
+engine::main_loop,802e9e08,fn_802e9e08,translated,high,"work/ghidra/main-gb/export/802e9e08_FUN_802e9e08.c; polls 9D3C unless -1 posts type 2 task",src/engine/main_loop.rs
+engine::main_loop,802e9e34,fn_802e9e34,translated,high,"work/ghidra/main-gb/export/802e9e34_FUN_802e9e34.c; builds 2 0 id task and enqueues it",src/engine/main_loop.rs
+engine::main_loop,802e9e74,fn_802e9e74,translated,high,"work/ghidra/main-gb/export/802e9e74_FUN_802e9e74.c; returns 0",src/engine/main_loop.rs
+engine::main_loop,802e9e7c,fn_802e9e7c,translated,high,"work/ghidra/main-gb/export/802e9e7c_FUN_802e9e7c.c; returns 0",src/engine/main_loop.rs
+engine::main_loop,802e9e84,fn_802e9e84,translated,high,"work/ghidra/main-gb/export/802e9e84_FUN_802e9e84.c; strlen loops to first zero byte",src/engine/main_loop.rs

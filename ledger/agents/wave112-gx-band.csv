@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,80296160,fn_80296160,translated,medium,"work/ghidra/main-gb/export/80296160_FUN_80296160.c; sine/cosine table sample at 0x802F74A0 (16-byte rows, 256/(2*pi) scale at 0x8042ECF8, 65536.0 reduction at 0x8042ED20); GQR3 index width inferred u8/scale 0",src/render/gx_band.rs
+render::gx_band,802961e0,fn_802961e0,translated,medium,"work/ghidra/main-gb/export/802961e0_FUN_802961e0.c; same table sample split across two output pointers; cos stored first via ps_merge10, sin negated for negative angles; GQR3 index width inferred u8/scale 0",src/render/gx_band.rs

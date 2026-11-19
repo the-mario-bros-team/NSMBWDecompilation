@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801a9c90,fn_801a9c90,translated,high,work/ghidra/main-gb/export/801a9c90_FUN_801a9c90.c; single sync barrier,src/audio/ax.rs
+audio::ax,801a9e70,fn_801a9e70,translated,high,work/ghidra/main-gb/export/801a9e70_FUN_801a9e70.c; RTC counter pair decoded into an 8-byte BCD timestamp record,src/audio/ax.rs
+audio::ax,801ab1b0,fn_801ab1b0,translated,high,work/ghidra/main-gb/export/801ab1b0_FUN_801ab1b0.c; low byte of the DI status register 0xCD006024,src/audio/ax.rs
+audio::ax,801ab1c0,fn_801ab1c0,translated,medium,work/ghidra/main-gb/export/801ab1c0_FUN_801ab1c0.c; varargs report through the fixed format at r13-0x61A4,src/audio/ax.rs
+audio::ax,801ab1d0,fn_801ab1d0,translated,high,work/ghidra/main-gb/export/801ab1d0_FUN_801ab1d0.c; copies the 4-byte machine code into the static buffer and NUL-terminates it,src/audio/ax.rs
+audio::ax,801ab260,fn_801ab260,translated,high,work/ghidra/main-gb/export/801ab260_FUN_801ab260.c; returns 0x40 when r13-0x5048 is set else the byte at 0x80003184,src/audio/ax.rs
+audio::ax,801abcf0,fn_801abcf0,translated,medium,work/ghidra/main-gb/export/801abcf0_FUN_801abcf0.c; JAI block unlink from the r13-0x4FEC bucket then insert into the free list; dropped r4 inferred as data-0x20,src/audio/ax.rs
+audio::ax,801abd70,fn_801abd70,translated,high,work/ghidra/main-gb/export/801abd70_FUN_801abd70.c; swaps the SDA word at r13-0x6188,src/audio/ax.rs
+audio::ax,801abe60,fn_801abe60,translated,high,work/ghidra/main-gb/export/801abe60_FUN_801abe60.c; reads the arena word at r13-0x4FE8,src/audio/ax.rs
+audio::ax,801abe70,fn_801abe70,translated,high,work/ghidra/main-gb/export/801abe70_FUN_801abe70.c; reads the arena word at r13-0x4FE4,src/audio/ax.rs
+audio::ax,801abe80,fn_801abe80,translated,high,work/ghidra/main-gb/export/801abe80_FUN_801abe80.c; alias read of the arena word at r13-0x4FE8,src/audio/ax.rs
+audio::ax,801abe90,fn_801abe90,translated,high,work/ghidra/main-gb/export/801abe90_FUN_801abe90.c; reads the arena low bound at r13-0x6180,src/audio/ax.rs
+audio::ax,801abea0,fn_801abea0,translated,high,work/ghidra/main-gb/export/801abea0_FUN_801abea0.c; reads the arena high bound at r13-0x617C,src/audio/ax.rs
+audio::ax,801abeb0,fn_801abeb0,translated,high,work/ghidra/main-gb/export/801abeb0_FUN_801abeb0.c; alias read of the arena low bound at r13-0x6180,src/audio/ax.rs
+audio::ax,801abec0,fn_801abec0,translated,high,work/ghidra/main-gb/export/801abec0_FUN_801abec0.c; writes the arena word at r13-0x4FE8,src/audio/ax.rs
+audio::ax,801abed0,fn_801abed0,translated,high,work/ghidra/main-gb/export/801abed0_FUN_801abed0.c; writes the arena word at r13-0x4FE4,src/audio/ax.rs
+audio::ax,801abee0,fn_801abee0,translated,high,work/ghidra/main-gb/export/801abee0_FUN_801abee0.c; alias write of the arena word at r13-0x4FE8,src/audio/ax.rs
+audio::ax,801abef0,fn_801abef0,translated,high,work/ghidra/main-gb/export/801abef0_FUN_801abef0.c; writes the arena low bound at r13-0x6180,src/audio/ax.rs
+audio::ax,801abf00,fn_801abf00,translated,high,work/ghidra/main-gb/export/801abf00_FUN_801abf00.c; writes the arena high bound at r13-0x617C,src/audio/ax.rs
+audio::ax,801abf10,fn_801abf10,translated,high,work/ghidra/main-gb/export/801abf10_FUN_801abf10.c; alias write of the arena low bound at r13-0x6180,src/audio/ax.rs
+audio::ax,801abf20,fn_801abf20,translated,high,work/ghidra/main-gb/export/801abf20_FUN_801abf20.c; aligns a request out of the arena low bound; C precedence of minus before the mask preserved,src/audio/ax.rs
+audio::ax,801ac350,fn_801ac350,partial,medium,work/ghidra/main-gb/export/801ac350_FUN_801ac350.c; clears the DMA start bit and halts the DSP; three unreachable blocks dropped by Ghidra so the tail is only the exported spin,src/audio/ax.rs
+audio::ax,801ac770,fn_801ac770,translated,medium,work/ghidra/main-gb/export/801ac770_FUN_801ac770.c; walks a byte range in 0x1000-byte chunks through the three-register helper 0x801AC740,src/audio/ax.rs
+audio::ax,801ac810,fn_801ac810,translated,medium,work/ghidra/main-gb/export/801ac810_FUN_801ac810.c; returns (HID2 >> 24) & 0xF via runtime::os::get_hid2,src/audio/ax.rs
+audio::ax,801ac820,fn_801ac820,translated,medium,work/ghidra/main-gb/export/801ac820_FUN_801ac820.c; spins until the HID2 locked-cache field reaches the requested value,src/audio/ax.rs
+audio::ax,801acda0,fn_801acda0,translated,high,work/ghidra/main-gb/export/801acda0_FUN_801acda0.c; reads the absolute word at 0x800000D4,src/audio/ax.rs
+audio::ax,801add20,fn_801add20,translated,high,work/ghidra/main-gb/export/801add20_FUN_801add20.c; formats a zero-terminated UTF-16BE byte stream as lowercase hex,src/audio/ax.rs
+audio::ax,801afdb0,fn_801afdb0,translated,high,work/ghidra/main-gb/export/801afdb0_FUN_801afdb0.c; font-map lookup for the low byte and both double-byte ranges; index bases literal,src/audio/ax.rs

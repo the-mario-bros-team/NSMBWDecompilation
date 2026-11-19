@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80714150,fn_80714150,translated,high,"work/ghidra/rel-d_basesNP/export/80714150_FUN_80714150.c; generic state release with optional free",src/game/bases.rs
+game::bases,80714290,fn_80714290,translated,high,"work/ghidra/rel-d_basesNP/export/80714290_FUN_80714290.c; five-step +0x30 child descent with recursion tail",src/game/bases.rs
+game::bases,80714430,fn_80714430,translated,medium,"work/ghidra/rel-d_basesNP/export/80714430_FUN_80714430.c; forwards through the unresolved 0x802DCBFC stub",src/game/bases.rs
+game::bases,80714460,fn_80714460,translated,medium,"work/ghidra/rel-d_basesNP/export/80714460_FUN_80714460.c; second forwarder through 0x802DCBFC",src/game/bases.rs
+game::bases,80714490,fn_80714490,translated,high,"work/ghidra/rel-d_basesNP/export/80714490_FUN_80714490.c; allocates 0x890 bytes then runs the constructor",src/game/bases.rs
+game::bases,807144c0,fn_807144c0,translated,high,"work/ghidra/rel-d_basesNP/export/807144c0_FUN_807144c0.c; constructor with vtable 0x808071E0 and four controller arrays",src/game/bases.rs
+game::bases,80714640,fn_80714640,translated,high,"work/ghidra/rel-d_basesNP/export/80714640_FUN_80714640.c; returns the 0x807CCC40 * 0x807CCC14 product",src/game/bases.rs
+game::bases,80714a60,fn_80714a60,translated,high,"work/ghidra/rel-d_basesNP/export/80714a60_FUN_80714a60.c; ages the +0x888 timer and ticks interface/animation",src/game/bases.rs
+game::bases,80714b20,fn_80714b20,translated,high,"work/ghidra/rel-d_basesNP/export/80714b20_FUN_80714b20.c; writes the matrix from position and the +0x104 angle",src/game/bases.rs
+game::bases,80714c90,fn_80714c90,translated,medium,"work/ghidra/rel-d_basesNP/export/80714c90_FUN_80714c90.c; ping-pong fold of the +0x74C curve value",src/game/bases.rs
+game::bases,80714ce0,fn_80714ce0,translated,high,"work/ghidra/rel-d_basesNP/export/80714ce0_FUN_80714ce0.c; sets the +0x754 latch",src/game/bases.rs
+game::bases,80714cf0,fn_80714cf0,translated,high,"work/ghidra/rel-d_basesNP/export/80714cf0_FUN_80714cf0.c; clears the +0x754 latch",src/game/bases.rs
+game::bases,80714d00,fn_80714d00,translated,high,"work/ghidra/rel-d_basesNP/export/80714d00_FUN_80714d00.c; initialises the curve driver at +0x74C..+0x75C",src/game/bases.rs
+game::bases,80714d40,fn_80714d40,translated,medium,"work/ghidra/rel-d_basesNP/export/80714d40_FUN_80714d40.c; curve driver with +0x6AC/+0x740 rate shrink and restore",src/game/bases.rs
+game::bases,80714eb0,fn_80714eb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80714eb0_FUN_80714eb0.c; animation frame to +0x104 angle",src/game/bases.rs
+game::bases,80714f40,fn_80714f40,translated,high,"work/ghidra/rel-d_basesNP/export/80714f40_FUN_80714f40.c; spawns Wm_lu_liftspark at the lift position",src/game/bases.rs
+game::bases,80714fd0,fn_80714fd0,translated,medium,"work/ghidra/rel-d_basesNP/export/80714fd0_FUN_80714fd0.c; binds both animation tracks through 0x800E81B0",src/game/bases.rs
+game::bases,80715070,fn_80715070,translated,high,"work/ghidra/rel-d_basesNP/export/80715070_FUN_80715070.c; per-frame model and angle step",src/game/bases.rs
+game::bases,807150f0,fn_807150f0,translated,high,"work/ghidra/rel-d_basesNP/export/807150f0_FUN_807150f0.c; per-frame step plus the spark spawn",src/game/bases.rs
+game::bases,80715170,fn_80715170,translated,high,"work/ghidra/rel-d_basesNP/export/80715170_FUN_80715170.c; per-frame step with +0x75C rate decay",src/game/bases.rs
+game::bases,807151f0,fn_807151f0,translated,high,"work/ghidra/rel-d_basesNP/export/807151f0_FUN_807151f0.c; destructor with nine release calls",src/game/bases.rs
+game::bases,80715690,fn_80715690,translated,high,"work/ghidra/rel-d_basesNP/export/80715690_FUN_80715690.c; generic state release with optional free",src/game/bases.rs
+game::bases,80715810,fn_80715810,translated,high,"work/ghidra/rel-d_basesNP/export/80715810_FUN_80715810.c; allocates 0x7C8 bytes then runs the constructor",src/game/bases.rs
+game::bases,80715840,fn_80715840,translated,high,"work/ghidra/rel-d_basesNP/export/80715840_FUN_80715840.c; constructor with vtable 0x80807650 and magic holder +0x634",src/game/bases.rs
+game::bases,80715a60,fn_80715a60,translated,medium,"work/ghidra/rel-d_basesNP/export/80715a60_FUN_80715a60.c; player landing / kind 0xFE arming branch",src/game/bases.rs
+game::bases,80715c90,fn_80715c90,translated,medium,"work/ghidra/rel-d_basesNP/export/80715c90_FUN_80715c90.c; per-frame height compare and +0x698 flag",src/game/bases.rs
+game::bases,80715da0,fn_80715da0,translated,high,"work/ghidra/rel-d_basesNP/export/80715da0_FUN_80715da0.c; writes the matrix with the fixed rotation constants",src/game/bases.rs
+game::bases,80715ed0,fn_80715ed0,translated,high,"work/ghidra/rel-d_basesNP/export/80715ed0_FUN_80715ed0.c; spawns Wm_mo_pillarhit at the pillar position",src/game/bases.rs
+game::bases,80715f20,fn_80715f20,translated,medium,"work/ghidra/rel-d_basesNP/export/80715f20_FUN_80715f20.c; two-stage pillar arming with sound 0x573 and two effects",src/game/bases.rs
+game::bases,807160b0,fn_807160b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807160b0_FUN_807160b0.c; arms one pillar sub-effect with mode offsets",src/game/bases.rs

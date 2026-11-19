@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::bres,802389f0,fn_802389f0,translated,medium,"work/ghidra/main-gb/export/802389f0_FUN_802389f0.c; 6 doubles in f1..f6 plus 2 pointer words; one matrix inverse, one 12-float copy, 8 corners, 4+6 plane records and the AABB call are literal",src/resource/bres.rs

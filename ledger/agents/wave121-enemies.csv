@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a70e20,fn_80a70e20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a70e20_FUN_80a70e20.c; stage x-band test via the 0x8006CED0 world-position query",src/game/enemies.rs
+game::enemies,80a70f40,fn_80a70f40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a70f40_FUN_80a70f40.c; heading sin/cos scaled by +0x10C into +0xF0/+0xE8",src/game/enemies.rs
+game::enemies,80a715e0,fn_80a715e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a715e0_FUN_80a715e0.c; walk_normal per-segment binder, five bias-encoded frame words",src/game/enemies.rs
+game::enemies,80a71700,fn_80a71700,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a71700_FUN_80a71700.c; walk_angly per-segment binder, five bias-encoded frame words",src/game/enemies.rs
+game::enemies,80a71aa0,fn_80a71aa0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a71aa0_FUN_80a71aa0.c; chain frame handler, +0x28 slot and +0x88 drop per segment",src/game/enemies.rs
+game::enemies,80a71c60,fn_80a71c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a71c60_FUN_80a71c60.c; Wm_en_hanapetal spawn plus 1.5 turn/timer scale",src/game/enemies.rs
+game::enemies,80a71f40,fn_80a71f40,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a71f40_FUN_80a71f40.c; chain frame handler plus the 0x4B turn countdown at +0x944",src/game/enemies.rs
+game::enemies,80a74570,fn_80a74570,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a74570_FUN_80a74570.c; shared (blend, actor, clip, flag) clip player",src/game/enemies.rs
+game::enemies,80a74600,fn_80a74600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a74600_FUN_80a74600.c; Turn descriptor query, walk at 4.0, +0x67C timer and per-variant speed",src/game/enemies.rs
+game::enemies,80a74a20,fn_80a74a20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a74a20_FUN_80a74a20.c; {throw_L, throw_R} table at frame 4.0, phase 1",src/game/enemies.rs
+game::enemies,80a74da0,fn_80a74da0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a74da0_FUN_80a74da0.c; jump_st clip at frame 4.0",src/game/enemies.rs
+game::enemies,80a74f20,fn_80a74f20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a74f20_FUN_80a74f20.c; {jump_throw_L, jump_throw_R} table, +0xEC 5.5",src/game/enemies.rs
+game::enemies,80a75190,fn_80a75190,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a75190_FUN_80a75190.c; jump_ed clip, three speed words zeroed",src/game/enemies.rs
+game::enemies,80a752e0,fn_80a752e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a752e0_FUN_80a752e0.c; jump_attack clip, +0xEC 5.75",src/game/enemies.rs
+game::enemies,80a754b0,fn_80a754b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a754b0_FUN_80a754b0.c; jump_attack_ed clip, phase word untouched",src/game/enemies.rs
+game::enemies,80a7a170,fn_80a7a170,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7a170_FUN_80a7a170.c; eight-row node refresh over the 0x80B2E068 id table plus node 0x15",src/game/enemies.rs
+game::enemies,80a7a2c0,fn_80a7a2c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7a2c0_FUN_80a7a2c0.c; clip-rate speed (32.0 * +0xDC) / (blend / rate)",src/game/enemies.rs
+game::enemies,80a7a360,fn_80a7a360,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7a360_FUN_80a7a360.c; arms +0xE7C with blend / rate",src/game/enemies.rs
+game::enemies,80a7a3c0,fn_80a7a3c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7a3c0_FUN_80a7a3c0.c; steps the +0xE7C countdown by the clip rate",src/game/enemies.rs
+game::enemies,80a7a860,fn_80a7a860,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7a860_FUN_80a7a860.c; +0x64C/+0x67C placement with the 64.0 * +0xDC step",src/game/enemies.rs
+game::enemies,80a7aef0,fn_80a7aef0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7aef0_FUN_80a7aef0.c; 0x16-node x-extent compared with 16.0",src/game/enemies.rs
+game::enemies,80a7d030,fn_80a7d030,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7d030_FUN_80a7d030.c; returns the shared word 0x80357BF4",src/game/enemies.rs
+game::enemies,80a7d040,fn_80a7d040,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7d040_FUN_80a7d040.c; returns the shared word 0x80357BB4",src/game/enemies.rs
+game::enemies,80a7d2d0,fn_80a7d2d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7d2d0_FUN_80a7d2d0.c; 48-byte 0x802DCBFC state forwarder",src/game/enemies.rs
+game::enemies,80a7d300,fn_80a7d300,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7d300_FUN_80a7d300.c; 48-byte 0x802DCBFC state forwarder",src/game/enemies.rs
+game::enemies,80a7d760,fn_80a7d760,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7d760_FUN_80a7d760.c; three-phase throw handler, switch to 0x80352CB4",src/game/enemies.rs
+game::enemies,80a7dc90,fn_80a7dc90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7dc90_FUN_80a7dc90.c; 48-byte 0x802DCBFC state forwarder",src/game/enemies.rs
+game::enemies,80a7dcc0,fn_80a7dcc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7dcc0_FUN_80a7dcc0.c; 48-byte 0x802DCBFC state forwarder",src/game/enemies.rs

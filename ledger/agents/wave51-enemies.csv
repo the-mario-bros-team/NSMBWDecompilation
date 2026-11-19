@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ad0070,fn_80ad0070,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0070_FUN_80ad0070.c; retire path via 0x800387D0 and the 0x80353AA4 state-name test",src/game/enemies.rs
+game::enemies,80ad01b0,fn_80ad01b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad01b0_FUN_80ad01b0.c; quicksand-column probe: 0x8000 flag plus ground code 3",src/game/enemies.rs
+game::enemies,80ad0240,fn_80ad0240,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0240_FUN_80ad0240.c; spawns the Wm_en_quicksand effect through vtable slot +0xA0",src/game/enemies.rs
+game::enemies,80ad0440,fn_80ad0440,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad0440_FUN_80ad0440.c; matrix rebuild from position and the +0x100 rotation triple; two helper roles inferred from call shape",src/game/enemies.rs
+game::enemies,80ad0690,fn_80ad0690,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad0690_FUN_80ad0690.c; side turn through 0x80064A30 and the +0x30C class slot; direction encoding inferred",src/game/enemies.rs
+game::enemies,80ad0740,fn_80ad0740,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0740_FUN_80ad0740.c; eleven box words and the five-argument collision binder 0x8006D090",src/game/enemies.rs
+game::enemies,80ad07d0,fn_80ad07d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad07d0_FUN_80ad07d0.c; 0x80B763F0 state test then negate the +0xE8 speed",src/game/enemies.rs
+game::enemies,80ad0860,fn_80ad0860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0860_FUN_80ad0860.c; +0x304 angle step and the 0x80B3081C target clamp",src/game/enemies.rs
+game::enemies,80ad0900,fn_80ad0900,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0900_FUN_80ad0900.c; direction byte and per-direction angle out-parameters",src/game/enemies.rs
+game::enemies,80ad0920,fn_80ad0920,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0920_FUN_80ad0920.c; surface height plus the 0x8042BB20 variant offset",src/game/enemies.rs
+game::enemies,80ad0ab0,fn_80ad0ab0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad0ab0_FUN_80ad0ab0.c; fifteen-word quicksand block plus the 0x802DCA98 scroll callback; four table words have no proven role",src/game/enemies.rs
+game::enemies,80ad0c90,fn_80ad0c90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0c90_FUN_80ad0c90.c; two state-name misses then latch +0x8A4 and zero +0xE8..+0xF0",src/game/enemies.rs
+game::enemies,80ad0e00,fn_80ad0e00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0e00_FUN_80ad0e00.c; actor lookup 0x79 then read +0x394 as f32",src/game/enemies.rs
+game::enemies,80ad0e40,fn_80ad0e40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0e40_FUN_80ad0e40.c; bind clip into the +0x7F8/+0x83C holder pair",src/game/enemies.rs
+game::enemies,80ad0eb0,fn_80ad0eb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0eb0_FUN_80ad0eb0.c; bind clip into the +0x544/+0x588 holder pair",src/game/enemies.rs
+game::enemies,80ad0f20,fn_80ad0f20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad0f20_FUN_80ad0f20.c; forward ground code test and the 0x800757B0 Y-window probe",src/game/enemies.rs
+game::enemies,80ad1010,fn_80ad1010,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad1010_FUN_80ad1010.c; landing smoke selected by ground state code 0xC",src/game/enemies.rs
+game::enemies,80ad10a0,fn_80ad10a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad10a0_FUN_80ad10a0.c; four controller name tests then walkA and the walk-state stores",src/game/enemies.rs
+game::enemies,80ad1240,fn_80ad1240,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad1240_FUN_80ad1240.c; main walk step with the signed-byte 2^52 conversion and two state changes",src/game/enemies.rs
+game::enemies,80ad1490,fn_80ad1490,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad1490_FUN_80ad1490.c; reset the +0x588 holder and two motion words",src/game/enemies.rs
+game::enemies,80ad16a0,fn_80ad16a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad16a0_FUN_80ad16a0.c; base steps then the +0x2E4 contact query",src/game/enemies.rs
+game::enemies,80ad17a0,fn_80ad17a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad17a0_FUN_80ad17a0.c; base steps then leave when the target distance is below 0x80B30894",src/game/enemies.rs
+game::enemies,80ad1860,fn_80ad1860,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad1860_FUN_80ad1860.c; walkA entry with the +0x500 frame limit",src/game/enemies.rs
+game::enemies,80ad1920,fn_80ad1920,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ad1920_FUN_80ad1920.c; resolve +0x368 through 0x80162D00 then copy one byte and enter 0x80353A64",src/game/enemies.rs
+game::enemies,80ad19c0,fn_80ad19c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad19c0_FUN_80ad19c0.c; BGM walk clip plus the three-frame countdown",src/game/enemies.rs
+game::enemies,80ad1a50,fn_80ad1a50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad1a50_FUN_80ad1a50.c; walk-in countdown and the 0x80B764F0 entry",src/game/enemies.rs
+game::enemies,80ad1b20,fn_80ad1b20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad1b20_FUN_80ad1b20.c; four-frame turn start toward the per-direction angle",src/game/enemies.rs
+game::enemies,80ad1bb0,fn_80ad1bb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad1bb0_FUN_80ad1bb0.c; four-frame turn step and final snap into 0x80B763B0",src/game/enemies.rs
+game::enemies,80ad1df0,fn_80ad1df0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ad1df0_FUN_80ad1df0.c; 0x80B763B0 state test then reverse into 0x80B763F0",src/game/enemies.rs

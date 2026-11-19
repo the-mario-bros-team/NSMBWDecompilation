@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a69010,fn_80a69010,translated,high,work/ghidra/rel-d_enemiesNP/export/80a69010_FUN_80a69010.c; dispose callback 0x8015F800 + optional 0x802B9280,src/game/enemies.rs
+game::enemies,80a69190,fn_80a69190,translated,high,work/ghidra/rel-d_enemiesNP/export/80a69190_FUN_80a69190.c; alloc 0x6A8; base 0x80094E80; class 0x80B49884; holders +0x524/+0x544/+0x594/+0x5C4/+0x5F0,src/game/enemies.rs
+game::enemies,80a69270,fn_80a69270,translated,high,work/ghidra/rel-d_enemiesNP/export/80a69270_FUN_80a69270.c; loads g3d/daikonbouBig.brres 0x80B49854; binds daikonbouBig 0x80B4986C and spine 0x80B4987C,src/game/enemies.rs
+game::enemies,80a695a0,fn_80a695a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a695a0_FUN_80a695a0.c; max(0, +0xB0 - 0x800B30E0) narrowed through f32",src/game/enemies.rs
+game::enemies,80a69600,fn_80a69600,translated,high,work/ghidra/rel-d_enemiesNP/export/80a69600_FUN_80a69600.c; distance outside +0xAC +/- 96.0 using 0x800B30C0,src/game/enemies.rs
+game::enemies,80a69670,fn_80a69670,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a69670_FUN_80a69670.c; +4 bit20 clear -> 0x2E4 with /1728.0; set -> 0x2DF with /288.0 when s16 < 600",src/game/enemies.rs
+game::enemies,80a697a0,fn_80a697a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a697a0_FUN_80a697a0.c; 0x801995A0 owner *actor; ids 0x2E5/0x2E0; same divisors",src/game/enemies.rs
+game::enemies,80a69a00,fn_80a69a00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a69a00_FUN_80a69a00.c; 0x801995A0 owner *actor; ids 0x2E7/0x2E2; same divisors",src/game/enemies.rs
+game::enemies,80a6a290,fn_80a6a290,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6a290_FUN_80a6a290.c; dispose callback; byte-identical to 80a69010,src/game/enemies.rs
+game::enemies,80a6a350,fn_80a6a350,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6a350_FUN_80a6a350.c; returns 80353c64,src/game/enemies.rs
+game::enemies,80a6a360,fn_80a6a360,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6a360_FUN_80a6a360.c; returns 80353be4,src/game/enemies.rs
+game::enemies,80a6a450,fn_80a6a450,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a6a450_FUN_80a6a450.c; +0x30 child chain; vtable +0xC filter; unrolled checks folded to a loop,src/game/enemies.rs
+game::enemies,80a6a530,fn_80a6a530,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a6a530_FUN_80a6a530.c; 0x802E1C40 ':' suffix compare with vtable +0x20 name,src/game/enemies.rs
+game::enemies,80a6a650,fn_80a6a650,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6a650_FUN_80a6a650.c; alloc 0x6A8; class 0x80B49CB4; holder sequence same as 80a69190,src/game/enemies.rs
+game::enemies,80a6a730,fn_80a6a730,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6a730_FUN_80a6a730.c; loads g3d/daikonbouBig.brres; weights 0x80B2D7C8/0x80B2D7CC,src/game/enemies.rs
+game::enemies,80a6a9c0,fn_80a6a9c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a6a9c0_FUN_80a6a9c0.c; 0x800954A0 then scene 0x80429E00 +0x38/+0x40 +/- 80.0",src/game/enemies.rs
+game::enemies,80a6aa60,fn_80a6aa60,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6aa60_FUN_80a6aa60.c; distance outside +0xAC +/- 96.0,src/game/enemies.rs
+game::enemies,80a6aad0,fn_80a6aad0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6aad0_FUN_80a6aad0.c; max(0, 0x800B30E0 - +0xB0)",src/game/enemies.rs
+game::enemies,80a6ab30,fn_80a6ab30,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6ab30_FUN_80a6ab30.c; 0x2E4/0x2DF with divisors 1728.0/288.0,src/game/enemies.rs
+game::enemies,80a6ac60,fn_80a6ac60,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6ac60_FUN_80a6ac60.c; 0x801995A0 ids 0x2E5/0x2E0,src/game/enemies.rs
+game::enemies,80a6aec0,fn_80a6aec0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6aec0_FUN_80a6aec0.c; 0x801995A0 ids 0x2E7/0x2E2,src/game/enemies.rs
+game::enemies,80a6b420,fn_80a6b420,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6b420_FUN_80a6b420.c; releases +0x5F0/+0x5B8/+0x588/+0x544/+0x524; base 0x80095130; mode>0 -> 0x80162920",src/game/enemies.rs
+game::enemies,80a6ba60,fn_80a6ba60,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6ba60_FUN_80a6ba60.c; alloc 0x630; class 0x80B4A110; holders +0x524/+0x544/+0x584/+0x5C8/+0x5F4,src/game/enemies.rs
+game::enemies,80a6bd30,fn_80a6bd30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a6bd30_FUN_80a6bd30.c; 0x80064AF0 angles +0x100..+0x104; 0x801C0BD0 three f64 + matrix +0x7C; block +0x464..+0x46C",src/game/enemies.rs
+game::enemies,80a6be30,fn_80a6be30,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a6be30_FUN_80a6be30.c; +0x38C 1/2 -> copy vtable +0x6C byte to +0x622,src/game/enemies.rs
+game::enemies,80a6be90,fn_80a6be90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6be90_FUN_80a6be90.c; counter 0x80429F10+0x134; slot 1..8; 0x800B34D0 frame table 0x80B2D888; 0x24C/0x1A5 or 0x245..0x24B",src/game/enemies.rs
+game::enemies,80a6c0e0,fn_80a6c0e0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a6c0e0_FUN_80a6c0e0.c; prologue 0x802DCD74 -> actor param; loads g3d/kinopio_balloon.brres 0x80B4A0C8 and wait 0x80B4A0F8,src/game/enemies.rs
+game::enemies,80a6c2f0,fn_80a6c2f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a6c2f0_FUN_80a6c2f0.c; +0x628 guard; Wm_en_burst_ss 0x80B4A100; effect 0x244; +0x124=1; state 0x80B727B0",src/game/enemies.rs
+game::enemies,80a6c3e0,fn_80a6c3e0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6c3e0_FUN_80a6c3e0.c; calls 80a6be90; 0x80429CFA bit3 clear -> vtable +0x1C/+0x14 on +0x544/+0x5BC/+0x5E8,src/game/enemies.rs
+game::enemies,80a6c6c0,fn_80a6c6c0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a6c6c0_FUN_80a6c6c0.c; dispose callback 0x8015F800 + optional 0x802B9280,src/game/enemies.rs

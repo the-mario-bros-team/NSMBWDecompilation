@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e890c,fn_802e890c,translated,medium,"work/ghidra/main-gb/export/802e890c_FUN_802e890c.c; bytes 0x0FE00000 twi 31,r0,0 + blr; trap gate, args r3..r6 and status in r3 inferred from fn_802ec0f4",src/engine/main_loop.rs
+engine::main_loop,802e8e1c,fn_802e8e1c,translated,high,"work/ghidra/main-gb/export/802e8e1c_FUN_802e8e1c.c; mask 0xFFFFFFF1, subf/add fold, dcbst/dcbf/sync/icbi per 8-byte step, isync tail",src/engine/main_loop.rs
+engine::main_loop,802ea4f8,fn_802ea4f8,translated,medium,"work/ghidra/main-gb/export/802ea4f8_FUN_802ea4f8.c; 96 registers stored to 0x804273E8..0x80427568 in export order; SPR numbers from the Ghidra register names",src/engine/main_loop.rs
+engine::main_loop,802ec1a0,fn_802ec1a0,translated,high,"work/ghidra/main-gb/export/802ec1a0_FUN_802ec1a0.c; empty export; bytes 0x7C6000A6 mfmsr r3 + blr",src/engine/main_loop.rs
+engine::main_loop,802ec1a8,fn_802ec1a8,translated,high,"work/ghidra/main-gb/export/802ec1a8_FUN_802ec1a8.c; empty export; bytes 0x7C600124 mtmsr r3 + blr",src/engine/main_loop.rs
+engine::main_loop,802ed6a4,fn_802ed6a4,translated,high,"work/ghidra/main-gb/export/802ed6a4_FUN_802ed6a4.c; mffs f31 + stfd f31,0(r3) with psq_st/psq_l save of f31; GQR0 ldexpf probes are paired-single artifacts",src/engine/main_loop.rs
+engine::main_loop,802ed6c8,fn_802ed6c8,translated,medium,"work/ghidra/main-gb/export/802ed6c8_FUN_802ed6c8.c; lfd f31,0(r3) + mtfsf 255,f31 removed as unreachable by Ghidra; recovered from raw words 0xCBE30000 and 0xFDFEFD8E",src/engine/main_loop.rs

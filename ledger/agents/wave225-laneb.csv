@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800aade0,fn_800aade0,translated,high,work/ghidra/main-gb/export/800aade0_FUN_800aade0.c,src/game/stage.rs
+game::stage,800ab590,fn_800ab590,translated,medium,work/ghidra/main-gb/export/800ab590_FUN_800ab590.c,src/game/stage.rs

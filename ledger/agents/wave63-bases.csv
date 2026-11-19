@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806f0bc0,fn_806f0bc0,translated,medium,"work/ghidra/rel-d_basesNP/export/806f0bc0_FUN_806f0bc0.c; resets both +0x610 motion records; returns 1",src/game/bases.rs
+game::bases,806f0d00,fn_806f0d00,translated,medium,"work/ghidra/rel-d_basesNP/export/806f0d00_FUN_806f0d00.c; two 0x800DB590 point-pair calls and record virtual +0xC",src/game/bases.rs
+game::bases,806f1110,fn_806f1110,translated,high,"work/ghidra/rel-d_basesNP/export/806f1110_FUN_806f1110.c; fills 256 halfwords at +0x752 with the +0x100 yaw",src/game/bases.rs
+game::bases,806f1140,fn_806f1140,translated,high,"work/ghidra/rel-d_basesNP/export/806f1140_FUN_806f1140.c; pushes yaw into the +0x954 ring and returns the index",src/game/bases.rs
+game::bases,806f1170,fn_806f1170,translated,medium,"work/ghidra/rel-d_basesNP/export/806f1170_FUN_806f1170.c; wheel distance / 0.6f -> history index; four i16 deltas",src/game/bases.rs
+game::bases,806f1340,fn_806f1340,translated,high,"work/ghidra/rel-d_basesNP/export/806f1340_FUN_806f1340.c; state 1 velocity integrate and state 2 zero-crossing event",src/game/bases.rs
+game::bases,806f1480,fn_806f1480,translated,medium,"work/ghidra/rel-d_basesNP/export/806f1480_FUN_806f1480.c; +0x72C countdown then event 0x8082E930",src/game/bases.rs
+game::bases,806f1560,fn_806f1560,translated,medium,"work/ghidra/rel-d_basesNP/export/806f1560_FUN_806f1560.c; settle state; +0x964 blink and 8-byte fill at +0x952",src/game/bases.rs
+game::bases,806f1d70,fn_806f1d70,translated,medium,"work/ghidra/rel-d_basesNP/export/806f1d70_FUN_806f1d70.c; box/plane stores; arms +0x394; spawns or kills",src/game/bases.rs
+game::bases,806f1e10,fn_806f1e10,translated,medium,"work/ghidra/rel-d_basesNP/export/806f1e10_FUN_806f1e10.c; per-frame driver; calls 806f1ea0 and 0x80064F50",src/game/bases.rs
+game::bases,806f1ea0,fn_806f1ea0,translated,high,"work/ghidra/rel-d_basesNP/export/806f1ea0_FUN_806f1ea0.c; +0x394 countdown; reload (flags>>8)&0xFFF0 then respawn",src/game/bases.rs
+game::bases,806f1ef0,fn_806f1ef0,translated,high,"work/ghidra/rel-d_basesNP/export/806f1ef0_FUN_806f1ef0.c; releases every node of the 0x801625B0 actor list",src/game/bases.rs
+game::bases,806f1f40,fn_806f1f40,translated,medium,"work/ghidra/rel-d_basesNP/export/806f1f40_FUN_806f1f40.c; retires nodes whose owner matches 0x8082E970",src/game/bases.rs
+game::bases,806f1fd0,fn_806f1fd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806f1fd0_FUN_806f1fd0.c; spawns actor 0x20F per +0x39C record; sets 96x64 box",src/game/bases.rs
+game::bases,806f2460,fn_806f2460,translated,medium,"work/ghidra/rel-d_basesNP/export/806f2460_FUN_806f2460.c; collects via 806f2710 then event 0x8082E9B0 or kill",src/game/bases.rs
+game::bases,806f2920,fn_806f2920,translated,high,"work/ghidra/rel-d_basesNP/export/806f2920_FUN_806f2920.c; returns 1 when a stage actor has a non-zero +0x958 byte",src/game/bases.rs
+game::bases,806f2990,fn_806f2990,translated,medium,"work/ghidra/rel-d_basesNP/export/806f2990_FUN_806f2990.c; +0x3D0 countdown or event 0x8082E9F0 when a rider is flagged",src/game/bases.rs
+game::bases,806f2a30,fn_806f2a30,translated,high,"work/ghidra/rel-d_basesNP/export/806f2a30_FUN_806f2a30.c; +0x3D4 countdown then 806f2560/806f25b0 and event 0x8082E9B0",src/game/bases.rs
+game::bases,806f2a90,fn_806f2a90,translated,high,"work/ghidra/rel-d_basesNP/export/806f2a90_FUN_806f2a90.c; destroys the 0x40x0x10 array at +0x3DC; optional delete",src/game/bases.rs
+game::bases,806f5220,fn_806f5220,translated,high,"work/ghidra/rel-d_basesNP/export/806f5220_FUN_806f5220.c; allocates 0x768 bytes and runs the base constructor",src/game/bases.rs
+game::bases,806f5250,fn_806f5250,translated,medium,"work/ghidra/rel-d_basesNP/export/806f5250_FUN_806f5250.c; 0x768 allocation plus derived vtable 0x80801598",src/game/bases.rs
+game::bases,806f52a0,fn_806f52a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806f52a0_FUN_806f52a0.c; returns the static record 0x80377A04",src/game/bases.rs
+game::bases,806f52b0,fn_806f52b0,translated,high,"work/ghidra/rel-d_basesNP/export/806f52b0_FUN_806f52b0.c; base constructor; vtable 0x8080183C; +0x524/+0x544/+0x584",src/game/bases.rs
+game::bases,806f5330,fn_806f5330,translated,high,"work/ghidra/rel-d_basesNP/export/806f5330_FUN_806f5330.c; destructor; tears down +0x584/+0x544/+0x524; optional delete",src/game/bases.rs
+game::bases,806f8a70,fn_806f8a70,translated,high,"work/ghidra/rel-d_basesNP/export/806f8a70_FUN_806f8a70.c; allocates 0x398 bytes and runs the constructor",src/game/bases.rs
+game::bases,806f8ad0,fn_806f8ad0,translated,high,"work/ghidra/rel-d_basesNP/export/806f8ad0_FUN_806f8ad0.c; vtable 0x80802530; registers 0x164-byte global at 0x8082ED60",src/game/bases.rs
+game::bases,806f8dd0,fn_806f8dd0,translated,medium,"work/ghidra/rel-d_basesNP/export/806f8dd0_FUN_806f8dd0.c; clears +0xE0..+0xF0; +0xE8 = 0x8005FEF0(); state 7",src/game/bases.rs
+game::bases,806f8eb0,fn_806f8eb0,translated,high,"work/ghidra/rel-d_basesNP/export/806f8eb0_FUN_806f8eb0.c; adds delta to record +0x74 and one to +0x78 at 0xC stride",src/game/bases.rs

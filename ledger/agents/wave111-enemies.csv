@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80adc440,fn_80adc440,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adc440_FUN_80adc440.c; +0x7DC latch; three angle writes; +0x764 holder commit",src/game/enemies.rs
+game::enemies,80adc500,fn_80adc500,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adc500_FUN_80adc500.c; root_parachute node lookup; +0x0C index into 0x80168180",src/game/enemies.rs
+game::enemies,80adc570,fn_80adc570,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adc570_FUN_80adc570.c; holder matrix into three floats; actor argument recovered from caller",src/game/enemies.rs
+game::enemies,80adc5f0,fn_80adc5f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adc5f0_FUN_80adc5f0.c; +-27 roll step, +-272 clamp, direction flip, +-0xC0 yaw step",src/game/enemies.rs
+game::enemies,80adc720,fn_80adc720,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adc720_FUN_80adc720.c; -0.04/-0.005 spring between -0.4 and -0.32; angle arrives in f1",src/game/enemies.rs
+game::enemies,80adc790,fn_80adc790,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adc790_FUN_80adc790.c; twenty-sample roll ring at +0x7EC..+0x812",src/game/enemies.rs
+game::enemies,80adc830,fn_80adc830,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adc830_FUN_80adc830.c; +0x394 state probe; 0xFF bytes; 240-frame retry",src/game/enemies.rs
+game::enemies,80adc920,fn_80adc920,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adc920_FUN_80adc920.c; para_drop binder; +0xEC seed -0.4; +0x7E2 seed 0x110",src/game/enemies.rs
+game::enemies,80adca00,fn_80adca00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adca00_FUN_80adca00.c; 14.0/4096.0 x rebuild; pitch -(+0x800>>2); state 0x80B76C68",src/game/enemies.rs
+game::enemies,80adcb00,fn_80adcb00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adcb00_FUN_80adcb00.c; para_receive binder with loop flag 1; +0x7DC = 1",src/game/enemies.rs
+game::enemies,80adcbc0,fn_80adcbc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adcbc0_FUN_80adcbc0.c; +0x1EC probe clears +0xEC; finished clip switches 0x80B76CA8",src/game/enemies.rs
+game::enemies,80adcc80,fn_80adcc80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adcc80_FUN_80adcc80.c; walk binder at weight 2.0; side from 0x80096240",src/game/enemies.rs
+game::enemies,80ade970,fn_80ade970,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ade970_FUN_80ade970.c; release + optional free; identical to fn_80adbf70",src/game/enemies.rs
+game::enemies,80adea90,fn_80adea90,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adea90_FUN_80adea90.c; 48-byte forwarder reshuffle (second, second, first)",src/game/enemies.rs
+game::enemies,80adeac0,fn_80adeac0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adeac0_FUN_80adeac0.c; second copy of the 48-byte forwarder",src/game/enemies.rs
+game::enemies,80adeaf0,fn_80adeaf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adeaf0_FUN_80adeaf0.c; 0x8E8 allocation; four vtables; +0x720 sub-object",src/game/enemies.rs
+game::enemies,80adec50,fn_80adec50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adec50_FUN_80adec50.c; 0x8006D090 contact record; height from 0x8042BB20[+0x391]",src/game/enemies.rs
+game::enemies,80adede0,fn_80adede0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adede0_FUN_80adede0.c; +0x8E0 latch; jnt_wing matrix into the +0x860 holder",src/game/enemies.rs
+game::enemies,80adee60,fn_80adee60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adee60_FUN_80adee60.c; jnt_wing node lookup; +0x0C index into 0x80168180",src/game/enemies.rs
+game::enemies,80adeed0,fn_80adeed0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adeed0_FUN_80adeed0.c; +0x394 probes; +0xAC += +0x1A4; two state targets",src/game/enemies.rs
+game::enemies,80adefc0,fn_80adefc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adefc0_FUN_80adefc0.c; +0x8E0 branch; +0x2D4 vtable hook; state 0x803534EC",src/game/enemies.rs
+game::enemies,80adf030,fn_80adf030,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adf030_FUN_80adf030.c; side code indexes 0x80B30B90 and 0x8042C1A4",src/game/enemies.rs
+game::enemies,80adf160,fn_80adf160,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adf160_FUN_80adf160.c; +0x490 guard; +0x480 slow flag; release 0x80358004",src/game/enemies.rs
+game::enemies,80adf4b0,fn_80adf4b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adf4b0_FUN_80adf4b0.c; walk and wing_kuri binders; 0x800B2EE0 frame via 2^52",src/game/enemies.rs
+game::enemies,80adf620,fn_80adf620,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adf620_FUN_80adf620.c; +0x8D8 timer, +0x8DA flap phases 3.0/1.25, bits 1/2/4",src/game/enemies.rs
+game::enemies,80adf850,fn_80adf850,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adf850_FUN_80adf850.c; 0x8015F4F0 yaw step of 4*0x8042B4C8; state 0x80B76DE8",src/game/enemies.rs
+game::enemies,80adfc50,fn_80adfc50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adfc50_FUN_80adfc50.c; release + optional free; identical to fn_80adbf70",src/game/enemies.rs
+game::enemies,80adfd70,fn_80adfd70,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adfd70_FUN_80adfd70.c; 48-byte forwarder reshuffle (second, second, first)",src/game/enemies.rs
+game::enemies,80adfda0,fn_80adfda0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adfda0_FUN_80adfda0.c; second copy of the 48-byte forwarder",src/game/enemies.rs

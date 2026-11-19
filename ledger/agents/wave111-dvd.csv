@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801d6f60,fn_801d6f60,translated,medium,"work/ghidra/main-gb/export/801d6f60_FUN_801d6f60.c; bit-coded LZ block decoder for the 0x801D6F20 context: tagged 32-bit header, two bit-packed code-length tables, literal/match loop; the header byte swap was re-read from the instruction stream at 0x801D7040-0x801D7050",src/runtime/dvd.rs

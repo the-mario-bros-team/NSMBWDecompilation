@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,0x801CBA00,fn_801cba00,translated,high,work/ghidra/main-gb/export/801cba00_FUN_801cba00.c; status header and 0x10/0x20/even/odd branches,src/runtime/dvd.rs
+runtime::dvd,0x801CBBE0,fn_801cbbe0,translated,high,work/ghidra/main-gb/export/801cbbe0_FUN_801cbbe0.c; raw error word 0x801D36D0 and default callback,src/runtime/dvd.rs
+runtime::dvd,0x801CBCC0,fn_801cbcc0,translated,high,work/ghidra/main-gb/export/801cbcc0_FUN_801cbcc0.c; waiting-descriptor tail and delayed retry alarm,src/runtime/dvd.rs
+runtime::dvd,0x801CBF00,dvd_check_partition_header_801cbf00,translated,high,work/ghidra/main-gb/export/801cbf00_FUN_801cbf00.c; header compare then 0x8D read at 0x10000 or stop motor,src/runtime/dvd.rs
+runtime::dvd,0x801CC3E0,dvd_partition_open_801cc3e0,translated,medium,work/ghidra/main-gb/export/801cc3e0_FUN_801cc3e0.c; partition table scan plus 0x8B/0x94 open calls,src/runtime/dvd.rs
+runtime::dvd,0x801CCB60,fn_801ccb60,translated,high,work/ghidra/main-gb/export/801ccb60_FUN_801ccb60.c; descriptor completion or state 6 plus retry alarm,src/runtime/dvd.rs
+runtime::dvd,0x801CCD30,dvd_fst_read_completion_801ccd30,translated,high,work/ghidra/main-gb/export/801ccd30_FUN_801ccd30.c; disc-change FST size check and 0x71 re-read,src/runtime/dvd.rs
+runtime::dvd,0x801CCFA0,dvd_read_id_step_801ccfa0,translated,medium,work/ghidra/main-gb/export/801ccfa0_FUN_801ccfa0.c; boot state 0x8003 selects 0xDD else 0x70,src/runtime/dvd.rs
+runtime::dvd,0x801CD1F0,dvd_retry_timer_801cd1f0,translated,high,work/ghidra/main-gb/export/801cd1f0_FUN_801cd1f0.c; 64-bit time save and 0x80395820 alarm re-arm,src/runtime/dvd.rs
+runtime::dvd,0x801CD2E0,dvd_max_rotation_801cd2e0,translated,high,work/ghidra/main-gb/export/801cd2e0_FUN_801cd2e0.c; event 0x25 then 0x801D2D90,src/runtime/dvd.rs
+runtime::dvd,0x801CD3B0,fn_801cd3b0,translated,high,work/ghidra/main-gb/export/801cd3b0_FUN_801cd3b0.c; max-rotation completion and read-id handoff,src/runtime/dvd.rs
+runtime::dvd,0x801CD5F0,fn_801cd5f0,translated,high,work/ghidra/main-gb/export/801cd5f0_FUN_801cd5f0.c; read-id continuation submits 0x70,src/runtime/dvd.rs
+runtime::dvd,0x801CD770,fn_801cd770,translated,high,work/ghidra/main-gb/export/801cd770_FUN_801cd770.c; read-id completion calls 0x801CBF00,src/runtime/dvd.rs
+runtime::dvd,0x801CD850,dvd_cover_alarm_801cd850,translated,medium,work/ghidra/main-gb/export/801cd850_FUN_801cd850.c; cover bits 0/2 and state 5/0x0C/3 recovery,src/runtime/dvd.rs
+runtime::dvd,0x801CFB20,dvd_queue_pop_801cfb20,translated,high,work/ghidra/main-gb/export/801cfb20_FUN_801cfb20.c; four-ring pop and node clear,src/runtime/dvd.rs
+runtime::dvd,0x801CFBC0,dvd_queue_has_work_801cfbc0,translated,high,work/ghidra/main-gb/export/801cfbc0_FUN_801cfbc0.c; four-ring non-empty test,src/runtime/dvd.rs
+runtime::dvd,0x801CFC90,dvd_queue_unlink_801cfc90,translated,high,work/ghidra/main-gb/export/801cfc90_FUN_801cfc90.c; queue node unlink,src/runtime/dvd.rs
+runtime::dvd,0x801D11E0,dvd_low_finish_801d11e0,translated,high,work/ghidra/main-gb/export/801d11e0_FUN_801d11e0.c; IOS close and ready latch clear,src/runtime/dvd.rs
+runtime::dvd,0x801D1230,dvd_low_init_801d1230,translated,medium,work/ghidra/main-gb/export/801d1230_FUN_801d1230.c; IPC init heap allocs context seed and /dev/di open,src/runtime/dvd.rs
+runtime::dvd,0x801D14A0,dvd_low_read_disk_id_801d14a0,translated,high,work/ghidra/main-gb/export/801d14a0_FUN_801d14a0.c; 0x70 read-disk-id submission,src/runtime/dvd.rs
+runtime::dvd,0x801D1630,dvd_low_open_partition_801d1630,translated,high,work/ghidra/main-gb/export/801d1630_FUN_801d1630.c; 0x8B open-partition ioctlv,src/runtime/dvd.rs
+runtime::dvd,0x801D18A0,dvd_low_open_partition_tmd_801d18a0,translated,high,work/ghidra/main-gb/export/801d18a0_FUN_801d18a0.c; 0x94 open-partition-with-TMD ioctlv,src/runtime/dvd.rs
+runtime::dvd,0x801D28E0,dvd_low_audio_config_801d28e0,translated,high,work/ghidra/main-gb/export/801d28e0_FUN_801d28e0.c; 0xE4 audio buffer config,src/runtime/dvd.rs
+runtime::dvd,0x801D2A80,dvd_low_report_key_801d2a80,translated,high,work/ghidra/main-gb/export/801d2a80_FUN_801d2a80.c; 0xA4 report key,src/runtime/dvd.rs
+runtime::dvd,0x801D2D90,dvd_low_set_max_rotation_801d2d90,translated,high,work/ghidra/main-gb/export/801d2d90_FUN_801d2d90.c; 0xDD set max rotation,src/runtime/dvd.rs

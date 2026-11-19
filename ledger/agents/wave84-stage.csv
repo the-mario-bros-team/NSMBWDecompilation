@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80097700,fn_80097700,translated,high,"work/ghidra/main-gb/export/80097700_FUN_80097700.c; ground query 0x80075270 then vtable +0x21C on status 1..2",src/game/stage.rs
+game::stage,800979b0,fn_800979b0,translated,high,"work/ghidra/main-gb/export/800979b0_FUN_800979b0.c; scans players 0..3 through 0x8005F900 and compares +0x2A78",src/game/stage.rs
+game::stage,80097c40,fn_80097c40,translated,high,"work/ghidra/main-gb/export/80097c40_FUN_80097c40.c; vtable +0x98 then copies +0xDC..+0xE4 to +0x370..+0x378 and calls +0xD4",src/game/stage.rs
+game::stage,80097ea0,fn_80097ea0,translated,high,"work/ghidra/main-gb/export/80097ea0_FUN_80097ea0.c; effect 0x269 through 0x80198C30 then point handed to 0x800943B0",src/game/stage.rs
+game::stage,80097f70,fn_80097f70,translated,medium,"work/ghidra/main-gb/export/80097f70_FUN_80097f70.c; variant byte +0x458 selects r2-0x6ED0 word and six rodata words into +0x414..+0x42C",src/game/stage.rs
+game::stage,80098350,fn_80098350,translated,high,"work/ghidra/main-gb/export/80098350_FUN_80098350.c; returns &DAT_80377a04",src/game/stage.rs
+game::stage,80098360,fn_80098360,translated,high,"work/ghidra/main-gb/export/80098360_FUN_80098360.c; returns &DAT_80377a04",src/game/stage.rs
+game::stage,80098370,fn_80098370,translated,high,"work/ghidra/main-gb/export/80098370_FUN_80098370.c; returns &DAT_80377a04",src/game/stage.rs
+game::stage,80098380,fn_80098380,translated,high,"work/ghidra/main-gb/export/80098380_FUN_80098380.c; returns &DAT_80377a04",src/game/stage.rs
+game::stage,80098390,fn_80098390,translated,high,"work/ghidra/main-gb/export/80098390_FUN_80098390.c; returns &DAT_80377a04",src/game/stage.rs
+game::stage,800983a0,fn_800983a0,translated,high,"work/ghidra/main-gb/export/800983a0_FUN_800983a0.c; returns &DAT_80377a04",src/game/stage.rs
+game::stage,800983b0,fn_800983b0,translated,high,"work/ghidra/main-gb/export/800983b0_FUN_800983b0.c; returns &DAT_80377a04",src/game/stage.rs
+game::stage,800983c0,fn_800983c0,translated,medium,"work/ghidra/main-gb/export/800983c0_FUN_800983c0.c; subclass constructor: three vtables +0x524 list +0x544 motion +0x5A8 vector",src/game/stage.rs
+game::stage,800984b0,fn_800984b0,translated,high,"work/ghidra/main-gb/export/800984b0_FUN_800984b0.c; releases +0x74 pair and +0x74 owner then conditionally frees",src/game/stage.rs
+game::stage,800985b0,fn_800985b0,translated,high,"work/ghidra/main-gb/export/800985b0_FUN_800985b0.c; full destructor of +0x544/+0x524 members with optional free",src/game/stage.rs
+game::stage,80098700,fn_80098700,translated,high,"work/ghidra/main-gb/export/80098700_FUN_80098700.c; six-arg 0x8016A960 reset plus +0x2CC/+0x2D0 callbacks",src/game/stage.rs
+game::stage,80098830,fn_80098830,translated,high,"work/ghidra/main-gb/export/80098830_FUN_80098830.c; base update gate then +0x540 countdown dispatching +0x2DC/+0x2E0",src/game/stage.rs
+game::stage,80098ad0,fn_80098ad0,translated,high,"work/ghidra/main-gb/export/80098ad0_FUN_80098ad0.c; +0x394 interface tag test then 0x80070CB0 on +0x1EC",src/game/stage.rs
+game::stage,80098d90,fn_80098d90,translated,medium,"work/ghidra/main-gb/export/80098d90_FUN_80098d90.c; drains +0x5F8 source and dispatches eight +0x60 vtable slots",src/game/stage.rs
+game::stage,8009b980,fn_8009b980,translated,high,"work/ghidra/main-gb/export/8009b980_FUN_8009b980.c; vtable +0x408 short stepped into 0x8015F4F0 on +0x102",src/game/stage.rs
+game::stage,8009ba50,fn_8009ba50,translated,high,"work/ghidra/main-gb/export/8009ba50_FUN_8009ba50.c; six u16 clears at +0x758..+0x762",src/game/stage.rs
+game::stage,8009bc90,fn_8009bc90,translated,high,"work/ghidra/main-gb/export/8009bc90_FUN_8009bc90.c; 0x34-byte stack matrix from +0x604 copied to out",src/game/stage.rs
+game::stage,8009bd10,fn_8009bd10,translated,high,"work/ghidra/main-gb/export/8009bd10_FUN_8009bd10.c; +0x7A4 player index then x comparison against +0xAC",src/game/stage.rs
+game::stage,8009bd80,fn_8009bd80,translated,high,"work/ghidra/main-gb/export/8009bd80_FUN_8009bd80.c; 0x4EA/0x4EB motion id plus Wm_jr_damage submit",src/game/stage.rs
+game::stage,8009beb0,fn_8009beb0,translated,high,"work/ghidra/main-gb/export/8009beb0_FUN_8009beb0.c; single 0x80168230 call with mode 1",src/game/stage.rs
+game::stage,8009bf60,fn_8009bf60,translated,high,"work/ghidra/main-gb/export/8009bf60_FUN_8009bf60.c; two-index loop over the +0x6B0/+0x6B4 guarded channels",src/game/stage.rs
+game::stage,8009bfe0,fn_8009bfe0,translated,high,"work/ghidra/main-gb/export/8009bfe0_FUN_8009bfe0.c; single byte store at +0x7B6",src/game/stage.rs
+game::stage,8009ac40,fn_8009ac40,translated,high,"work/ghidra/main-gb/export/8009ac40_FUN_8009ac40.c; forwards (second,second,first) to 0x802DCBFC",src/game/stage.rs
+game::stage,8009ac70,fn_8009ac70,translated,high,"work/ghidra/main-gb/export/8009ac70_FUN_8009ac70.c; duplicate of the 0x802DCBFC forwarding wrapper",src/game/stage.rs

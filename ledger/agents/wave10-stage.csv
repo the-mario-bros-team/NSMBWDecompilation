@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800bb090,course_manager_construct,translated,high,"work/ghidra/main-gb/export/800bb090_FUN_800bb090.c; vtable 0x80315BA0; stage slot at +0x08; global owner r13-0x5704",src/game/stage.rs
+game::stage,800bb130,course_manager_set_defaults,translated,high,"work/ghidra/main-gb/export/800bb130_FUN_800bb130.c; 0x80354E60..0x80354E6C order words; +0x384..+0x390",src/game/stage.rs
+game::stage,800bb170,course_manager_clear_entries,translated,high,"work/ghidra/main-gb/export/800bb170_FUN_800bb170.c; six 0x80-byte groups of eight {0,-1,2,0} records",src/game/stage.rs
+game::stage,800bb400,course_manager_reset,translated,high,"work/ghidra/main-gb/export/800bb400_FUN_800bb400.c; calls 0x800BB170, 0x8008EDB0, 0x800BB560",src/game/stage.rs
+game::stage,800bb560,course_manager_clear_tile_lists,translated,high,"work/ghidra/main-gb/export/800bb560_FUN_800bb560.c; four 0xC0-byte groups, fifth partial group, twenty 8-byte records",src/game/stage.rs
+game::stage,800bb780,course_manager_set_course,translated,medium,"work/ghidra/main-gb/export/800bb780_FUN_800bb780.c; descriptor bytes -> 0x80315B90..B9F; mode byte 1 of +0xC word; mode 0x26 writes +2/+3; 0x800E1E60(7,..)",src/game/stage.rs
+game::stage,800bb8f0,course_manager_load_course,translated,medium,"work/ghidra/main-gb/export/800bb8f0_FUN_800bb8f0.c; manager fields -> 0x80358D58; 0x80354E50/E60 loop; 0x8008EE00; 0x80101FD0 x3",src/game/stage.rs
+game::stage,800bbb70,course_manager_set_tile_entry,translated,high,"work/ghidra/main-gb/export/800bbb70_FUN_800bbb70.c; base = this + x*0x40 + y*0x10; 3 words + byte at +0xA0",src/game/stage.rs
+game::stage,800bbc90,course_manager_global_init,translated,high,"work/ghidra/main-gb/export/800bbc90_FUN_800bbc90.c; five r2 words; 0x802DC780(0,0x800BBD10,0x80358D48); slot 0x80358D54",src/game/stage.rs
+game::stage,800cd230,camera_global_f32,translated,high,"work/ghidra/main-gb/export/800cd230_FUN_800cd230.c; returns DAT_80317894",src/game/stage.rs
+game::stage,800cd240,camera_mode_flag,translated,high,"work/ghidra/main-gb/export/800cd240_FUN_800cd240.c; returns DAT_803178B0",src/game/stage.rs
+game::stage,800cd250,camera_mode_is_mid,translated,high,"work/ghidra/main-gb/export/800cd250_FUN_800cd250.c; owner r13-0x56E0; flag 0x800CD240; mode +0x20 in 0x20..0x30",src/game/stage.rs
+game::stage,800cd2c0,camera_mode_is_low,translated,high,"work/ghidra/main-gb/export/800cd2c0_FUN_800cd2c0.c; owner r13-0x56E0; flag 0x800CD240; mode +0x20 in 0x10..0x1F",src/game/stage.rs
+game::stage,800cd330,camera_value_store,translated,high,"work/ghidra/main-gb/export/800cd330_FUN_800cd330.c; *out = DAT_803178B4",src/game/stage.rs
+game::stage,800cd350,camera_byte_b2,translated,high,"work/ghidra/main-gb/export/800cd350_FUN_800cd350.c; returns DAT_803178B2",src/game/stage.rs
+game::stage,800cd360,camera_f32_b8,translated,high,"work/ghidra/main-gb/export/800cd360_FUN_800cd360.c; returns DAT_803178B8",src/game/stage.rs
+game::stage,800cd370,camera_f32_bc,translated,high,"work/ghidra/main-gb/export/800cd370_FUN_800cd370.c; returns DAT_803178BC",src/game/stage.rs
+game::stage,800cd380,camera_word_c0,translated,high,"work/ghidra/main-gb/export/800cd380_FUN_800cd380.c; returns DAT_803178C0",src/game/stage.rs
+game::stage,800cd390,camera_manager_construct,translated,high,"work/ghidra/main-gb/export/800cd390_FUN_800cd390.c; vtable 0x803178E0; 0x80069020(this+4); global r13-0x56E0",src/game/stage.rs
+game::stage,800cd3e0,camera_manager_destroy,translated,medium,"work/ghidra/main-gb/export/800cd3e0_FUN_800cd3e0.c; 0x8016A5D0/0x8016A880; 0x80069060(this+4,-1); delete size in r4",src/game/stage.rs
+game::stage,800cd470,stage_point_section_code,translated,medium,"work/ghidra/main-gb/export/800cd470_FUN_800cd470.c; stage by info+0x120E; camera+0x8FE6C; 0x800789A0; 0x8008E770/0x8008E620",src/game/stage.rs
+game::stage,800cfd00,stage_section3_copy,translated,high,"work/ghidra/main-gb/export/800cfd00_FUN_800cfd00.c; 5 words from 0x8008E3D0; byte +9 remap; byte +10 from [stage+0xC]+0x10",src/game/stage.rs
+game::stage,800cfde0,stage_section3_changed,translated,high,"work/ghidra/main-gb/export/800cfde0_FUN_800cfde0.c; guard byte +0x18; compare bytes +8/+9 against 0x8008E3D0 entry",src/game/stage.rs
+game::stage,800cfea0,stage_object_tile_lookup,translated,medium,"work/ghidra/main-gb/export/800cfea0_FUN_800cfea0.c; stage+0x20 list, count +0x90, 0x14-byte entries, class byte +0xB, extents r2-0x66C0/BC/B8",src/game/stage.rs
+game::stage,800d90c0,stage_object_section_entry,translated,high,"work/ghidra/main-gb/export/800d90c0_FUN_800d90c0.c; stage+0x38 list, count +0xA8, 8-byte stride, first byte match",src/game/stage.rs
+game::stage,800e3640,stage_resource_table_entry,translated,high,"work/ghidra/main-gb/export/800e3640_FUN_800e3640.c; id 1 remapped from r13-0x5618; *(r13-0x6F34 + (id&0xFF)*8)",src/game/stage.rs
+game::stage,800e3660,stage_resources_ready,translated,medium,"work/ghidra/main-gb/export/800e3660_FUN_800e3660.c; table from 0x800E3640(r13-0x5617); type 3 entries; 0x8008F620 per id; result via restore helper",src/game/stage.rs
+game::stage,800e3ab0,stage_slot_construct_thunk,translated,high,"work/ghidra/main-gb/export/800e3ab0_FUN_800e3ab0.c; 0x8008ED70(r3); returns r3",src/game/stage.rs

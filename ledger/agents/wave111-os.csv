@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::os,802403c0,fn_802403c0,translated,medium,"work/ghidra/main-gb/export/802403c0_FUN_802403c0.c; packed 4-byte Hermite keys (time byte, signed 12-bit tangent, unsigned 12-bit value); last 88 bytes identical to fn_80240240",src/runtime/os.rs
+runtime::os,802471e0,fn_802471e0,translated,medium,"work/ghidra/main-gb/export/802471e0_FUN_802471e0.c; 0x802DCD74 matrix-slot quantiser: record copy via 0x80247140, abs-max of six slot floats, ldexp rebase, 0x8023DAA0 encode per set nibble",src/runtime/os.rs

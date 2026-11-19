@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80abd750,fn_80abd750,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abd750_FUN_80abd750.c; 0x710-byte daEnManholeChoropu_c constructor, vtable 0x80B580F8",src/game/enemies.rs
+game::enemies,80abd950,fn_80abd950,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abd950_FUN_80abd950.c; g3d/choropoo.brres binder plus choropoo/walk clip pair",src/game/enemies.rs
+game::enemies,80abdb00,fn_80abdb00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abdb00_FUN_80abdb00.c; owner compare against 0x8016A5D0 and two holder +0x10 slots",src/game/enemies.rs
+game::enemies,80abdb70,fn_80abdb70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abdb70_FUN_80abdb70.c; matrix rebuild from +0xAC position and +0x100 angles",src/game/enemies.rs
+game::enemies,80abdc50,fn_80abdc50,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abdc50_FUN_80abdc50.c; manhole node frame copied to +0x6F0",src/game/enemies.rs
+game::enemies,80abdcc0,fn_80abdcc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abdcc0_FUN_80abdcc0.c; side-selected arm_spanner clip frame to +0x5C0",src/game/enemies.rs
+game::enemies,80abddc0,fn_80abddc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abddc0_FUN_80abddc0.c; first hide request arms +0x608/+0x148",src/game/enemies.rs
+game::enemies,80abdef0,fn_80abdef0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abdef0_FUN_80abdef0.c; collision kind dispatch to 0x80095C80 / 0x800A0FB0",src/game/enemies.rs
+game::enemies,80abdf80,fn_80abdf80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abdf80_FUN_80abdf80.c; nearest in-front player scan, returns index or -1",src/game/enemies.rs
+game::enemies,80abe0b0,fn_80abe0b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abe0b0_FUN_80abe0b0.c; effect 0x177 at cached +0x6F0, +0x444 owner link",src/game/enemies.rs
+game::enemies,80abe130,fn_80abe130,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abe130_FUN_80abe130.c; child placement from composed matrix and +0x6F0 base",src/game/enemies.rs
+game::enemies,80abe2d0,fn_80abe2d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abe2d0_FUN_80abe2d0.c; child placement with constant (0, 1.5, 2) triple",src/game/enemies.rs
+game::enemies,80abe320,fn_80abe320,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abe320_FUN_80abe320.c; sign of +0xE8 selects the child offset triple",src/game/enemies.rs
+game::enemies,80abe3c0,fn_80abe3c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abe3c0_FUN_80abe3c0.c; effect 0x174 + side at the +0x5C0 translation",src/game/enemies.rs
+game::enemies,80abe450,fn_80abe450,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abe450_FUN_80abe450.c; child +0x434/+0x454 stores",src/game/enemies.rs
+game::enemies,80abe4a0,fn_80abe4a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abe4a0_FUN_80abe4a0.c; child angle/position placement, two offset triples",src/game/enemies.rs
+game::enemies,80abe630,fn_80abe630,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abe630_FUN_80abe630.c; per-side test writes the player point to +0x438",src/game/enemies.rs
+game::enemies,80abe790,fn_80abe790,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abe790_FUN_80abe790.c; Disappear predicate sets +0x5F8 then releases effects",src/game/enemies.rs
+game::enemies,80abe840,fn_80abe840,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abe840_FUN_80abe840.c; timer decrement then StateID_Hide switch",src/game/enemies.rs
+game::enemies,80abe8b0,fn_80abe8b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abe8b0_FUN_80abe8b0.c; throw_1 bind, sound 0x21F, (0, 0.75, 0) velocity",src/game/enemies.rs
+game::enemies,80abe990,fn_80abe990,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abe990_FUN_80abe990.c; throw_1 step, clamp then StateID_Search",src/game/enemies.rs
+game::enemies,80abeb00,fn_80abeb00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abeb00_FUN_80abeb00.c; throw_2 bind and phase seed",src/game/enemies.rs
+game::enemies,80abeb90,fn_80abeb90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abeb90_FUN_80abeb90.c; throw_2 step, 0x4B timer then StateID_AppearFull",src/game/enemies.rs
+game::enemies,80abec70,fn_80abec70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abec70_FUN_80abec70.c; throw_3 bind, sound 0x220, two velocity triples",src/game/enemies.rs
+game::enemies,80abed70,fn_80abed70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abed70_FUN_80abed70.c; throw_3 step, descent clamp then StateID_Attack",src/game/enemies.rs
+game::enemies,80abeeb0,fn_80abeeb0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abeeb0_FUN_80abeeb0.c; throw_4 side clip bind plus player/effect handoff",src/game/enemies.rs
+game::enemies,80abef90,fn_80abef90,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abef90_FUN_80abef90.c; throw_4 step on the 47.0 clip frame, StateID_Disappear",src/game/enemies.rs
+game::enemies,80abf0e0,fn_80abf0e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80abf0e0_FUN_80abf0e0.c; throw_5 bind, 1.2 clip rate, two velocity triples",src/game/enemies.rs
+game::enemies,80abf1a0,fn_80abf1a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abf1a0_FUN_80abf1a0.c; landing clamp, Wm_en_landsmoke, sound 0x221, StateID_Hide",src/game/enemies.rs
+game::enemies,80abf650,fn_80abf650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abf650_FUN_80abf650.c; +0x704 guard re-seats the child via 0x80ABE4A0",src/game/enemies.rs

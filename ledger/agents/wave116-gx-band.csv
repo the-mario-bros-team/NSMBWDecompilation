@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,8028b6c0,fn_8028b6c0,translated,medium,"work/ghidra/main-gb/export/8028b6c0_FUN_8028b6c0.c; float keyframe track sampler: channel tables 0x8034F3D8/0x8034F4D8; key entries at desc+0x24 with stride 4*channels+0x0C; ramp records of 8*channels+4 bytes with LCG dither and the 0x3F81F635/0x30A74193/0x0007B929/0x371097E7/0x0004BF53 seed hash; five-arm frame resolver plus binary key search; three live curve arms (plain, second-key ramp, both ramps)","src/render/gx_band.rs"

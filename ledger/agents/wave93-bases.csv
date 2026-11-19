@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8070a220,fn_8070a220,translated,high,"work/ghidra/rel-d_basesNP/export/8070a220_FUN_8070a220.c; +0x820 timer, +0x394 slot 0x10, +0x5BC refresh, returns 1",src/game/bases.rs
+game::bases,8070a3b0,fn_8070a3b0,translated,high,"work/ghidra/rel-d_basesNP/export/8070a3b0_FUN_8070a3b0.c; +0x7C matrix from +0xAC, angles +0x100..+0x104, holder +0x544",src/game/bases.rs
+game::bases,8070a480,fn_8070a480,translated,high,"work/ghidra/rel-d_basesNP/export/8070a480_FUN_8070a480.c; 0x8007F950 on +0x5BC, returns 1",src/game/bases.rs
+game::bases,8070a4b0,fn_8070a4b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070a4b0_FUN_8070a4b0.c; travel-box reset, +0x6AC slot 0x0C with four floats",src/game/bases.rs
+game::bases,8070a570,fn_8070a570,translated,medium,"work/ghidra/rel-d_basesNP/export/8070a570_FUN_8070a570.c; sled_to_L/sled_to_R bind via 0x807CC8C8 table",src/game/bases.rs
+game::bases,8070a610,fn_8070a610,translated,high,"work/ghidra/rel-d_basesNP/export/8070a610_FUN_8070a610.c; Wm_ig_liftbrake sound through +0x70C slot 0xA0",src/game/bases.rs
+game::bases,8070a680,fn_8070a680,translated,high,"work/ghidra/rel-d_basesNP/export/8070a680_FUN_8070a680.c; +0x70C slot 0xB0 stop request",src/game/bases.rs
+game::bases,8070a6e0,fn_8070a6e0,translated,high,"work/ghidra/rel-d_basesNP/export/8070a6e0_FUN_8070a6e0.c; source mode +0x6DC and phase +0x6E0 range tests",src/game/bases.rs
+game::bases,8070a740,fn_8070a740,translated,high,"work/ghidra/rel-d_basesNP/export/8070a740_FUN_8070a740.c; +0x6AC slot 0x18 writes anchor +0x6E4",src/game/bases.rs
+game::bases,8070a7c0,fn_8070a7c0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070a7c0_FUN_8070a7c0.c; six-slot brake step, CONCAT44 signed conversion, Wm_ig_liftbrake on engage",src/game/bases.rs
+game::bases,8070aab0,fn_8070aab0,translated,high,"work/ghidra/rel-d_basesNP/export/8070aab0_FUN_8070aab0.c; release +0x5BC and clear +0xE8..+0x114",src/game/bases.rs
+game::bases,8070ac80,fn_8070ac80,translated,high,"work/ghidra/rel-d_basesNP/export/8070ac80_FUN_8070ac80.c; destructor: +0x70C, +0x5BC, +0x584, +0x544, +0x524, base, free",src/game/bases.rs
+game::bases,8070af20,fn_8070af20,translated,high,"work/ghidra/rel-d_basesNP/export/8070af20_FUN_8070af20.c; 0x8015F800 plus conditional 0x802B9280",src/game/bases.rs
+game::bases,8070b300,fn_8070b300,translated,medium,"work/ghidra/rel-d_basesNP/export/8070b300_FUN_8070b300.c; registered free wrapper, 0x802B9280 argument dropped in export",src/game/bases.rs
+game::bases,8070b340,fn_8070b340,translated,high,"work/ghidra/rel-d_basesNP/export/8070b340_FUN_8070b340.c; release +0x18 then conditional free",src/game/bases.rs
+game::bases,8070b3a0,fn_8070b3a0,translated,high,"work/ghidra/rel-d_basesNP/export/8070b3a0_FUN_8070b3a0.c; byte-identical second instantiation of 0x8070B340",src/game/bases.rs
+game::bases,8070bad0,fn_8070bad0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070bad0_FUN_8070bad0.c; rail colour refresh, CONCAT13/CONCAT31 alpha patches, returns 1",src/game/bases.rs
+game::bases,8070bce0,fn_8070bce0,translated,high,"work/ghidra/rel-d_basesNP/export/8070bce0_FUN_8070bce0.c; 0x80064AF0 placement plus +0x7C rebuild and +0x6E8 scale",src/game/bases.rs
+game::bases,8070bde0,fn_8070bde0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070bde0_FUN_8070bde0.c; transform snapshot +0x650, 0x801C1160 axis into +0x638",src/game/bases.rs
+game::bases,8070be60,fn_8070be60,translated,medium,"work/ghidra/rel-d_basesNP/export/8070be60_FUN_8070be60.c; clears +0x620 when 0x8070BEB0 reports the limit",src/game/bases.rs
+game::bases,8070beb0,fn_8070beb0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070beb0_FUN_8070beb0.c; +0x348 tables 0x807CC904/0x807CC908, 0x802DE514 compare and snap",src/game/bases.rs
+game::bases,8070c060,fn_8070c060,translated,high,"work/ghidra/rel-d_basesNP/export/8070c060_FUN_8070c060.c; 0x808056B0 model bind, clip +0x584, secondary +0x5C0",src/game/bases.rs
+game::bases,8070c340,fn_8070c340,translated,medium,"work/ghidra/rel-d_basesNP/export/8070c340_FUN_8070c340.c; ground test +0x788 then Wm_en_landsmoke",src/game/bases.rs
+game::bases,8070c410,fn_8070c410,translated,medium,"work/ghidra/rel-d_basesNP/export/8070c410_FUN_8070c410.c; current actor from 0x802DCD74, three column normalizes, Wm_ig_bite",src/game/bases.rs
+game::bases,8070c4f0,fn_8070c4f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070c4f0_FUN_8070c4f0.c; three clip probes then effect 0x564",src/game/bases.rs
+game::bases,8070c590,fn_8070c590,translated,medium,"work/ghidra/rel-d_basesNP/export/8070c590_FUN_8070c590.c; effect 0x565 with +0xAC position and halfword payload",src/game/bases.rs
+game::bases,8070c600,fn_8070c600,translated,medium,"work/ghidra/rel-d_basesNP/export/8070c600_FUN_8070c600.c; Wm_ob_witchcraft through +0x9E8 slots 0xA0/0x74/0x2C",src/game/bases.rs
+game::bases,8070c6d0,fn_8070c6d0,translated,high,"work/ghidra/rel-d_basesNP/export/8070c6d0_FUN_8070c6d0.c; +0x791 gate, +0x792 step by 3 toward 0 or 0x80",src/game/bases.rs
+game::bases,8070c720,fn_8070c720,translated,medium,"work/ghidra/rel-d_basesNP/export/8070c720_FUN_8070c720.c; first basis column normalized, x scaled into +0x164",src/game/bases.rs
+game::bases,8070c7a0,fn_8070c7a0,translated,high,"work/ghidra/rel-d_basesNP/export/8070c7a0_FUN_8070c7a0.c; model bind variant with count 0 and +0x5C0 scale 0x807CC9A8",src/game/bases.rs

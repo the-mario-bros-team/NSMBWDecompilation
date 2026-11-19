@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80670bb0,fn_80670bb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80670bb0_FUN_80670bb0.c; Lemmy-ball +0x544 colour-slot writer; rewrites low byte from +0x89D, calls 0x80168880 and fn_806b58e0",src/game/bases.rs
+game::bases,80670f10,fn_80670f10,translated,medium,"work/ghidra/rel-d_basesNP/export/80670f10_FUN_80670f10.c; returns 0x807C90FC or 0x807C9100 from the two +0x5F8 virtual queries",src/game/bases.rs
+game::bases,80675620,fn_80675620,translated,medium,"work/ghidra/rel-d_basesNP/export/80675620_FUN_80675620.c; flag-capture hand-off gated by player +0x1090 low byte; 0x80145AC0/0x801474D0 then 0x800D8D30 with the +0x6C slot id",src/game/bases.rs
+game::bases,806756b0,fn_806756b0,translated,high,"work/ghidra/rel-d_basesNP/export/806756b0_FUN_806756b0.c; binds clip 0x8023A0B0 into +0x430 over model +0x3F0 with 0x801651F0 and 0x80169F80",src/game/bases.rs
+game::bases,80675720,fn_80675720,translated,medium,"work/ghidra/rel-d_basesNP/export/80675720_FUN_80675720.c; binds pane 0x8023A270 into +0x49C, caches at +0x498; the name argument is dropped by the export",src/game/bases.rs
+game::bases,80675790,fn_80675790,translated,high,"work/ghidra/rel-d_basesNP/export/80675790_FUN_80675790.c; swing pose, unnamed clip 0x807EAE68 at time 8.0, flag 0",src/game/bases.rs
+game::bases,80675820,fn_80675820,translated,medium,"work/ghidra/rel-d_basesNP/export/80675820_FUN_80675820.c; clamps +0x4D8 against 0x807C9278 with 0x8015F470 and advances both blocks",src/game/bases.rs
+game::bases,806758b0,fn_806758b0,translated,high,"work/ghidra/rel-d_basesNP/export/806758b0_FUN_806758b0.c; swing pose at time 4.0, flag 1, resets both blocks to 0x807C9248",src/game/bases.rs
+game::bases,80675a60,fn_80675a60,translated,high,"work/ghidra/rel-d_basesNP/export/80675a60_FUN_80675a60.c; wait_sea pose at time 30.0, flag 0",src/game/bases.rs
+game::bases,80675af0,fn_80675af0,translated,high,"work/ghidra/rel-d_basesNP/export/80675af0_FUN_80675af0.c; copies +0x4D8 into +0x430 and +0x49C and advances both interfaces",src/game/bases.rs
+game::bases,80675b60,fn_80675b60,translated,high,"work/ghidra/rel-d_basesNP/export/80675b60_FUN_80675b60.c; swing_sea 0x807EAE84 at time 4.0, second block reuses swing 0x807EAE70",src/game/bases.rs
+game::bases,80675c10,fn_80675c10,translated,high,"work/ghidra/rel-d_basesNP/export/80675c10_FUN_80675c10.c; unregisters +0x148 and raises 0x80829F18 when the block and collision area are idle",src/game/bases.rs
+game::bases,806760a0,fn_806760a0,translated,high,"work/ghidra/rel-d_basesNP/export/806760a0_FUN_806760a0.c; releases with 0x8015F800 and frees with 0x802B9280 when count is positive",src/game/bases.rs
+game::bases,80676220,fn_80676220,translated,high,"work/ghidra/rel-d_basesNP/export/80676220_FUN_80676220.c; allocates 0x420 bytes, vtable 0x807EB0F4, +0x3E8 sub-object, +0x404 interface 0x80317860",src/game/bases.rs
+game::bases,806762a0,fn_806762a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806762a0_FUN_806762a0.c; copies +0xAC..+0xB4 into +0x408..+0x410 and stores virtual +0xF0 at +0x414",src/game/bases.rs
+game::bases,80679c60,fn_80679c60,translated,high,"work/ghidra/rel-d_basesNP/export/80679c60_FUN_80679c60.c; releases with 0x800671B0 and frees with 0x80162920 when count is positive",src/game/bases.rs
+game::bases,80679e80,fn_80679e80,translated,high,"work/ghidra/rel-d_basesNP/export/80679e80_FUN_80679e80.c; releases with 0x8015F800 and frees with 0x802B9280 when count is positive",src/game/bases.rs
+game::bases,8067a000,fn_8067a000,translated,high,"work/ghidra/rel-d_basesNP/export/8067a000_FUN_8067a000.c; allocates 0x5A8 bytes, vtable 0x807EBF48, blocks at +0x434/+0x440/+0x47C and 0x807C9408 seeds at +0x460",src/game/bases.rs
+game::bases,8067a1e0,fn_8067a1e0,translated,high,"work/ghidra/rel-d_basesNP/export/8067a1e0_FUN_8067a1e0.c; boss_ef_attack archive and larry_attack clips from the four +0x478-indexed tables",src/game/bases.rs
+game::bases,8067a330,fn_8067a330,translated,high,"work/ghidra/rel-d_basesNP/export/8067a330_FUN_8067a330.c; +0x394 slot +0x10, fn_8067a3e0 and 0x80064F50, returns 1",src/game/bases.rs
+game::bases,8067a3e0,fn_8067a3e0,translated,high,"work/ghidra/rel-d_basesNP/export/8067a3e0_FUN_8067a3e0.c; matrix rebuild from +0xAC position and +0x100 rotation, then model binds and fn_8067a4d0",src/game/bases.rs
+game::bases,8067a4d0,fn_8067a4d0,translated,high,"work/ghidra/rel-d_basesNP/export/8067a4d0_FUN_8067a4d0.c; samples frame 0 with 0x80168180 into the +0x46C clip via 0x8016F130",src/game/bases.rs
+game::bases,8067a6b0,fn_8067a6b0,translated,high,"work/ghidra/rel-d_basesNP/export/8067a6b0_FUN_8067a6b0.c; Wm_en_burst_m and Wm_en_firesnk_icehitsmk_h, sound 0x51F, release 0x80162510",src/game/bases.rs
+game::bases,8067a750,fn_8067a750,translated,high,"work/ghidra/rel-d_basesNP/export/8067a750_FUN_8067a750.c; Wm_la_magicattack dispatch through +0x47C slot +0xA0 with the +0x478-indexed table 0x807EBEE8",src/game/bases.rs
+game::bases,8067a7e0,fn_8067a7e0,translated,high,"work/ghidra/rel-d_basesNP/export/8067a7e0_FUN_8067a7e0.c; raises 0x8082A2D8 when 0x801C14C0(+0x460) exceeds 0x807C9408",src/game/bases.rs
+game::bases,8067a840,fn_8067a840,translated,medium,"work/ghidra/rel-d_basesNP/export/8067a840_FUN_8067a840.c; address-only call to paired-single 0x8067A520 then sound 0x51D",src/game/bases.rs
+game::bases,8067a8b0,fn_8067a8b0,translated,high,"work/ghidra/rel-d_basesNP/export/8067a8b0_FUN_8067a8b0.c; advances +0x434 slot +0x14, calls 0x8006CD40 and fn_8067a750",src/game/bases.rs

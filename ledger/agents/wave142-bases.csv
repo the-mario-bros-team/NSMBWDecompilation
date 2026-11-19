@@ -1,0 +1,18 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807bd110,fn_807bd110,translated,high,"work/ghidra/rel-d_basesNP/export/807bd110_FUN_807bd110.c; dWorldSelect_c constructor; 13 StateID objects, 17 f32 + 9 u16 layout block, 13 x 9-word payload rotation",src/game/bases.rs
+game::bases,8062c8e0,fn_8062c8e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8062c8e0_FUN_8062c8e0.c; world-select cell initialiser; 9 x 38 grid scan, course-object banks +0x400/+0x770, snapshot +100..+109",src/game/bases.rs
+game::bases,8071d500,fn_8071d500,translated,medium,"work/ghidra/rel-d_basesNP/export/8071d500_FUN_8071d500.c; world-9 water-level sequence; six states, 0x550/0x551/0x552 sound ids, slope -1.0/120.0",src/game/bases.rs
+game::bases,8067fc80,fn_8067fc80,translated,medium,"work/ghidra/rel-d_basesNP/export/8067fc80_FUN_8067fc80.c; water-surface actor create; 8 wave segments, 8 node records, 24 render-node pairs from 0x807ECB48",src/game/bases.rs
+game::bases,80773a40,fn_80773a40,translated,medium,"work/ghidra/rel-d_basesNP/export/80773a40_FUN_80773a40.c; tail call 0x80773AD0 with the zone record at +0x3180 + index*10",src/game/bases.rs
+game::bases,80773a60,fn_80773a60,translated,medium,"work/ghidra/rel-d_basesNP/export/80773a60_FUN_80773a60.c; zone step result, returns -1 unless fn_80773a40 low bit is set",src/game/bases.rs
+game::bases,80774090,fn_80774090,translated,high,"work/ghidra/rel-d_basesNP/export/80774090_FUN_80774090.c; cntlzw(kind-2)>>5 kind==2 test over 0x800F9270/0x800F9970",src/game/bases.rs
+game::bases,80774750,fn_80774750,translated,medium,"work/ghidra/rel-d_basesNP/export/80774750_FUN_80774750.c; W<S><n>S name; profile 0x279 spawn; (flag!=0)<<8 | strlen<<16 | *0x8042CF84",src/game/bases.rs
+game::bases,80775030,fn_80775030,translated,medium,"work/ghidra/rel-d_basesNP/export/80775030_FUN_80775030.c; zone table +0x5C7F4 stride 0x3F08; field +0x30 + index*4",src/game/bases.rs
+game::bases,80775100,fn_80775100,translated,medium,"work/ghidra/rel-d_basesNP/export/80775100_FUN_80775100.c; zone object +0x48 or 0xFFFFFFFF",src/game/bases.rs
+game::bases,80775150,fn_80775150,translated,medium,"work/ghidra/rel-d_basesNP/export/80775150_FUN_80775150.c; zone object +0x50, no null check",src/game/bases.rs
+game::bases,807760b0,fn_807760b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807760b0_FUN_807760b0.c; 0x808173C8 descriptor at +0x60, inits +0x184 and +0x1A0",src/game/bases.rs
+game::bases,80776360,fn_80776360,translated,high,"work/ghidra/rel-d_basesNP/export/80776360_FUN_80776360.c; pose reset +0x128..+0x134 from +0xAC..+0xB4 plus 50.0; clears +0x1AC",src/game/bases.rs
+game::bases,80777910,fn_80777910,translated,high,"work/ghidra/rel-d_basesNP/export/80777910_FUN_80777910.c; deleting destructor, frees via 0x802B9280 when free>0",src/game/bases.rs
+game::bases,80777950,fn_80777950,translated,high,"work/ghidra/rel-d_basesNP/export/80777950_FUN_80777950.c; instruction-identical twin of fn_80777910",src/game/bases.rs
+game::bases,80777f60,fn_80777f60,translated,high,"work/ghidra/rel-d_basesNP/export/80777f60_FUN_80777f60.c; clamped step of +0x4F4 toward +0x4F8 by +0x500",src/game/bases.rs
+game::bases,80779f90,fn_80779f90,translated,high,"work/ghidra/rel-d_basesNP/export/80779f90_FUN_80779f90.c; clears the +0x1F4 word",src/game/bases.rs

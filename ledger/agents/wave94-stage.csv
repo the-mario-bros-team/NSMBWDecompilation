@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800b04a0,fn_800b04a0,translated,high,"work/ghidra/main-gb/export/800b04a0_FUN_800b04a0.c; returns descriptor 0x803576B4",src/game/stage.rs
+game::stage,800b04b0,fn_800b04b0,translated,high,"work/ghidra/main-gb/export/800b04b0_FUN_800b04b0.c; returns descriptor 0x803577B4",src/game/stage.rs
+game::stage,800b04c0,fn_800b04c0,translated,high,"work/ghidra/main-gb/export/800b04c0_FUN_800b04c0.c; returns descriptor 0x80357734",src/game/stage.rs
+game::stage,800b19b0,fn_800b19b0,translated,high,"work/ghidra/main-gb/export/800b19b0_FUN_800b19b0.c; runs 0x800C9930 on the +0x04 sub-object",src/game/stage.rs
+game::stage,800b2eb0,fn_800b2eb0,translated,high,"work/ghidra/main-gb/export/800b2eb0_FUN_800b2eb0.c; word store to r13-0x573C",src/game/stage.rs
+game::stage,800b2ec0,fn_800b2ec0,translated,high,"work/ghidra/main-gb/export/800b2ec0_FUN_800b2ec0.c; word load from r13-0x573C",src/game/stage.rs
+game::stage,800b2ed0,fn_800b2ed0,translated,high,"work/ghidra/main-gb/export/800b2ed0_FUN_800b2ed0.c; setter 0x80161460 on the scale record",src/game/stage.rs
+game::stage,800b2ee0,fn_800b2ee0,translated,high,"work/ghidra/main-gb/export/800b2ee0_FUN_800b2ee0.c; duplicate of 0x800B2ED0 kept by the linker",src/game/stage.rs
+game::stage,800b2f00,fn_800b2f00,translated,high,"work/ghidra/main-gb/export/800b2f00_FUN_800b2f00.c; flush 0x80161490 on the scale record",src/game/stage.rs
+game::stage,800b37e0,fn_800b37e0,translated,medium,"work/ghidra/main-gb/export/800b37e0_FUN_800b37e0.c; aspect-ratio rescale of a two-word point",src/game/stage.rs
+game::stage,800b4730,fn_800b4730,translated,high,"work/ghidra/main-gb/export/800b4730_FUN_800b4730.c; two 20-byte colour blocks plus +0x28 virtual setter",src/game/stage.rs
+game::stage,800b55f0,fn_800b55f0,translated,medium,"work/ghidra/main-gb/export/800b55f0_FUN_800b55f0.c; sprite x/z window test with scene wrap",src/game/stage.rs
+game::stage,800b56e0,fn_800b56e0,translated,medium,"work/ghidra/main-gb/export/800b56e0_FUN_800b56e0.c; scrolling sprite window test",src/game/stage.rs
+game::stage,800b5c60,fn_800b5c60,translated,medium,"work/ghidra/main-gb/export/800b5c60_FUN_800b5c60.c; full per-frame input record refresh",src/game/stage.rs
+game::stage,800b61a0,fn_800b61a0,translated,high,"work/ghidra/main-gb/export/800b61a0_FUN_800b61a0.c; sprite angle at +0x8E",src/game/stage.rs
+game::stage,800b6250,fn_800b6250,translated,medium,"work/ghidra/main-gb/export/800b6250_FUN_800b6250.c; orientation step counters +0x8C..+0x92",src/game/stage.rs
+game::stage,800b6930,fn_800b6930,translated,high,"work/ghidra/main-gb/export/800b6930_FUN_800b6930.c; reset heading and the three ground-speed words",src/game/stage.rs
+game::stage,800b7b10,fn_800b7b10,translated,medium,"work/ghidra/main-gb/export/800b7b10_FUN_800b7b10.c; scaled count submitted to 0x80168FE0",src/game/stage.rs
+game::stage,800b7b80,fn_800b7b80,translated,high,"work/ghidra/main-gb/export/800b7b80_FUN_800b7b80.c; guarded release returning the same pointer",src/game/stage.rs
+game::stage,800b8550,fn_800b8550,translated,medium,"work/ghidra/main-gb/export/800b8550_FUN_800b8550.c; timer record start: state mirror, matrix, sound 0x26A",src/game/stage.rs
+game::stage,800b8620,fn_800b8620,translated,medium,"work/ghidra/main-gb/export/800b8620_FUN_800b8620.c; timer record state selection",src/game/stage.rs
+game::stage,800b8850,fn_800b8850,translated,high,"work/ghidra/main-gb/export/800b8850_FUN_800b8850.c; release the twelve +0x34 handles",src/game/stage.rs
+game::stage,800b8ee0,fn_800b8ee0,translated,high,"work/ghidra/main-gb/export/800b8ee0_FUN_800b8ee0.c; two-phase timer step",src/game/stage.rs
+game::stage,800b9230,fn_800b9230,translated,medium,"work/ghidra/main-gb/export/800b9230_FUN_800b9230.c; tear down the +0x20 animation-node list",src/game/stage.rs
+game::stage,800b9570,fn_800b9570,translated,high,"work/ghidra/main-gb/export/800b9570_FUN_800b9570.c; (count - 2) scaled to a float",src/game/stage.rs
+game::stage,800babb0,fn_800babb0,translated,medium,"work/ghidra/main-gb/export/800babb0_FUN_800babb0.c; wanwan_boss_iggy model and magic_chainAB animation",src/game/stage.rs
+game::stage,800bacd0,fn_800bacd0,translated,high,"work/ghidra/main-gb/export/800bacd0_FUN_800bacd0.c; +0x44 transform bound to the +0x04 model",src/game/stage.rs
+game::stage,800bc460,fn_800bc460,translated,high,"work/ghidra/main-gb/export/800bc460_FUN_800bc460.c; three 0x2C-stride submits from +0xCC",src/game/stage.rs

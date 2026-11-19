@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a55550,fn_80a55550,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a55550_FUN_80a55550.c; seventh 0x548 shell; deleting destructor, clears through 0x8015F800 then frees on positive mode",src/game/enemies.rs
+game::enemies,80a555b0,fn_80a555b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a555b0_FUN_80a555b0.c; constant producer returning 0x80358104",src/game/enemies.rs
+game::enemies,80a556a0,fn_80a556a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a556a0_FUN_80a556a0.c; five-step +0x30 chain walk with recursion, predicate slot +0xC",src/game/enemies.rs
+game::enemies,80a55780,fn_80a55780,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a55780_FUN_80a55780.c; colon-suffix name predicate over 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80a55840,fn_80a55840,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a55840_FUN_80a55840.c; 48-byte argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a55870,fn_80a55870,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a55870_FUN_80a55870.c; second 48-byte forwarder, identical to 80a55840",src/game/enemies.rs
+game::enemies,80a558a0,fn_80a558a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a558a0_FUN_80a558a0.c; 0x548-byte constructor, vtable 0x80B45E88, model holder at +0x524",src/game/enemies.rs
+game::enemies,80a570a0,fn_80a570a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a570a0_FUN_80a570a0.c; daEnFireSnake_c deleting destructor",src/game/enemies.rs
+game::enemies,80a571c0,fn_80a571c0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a571c0_FUN_80a571c0.c; 48-byte argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80a571f0,fn_80a571f0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a571f0_FUN_80a571f0.c; second forwarder of daEnFireSnake_c",src/game/enemies.rs
+game::enemies,80a57220,fn_80a57220,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a57220_FUN_80a57220.c; 0x14E0-byte daEnFireSnake_c constructor; 8x0x29 node array and 4x0x260 element array",src/game/enemies.rs
+game::enemies,80a57400,fn_80a57400,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a57400_FUN_80a57400.c; 0x260-byte chain element constructor",src/game/enemies.rs
+game::enemies,80a574c0,fn_80a574c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a574c0_FUN_80a574c0.c; chain element destructor, releases +0x1AC, +0x74, +0x48 and +0x04",src/game/enemies.rs
+game::enemies,80a575c0,fn_80a575c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a575c0_FUN_80a575c0.c; binds g3d/fire_snake.brres node fire_snake_body and its animation",src/game/enemies.rs
+game::enemies,80a576a0,fn_80a576a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a576a0_FUN_80a576a0.c; element placement with 0x80B2CFB8 vertical step per index",src/game/enemies.rs
+game::enemies,80a57780,fn_80a57780,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a57780_FUN_80a57780.c; element matrix rebuild via 0x80064AF0/0x801C0BD0",src/game/enemies.rs
+game::enemies,80a57810,fn_80a57810,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a57810_FUN_80a57810.c; Wm_en_firesnkspark02 per-element effect",src/game/enemies.rs
+game::enemies,80a578b0,fn_80a578b0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a578b0_FUN_80a578b0.c; 16-byte indirect dispatch through the +0x04 owner slot +0x14",src/game/enemies.rs
+game::enemies,80a578c0,fn_80a578c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a578c0_FUN_80a578c0.c; spawn initialiser; 41-sample ring at +0x638 and +0x04-gated state switch",src/game/enemies.rs
+game::enemies,80a57b50,fn_80a57b50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a57b50_FUN_80a57b50.c; fire_snake model/head/R_jump_st binder and element bind loop",src/game/enemies.rs
+game::enemies,80a57d30,fn_80a57d30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a57d30_FUN_80a57d30.c; dispatches +0x79C slot +0x08 with (this, arg, 2)",src/game/enemies.rs
+game::enemies,80a57f60,fn_80a57f60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a57f60_FUN_80a57f60.c; wrapper around the +0x7C matrix rebuild and the spark emitter",src/game/enemies.rs
+game::enemies,80a57fa0,fn_80a57fa0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a57fa0_FUN_80a57fa0.c; builds the +0x7C matrix from +0xAC with the three +0x100 angles",src/game/enemies.rs
+game::enemies,80a580b0,fn_80a580b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a580b0_FUN_80a580b0.c; skl_root probe and Wm_en_firesnkspark01 effect",src/game/enemies.rs
+game::enemies,80a581e0,fn_80a581e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a581e0_FUN_80a581e0.c; head bob clamp writing +0x7A0..+0x7AC",src/game/enemies.rs
+game::enemies,80a58290,fn_80a58290,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a58290_FUN_80a58290.c; resets +0x60C and the four element +0x48 holders",src/game/enemies.rs
+game::enemies,80a58300,fn_80a58300,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58300_FUN_80a58300.c; releases +0x148 and the four element +0x1AC blocks",src/game/enemies.rs
+game::enemies,80a58360,fn_80a58360,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58360_FUN_80a58360.c; shifts the 41-sample ring at +0x638 by one 8-byte sample",src/game/enemies.rs
+game::enemies,80a58410,fn_80a58410,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58410_FUN_80a58410.c; copies ring samples 1..4 into the two element pairs",src/game/enemies.rs
+game::enemies,80a58960,fn_80a58960,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a58960_FUN_80a58960.c; seeds the +0x1154 countdown from 0x800B2EE0(2) + 3",src/game/enemies.rs

@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80093f10,fn_80093f10,translated,medium,"work/ghidra/main-gb/export/80093f10_FUN_80093f10.c; 0xA8-byte pane record with two 0x30-byte quads, 15 effect modes",src/game/stage.rs
+game::stage,80097170,fn_80097170,translated,medium,"work/ghidra/main-gb/export/80097170_FUN_80097170.c; notice latch over fn_80097250; 3 parameters restored from the two call sites",src/game/stage.rs
+game::stage,80097250,fn_80097250,translated,medium,"work/ghidra/main-gb/export/80097250_FUN_80097250.c; ground probe plus the four vtable transition slots 0x21C/0xC8/0xCC/0xD0",src/game/stage.rs
+game::stage,80098900,fn_80098900,translated,medium,"work/ghidra/main-gb/export/80098900_FUN_80098900.c; mode-2 retarget pass over the +0x5B8 records and mask bits 0/2/3",src/game/stage.rs

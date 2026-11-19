@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80200968,fn_80200968,translated,medium,"work/ghidra/main-gb/export/80200968_FUN_80200968.c; role-switch cancel/complete by handle; slot +0x11B marker and 0x080B gate",src/runtime/bt.rs
+runtime::bt,80201320,fn_80201320,translated,medium,"work/ghidra/main-gb/export/80201320_FUN_80201320.c; role-switch event; copies timeout to peer slot; 0x0413 advance or callback",src/runtime/bt.rs
+runtime::bt,8020182c,fn_8020182c,translated,high,"work/ghidra/main-gb/export/8020182c_FUN_8020182c.c; RSSI read request; BTM_CB_2158 gate and 0x8020ED2C",src/runtime/bt.rs
+runtime::bt,80201968,fn_80201968,translated,high,"work/ghidra/main-gb/export/80201968_FUN_80201968.c; link-quality read request; twin of 8020182C",src/runtime/bt.rs
+runtime::bt,80201d94,fn_80201d94,translated,medium,"work/ghidra/main-gb/export/80201d94_FUN_80201d94.c; eSCO packet-type re-selection; QoS and 0x040F paths",src/runtime/bt.rs
+runtime::bt,80201fb4,fn_80201fb4,translated,medium,"work/ghidra/main-gb/export/80201fb4_FUN_80201fb4.c; create/update BTM device record; name/class/link-key fields",src/runtime/bt.rs
+runtime::bt,802021e8,fn_802021e8,translated,high,"work/ghidra/main-gb/export/802021e8_FUN_802021e8.c; device record lookup returns name buffer at +0x35",src/runtime/bt.rs
+runtime::bt,80202288,fn_80202288,translated,medium,"work/ghidra/main-gb/export/80202288_FUN_80202288.c; allocate/clear BTM device record and fill class/address/handle",src/runtime/bt.rs
+runtime::bt,802023a8,fn_802023a8,translated,high,"work/ghidra/main-gb/export/802023a8_FUN_802023a8.c; find device record by u16 handle at +0x18",src/runtime/bt.rs
+runtime::bt,80202680,fn_80202680,translated,high,"work/ghidra/main-gb/export/80202680_FUN_80202680.c; reset BTM default globals and send 0x0C03",src/runtime/bt.rs
+runtime::bt,80202a20,fn_80202a20,translated,medium,"work/ghidra/main-gb/export/80202a20_FUN_80202a20.c; BTM bring-up retry state machine; builder args recovered from allocations",src/runtime/bt.rs
+runtime::bt,80203fe8,fn_80203fe8,translated,medium,"work/ghidra/main-gb/export/80203fe8_FUN_80203fe8.c; forwards to BTM_DEV_READY_CB when installed",src/runtime/bt.rs
+runtime::bt,802045b8,fn_802045b8,translated,medium,"work/ghidra/main-gb/export/802045b8_FUN_802045b8.c; connectability mode setter; interval/window caches and two builders",src/runtime/bt.rs
+runtime::bt,8020508c,fn_8020508c,translated,medium,"work/ghidra/main-gb/export/8020508c_FUN_8020508c.c; insert inquiry result into fixed 0x0C-stride buffer",src/runtime/bt.rs
+runtime::bt,80205168,fn_80205168,translated,high,"work/ghidra/main-gb/export/80205168_FUN_80205168.c; allocate/reuse inquiry database record; eviction callback",src/runtime/bt.rs
+runtime::bt,802058ec,fn_802058ec,translated,medium,"work/ghidra/main-gb/export/802058ec_FUN_802058ec.c; remote-name request gate; pending mask timer and 0x8020D700",src/runtime/bt.rs
+runtime::bt,802072f8,fn_802072f8,translated,medium,"work/ghidra/main-gb/export/802072f8_FUN_802072f8.c; eSCO link parameter update; slot policy and 0x8020D9EC",src/runtime/bt.rs
+runtime::bt,8020bcd0,fn_8020bcd0,translated,high,"work/ghidra/main-gb/export/8020bcd0_FUN_8020bcd0.c; GAP connection lookup by CID; config or teardown path",src/runtime/bt.rs
+runtime::bt,8020beac,fn_8020beac,translated,medium,"work/ghidra/main-gb/export/8020beac_FUN_8020beac.c; GAP configuration result and L2CAP config response",src/runtime/bt.rs
+runtime::bt,8020bfe8,fn_8020bfe8,translated,high,"work/ghidra/main-gb/export/8020bfe8_FUN_8020bfe8.c; GAP configuration response flag; callback or teardown",src/runtime/bt.rs
+runtime::bt,8020c1d4,fn_8020c1d4,translated,medium,"work/ghidra/main-gb/export/8020c1d4_FUN_8020c1d4.c; GAP L2CAP disconnect indication; optional response then teardown",src/runtime/bt.rs
+runtime::bt,8020c3cc,fn_8020c3cc,translated,medium,"work/ghidra/main-gb/export/8020c3cc_FUN_8020c3cc.c; queue frame in state 4 or free it; callback 0x102",src/runtime/bt.rs
+runtime::bt,8020c4dc,fn_8020c4dc,translated,high,"work/ghidra/main-gb/export/8020c4dc_FUN_8020c4dc.c; GAP congestion callback with 0x103/0x104 event codes",src/runtime/bt.rs
+runtime::bt,8020c610,fn_8020c610,translated,medium,"work/ghidra/main-gb/export/8020c610_FUN_8020c610.c; discovery/name completion status mapping and callback",src/runtime/bt.rs
+runtime::bt,8020c800,fn_8020c800,translated,medium,"work/ghidra/main-gb/export/8020c800_FUN_8020c800.c; remote-name lookup completion; record chain and result callback",src/runtime/bt.rs
+runtime::bt,8020ca18,fn_8020ca18,translated,medium,"work/ghidra/main-gb/export/8020ca18_FUN_8020ca18.c; inquiry-complete remote-name lookup; result callback",src/runtime/bt.rs

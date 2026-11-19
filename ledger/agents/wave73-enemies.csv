@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80af0010,fn_80af0010,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0010_FUN_80af0010.c; both effect holders placed from position; +0x5EC lowered by 20.0",src/game/enemies.rs
+game::enemies,80af0160,fn_80af0160,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0160_FUN_80af0160.c; advances +0x544 and +0x5EC holders and returns 1",src/game/enemies.rs
+game::enemies,80af01e0,fn_80af01e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af01e0_FUN_80af01e0.c; copies the +0x544 matrix into the +0x6C8 effect record",src/game/enemies.rs
+game::enemies,80af0230,fn_80af0230,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0230_FUN_80af0230.c; x band 16.0 and y band 24.0 against the four player slots",src/game/enemies.rs
+game::enemies,80af02c0,fn_80af02c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af02c0_FUN_80af02c0.c; refreshes the cached slot offsets; sentinel 1000000.0 when no player",src/game/enemies.rs
+game::enemies,80af03a0,fn_80af03a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af03a0_FUN_80af03a0.c; binds the red_ring node into +0x584 and resets +0x5C0",src/game/enemies.rs
+game::enemies,80af0440,fn_80af0440,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af0440_FUN_80af0440.c; 0x800B1100 emission plus the untranslated 0x80AF0370 call",src/game/enemies.rs
+game::enemies,80af04a0,fn_80af04a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af04a0_FUN_80af04a0.c; four-player red-ring scan with Wm_ob_redringkira/get effects",src/game/enemies.rs
+game::enemies,80af0660,fn_80af0660,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0660_FUN_80af0660.c; 0.03515625 scale step and the +0x6D4 angle ramp",src/game/enemies.rs
+game::enemies,80af0b70,fn_80af0b70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0b70_FUN_80af0b70.c; deleting destructor 0x8015F800/0x802B9280 returning this",src/game/enemies.rs
+game::enemies,80af0c90,fn_80af0c90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0c90_FUN_80af0c90.c; 48-byte forwarder to 0x802DCBFC(second second first)",src/game/enemies.rs
+game::enemies,80af0cc0,fn_80af0cc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0cc0_FUN_80af0cc0.c; duplicate of 80af0c90",src/game/enemies.rs
+game::enemies,80af0cf0,fn_80af0cf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0cf0_FUN_80af0cf0.c; 0x6A8-byte constructor with vtable 0x80B627A8",src/game/enemies.rs
+game::enemies,80af0ef0,fn_80af0ef0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af0ef0_FUN_80af0ef0.c; disposes the two holders and returns 1",src/game/enemies.rs
+game::enemies,80af1200,fn_80af1200,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af1200_FUN_80af1200.c; effect spawn item drop and 0x243 collection branch",src/game/enemies.rs
+game::enemies,80af1500,fn_80af1500,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af1500_FUN_80af1500.c; g3d/obj_coin.brres binder for the obj_coin_red node",src/game/enemies.rs
+game::enemies,80af15b0,fn_80af15b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af15b0_FUN_80af15b0.c; four-player item selection over the 0x80B31328 table",src/game/enemies.rs
+game::enemies,80af18b0,fn_80af18b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af18b0_FUN_80af18b0.c; re-tests the player masks and switches to 0x80B778D0",src/game/enemies.rs
+game::enemies,80af19b0,fn_80af19b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af19b0_FUN_80af19b0.c; three-phase landing timer with mask clear and sound 0xBA",src/game/enemies.rs
+game::enemies,80af1f70,fn_80af1f70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af1f70_FUN_80af1f70.c; deleting destructor duplicate of 80af0b70",src/game/enemies.rs
+game::enemies,80af2090,fn_80af2090,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af2090_FUN_80af2090.c; 48-byte forwarder duplicate of 80af0c90",src/game/enemies.rs
+game::enemies,80af20c0,fn_80af20c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af20c0_FUN_80af20c0.c; 48-byte forwarder duplicate of 80af2090",src/game/enemies.rs
+game::enemies,80af7ca0,fn_80af7ca0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af7ca0_FUN_80af7ca0.c; block_roulette model glass and empty node loader",src/game/enemies.rs
+game::enemies,80af7e80,fn_80af7e80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af7e80_FUN_80af7e80.c; two-mode state switch plus the six-word drop request",src/game/enemies.rs
+game::enemies,80af8000,fn_80af8000,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af8000_FUN_80af8000.c; frame index to item id over the 0x80B31508 table",src/game/enemies.rs
+game::enemies,80af8050,fn_80af8050,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80af8050_FUN_80af8050.c; gated drop request via 0x800226D0 or 0x80022780",src/game/enemies.rs
+game::enemies,80af8150,fn_80af8150,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af8150_FUN_80af8150.c; nine-frame face cycle and sound 0x276",src/game/enemies.rs
+game::enemies,80af8200,fn_80af8200,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af8200_FUN_80af8200.c; reset with three callbacks twice and 0x80B77C70 state",src/game/enemies.rs

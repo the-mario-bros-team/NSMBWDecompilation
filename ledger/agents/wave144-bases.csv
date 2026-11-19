@@ -1,0 +1,17 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807a84b0,fn_807a84b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807a84b0_FUN_807a84b0.c; otasukeInfo backdrop rebuild; w/h from 0x8042A0F0/0x8042A0EC and camera +0x18C; wide arm rounds counts with the 0x807D0690 table",src/game/bases.rs
+game::bases,80772370,fn_80772370,translated,medium,"work/ghidra/rel-d_basesNP/export/80772370_FUN_80772370.c; three-pass crossing test over 0x16518-stride areas; pass 3 has two independent ifs",src/game/bases.rs
+game::bases,806639a0,fn_806639a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806639a0_FUN_806639a0.c; five-state contact machine; countdown 80/20; per-player Y targets +0x3EC; state compare uses the 0x80162D00 object +0x360",src/game/bases.rs
+game::bases,8074c540,fn_8074c540,translated,medium,"work/ghidra/rel-d_basesNP/export/8074c540_FUN_8074c540.c; join panel portrait draw id 159; 4-bit slot walks and 9-bit confirmed mask; draw flag is bit 31",src/game/bases.rs
+game::bases,8075d5c0,fn_8075d5c0,translated,medium,"work/ghidra/rel-d_basesNP/export/8075d5c0_FUN_8075d5c0.c; ten-pane layout pass; three hinges +0x314 and panes +0x3C8/+0x408; 0x800F6910(this, 0x80814798, -40.0, 0.8)",src/game/bases.rs
+game::bases,80763e50,fn_80763e50,translated,medium,"work/ghidra/rel-d_basesNP/export/80763e50_FUN_80763e50.c; world-map event ids 0x5F/0x15..0x19; open and poll phases; effect records 39/40/41",src/game/bases.rs
+game::bases,80757900,fn_80757900,translated,high,"work/ghidra/rel-d_basesNP/export/80757900_FUN_80757900.c; releases 0x8015F800(this,0) and frees when the count is positive; returns this",src/game/bases.rs
+game::bases,8075b6b0,fn_8075b6b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8075b6b0_FUN_8075b6b0.c; 0x800F5FD0(this); class word 0x80814568 at +0x60; constructs +0x188",src/game/bases.rs
+game::bases,8075b8b0,fn_8075b8b0,translated,high,"work/ghidra/rel-d_basesNP/export/8075b8b0_FUN_8075b8b0.c; single store of zero at +0x1A8",src/game/bases.rs
+game::bases,8075b8d0,fn_8075b8d0,translated,high,"work/ghidra/rel-d_basesNP/export/8075b8d0_FUN_8075b8d0.c; two stores of one at +0x1A4 and +0x1A8",src/game/bases.rs
+game::bases,80752ca0,fn_80752ca0,translated,high,"work/ghidra/rel-d_basesNP/export/80752ca0_FUN_80752ca0.c; +0xB0 replaced by f32 0x80752AC0(+0xB0)",src/game/bases.rs
+game::bases,80752d10,fn_80752d10,translated,high,"work/ghidra/rel-d_basesNP/export/80752d10_FUN_80752d10.c; +0xAC replaced by f32 0x80752AC0(+0xAC)",src/game/bases.rs
+game::bases,80753b20,fn_80753b20,translated,high,"work/ghidra/rel-d_basesNP/export/80753b20_FUN_80753b20.c; decrements +0x1A498 and re-evaluates +0xB0 via 0x807537D0 at zero",src/game/bases.rs
+game::bases,80753780,fn_80753780,translated,medium,"work/ghidra/rel-d_basesNP/export/80753780_FUN_80753780.c; refreshes +0x514 with 0x800EDEB0 and rebinds +0x1A4B8 via 0x800EBB30; returns 1",src/game/bases.rs
+game::bases,806765b0,fn_806765b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806765b0_FUN_806765b0.c; houdai placement from the 12-bit parameter word; stage record 0x8007FB10; +0x5E0 halfword read transcribed verbatim",src/game/bases.rs
+game::bases,807bef60,fn_807bef60,translated,medium,"work/ghidra/rel-d_basesNP/export/807bef60_FUN_807bef60.c; 0x807BE screen rebuild; rotated +0x4C8 block; two 0x802D1210 owners; rects +0x3A4/+0x48C; colour block +0x468",src/game/bases.rs

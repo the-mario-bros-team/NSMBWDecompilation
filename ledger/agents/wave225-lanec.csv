@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800ab650,fn_800ab650,translated,high,work/ghidra/main-gb/export/800ab650_FUN_800ab650.c; 148 bytes stwu at 0x800AB650 to bclr at 0x800AB6E0 matching the tsv; interface +0x394 slot +0x28 then state slot +0x14 against 0x80358304; +0x510 callback forwards its f1 to 0x801690E0 on +0x644,src/game/stage.rs
+game::stage,800ab700,fn_800ab700,translated,high,work/ghidra/main-gb/export/800ab700_FUN_800ab700.c; 164 bytes stwu at 0x800AB700 to bclr at 0x800AB7A0 matching the tsv; interface +0x394 slot +0x28 then state slot +0x14 against 0x80358344; +0x514 float clamped by the +0x66C min then 0x801690E0 on +0x644,src/game/stage.rs

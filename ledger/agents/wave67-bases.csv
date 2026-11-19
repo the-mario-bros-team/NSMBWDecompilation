@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80701c60,fn_80701c60,translated,high,"work/ghidra/rel-d_basesNP/export/80701c60_FUN_80701c60.c; copies 3 floats to +0x78 stores 100.0 at +0x84 and calls the +0x74 vtable slot +0x0C",src/game/bases.rs
+game::bases,80702320,fn_80702320,translated,high,"work/ghidra/rel-d_basesNP/export/80702320_FUN_80702320.c; writes 0xFF to the first two bytes of a three-byte colour record",src/game/bases.rs
+game::bases,80702970,fn_80702970,translated,medium,"work/ghidra/rel-d_basesNP/export/80702970_FUN_80702970.c; converts the +0x100 angles builds the +0x7C matrix from +0xAC and applies it to the +0x478 node",src/game/bases.rs
+game::bases,80702a30,fn_80702a30,translated,medium,"work/ghidra/rel-d_basesNP/export/80702a30_FUN_80702a30.c; emits Wm_ob_boat at +0xAC plus 105.0 through the +0xA5C vtable slot +0xA0",src/game/bases.rs
+game::bases,80702d90,fn_80702d90,translated,high,"work/ghidra/rel-d_basesNP/export/80702d90_FUN_80702d90.c; releases the +0x74 member of the five 0x90-stride light objects at +0x744",src/game/bases.rs
+game::bases,80702df0,fn_80702df0,translated,high,"work/ghidra/rel-d_basesNP/export/80702df0_FUN_80702df0.c; clears the sixteen three-byte colour records at +0xA2C via fn_80702320",src/game/bases.rs
+game::bases,80702e40,fn_80702e40,translated,high,"work/ghidra/rel-d_basesNP/export/80702e40_FUN_80702e40.c; pushes each of the sixteen colour records through fn_80702380 against the +0x744 lights",src/game/bases.rs
+game::bases,80702ea0,fn_80702ea0,translated,high,"work/ghidra/rel-d_basesNP/export/80702ea0_FUN_80702ea0.c; claims the first free colour record and emits event 0x2AA from the +0xAC position",src/game/bases.rs
+game::bases,80702f40,fn_80702f40,translated,medium,"work/ghidra/rel-d_basesNP/export/80702f40_FUN_80702f40.c; initialises the six 0x5C-stride switch records at +0xB84 with 4 zero floats and the +0x3C mode",src/game/bases.rs
+game::bases,807031e0,fn_807031e0,translated,medium,"work/ghidra/rel-d_basesNP/export/807031e0_FUN_807031e0.c; runs 0x800DAE80 on the six switch records at +0xB84",src/game/bases.rs
+game::bases,80703230,fn_80703230,translated,high,"work/ghidra/rel-d_basesNP/export/80703230_FUN_80703230.c; calls the +0x0C virtual of the six switch records at +0xB84",src/game/bases.rs
+game::bases,80703290,fn_80703290,translated,medium,"work/ghidra/rel-d_basesNP/export/80703290_FUN_80703290.c; runs the 0x800DAED0 release on the six switch records at +0xB84",src/game/bases.rs
+game::bases,807032e0,fn_807032e0,translated,medium,"work/ghidra/rel-d_basesNP/export/807032e0_FUN_807032e0.c; derives the fade rate from the selected player +0x14D4 counter then reselects the +0xA14 palette index",src/game/bases.rs
+game::bases,80703390,fn_80703390,translated,medium,"work/ghidra/rel-d_basesNP/export/80703390_FUN_80703390.c; copies bone 2/3 positions into the palette slots when the +0xA25..+0xA27 gates are set",src/game/bases.rs
+game::bases,80703460,fn_80703460,translated,medium,"work/ghidra/rel-d_basesNP/export/80703460_FUN_80703460.c; creates the two light_fog_st effect records and sets +0xE08/+0xE09",src/game/bases.rs
+game::bases,80703540,fn_80703540,translated,medium,"work/ghidra/rel-d_basesNP/export/80703540_FUN_80703540.c; stops and releases the light_fog_st pair clears +0xE08 and writes 0xFF to +0x430",src/game/bases.rs
+game::bases,80703640,fn_80703640,translated,medium,"work/ghidra/rel-d_basesNP/export/80703640_FUN_80703640.c; ticks both fog members and switches to light_fog_wait when the first finishes",src/game/bases.rs
+game::bases,80703750,fn_80703750,translated,medium,"work/ghidra/rel-d_basesNP/export/80703750_FUN_80703750.c; stores the mode at +0xE0E applies the player-mask fog gate and resets the two +0x574 beams",src/game/bases.rs
+game::bases,80703840,fn_80703840,translated,medium,"work/ghidra/rel-d_basesNP/export/80703840_FUN_80703840.c; two-mode player machine using the +0x358/+0x35C masks returning the player index or -1",src/game/bases.rs
+game::bases,80703b40,fn_80703b40,translated,high,"work/ghidra/rel-d_basesNP/export/80703b40_FUN_80703b40.c; places the two beams from bone 3 and subtracts 0x8000 from the yaw each step",src/game/bases.rs
+game::bases,80703c00,fn_80703c00,translated,high,"work/ghidra/rel-d_basesNP/export/80703c00_FUN_80703c00.c; releases the two 0xE8-stride beams at +0x574 through fn_807022d0",src/game/bases.rs
+game::bases,80703c50,fn_80703c50,translated,high,"work/ghidra/rel-d_basesNP/export/80703c50_FUN_80703c50.c; resets the four two-byte player sound records at +0xDAC via fn_80702510",src/game/bases.rs
+game::bases,80703ca0,fn_80703ca0,translated,high,"work/ghidra/rel-d_basesNP/export/80703ca0_FUN_80703ca0.c; detects the 0xFF yaw jump drives each +0xE11 player-mask bit through fn_80702520 and latches +0xE06",src/game/bases.rs
+game::bases,80703d70,fn_80703d70,translated,high,"work/ghidra/rel-d_basesNP/export/80703d70_FUN_80703d70.c; prepares the four two-byte player sound records at +0xDAC via fn_807024c0",src/game/bases.rs
+game::bases,80704130,fn_80704130,translated,medium,"work/ghidra/rel-d_basesNP/export/80704130_FUN_80704130.c; copies bone 3 translation to +0x55C stores 80.0 at +0x568 and calls the +0x558 vtable slot +0x0C",src/game/bases.rs
+game::bases,80704860,fn_80704860,translated,medium,"work/ghidra/rel-d_basesNP/export/80704860_FUN_80704860.c; destroys the six switch records five lights and two beams and resets the NW4R members at +0x458..+0x53C",src/game/bases.rs
+game::bases,80704ce0,fn_80704ce0,translated,high,"work/ghidra/rel-d_basesNP/export/80704ce0_FUN_80704ce0.c; null-guarded 0x8015F800 teardown and optional 0x802B9280 free returning the object",src/game/bases.rs
+game::bases,80704e60,fn_80704e60,translated,medium,"work/ghidra/rel-d_basesNP/export/80704e60_FUN_80704e60.c; allocates 0x3F0 bytes runs the 0x80066FC0 base constructor and stores vtable 0x80804390 at +0x60",src/game/bases.rs
+game::bases,80705080,fn_80705080,translated,medium,"work/ghidra/rel-d_basesNP/export/80705080_FUN_80705080.c; emits the 2-D effect and the 0x8082F320 parameter block only when both +0x3D4 counter tests are idle",src/game/bases.rs
+game::bases,807053c0,fn_807053c0,translated,high,"work/ghidra/rel-d_basesNP/export/807053c0_FUN_807053c0.c; null-guarded 0x8015F800 teardown and optional 0x802B9280 free returning the object",src/game/bases.rs

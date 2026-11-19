@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a51a30,fn_80a51a30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a51a30_FUN_80a51a30.c; deleting destructor: 0x8015F800(state,0), 0x802B9280 when mode > 0",src/game/enemies.rs
+game::enemies,80a51a90,fn_80a51a90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a51a90_FUN_80a51a90.c; constant producer, returns the shared descriptor 0x80358084",src/game/enemies.rs
+game::enemies,80a51b80,fn_80a51b80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a51b80_FUN_80a51b80.c; five-step +0x30 owner walk, sixth owner recurses",src/game/enemies.rs
+game::enemies,80a51c60,fn_80a51c60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a51c60_FUN_80a51c60.c; name predicate, 0x802E1C40/0x802E1AB4 on the ':' suffix",src/game/enemies.rs
+game::enemies,80a51d20,fn_80a51d20,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a51d20_FUN_80a51d20.c; 48-byte forwarder, 0x802DCBFC(second,second,first)",src/game/enemies.rs
+game::enemies,80a51d50,fn_80a51d50,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a51d50_FUN_80a51d50.c; second 48-byte forwarder, identical reshuffle",src/game/enemies.rs
+game::enemies,80a51d80,fn_80a51d80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a51d80_FUN_80a51d80.c; 0x6E8-byte constructor, class vtable 0x80B44DEC",src/game/enemies.rs
+game::enemies,80a521f0,fn_80a521f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a521f0_FUN_80a521f0.c; reads the 3x4 matrix at transform+0x14D8 and rewrites +0xAC/+0xB0",src/game/enemies.rs
+game::enemies,80a53710,fn_80a53710,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a53710_FUN_80a53710.c; g3d/dossun.brres binder, per-variant dossun/dossun_big model and clip",src/game/enemies.rs
+game::enemies,80a539c0,fn_80a539c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a539c0_FUN_80a539c0.c; Wm_en_dossunfall01..03 plus Wm_en_landsmoke/Wm_en_sndlandsmk at (+0xAC,+0xB0,5500.0)",src/game/enemies.rs
+game::enemies,80a53bd0,fn_80a53bd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a53bd0_FUN_80a53bd0.c; +0x5DC countdown, 0x800978C0(delay[variant],256.0) switches to 0x80B71470",src/game/enemies.rs
+game::enemies,80a53ca0,fn_80a53ca0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a53ca0_FUN_80a53ca0.c; 0x80169020 clip-finished test then state 0x80B714B0 and holder release",src/game/enemies.rs
+game::enemies,80a53de0,fn_80a53de0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a53de0_FUN_80a53de0.c; same as 0x80A53CA0 with state 0x80B71530",src/game/enemies.rs
+game::enemies,80a53e70,fn_80a53e70,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a53e70_FUN_80a53e70.c; 0x80072BC0 contact dispatch, 0x400000 branch, 0x800D8C60, landing effects and sound 0x211/0x212",src/game/enemies.rs
+game::enemies,80a54010,fn_80a54010,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a54010_FUN_80a54010.c; +0x5DC countdown, mode byte +0x5B8 set to 3 at 0x20, state 0x80B715B0 at zero",src/game/enemies.rs
+game::enemies,80a540b0,fn_80a540b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a540b0_FUN_80a540b0.c; +0xEC=0.875, 0x8006EF40 landing probe, state 0x80B71430 and 0x0C countdown",src/game/enemies.rs
+game::enemies,80a54120,fn_80a54120,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a54120_FUN_80a54120.c; wait entry: clears +0x100/+0x102, sound 0x20F/0x210, +0x114 speed -0.25/-0.2, +0x500=0x0D",src/game/enemies.rs
+game::enemies,80a54c00,fn_80a54c00,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a54c00_FUN_80a54c00.c; deleting destructor of the jugem descriptor skeleton",src/game/enemies.rs
+game::enemies,80a54c60,fn_80a54c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a54c60_FUN_80a54c60.c; second deleting destructor, same body, 4 bytes of padding",src/game/enemies.rs
+game::enemies,80a54cc0,fn_80a54cc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a54cc0_FUN_80a54cc0.c; constant producer, returns 0x80358004",src/game/enemies.rs
+game::enemies,80a54cd0,fn_80a54cd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a54cd0_FUN_80a54cd0.c; constant producer, returns 0x80357BF4",src/game/enemies.rs
+game::enemies,80a54dc0,fn_80a54dc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a54dc0_FUN_80a54dc0.c; five-step +0x30 owner walk with tail recursion",src/game/enemies.rs
+game::enemies,80a54ea0,fn_80a54ea0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a54ea0_FUN_80a54ea0.c; name predicate on the ':'-suffix of the +0x20 name slot",src/game/enemies.rs
+game::enemies,80a54f60,fn_80a54f60,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a54f60_FUN_80a54f60.c; 48-byte forwarder, 0x802DCBFC(second,second,first)",src/game/enemies.rs
+game::enemies,80a54f90,fn_80a54f90,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a54f90_FUN_80a54f90.c; second 48-byte forwarder, identical reshuffle",src/game/enemies.rs
+game::enemies,80a54fc0,fn_80a54fc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a54fc0_FUN_80a54fc0.c; 0x5F0-byte jugem constructor, class vtable 0x80B45B20",src/game/enemies.rs
+game::enemies,80a550f0,fn_80a550f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a550f0_FUN_80a550f0.c; transform commit: 0x801C0BD0 matrix, three rotation setters, scale bind, model commit",src/game/enemies.rs
+game::enemies,80a55220,fn_80a55220,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a55220_FUN_80a55220.c; g3d/jugem.brres binder with the jugem model and throw clip",src/game/enemies.rs

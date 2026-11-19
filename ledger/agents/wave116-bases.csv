@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80603860,fn_80603860,translated,medium,"work/ghidra/rel-d_basesNP/export/80603860_FUN_80603860.c; copies the owner position triple into the preview player record; folded 2^52 X scale; starts layout animation 4",src/game/bases.rs
+game::bases,80603990,fn_80603990,translated,high,"work/ghidra/rel-d_basesNP/export/80603990_FUN_80603990.c; layout query then dispatch 0x80822DD8",src/game/bases.rs
+game::bases,80603a10,fn_80603a10,translated,high,"work/ghidra/rel-d_basesNP/export/80603a10_FUN_80603a10.c; six preview sound ids; writes chosen slot array 0x80354E60; seeds player record fields",src/game/bases.rs
+game::bases,80603c60,fn_80603c60,translated,medium,"work/ghidra/rel-d_basesNP/export/80603c60_FUN_80603c60.c; slot scan via fn_80602460; counter decrement and 0x80822E58/0x80822ED8 dispatch",src/game/bases.rs
+game::bases,80603eb0,fn_80603eb0,translated,high,"work/ghidra/rel-d_basesNP/export/80603eb0_FUN_80603eb0.c; pane visibility pair; animation 0; writes +0x24C/+0x234",src/game/bases.rs
+game::bases,80603f30,fn_80603f30,translated,high,"work/ghidra/rel-d_basesNP/export/80603f30_FUN_80603f30.c; layout query then dispatch 0x80822B58",src/game/bases.rs
+game::bases,80603fa0,fn_80603fa0,translated,high,"work/ghidra/rel-d_basesNP/export/80603fa0_FUN_80603fa0.c; three pane visibilities; fn_80602810; selected row writes; animation 0",src/game/bases.rs
+game::bases,80604090,fn_80604090,translated,high,"work/ghidra/rel-d_basesNP/export/80604090_FUN_80604090.c; layout query then 0x80822B18 or 0x80822B58 by selected slot",src/game/bases.rs
+game::bases,80604130,fn_80604130,translated,high,"work/ghidra/rel-d_basesNP/export/80604130_FUN_80604130.c; animation 4 and dirty byte",src/game/bases.rs
+game::bases,80604170,fn_80604170,translated,high,"work/ghidra/rel-d_basesNP/export/80604170_FUN_80604170.c; layout query then dispatch 0x80822A58",src/game/bases.rs
+game::bases,806057b0,fn_806057b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806057b0_FUN_806057b0.c; characterChangeSelectContents_05 layout; binds N_cSelectCon_00/PbuttonShadow_00/T_zanki_01 arrays",src/game/bases.rs
+game::bases,80605a20,fn_80605a20,translated,medium,"work/ghidra/rel-d_basesNP/export/80605a20_FUN_80605a20.c; formats text object +0x2A8 and shows pane +0x254[index + 2]",src/game/bases.rs
+game::bases,80605aa0,fn_80605aa0,translated,medium,"work/ghidra/rel-d_basesNP/export/80605aa0_FUN_80605aa0.c; formats text object +0x2B0 and shows pane +0x254[index + 4]",src/game/bases.rs
+game::bases,80605b20,fn_80605b20,translated,medium,"work/ghidra/rel-d_basesNP/export/80605b20_FUN_80605b20.c; formats text object +0x2AC and shows pane +0x254[index + 6]",src/game/bases.rs
+game::bases,80606030,fn_80606030,translated,medium,"work/ghidra/rel-d_basesNP/export/80606030_FUN_80606030.c; relatches +0x28C/+0x290 and +0x294/+0x298 then calls the 0x80605BA0 row builder",src/game/bases.rs
+game::bases,806060a0,fn_806060a0,translated,high,"work/ghidra/rel-d_basesNP/export/806060a0_FUN_806060a0.c; early-out; clears four row panes; sets +0x23C/+0x248 and +0x24C/+0x234",src/game/bases.rs
+game::bases,80606140,fn_80606140,translated,high,"work/ghidra/rel-d_basesNP/export/80606140_FUN_80606140.c; animation 0; clears pane visibility and +0x29F/+0x2A0",src/game/bases.rs
+game::bases,80606260,fn_80606260,translated,high,"work/ghidra/rel-d_basesNP/export/80606260_FUN_80606260.c; +0x29E/+0x29F guards; dispatches 0x80822FE0 or 0x80822F60",src/game/bases.rs
+game::bases,80606300,fn_80606300,translated,high,"work/ghidra/rel-d_basesNP/export/80606300_FUN_80606300.c; layout query then dispatch 0x80822FA0",src/game/bases.rs
+game::bases,80607740,fn_80607740,translated,medium,"work/ghidra/rel-d_basesNP/export/80607740_FUN_80607740.c; builds the 9x12 character unlock table; copies 24 saved words into two layouts; 0x80823070",src/game/bases.rs
+game::bases,80607a50,fn_80607a50,translated,high,"work/ghidra/rel-d_basesNP/export/80607a50_FUN_80607a50.c; fn_806072e0 + fn_806074e0; twelve pane refresh; animation 0; 0x808230B0",src/game/bases.rs
+game::bases,80607b10,fn_80607b10,translated,high,"work/ghidra/rel-d_basesNP/export/80607b10_FUN_80607b10.c; previous/next unlocked column flags; record +0x255/+0x25C; animations 1/2/0",src/game/bases.rs
+game::bases,80607bc0,fn_80607bc0,translated,high,"work/ghidra/rel-d_basesNP/export/80607bc0_FUN_80607bc0.c; layout and row-flag guards then dispatch 0x808230F0",src/game/bases.rs
+game::bases,80607c50,fn_80607c50,translated,medium,"work/ghidra/rel-d_basesNP/export/80607c50_FUN_80607c50.c; frame record flags bit 3/2 select fn_80607380/fn_80607430 else 0x808231B0",src/game/bases.rs
+game::bases,80607d00,fn_80607d00,translated,high,"work/ghidra/rel-d_basesNP/export/80607d00_FUN_80607d00.c; record +0x25C 2/3; twelve pane slots 12..23; sound 0x7D",src/game/bases.rs
+game::bases,80607db0,fn_80607db0,translated,high,"work/ghidra/rel-d_basesNP/export/80607db0_FUN_80607db0.c; +0xB3C transition reopens pane 0/1; second gate dispatches 0x80823170",src/game/bases.rs
+game::bases,80607e50,fn_80607e50,translated,high,"work/ghidra/rel-d_basesNP/export/80607e50_FUN_80607e50.c; animation 1/3; twelve pane refresh; record +0x25C states 1/4/5",src/game/bases.rs
+game::bases,80608040,fn_80608040,translated,high,"work/ghidra/rel-d_basesNP/export/80608040_FUN_80608040.c; sound 0x7A and animation 5",src/game/bases.rs
+game::bases,80608090,fn_80608090,translated,high,"work/ghidra/rel-d_basesNP/export/80608090_FUN_80608090.c; layout query then dispatch 0x80823070",src/game/bases.rs

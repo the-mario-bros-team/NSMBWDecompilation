@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80144110,fn_80144110,translated,medium,"work/ghidra/main-gb/export/80144110_FUN_80144110.c; partner ground snap; signed +0x1C conversion; two arg counts on 0x8012DBE0",src/game/worldmap.rs
+game::worldmap,80144280,fn_80144280,translated,high,"work/ghidra/main-gb/export/80144280_FUN_80144280.c; allocates 0x2D08 then calls the ctor with r3",src/game/worldmap.rs
+game::worldmap,801442b0,fn_801442b0,translated,medium,"work/ghidra/main-gb/export/801442b0_FUN_801442b0.c; 18 embedded records; vtables 80325420/80325878/80310ED8; per-player tables",src/game/worldmap.rs
+game::worldmap,801446e0,fn_801446e0,translated,high,"work/ghidra/main-gb/export/801446e0_FUN_801446e0.c; deleting destructor; restores vtable and releases every record",src/game/worldmap.rs
+game::worldmap,80144b20,fn_80144b20,translated,medium,"work/ghidra/main-gb/export/80144b20_FUN_80144b20.c; per-player state copy; tables 80354E50..80354E80",src/game/worldmap.rs
+game::worldmap,80144d50,fn_80144d50,translated,high,"work/ghidra/main-gb/export/80144d50_FUN_80144d50.c; single r13-0x6674 word load",src/game/worldmap.rs
+game::worldmap,80145040,fn_80145040,translated,medium,"work/ghidra/main-gb/export/80145040_FUN_80145040.c; save/copy/restore of +0x38E around 0x80046AB0",src/game/worldmap.rs
+game::worldmap,801451f0,fn_801451f0,translated,medium,"work/ghidra/main-gb/export/801451f0_FUN_801451f0.c; gate chain; +0x60 slots 0x294/0x404; +0x1464 child slot 0x28",src/game/worldmap.rs
+game::worldmap,8014a340,fn_8014a340,translated,high,"work/ghidra/main-gb/export/8014a340_FUN_8014a340.c; returns per-map block 0x80354B2C",src/game/worldmap.rs
+game::worldmap,8014a350,fn_8014a350,translated,high,"work/ghidra/main-gb/export/8014a350_FUN_8014a350.c; returns per-map block 0x803545DC",src/game/worldmap.rs
+game::worldmap,8014a360,fn_8014a360,translated,high,"work/ghidra/main-gb/export/8014a360_FUN_8014a360.c; returns per-map block 0x8035459C",src/game/worldmap.rs
+game::worldmap,8014a370,fn_8014a370,translated,high,"work/ghidra/main-gb/export/8014a370_FUN_8014a370.c; returns per-map block 0x8035449C",src/game/worldmap.rs
+game::worldmap,8014a380,fn_8014a380,translated,high,"work/ghidra/main-gb/export/8014a380_FUN_8014a380.c; returns per-map block 0x8035445C",src/game/worldmap.rs
+game::worldmap,8014a390,fn_8014a390,translated,high,"work/ghidra/main-gb/export/8014a390_FUN_8014a390.c; returns per-map block 0x8035441C",src/game/worldmap.rs
+game::worldmap,8014a3a0,fn_8014a3a0,translated,high,"work/ghidra/main-gb/export/8014a3a0_FUN_8014a3a0.c; returns per-map block 0x803543DC",src/game/worldmap.rs
+game::worldmap,8014a3b0,fn_8014a3b0,translated,high,"work/ghidra/main-gb/export/8014a3b0_FUN_8014a3b0.c; returns per-map block 0x803542DC",src/game/worldmap.rs
+game::worldmap,8014a3c0,fn_8014a3c0,translated,high,"work/ghidra/main-gb/export/8014a3c0_FUN_8014a3c0.c; returns per-map block 0x8035439C",src/game/worldmap.rs
+game::worldmap,8014a3d0,fn_8014a3d0,translated,high,"work/ghidra/main-gb/export/8014a3d0_FUN_8014a3d0.c; returns per-map block 0x8035435C",src/game/worldmap.rs
+game::worldmap,8014a3e0,fn_8014a3e0,translated,high,"work/ghidra/main-gb/export/8014a3e0_FUN_8014a3e0.c; returns per-map block 0x8035431C",src/game/worldmap.rs
+game::worldmap,8014a3f0,fn_8014a3f0,translated,high,"work/ghidra/main-gb/export/8014a3f0_FUN_8014a3f0.c; returns per-map block 0x8035429C",src/game/worldmap.rs
+game::worldmap,8014a400,fn_8014a400,translated,high,"work/ghidra/main-gb/export/8014a400_FUN_8014a400.c; returns per-map block 0x8035425C",src/game/worldmap.rs
+game::worldmap,8014aaf0,fn_8014aaf0,translated,medium,"work/ghidra/main-gb/export/8014aaf0_FUN_8014aaf0.c; g3d_ice_brres loader; +0x3B0/+0x3B4/+0x3F4/+0x3F8 records",src/game/worldmap.rs
+game::worldmap,8014b000,fn_8014b000,translated,medium,"work/ghidra/main-gb/export/8014b000_FUN_8014b000.c; forwards to 0x8014AFC0 with implicit r3",src/game/worldmap.rs
+game::worldmap,8014b020,fn_8014b020,translated,medium,"work/ghidra/main-gb/export/8014b020_FUN_8014b020.c; forwards to 0x8014AFC0 with implicit r3",src/game/worldmap.rs
+game::worldmap,8014b040,fn_8014b040,translated,medium,"work/ghidra/main-gb/export/8014b040_FUN_8014b040.c; forwards to 0x8014AFC0 with implicit r3",src/game/worldmap.rs
+game::worldmap,8014fc50,fn_8014fc50,translated,medium,"work/ghidra/main-gb/export/8014fc50_FUN_8014fc50.c; +0x14D8 child slot 0x64 with 0x80371270 double; +0x151C = 5",src/game/worldmap.rs
+game::worldmap,8014fe60,fn_8014fe60,translated,high,"work/ghidra/main-gb/export/8014fe60_FUN_8014fe60.c; clears +0x17C bit 3; child slot 0x68; +0x153C = 0x1E",src/game/worldmap.rs
+game::worldmap,8014ff00,fn_8014ff00,translated,medium,"work/ghidra/main-gb/export/8014ff00_FUN_8014ff00.c; sets +0x17C bit 4; child slot 0x64 with 0x80371258 double",src/game/worldmap.rs

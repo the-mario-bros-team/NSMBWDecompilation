@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::menu,801735b0,fn_801735b0,translated,high,work/ghidra/main-gb/export/801735b0_FUN_801735b0.c; recovered by audit-unledgered; verified against functions.tsv and the export,src/ui/menu.rs

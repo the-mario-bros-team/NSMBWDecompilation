@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801e5450,fn_801e5450,translated,high,"work/ghidra/main-gb/export/801e5450_FUN_801e5450.c; KPAD init word store at r13-0x4BD8",src/runtime/input.rs
+runtime::input,801ea9c0,fn_801ea9c0,translated,high,"work/ghidra/main-gb/export/801ea9c0_FUN_801ea9c0.c; channel block reset: pointer bounds + gain + 6 status bytes",src/runtime/input.rs
+runtime::input,801eab90,fn_801eab90,translated,high,"work/ghidra/main-gb/export/801eab90_FUN_801eab90.c; two 16-bit press timers with 40000/20000 wrap",src/runtime/input.rs
+runtime::input,801ead30,fn_801ead30,translated,medium,"work/ghidra/main-gb/export/801ead30_FUN_801ead30.c; button word + press/release edges then timer step",src/runtime/input.rs
+runtime::input,801eadd0,fn_801eadd0,translated,high,"work/ghidra/main-gb/export/801eadd0_FUN_801eadd0.c; axis smoothing: fourth-power gain below +0xC8 radius",src/runtime/input.rs
+runtime::input,801eae90,fn_801eae90,translated,medium,"work/ghidra/main-gb/export/801eae90_FUN_801eae90.c; acceleration direction blend and +0x4FC hold counter",src/runtime/input.rs
+runtime::input,801eb030,fn_801eb030,translated,medium,"work/ghidra/main-gb/export/801eb030_FUN_801eb030.c; three-axis normalise into +0x54/+0x58",src/runtime/input.rs
+runtime::input,801eb160,fn_801eb160,translated,medium,"work/ghidra/main-gb/export/801eb160_FUN_801eb160.c; extension report decode: kinds 1/2/4/5/7/8/0xB plus control stick",src/runtime/input.rs
+runtime::input,801eb5c0,fn_801eb5c0,translated,medium,"work/ghidra/main-gb/export/801eb5c0_FUN_801eb5c0.c; sensor-bar pair search by best dot product",src/runtime/input.rs
+runtime::input,801eb7b0,fn_801eb7b0,translated,medium,"work/ghidra/main-gb/export/801eb7b0_FUN_801eb7b0.c; weighted sensor-bar pair search with cosine gate",src/runtime/input.rs
+runtime::input,801eb9e0,fn_801eb9e0,translated,medium,"work/ghidra/main-gb/export/801eb9e0_FUN_801eb9e0.c; per-point border extrapolation test",src/runtime/input.rs
+runtime::input,801ebba0,fn_801ebba0,translated,medium,"work/ghidra/main-gb/export/801ebba0_FUN_801ebba0.c; nearest sensor-bar point per aim point",src/runtime/input.rs
+runtime::input,801ec8a0,fn_801ec8a0,translated,medium,"work/ghidra/main-gb/export/801ec8a0_FUN_801ec8a0.c; control-stick dead zone and radial clamp",src/runtime/input.rs
+runtime::input,801edf40,fn_801edf40,translated,medium,"work/ghidra/main-gb/export/801edf40_FUN_801edf40.c; asynchronous channel reset via 0x802DCD74 halves",src/runtime/input.rs
+runtime::input,801ee0b0,fn_801ee0b0,translated,high,"work/ghidra/main-gb/export/801ee0b0_FUN_801ee0b0.c; locked word exchange at block+0x44",src/runtime/input.rs
+runtime::input,801ee150,fn_801ee150,translated,high,"work/ghidra/main-gb/export/801ee150_FUN_801ee150.c; clears block+0x4A",src/runtime/input.rs
+runtime::input,801ee170,fn_801ee170,translated,high,"work/ghidra/main-gb/export/801ee170_FUN_801ee170.c; sets block+0x4A",src/runtime/input.rs
+runtime::input,801ee190,fn_801ee190,translated,medium,"work/ghidra/main-gb/export/801ee190_FUN_801ee190.c; extension detach notification and state latches",src/runtime/input.rs
+runtime::input,801ef6f0,fn_801ef6f0,translated,medium,"work/ghidra/main-gb/export/801ef6f0_FUN_801ef6f0.c; IOS bulk message tag 2 via 0x801EF390",src/runtime/input.rs
+runtime::input,801ef770,fn_801ef770,translated,medium,"work/ghidra/main-gb/export/801ef770_FUN_801ef770.c; IOS bulk message tag 1 with 0x10000 threshold",src/runtime/input.rs
+runtime::input,801ef810,fn_801ef810,translated,medium,"work/ghidra/main-gb/export/801ef810_FUN_801ef810.c; same as 801ef770 after a cache flush",src/runtime/input.rs
+runtime::input,801efef0,fn_801efef0,translated,high,"work/ghidra/main-gb/export/801efef0_FUN_801efef0.c; reads r13-0x4B38 (WBC personality word)",src/runtime/input.rs
+runtime::input,801eff00,fn_801eff00,translated,high,"work/ghidra/main-gb/export/801eff00_FUN_801eff00.c; App_MEMalloc wrapper over 0x803A3814",src/runtime/input.rs
+runtime::input,801eff50,fn_801eff50,translated,high,"work/ghidra/main-gb/export/801eff50_FUN_801eff50.c; App_MEMfree wrapper over 0x803A3818",src/runtime/input.rs
+runtime::input,801effa0,fn_801effa0,translated,high,"work/ghidra/main-gb/export/801effa0_FUN_801effa0.c; __wudSyncFlushCallback pending mode 0x17/0xFF",src/runtime/input.rs

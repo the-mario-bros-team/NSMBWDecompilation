@@ -1,0 +1,3 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801e1e20,fn_801e1e20,translated,medium,"work/ghidra/main-gb/export/801e1e20_FUN_801e1e20.c; extension enable/disable register sequence: mode 0 queues five 0x30-byte records, modes 1/5 queue seven, 2/3/4 queue one (ids 0x14/0x15/0x16/0x19); seven-byte template at r2-0x4DA0 with byte 4 from r13-0x4BC9; +0x83C state gate",src/runtime/input.rs
+runtime::input,801e39c0,fn_801e39c0,translated,medium,"work/ghidra/main-gb/export/801e39c0_FUN_801e39c0.c; extension activation sequence: mode 0 queues three records, a new mode queues eight (ids 0x13/0x15/0x16/0x1A); 0x4B000xx register writes, 0x802F6CD8/0x802F6D08 per-kind tables, +0x8CC latch and +0x994/+0x8CC stores",src/runtime/input.rs

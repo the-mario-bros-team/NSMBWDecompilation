@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80738050,fn_80738050,translated,high,"work/ghidra/rel-d_basesNP/export/80738050_FUN_80738050.c; teardown: animator +0x10, clip +0x14, releases +0x4AC and +0x590, mode 0",src/game/bases.rs
+game::bases,807380c0,fn_807380c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807380c0_FUN_807380c0.c; model holder +0x3F0 virtual +0x14; receiver taken from r3",src/game/bases.rs
+game::bases,807383f0,fn_807383f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807383f0_FUN_807383f0.c; player virtual +0x6C byte to +0x38D; owner +0x4E4; clip 0x80830FA8",src/game/bases.rs
+game::bases,80738580,fn_80738580,translated,high,"work/ghidra/rel-d_basesNP/export/80738580_FUN_80738580.c; three 16-byte records +0x46C/+0x47C/+0x48C; 4096.0 fixed point",src/game/bases.rs
+game::bases,80738690,fn_80738690,translated,high,"work/ghidra/rel-d_basesNP/export/80738690_FUN_80738690.c; flat records with kind 1; y extent and centred span",src/game/bases.rs
+game::bases,80738780,fn_80738780,translated,high,"work/ghidra/rel-d_basesNP/export/80738780_FUN_80738780.c; animator +0x394 slot +0x18 with name 0x80831028",src/game/bases.rs
+game::bases,807387a0,fn_807387a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807387a0_FUN_807387a0.c; touch test ground +0xEC below zero; effect via 0x800D8B00; event 0x11",src/game/bases.rs
+game::bases,80738890,fn_80738890,translated,high,"work/ghidra/rel-d_basesNP/export/80738890_FUN_80738890.c; constant return 0",src/game/bases.rs
+game::bases,807388a0,fn_807388a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807388a0_FUN_807388a0.c; state +0x28 object query for clip 0x80830FE8; event 3",src/game/bases.rs
+game::bases,80738950,fn_80738950,translated,high,"work/ghidra/rel-d_basesNP/export/80738950_FUN_80738950.c; both-clips-idle query; 0xE mask; hit test fn_807387a0",src/game/bases.rs
+game::bases,80738a40,fn_80738a40,translated,high,"work/ghidra/rel-d_basesNP/export/80738a40_FUN_80738a40.c; same shape as fn_80738950 with fn_80738890",src/game/bases.rs
+game::bases,80738b30,fn_80738b30,translated,high,"work/ghidra/rel-d_basesNP/export/80738b30_FUN_80738b30.c; same shape as fn_80738950 with fn_807388a0",src/game/bases.rs
+game::bases,80738d40,fn_80738d40,translated,medium,"work/ghidra/rel-d_basesNP/export/80738d40_FUN_80738d40.c; child list +0x4B8 walked through +0x6C; state 1/2; +0x10D4 bit 2",src/game/bases.rs
+game::bases,80738f00,fn_80738f00,translated,medium,"work/ghidra/rel-d_basesNP/export/80738f00_FUN_80738f00.c; landing latch +0x460; sound 0x26F; record 0x80429D08/0x80429D0C",src/game/bases.rs
+game::bases,80738ff0,fn_80738ff0,translated,medium,"work/ghidra/rel-d_basesNP/export/80738ff0_FUN_80738ff0.c; flat records; state 2; 0x900000 mask; 0x80065480",src/game/bases.rs
+game::bases,80739080,fn_80739080,translated,high,"work/ghidra/rel-d_basesNP/export/80739080_FUN_80739080.c; character resolved by 0x8005F900; low bits of +0x12C cleared",src/game/bases.rs
+game::bases,80739300,fn_80739300,translated,medium,"work/ghidra/rel-d_basesNP/export/80739300_FUN_80739300.c; direction tables 0x807CDC10/0x807CDC18/0x807CDBD0; masks ORed",src/game/bases.rs
+game::bases,807394b0,fn_807394b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807394b0_FUN_807394b0.c; sound 0x26F then 0x26D with owner word; motion end restarts clip",src/game/bases.rs
+game::bases,807395b0,fn_807395b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807395b0_FUN_807395b0.c; bit 2 of +0x590 cleared; sound 0x26C; mode -1",src/game/bases.rs
+game::bases,80739650,fn_80739650,translated,high,"work/ghidra/rel-d_basesNP/export/80739650_FUN_80739650.c; 0x8008C380 then 0x8007F950 then mode 1",src/game/bases.rs
+game::bases,807396f0,fn_807396f0,translated,high,"work/ghidra/rel-d_basesNP/export/807396f0_FUN_807396f0.c; direction byte toggled; pitch negated; clip 0x80831028",src/game/bases.rs
+game::bases,807397e0,fn_807397e0,translated,high,"work/ghidra/rel-d_basesNP/export/807397e0_FUN_807397e0.c; identical twin of fn_807396f0",src/game/bases.rs
+game::bases,80739880,fn_80739880,translated,high,"work/ghidra/rel-d_basesNP/export/80739880_FUN_80739880.c; velocity deltas divided by 60; counter 0x3C; +0x590 sub-flag 4",src/game/bases.rs
+game::bases,80739950,fn_80739950,translated,high,"work/ghidra/rel-d_basesNP/export/80739950_FUN_80739950.c; counter decrement; velocity deltas subtracted; mode 1 at zero",src/game/bases.rs
+game::bases,8073a170,fn_8073a170,translated,high,"work/ghidra/rel-d_basesNP/export/8073a170_FUN_8073a170.c; 0x8015F800 always then 0x802B9280 when free is positive",src/game/bases.rs
+game::bases,8073a6e0,fn_8073a6e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8073a6e0_FUN_8073a6e0.c; twelve-word transform copy; angle adds 0x200 and 0x1000",src/game/bases.rs
+game::bases,8073aa10,fn_8073aa10,translated,high,"work/ghidra/rel-d_basesNP/export/8073aa10_FUN_8073aa10.c; twin of fn_8073a170",src/game/bases.rs
+game::bases,8073ab90,fn_8073ab90,translated,medium,"work/ghidra/rel-d_basesNP/export/8073ab90_FUN_8073ab90.c; 0x398-byte constructor with class table 0x8080E64C",src/game/bases.rs

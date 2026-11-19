@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,8022fa70,fn_8022fa70,translated,medium,"work/ghidra/main-gb/export/8022fa70_FUN_8022fa70.c; text appender, draw-side twin of fn_8022f350; 2052 bytes",src/runtime/bt.rs

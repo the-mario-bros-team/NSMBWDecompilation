@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,801628c0,fn_801628c0,translated,high,"work/ghidra/main-gb/export/801628c0_FUN_801628c0.c; zeroed default-heap allocation via 0x802B8CC0 and memset 0x800046B4",src/resource/registry.rs
+resource::registry,80162920,fn_80162920,translated,high,work/ghidra/main-gb/export/80162920_FUN_80162920.c; free on the DAT_80377C48 game heap,src/resource/registry.rs
+resource::registry,80162930,fn_80162930,translated,medium,"work/ghidra/main-gb/export/80162930_FUN_80162930.c; update pass then pending-list append; dropped receiver inferred as this",src/resource/registry.rs
+resource::registry,801629b0,fn_801629b0,translated,medium,"work/ghidra/main-gb/export/801629b0_FUN_801629b0.c; first bank payload with +0x0A == 0; hidden this inferred from callee",src/resource/registry.rs
+resource::registry,80162a50,fn_80162a50,translated,high,"work/ghidra/main-gb/export/80162a50_FUN_80162a50.c; stash u16 id plus two words and a flag byte in SDA",src/resource/registry.rs
+resource::registry,80162b40,fn_80162b40,translated,medium,"work/ghidra/main-gb/export/80162b40_FUN_80162b40.c; ordered insert by u16 key at +0x0C; final insert predecessor inferred",src/resource/registry.rs
+resource::registry,80162bb0,fn_80162bb0,translated,high,"work/ghidra/main-gb/export/80162bb0_FUN_80162bb0.c; free each node payload under the +0x08 critical section",src/resource/registry.rs
+resource::registry,80162c30,fn_80162c30,translated,high,"work/ghidra/main-gb/export/80162c30_FUN_80162c30.c; bucket find comparing the descriptor's first word",src/resource/registry.rs
+resource::registry,80162ca0,fn_80162ca0,translated,high,"work/ghidra/main-gb/export/80162ca0_FUN_80162ca0.c; unlink node at owner+0x54 and clear +0x08",src/resource/registry.rs
+resource::registry,80162cf0,fn_80162cf0,translated,high,"work/ghidra/main-gb/export/80162cf0_FUN_80162cf0.c; double indirection on +0x3C masked with 7",src/resource/registry.rs
+resource::registry,80162d00,fn_80162d00,translated,medium,"work/ghidra/main-gb/export/80162d00_FUN_80162d00.c; id&7 selects a 0x20-byte hash bucket; pointer scale inferred",src/resource/registry.rs
+resource::registry,80162d50,fn_80162d50,translated,high,"work/ghidra/main-gb/export/80162d50_FUN_80162d50.c; u16 payload key lookup in list 0x80377A10",src/resource/registry.rs
+resource::registry,80162db0,fn_80162db0,translated,high,"work/ghidra/main-gb/export/80162db0_FUN_80162db0.c; u8 payload sub-key lookup in list 0x80377A10",src/resource/registry.rs
+resource::registry,80162e10,fn_80162e10,translated,high,"work/ghidra/main-gb/export/80162e10_FUN_80162e10.c; five mask bits free five lists, then group id = 0",src/resource/registry.rs
+resource::registry,80162ed0,fn_80162ed0,translated,high,"work/ghidra/main-gb/export/80162ed0_FUN_80162ed0.c; reset five lists from 0x80329460 and hash init(8,8)",src/resource/registry.rs
+resource::registry,80163000,fn_80163000,translated,high,"work/ghidra/main-gb/export/80163000_FUN_80163000.c; walk with 0x801616C0 and free the +0x10 payload",src/resource/registry.rs
+resource::registry,80163090,fn_80163090,translated,high,"work/ghidra/main-gb/export/80163090_FUN_80163090.c; u16 key at payload+0x08, optional start node",src/resource/registry.rs
+resource::registry,80163100,fn_80163100,translated,high,"work/ghidra/main-gb/export/80163100_FUN_80163100.c; u8 sub-key at payload+0x0E, optional start node",src/resource/registry.rs
+resource::registry,80163170,fn_80163170,translated,high,"work/ghidra/main-gb/export/80163170_FUN_80163170.c; ut::List init at 0x80377AB0",src/resource/registry.rs
+resource::registry,80163180,fn_80163180,translated,medium,"work/ghidra/main-gb/export/80163180_FUN_80163180.c; builds LZ view via wave-39 0x8016A5E0/0x8016A690; dropped receiver inferred",src/resource/registry.rs
+resource::registry,80163280,fn_80163280,translated,medium,"work/ghidra/main-gb/export/80163280_FUN_80163280.c; virtual pass over 0x80377AB0; GX setup 0x80163220 not translated",src/resource/registry.rs
+resource::registry,801634c0,fn_801634c0,translated,high,work/ghidra/main-gb/export/801634c0_FUN_801634c0.c; read the r13-0x52C0 LZ view,src/resource/registry.rs
+resource::registry,80168060,fn_80168060,translated,high,"work/ghidra/main-gb/export/80168060_FUN_80168060.c; class tag via 0x80249C90(element+0x04, 4)",src/resource/registry.rs
+resource::registry,80168080,fn_80168080,translated,medium,"work/ghidra/main-gb/export/80168080_FUN_80168080.c; vtable slot +0x20 on the element object",src/resource/registry.rs
+resource::registry,801680a0,fn_801680a0,translated,medium,"work/ghidra/main-gb/export/801680a0_FUN_801680a0.c; vtable slot +0x1C on the element object",src/resource/registry.rs
+resource::registry,801680c0,fn_801680c0,translated,medium,"work/ghidra/main-gb/export/801680c0_FUN_801680c0.c; vtable slot +0x2C on the element object",src/resource/registry.rs
+resource::registry,801680e0,fn_801680e0,translated,medium,"work/ghidra/main-gb/export/801680e0_FUN_801680e0.c; vtable slot +0x28 on the element object",src/resource/registry.rs

@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,807948a0,fn_807948a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807948a0_FUN_807948a0.c; arms +0x330/+0x344 from the 0x8081B4F0 record table through 0x800FAE80/0x800FAF70",src/game/bases.rs
+game::bases,80795140,fn_80795140,translated,medium,"work/ghidra/rel-d_basesNP/export/80795140_FUN_80795140.c; in-place constructor with class vtable 0x8081BD78 at +0x60, the +0x1CC holder and the 0x80377DC8 vector",src/game/bases.rs
+game::bases,807954c0,fn_807954c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807954c0_FUN_807954c0.c; selects the slot-0 model through 0x80354E70 and binds character_SV",src/game/bases.rs
+game::bases,80795550,fn_80795550,translated,medium,"work/ghidra/rel-d_basesNP/export/80795550_FUN_80795550.c; spawns three 0x295 children and links +0x184/+0x188",src/game/bases.rs
+game::bases,807955d0,fn_807955d0,translated,high,"work/ghidra/rel-d_basesNP/export/807955d0_FUN_807955d0.c; presence refresh then 0x8077E250 on every child",src/game/bases.rs
+game::bases,80795620,fn_80795620,translated,medium,"work/ghidra/rel-d_basesNP/export/80795620_FUN_80795620.c; rebuilds the 0x80354E50 presence words and the 0x80832EB8 character mirror",src/game/bases.rs
+game::bases,807957b0,fn_807957b0,translated,high,"work/ghidra/rel-d_basesNP/export/807957b0_FUN_807957b0.c; finds a child with 0x80781C30 and arms or clears its +0x124 byte",src/game/bases.rs
+game::bases,80795850,fn_80795850,translated,medium,"work/ghidra/rel-d_basesNP/export/80795850_FUN_80795850.c; drives interface slots +0x30/+0x40/+0x48 of the child model",src/game/bases.rs
+game::bases,80795920,fn_80795920,translated,medium,"work/ghidra/rel-d_basesNP/export/80795920_FUN_80795920.c; per-slot character refresh through 0x807C3B60 and fn_80795850",src/game/bases.rs
+game::bases,80795a20,fn_80795a20,translated,high,"work/ghidra/rel-d_basesNP/export/80795a20_FUN_80795a20.c; scales +0xDC..+0xE4 by +0x298 while +0x228 is not 9",src/game/bases.rs
+game::bases,80795c40,fn_80795c40,translated,medium,"work/ghidra/rel-d_basesNP/export/80795c40_FUN_80795c40.c; writes the transform from +0xAC/+0x100/+0xDC with the 0x8031D3C0 offset table",src/game/bases.rs
+game::bases,80795d00,fn_80795d00,translated,medium,"work/ghidra/rel-d_basesNP/export/80795d00_FUN_80795d00.c; six-way layout dispatcher and label rebuild for panel states 9 and 12",src/game/bases.rs
+game::bases,80795fe0,fn_80795fe0,translated,medium,"work/ghidra/rel-d_basesNP/export/80795fe0_FUN_80795fe0.c; appends two 5-byte labels with the 10000 overflow swap retry",src/game/bases.rs
+game::bases,80796180,fn_80796180,translated,high,"work/ghidra/rel-d_basesNP/export/80796180_FUN_80796180.c; builds the text control block and fills 0xA0 entries",src/game/bases.rs
+game::bases,80798510,fn_80798510,translated,medium,"work/ghidra/rel-d_basesNP/export/80798510_FUN_80798510.c; spawns 0x282 and writes the +0x1FC effect vector then state 7",src/game/bases.rs
+game::bases,807986b0,fn_807986b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807986b0_FUN_807986b0.c; spawns 0x282 and writes +0x1FC..+0x204 then state 8",src/game/bases.rs
+game::bases,807987e0,fn_807987e0,translated,medium,"work/ghidra/rel-d_basesNP/export/807987e0_FUN_807987e0.c; copies the position to the children, scans six course records and enters state 9",src/game/bases.rs
+game::bases,80798b10,fn_80798b10,translated,medium,"work/ghidra/rel-d_basesNP/export/80798b10_FUN_80798b10.c; W/S record-name gate plus the player idle latch",src/game/bases.rs
+game::bases,80798c30,fn_80798c30,translated,medium,"work/ghidra/rel-d_basesNP/export/80798c30_FUN_80798c30.c; +0x23C tree link from 0x800F3330 and the 0x8079A870 refresh",src/game/bases.rs
+game::bases,80798d10,fn_80798d10,translated,high,"work/ghidra/rel-d_basesNP/export/80798d10_FUN_80798d10.c; writes the +0x1D8 rotation triple from 0x807D01B0",src/game/bases.rs
+game::bases,80798d40,fn_80798d40,translated,medium,"work/ghidra/rel-d_basesNP/export/80798d40_FUN_80798d40.c; remaps record kinds 0x15/0x16 and writes the rotation probe",src/game/bases.rs
+game::bases,8079e4e0,fn_8079e4e0,translated,medium,"work/ghidra/rel-d_basesNP/export/8079e4e0_FUN_8079e4e0.c; 0x800F6AB0 gate then state 0xD and the 0x8079EE70 effect",src/game/bases.rs
+game::bases,8079ec40,fn_8079ec40,translated,high,"work/ghidra/rel-d_basesNP/export/8079ec40_FUN_8079ec40.c; three-mode state and scale selector",src/game/bases.rs
+game::bases,8079edd0,fn_8079edd0,translated,high,"work/ghidra/rel-d_basesNP/export/8079edd0_FUN_8079edd0.c; plays 0x80104FD0 for the actor and every armed child",src/game/bases.rs
+game::bases,8079f260,fn_8079f260,translated,high,"work/ghidra/rel-d_basesNP/export/8079f260_FUN_8079f260.c; mirrors layout bit 4 into +0x308 and hides pane 0x10",src/game/bases.rs
+game::bases,8079f2c0,fn_8079f2c0,translated,medium,"work/ghidra/rel-d_basesNP/export/8079f2c0_FUN_8079f2c0.c; restores pane 0x10 from +0x308 when 0x800FDD60 is nonzero",src/game/bases.rs
+game::bases,8079f320,fn_8079f320,translated,high,"work/ghidra/rel-d_basesNP/export/8079f320_FUN_8079f320.c; cancels the 0x800FDB30 result in modes 5 and 6",src/game/bases.rs
+game::bases,8079fbd0,fn_8079fbd0,translated,high,"work/ghidra/rel-d_basesNP/export/8079fbd0_FUN_8079fbd0.c; fugu actor in-place constructor with class vtable 0x8081BFD0",src/game/bases.rs
+game::bases,8079fc50,fn_8079fc50,translated,high,"work/ghidra/rel-d_basesNP/export/8079fc50_FUN_8079fc50.c; fugu actor destructor with the optional 0x80162920 free",src/game/bases.rs
+game::bases,8079fe20,fn_8079fe20,translated,medium,"work/ghidra/rel-d_basesNP/export/8079fe20_FUN_8079fe20.c; loads g3d/fugu.brres and binds the +0x704/+0x744 holders",src/game/bases.rs

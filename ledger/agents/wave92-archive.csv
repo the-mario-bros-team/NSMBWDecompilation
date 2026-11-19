@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,80260950,fn_80260950,translated,medium,work/ghidra/main-gb/export/80260950_FUN_80260950.c; one-time resident init with two block clears and six SDA links,src/resource/archive.rs
+resource::archive,80261640,fn_80261640,translated,medium,work/ghidra/main-gb/export/80261640_FUN_80261640.c; per-slot list walk and channel reset,src/resource/archive.rs
+resource::archive,80261e70,fn_80261e70,translated,medium,work/ghidra/main-gb/export/80261e70_FUN_80261e70.c; cursor-in-window test with mode ladder,src/resource/archive.rs
+resource::archive,80262540,fn_80262540,translated,medium,work/ghidra/main-gb/export/80262540_FUN_80262540.c; distance from mode edge with three-way ladder,src/resource/archive.rs
+resource::archive,802628a0,fn_802628a0,translated,medium,work/ghidra/main-gb/export/802628a0_FUN_802628a0.c; cursor advance plus twelve-halfword snapshot,src/resource/archive.rs
+resource::archive,80262e90,fn_80262e90,translated,medium,work/ghidra/main-gb/export/80262e90_FUN_80262e90.c; 0x28-byte parameter block upload by mode,src/resource/archive.rs
+resource::archive,80263b90,fn_80263b90,translated,medium,work/ghidra/main-gb/export/80263b90_FUN_80263b90.c; duration split into the 0xE2 rate block,src/resource/archive.rs
+resource::archive,80264400,fn_80264400,translated,high,work/ghidra/main-gb/export/80264400_FUN_80264400.c; 24 halfwords plus packed channel word,src/resource/archive.rs
+resource::archive,80264760,fn_80264760,translated,high,work/ghidra/main-gb/export/80264760_FUN_80264760.c; 16 halfwords plus 1-shift flag word,src/resource/archive.rs
+resource::archive,80265100,fn_80265100,translated,medium,work/ghidra/main-gb/export/80265100_FUN_80265100.c; resident queue drain with lazy list heads,src/resource/archive.rs
+resource::archive,80265780,fn_80265780,translated,medium,work/ghidra/main-gb/export/80265780_FUN_80265780.c; two-level descriptor index chain,src/resource/archive.rs
+resource::archive,80265890,fn_80265890,translated,medium,work/ghidra/main-gb/export/80265890_FUN_80265890.c; fill caller record from resolved descriptor,src/resource/archive.rs
+resource::archive,80265a30,fn_80265a30,translated,medium,work/ghidra/main-gb/export/80265a30_FUN_80265a30.c; kind-2 and kind-3 descriptor walks,src/resource/archive.rs
+resource::archive,80265ff0,fn_80265ff0,translated,high,work/ghidra/main-gb/export/80265ff0_FUN_80265ff0.c; vtable plus full field block initialiser,src/resource/archive.rs
+resource::archive,802660d0,fn_802660d0,translated,high,work/ghidra/main-gb/export/802660d0_FUN_802660d0.c; counter reset and doubled range ladder,src/resource/archive.rs
+resource::archive,80267e30,fn_80267e30,translated,medium,work/ghidra/main-gb/export/80267e30_FUN_80267e30.c; stream record defaults plus block init at +0x1C,src/resource/archive.rs
+resource::archive,80269f00,fn_80269f00,translated,medium,work/ghidra/main-gb/export/80269f00_FUN_80269f00.c; inner-list drain and optional free,src/resource/archive.rs
+resource::archive,8026a010,fn_8026a010,translated,medium,work/ghidra/main-gb/export/8026a010_FUN_8026a010.c; release and rebuild heap block plus list node,src/resource/archive.rs
+resource::archive,8026a2a0,fn_8026a2a0,translated,medium,work/ghidra/main-gb/export/8026a2a0_FUN_8026a2a0.c; aligned payload node allocate and link,src/resource/archive.rs
+resource::archive,8026a350,fn_8026a350,translated,medium,work/ghidra/main-gb/export/8026a350_FUN_8026a350.c; heap grow and node rebuild returning count-1,src/resource/archive.rs
+resource::archive,8026a880,fn_8026a880,translated,medium,work/ghidra/main-gb/export/8026a880_FUN_8026a880.c; five voice parameters with clamps at +0xAC..+0xC8,src/resource/archive.rs
+resource::archive,8026add0,fn_8026add0,translated,medium,work/ghidra/main-gb/export/8026add0_FUN_8026add0.c; five voice parameters doubled into +0x164..+0x180,src/resource/archive.rs
+resource::archive,8026b370,fn_8026b370,translated,medium,work/ghidra/main-gb/export/8026b370_FUN_8026b370.c; five voice parameters with range-change branch,src/resource/archive.rs
+resource::archive,8026b900,fn_8026b900,translated,medium,work/ghidra/main-gb/export/8026b900_FUN_8026b900.c; five voice parameters mirrored at +0xC8..+0xE4,src/resource/archive.rs
+resource::archive,8026df50,fn_8026df50,translated,medium,work/ghidra/main-gb/export/8026df50_FUN_8026df50.c; three-level lookup summed with the +0x108 base,src/resource/archive.rs

@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::ax,801ac710,fn_801ac710,translated,medium,"work/ghidra/main-gb/export/801ac710_FUN_801ac710.c; 36 bytes; mtspr 922/923 descriptor pair with command 0x12; export prints return;",src/audio/ax.rs
+audio::ax,801ac740,fn_801ac740,translated,medium,"work/ghidra/main-gb/export/801ac740_FUN_801ac740.c; 36 bytes; mtspr 922/923 descriptor pair with command 0x02; export keeps only the 0x1FFFFFFF mask;",src/audio/ax.rs
+audio::ax,801acdb0,fn_801acdb0,translated,high,"work/ghidra/main-gb/export/801acdb0_FUN_801acdb0.c; 128 bytes; 27-word OSContext snapshot: stmw r13 + GQR1..7 + CR/LR/MSR/CTR/XER + r1/r2/+0xC;",src/audio/ax.rs
+audio::ax,801acf10,fn_801acf10,translated,high,"work/ghidra/main-gb/export/801acf10_FUN_801acf10.c; 8 bytes; mr r3,r1 then blr; returns the caller stack pointer;",src/audio/ax.rs
+audio::ax,801acf20,fn_801acf20,translated,high,"work/ghidra/main-gb/export/801acf20_FUN_801acf20.c; 48 bytes; call on an alternate stack: stwu r5,-8(r4) + mtspr 8 + blrl then unwind;",src/audio/ax.rs
+audio::ax,801acf50,fn_801acf50,translated,medium,"work/ghidra/main-gb/export/801acf50_FUN_801acf50.c; 48 bytes; same stack switch with the callback in r7 and the stack in r8;",src/audio/ax.rs
+audio::ax,801ae050,fn_801ae050,translated,medium,"work/ghidra/main-gb/export/801ae050_FUN_801ae050.c; 40 bytes; HID0|0x800 I-cache enable via 0x801AC5A0 then sync/isync and bctr to the stage entry;",src/audio/ax.rs

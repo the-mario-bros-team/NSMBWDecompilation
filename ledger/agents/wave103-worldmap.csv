@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,8010fe80,fn_8010fe80,translated,high,"work/ghidra/main-gb/export/8010fe80_FUN_8010fe80.c; returns the constant pointer 0x80358104",src/game/worldmap.rs
+game::worldmap,8010f7a0,fn_8010f7a0,translated,high,"work/ghidra/main-gb/export/8010f7a0_FUN_8010f7a0.c; stores object + index * 0x98 + 0x144 at +0x604",src/game/worldmap.rs
+game::worldmap,80108f40,fn_80108f40,translated,high,"work/ghidra/main-gb/export/80108f40_FUN_80108f40.c; rewrites +0x18 low nibble and calls 0x802C02C0 with four zeros and -1",src/game/worldmap.rs
+game::worldmap,8010e7d0,fn_8010e7d0,translated,medium,"work/ghidra/main-gb/export/8010e7d0_FUN_8010e7d0.c; calls 0x802DCBFC with the second register duplicated",src/game/worldmap.rs
+game::worldmap,8010e800,fn_8010e800,translated,medium,"work/ghidra/main-gb/export/8010e800_FUN_8010e800.c; byte-identical to fn_8010e7d0",src/game/worldmap.rs
+game::worldmap,8010f470,fn_8010f470,translated,high,"work/ghidra/main-gb/export/8010f470_FUN_8010f470.c; releases +0x30 and +0x10 then optionally frees the object",src/game/worldmap.rs
+game::worldmap,8010fe20,fn_8010fe20,translated,high,"work/ghidra/main-gb/export/8010fe20_FUN_8010fe20.c; releases the child then optionally frees the object",src/game/worldmap.rs
+game::worldmap,80102db0,fn_80102db0,translated,medium,"work/ghidra/main-gb/export/80102db0_FUN_80102db0.c; value / fn_80102e00(mode) rounded through f32",src/game/worldmap.rs
+game::worldmap,8011ec10,fn_8011ec10,translated,medium,"work/ghidra/main-gb/export/8011ec10_FUN_8011ec10.c; four 0x800767F0 ground probes around +0x5B4 half-width",src/game/worldmap.rs
+game::worldmap,8010f600,fn_8010f600,translated,medium,"work/ghidra/main-gb/export/8010f600_FUN_8010f600.c; warning level at r13-0x5394 plus the two 0x80006870 refreshes",src/game/worldmap.rs
+game::worldmap,80109780,fn_80109780,translated,medium,"work/ghidra/main-gb/export/80109780_FUN_80109780.c; fills and submits a 0x38-byte scratch record",src/game/worldmap.rs
+game::worldmap,8010f980,fn_8010f980,translated,medium,"work/ghidra/main-gb/export/8010f980_FUN_8010f980.c; six-word position block plus three 0x8016E axis setters",src/game/worldmap.rs
+game::worldmap,8010fb50,fn_8010fb50,translated,medium,"work/ghidra/main-gb/export/8010fb50_FUN_8010fb50.c; loads obj_coin.brres and submits the coin packet",src/game/worldmap.rs
+game::worldmap,80101aa0,fn_80101aa0,translated,medium,"work/ghidra/main-gb/export/80101aa0_FUN_80101aa0.c; wraps a height into the 0x800789A0/0x80078B40 camera window",src/game/worldmap.rs
+game::worldmap,8010f0c0,fn_8010f0c0,translated,medium,"work/ghidra/main-gb/export/8010f0c0_FUN_8010f0c0.c; opens WiiStrap.arc and binds the language message file",src/game/worldmap.rs
+game::worldmap,8011f1d0,fn_8011f1d0,translated,medium,"work/ghidra/main-gb/export/8011f1d0_FUN_8011f1d0.c; resolves a grab position through 0x8012DE80 and two matrix products",src/game/worldmap.rs
+game::worldmap,8010de30,fn_8010de30,translated,medium,"work/ghidra/main-gb/export/8010de30_FUN_8010de30.c; four-slot selection loop using r13-0x5704 and r13-0x5658",src/game/worldmap.rs
+game::worldmap,8010dc80,fn_8010dc80,translated,medium,"work/ghidra/main-gb/export/8010dc80_FUN_8010dc80.c; rotates the +0xB78 queue and commits the owner handler",src/game/worldmap.rs
+game::worldmap,8010ff70,fn_8010ff70,translated,low,"work/ghidra/main-gb/export/8010ff70_FUN_8010ff70.c; six +0x30 links and vtable slot 0x0C, argument convention inferred",src/game/worldmap.rs
+game::worldmap,80106620,fn_80106620,translated,medium,"work/ghidra/main-gb/export/80106620_FUN_80106620.c; four-control-point spline interpolation through 0x802E55A4",src/game/worldmap.rs
+game::worldmap,801068b0,fn_801068b0,translated,medium,"work/ghidra/main-gb/export/801068b0_FUN_801068b0.c; rebuilds one point and appends the cross-product offset",src/game/worldmap.rs
+game::worldmap,8010a3e0,fn_8010a3e0,translated,medium,"work/ghidra/main-gb/export/8010a3e0_FUN_8010a3e0.c; GX ortho/TEV block with two 0x8010A2C0/0x8010A350 colour records",src/game/worldmap.rs
+game::worldmap,80108f70,fn_80108f70,translated,medium,"work/ghidra/main-gb/export/80108f70_FUN_80108f70.c; screen-sized GX scissor/viewport/TEV rebuild",src/game/worldmap.rs
+game::worldmap,8010ad00,fn_8010ad00,translated,medium,"work/ghidra/main-gb/export/8010ad00_FUN_8010ad00.c; GX tile build plus scissor/viewport/depth and texture upload",src/game/worldmap.rs
+game::worldmap,8010aaa0,fn_8010aaa0,translated,medium,"work/ghidra/main-gb/export/8010aaa0_FUN_8010aaa0.c; effect-layer GX ortho rebuild with two display lists",src/game/worldmap.rs

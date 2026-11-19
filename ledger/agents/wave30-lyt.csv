@@ -1,0 +1,6 @@
+module,address,name,status,confidence,evidence,rust_file
+ui::lyt,80191250,fn_80191250,translated,high,work/ghidra/main-gb/export/80191250_FUN_80191250.c,src/ui/lyt.rs
+ui::lyt,80191260,fn_80191260,translated,high,work/ghidra/main-gb/export/80191260_FUN_80191260.c,src/ui/lyt.rs
+ui::lyt,80191d20,fn_80191d20,translated,high,work/ghidra/main-gb/export/80191d20_FUN_80191d20.c,src/ui/lyt.rs
+ui::lyt,80193220,fn_80193220,translated,medium,work/ghidra/main-gb/export/80193220_FUN_80193220.c,src/ui/lyt.rs
+ui::lyt,801942c0,fn_801942c0,translated,medium,work/ghidra/main-gb/export/801942c0_FUN_801942c0.c,src/ui/lyt.rs

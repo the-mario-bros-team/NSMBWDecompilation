@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800a73f0,fn_800a73f0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x18); register sequence read from work/wave250/a_dis.txt",src/game/stage.rs
+game::stage,800a7420,fn_800a7420,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x24); register sequence read from work/wave250/a_dis.txt",src/game/stage.rs
+game::stage,800a2810,fn_800a2810,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x18); register sequence read from work/wave250/a_dis.txt",src/game/stage.rs
+game::stage,800a2840,fn_800a2840,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x24); register sequence read from work/wave250/a_dis.txt",src/game/stage.rs
+game::stage,8007ab70,fn_8007ab70,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x9007C); register sequence read from work/wave250/a_dis.txt",src/game/stage.rs
+game::stage,80086b20,bg_unit_tile_write_cell,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call_desc3, r12 record); register sequence read from work/wave250/a_dis.txt",src/game/stage.rs
+game::player,80062ea0,fn_80062ea0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x18); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::player,80062ed0,fn_80062ed0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x24); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::player,80067740,fn_80067740,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x18); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::player,80067770,fn_80067770,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x0C); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::player,800677a0,fn_800677a0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x24); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::player,800677d0,fn_800677d0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x18); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::player,80067800,fn_80067800,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x0C); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::player,8006ef40,fn_8006ef40,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call_f32_1, 0x80355F14); register sequence read from work/wave250/a_dis.txt",src/game/player.rs
+game::worldmap,8010e7d0,fn_8010e7d0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x18); register sequence read from work/wave250/a_dis.txt",src/game/worldmap.rs
+game::worldmap,8010e800,fn_8010e800,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x0C); register sequence read from work/wave250/a_dis.txt",src/game/worldmap.rs
+game::worldmap,8014a690,fn_8014a690,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x18); register sequence read from work/wave250/a_dis.txt",src/game/worldmap.rs
+game::worldmap,8014a6c0,fn_8014a6c0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call3, 0x24); register sequence read from work/wave250/a_dis.txt",src/game/worldmap.rs
+game::enemies,80ab6df0,fn_80ab6df0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call2, +0x348 table); register sequence read from work/wave250/a_dis.txt",src/game/enemies.rs
+game::enemies,80b18cc0,fn_80b18cc0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call2, 0x3B0); register sequence read from work/wave250/a_dis.txt",src/game/enemies.rs
+game::enemies,80b0a8d0,fn_80b0a8d0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call2, +0x348 table); register sequence read from work/wave250/a_dis.txt",src/game/enemies.rs
+game::enemies,80a9b1b0,fn_80a9b1b0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call2, 0xB04 + 12*slot); register sequence read from work/wave250/a_dis.txt",src/game/enemies.rs
+resource::registry,80161cc0,fn_80161cc0,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call_desc2, caller descriptors); register sequence read from work/wave250/a_dis.txt",src/resource/registry.rs
+ui::hud,8001b580,fn_8001b580,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call2, 0x802EE038); register sequence read from work/wave250/a_dis.txt",src/ui/hud.rs
+ui::hud,80020100,fn_80020100,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call2, 0x6AC/0x6B8); register sequence read from work/wave250/a_dis.txt",src/ui/hud.rs
+engine::display,800d1f10,cursor_begin_track,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call2, 0x802F1220); register sequence read from work/wave250/a_dis.txt",src/engine/display.rs
+engine::display,800d9940,fn_800d9940,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call_desc5, 0x80371810); register sequence read from work/wave250/a_dis.txt",src/engine/display.rs
+engine::display,800d9a30,fn_800d9a30,translated,high,"wave 250 lane A: descriptor resolved in software (interface_call_desc5, 0x80371810); register sequence read from work/wave250/a_dis.txt",src/engine/display.rs

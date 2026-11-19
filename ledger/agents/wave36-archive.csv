@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b8b40,fn_802b8b40,translated,high,"work/ghidra/main-gb/export/802b8b40_FUN_802b8b40.c; heap list init 0x20 and mutex plus ready flag",src/resource/archive.rs
+resource::archive,802b8b80,fn_802b8b80,translated,medium,"work/ghidra/main-gb/export/802b8b80_FUN_802b8b80.c; base heap ctor vtable 8034fd10 plus list append",src/resource/archive.rs
+resource::archive,802b8c20,fn_802b8c20,translated,high,"work/ghidra/main-gb/export/802b8c20_FUN_802b8c20.c; base heap dtor remove plus free",src/resource/archive.rs
+resource::archive,802b9070,fn_802b9070,translated,high,"work/ghidra/main-gb/export/802b9070_FUN_802b9070.c; empty stub",src/resource/archive.rs
+resource::archive,802b9080,fn_802b9080,translated,medium,"work/ghidra/main-gb/export/802b9080_FUN_802b9080.c; walk heap list calling slot +0x28 with 4",src/resource/archive.rs
+resource::archive,802b9210,fn_802b9210,translated,high,"work/ghidra/main-gb/export/802b9210_FUN_802b9210.c; allocate size 4 0",src/resource/archive.rs
+resource::archive,802b9220,fn_802b9220,translated,high,"work/ghidra/main-gb/export/802b9220_FUN_802b9220.c; return second word",src/resource/archive.rs
+resource::archive,802b9230,fn_802b9230,translated,high,"work/ghidra/main-gb/export/802b9230_FUN_802b9230.c; allocate size align 0",src/resource/archive.rs
+resource::archive,802b9240,fn_802b9240,translated,high,"work/ghidra/main-gb/export/802b9240_FUN_802b9240.c; allocate size align heap",src/resource/archive.rs
+resource::archive,802b9250,fn_802b9250,translated,high,"work/ghidra/main-gb/export/802b9250_FUN_802b9250.c; allocate size 4 0 sibling",src/resource/archive.rs
+resource::archive,802b9260,fn_802b9260,translated,high,"work/ghidra/main-gb/export/802b9260_FUN_802b9260.c; allocate size align 0 sibling",src/resource/archive.rs
+resource::archive,802b9270,fn_802b9270,translated,high,"work/ghidra/main-gb/export/802b9270_FUN_802b9270.c; allocate size align heap sibling",src/resource/archive.rs
+resource::archive,802b9290,fn_802b9290,translated,high,"work/ghidra/main-gb/export/802b9290_FUN_802b9290.c; free through thread heap",src/resource/archive.rs
+resource::archive,802b92a0,fn_802b92a0,translated,medium,"work/ghidra/main-gb/export/802b92a0_FUN_802b92a0.c; heap type A ctor vtable 8034fd60",src/resource/archive.rs
+resource::archive,802b9360,fn_802b9360,translated,medium,"work/ghidra/main-gb/export/802b9360_FUN_802b9360.c; factory A via 801d4380 plus hook",src/resource/archive.rs
+resource::archive,802b9430,fn_802b9430,translated,medium,"work/ghidra/main-gb/export/802b9430_FUN_802b9430.c; alloc and construct for A",src/resource/archive.rs
+resource::archive,802b9650,fn_802b9650,translated,high,"work/ghidra/main-gb/export/802b9650_FUN_802b9650.c; forward user word to 801d4940",src/resource/archive.rs
+resource::archive,802b9660,fn_802b9660,translated,high,"work/ghidra/main-gb/export/802b9660_FUN_802b9660.c; forward user word to 801d49a0",src/resource/archive.rs
+resource::archive,802b9670,fn_802b9670,translated,medium,"work/ghidra/main-gb/export/802b9670_FUN_802b9670.c; forward user word plus two words to 801d49f0",src/resource/archive.rs
+resource::archive,802b9730,fn_802b9730,translated,medium,"work/ghidra/main-gb/export/802b9730_FUN_802b9730.c; release clients then forward",src/resource/archive.rs
+resource::archive,802b9780,fn_802b9780,translated,medium,"work/ghidra/main-gb/export/802b9780_FUN_802b9780.c; heap type B ctor vtable 8034fd90",src/resource/archive.rs
+resource::archive,802b9840,fn_802b9840,translated,medium,"work/ghidra/main-gb/export/802b9840_FUN_802b9840.c; factory B via 801d4b80 0x38",src/resource/archive.rs
+resource::archive,802b99c0,fn_802b99c0,translated,high,"work/ghidra/main-gb/export/802b99c0_FUN_802b99c0.c; forward user word to 801d4d60",src/resource/archive.rs
+resource::archive,802b9ab0,fn_802b9ab0,translated,medium,"work/ghidra/main-gb/export/802b9ab0_FUN_802b9ab0.c; heap type C ctor vtable 8034fdc0 plus extra",src/resource/archive.rs
+resource::archive,802b9b80,fn_802b9b80,translated,medium,"work/ghidra/main-gb/export/802b9b80_FUN_802b9b80.c; factory C via 801d5180 0x3c",src/resource/archive.rs
+resource::archive,802b9de0,fn_802b9de0,translated,high,"work/ghidra/main-gb/export/802b9de0_FUN_802b9de0.c; forward user word to 801d5420",src/resource/archive.rs
+resource::archive,802b9df0,fn_802b9df0,translated,medium,"work/ghidra/main-gb/export/802b9df0_FUN_802b9df0.c; 801d54a0 plus 0x3c",src/resource/archive.rs
+resource::archive,802b9e70,fn_802b9e70,translated,medium,"work/ghidra/main-gb/export/802b9e70_FUN_802b9e70.c; heap type D ctor vtable 8034fdf0",src/resource/archive.rs
+resource::archive,802b9f30,fn_802b9f30,translated,medium,"work/ghidra/main-gb/export/802b9f30_FUN_802b9f30.c; factory D via 801d4b80 0x38",src/resource/archive.rs
+resource::archive,802ba000,fn_802ba000,translated,medium,"work/ghidra/main-gb/export/802ba000_FUN_802ba000.c; alloc and construct for D",src/resource/archive.rs

@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a0a240,fn_80a0a240,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0a240_FUN_80a0a240.c; free helper: 0x8015F800 then 0x802B9280 for a positive mode",src/game/enemies.rs
+game::enemies,80a0a360,fn_80a0a360,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a0a360_FUN_80a0a360.c; 48-byte 0x802DCBFC forwarder; hidden r12 not modelled",src/game/enemies.rs
+game::enemies,80a0a390,fn_80a0a390,translated,low,"work/ghidra/rel-d_enemiesNP/export/80a0a390_FUN_80a0a390.c; second 48-byte 0x802DCBFC forwarder",src/game/enemies.rs
+game::enemies,80a0a3c0,fn_80a0a3c0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0a3c0_FUN_80a0a3c0.c; 0x8A8-byte constructor, class vtable 0x80B348E8",src/game/enemies.rs
+game::enemies,80a0a6c0,fn_80a0a6c0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0a6c0_FUN_80a0a6c0.c; resets +0x524 then runs the three model binders",src/game/enemies.rs
+game::enemies,80a0a730,fn_80a0a730,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0a730_FUN_80a0a730.c; basabasa_wait/wait binder into +0x540 holder",src/game/enemies.rs
+game::enemies,80a0a8a0,fn_80a0a8a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0a8a0_FUN_80a0a8a0.c; basabasa_fly/fly binder; reads +0x540 in the third lookup as observed",src/game/enemies.rs
+game::enemies,80a0aa10,fn_80a0aa10,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0aa10_FUN_80a0aa10.c; basa_eye_light/eye_wait binder into +0x548",src/game/enemies.rs
+game::enemies,80a0adc0,fn_80a0adc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0adc0_FUN_80a0adc0.c; fly model placement, 8.0/-8.0 offsets and eye branch",src/game/enemies.rs
+game::enemies,80a0b080,fn_80a0b080,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b080_FUN_80a0b080.c; wait model placement, 4.0/-4.0 offsets and eye copy",src/game/enemies.rs
+game::enemies,80a0b210,fn_80a0b210,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b210_FUN_80a0b210.c; joint-0 matrix of +0x54C copied to +0x770",src/game/enemies.rs
+game::enemies,80a0b260,fn_80a0b260,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b260_FUN_80a0b260.c; joint-2 matrix of +0x54C copied to +0x764",src/game/enemies.rs
+game::enemies,80a0b2b0,fn_80a0b2b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b2b0_FUN_80a0b2b0.c; joint-0 matrix of +0x58C copied to +0x770",src/game/enemies.rs
+game::enemies,80a0b5a0,fn_80a0b5a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b5a0_FUN_80a0b5a0.c; free helper without the null guard",src/game/enemies.rs
+game::enemies,80a0b5e0,fn_80a0b5e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b5e0_FUN_80a0b5e0.c; fly clip attach, +0x100 cleared and side table heading",src/game/enemies.rs
+game::enemies,80a0b690,fn_80a0b690,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b690_FUN_80a0b690.c; +0x414 hit record from 0x8042C1B0 table and 0x80B2AC6C block",src/game/enemies.rs
+game::enemies,80a0b770,fn_80a0b770,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b770_FUN_80a0b770.c; side classifier: 0x74C latch or nearest-player byte, clz compare",src/game/enemies.rs
+game::enemies,80a0b7f0,fn_80a0b7f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b7f0_FUN_80a0b7f0.c; latches target +0x74C when it carries state 0x80B6EC58",src/game/enemies.rs
+game::enemies,80a0b910,fn_80a0b910,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0b910_FUN_80a0b910.c; wait/eye_wait bind gated on state 0x80B6ED58",src/game/enemies.rs
+game::enemies,80a0ba80,fn_80a0ba80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0ba80_FUN_80a0ba80.c; spawn gate, holder steps and 80.0/128.0 grab radius",src/game/enemies.rs
+game::enemies,80a0bbe0,fn_80a0bbe0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0bbe0_FUN_80a0bbe0.c; unconditional wait/eye_wait bind and +0x360 = 1",src/game/enemies.rs
+game::enemies,80a0bef0,fn_80a0bef0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0bef0_FUN_80a0bef0.c; eye_fall clip, sound 0x1F0 and +0x102 = 0x8000",src/game/enemies.rs
+game::enemies,80a0bfe0,fn_80a0bfe0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0bfe0_FUN_80a0bfe0.c; heading spin from 0x8042C1A8, player/ground catch",src/game/enemies.rs
+game::enemies,80a0c160,fn_80a0c160,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0c160_FUN_80a0c160.c; fly/eye_fly entry, side tables 0x80B2AC00 and 0x80B2AC08",src/game/enemies.rs
+game::enemies,80a0c2d0,fn_80a0c2d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0c2d0_FUN_80a0c2d0.c; +0x100 angle unwind and side re-pick at zero",src/game/enemies.rs
+game::enemies,80a0c470,fn_80a0c470,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0c470_FUN_80a0c470.c; fly holder step plus two base frame helpers",src/game/enemies.rs

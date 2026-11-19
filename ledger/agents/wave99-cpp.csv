@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::cpp,802d0030,fn_802d0030,translated,high,"work/ghidra/main-gb/export/802d0030_FUN_802d0030.c; 372 bytes; vtable+0x10 hook, 0x801C0C60/0C10 quad build, 40-byte GX FIFO burst",src/runtime/cpp.rs
+runtime::cpp,802d12e0,fn_802d12e0,translated,high,"work/ghidra/main-gb/export/802d12e0_FUN_802d12e0.c; 1240 bytes; r3 = record, 0x802D1B90 call ABI read from 0x802D1340",src/runtime/cpp.rs
+runtime::cpp,802d1e20,fn_802d1e20,translated,medium,"work/ghidra/main-gb/export/802d1e20_FUN_802d1e20.c; 968 bytes; r3 = slot index (mulli 12), r4 = active, r5 = token; three 0x802D3700 arms",src/runtime/cpp.rs
+runtime::cpp,802d2310,fn_802d2310,translated,medium,"work/ghidra/main-gb/export/802d2310_FUN_802d2310.c; 572 bytes; r4 = token vs slot+4, r3 = inactive flag; 0x90-byte stack record",src/runtime/cpp.rs
+runtime::cpp,802d2550,fn_802d2550,translated,high,"work/ghidra/main-gb/export/802d2550_FUN_802d2550.c; 160 bytes; six lfs fix the dropped 0x802D3200 arguments",src/runtime/cpp.rs
+runtime::cpp,802d7860,fn_802d7860,translated,medium,"work/ghidra/main-gb/export/802d7860_FUN_802d7860.c; 60 bytes; forwards r4/r5 to 0x802D79A0 then adds this+8 and 8",src/runtime/cpp.rs
+runtime::cpp,802d79a0,fn_802d79a0,translated,high,"work/ghidra/main-gb/export/802d79a0_FUN_802d79a0.c; 212 bytes; tagged-section search over 0x802FD2E8/0x802FD300 descriptors",src/runtime/cpp.rs

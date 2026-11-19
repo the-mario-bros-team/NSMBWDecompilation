@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80615800,fn_80615800,translated,high,"work/ghidra/rel-d_basesNP/export/80615800_FUN_80615800.c; fileSelectBase archive layout animations and panes; handle written at +0x268",src/game/bases.rs
+game::bases,80615b50,fn_80615b50,translated,high,"work/ghidra/rel-d_basesNP/export/80615b50_FUN_80615b50.c; first slot index 0..2 whose +0xE4A byte is clear else 3",src/game/bases.rs
+game::bases,80615bd0,fn_80615bd0,translated,medium,"work/ghidra/rel-d_basesNP/export/80615bd0_FUN_80615bd0.c; table 0x807C6BE8 indexed by param; two 0x800C9A60 writes via 0x800CDC60 token",src/game/bases.rs
+game::bases,80615d20,fn_80615d20,translated,high,"work/ghidra/rel-d_basesNP/export/80615d20_FUN_80615d20.c; 8-byte stack buffer seeded from 0x807C6C24/26 with two indexed clears",src/game/bases.rs
+game::bases,80615e80,fn_80615e80,translated,high,"work/ghidra/rel-d_basesNP/export/80615e80_FUN_80615e80.c; clamps candidate to 0..2 then walks skipping slots with +0xE4A set",src/game/bases.rs
+game::bases,80615f00,fn_80615f00,translated,high,"work/ghidra/rel-d_basesNP/export/80615f00_FUN_80615f00.c; slot byte reset for three slots plus +0x2DB/+0x2DC cleared and +0x2C4 set to 2",src/game/bases.rs
+game::bases,80616110,fn_80616110,translated,high,"work/ghidra/rel-d_basesNP/export/80616110_FUN_80616110.c; stops animations 0 0xD 0xE and clears +0xBB low bit for three slots",src/game/bases.rs
+game::bases,806161b0,fn_806161b0,translated,high,"work/ghidra/rel-d_basesNP/export/806161b0_FUN_806161b0.c; transitions to 0x808240F0 when animations 0 0xD 0xE are idle",src/game/bases.rs
+game::bases,80616270,fn_80616270,translated,high,"work/ghidra/rel-d_basesNP/export/80616270_FUN_80616270.c; clears +0xBB low bit for three slots and stops animations 0xD 0xE",src/game/bases.rs
+game::bases,80616300,fn_80616300,translated,high,"work/ghidra/rel-d_basesNP/export/80616300_FUN_80616300.c; transitions to 0x808240F0 when animations 0xD 0xE are idle",src/game/bases.rs
+game::bases,80616380,fn_80616380,translated,high,"work/ghidra/rel-d_basesNP/export/80616380_FUN_80616380.c; slot back/front +0xDD8 writes with 0x800C92F0 stops 0x28/0x29/0x22/0x23 and sound 0x78",src/game/bases.rs
+game::bases,806164b0,fn_806164b0,translated,high,"work/ghidra/rel-d_basesNP/export/806164b0_FUN_806164b0.c; transitions to 0x80824130 when +0xE4D clear or animation 0xFFFFFFFF idle",src/game/bases.rs
+game::bases,80616590,fn_80616590,translated,medium,"work/ghidra/rel-d_basesNP/export/80616590_FUN_80616590.c; pad bits from 0x80429F50 record adjust index; view +0x20 probe with 0x900; transitions 0x808240F0/4230/4270/4170/41B0",src/game/bases.rs
+game::bases,80616930,fn_80616930,translated,high,"work/ghidra/rel-d_basesNP/export/80616930_FUN_80616930.c; slot +0xDD8 set to 2 or stops 0x26/0x27; sound 0x79",src/game/bases.rs
+game::bases,806169b0,fn_806169b0,translated,high,"work/ghidra/rel-d_basesNP/export/806169b0_FUN_806169b0.c; transitions to 0x808241F0 when +0xE4D clear or animation 0xFFFFFFFF idle",src/game/bases.rs
+game::bases,80616b80,fn_80616b80,translated,high,"work/ghidra/rel-d_basesNP/export/80616b80_FUN_80616b80.c; stops animations 0x2A and 0x2B",src/game/bases.rs
+game::bases,80616bd0,fn_80616bd0,translated,high,"work/ghidra/rel-d_basesNP/export/80616bd0_FUN_80616bd0.c; transitions to 0x808242B0 when animation 0xFFFFFFFF is idle",src/game/bases.rs
+game::bases,80616c40,fn_80616c40,translated,high,"work/ghidra/rel-d_basesNP/export/80616c40_FUN_80616c40.c; pane index 0 or 3 by +0x25C then stops 0xF",src/game/bases.rs
+game::bases,80616ca0,fn_80616ca0,translated,high,"work/ghidra/rel-d_basesNP/export/80616ca0_FUN_80616ca0.c; transitions to 0x808241F0 when animation 0xFFFFFFFF is idle",src/game/bases.rs
+game::bases,80616dc0,fn_80616dc0,translated,high,"work/ghidra/rel-d_basesNP/export/80616dc0_FUN_80616dc0.c; previous slot +0xDD8 set to 4 with sound 0x78; current slot +0xDD8 set to 1",src/game/bases.rs
+game::bases,80616ea0,fn_80616ea0,translated,medium,"work/ghidra/rel-d_basesNP/export/80616ea0_FUN_80616ea0.c; pad bits 8 and 4 through fn_80615e80; view +0x20 probe; transitions 0x808243F0/49B0/4370/41F0",src/game/bases.rs
+game::bases,80617110,fn_80617110,translated,high,"work/ghidra/rel-d_basesNP/export/80617110_FUN_80617110.c; transitions to 0x808240B0 when animation 0xFFFFFFFF is idle",src/game/bases.rs
+game::bases,806171c0,fn_806171c0,translated,high,"work/ghidra/rel-d_basesNP/export/806171c0_FUN_806171c0.c; transitions to 0x80824430 when animation 0xFFFFFFFF is idle",src/game/bases.rs
+game::bases,80617230,fn_80617230,translated,high,"work/ghidra/rel-d_basesNP/export/80617230_FUN_80617230.c; pane index 1 then stops 0xF",src/game/bases.rs
+game::bases,80617270,fn_80617270,translated,high,"work/ghidra/rel-d_basesNP/export/80617270_FUN_80617270.c; transitions to 0x80824470 when animation 0xFFFFFFFF is idle",src/game/bases.rs
+game::bases,80617360,fn_80617360,translated,high,"work/ghidra/rel-d_basesNP/export/80617360_FUN_80617360.c; previous slot +0xDD8 set to 4 with sound 0x78; current slot +0xDD8 set to 1",src/game/bases.rs
+game::bases,80617440,fn_80617440,translated,medium,"work/ghidra/rel-d_basesNP/export/80617440_FUN_80617440.c; pad bits 8 and 4 adjust +0x2B8 index; view +0x20 probe; transitions 0x808245B0/44F0/4470",src/game/bases.rs
+game::bases,80617650,fn_80617650,translated,high,"work/ghidra/rel-d_basesNP/export/80617650_FUN_80617650.c; transitions to 0x80824570 when animation 0xFFFFFFFF is idle",src/game/bases.rs
+game::bases,806176c0,fn_806176c0,translated,high,"work/ghidra/rel-d_basesNP/export/806176c0_FUN_806176c0.c; pane index 0 then stops 0xF",src/game/bases.rs
+game::bases,80617700,fn_80617700,translated,high,"work/ghidra/rel-d_basesNP/export/80617700_FUN_80617700.c; transitions to 0x80824330 when animation 0xFFFFFFFF is idle",src/game/bases.rs

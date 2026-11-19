@@ -1,0 +1,6 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80713b00,fn_80713b00,translated,high,work/ghidra/rel-d_basesNP/export/80713b00_FUN_80713b00.c,src/game/bases.rs
+game::bases,80773d70,fn_80773d70,translated,high,work/ghidra/rel-d_basesNP/export/80773d70_FUN_80773d70.c,src/game/bases.rs
+game::bases,8078eb40,fn_8078eb40,translated,high,work/ghidra/rel-d_basesNP/export/8078eb40_FUN_8078eb40.c,src/game/bases.rs
+game::bases,80764c80,fn_80764c80,translated,high,work/ghidra/rel-d_basesNP/export/80764c80_FUN_80764c80.c,src/game/bases.rs
+game::bases,8062d660,fn_8062d660,translated,high,work/ghidra/rel-d_basesNP/export/8062d660_FUN_8062d660.c,src/game/bases.rs

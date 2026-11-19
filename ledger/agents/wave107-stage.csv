@@ -1,0 +1,7 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800728c0,fn_800728c0,translated,medium,"work/ghidra/main-gb/export/800728c0_FUN_800728c0.c; feet probe: the 0x40 slope and 0x4899 snap arms of the ground walk",src/game/stage.rs
+game::stage,80073fc0,fn_80073fc0,translated,medium,"work/ghidra/main-gb/export/80073fc0_FUN_80073fc0.c; r13-0x58A0 world scan with the entry +0xD0 attribute ladder",src/game/stage.rs
+game::stage,80074470,fn_80074470,translated,medium,"work/ghidra/main-gb/export/80074470_FUN_80074470.c; circle, box and segment arms of the scroll-layer height solve",src/game/stage.rs
+game::stage,80074af0,fn_80074af0,translated,medium,"work/ghidra/main-gb/export/80074af0_FUN_80074af0.c; lane-aware twin of 0x80073FC0 built on 0x80074470",src/game/stage.rs
+game::stage,80075ca0,fn_80075ca0,translated,medium,"work/ghidra/main-gb/export/80075ca0_FUN_80075ca0.c; vertical ground drop using the 0x802EF488 slope table",src/game/stage.rs
+game::stage,8007ffa0,fn_8007ffa0,translated,low,"work/ghidra/main-gb/export/8007ffa0_FUN_8007ffa0.c; facing-relative actor step; GQR3 s16 angle scale is not printed",src/game/stage.rs

@@ -1,0 +1,10 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,8006cc00,fn_8006cc00,translated,medium,"work/ghidra/main-gb/export/8006cc00_FUN_8006cc00.c; velocity triple rebuilt from the +0x108 heading via the 1/256 angle unit and the sin/cos wrappers",src/game/player.rs
+game::player,8006ccb0,fn_8006ccb0,translated,medium,"work/ghidra/main-gb/export/8006ccb0_FUN_8006ccb0.c; +0x7C matrix rebuilt from +0xAC..+0xB4 and the +0x102 angle resubmitted",src/game/player.rs
+game::player,8006cd00,fn_8006cd00,translated,high,"work/ghidra/main-gb/export/8006cd00_FUN_8006cd00.c; position += three-float vector",src/game/player.rs
+game::player,8006cd40,fn_8006cd40,translated,high,"work/ghidra/main-gb/export/8006cd40_FUN_8006cd40.c; tail call integrating +0xE8 velocity into the position",src/game/player.rs
+game::player,8006cd50,fn_8006cd50,translated,high,"work/ghidra/main-gb/export/8006cd50_FUN_8006cd50.c; speed ramp then +0xE8 = +0x10C then vertical ramp",src/game/player.rs
+game::player,8006cd90,fn_8006cd90,translated,high,"work/ghidra/main-gb/export/8006cd90_FUN_8006cd90.c; +0xE8 stepped toward +0xF4 by +0x11C and clamped",src/game/player.rs
+game::player,8006cde0,fn_8006cde0,translated,high,"work/ghidra/main-gb/export/8006cde0_FUN_8006cde0.c; vertical ramp max(+0xEC + +0x114, +0xF8)",src/game/player.rs
+game::player,8006ce10,fn_8006ce10,translated,high,"work/ghidra/main-gb/export/8006ce10_FUN_8006ce10.c; +0x10C stepped toward +0x110 by +0x11C with store only on change",src/game/player.rs
+game::player,8006ce70,fn_8006ce70,translated,high,"work/ghidra/main-gb/export/8006ce70_FUN_8006ce70.c; +0xEC stepped away from +0x118 by +0x114 with store only on change",src/game/player.rs

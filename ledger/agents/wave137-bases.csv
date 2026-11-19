@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80600ad0,fn_80600ad0,translated,high,"work/ghidra/rel-d_basesNP/export/80600ad0_FUN_80600ad0.c; release-only wrapper; null + free>0 guards then 0x802B9280(this)",src/game/bases.rs
+game::bases,80601d10,fn_80601d10,translated,high,"work/ghidra/rel-d_basesNP/export/80601d10_FUN_80601d10.c; same 16-word body; bl displacement 0x4BCB754D only",src/game/bases.rs
+game::bases,80601eb0,fn_80601eb0,translated,high,"work/ghidra/rel-d_basesNP/export/80601eb0_FUN_80601eb0.c; same 16-word body; bl displacement 0x4BCB73AD only",src/game/bases.rs
+game::bases,80605500,fn_80605500,translated,high,"work/ghidra/rel-d_basesNP/export/80605500_FUN_80605500.c; same 16-word body; bl displacement 0x4BCB3D5D only",src/game/bases.rs
+game::bases,8069aca0,fn_8069aca0,translated,high,"work/ghidra/rel-d_basesNP/export/8069aca0_FUN_8069aca0.c; lha at 0x807F1360 -> this+0xD84 then bcctr tail dispatch slot 0xD4",src/game/bases.rs
+game::bases,806e0720,fn_806e0720,translated,high,"work/ghidra/rel-d_basesNP/export/806e0720_FUN_806e0720.c; 0x8015F800(state,0) then conditional 0x802B9280 free",src/game/bases.rs
+game::bases,806e1600,fn_806e1600,translated,high,"work/ghidra/rel-d_basesNP/export/806e1600_FUN_806e1600.c; 0x806511D0-shape destructor; branch words 0x4BA7E1D9 0x4BBD7C49",src/game/bases.rs
+game::bases,806e3380,fn_806e3380,translated,high,"work/ghidra/rel-d_basesNP/export/806e3380_FUN_806e3380.c; three lfs/stfs float pairs into this+0x60/0x64/0x68",src/game/bases.rs
+game::bases,806e4f10,fn_806e4f10,translated,high,"work/ghidra/rel-d_basesNP/export/806e4f10_FUN_806e4f10.c; beqlr on byte +0x588 then lwzu receiver this+0x3FC slot 0x14",src/game/bases.rs
+game::bases,806e5940,fn_806e5940,translated,high,"work/ghidra/rel-d_basesNP/export/806e5940_FUN_806e5940.c; 0x806511D0-shape destructor; branch words 0x4BA79E99 0x4BBD3909",src/game/bases.rs
+game::bases,806e6450,fn_806e6450,translated,medium,"work/ghidra/rel-d_basesNP/export/806e6450_FUN_806e6450.c; 0x806E5D60 gate + 0x806E5DC0 copy + call_f32x2_u32x2 0x806E5FE0 + slot 0x18",src/game/bases.rs
+game::bases,806e6a90,fn_806e6a90,translated,high,"work/ghidra/rel-d_basesNP/export/806e6a90_FUN_806e6a90.c; 0x806511D0-shape destructor; branch words 0x4BA78D49 0x4BBD27B9",src/game/bases.rs
+game::bases,806e6fb0,fn_806e6fb0,translated,high,"work/ghidra/rel-d_basesNP/export/806e6fb0_FUN_806e6fb0.c; byte +0x471 selects +0xAC or +0xB0 into scratch float +0x558",src/game/bases.rs
+game::bases,806e6fe0,fn_806e6fe0,translated,high,"work/ghidra/rel-d_basesNP/export/806e6fe0_FUN_806e6fe0.c; fadds +0x458 onto +0x558 then byte +0x471 selects +0xAC or +0xB0",src/game/bases.rs
+game::bases,806e7010,fn_806e7010,translated,medium,"work/ghidra/rel-d_basesNP/export/806e7010_FUN_806e7010.c; (flags>>12)&0xF gate; 0x800D7880 on the set path; slot 0x18 of +0x394",src/game/bases.rs
+game::bases,806e7a30,fn_806e7a30,translated,medium,"work/ghidra/rel-d_basesNP/export/806e7a30_FUN_806e7a30.c; constant block 0x807CBD88 seeds five floats; 0x806E7900 + 0x80062600 bind",src/game/bases.rs
+game::bases,806e7f20,fn_806e7f20,translated,high,"work/ghidra/rel-d_basesNP/export/806e7f20_FUN_806e7f20.c; 0x8007F950(this+0x5AC) then li r3,1",src/game/bases.rs
+game::bases,806e81f0,fn_806e81f0,translated,medium,"work/ghidra/rel-d_basesNP/export/806e81f0_FUN_806e81f0.c; position +0xAC..+0xB4 into +0x6D4..+0x6E0 then lwzu slot 0x0C at +0x6D0",src/game/bases.rs
+game::bases,806e9250,fn_806e9250,translated,medium,"work/ghidra/rel-d_basesNP/export/806e9250_FUN_806e9250.c; three-float zero seed at 0x807CBDBC; state words +0x690..+0x6A0; two sub-object resets",src/game/bases.rs
+game::bases,806e9a60,fn_806e9a60,translated,high,"work/ghidra/rel-d_basesNP/export/806e9a60_FUN_806e9a60.c; 0x806511D0-shape destructor; branch words 0x4BA75D79 0x4BBCF7E9",src/game/bases.rs
+game::bases,806e9cf0,fn_806e9cf0,translated,medium,"work/ghidra/rel-d_basesNP/export/806e9cf0_FUN_806e9cf0.c; 0x802E1C40 colon scan twice + 0x802E1AB4 suffix compare; slot 0x20 supplies the second name",src/game/bases.rs
+game::bases,806efd70,fn_806efd70,translated,high,"work/ghidra/rel-d_basesNP/export/806efd70_FUN_806efd70.c; 0x806511D0-shape destructor; branch words 0x4BA6FA69 0x4BBC94D9",src/game/bases.rs
+game::bases,806fcc60,fn_806fcc60,translated,high,"work/ghidra/rel-d_basesNP/export/806fcc60_FUN_806fcc60.c; release-only wrapper; entry r3 reaches 0x802B9280; bl 0x4BBBC5FD",src/game/bases.rs
+game::bases,806fcca0,fn_806fcca0,translated,high,"work/ghidra/rel-d_basesNP/export/806fcca0_FUN_806fcca0.c; fn_806357e0 twin plus one dead beq; 0x8015F9F0(this+0x18,0) then conditional free",src/game/bases.rs
+game::bases,806fcd70,fn_806fcd70,translated,high,"work/ghidra/rel-d_basesNP/export/806fcd70_FUN_806fcd70.c; same 16-word body; bl displacement 0x4BBBC4ED only",src/game/bases.rs
+game::bases,806fcdb0,fn_806fcdb0,translated,high,"work/ghidra/rel-d_basesNP/export/806fcdb0_FUN_806fcdb0.c; same 16-word body; bl displacement 0x4BBBC4AD only",src/game/bases.rs
+game::bases,806ff700,fn_806ff700,translated,high,"work/ghidra/rel-d_basesNP/export/806ff700_FUN_806ff700.c; 0x8007F950(this+0x3C0) then li r3,1",src/game/bases.rs

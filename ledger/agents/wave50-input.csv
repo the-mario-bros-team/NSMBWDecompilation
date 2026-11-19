@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801fb924,fn_801fb924,translated,high,"work/ghidra/main-gb/export/801fb924_FUN_801fb924.c; 76 bytes; trace gate > 3, clear 0x803D1810, tail call 0x801FBCE0",src/runtime/input.rs
+runtime::input,801fb970,fn_801fb970,translated,high,"work/ghidra/main-gb/export/801fb970_FUN_801fb970.c; 68 bytes; guarded free of 0x803D17AC",src/runtime/input.rs
+runtime::input,801fb9b4,fn_801fb9b4,translated,high,"work/ghidra/main-gb/export/801fb9b4_FUN_801fb9b4.c; 72 bytes; getbuf 0x1C then memcpy 0x1C into 0x803D180C",src/runtime/input.rs
+runtime::input,801fb9fc,fn_801fb9fc,translated,high,"work/ghidra/main-gb/export/801fb9fc_FUN_801fb9fc.c; 72 bytes; getbuf 0x18 then memcpy 0x18 into 0x803D180C",src/runtime/input.rs
+runtime::input,801fba44,fn_801fba44,translated,high,"work/ghidra/main-gb/export/801fba44_FUN_801fba44.c; 68 bytes; guarded free of 0x803D180C",src/runtime/input.rs
+runtime::input,801fba88,fn_801fba88,translated,medium,"work/ghidra/main-gb/export/801fba88_FUN_801fba88.c; 68 bytes; send then clear 0x803D180C; send pointer is implicit r3",src/runtime/input.rs
+runtime::input,801fbacc,fn_801fbacc,translated,medium,"work/ghidra/main-gb/export/801fbacc_FUN_801fbacc.c; 92 bytes; free 0x803D17AC then callback(4,0) via 0x803D1798",src/runtime/input.rs
+runtime::input,801fbdc0,fn_801fbdc0,translated,high,"work/ghidra/main-gb/export/801fbdc0_FUN_801fbdc0.c; 72 bytes; event 0x206 with u16 payload at +8",src/runtime/input.rs
+runtime::input,801fbe98,fn_801fbe98,translated,high,"work/ghidra/main-gb/export/801fbe98_FUN_801fbe98.c; 76 bytes; event 0x203 with one byte from src+1",src/runtime/input.rs
+runtime::input,801fbee4,fn_801fbee4,translated,medium,"work/ghidra/main-gb/export/801fbee4_FUN_801fbee4.c; 64 bytes; strncpy 0x1F into 0x803D17B8 then unregister itself",src/runtime/input.rs
+runtime::input,801fbf24,fn_801fbf24,translated,medium,"work/ghidra/main-gb/export/801fbf24_FUN_801fbf24.c; 140 bytes; stop 0x803D17F0 timer, event 0x204, BDA from 0x803D179C+2",src/runtime/input.rs
+runtime::input,801fbfb0,fn_801fbfb0,translated,medium,"work/ghidra/main-gb/export/801fbfb0_FUN_801fbfb0.c; 136 bytes; same event 0x204 with local BDA 0x803D17B2",src/runtime/input.rs
+runtime::input,801fc03c,fn_801fc03c,translated,medium,"work/ghidra/main-gb/export/801fc03c_FUN_801fc03c.c; 200 bytes; BDA+name record, service scan 0x802F6E18, callback event 4",src/runtime/input.rs
+runtime::input,801fce00,fn_801fce00,translated,high,"work/ghidra/main-gb/export/801fce00_FUN_801fce00.c; 28 bytes; indirect call (1,0); Ghidra jumptable warning only",src/runtime/input.rs
+runtime::input,801fce20,fn_801fce20,translated,medium,"work/ghidra/main-gb/export/801fce20_FUN_801fce20.c; 80 bytes; shutdown flag, pool-2 getbuf, header 0x8020E784, teardown start",src/runtime/input.rs
+runtime::input,801fce70,fn_801fce70,translated,medium,"work/ghidra/main-gb/export/801fce70_FUN_801fce70.c; 136 bytes; clear 0x104, register event queues 1/2, post 0x100",src/runtime/input.rs
+runtime::input,801fcef8,fn_801fcef8,translated,high,"work/ghidra/main-gb/export/801fcef8_FUN_801fcef8.c; 56 bytes; event 0x101 with an 8-byte buffer",src/runtime/input.rs
+runtime::input,801fcf30,fn_801fcf30,translated,medium,"work/ghidra/main-gb/export/801fcf30_FUN_801fcf30.c; 56 bytes; critical section around 0x80202914 (state==5)",src/runtime/input.rs
+runtime::input,801fcf68,fn_801fcf68,translated,high,"work/ghidra/main-gb/export/801fcf68_FUN_801fcf68.c; 100 bytes; event 0x102 with strncpy 0x20 to +8",src/runtime/input.rs
+runtime::input,801fcfcc,fn_801fcfcc,translated,high,"work/ghidra/main-gb/export/801fcfcc_FUN_801fcfcc.c; 88 bytes; event 0x103 with two mode bytes at +8/+9",src/runtime/input.rs
+runtime::input,801fd024,fn_801fd024,translated,high,"work/ghidra/main-gb/export/801fd024_FUN_801fd024.c; 132 bytes; event 0x200, memcpy 10, two words",src/runtime/input.rs
+runtime::input,801fd0a8,fn_801fd0a8,translated,high,"work/ghidra/main-gb/export/801fd0a8_FUN_801fd0a8.c; 56 bytes; event 0x201 with an 8-byte buffer",src/runtime/input.rs
+runtime::input,801fd25c,fn_801fd25c,translated,high,"work/ghidra/main-gb/export/801fd25c_FUN_801fd25c.c; 72 bytes; lock, 0x8020213C remove, invert result",src/runtime/input.rs
+runtime::input,801fd2a4,fn_801fd2a4,translated,high,"work/ghidra/main-gb/export/801fd2a4_FUN_801fd2a4.c; 56 bytes; event 0x10C with an 8-byte buffer",src/runtime/input.rs
+runtime::input,801fd2dc,fn_801fd2dc,translated,medium,"work/ghidra/main-gb/export/801fd2dc_FUN_801fd2dc.c; 152 bytes; 3-byte handler rows 0x802F6EC4, actions 0x802F6E90",src/runtime/input.rs
+runtime::input,801fd374,fn_801fd374,translated,medium,"work/ghidra/main-gb/export/801fd374_FUN_801fd374.c; 200 bytes; state record pointer 0x802F6FA8, next state, actions 0x802F6EF0",src/runtime/input.rs
+runtime::input,801fd43c,fn_801fd43c,translated,medium,"work/ghidra/main-gb/export/801fd43c_FUN_801fd43c.c; 104 bytes; clear 0x2E, install 0x801FD4BC, service slot 3",src/runtime/input.rs
+runtime::input,801fd4a4,fn_801fd4a4,translated,high,"work/ghidra/main-gb/export/801fd4a4_FUN_801fd4a4.c; 24 bytes; service deregister mode 4",src/runtime/input.rs

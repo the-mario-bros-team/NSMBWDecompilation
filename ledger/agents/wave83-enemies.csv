@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a059d0,fn_80a059d0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a059d0_FUN_80a059d0.c; DieFall extra state word 0x80357BF4 for register_buku_states,src/game/enemies.rs
+game::enemies,80a05c60,fn_80a05c60,translated,low,work/ghidra/rel-d_enemiesNP/export/80a05c60_FUN_80a05c60.c; 48-byte forwarder to 0x802DCBFC; hidden r12 this-adjust not modelled,src/game/enemies.rs
+game::enemies,80a05c90,fn_80a05c90,translated,low,work/ghidra/rel-d_enemiesNP/export/80a05c90_FUN_80a05c90.c; second 48-byte forwarder of the Buku block,src/game/enemies.rs
+game::enemies,80a08120,fn_80a08120,translated,high,work/ghidra/rel-d_enemiesNP/export/80a08120_FUN_80a08120.c; freeing helper of the lift_taru family,src/game/enemies.rs
+game::enemies,80a08260,fn_80a08260,translated,high,work/ghidra/rel-d_enemiesNP/export/80a08260_FUN_80a08260.c; five-link +0x30 chain walker of the lift_taru family,src/game/enemies.rs
+game::enemies,80a08340,fn_80a08340,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a08340_FUN_80a08340.c; colon-suffix name predicate; 0x802E1C40 and 0x802E1AB4,src/game/enemies.rs
+game::enemies,80a08400,fn_80a08400,translated,low,work/ghidra/rel-d_enemiesNP/export/80a08400_FUN_80a08400.c; 48-byte forwarder to 0x802DCBFC; hidden r12 this-adjust not modelled,src/game/enemies.rs
+game::enemies,80a08430,fn_80a08430,translated,low,work/ghidra/rel-d_enemiesNP/export/80a08430_FUN_80a08430.c; second 48-byte forwarder of the lift_taru shell,src/game/enemies.rs
+game::enemies,80a08460,fn_80a08460,translated,high,work/ghidra/rel-d_enemiesNP/export/80a08460_FUN_80a08460.c; 0x5D8-byte lift_taru constructor; vtable 0x80B34320,src/game/enemies.rs
+game::enemies,80a084d0,fn_80a084d0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a084d0_FUN_80a084d0.c; lift_taru dispose via 0x800DAE00 plus 0x802B9280,src/game/enemies.rs
+game::enemies,80a086d0,fn_80a086d0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a086d0_FUN_80a086d0.c; g3d/lift_taru.brres binder; model lift_taru; six-argument holder commit,src/game/enemies.rs
+game::enemies,80a0cf90,fn_80a0cf90,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0cf90_FUN_80a0cf90.c; freeing helper; 0x8015F800 then optional 0x802B9280,src/game/enemies.rs
+game::enemies,80a0cff0,fn_80a0cff0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0cff0_FUN_80a0cff0.c; second copy of the freeing helper,src/game/enemies.rs
+game::enemies,80a0d050,fn_80a0d050,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0d050_FUN_80a0d050.c; returns shared record word 0x80357BF4,src/game/enemies.rs
+game::enemies,80a0d060,fn_80a0d060,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0d060_FUN_80a0d060.c; returns shared record word 0x80357BB4,src/game/enemies.rs
+game::enemies,80a0d150,fn_80a0d150,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0d150_FUN_80a0d150.c; five-link +0x30 chain walker; vtable +0x0C predicate; recurses,src/game/enemies.rs
+game::enemies,80a0d230,fn_80a0d230,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a0d230_FUN_80a0d230.c; colon-suffix name predicate; 0x802E1C40 and 0x802E1AB4,src/game/enemies.rs
+game::enemies,80a0d2f0,fn_80a0d2f0,translated,low,work/ghidra/rel-d_enemiesNP/export/80a0d2f0_FUN_80a0d2f0.c; 48-byte forwarder to 0x802DCBFC; hidden r12 this-adjust not modelled,src/game/enemies.rs
+game::enemies,80a0d320,fn_80a0d320,translated,low,work/ghidra/rel-d_enemiesNP/export/80a0d320_FUN_80a0d320.c; second 48-byte forwarder to 0x802DCBFC,src/game/enemies.rs
+game::enemies,80a0d350,fn_80a0d350,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0d350_FUN_80a0d350.c; 0x618-byte constructor; vtable 0x80B34E08; five holder layers,src/game/enemies.rs
+game::enemies,80a0ee70,fn_80a0ee70,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0ee70_FUN_80a0ee70.c; freeing helper of the 0x938-byte family,src/game/enemies.rs
+game::enemies,80a0eed0,fn_80a0eed0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0eed0_FUN_80a0eed0.c; second freeing helper of the 0x938-byte family,src/game/enemies.rs
+game::enemies,80a0ef30,fn_80a0ef30,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0ef30_FUN_80a0ef30.c; returns shared record word 0x80357BF4,src/game/enemies.rs
+game::enemies,80a0f020,fn_80a0f020,translated,high,work/ghidra/rel-d_enemiesNP/export/80a0f020_FUN_80a0f020.c; five-link +0x30 chain walker of the third shell,src/game/enemies.rs
+game::enemies,80a0f100,fn_80a0f100,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a0f100_FUN_80a0f100.c; colon-suffix name predicate of the third shell,src/game/enemies.rs
+game::enemies,80a0f1c0,fn_80a0f1c0,translated,low,work/ghidra/rel-d_enemiesNP/export/80a0f1c0_FUN_80a0f1c0.c; 48-byte forwarder to 0x802DCBFC; hidden r12 this-adjust not modelled,src/game/enemies.rs
+game::enemies,80a0f1f0,fn_80a0f1f0,translated,low,work/ghidra/rel-d_enemiesNP/export/80a0f1f0_FUN_80a0f1f0.c; second 48-byte forwarder of the third shell,src/game/enemies.rs
+game::enemies,80a0f220,fn_80a0f220,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a0f220_FUN_80a0f220.c; 0x938-byte constructor; vtable 0x80B35238; 0x800B6830 rig call,src/game/enemies.rs

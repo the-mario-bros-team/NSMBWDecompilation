@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,80110050,fn_80110050,translated,high,"work/ghidra/main-gb/export/80110050_FUN_80110050.c; strrchr on both names then strcmp after the last colon",src/game/worldmap.rs
+game::worldmap,80110110,fn_80110110,translated,high,"work/ghidra/main-gb/export/80110110_FUN_80110110.c; single 0x802DCBFC(b,b,a) call",src/game/worldmap.rs
+game::worldmap,80110140,fn_80110140,translated,high,"work/ghidra/main-gb/export/80110140_FUN_80110140.c; byte-identical twin of 0x80110110",src/game/worldmap.rs
+game::worldmap,80110170,fn_80110170,translated,medium,"work/ghidra/main-gb/export/80110170_FUN_80110170.c; allocates 0x8A0 bytes, installs five vtables and runs four sub-constructors; 0x80094E80 printed with no argument and 0x802DCD70/0x802DCDBC are _savegpr/empty-return helpers",src/game/worldmap.rs
+game::worldmap,801102d0,fn_801102d0,translated,medium,"work/ghidra/main-gb/export/801102d0_FUN_801102d0.c; splits +0x04 into +0x810/+0x814/+0x7EC, seeds +0x7D4..+0x7DC and ~50 state words, posts 0x8006D090 and 0x8008C3E0",src/game/worldmap.rs
+game::worldmap,801111b0,fn_801111b0,translated,medium,"work/ghidra/main-gb/export/801111b0_FUN_801111b0.c; +0x87C/+0x880 gate, +0x394 name test, position snapshot at +0x870",src/game/worldmap.rs
+game::worldmap,80111580,fn_80111580,translated,medium,"work/ghidra/main-gb/export/80111580_FUN_80111580.c; byte-identical twin of 0x801111B0",src/game/worldmap.rs
+game::worldmap,801117a0,fn_801117a0,translated,medium,"work/ghidra/main-gb/export/801117a0_FUN_801117a0.c; copies three words, subtracts 16.0f, adds 9.0f when status 0x4F is set, posts 0x80375208",src/game/worldmap.rs
+game::worldmap,80111c70,fn_80111c70,translated,medium,"work/ghidra/main-gb/export/80111c70_FUN_80111c70.c; builds the +0x7C layout with 0x80064AF0/0x801C0BD0/0x801C0540 and commits it into +0x6B8",src/game/worldmap.rs
+game::worldmap,80111d80,fn_80111d80,translated,medium,"work/ghidra/main-gb/export/80111d80_FUN_80111d80.c; binds the r13-0x63C8/r13-0x63C0 records through 0x8023A0B0/0x801651F0/0x80169F80",src/game/worldmap.rs
+game::worldmap,80111e50,fn_80111e50,translated,high,"work/ghidra/main-gb/export/80111e50_FUN_80111e50.c; +0x394 gate, +0x81D byte decrement and the +0x7C4 sign mirror",src/game/worldmap.rs
+game::worldmap,80111f90,fn_80111f90,translated,high,"work/ghidra/main-gb/export/80111f90_FUN_80111f90.c; +0x7E4 countdown, +0x7C8 clear and one 0x80111D80(0) call",src/game/worldmap.rs
+game::worldmap,80111fd0,fn_80111fd0,translated,medium,"work/ghidra/main-gb/export/80111fd0_FUN_80111fd0.c; effect 0x07000008 at +0xAC/+0xB0+8.0f/600.0f then sound 0x286",src/game/worldmap.rs
+game::worldmap,80112080,fn_80112080,translated,medium,"work/ghidra/main-gb/export/80112080_FUN_80112080.c; +0x7EC==0 copies +0x1035 between player slots, else calls 0x80111FD0",src/game/worldmap.rs
+game::worldmap,80112120,fn_80112120,translated,high,"work/ghidra/main-gb/export/80112120_FUN_80112120.c; 0x801126A0 flag/result gate, r13-0x59B4 test, four exit calls",src/game/worldmap.rs
+game::worldmap,80112440,fn_80112440,translated,high,"work/ghidra/main-gb/export/80112440_FUN_80112440.c; -8000.0f sentinel and the 8.0f band test on +0xAC",src/game/worldmap.rs
+game::worldmap,80112480,fn_80112480,translated,high,"work/ghidra/main-gb/export/80112480_FUN_80112480.c; eight 0x800668F0 probes at +-7.0f and 3.0/29.0/5.0/24.0 packed into one byte",src/game/worldmap.rs
+game::worldmap,80112b30,fn_80112b30,translated,medium,"work/ghidra/main-gb/export/80112b30_FUN_80112b30.c; camera+0x8FEAC correction clamped to +-7.0f, floor band from scene+0x3C/+0x44",src/game/worldmap.rs
+game::worldmap,80113260,fn_80113260,translated,high,"work/ghidra/main-gb/export/80113260_FUN_80113260.c; 0x80160D10 with 1.5f and the +0x7B0/+0x7B4/+0xB4 vector",src/game/worldmap.rs
+game::worldmap,801132c0,fn_801132c0,translated,high,"work/ghidra/main-gb/export/801132c0_FUN_801132c0.c; bumps +0x7F8 and posts 0x800B3720(player,0x14,0) past 2",src/game/worldmap.rs
+game::worldmap,80113320,fn_80113320,translated,high,"work/ghidra/main-gb/export/80113320_FUN_80113320.c; +0x7EC==1 and status 0x53 gates around the three-call exit",src/game/worldmap.rs
+game::worldmap,801133b0,fn_801133b0,translated,medium,"work/ghidra/main-gb/export/801133b0_FUN_801133b0.c; +0x7E0 countdown, +0xEA4 contact test, arms 0x1E/0x1F and runs five calls",src/game/worldmap.rs
+game::worldmap,80113470,fn_80113470,translated,high,"work/ghidra/main-gb/export/80113470_FUN_80113470.c; +0x7FC==1 then 0x8008C330 on +0x148",src/game/worldmap.rs
+game::worldmap,80113500,fn_80113500,translated,medium,"work/ghidra/main-gb/export/80113500_FUN_80113500.c; band test, r13-0x5770 +0x110 lane wrap, 0x801129C0 and the +-1.7f turn per side",src/game/worldmap.rs
+game::worldmap,80113600,fn_80113600,translated,medium,"work/ghidra/main-gb/export/80113600_FUN_80113600.c; four side branches place +0xAC/+0xB0 with 0.5*scene+0x40 and the 0x802F4BA8 lane table",src/game/worldmap.rs
+game::worldmap,80113cc0,fn_80113cc0,translated,medium,"work/ghidra/main-gb/export/80113cc0_FUN_80113cc0.c; +0x500/+0x502 timers, 0x80112810 or 0x8015F480 ease, then both clamps and the two chains",src/game/worldmap.rs
+game::worldmap,80113e40,fn_80113e40,translated,medium,"work/ghidra/main-gb/export/80113e40_FUN_80113e40.c; 0x80112E80 band gate, side 0/1 selection and the 0x80375108/0x80375188 split",src/game/worldmap.rs
+game::worldmap,80113fa0,fn_80113fa0,translated,high,"work/ghidra/main-gb/export/80113fa0_FUN_80113fa0.c; 0x80112120 then 0x80375248 plus the two clamp calls with flag 1",src/game/worldmap.rs

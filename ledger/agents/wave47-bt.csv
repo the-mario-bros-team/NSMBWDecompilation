@@ -1,0 +1,32 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,80224340,fn_80224340,translated,high,"work/ghidra/main-gb/export/80224340_FUN_80224340.c; word read at 0xCD000000 + index*4",src/runtime/bt.rs
+runtime::bt,80224350,fn_80224350,translated,high,"work/ghidra/main-gb/export/80224350_FUN_80224350.c; word write at 0xCD000000 + index*4",src/runtime/bt.rs
+runtime::bt,80224390,fn_80224390,translated,high,"work/ghidra/main-gb/export/80224390_FUN_80224390.c; strnlen: non-NUL bytes capped at the limit",src/runtime/bt.rs
+runtime::bt,802278a0,fn_802278a0,translated,medium,"work/ghidra/main-gb/export/802278a0_FUN_802278a0.c; size != 0 and 32-byte aligned -> 0x80225010, else -101",src/runtime/bt.rs
+runtime::bt,80227970,fn_80227970,translated,medium,"work/ghidra/main-gb/export/80227970_FUN_80227970.c; same guard as 802278a0 -> 0x80225220, else -101",src/runtime/bt.rs
+runtime::bt,80229360,fn_80229360,translated,high,"work/ghidra/main-gb/export/80229360_FUN_80229360.c; installs vtable 0x8034CC2C",src/runtime/bt.rs
+runtime::bt,80229370,fn_80229370,translated,high,"work/ghidra/main-gb/export/80229370_FUN_80229370.c; release guard then free through 0x802B9280",src/runtime/bt.rs
+runtime::bt,80229810,fn_80229810,translated,high,"work/ghidra/main-gb/export/80229810_FUN_80229810.c; installs vtable 0x8034CC18",src/runtime/bt.rs
+runtime::bt,80229820,fn_80229820,translated,high,"work/ghidra/main-gb/export/80229820_FUN_80229820.c; same release guard as 80229370",src/runtime/bt.rs
+runtime::bt,8022a6b0,fn_8022a6b0,translated,high,"work/ghidra/main-gb/export/8022a6b0_FUN_8022a6b0.c; base destructor 0x8022A120 then guarded free",src/runtime/bt.rs
+runtime::bt,8022a9f0,fn_8022a9f0,translated,medium,"work/ghidra/main-gb/export/8022a9f0_FUN_8022a9f0.c; vtable 0x8034CD10 + 14 field clears + self pointer + 8022AB50",src/runtime/bt.rs
+runtime::bt,8022aa60,fn_8022aa60,translated,medium,"work/ghidra/main-gb/export/8022aa60_FUN_8022aa60.c; same field clears as 8022A9F0 then 0x8022AC40",src/runtime/bt.rs
+runtime::bt,8022aad0,fn_8022aad0,translated,medium,"work/ghidra/main-gb/export/8022aad0_FUN_8022aad0.c; vtable restore + armed-flag virtual slot +0x10 + guarded free",src/runtime/bt.rs
+runtime::bt,8022ab50,fn_8022ab50,translated,medium,"work/ghidra/main-gb/export/8022ab50_FUN_8022ab50.c; flag bits 0/1, array open 0x801D95B0, query 0x801D9040, range reset",src/runtime/bt.rs
+runtime::bt,8022aea0,fn_8022aea0,translated,high,"work/ghidra/main-gb/export/8022aea0_FUN_8022aea0.c; two guards then close 0x801D9850 and clear +4",src/runtime/bt.rs
+runtime::bt,8022aef0,fn_8022aef0,translated,medium,"work/ghidra/main-gb/export/8022aef0_FUN_8022aef0.c; seek 0x801D8BD0 + append 0x801D89F0 + range advance",src/runtime/bt.rs
+runtime::bt,8022b150,fn_8022b150,translated,high,"work/ghidra/main-gb/export/8022b150_FUN_8022b150.c; tail call rewinds the range at +0x14",src/runtime/bt.rs
+runtime::bt,8022b230,fn_8022b230,translated,high,"work/ghidra/main-gb/export/8022b230_FUN_8022b230.c; guard 0x803DA0DC around one-shot queue open + flag",src/runtime/bt.rs
+runtime::bt,8022b290,fn_8022b290,translated,high,"work/ghidra/main-gb/export/8022b290_FUN_8022b290.c; drain loop + close 0x801AC6E0 + flag clear",src/runtime/bt.rs
+runtime::bt,8022b310,fn_8022b310,translated,high,"work/ghidra/main-gb/export/8022b310_FUN_8022b310.c; drain without close; leave call only on the early-return branch",src/runtime/bt.rs
+runtime::bt,8022b380,fn_8022b380,translated,high,"work/ghidra/main-gb/export/8022b380_FUN_8022b380.c; drain loop then guard leave",src/runtime/bt.rs
+runtime::bt,8022b410,fn_8022b410,translated,high,"work/ghidra/main-gb/export/8022b410_FUN_8022b410.c; selector 0/1/2/default writes +4 +8 +0xC from 0x8034CD70..9C",src/runtime/bt.rs
+runtime::bt,8022b4c0,fn_8022b4c0,translated,high,"work/ghidra/main-gb/export/8022b4c0_FUN_8022b4c0.c; two vtables then +0x14..+0x18 clears, u16 0x3F at +0x18",src/runtime/bt.rs
+runtime::bt,8022b560,fn_8022b560,translated,high,"work/ghidra/main-gb/export/8022b560_FUN_8022b560.c; release guard then free",src/runtime/bt.rs
+runtime::bt,8022b680,fn_8022b680,translated,high,"work/ghidra/main-gb/export/8022b680_FUN_8022b680.c; mode 0 -> 0x20120, mode 1 -> 0x120F00, else 0",src/runtime/bt.rs
+runtime::bt,8022bb80,fn_8022bb80,translated,high,"work/ghidra/main-gb/export/8022bb80_FUN_8022bb80.c; two vtables, nine stores, u16 pair 0 / 0xFFFF at +0x18/+0x1A",src/runtime/bt.rs
+runtime::bt,8022bbe0,fn_8022bbe0,translated,high,"work/ghidra/main-gb/export/8022bbe0_FUN_8022bbe0.c; release guard then free",src/runtime/bt.rs
+runtime::bt,8022bc20,fn_8022bc20,translated,high,"work/ghidra/main-gb/export/8022bc20_FUN_8022bc20.c; two stores at +0x10 and +0x14",src/runtime/bt.rs
+runtime::bt,8022bd40,fn_8022bd40,translated,medium,"work/ghidra/main-gb/export/8022bd40_FUN_8022bd40.c; cached selector at +0x18, bounded list walk, 0x8022C120 lookup, header +2 write",src/runtime/bt.rs
+runtime::bt,8022c300,fn_8022c300,translated,high,"work/ghidra/main-gb/export/8022c300_FUN_8022c300.c; base ctor 8022BB80 then vtable 0x8034CED0",src/runtime/bt.rs
+runtime::bt,8022c340,fn_8022c340,translated,high,"work/ghidra/main-gb/export/8022c340_FUN_8022c340.c; base dtor 8022BBE0 with zero release then guarded free",src/runtime/bt.rs

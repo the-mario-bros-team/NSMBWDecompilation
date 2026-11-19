@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a00200,fn_80a00200,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a00200_FUN_80a00200.c; guard + heap release 0x802B9280 + returned pointer are literal",src/game/enemies.rs
+game::enemies,80a00240,fn_80a00240,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a00240_FUN_80a00240.c; byte-identical to fn_80a00200",src/game/enemies.rs
+game::enemies,80a08cb0,fn_80a08cb0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a08cb0_FUN_80a08cb0.c; one sub-object release at +0x578 and constant 1",src/game/enemies.rs
+game::enemies,80a08dc0,fn_80a08dc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a08dc0_FUN_80a08dc0.c; +0x588 rider-list walk; +0x567/+0x38D writes inferred from the three steps that read them",src/game/enemies.rs
+game::enemies,80a08e40,fn_80a08e40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a08e40_FUN_80a08e40.c; four-bit player mask built from the rider list",src/game/enemies.rs
+game::enemies,80a08ff0,fn_80a08ff0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a08ff0_FUN_80a08ff0.c; ride-height copy 0x80B6EA98 switch and 0x80078410 effect are literal",src/game/enemies.rs
+game::enemies,80a090a0,fn_80a090a0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a090a0_FUN_80a090a0.c; three-way flow literal; timer unit and +0x567 type byte inferred",src/game/enemies.rs
+game::enemies,80a091b0,fn_80a091b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a091b0_FUN_80a091b0.c; gravity subtraction and 0x80B6EAD8/0x80B6EB18 switches are literal",src/game/enemies.rs
+game::enemies,80a09310,fn_80a09310,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a09310_FUN_80a09310.c; rise step with three branch tails; state roles inferred",src/game/enemies.rs
+game::enemies,80a09460,fn_80a09460,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a09460_FUN_80a09460.c; +0x5B4 bit 0x40 impact branch and rider vtable +0x3FC call are literal",src/game/enemies.rs
+game::enemies,80a09650,fn_80a09650,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a09650_FUN_80a09650.c; bounce step over +0x554 and the three state descriptors",src/game/enemies.rs
+game::enemies,80a09880,fn_80a09880,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a09880_FUN_80a09880.c; CONCAT44 integer conversion modelled as a plain byte; +0x566 used as height tolerance",src/game/enemies.rs
+game::enemies,80a0d5b0,fn_80a0d5b0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0d5b0_FUN_80a0d5b0.c; position/angle transform + 0x801C0BD0 matrix + three angle setters + +0x544 commit are literal",src/game/enemies.rs
+game::enemies,80a0d8a0,fn_80a0d8a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0d8a0_FUN_80a0d8a0.c; sound event 0x1F9 at the actor position",src/game/enemies.rs
+game::enemies,80a0d8f0,fn_80a0d8f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0d8f0_FUN_80a0d8f0.c; sound event 0x1FA at the actor position",src/game/enemies.rs
+game::enemies,80a0d940,fn_80a0d940,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0d940_FUN_80a0d940.c; byte-identical to fn_80a0d8f0",src/game/enemies.rs
+game::enemies,80a0d990,fn_80a0d990,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0d990_FUN_80a0d990.c; byte-identical to fn_80a0d8f0",src/game/enemies.rs
+game::enemies,80a0d9e0,fn_80a0d9e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0d9e0_FUN_80a0d9e0.c; byte-identical to fn_80a0d8f0",src/game/enemies.rs
+game::enemies,80a0da30,fn_80a0da30,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0da30_FUN_80a0da30.c; double vtable dispatch and the ==0 test; 0x80B6EE98 role unknown",src/game/enemies.rs
+game::enemies,80a0dac0,fn_80a0dac0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0dac0_FUN_80a0dac0.c; sound 0x1FB + record word +0x04 forwarded to fn_80a0db40",src/game/enemies.rs
+game::enemies,80a0db40,fn_80a0db40,partial,low,"work/ghidra/rel-d_enemiesNP/export/80a0db40_FUN_80a0db40.c; height compare and two +0xE8 stores are literal; jump table at 0x80A0DB80 not recovered",src/game/enemies.rs
+game::enemies,80a0dcc0,fn_80a0dcc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0dcc0_FUN_80a0dcc0.c; side-byte table at 0x8042C1B0 and the seven-word record write are literal",src/game/enemies.rs
+game::enemies,80a0ddd0,fn_80a0ddd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0ddd0_FUN_80a0ddd0.c; g3d/kuriboMini.brres + kuriboMini node + +0x524/+0x544/+0x584 holders are literal",src/game/enemies.rs
+game::enemies,80a0def0,fn_80a0def0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0def0_FUN_80a0def0.c; vtable +0x1C commit; export drops the object argument",src/game/enemies.rs
+game::enemies,80a0df00,fn_80a0df00,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0df00_FUN_80a0df00.c; six button predicates and both counters are literal; button meanings unnamed",src/game/enemies.rs
+game::enemies,80a0e0f0,fn_80a0e0f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0e0f0_FUN_80a0e0f0.c; ground query + conditional +0xEC store + release",src/game/enemies.rs
+game::enemies,80a0e190,fn_80a0e190,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a0e190_FUN_80a0e190.c; side test and negation of 0x80B34DC0 plus four clears",src/game/enemies.rs
+game::enemies,80a0e220,fn_80a0e220,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0e220_FUN_80a0e220.c; three-contact counter and two state switches are literal",src/game/enemies.rs
+game::enemies,80a0e3b0,fn_80a0e3b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a0e3b0_FUN_80a0e3b0.c; base updates + ground query + 0x80097B30 band test",src/game/enemies.rs

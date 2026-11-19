@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,80151630,fn_80151630,translated,medium,"work/ghidra/main-gb/export/80151630_FUN_80151630.c; copies 12 words to +0x1094..+0x10C0; ORs capabilities from mode 0x11/0x12 and pad tests; binds three words via 0x8006D090",src/engine/display.rs
+engine::display,801533d0,fn_801533d0,translated,high,"work/ghidra/main-gb/export/801533d0_FUN_801533d0.c; 0x802DCBFC(second, second, first)",src/engine/display.rs
+engine::display,80153400,fn_80153400,translated,high,"work/ghidra/main-gb/export/80153400_FUN_80153400.c; registers 19 daYoshi_c state descriptors from 0x80326D08..0x80326FB4; 11 riding states add the +0x30 table getter",src/engine/display.rs
+engine::display,80154360,fn_80154360,translated,high,"work/ghidra/main-gb/export/80154360_FUN_80154360.c; 0x8015F800 destructor then optional 0x802B9280 free; returns the object",src/engine/display.rs
+engine::display,801543c0,fn_801543c0,translated,high,"work/ghidra/main-gb/export/801543c0_FUN_801543c0.c; returns &DAT_803545dc (Cloud state table)",src/engine/display.rs
+engine::display,801543d0,fn_801543d0,translated,high,"work/ghidra/main-gb/export/801543d0_FUN_801543d0.c; returns &DAT_8035455c (Funsui state table)",src/engine/display.rs
+engine::display,801543e0,fn_801543e0,translated,high,"work/ghidra/main-gb/export/801543e0_FUN_801543e0.c; returns &DAT_8035445c (HipAttack state table)",src/engine/display.rs
+engine::display,801543f0,fn_801543f0,translated,high,"work/ghidra/main-gb/export/801543f0_FUN_801543f0.c; returns &DAT_8035441c (Turn state table)",src/engine/display.rs
+engine::display,80154400,fn_80154400,translated,high,"work/ghidra/main-gb/export/80154400_FUN_80154400.c; returns &DAT_803543dc (Slip state table)",src/engine/display.rs
+engine::display,80154410,fn_80154410,translated,high,"work/ghidra/main-gb/export/80154410_FUN_80154410.c; returns &DAT_803542dc (SitJump state table)",src/engine/display.rs
+engine::display,80154420,fn_80154420,translated,high,"work/ghidra/main-gb/export/80154420_FUN_80154420.c; returns &DAT_8035439c (Crouch state table)",src/engine/display.rs
+engine::display,80154430,fn_80154430,translated,high,"work/ghidra/main-gb/export/80154430_FUN_80154430.c; returns &DAT_8035435c (Land state table)",src/engine/display.rs
+engine::display,80154440,fn_80154440,translated,high,"work/ghidra/main-gb/export/80154440_FUN_80154440.c; returns &DAT_8035431c (Fall state table)",src/engine/display.rs
+engine::display,80154450,fn_80154450,translated,high,"work/ghidra/main-gb/export/80154450_FUN_80154450.c; returns &DAT_8035429c (Jump state table)",src/engine/display.rs
+engine::display,80154460,fn_80154460,translated,high,"work/ghidra/main-gb/export/80154460_FUN_80154460.c; returns &DAT_8035425c (Walk state table)",src/engine/display.rs
+engine::display,80154740,fn_80154740,translated,medium,"work/ghidra/main-gb/export/80154740_FUN_80154740.c; route state reset, variant copy, four pane builds, two pad masks 0x1FF/0x2FF, HUD block reset; returns 1",src/engine/display.rs
+engine::display,801578f0,fn_801578f0,translated,high,"work/ghidra/main-gb/export/801578f0_FUN_801578f0.c; destroys the +0x18 manager then optionally frees; returns the object",src/engine/display.rs
+engine::display,80159eb0,fn_80159eb0,translated,high,"work/ghidra/main-gb/export/80159eb0_FUN_80159eb0.c; 0x802DCBFC(second, second, first)",src/engine/display.rs
+engine::display,80159ee0,fn_80159ee0,translated,high,"work/ghidra/main-gb/export/80159ee0_FUN_80159ee0.c; 0x802DCBFC(second, second, first)",src/engine/display.rs
+engine::display,8015b2c0,fn_8015b2c0,translated,high,"work/ghidra/main-gb/export/8015b2c0_FUN_8015b2c0.c; 0x802DCBFC(second, second, first)",src/engine/display.rs
+engine::display,8015b2f0,fn_8015b2f0,translated,high,"work/ghidra/main-gb/export/8015b2f0_FUN_8015b2f0.c; 0x802DCBFC(second, second, first)",src/engine/display.rs
+engine::display,8015b320,fn_8015b320,translated,high,"work/ghidra/main-gb/export/8015b320_FUN_8015b320.c; seeds 0x803279D0/D4/D8/C4 from SDA2, registers the null sentinel, then 6 Pausewindow_c descriptors",src/engine/display.rs
+engine::display,8015dda0,fn_8015dda0,translated,high,"work/ghidra/main-gb/export/8015dda0_FUN_8015dda0.c; 0x802DCBFC(second, second, first)",src/engine/display.rs
+engine::display,8015ddd0,fn_8015ddd0,translated,high,"work/ghidra/main-gb/export/8015ddd0_FUN_8015ddd0.c; registers d_enemies and d_en_boss, copies two SDA tables, then 24 dScBoot_c descriptors",src/engine/display.rs
+engine::display,8015f040,fn_8015f040,translated,high,"work/ghidra/main-gb/export/8015f040_FUN_8015f040.c; 0x8015F800 destructor then optional 0x802B9280 free; returns the object",src/engine/display.rs

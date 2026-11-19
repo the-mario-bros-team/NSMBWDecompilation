@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80740160,fn_80740160,translated,high,"work/ghidra/rel-d_basesNP/export/80740160_FUN_80740160.c; four +0x430 halfword slots filled from the active 0x20-byte records",src/game/bases.rs
+game::bases,807401c0,fn_807401c0,translated,high,"work/ghidra/rel-d_basesNP/export/807401c0_FUN_807401c0.c; five reset helpers then 80740250/80740290/807402f0 and +0x7ED count",src/game/bases.rs
+game::bases,80740250,fn_80740250,translated,high,"work/ghidra/rel-d_basesNP/export/80740250_FUN_80740250.c; collects active +0x480 records into a pointer array and returns the count",src/game/bases.rs
+game::bases,80740290,fn_80740290,translated,high,"work/ghidra/rel-d_basesNP/export/80740290_FUN_80740290.c; bubble sort of the collected records by the float at +0x14",src/game/bases.rs
+game::bases,807402f0,fn_807402f0,translated,high,"work/ghidra/rel-d_basesNP/export/807402f0_FUN_807402f0.c; neighbour gap scaled by >>12 added to each record halfword",src/game/bases.rs
+game::bases,807405a0,fn_807405a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807405a0_FUN_807405a0.c; 0x200 rate limits and +0x43C clamp; 80740370 is address-only",src/game/bases.rs
+game::bases,80740c70,fn_80740c70,translated,high,"work/ghidra/rel-d_basesNP/export/80740c70_FUN_80740c70.c; four 12-byte records get 0xFF at +0x0A and +0x0B",src/game/bases.rs
+game::bases,80740e20,fn_80740e20,translated,high,"work/ghidra/rel-d_basesNP/export/80740e20_FUN_80740e20.c; 16 records through 800DF860 plus 0.0f and slot 0xFF",src/game/bases.rs
+game::bases,80740ed0,fn_80740ed0,translated,medium,"work/ghidra/rel-d_basesNP/export/80740ed0_FUN_80740ed0.c; stale slot index cleared to 0xFF",src/game/bases.rs
+game::bases,80740f20,fn_80740f20,translated,high,"work/ghidra/rel-d_basesNP/export/80740f20_FUN_80740f20.c; max slot timer scaled by 60 + 550*x/130 clamped to 550",src/game/bases.rs
+game::bases,80741280,fn_80741280,translated,high,"work/ghidra/rel-d_basesNP/export/80741280_FUN_80741280.c; copies +0x14 into +0x18 of each 0x20-byte record",src/game/bases.rs
+game::bases,807412a0,fn_807412a0,translated,high,"work/ghidra/rel-d_basesNP/export/807412a0_FUN_807412a0.c; 2.0f step with zero clamp and the +0x4D0 snapshot",src/game/bases.rs
+game::bases,80741380,fn_80741380,translated,medium,"work/ghidra/rel-d_basesNP/export/80741380_FUN_80741380.c; covered-record queue then clear +0x1C",src/game/bases.rs
+game::bases,80741910,fn_80741910,translated,high,"work/ghidra/rel-d_basesNP/export/80741910_FUN_80741910.c; four slot words at +0x4C4 receive +0x514 or zero",src/game/bases.rs
+game::bases,807419c0,fn_807419c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807419c0_FUN_807419c0.c; frame pipeline; 80741010 and 80741510 are address-only",src/game/bases.rs
+game::bases,80741a30,fn_80741a30,translated,high,"work/ghidra/rel-d_basesNP/export/80741a30_FUN_80741a30.c; same collect loop with the +0x514 record base",src/game/bases.rs
+game::bases,80742010,fn_80742010,translated,high,"work/ghidra/rel-d_basesNP/export/80742010_FUN_80742010.c; position +0xAC and angles +0x100 into the +0x7C matrix copied to +0x450",src/game/bases.rs
+game::bases,807422f0,fn_807422f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807422f0_FUN_807422f0.c; 0x807CE100 table indexed by +0x3E4 and an 800B2EE0 query",src/game/bases.rs
+game::bases,80742340,fn_80742340,translated,medium,"work/ghidra/rel-d_basesNP/export/80742340_FUN_80742340.c; variant bit mask with the 4 to 0xF fast path",src/game/bases.rs
+game::bases,807423e0,fn_807423e0,translated,high,"work/ghidra/rel-d_basesNP/export/807423e0_FUN_807423e0.c; spawns type 0x9F or 0xA1 and stores the handle at +0x3D0",src/game/bases.rs
+game::bases,80742600,fn_80742600,translated,medium,"work/ghidra/rel-d_basesNP/export/80742600_FUN_80742600.c; four 80162D00 lookups then 80064D10 when all are dead",src/game/bases.rs
+game::bases,80742800,fn_80742800,translated,high,"work/ghidra/rel-d_basesNP/export/80742800_FUN_80742800.c; 8015F800 then guarded 802B9280",src/game/bases.rs
+game::bases,80742980,fn_80742980,translated,high,"work/ghidra/rel-d_basesNP/export/80742980_FUN_80742980.c; allocates 0xAA0 bytes then calls 807429C0",src/game/bases.rs
+game::bases,807429b0,fn_807429b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807429b0_FUN_807429b0.c; returns the constant 0x80377A04",src/game/bases.rs
+game::bases,807429c0,fn_807429c0,translated,high,"work/ghidra/rel-d_basesNP/export/807429c0_FUN_807429c0.c; vtable 0x8080FF80 and the 0x5C/0xE4 array descriptors",src/game/bases.rs
+game::bases,80742b90,fn_80742b90,translated,high,"work/ghidra/rel-d_basesNP/export/80742b90_FUN_80742b90.c; g3d/W7_shiroboss_bg_U.brres and the W7_shiroboss_bg_U pane",src/game/bases.rs
+game::bases,80742ec0,fn_80742ec0,translated,high,"work/ghidra/rel-d_basesNP/export/80742ec0_FUN_80742ec0.c; interface +0x10, vtable +0x294, four 0x5C and four 0xE4 releases",src/game/bases.rs
+game::bases,80742f70,fn_80742f70,translated,high,"work/ghidra/rel-d_basesNP/export/80742f70_FUN_80742f70.c; +0xAC position into the +0x544 model matrix",src/game/bases.rs
+game::bases,80743260,fn_80743260,translated,high,"work/ghidra/rel-d_basesNP/export/80743260_FUN_80743260.c; second destructor twin of 80742800",src/game/bases.rs

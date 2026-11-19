@@ -1,0 +1,23 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8070dc70,fn_8070dc70,translated,high,"work/ghidra/rel-d_basesNP/export/8070dc70_FUN_8070dc70.c; six-way arm table driven by the s16 pair at 0x807CC908/0x807CC90C; +0x794 == 0 commit gate, %6 arm step",src/game/bases.rs
+game::bases,806a53e0,fn_806a53e0,translated,high,"work/ghidra/rel-d_basesNP/export/806a53e0_FUN_806a53e0.c; two-state carried-object update on +0x360; 0.9/0.8 scale ladder; message 0x8082B984",src/game/bases.rs
+game::bases,80684680,fn_80684680,translated,high,"work/ghidra/rel-d_basesNP/export/80684680_FUN_80684680.c; carried id via extsb; 0x130/0x135 spawn replies; three class tokens 0x8035425C/0x8035429C/0x8035431C",src/game/bases.rs
+game::bases,8068e0b0,fn_8068e0b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8068e0b0_FUN_8068e0b0.c; spawn word unpack with the 0x807C9C08/0x807C9C10 skewed table pair; 0xE4-stride pane loop",src/game/bases.rs
+game::bases,806fe480,fn_806fe480,translated,high,"work/ghidra/rel-d_basesNP/export/806fe480_FUN_806fe480.c; four-state MSG gate on +0x21C; eighteen 0x10-byte records; message 0x8082F008",src/game/bases.rs
+game::bases,80632dc0,fn_80632dc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80632dc0_FUN_80632dc0.c; path A four-slot transform sync and path B double-pass bdnz pair; selector 0x80428732",src/game/bases.rs
+game::bases,806d3c20,fn_806d3c20,translated,high,"work/ghidra/rel-d_basesNP/export/806d3c20_FUN_806d3c20.c; slot byte +0x430 against the 0x807CB608 mask table; 0.071/1.35 over 3000 rate ladder",src/game/bases.rs
+game::bases,806a6c50,fn_806a6c50,translated,medium,"work/ghidra/rel-d_basesNP/export/806a6c50_FUN_806a6c50.c; intrusive list at +0x718 with the provably dead count-bounded rescan",src/game/bases.rs
+game::bases,807813f0,fn_807813f0,translated,high,"work/ghidra/rel-d_basesNP/export/807813f0_FUN_807813f0.c; acos clamp plus 180/pi and the 10-degree cross-product sign fix; 0x807816B0 with r7 = i",src/game/bases.rs
+game::bases,806ded20,fn_806ded20,translated,medium,"work/ghidra/rel-d_basesNP/export/806ded20_FUN_806ded20.c; spawn nibbles, 0x800DB180 box and 0x800DF860 pane; both 2^52 constants kept apart",src/game/bases.rs
+game::bases,807807e0,fn_807807e0,translated,high,"work/ghidra/rel-d_basesNP/export/807807e0_FUN_807807e0.c; pose index via 0x80775030; wrist_l1/wrist_r1 at 0x808184FC/0x80818508",src/game/bases.rs
+game::bases,80724cd0,fn_80724cd0,translated,high,"work/ghidra/rel-d_basesNP/export/80724cd0_FUN_80724cd0.c; heading from the 0x807CD1D0 table; spin path posts 0x80830498, normal path 0x80830458",src/game/bases.rs
+game::bases,80628770,fn_80628770,translated,high,"work/ghidra/rel-d_basesNP/export/80628770_FUN_80628770.c; row-major index = +0xA90 + 5 * +0xA88",src/game/bases.rs
+game::bases,80628740,fn_80628740,translated,high,"work/ghidra/rel-d_basesNP/export/80628740_FUN_80628740.c; both cells set to 3 and the +0xA98 countdown decremented",src/game/bases.rs
+game::bases,80628940,fn_80628940,translated,high,"work/ghidra/rel-d_basesNP/export/80628940_FUN_80628940.c; row wrap for kind 2 and occupancy skip for kind 1",src/game/bases.rs
+game::bases,80629770,fn_80629770,translated,high,"work/ghidra/rel-d_basesNP/export/80629770_FUN_80629770.c; 0x800CE150 row select, +0xA98 cell delay and +0xAA0 = 0x1E",src/game/bases.rs
+game::bases,806298e0,fn_806298e0,translated,high,"work/ghidra/rel-d_basesNP/export/806298e0_FUN_806298e0.c; message 0xA9 then cell +0x280 = 4",src/game/bases.rs
+game::bases,80629980,fn_80629980,translated,high,"work/ghidra/rel-d_basesNP/export/80629980_FUN_80629980.c; cell +0x1D4 = 3 at the row index of 0x80628770",src/game/bases.rs
+game::bases,80628f20,fn_80628f20,translated,high,"work/ghidra/rel-d_basesNP/export/80628f20_FUN_80628f20.c; 0x800B44D0(cell->+0x25C, 0, 0) then +0xA81 = 1",src/game/bases.rs
+game::bases,80628ea0,fn_80628ea0,translated,medium,"work/ghidra/rel-d_basesNP/export/80628ea0_FUN_80628ea0.c; two gate bytes then message 0x80825EE0 through virtual +0x18; 0x80628610 called with r3 = this",src/game/bases.rs
+game::bases,806291a0,fn_806291a0,translated,high,"work/ghidra/rel-d_basesNP/export/806291a0_FUN_806291a0.c; 0x8010C780([0x8042A2C8], 0), +0xA81 = 0 and +0xAB4 from 0x807C7A10",src/game/bases.rs
+game::bases,8062ba30,fn_8062ba30,translated,high,"work/ghidra/rel-d_basesNP/export/8062ba30_FUN_8062ba30.c; single lwzx from the 0x807C7A18 table",src/game/bases.rs

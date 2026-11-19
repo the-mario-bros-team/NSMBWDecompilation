@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e886c,fn_802e886c,translated,medium,"work/ghidra/main-gb/export/802e886c_FUN_802e886c.c; translate both bytes through *(0x80350E68)+0x10 then compare; returns -1/0/1",src/engine/main_loop.rs
+engine::main_loop,802e892c,fn_802e892c,translated,medium,"work/ghidra/main-gb/export/802e892c_FUN_802e892c.c; serial setup 0x80228358 then ring constructor with storage 0x804251B0 and 0x500 bytes",src/engine/main_loop.rs
+engine::main_loop,802e899c,fn_802e899c,translated,medium,"work/ghidra/main-gb/export/802e899c_FUN_802e899c.c; while queued < len read port into 1284-byte stack buffer and append then drain to dst",src/engine/main_loop.rs
+engine::main_loop,802e8a50,fn_802e8a50,translated,medium,"work/ghidra/main-gb/export/802e8a50_FUN_802e8a50.c; port-ready check r13-0x4668 then chunked 0x8022852C send loop; -10001 when closed",src/engine/main_loop.rs
+engine::main_loop,802e8ac4,fn_802e8ac4,translated,high,"work/ghidra/main-gb/export/802e8ac4_FUN_802e8ac4.c; single 0x80228640 flush call then return 0",src/engine/main_loop.rs
+engine::main_loop,802e8b0c,fn_802e8b0c,translated,high,"work/ghidra/main-gb/export/802e8b0c_FUN_802e8b0c.c; read available count then 1284-byte stack buffer append; -10009 on port failure",src/engine/main_loop.rs
+engine::main_loop,802e8b80,fn_802e8b80,translated,high,"work/ghidra/main-gb/export/802e8b80_FUN_802e8b80.c; single 0x802283B4 serial reinit call then return 0",src/engine/main_loop.rs
+engine::main_loop,802e8ba8,fn_802e8ba8,translated,medium,"work/ghidra/main-gb/export/802e8ba8_FUN_802e8ba8.c; store 0x801B1140 interrupt-disable state into the lock word",src/engine/main_loop.rs
+engine::main_loop,802e8bd8,fn_802e8bd8,translated,medium,"work/ghidra/main-gb/export/802e8bd8_FUN_802e8bd8.c; restore interrupt state via 0x801B1180 from the lock word",src/engine/main_loop.rs
+engine::main_loop,802e8be0,fn_802e8be0,translated,high,"work/ghidra/main-gb/export/802e8be0_FUN_802e8be0.c; return ring word at +0x10 (bytes queued)",src/engine/main_loop.rs
+engine::main_loop,802e8be8,fn_802e8be8,translated,high,"work/ghidra/main-gb/export/802e8be8_FUN_802e8be8.c; six-word ring control block init base/base/base/capacity/0/capacity and return +0x18",src/engine/main_loop.rs
+engine::main_loop,802e8c0c,fn_802e8c0c,translated,high,"work/ghidra/main-gb/export/802e8c0c_FUN_802e8c0c.c; interrupt-masked ring append with memcpy 0x80004364 wrap and cursor/free/used updates",src/engine/main_loop.rs
+engine::main_loop,802e8d14,fn_802e8d14,translated,high,"work/ghidra/main-gb/export/802e8d14_FUN_802e8d14.c; interrupt-masked ring drain with memcpy 0x80004364 wrap and cursor/free/used updates",src/engine/main_loop.rs
+engine::main_loop,802ea820,fn_802ea820,translated,high,"work/ghidra/main-gb/export/802ea820_FUN_802ea820.c; stamp +0x12 with 16-bit tx sequence increment then 0x802E98F0 write and error print",src/engine/main_loop.rs
+engine::main_loop,802ea884,fn_802ea884,translated,high,"work/ghidra/main-gb/export/802ea884_FUN_802ea884.c; clear in-use word of all three 0x88C slots at 0x80425720/80425FAC/80426838",src/engine/main_loop.rs
+engine::main_loop,802ea8a4,fn_802ea8a4,translated,high,"work/ghidra/main-gb/export/802ea8a4_FUN_802ea8a4.c; scan three slots mark in use store index and address or print no-buffer error and return 0x300",src/engine/main_loop.rs
+engine::main_loop,802ea940,fn_802ea940,translated,high,"work/ghidra/main-gb/export/802ea940_FUN_802ea940.c; slot address 0x80425720 + index*0x88C or null when index >= 3",src/engine/main_loop.rs
+engine::main_loop,802ea964,fn_802ea964,translated,high,"work/ghidra/main-gb/export/802ea964_FUN_802ea964.c; ignore -1 and index > 2 then clear slot in-use word",src/engine/main_loop.rs
+engine::main_loop,802ea98c,fn_802ea98c,translated,high,"work/ghidra/main-gb/export/802ea98c_FUN_802ea98c.c; zero +0x04/+0x08 and when keep_data is 0 memset 0x880 payload via 0x802E90B8",src/engine/main_loop.rs
+engine::main_loop,802ea9b4,fn_802ea9b4,translated,high,"work/ghidra/main-gb/export/802ea9b4_FUN_802ea9b4.c; set used and high-water length with 0x880 bound returning 0x301",src/engine/main_loop.rs
+engine::main_loop,802ea9e4,fn_802ea9e4,translated,high,"work/ghidra/main-gb/export/802ea9e4_FUN_802ea9e4.c; append payload at +0x0C+used with 0x880 clamp single-byte special case and 0x301 truncation",src/engine/main_loop.rs
+engine::main_loop,802eb090,fn_802eb090,translated,medium,"work/ghidra/main-gb/export/802eb090_FUN_802eb090.c; return SDA word r13-0x462c role inferred from 0x802EC0F4 handler gate",src/engine/main_loop.rs
+engine::main_loop,802ed2e4,fn_802ed2e4,translated,high,"work/ghidra/main-gb/export/802ed2e4_FUN_802ed2e4.c; return word 0x804272C0",src/engine/main_loop.rs
+engine::main_loop,802ed4e8,fn_802ed4e8,translated,high,"work/ghidra/main-gb/export/802ed4e8_FUN_802ed4e8.c; return 0x80427230 request-path enable word",src/engine/main_loop.rs
+engine::main_loop,802ed4f8,fn_802ed4f8,translated,high,"work/ghidra/main-gb/export/802ed4f8_FUN_802ed4f8.c; store argument into 0x80427230",src/engine/main_loop.rs
+engine::main_loop,802ed508,fn_802ed508,translated,high,"work/ghidra/main-gb/export/802ed508_FUN_802ed508.c; store 1 into 0x80427230 and return 0",src/engine/main_loop.rs
+engine::main_loop,802ed91c,fn_802ed91c,translated,high,"work/ghidra/main-gb/export/802ed91c_FUN_802ed91c.c; store handler word into 0x80427238 used by the 0x802ECCB4 interrupt path",src/engine/main_loop.rs
+engine::main_loop,802ed92c,fn_802ed92c,translated,high,"work/ghidra/main-gb/export/802ed92c_FUN_802ed92c.c; return value | 0x80000000 cached-physical tag",src/engine/main_loop.rs
+engine::main_loop,802ed9c4,fn_802ed9c4,translated,high,"work/ghidra/main-gb/export/802ed9c4_FUN_802ed9c4.c; store byte at r13-0x4620 = 0x8042B060",src/engine/main_loop.rs
+engine::main_loop,802ed9cc,fn_802ed9cc,translated,high,"work/ghidra/main-gb/export/802ed9cc_FUN_802ed9cc.c; load byte at r13-0x4620 = 0x8042B060",src/engine/main_loop.rs

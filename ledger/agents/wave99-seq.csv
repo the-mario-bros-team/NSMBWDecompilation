@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,80270920,fn_80270920,translated,medium,"work/ghidra/main-gb/export/80270920_FUN_80270920.c; global track record state store and one-shot callback",src/audio/seq.rs
+audio::seq,80270ad0,fn_80270ad0,translated,high,"work/ghidra/main-gb/export/80270ad0_FUN_80270ad0.c; lazy four-record table init and returned base",src/audio/seq.rs
+audio::seq,80270c20,fn_80270c20,translated,medium,"work/ghidra/main-gb/export/80270c20_FUN_80270c20.c; port refresh of the four records plus tail tick",src/audio/seq.rs
+audio::seq,80274ce0,fn_80274ce0,translated,medium,"work/ghidra/main-gb/export/80274ce0_FUN_80274ce0.c; masked mix-value accumulation over the node list",src/audio/seq.rs
+audio::seq,802783c0,fn_802783c0,translated,medium,"work/ghidra/main-gb/export/802783c0_FUN_802783c0.c; release bank array and rebuild three priority buckets",src/audio/seq.rs
+audio::seq,80279510,fn_80279510,translated,medium,"work/ghidra/main-gb/export/80279510_FUN_80279510.c; file/name and bank-id start routes with tempo and volumes",src/audio/seq.rs
+audio::seq,80279880,fn_80279880,translated,medium,"work/ghidra/main-gb/export/80279880_FUN_80279880.c; small-element rebuild loop and stream arm",src/audio/seq.rs
+audio::seq,80279a30,fn_80279a30,translated,medium,"work/ghidra/main-gb/export/80279a30_FUN_80279a30.c; bank-group id start with seven-word resolver",src/audio/seq.rs
+audio::seq,80279b70,fn_80279b70,translated,medium,"work/ghidra/main-gb/export/80279b70_FUN_80279b70.c; slot cache probe and loader open",src/audio/seq.rs
+audio::seq,80279ce0,fn_80279ce0,translated,high,"work/ghidra/main-gb/export/80279ce0_FUN_80279ce0.c; name to slot then delegate",src/audio/seq.rs
+audio::seq,8027aa00,fn_8027aa00,translated,medium,"work/ghidra/main-gb/export/8027aa00_FUN_8027aa00.c; static bucket init and list drain/refill",src/audio/seq.rs
+audio::seq,8027abb0,fn_8027abb0,translated,medium,"work/ghidra/main-gb/export/8027abb0_FUN_8027abb0.c; priority admission and two-link insert",src/audio/seq.rs
+audio::seq,8027b720,fn_8027b720,translated,medium,"work/ghidra/main-gb/export/8027b720_FUN_8027b720.c; one-shot thread start and failure cleanup",src/audio/seq.rs
+audio::seq,8027b850,fn_8027b850,translated,medium,"work/ghidra/main-gb/export/8027b850_FUN_8027b850.c; globals init and pending-destruction drain",src/audio/seq.rs
+audio::seq,8027b960,fn_8027b960,translated,medium,"work/ghidra/main-gb/export/8027b960_FUN_8027b960.c; thread callback registration and message loop",src/audio/seq.rs
+audio::seq,8027baf0,fn_8027baf0,translated,medium,"work/ghidra/main-gb/export/8027baf0_FUN_8027baf0.c; frame ticks and elapsed counter",src/audio/seq.rs
+audio::seq,8027d660,fn_8027d660,translated,medium,"work/ghidra/main-gb/export/8027d660_FUN_8027d660.c; RSTM load decoders and start sequence",src/audio/seq.rs
+audio::seq,8027d960,fn_8027d960,translated,medium,"work/ghidra/main-gb/export/8027d960_FUN_8027d960.c; two-element stream batches into voices",src/audio/seq.rs
+audio::seq,8027dbd0,fn_8027dbd0,translated,medium,"work/ghidra/main-gb/export/8027dbd0_FUN_8027dbd0.c; timing fields and allocator slot claim with rollback",src/audio/seq.rs
+audio::seq,8027ede0,fn_8027ede0,translated,medium,"work/ghidra/main-gb/export/8027ede0_FUN_8027ede0.c; position to row/index/wrap mapping",src/audio/seq.rs
+audio::seq,8027f450,fn_8027f450,translated,high,"work/ghidra/main-gb/export/8027f450_FUN_8027f450.c; player constructor and seven ramp records",src/audio/seq.rs
+audio::seq,8027f7b0,fn_8027f7b0,translated,medium,"work/ghidra/main-gb/export/8027f7b0_FUN_8027f7b0.c; eight-record ramp interpolation",src/audio/seq.rs
+audio::seq,8027f890,fn_8027f890,translated,low,"work/ghidra/main-gb/export/8027f890_FUN_8027f890.c; masked ramp re-arm with incoming f1 level",src/audio/seq.rs
+audio::seq,8027fc50,fn_8027fc50,translated,medium,"work/ghidra/main-gb/export/8027fc50_FUN_8027fc50.c; player lookup through the marker chain",src/audio/seq.rs
+audio::seq,8027ffe0,fn_8027ffe0,translated,medium,"work/ghidra/main-gb/export/8027ffe0_FUN_8027ffe0.c; three-list pop under the outer lock",src/audio/seq.rs

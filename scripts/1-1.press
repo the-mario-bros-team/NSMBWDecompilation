@@ -1,0 +1,20 @@
+# NSMBW Rust port: a scripted run from boot through World 1-1's flagpole (P4's check).
+# Wii Remote 1, held sideways (its D-pad down is screen right, 2 jumps, 1 runs).
+# nsmbw-port --unpaced --press-file scripts/1-1.press --frames 9200
+# Needs an existing save in file 1 (otherwise the save-data prompt shifts every frame below).
+
+# Strap screen, title, file select, Select Players, opening cutscene.
+600:a 1550:2 2600:2 3000:2 3400:2
+# Walk out of the castle to the World 1 map, then enter 1-1.
+5150:down:900 6100:2
+
+# 1-1: hold right and run, hop for 20 frames at each listed frame.
+6300:down+1:3000
+# Up to the first Koopa (an extra hop at 6844 clears it).
+6300:2:20 6340:2:20 6380:2:20 6420:2:20 6460:2:20 6500:2:20 6540:2:20 6580:2:20 6620:2:20 6660:2:20 6700:2:20 6740:2:20 6780:2:20 6820:2:20 6844:2:20 6884:2:20
+# Brick row with a Goomba on it: no hops under it (7084, 7124 left out); 7125 lands on the step.
+6924:2:20 6964:2:20 7004:2:20 7044:2:20 7125:2:20 7165:2:20 7205:2:20 7245:2:20 7285:2:20 7325:2:20 7365:2:20 7405:2:20 7445:2:20 7485:2:20 7525:2:20 7565:2:20 7605:2:20 7645:2:20 7685:2:20 7725:2:20 7765:2:20 7805:2:20 7845:2:20 7885:2:20 7925:2:20 7965:2:20
+# Hilltop step under a ? block: a 4-frame tap (a full jump hits the block); then the first pit (8195).
+8030:2:4 8125:2:20 8165:2:20 8195:2:20 8235:2:20 8275:2:20 8315:2:20
+# Three Goombas on the hilltop (8360), three on the slope (8588), then the flagpole.
+8360:2:20 8400:2:20 8440:2:20 8480:2:20 8520:2:20 8560:2:20 8588:2:20 8628:2:20 8668:2:20 8708:2:20 8748:2:20 8788:2:20 8828:2:20 8868:2:20 8908:2:20 8948:2:20 8988:2:20 9028:2:20 9068:2:20 9108:2:20 9148:2:20 9188:2:20

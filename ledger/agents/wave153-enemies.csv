@@ -1,0 +1,20 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a5e1a0,fn_80a5e1a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a5e1a0_FUN_80a5e1a0.c; single-holder clip binder: 0x8023A0B0(+0x540) then 0x801651F0(+0x584 +0x544)",src/game/enemies.rs
+game::enemies,80a5e590,fn_80a5e590,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a5e590_FUN_80a5e590.c; daEnGabon_c wait entry: two-level +0x2C/+0x14 component query selects 3.0 or 6.0",src/game/enemies.rs
+game::enemies,80a7aca0,fn_80a7aca0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a7aca0_FUN_80a7aca0.c; two-table ground probe over 0x80B2E0D8 and 0x80B2E100; band is the leftover r3 of 0x80A7AB30",src/game/enemies.rs
+game::enemies,80a80f40,fn_80a80f40,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a80f40_FUN_80a80f40.c; daEnIgaKuribo_c swing step: 208..768 amplitude clamp and one qr3 widen to 1280.0 * sin",src/game/enemies.rs
+game::enemies,80a965d0,fn_80a965d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a965d0_FUN_80a965d0.c; platform per-player ride registration over +0x608/+0x612/+0x61C and +0x5C0/+0x5DC",src/game/enemies.rs
+game::enemies,80ab0870,fn_80ab0870,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab0870_FUN_80ab0870.c; per-mode holder release: +0x544 or four +0x584 slots (stride 0x40) plus +0x6C4/+0x684",src/game/enemies.rs
+game::enemies,80ab12e0,fn_80ab12e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ab12e0_FUN_80ab12e0.c; per-section texcoord/colour override; mode byte patches the low byte of the texcoord word",src/game/enemies.rs
+game::enemies,80ab1780,fn_80ab1780,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ab1780_FUN_80ab1780.c; binds swim/attack_st/attack into +0x704 and stores the index at +0x98C",src/game/enemies.rs
+game::enemies,80aba5b0,fn_80aba5b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aba5b0_FUN_80aba5b0.c; sized free when pointer non-null and count positive; returns the pointer",src/game/enemies.rs
+game::enemies,80aba5f0,fn_80aba5f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80aba5f0_FUN_80aba5f0.c; byte-identical duplicate of 0x80ABA5B0",src/game/enemies.rs
+game::enemies,80abb1b0,fn_80abb1b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abb1b0_FUN_80abb1b0.c; deleting-destructor forwarder with hidden r12 this-adjust param_1 + 0x18",src/game/enemies.rs
+game::enemies,80abb1e0,fn_80abb1e0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80abb1e0_FUN_80abb1e0.c; deleting-destructor forwarder with hidden r12 this-adjust param_1 + 0x0C",src/game/enemies.rs
+game::enemies,80ac0750,fn_80ac0750,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac0750_FUN_80ac0750.c; launch-angle solver: 32-unit sphere clamp then atan2(|dx| dy) negated and clamped to the negative half",src/game/enemies.rs
+game::enemies,80ac1800,fn_80ac1800,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ac1800_FUN_80ac1800.c; daEnMechaKoopa_c clip binder over the four-entry name table at 0x80B30210",src/game/enemies.rs
+game::enemies,80ae0780,fn_80ae0780,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ae0780_FUN_80ae0780.c; per-player effect burst 0x3C/0x87 gated on 0x80429CA8 and 0x80056CF0(p 0x53)",src/game/enemies.rs
+game::enemies,80af5c60,fn_80af5c60,translated,high,"work/ghidra/rel-d_enemiesNP/export/80af5c60_FUN_80af5c60.c; daEnRotBlock_c pivot placement with two qr3 widens feeding the cosine and sine tables",src/game/enemies.rs
+game::enemies,80b16a80,fn_80b16a80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b16a80_FUN_80b16a80.c; daEnUnizoo_c eye/mouth node offsets; eye x is 0.25 + +0x5F4 and y is +0x5F0",src/game/enemies.rs
+game::enemies,80b1ad30,fn_80b1ad30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b1ad30_FUN_80b1ad30.c; daEnWalkPakkun_c ground snap plus the 0x800A0A30 ride completion",src/game/enemies.rs
+game::enemies,80b27dc0,fn_80b27dc0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b27dc0_FUN_80b27dc0.c; per-slot angle to speed factor: two curves around 1.0 with the sign from +0x8B8",src/game/enemies.rs

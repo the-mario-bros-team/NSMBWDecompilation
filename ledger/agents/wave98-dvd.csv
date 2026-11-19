@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::dvd,801d7760,fn_801d7760,translated,high,"work/ghidra/main-gb/export/801d7760_FUN_801d7760.c; freq bump, eight-way cum bump and 0x10000 rescale of the probability model",src/runtime/dvd.rs
+runtime::dvd,801d7950,fn_801d7950,translated,medium,"work/ghidra/main-gb/export/801d7950_FUN_801d7950.c; bounded binary search plus linear correction over the cumulative array",src/runtime/dvd.rs
+runtime::dvd,801d79f0,fn_801d79f0,translated,medium,"work/ghidra/main-gb/export/801d79f0_FUN_801d79f0.c; one symbol step: interval narrowing, model bump, 8-bit renormalisation",src/runtime/dvd.rs
+runtime::dvd,801d7b00,fn_801d7b00,translated,high,"work/ghidra/main-gb/export/801d7b00_FUN_801d7b00.c; constructor of both 0x200/0x1000-entry models and the low/range/code triple",src/runtime/dvd.rs
+runtime::dvd,801d7d50,fn_801d7d50,translated,medium,"work/ghidra/main-gb/export/801d7d50_FUN_801d7d50.c; header prefill, literal/match loop and the four negative return codes",src/runtime/dvd.rs
+runtime::dvd,801d82e0,fn_801d82e0,translated,medium,"work/ghidra/main-gb/export/801d82e0_FUN_801d82e0.c; distance-tree validator with a 0x80-byte visited bitmap",src/runtime/dvd.rs
+runtime::dvd,801d84e0,fn_801d84e0,translated,medium,"work/ghidra/main-gb/export/801d84e0_FUN_801d84e0.c; sync set-attribute: shared2 reject, 0x10 gate, 0x802273A0 call",src/runtime/dvd.rs
+runtime::dvd,801d85f0,fn_801d85f0,translated,medium,"work/ghidra/main-gb/export/801d85f0_FUN_801d85f0.c; same sync set-attribute without the shared2 path test",src/runtime/dvd.rs
+runtime::dvd,801d86e0,fn_801d86e0,translated,medium,"work/ghidra/main-gb/export/801d86e0_FUN_801d86e0.c; async set-attribute, seven-argument 0x802274A0 submission",src/runtime/dvd.rs
+runtime::dvd,801d87e0,fn_801d87e0,translated,medium,"work/ghidra/main-gb/export/801d87e0_FUN_801d87e0.c; delete with shared2 reject and 0x80226E90 call",src/runtime/dvd.rs
+runtime::dvd,801d8890,fn_801d8890,translated,high,"work/ghidra/main-gb/export/801d8890_FUN_801d8890.c; delete without the shared2 test; mapper argument recovered from r3",src/runtime/dvd.rs
+runtime::dvd,801d8a60,fn_801d8a60,translated,medium,"work/ghidra/main-gb/export/801d8a60_FUN_801d8a60.c; async chunk write through 0x802278C0 with the fixed AB50 completion",src/runtime/dvd.rs
+runtime::dvd,801d8b50,fn_801d8b50,translated,medium,"work/ghidra/main-gb/export/801d8b50_FUN_801d8b50.c; async chunk read through 0x80227990 with the fixed AB50 completion",src/runtime/dvd.rs
+runtime::dvd,801d8c70,fn_801d8c70,translated,medium,"work/ghidra/main-gb/export/801d8c70_FUN_801d8c70.c; mode map 0/1/2 else -1 then 0x80227810 submission",src/runtime/dvd.rs
+runtime::dvd,801d8d20,fn_801d8d20,translated,medium,"work/ghidra/main-gb/export/801d8d20_FUN_801d8d20.c; async attribute read through 0x80226840",src/runtime/dvd.rs
+runtime::dvd,801d8e20,fn_801d8e20,translated,medium,"work/ghidra/main-gb/export/801d8e20_FUN_801d8e20.c; two-path rename core with sprintf/strcat target rebuild",src/runtime/dvd.rs
+runtime::dvd,801d91c0,fn_801d91c0,translated,medium,"work/ghidra/main-gb/export/801d91c0_FUN_801d91c0.c; sync/async attribute read pair 0x80226BF0 and 0x80226D50",src/runtime/dvd.rs
+runtime::dvd,801d97d0,fn_801d97d0,translated,high,"work/ghidra/main-gb/export/801d97d0_FUN_801d97d0.c; descriptor continuation: success stores two state bytes and calls back with one word",src/runtime/dvd.rs
+runtime::dvd,801d9d10,fn_801d9d10,translated,high,"work/ghidra/main-gb/export/801d9d10_FUN_801d9d10.c; mode/state chain closing two descriptors and running the two-path core",src/runtime/dvd.rs
+runtime::dvd,801d9f60,fn_801d9f60,translated,high,"work/ghidra/main-gb/export/801d9f60_FUN_801d9f60.c; close state chain 7/6/5/4/2 down to idle",src/runtime/dvd.rs
+runtime::dvd,801da110,fn_801da110,translated,high,"work/ghidra/main-gb/export/801da110_FUN_801da110.c; directory part before the last slash, root special case",src/runtime/dvd.rs
+runtime::dvd,801da1f0,fn_801da1f0,translated,medium,"work/ghidra/main-gb/export/801da1f0_FUN_801da1f0.c; split at the first slash into left and right buffers",src/runtime/dvd.rs
+runtime::dvd,801da2d0,fn_801da2d0,translated,medium,"work/ghidra/main-gb/export/801da2d0_FUN_801da2d0.c; last path component with the SDA root default; strcmp second operand recovered from r4",src/runtime/dvd.rs
+runtime::dvd,801da7b0,fn_801da7b0,translated,medium,"work/ghidra/main-gb/export/801da7b0_FUN_801da7b0.c; directory part before the last slash or the SDA root string",src/runtime/dvd.rs
+runtime::dvd,801dab90,fn_801dab90,translated,medium,"work/ghidra/main-gb/export/801dab90_FUN_801dab90.c; ISFS open core: shared2 depth test, trailing-slash strip, 0x80226940/0x80226AA0",src/runtime/dvd.rs

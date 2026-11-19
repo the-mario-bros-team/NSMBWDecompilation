@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80ada1a0,fn_80ada1a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ada1a0_FUN_80ada1a0.c; deleting destructor: 0x8015F800 then 0x802B9280 when mode > 0",src/game/enemies.rs
+game::enemies,80ada2c0,fn_80ada2c0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80ada2c0_FUN_80ada2c0.c; 48-byte argument-swapping forwarder to 0x802DCBFC; target role unknown",src/game/enemies.rs
+game::enemies,80ada2f0,fn_80ada2f0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80ada2f0_FUN_80ada2f0.c; second copy of the same 48-byte forwarder",src/game/enemies.rs
+game::enemies,80ada570,fn_80ada570,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ada570_FUN_80ada570.c; class 0x1C0 chain scan matching the top byte of record +4 against +0x4B98",src/game/enemies.rs
+game::enemies,80ada5d0,fn_80ada5d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ada5d0_FUN_80ada5d0.c; copies record +0/+0x528/+0x5A1 and writes the (record[1] >> 4) & 0xF nibble",src/game/enemies.rs
+game::enemies,80ada600,fn_80ada600,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ada600_FUN_80ada600.c; clears +0x534/+0x538, stores both extents and calls the +0x280 virtual slot",src/game/enemies.rs
+game::enemies,80ada640,fn_80ada640,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ada640_FUN_80ada640.c; 0x8007FA40 rectangle animator over the four +0x534 floats plus three callbacks",src/game/enemies.rs
+game::enemies,80ada6f0,fn_80ada6f0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80ada6f0_FUN_80ada6f0.c; half-extent block from the 0x80B30A4C 0.5 word and the 768 + 32*index angle pair",src/game/enemies.rs
+game::enemies,80adab80,fn_80adab80,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adab80_FUN_80adab80.c; 0x4BA0 constructor with vtable 0x80B5E240 and a 2 x 0x2290 element pool",src/game/enemies.rs
+game::enemies,80adac20,fn_80adac20,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adac20_FUN_80adac20.c; spawn initialiser over the 0x1C0 record, cell offsets, 0x800BFC60 and the 0x80B76A90 entry",src/game/enemies.rs
+game::enemies,80adad80,fn_80adad80,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adad80_FUN_80adad80.c; rectangle install, +0x284 virtual slot and the 0x80ADAE40 descriptor",src/game/enemies.rs
+game::enemies,80adae60,fn_80adae60,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adae60_FUN_80adae60.c; partner position add, +0x544 copy, 0x80B76B68 holder test then the 0x80B76AD0 entry",src/game/enemies.rs
+game::enemies,80adaf50,fn_80adaf50,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adaf50_FUN_80adaf50.c; installs the 0x80ADA9E0 descriptor and refreshes the +0x548 rectangle",src/game/enemies.rs
+game::enemies,80adafc0,fn_80adafc0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80adafc0_FUN_80adafc0.c; mirror of fn_80adae60 with the zero answer selecting the 0x80B76A90 entry",src/game/enemies.rs
+game::enemies,80adb3d0,fn_80adb3d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adb3d0_FUN_80adb3d0.c; second copy of the deleting-destructor pair of the gate class",src/game/enemies.rs
+game::enemies,80adb4f0,fn_80adb4f0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adb4f0_FUN_80adb4f0.c; 48-byte argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80adb520,fn_80adb520,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adb520_FUN_80adb520.c; second copy of the same 48-byte forwarder",src/game/enemies.rs
+game::enemies,80adb550,fn_80adb550,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adb550_FUN_80adb550.c; allocates 0x4BA0, calls 0x80ADAB80 and rewrites +0x60 to vtable 0x80B5E600",src/game/enemies.rs
+game::enemies,80adb650,fn_80adb650,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adb650_FUN_80adb650.c; 0x5A8 constructor: vtable 0x80B5E8A8, five holder words and the 0x8015FC90 controller link",src/game/enemies.rs
+game::enemies,80adb720,fn_80adb720,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adb720_FUN_80adb720.c; bit 3 and the spawn nibble select the 0x80B76BA8 / 0x80B76B28 / 0x80B76BE8 entries",src/game/enemies.rs
+game::enemies,80adb7e0,fn_80adb7e0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adb7e0_FUN_80adb7e0.c; 0x800D77D0 receives the five packed fields and the body returns 1",src/game/enemies.rs
+game::enemies,80adb940,fn_80adb940,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adb940_FUN_80adb940.c; 0x8042A078/0x8042A07C contact masks then the 0x800D79B0 or 0x800D7980 ride start",src/game/enemies.rs
+game::enemies,80adbb30,fn_80adbb30,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adbb30_FUN_80adbb30.c; bit 21 plus the two contact masks guard the 0x800D7820 re-arm",src/game/enemies.rs
+game::enemies,80adbf70,fn_80adbf70,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adbf70_FUN_80adbf70.c; third copy of the deleting-destructor pair in this bucket",src/game/enemies.rs
+game::enemies,80adc090,fn_80adc090,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adc090_FUN_80adc090.c; 48-byte argument-swapping forwarder to 0x802DCBFC",src/game/enemies.rs
+game::enemies,80adc0c0,fn_80adc0c0,translated,low,"work/ghidra/rel-d_enemiesNP/export/80adc0c0_FUN_80adc0c0.c; second copy of the same 48-byte forwarder",src/game/enemies.rs
+game::enemies,80adc0f0,fn_80adc0f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80adc0f0_FUN_80adc0f0.c; 0x840 constructor: interim 0x80B3AEF8, final 0x80B5EE08 and two holder layers",src/game/enemies.rs

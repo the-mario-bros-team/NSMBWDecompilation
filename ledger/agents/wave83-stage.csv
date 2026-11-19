@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800705b0,fn_800705b0,translated,medium,"work/ghidra/main-gb/export/800705b0_FUN_800705b0.c; +0x99 signed player index else the raw +0x04 word; 0x8005F900 object lookup",src/game/stage.rs
+game::stage,80070720,fn_80070720,translated,high,"work/ghidra/main-gb/export/80070720_FUN_80070720.c; (+0xA0 >> 16) & 0xFF",src/game/stage.rs
+game::stage,80070730,fn_80070730,translated,high,"work/ghidra/main-gb/export/80070730_FUN_80070730.c; (+0xA8 >> 16) & 0xFF",src/game/stage.rs
+game::stage,80070ca0,fn_80070ca0,translated,high,"work/ghidra/main-gb/export/80070ca0_FUN_80070ca0.c; +0x88 & 0x18000",src/game/stage.rs
+game::stage,80070e70,fn_80070e70,translated,medium,"work/ghidra/main-gb/export/80070e70_FUN_80070e70.c; 0x8006DB30 seed | 0x80070CD0 status | 0x8000 when 0x80056CF0(+0x14) hits | 0x8006EF40",src/game/stage.rs
+game::stage,800713b0,fn_800713b0,translated,medium,"work/ghidra/main-gb/export/800713b0_FUN_800713b0.c; +0x50 handle + +0x88 flags; 0x800D9900 edge record; 0x800D9A30 query clears 0x8000",src/game/stage.rs
+game::stage,800731e0,fn_800731e0,translated,high,"work/ghidra/main-gb/export/800731e0_FUN_800731e0.c; +0x58 owner; +0x34/+0x38 = point - owner(+0x58/+0x5C)",src/game/stage.rs
+game::stage,80073ac0,fn_80073ac0,translated,high,"work/ghidra/main-gb/export/80073ac0_FUN_80073ac0.c; +0xBC bit 2 guard; 0x80080530 re-bind; +0x3C/+0x40 offsets",src/game/stage.rs
+game::stage,80077610,fn_80077610,translated,high,"work/ghidra/main-gb/export/80077610_FUN_80077610.c; 0x800775A0 cell id; 0xFFFF passes through else & 0x3FF",src/game/stage.rs
+game::stage,80077d80,fn_80077d80,translated,high,"work/ghidra/main-gb/export/80077d80_FUN_80077d80.c; vtable +8 destroy(handle,1) of +0x90A4C then the three slots at +0x90A40",src/game/stage.rs
+game::stage,80078250,fn_80078250,translated,high,"work/ghidra/main-gb/export/80078250_FUN_80078250.c; 0x100-slot table at +0x78 stride 0x10; kinds 0x2A/0x28; 0x80077860 publish",src/game/stage.rs
+game::stage,80078510,fn_80078510,translated,high,"work/ghidra/main-gb/export/80078510_FUN_80078510.c; byte at +0x90AA8",src/game/stage.rs
+game::stage,80078520,fn_80078520,translated,high,"work/ghidra/main-gb/export/80078520_FUN_80078520.c; *(u32 *)(+0x90A40 + index*4) + 0x38",src/game/stage.rs
+game::stage,80078540,fn_80078540,translated,high,"work/ghidra/main-gb/export/80078540_FUN_80078540.c; 0x8005FC70 mask over 0x8005F900 players; +0x153C state 2 or 6",src/game/stage.rs
+game::stage,800785e0,fn_800785e0,translated,high,"work/ghidra/main-gb/export/800785e0_FUN_800785e0.c; 0x8005FC70 mask over 0x8005F900 players; +0x153C state 6 only",src/game/stage.rs
+game::stage,80078780,fn_80078780,translated,medium,"work/ghidra/main-gb/export/80078780_FUN_80078780.c; stage = *(r13-0x57E8)+[info+0x120E]*0x3B0; 0x8008E4D0/0x8008E500/0x8008E310; u16 at +0x12",src/game/stage.rs
+game::stage,80078800,fn_80078800,translated,high,"work/ghidra/main-gb/export/80078800_FUN_80078800.c; same stage lookup; returns +0xA4",src/game/stage.rs
+game::stage,80078830,fn_80078830,translated,high,"work/ghidra/main-gb/export/80078830_FUN_80078830.c; same stage lookup; 0x8008EAF0 release",src/game/stage.rs
+game::stage,80078ce0,fn_80078ce0,translated,medium,"work/ghidra/main-gb/export/80078ce0_FUN_80078ce0.c; single at +0x90040 returned in f1",src/game/stage.rs
+game::stage,80078cf0,fn_80078cf0,translated,medium,"work/ghidra/main-gb/export/80078cf0_FUN_80078cf0.c; single at +0x90050 returned in f1",src/game/stage.rs
+game::stage,80078eb0,fn_80078eb0,translated,medium,"work/ghidra/main-gb/export/80078eb0_FUN_80078eb0.c; 0x80078D00 selector then 0x80078860(param_1)",src/game/stage.rs
+game::stage,80079020,fn_80079020,translated,medium,"work/ghidra/main-gb/export/80079020_FUN_80079020.c; 0x80078EF0 selector then 0x80078860(param_1)",src/game/stage.rs
+game::stage,8007a6b0,fn_8007a6b0,translated,high,"work/ghidra/main-gb/export/8007a6b0_FUN_8007a6b0.c; clears the byte at +0x900C6",src/game/stage.rs
+game::stage,8007d5b0,fn_8007d5b0,translated,high,"work/ghidra/main-gb/export/8007d5b0_FUN_8007d5b0.c; cell table row*0x2200+col*0x440+0x1078; +0x14 probe; 16 x 0x44 shift then zero fill",src/game/stage.rs
+game::stage,8007d770,fn_8007d770,translated,high,"work/ghidra/main-gb/export/8007d770_FUN_8007d770.c; same table; +0x2C probe against cell word 11; 16 x 0x44 shift then zero fill",src/game/stage.rs
+game::stage,8007ea50,fn_8007ea50,translated,high,"work/ghidra/main-gb/export/8007ea50_thunk_FUN_8007ea30.c; thunk copy of 0x8007EA30: id 0xFFFF, two u16 cells 0, +0x08 word 0",src/game/stage.rs

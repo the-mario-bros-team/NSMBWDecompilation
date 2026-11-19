@@ -1,0 +1,14 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80630820,fn_80630820,translated,medium,"work/ghidra/rel-d_basesNP/export/80630820_FUN_80630820.c; 13-pane course-select texture refresher; path build, archive load, layout page 5",src/game/bases.rs
+game::bases,80645080,fn_80645080,translated,high,"work/ghidra/rel-d_basesNP/export/80645080_FUN_80645080.c; +0x18 release wrapper, frees record when count > 0",src/game/bases.rs
+game::bases,80645e10,fn_80645e10,translated,high,"work/ghidra/rel-d_basesNP/export/80645e10_FUN_80645e10.c; +0x18 release wrapper, twin of 0x80645080",src/game/bases.rs
+game::bases,80649010,fn_80649010,translated,medium,"work/ghidra/rel-d_basesNP/export/80649010_FUN_80649010.c; flag nibbles 16..23 * 0x3C into +0x1A4EE..+0x1A4F2, 0x80648550 state",src/game/bases.rs
+game::bases,8064ac90,fn_8064ac90,translated,medium,"work/ghidra/rel-d_basesNP/export/8064ac90_FUN_8064ac90.c; +0x764 gate, 0x80166EF0(+0x704, 0.0), vtable +0xD4",src/game/bases.rs
+game::bases,8064d5e0,fn_8064d5e0,translated,high,"work/ghidra/rel-d_basesNP/export/8064d5e0_FUN_8064d5e0.c; allocates 0x418 bytes, vtable 0x807E46D0, +0x3D0/+0x3F0 ctors",src/game/bases.rs
+game::bases,80669560,fn_80669560,translated,high,"work/ghidra/rel-d_basesNP/export/80669560_FUN_80669560.c; two mirrored shadow quads via 0x800DB210, qr3 u16->f32, culling extents",src/game/bases.rs
+game::bases,8070fab0,fn_8070fab0,translated,medium,"work/ghidra/rel-d_basesNP/export/8070fab0_FUN_8070fab0.c; Wm_ob_witchcraft slot sweep, six kill tests, emitter burst, returns 1",src/game/bases.rs
+game::bases,8077a4b0,fn_8077a4b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8077a4b0_FUN_8077a4b0.c; s0/s1 child pair spawn or clear, mode arms 0/9/3+/1+",src/game/bases.rs
+game::bases,8077c670,fn_8077c670,translated,medium,"work/ghidra/rel-d_basesNP/export/8077c670_FUN_8077c670.c; twelve-state cursor machine, jump table 0x8081845C, four fall-throughs",src/game/bases.rs
+game::bases,8077dc80,fn_8077dc80,translated,medium,"work/ghidra/rel-d_basesNP/export/8077dc80_FUN_8077dc80.c; eight-state controller, dispatch table 0x807CF6C8, sound and model submit",src/game/bases.rs
+game::bases,80797d30,fn_80797d30,translated,medium,"work/ghidra/rel-d_basesNP/export/80797d30_FUN_80797d30.c; course-tree node update, 34 callees, seven-arm state machine",src/game/bases.rs
+game::bases,807bffa0,fn_807bffa0,translated,medium,"work/ghidra/rel-d_basesNP/export/807bffa0_FUN_807bffa0.c; six-float bounds rebuild, display vtable +0x28, ten clamps, returns 1",src/game/bases.rs

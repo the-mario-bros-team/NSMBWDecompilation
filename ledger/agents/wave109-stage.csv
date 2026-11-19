@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,80075820,fn_80075820,translated,medium,"work/ghidra/main-gb/export/80075820_FUN_80075820.c; downward ground sweep seeded by 0x800DAA10/0x800766F0; 8.0 steps; 0x802EF3F0 slope table and 0x802EF548 tile ids",src/game/stage.rs
+game::stage,80075fd0,fn_80075fd0,translated,low,"work/ghidra/main-gb/export/80075fd0_FUN_80075fd0.c; segment sweep with 0x800766F0 seed; /8 and /16 cell probes; 0x802390D0 slope intersection",src/game/stage.rs
+game::stage,80077700,fn_80077700,translated,medium,"work/ghidra/main-gb/export/80077700_FUN_80077700.c; forwards four words to 0x80077650 and returns the low word of its r3:r4 pair",src/game/stage.rs
+game::stage,80079e80,fn_80079e80,translated,low,"work/ghidra/main-gb/export/80079e80_FUN_80079e80.c; stage-scroll tile advance; 0x80170980 normalise; two 0x801611C0 angles; 0x80237C40/0x80237BD0 matrix step",src/game/stage.rs
+game::stage,8007a6c0,fn_8007a6c0,translated,medium,"work/ghidra/main-gb/export/8007a6c0_FUN_8007a6c0.c; scroll-layer rectangle refresh; 0x800791D0 zoom; 0x80078A70/0x80078C10/0x800789A0 bounds; 0x8007E0E0 depth",src/game/stage.rs
+game::stage,8007cd70,fn_8007cd70,translated,low,"work/ghidra/main-gb/export/8007cd70_FUN_8007cd70.c; rectangle clamp plus four 0x8015F140 corner smoothers; 0x802E8620 distance; camera +0x90128/+0x9012C offsets",src/game/stage.rs
+game::stage,8007fa40,fn_8007fa40,translated,medium,"work/ghidra/main-gb/export/8007fa40_FUN_8007fa40.c; twelve-argument layer bootstrap: 0x8007F9B0 init; 0x8007FBF0 rect; layer +0xC8 clear; 0x8007FDA0 rebuild",src/game/stage.rs

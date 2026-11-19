@@ -1,0 +1,14 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80612d30,fn_80612d30,translated,high,"work/ghidra/rel-d_basesNP/export/80612d30_FUN_80612d30.c; destructor wrapper: +0x18 sub-object, optional free, returns this",src/game/bases.rs
+game::bases,80612ec0,fn_80612ec0,translated,medium,"work/ghidra/rel-d_basesNP/export/80612ec0_FUN_80612ec0.c; easyPairing layout load: arc open, brlyt, inWindow brlan, two panes",src/game/bases.rs
+game::bases,806131d0,fn_806131d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806131d0_FUN_806131d0.c; four-player scan, +0x10 slot, state word +0x27C+i*4",src/game/bases.rs
+game::bases,80613380,fn_80613380,translated,medium,"work/ghidra/rel-d_basesNP/export/80613380_FUN_80613380.c; state apply: system +0x1D8 bit 0x40, twelve words, pane/text pass, sound 0x83",src/game/bases.rs
+game::bases,80613a30,fn_80613a30,translated,medium,"work/ghidra/rel-d_basesNP/export/80613a30_FUN_80613a30.c; animation-gated exit: clears system bit 0x40, pane byte, +0x208 slot +0x18",src/game/bases.rs
+game::bases,806d8b90,fn_806d8b90,translated,high,"work/ghidra/rel-d_basesNP/export/806d8b90_FUN_806d8b90.c; clamp modes 0-4 with +0x58C latch, rider pass, +0x508 release, vtable +0xE0",src/game/bases.rs
+game::bases,807390d0,fn_807390d0,translated,medium,"work/ghidra/rel-d_basesNP/export/807390d0_FUN_807390d0.c; character heading from 0x807CDC00 mirror table, mount branch, three descriptors",src/game/bases.rs
+game::bases,80741a70,fn_80741a70,translated,high,"work/ghidra/rel-d_basesNP/export/80741a70_FUN_80741a70.c; 16-slot angle tape +0x7E0, 64-entry ring +0x800, 0x8015F4F0 step 0x200",src/game/bases.rs
+game::bases,80763c20,fn_80763c20,translated,high,"work/ghidra/rel-d_basesNP/export/80763c20_FUN_80763c20.c; cobGhost cue body: state +0x3D4, latch +0x3D0, clip +0x1B4/+0x224, effect 0x2B0",src/game/bases.rs
+game::bases,80776440,fn_80776440,translated,medium,"work/ghidra/rel-d_basesNP/export/80776440_FUN_80776440.c; actions 31/32: 60-frame approach via 0x80160AE0, node position, idle countdown",src/game/bases.rs
+game::bases,8077c440,fn_8077c440,translated,medium,"work/ghidra/rel-d_basesNP/export/8077c440_FUN_8077c440.c; route target/heading: +0x210 index, +0x274 kind, direction states 2-5",src/game/bases.rs
+game::bases,807a0090,fn_807a0090,translated,medium,"work/ghidra/rel-d_basesNP/export/807a0090_FUN_807a0090.c; rail vehicle position/aim: rail arrays, +0x184 element, +0x784 aim point",src/game/bases.rs
+game::bases,807b2550,fn_807b2550,translated,medium,"work/ghidra/rel-d_basesNP/export/807b2550_FUN_807b2550.c; archive-name collector: four groups, Pa3_ strcmp set, 0x8031A834 registry, two requests",src/game/bases.rs

@@ -1,0 +1,5 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::main_loop,802e21fc,fn_802e21fc,translated,medium,"work/ghidra/main-gb/export/802e21fc_FUN_802e21fc.c; wide printf format-spec parser; flags/width/precision/length loops and the 0xFFFF rejection cases literal",src/engine/main_loop.rs
+engine::main_loop,802e2c8c,fn_802e2c8c,translated,medium,"work/ghidra/main-gb/export/802e2c8c_FUN_802e2c8c.c; wide %a/%A hex-float converter; dtoa classifies, raw IEEE-754 nibbles, decimal p-exponent via fn_802e278c",src/engine/main_loop.rs
+engine::main_loop,802e3998,fn_802e3998,translated,medium,"work/ghidra/main-gb/export/802e3998_FUN_802e3998.c; wide printf driver, twin of fn_802e0bf0; now calls fn_802e21fc/fn_802e2c8c/fn_802e3208/fn_802e278c/fn_802e29d0 directly",src/engine/main_loop.rs
+engine::main_loop,802e9cc8,fn_802e9cc8,partial,low,"work/ghidra/main-gb/export/802e9cc8_FUN_802e9cc8.c; MetroTRK reply-pending flag set to 1 at 0x8042B038 (r13-0x4648) twice then return 0; three blocks removed as unreachable in the 116-byte extent",src/engine/main_loop.rs

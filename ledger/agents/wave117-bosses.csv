@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bosses,80c0b510,fn_80c0b510,translated,high,"work/ghidra/rel-d_en_bossNP/export/80c0b510_FUN_80c0b510.c; C export truncates at halt_baddata; eight-byte body decoded from the raw REL text as lwz r3,0x770(r3) / b 0x80162D00 (R_PPC_REL24, module 0, addend 0x80162D00, relocation patched at 0x80C0B514); callee is main.dol FUN_80162d00, the id&7 bank lookup, so the loaded handle is its r3 argument",src/game/bosses.rs

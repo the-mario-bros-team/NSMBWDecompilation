@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80743ba0,fn_80743ba0,translated,medium,"work/ghidra/rel-d_basesNP/export/80743ba0_FUN_80743ba0.c; virtual +0x14 on +0x460 and +0x434, part release inferred",src/game/bases.rs
+game::bases,80743bf0,fn_80743bf0,translated,high,"work/ghidra/rel-d_basesNP/export/80743bf0_FUN_80743bf0.c; +0x4A8 sub-object vtable 0x80329958, five -1 closes, base 0x800671B0",src/game/bases.rs
+game::bases,80743ef0,fn_80743ef0,translated,low,"work/ghidra/rel-d_basesNP/export/80743ef0_FUN_80743ef0.c; tail call 0x802DCBFC(b,b,a); helper behaviour unknown",src/game/bases.rs
+game::bases,80744010,fn_80744010,translated,high,"work/ghidra/rel-d_basesNP/export/80744010_FUN_80744010.c; seven-entry short table selected by +0x3E0",src/game/bases.rs
+game::bases,80744750,fn_80744750,translated,high,"work/ghidra/rel-d_basesNP/export/80744750_FUN_80744750.c; state destructor, 0x8015F800 then guarded 0x802B9280",src/game/bases.rs
+game::bases,807447b0,fn_807447b0,translated,high,"work/ghidra/rel-d_basesNP/export/807447b0_FUN_807447b0.c; identical second state destructor",src/game/bases.rs
+game::bases,80744810,fn_80744810,translated,high,"work/ghidra/rel-d_basesNP/export/80744810_FUN_80744810.c; returns constant 0x80352730",src/game/bases.rs
+game::bases,80744820,fn_80744820,translated,high,"work/ghidra/rel-d_basesNP/export/80744820_FUN_80744820.c; returns constant 0x803526B0",src/game/bases.rs
+game::bases,80744910,fn_80744910,translated,medium,"work/ghidra/rel-d_basesNP/export/80744910_FUN_80744910.c; five +0x30 parent probes via vtable +0x0C, then recursion",src/game/bases.rs
+game::bases,807449f0,fn_807449f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807449f0_FUN_807449f0.c; strchr 0x802E1C40 plus strcmp 0x802E1AB4 on the suffix after the first colon",src/game/bases.rs
+game::bases,80744ab0,fn_80744ab0,translated,low,"work/ghidra/rel-d_basesNP/export/80744ab0_FUN_80744ab0.c; tail call 0x802DCBFC(b,b,a); helper behaviour unknown",src/game/bases.rs
+game::bases,80744ae0,fn_80744ae0,translated,low,"work/ghidra/rel-d_basesNP/export/80744ae0_FUN_80744ae0.c; tail call 0x802DCBFC(b,b,a); helper behaviour unknown",src/game/bases.rs
+game::bases,80744b10,fn_80744b10,translated,high,"work/ghidra/rel-d_basesNP/export/80744b10_FUN_80744b10.c; allocates 0x18C bytes, vtable 0x80810758, arena +0x128, model +0x144, animation +0x15C",src/game/bases.rs
+game::bases,80744c50,fn_80744c50,translated,medium,"work/ghidra/rel-d_basesNP/export/80744c50_FUN_80744c50.c; compares +0x13C with 0x8016A5D0, releases +0x150/+0x144/+0x128",src/game/bases.rs
+game::bases,80744cc0,fn_80744cc0,translated,medium,"work/ghidra/rel-d_basesNP/export/80744cc0_FUN_80744cc0.c; calls 80744dc0 and returns 1, receiver restored from the callee export",src/game/bases.rs
+game::bases,80744cf0,fn_80744cf0,translated,medium,"work/ghidra/rel-d_basesNP/export/80744cf0_FUN_80744cf0.c; transform from saved +0x17C, angles +0x100..+0x104, scale +0xDC",src/game/bases.rs
+game::bases,80744dc0,fn_80744dc0,translated,high,"work/ghidra/rel-d_basesNP/export/80744dc0_FUN_80744dc0.c; g3d/obj_chikuwa_block.brres, pane obj_chikuwa_block, saved position +0x17C",src/game/bases.rs
+game::bases,80745270,fn_80745270,translated,medium,"work/ghidra/rel-d_basesNP/export/80745270_FUN_80745270.c; calls 80745550 and returns 1, receiver restored from the callee export",src/game/bases.rs
+game::bases,807452a0,fn_807452a0,translated,medium,"work/ghidra/rel-d_basesNP/export/807452a0_FUN_807452a0.c; per-variant offset pair at 0x80810818/0x8081081C, same matrix tail as 80744cf0",src/game/bases.rs
+game::bases,80745380,fn_80745380,translated,medium,"work/ghidra/rel-d_basesNP/export/80745380_FUN_80745380.c; variant from 0x80429DD8+0x40, slots 1 and 2 through 80745490",src/game/bases.rs
+game::bases,80745410,fn_80745410,translated,medium,"work/ghidra/rel-d_basesNP/export/80745410_FUN_80745410.c; rail_mat lookup 0x8023B760, clears bit 0x8000 at +0x1A8, writes +0x1F8/+0x1FC",src/game/bases.rs
+game::bases,80745490,fn_80745490,translated,medium,"work/ghidra/rel-d_basesNP/export/80745490_FUN_80745490.c; loops the 0x80168400 model list, +0x3C link, 0x8023D3C0 and 0x8023CA80",src/game/bases.rs
+game::bases,80745550,fn_80745550,translated,high,"work/ghidra/rel-d_basesNP/export/80745550_FUN_80745550.c; g3d/rail.brres, rail_00 name table 0x808109D8, then 80745380/80745410/807452a0",src/game/bases.rs
+game::bases,80745610,fn_80745610,translated,high,"work/ghidra/rel-d_basesNP/export/80745610_FUN_80745610.c; closes +0x144 and +0x128, base destructor 0x8006C7F0, guarded 0x80162920",src/game/bases.rs
+game::bases,80746100,fn_80746100,translated,medium,"work/ghidra/rel-d_basesNP/export/80746100_FUN_80746100.c; 0x8007F950 over +0x474..+0x63C in 0xE4 steps",src/game/bases.rs
+game::bases,80746510,fn_80746510,translated,medium,"work/ghidra/rel-d_basesNP/export/80746510_FUN_80746510.c; decrements +0x3D4 and compares 0x807CE3B0 with camera_y - +0x3D8",src/game/bases.rs
+game::bases,80746560,fn_80746560,translated,medium,"work/ghidra/rel-d_basesNP/export/80746560_FUN_80746560.c; half-width band 0x807CE3CC, width 0x807CE3C0, camera scale 0x807CE3C4/C8",src/game/bases.rs
+game::bases,80746890,fn_80746890,translated,high,"work/ghidra/rel-d_basesNP/export/80746890_FUN_80746890.c; up to 100 chained 0x80162D50(0x145) records at +0x3E4, count +0x3E0",src/game/bases.rs
+game::bases,80747260,fn_80747260,translated,medium,"work/ghidra/rel-d_basesNP/export/80747260_FUN_80747260.c; gate 0x807CE47C plus 80746510, calls 80746640, interface +0x18 event 0x808316A0",src/game/bases.rs
+game::bases,80747310,fn_80747310,translated,medium,"work/ghidra/rel-d_basesNP/export/80747310_FUN_80747310.c; +0x3DC lookup 0x80162D00, interface +0x18 event 0x80831660",src/game/bases.rs

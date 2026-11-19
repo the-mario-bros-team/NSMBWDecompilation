@@ -1,0 +1,28 @@
+module,address,name,status,confidence,evidence,rust_file
+game::player,80040de0,fn_80040de0,translated,medium,"work/ghidra/main-gb/export/80040de0_FUN_80040de0.c; two-stage hit test on +0xAC with a {a,a,b,b} box from 0x8042B734/0x8042B738",src/game/player.rs
+game::player,80040e70,fn_80040e70,translated,medium,"work/ghidra/main-gb/export/80040e70_FUN_80040e70.c; binds +0x1EC to 0x8006D090 and points +0x23C at +0x2DC",src/game/player.rs
+game::player,80040ec0,fn_80040ec0,translated,high,"work/ghidra/main-gb/export/80040ec0_FUN_80040ec0.c; spawns Wm_mr_fireball_hit and sets +0x408 = 1",src/game/player.rs
+game::player,80040f70,fn_80040f70,translated,medium,"work/ghidra/main-gb/export/80040f70_FUN_80040f70.c; copies +0xAC..+0xB4 to +0x3F0..+0x3FC and calls vtable +0x134 then +0x0C",src/game/player.rs
+game::player,800414e0,fn_800414e0,translated,high,"work/ghidra/main-gb/export/800414e0_FUN_800414e0.c; installs the four daFireBall_Base_c state descriptors with the nine-word permutation",src/game/player.rs
+game::player,80042480,fn_80042480,translated,medium,"work/ghidra/main-gb/export/80042480_FUN_80042480.c; state-1 gate then event 9 or 1 by the +0xC8 bound",src/game/player.rs
+game::player,80042650,fn_80042650,translated,medium,"work/ghidra/main-gb/export/80042650_FUN_80042650.c; lift_ice_ashiba model, anim resolve, +0x3F0 node, scratch flush",src/game/player.rs
+game::player,800437d0,fn_800437d0,translated,medium,"work/ghidra/main-gb/export/800437d0_FUN_800437d0.c; three-word clear from 0x8042B7AC plus the 0x800665D0 angle",src/game/player.rs
+game::player,80044460,fn_80044460,translated,medium,"work/ghidra/main-gb/export/80044460_FUN_80044460.c; +0x3A8 arena, 0x80-byte copy buffer and two four-byte ids",src/game/player.rs
+game::player,80044940,fn_80044940,translated,high,"work/ghidra/main-gb/export/80044940_FUN_80044940.c; returns the shared handler 0x80377A04",src/game/player.rs
+game::player,80044ff0,fn_80044ff0,translated,medium,"work/ghidra/main-gb/export/80044ff0_FUN_80044ff0.c; five +0x30 probes with vtable +0x0C then one-level recursion",src/game/player.rs
+game::player,800450d0,fn_800450d0,translated,high,"work/ghidra/main-gb/export/800450d0_FUN_800450d0.c; compares the text after the last colon of the virtual name and the path",src/game/player.rs
+game::player,80045590,fn_80045590,translated,medium,"work/ghidra/main-gb/export/80045590_FUN_80045590.c; unpacks +0x04 nibble/bits 4..5 and tail-calls 0x80045A10",src/game/player.rs
+game::player,80045710,fn_80045710,translated,medium,"work/ghidra/main-gb/export/80045710_FUN_80045710.c; obj_dokan A/B shape nodes plus four shape/polygon primitives",src/game/player.rs
+game::player,800459f0,fn_800459f0,translated,medium,"work/ghidra/main-gb/export/800459f0_FUN_800459f0.c; +0xE0 = 0x8042B820 * +0x5C8",src/game/player.rs
+game::player,80045b10,fn_80045b10,translated,high,"work/ghidra/main-gb/export/80045b10_FUN_80045b10.c; release +0x4E4 track then refresh +0xE0 and return 1",src/game/player.rs
+game::player,80045d00,fn_80045d00,translated,medium,"work/ghidra/main-gb/export/80045d00_FUN_80045d00.c; stores +0x5C8 and retimes the +0x4E4 track to speed + 0x8042B828",src/game/player.rs
+game::player,800460d0,fn_800460d0,translated,medium,"work/ghidra/main-gb/export/800460d0_FUN_800460d0.c; full actor constructor: seven sub-records, effect timer, four effect records, two interfaces",src/game/player.rs
+game::player,80046490,fn_80046490,translated,medium,"work/ghidra/main-gb/export/80046490_FUN_80046490.c; 0x8027A200 flush then conditional 0x802B9280 free, returns this",src/game/player.rs
+game::player,800467c0,fn_800467c0,translated,high,"work/ghidra/main-gb/export/800467c0_FUN_800467c0.c; the constructor in reverse: interfaces, four effect records, timer, seven sub-records",src/game/player.rs
+game::player,80046fc0,fn_80046fc0,translated,high,"work/ghidra/main-gb/export/80046fc0_FUN_80046fc0.c; mode-2 reset: six snapshots, thirteen clears, two flag pairs, base hook",src/game/player.rs
+game::player,80047270,fn_80047270,translated,high,"work/ghidra/main-gb/export/80047270_FUN_80047270.c; first of the 18-getter run, returns 0x80377A04",src/game/player.rs
+game::player,80047380,fn_80047380,translated,high,"work/ghidra/main-gb/export/80047380_FUN_80047380.c; last of the 18-getter run, returns 0x80377A04",src/game/player.rs
+game::player,80047630,fn_80047630,translated,medium,"work/ghidra/main-gb/export/80047630_FUN_80047630.c; stopped-motion gate on +0x10C, +0x10D4 bits and +0xEA4, then slots +0x380/+0x37C",src/game/player.rs
+game::player,80047c40,fn_80047c40,translated,medium,"work/ghidra/main-gb/export/80047c40_FUN_80047c40.c; contact flags, three-double interface call and the +0x14C8 hop decay",src/game/player.rs
+game::player,80047dc0,fn_80047dc0,translated,medium,"work/ghidra/main-gb/export/80047dc0_FUN_80047dc0.c; 0x80047EE0 gate then animation 0x15 or rate by +0x10D4 bit 0x4000",src/game/player.rs
+game::player,8004d6f0,fn_8004d6f0,translated,high,"work/ghidra/main-gb/export/8004d6f0_FUN_8004d6f0.c; first of the 19-getter run, returns 0x80377A04",src/game/player.rs

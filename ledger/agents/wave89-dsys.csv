@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e37f0,fn_800e37f0,translated,high,"work/ghidra/main-gb/export/800e37f0_FUN_800e37f0.c; vtable 0x8031B040, +4 = value << 12, +8 = u16 value, zeros at +0xA..+0xC, publishes 0x8042A070",src/engine/dsys.rs
+engine::dsys,800e3820,fn_800e3820,translated,medium,"work/ghidra/main-gb/export/800e3820_FUN_800e3820.c; clears 0x8042A070 and frees when the count is positive; the dropped free argument is inferred from fn_800ea540",src/engine/dsys.rs
+engine::dsys,800e3910,fn_800e3910,translated,high,"work/ghidra/main-gb/export/800e3910_FUN_800e3910.c; clamps to 999 then stores u16 at +8 and value << 12 at +4",src/engine/dsys.rs
+engine::dsys,800e3a60,fn_800e3a60,translated,medium,"work/ghidra/main-gb/export/800e3a60_FUN_800e3a60.c; three guards then one byte store of 1 at target+0x379",src/engine/dsys.rs
+engine::dsys,800e5a70,fn_800e5a70,translated,medium,"work/ghidra/main-gb/export/800e5a70_FUN_800e5a70.c; u16 operand widened with the 2^52 idiom, divided by 0x8042CD00 and scaled into +0x24/+0x28",src/engine/dsys.rs
+engine::dsys,800e6030,fn_800e6030,translated,high,"work/ghidra/main-gb/export/800e6030_FUN_800e6030.c; clears via 0x801C5860 then forwards record+0x24..+0x30 to 0x801C9C60",src/engine/dsys.rs
+engine::dsys,800e65e0,fn_800e65e0,translated,medium,"work/ghidra/main-gb/export/800e65e0_FUN_800e65e0.c; same operand maths as 800e5a70 with 0x8022D560 flushes around the two size stores",src/engine/dsys.rs
+engine::dsys,800e6be0,fn_800e6be0,translated,high,"work/ghidra/main-gb/export/800e6be0_FUN_800e6be0.c; handle at context+0x3BC encoded into +4 with width 3 and flag 1",src/engine/dsys.rs
+engine::dsys,800e6ce0,fn_800e6ce0,translated,high,"work/ghidra/main-gb/export/800e6ce0_FUN_800e6ce0.c; handle at context+0x3C0 with the digit count from fn_800e6930",src/engine/dsys.rs
+engine::dsys,800e6ef0,fn_800e6ef0,translated,medium,"work/ghidra/main-gb/export/800e6ef0_FUN_800e6ef0.c; 0x28-byte layout slot selected by context+0x3C8; frame/surface words then two scaled positions and the 0xF tag",src/engine/dsys.rs
+engine::dsys,800e7040,fn_800e7040,translated,high,"work/ghidra/main-gb/export/800e7040_FUN_800e7040.c; mode byte non-zero selects style 1 else style 3",src/engine/dsys.rs
+engine::dsys,800e7060,fn_800e7060,translated,high,"work/ghidra/main-gb/export/800e7060_FUN_800e7060.c; handle at context+0x3C4 encoded through 0x800CDDB0",src/engine/dsys.rs
+engine::dsys,800e70b0,fn_800e70b0,translated,high,"work/ghidra/main-gb/export/800e70b0_FUN_800e70b0.c; two 4-slot halves from context+0x3D0/+0x3D4 with the 0x5F separator at +0xC",src/engine/dsys.rs
+engine::dsys,800e7130,fn_800e7130,translated,high,"work/ghidra/main-gb/export/800e7130_FUN_800e7130.c; clears the string then encodes the handle at context+0x3CC",src/engine/dsys.rs
+engine::dsys,800e7590,fn_800e7590,translated,high,"work/ghidra/main-gb/export/800e7590_FUN_800e7590.c; drains 0x8042A0D8 unlinking and freeing each payload",src/engine/dsys.rs
+engine::dsys,800e75f0,fn_800e75f0,translated,medium,"work/ghidra/main-gb/export/800e75f0_FUN_800e75f0.c; allocates 0x20 bytes, self-link at +8, tag 0x118, appends to 0x8042A0D8",src/engine/dsys.rs
+engine::dsys,800e7880,fn_800e7880,translated,medium,"work/ghidra/main-gb/export/800e7880_FUN_800e7880.c; fills a 48-byte rectangle via 0x80168180 then draws through 0x801C1160",src/engine/dsys.rs
+engine::dsys,800e8ba0,fn_800e8ba0,translated,high,"work/ghidra/main-gb/export/800e8ba0_FUN_800e8ba0.c; 0x8016A960 init, fn_800e8dc0 chain, fn_800e8e90 bind, 0x8016A9B0 finalise",src/engine/dsys.rs
+engine::dsys,800e8cc0,fn_800e8cc0,translated,high,"work/ghidra/main-gb/export/800e8cc0_FUN_800e8cc0.c; walks the +0x54 chain calling 0x800EA6F0 once per node",src/engine/dsys.rs
+engine::dsys,800e9e20,fn_800e9e20,translated,high,"work/ghidra/main-gb/export/800e9e20_FUN_800e9e20.c; alternating parity restart of every node through 0x800EA980",src/engine/dsys.rs
+engine::dsys,800e9ef0,fn_800e9ef0,translated,high,"work/ghidra/main-gb/export/800e9ef0_FUN_800e9ef0.c; steps the first +0x1C nodes then calls the virtual slot at +0x2C+0x18 with tag 0x80371C48",src/engine/dsys.rs
+engine::dsys,800ea540,fn_800ea540,translated,high,"work/ghidra/main-gb/export/800ea540_FUN_800ea540.c; 0x8015F800 teardown then a free when the count is positive",src/engine/dsys.rs
+engine::dsys,800eb640,fn_800eb640,translated,high,"work/ghidra/main-gb/export/800eb640_FUN_800eb640.c; box hit test returning the signed byte at record+0x18 or -1",src/engine/dsys.rs
+engine::dsys,800eb6b0,fn_800eb6b0,translated,medium,"work/ghidra/main-gb/export/800eb6b0_FUN_800eb6b0.c; returns 0x801611C0 truncated to a signed 16-bit angle",src/engine/dsys.rs
+engine::dsys,800edf20,fn_800edf20,translated,high,"work/ghidra/main-gb/export/800edf20_FUN_800edf20.c; base constructor 0x80170C50 then vtable 0x8031BA1C",src/engine/dsys.rs
+engine::dsys,800ee3d0,fn_800ee3d0,translated,high,"work/ghidra/main-gb/export/800ee3d0_FUN_800ee3d0.c; releases the +0x10 sub-object then frees when the count is positive",src/engine/dsys.rs
+engine::dsys,800ee430,fn_800ee430,translated,high,"work/ghidra/main-gb/export/800ee430_FUN_800ee430.c; frees only when non-null and the count is positive",src/engine/dsys.rs
+engine::dsys,800ee930,fn_800ee930,translated,high,"work/ghidra/main-gb/export/800ee930_FUN_800ee930.c; 0x800EEAE0 then 0x800EE9B0 / 0x800EEE70 / 0x800EF770 in order",src/engine/dsys.rs

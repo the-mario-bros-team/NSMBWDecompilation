@@ -1,0 +1,8 @@
+module,address,name,status,confidence,evidence,rust_file
+render::gx_band,802830a0,fn_802830a0,translated,medium,"work/ghidra/main-gb/export/802830a0_FUN_802830a0.c; free-list allocate, 0x80280E60 init, sorted active-list insert; level at chunk+0xA8",src/render/gx_band.rs
+render::gx_band,80283bd0,fn_80283bd0,translated,medium,"work/ghidra/main-gb/export/80283bd0_FUN_80283bd0.c; 0x4C-byte record expansion; kind table 0/1/2 and two 0x80262750 lookups",src/render/gx_band.rs
+render::gx_band,80288390,fn_80288390,translated,high,"work/ghidra/main-gb/export/80288390_FUN_80288390.c; squared-distance fade ramp; 0x801C1650 distance and 0x80237BA0 rsqrt",src/render/gx_band.rs
+render::gx_band,80288490,fn_80288490,translated,medium,"work/ghidra/main-gb/export/80288490_FUN_80288490.c; particle age accumulator, LCG at +0xEC, two eight-argument draw packets",src/render/gx_band.rs
+render::gx_band,802888e0,fn_802888e0,translated,medium,"work/ghidra/main-gb/export/802888e0_FUN_802888e0.c; strip-key walk over the self-relative table at +0xB8; calls 0x8028A6F0",src/render/gx_band.rs
+render::gx_band,8028c7a0,fn_8028c7a0,translated,medium,"work/ghidra/main-gb/export/8028c7a0_FUN_8028c7a0.c; h/l/p channel key resolver; binary search over 0x10-byte entries and hash fold",src/render/gx_band.rs
+render::gx_band,8028e310,fn_8028e310,partial,medium,"work/ghidra/main-gb/export/8028e310_FUN_8028e310.c; unit-box classifier; type-0 float arm only, GQR-quantised input arms omitted",src/render/gx_band.rs

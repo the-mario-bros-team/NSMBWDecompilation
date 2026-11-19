@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::display,800db450,fn_800db450,translated,medium,"work/ghidra/main-gb/export/800db450_FUN_800db450.c; base ctor arg inferred",src/engine/display.rs
+engine::display,800db590,fn_800db590,translated,high,work/ghidra/main-gb/export/800db590_FUN_800db590.c,src/engine/display.rs
+engine::display,800db5f0,fn_800db5f0,translated,high,work/ghidra/main-gb/export/800db5f0_FUN_800db5f0.c,src/engine/display.rs
+engine::display,800db620,fn_800db620,translated,medium,"work/ghidra/main-gb/export/800db620_FUN_800db620.c; angle operands dropped",src/engine/display.rs
+engine::display,800dbcc0,fn_800dbcc0,translated,high,work/ghidra/main-gb/export/800dbcc0_FUN_800dbcc0.c,src/engine/display.rs
+engine::display,800dbd10,fn_800dbd10,translated,high,work/ghidra/main-gb/export/800dbd10_FUN_800dbd10.c,src/engine/display.rs
+engine::display,800dbd60,fn_800dbd60,translated,high,work/ghidra/main-gb/export/800dbd60_FUN_800dbd60.c,src/engine/display.rs
+engine::display,800dbd80,fn_800dbd80,translated,medium,"work/ghidra/main-gb/export/800dbd80_FUN_800dbd80.c; pad operand inferred",src/engine/display.rs
+engine::display,800dbe30,fn_800dbe30,translated,high,work/ghidra/main-gb/export/800dbe30_FUN_800dbe30.c,src/engine/display.rs
+engine::display,800dbe80,fn_800dbe80,translated,high,work/ghidra/main-gb/export/800dbe80_FUN_800dbe80.c,src/engine/display.rs
+engine::display,800dbf50,fn_800dbf50,translated,high,work/ghidra/main-gb/export/800dbf50_FUN_800dbf50.c,src/engine/display.rs
+engine::display,800dbfe0,fn_800dbfe0,translated,high,work/ghidra/main-gb/export/800dbfe0_FUN_800dbfe0.c,src/engine/display.rs
+engine::display,800dc120,fn_800dc120,translated,high,work/ghidra/main-gb/export/800dc120_FUN_800dc120.c,src/engine/display.rs
+engine::display,800dc1f0,fn_800dc1f0,translated,high,work/ghidra/main-gb/export/800dc1f0_FUN_800dc1f0.c,src/engine/display.rs
+engine::display,800dc230,fn_800dc230,translated,high,work/ghidra/main-gb/export/800dc230_FUN_800dc230.c,src/engine/display.rs
+engine::display,800dc270,fn_800dc270,translated,high,work/ghidra/main-gb/export/800dc270_FUN_800dc270.c,src/engine/display.rs
+engine::display,800dc3b0,fn_800dc3b0,translated,high,work/ghidra/main-gb/export/800dc3b0_FUN_800dc3b0.c,src/engine/display.rs
+engine::display,800dc3f0,fn_800dc3f0,translated,high,work/ghidra/main-gb/export/800dc3f0_FUN_800dc3f0.c,src/engine/display.rs
+engine::display,800dc430,fn_800dc430,translated,medium,"work/ghidra/main-gb/export/800dc430_FUN_800dc430.c; container arg inferred",src/engine/display.rs
+engine::display,800dc480,fn_800dc480,translated,medium,"work/ghidra/main-gb/export/800dc480_FUN_800dc480.c; route receiver dropped",src/engine/display.rs
+engine::display,800dc570,fn_800dc570,translated,high,work/ghidra/main-gb/export/800dc570_FUN_800dc570.c,src/engine/display.rs
+engine::display,800dc6f0,fn_800dc6f0,translated,medium,"work/ghidra/main-gb/export/800dc6f0_FUN_800dc6f0.c; setup arg inferred",src/engine/display.rs
+engine::display,800dc820,fn_800dc820,translated,medium,"work/ghidra/main-gb/export/800dc820_FUN_800dc820.c; empty callee by address",src/engine/display.rs
+engine::display,800dc8a0,fn_800dc8a0,translated,medium,"work/ghidra/main-gb/export/800dc8a0_FUN_800dc8a0.c; jumptable callee by address",src/engine/display.rs
+engine::display,800dc8e0,fn_800dc8e0,translated,high,"work/ghidra/main-gb/export/800dc8e0_FUN_800dc8e0.c; jumptable callee by address",src/engine/display.rs
+engine::display,800dc9a0,fn_800dc9a0,translated,high,work/ghidra/main-gb/export/800dc9a0_FUN_800dc9a0.c,src/engine/display.rs
+engine::display,800dca20,fn_800dca20,translated,medium,"work/ghidra/main-gb/export/800dca20_FUN_800dca20.c; slot from r3",src/engine/display.rs
+engine::display,800dcb70,fn_800dcb70,translated,high,work/ghidra/main-gb/export/800dcb70_FUN_800dcb70.c,src/engine/display.rs
+engine::display,800dcca0,fn_800dcca0,translated,high,work/ghidra/main-gb/export/800dcca0_FUN_800dcca0.c,src/engine/display.rs
+engine::display,800dcdd0,fn_800dcdd0,translated,high,work/ghidra/main-gb/export/800dcdd0_FUN_800dcdd0.c,src/engine/display.rs

@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+audio::seq,802700f0,fn_802700f0,translated,high,"work/ghidra/main-gb/export/802700f0_FUN_802700f0.c; returns *(i32*)(+0x10) - *(i32*)(+0x14)",src/audio/seq.rs
+audio::seq,80270100,fn_80270100,translated,high,"work/ghidra/main-gb/export/80270100_FUN_80270100.c; one store of the caller word at +0x04",src/audio/seq.rs
+audio::seq,80270110,fn_80270110,translated,high,"work/ghidra/main-gb/export/80270110_FUN_80270110.c; one constant zero store at +0x04",src/audio/seq.rs
+audio::seq,80270310,fn_80270310,translated,high,"work/ghidra/main-gb/export/80270310_FUN_80270310.c; returns +0x02 gated on a non-zero +0x00 byte",src/audio/seq.rs
+audio::seq,8027b010,fn_8027b010,translated,high,"work/ghidra/main-gb/export/8027b010_FUN_8027b010.c; unlinks key-0x18 from the +0x18 list under the manager mutex then calls 80270100 / 80267300 / 80270060",src/audio/seq.rs
+audio::seq,8027b0c0,fn_8027b0c0,translated,high,"work/ghidra/main-gb/export/8027b0c0_FUN_8027b0c0.c; inverse of 8027b010: 80270110 then 80267310 and an insert into the +0x18 list",src/audio/seq.rs
+audio::seq,8027b160,fn_8027b160,translated,medium,"work/ghidra/main-gb/export/8027b160_FUN_8027b160.c; vtable slot +0x0C probe with no argument list in the export; drops the handle with 80266230",src/audio/seq.rs
+audio::seq,8027b1c0,fn_8027b1c0,translated,medium,"work/ghidra/main-gb/export/8027b1c0_FUN_8027b1c0.c; cache-hit test on handle+0x9C then a five-argument vtable +0x0C call",src/audio/seq.rs
+audio::seq,8027b270,fn_8027b270,translated,low,"work/ghidra/main-gb/export/8027b270_FUN_8027b270.c; single vtable +0x0C dispatch printed as an indirect jump; arguments and return unknown",src/audio/seq.rs
+audio::seq,8027b290,fn_8027b290,translated,medium,"work/ghidra/main-gb/export/8027b290_FUN_8027b290.c; four-word descriptor handed to 8027B360 with 0x803FD600 and 0x155E0",src/audio/seq.rs
+audio::seq,8027b2e0,fn_8027b2e0,translated,medium,"work/ghidra/main-gb/export/8027b2e0_FUN_8027b2e0.c; five-term sum of three manager clock pairs plus +0x04 and +0x0C",src/audio/seq.rs
+audio::seq,8027c210,fn_8027c210,translated,high,"work/ghidra/main-gb/export/8027c210_FUN_8027c210.c; RSTM magic 0x5253544D and version at +0x06 with two seek/read pairs through vtable +0x44 / +0x14",src/audio/seq.rs
+audio::seq,8027c4b0,fn_8027c4b0,translated,medium,"work/ghidra/main-gb/export/8027c4b0_FUN_8027c4b0.c; three 80283A60 resolutions then nine words plus seven half-words copied",src/audio/seq.rs
+audio::seq,8027c600,fn_8027c600,translated,high,"work/ghidra/main-gb/export/8027c600_FUN_8027c600.c; seek to state+0x18 + row*count*4 + 8 and deinterleave 0x20 bytes into two arrays",src/audio/seq.rs
+audio::seq,8027c7c0,fn_8027c7c0,translated,high,"work/ghidra/main-gb/export/8027c7c0_FUN_8027c7c0.c; installs three vtables and self-links +0x178 and registers the 0x34 / 0x20 element array",src/audio/seq.rs
+audio::seq,8027c970,fn_8027c970,translated,medium,"work/ghidra/main-gb/export/8027c970_FUN_8027c970.c; vtable reinstall plus base destructor then mutex-guarded array release and two list teardowns",src/audio/seq.rs
+audio::seq,8027ca70,fn_8027ca70,translated,medium,"work/ghidra/main-gb/export/8027ca70_FUN_8027ca70.c; clamp to 0x10 then bitmap walk to eight elements then allocator claim with rollback; exit codes 2 / 1 / 0",src/audio/seq.rs
+audio::seq,8027d3a0,fn_8027d3a0,translated,high,"work/ghidra/main-gb/export/8027d3a0_FUN_8027d3a0.c; +0x103 guard then flag from +0xC4 and three words from +0xCC / +0xD4 / +0xD8",src/audio/seq.rs
+audio::seq,8027d440,fn_8027d440,translated,high,"work/ghidra/main-gb/export/8027d440_FUN_8027d440.c; three guards returning -1 / -1 / 0 then 802819D0 plus +0xE8*(+0x13C-+0x138)",src/audio/seq.rs
+audio::seq,8027d520,fn_8027d520,translated,high,"work/ghidra/main-gb/export/8027d520_FUN_8027d520.c; eight element default pairs from 0x8042EAE8 / 0x8042EAD0 plus eleven state bytes and sixteen slot words",src/audio/seq.rs
+audio::seq,8027ddd0,fn_8027ddd0,translated,medium,"work/ghidra/main-gb/export/8027ddd0_FUN_8027ddd0.c; 802830A0 bind per element with callback 8027eef0 and rollback through 802810A0",src/audio/seq.rs
+audio::seq,8027e590,fn_8027e590,translated,medium,"work/ghidra/main-gb/export/8027e590_FUN_8027e590.c; per-element 802819F0 / 80281A70 / 80281AF0 over the +0x818 slot arrays",src/audio/seq.rs
+audio::seq,8027ea00,fn_8027ea00,translated,medium,"work/ghidra/main-gb/export/8027ea00_FUN_8027ea00.c; 80281B80 with +0xF0 + step*+0xE8 then +0x10D set",src/audio/seq.rs
+audio::seq,8027ed20,fn_8027ed20,translated,medium,"work/ghidra/main-gb/export/8027ed20_FUN_8027ed20.c; pause state from +0x109 / +0x107 compared with +0x108 then 80281460 per element",src/audio/seq.rs
+audio::seq,8027f270,fn_8027f270,translated,high,"work/ghidra/main-gb/export/8027f270_FUN_8027f270.c; unlink from owner+0x174 then vtable +0x08 with -1 then 8026DB00 on owner+0x180",src/audio/seq.rs
+audio::seq,8027fdd0,fn_8027fdd0,translated,high,"work/ghidra/main-gb/export/8027fdd0_FUN_8027fdd0.c; one-shot registry at 0x80416FC4 with 802DC9A0 / 802DC780 and two list initialisers",src/audio/seq.rs

@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800c0310,fn_800c0310,translated,high,"work/ghidra/main-gb/export/800c0310_FUN_800c0310.c; lift model by +0x130; name/brres/part tables; binds +0x20/+0x60/+0xA0",src/game/stage.rs
+game::stage,800c0440,fn_800c0440,translated,medium,"work/ghidra/main-gb/export/800c0440_FUN_800c0440.c; +0x64 draw object filtered by the 0x802F8FF0 virtual test; iterator + scale matrix + submit",src/game/stage.rs
+game::stage,800c0ae0,fn_800c0ae0,translated,medium,"work/ghidra/main-gb/export/800c0ae0_FUN_800c0ae0.c; neutral 0x80/0x80/0x80/0xFF palette entry; nine layer modes; cell 0 re-keyed; flag bit 4",src/game/stage.rs
+game::stage,800c0bf0,fn_800c0bf0,translated,medium,"work/ghidra/main-gb/export/800c0bf0_FUN_800c0bf0.c; bounds-checked 0x44-byte cell; key word + three-float position + two scale calls",src/game/stage.rs
+game::stage,800c0cf0,fn_800c0cf0,translated,high,"work/ghidra/main-gb/export/800c0cf0_FUN_800c0cf0.c; four-byte palette write at *(table+8)+index*4",src/game/stage.rs
+game::stage,800c0d70,fn_800c0d70,translated,high,"work/ghidra/main-gb/export/800c0d70_FUN_800c0d70.c; constructor: 0x802DCD60 object + header + two 0x8015FC90 interfaces + publish",src/game/stage.rs
+game::stage,800c1070,fn_800c1070,translated,medium,"work/ghidra/main-gb/export/800c1070_FUN_800c1070.c; optional 0x802B9280 free under a positive ownership flag",src/game/stage.rs
+game::stage,800c10b0,fn_800c10b0,translated,medium,"work/ghidra/main-gb/export/800c10b0_FUN_800c10b0.c; identical twin of 0x800C1070",src/game/stage.rs
+game::stage,800c1230,fn_800c1230,translated,medium,"work/ghidra/main-gb/export/800c1230_FUN_800c1230.c; +0x67 gate; virtual +0x10 then +0x40/+0x44 copied to +0x48/+0x4C",src/game/stage.rs
+game::stage,800c1810,fn_800c1810,translated,high,"work/ghidra/main-gb/export/800c1810_FUN_800c1810.c; six zero words then the lazily seeded 0x80359440 eight-word table",src/game/stage.rs
+game::stage,800caa10,fn_800caa10,translated,high,"work/ghidra/main-gb/export/800caa10_FUN_800caa10.c; cave override pins +0x86C to 1; otherwise stores the state and bit 0 of +0x17C",src/game/stage.rs
+game::stage,800cab10,fn_800cab10,translated,medium,"work/ghidra/main-gb/export/800cab10_FUN_800cab10.c; archive load of the cave_bti entry into the r13-0x7A38 buffer",src/game/stage.rs
+game::stage,800cacb0,fn_800cacb0,translated,medium,"work/ghidra/main-gb/export/800cacb0_FUN_800cacb0.c; count/size getters forwarded to the 0x800CAB30 strip draw",src/game/stage.rs
+game::stage,800cafd0,fn_800cafd0,translated,high,"work/ghidra/main-gb/export/800cafd0_FUN_800cafd0.c; 0x34-byte record: vtable 0x803177FC + 0x802DC9A0 header + optional twelve-word copy",src/game/stage.rs
+game::stage,800cb080,fn_800cb080,translated,high,"work/ghidra/main-gb/export/800cb080_FUN_800cb080.c; twelve-word copy from source to this+4",src/game/stage.rs
+game::stage,800cb0f0,fn_800cb0f0,translated,medium,"work/ghidra/main-gb/export/800cb0f0_FUN_800cb0f0.c; vtable 0x803177E0 + source vector + two floats + 0x10-byte child; twenty fill words",src/game/stage.rs
+game::stage,800cb1c0,fn_800cb1c0,translated,medium,"work/ghidra/main-gb/export/800cb1c0_FUN_800cb1c0.c; saves +0x10 replaces it draws through 0x800CACB0 and restores it",src/game/stage.rs
+game::stage,800cbf60,fn_800cbf60,translated,high,"work/ghidra/main-gb/export/800cbf60_FUN_800cbf60.c; base constructor then vtable 0x80317748",src/game/stage.rs
+game::stage,800cbfa0,fn_800cbfa0,translated,high,"work/ghidra/main-gb/export/800cbfa0_FUN_800cbfa0.c; 0x80164FD0 render object; negative limits forced to 1; size applied",src/game/stage.rs
+game::stage,800cc250,fn_800cc250,translated,high,"work/ghidra/main-gb/export/800cc250_FUN_800cc250.c; base constructor vtable 0x80317728 and byte +0x14 cleared",src/game/stage.rs
+game::stage,800cc2a0,fn_800cc2a0,translated,high,"work/ghidra/main-gb/export/800cc2a0_FUN_800cc2a0.c; identical render bind to 0x800CBFA0",src/game/stage.rs
+game::stage,800ccd90,fn_800ccd90,translated,high,"work/ghidra/main-gb/export/800ccd90_FUN_800ccd90.c; vtable 0x80317830; row descriptor copied twice; two u16 clears; r2-0x6700 seeds",src/game/stage.rs
+game::stage,800cd0d0,fn_800cd0d0,translated,medium,"work/ghidra/main-gb/export/800cd0d0_FUN_800cd0d0.c; optional 0x802B9280 free under a positive ownership flag",src/game/stage.rs
+game::stage,800cd110,fn_800cd110,translated,medium,"work/ghidra/main-gb/export/800cd110_FUN_800cd110.c; identical twin of 0x800CD0D0",src/game/stage.rs
+game::stage,800cd610,fn_800cd610,translated,medium,"work/ghidra/main-gb/export/800cd610_FUN_800cd610.c; refresh test then (0 0 7000) seeds and the two virtual +0x14 calls",src/game/stage.rs
+game::stage,800cdc40,fn_800cdc40,translated,high,"work/ghidra/main-gb/export/800cdc40_FUN_800cdc40.c; forwards two keys to 0x802D7860 with the 0x80359CB4 object",src/game/stage.rs
+game::stage,800cdc60,fn_800cdc60,translated,high,"work/ghidra/main-gb/export/800cdc60_FUN_800cdc60.c; returns the 0x80359CB4 message object",src/game/stage.rs
+game::stage,800ce020,fn_800ce020,translated,medium,"work/ghidra/main-gb/export/800ce020_FUN_800ce020.c; resets the record when its kind byte is not 0x0E then stores 0x0E",src/game/stage.rs

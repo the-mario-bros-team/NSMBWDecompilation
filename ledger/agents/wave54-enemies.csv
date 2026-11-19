@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a135a0,fn_80a135a0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a135a0_FUN_80a135a0.c; state descriptor normaliser - name init 0x8015F800 then mode-gated 0x802B9280,src/game/enemies.rs
+game::enemies,80a13600,fn_80a13600,translated,high,work/ghidra/rel-d_enemiesNP/export/80a13600_FUN_80a13600.c; byte-identical second copy of the descriptor normaliser,src/game/enemies.rs
+game::enemies,80a13660,fn_80a13660,translated,high,work/ghidra/rel-d_enemiesNP/export/80a13660_FUN_80a13660.c; constant producer returning 0x80357BF4,src/game/enemies.rs
+game::enemies,80a13750,fn_80a13750,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a13750_FUN_80a13750.c; walks the +0x30 chain while child vtable +0xC returns 0,src/game/enemies.rs
+game::enemies,80a13830,fn_80a13830,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a13830_FUN_80a13830.c; name-suffix predicate - strrchr 0x802E1C40 then strcmp 0x802E1AB4,src/game/enemies.rs
+game::enemies,80a138f0,fn_80a138f0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a138f0_FUN_80a138f0.c; 48-byte forwarder to 0x802DCBFC with hidden r12 this-adjust not modelled,src/game/enemies.rs
+game::enemies,80a13920,fn_80a13920,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a13920_FUN_80a13920.c; second 48-byte forwarder identical to 80a138f0,src/game/enemies.rs
+game::enemies,80a13950,fn_80a13950,translated,high,work/ghidra/rel-d_enemiesNP/export/80a13950_FUN_80a13950.c; alloc 0x798 with vtable 0x80B35C80 and holders at 0x524/0x544/0x584/0x5BC/0x618/0x674/0x72C,src/game/enemies.rs
+game::enemies,80a13cf0,fn_80a13cf0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a13cf0_FUN_80a13cf0.c; rebuilds the +0x7C matrix from position +0xAC and angles +0x100 then applies it to holder +0x544,src/game/enemies.rs
+game::enemies,80a13e60,fn_80a13e60,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a13e60_FUN_80a13e60.c; binds g3d/met.brres into +0x540/+0x544 and the two-model holder +0x584,src/game/enemies.rs
+game::enemies,80a14090,fn_80a14090,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a14090_FUN_80a14090.c; base hooks then flag bit 2 switches to 0x80B6F218 and steps holder +0x544 slot +0x1C,src/game/enemies.rs
+game::enemies,80a14140,fn_80a14140,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a14140_FUN_80a14140.c; wall test via 0x80097B30 with a signed angle pair reflects +0x790/+0xE8 and switches to 0x80B6F1D8,src/game/enemies.rs
+game::enemies,80a14580,fn_80a14580,translated,high,work/ghidra/rel-d_enemiesNP/export/80a14580_FUN_80a14580.c; third copy of the descriptor normaliser,src/game/enemies.rs
+game::enemies,80a146a0,fn_80a146a0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a146a0_FUN_80a146a0.c; deleting-destructor forwarder to 0x802DCBFC,src/game/enemies.rs
+game::enemies,80a146d0,fn_80a146d0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a146d0_FUN_80a146d0.c; second deleting-destructor forwarder of the same block,src/game/enemies.rs
+game::enemies,80a14700,fn_80a14700,translated,high,work/ghidra/rel-d_enemiesNP/export/80a14700_FUN_80a14700.c; alloc 0x798 Wm_en_iron actor with vtable 0x80B36040 and helper +0x65C vtable 0x8032989C,src/game/enemies.rs
+game::enemies,80a147c0,fn_80a147c0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a147c0_FUN_80a147c0.c; spawn gate then model bind and motion seeds plus +0x148/+0x1EC helpers ending in state 0x80B6F258,src/game/enemies.rs
+game::enemies,80a14940,fn_80a14940,translated,high,work/ghidra/rel-d_enemiesNP/export/80a14940_FUN_80a14940.c; binds g3d/iron_ball.brres nodes iron_ball and iron_ballBig into +0x544,src/game/enemies.rs
+game::enemies,80a149f0,fn_80a149f0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a149f0_FUN_80a149f0.c; spawn bits 4..6 choose facing 1/0/0x80096240 result at +0x348,src/game/enemies.rs
+game::enemies,80a14a60,fn_80a14a60,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a14a60_FUN_80a14a60.c; scene/flag gate then bit 8 and 0x80064740 contact compare against +0x348,src/game/enemies.rs
+game::enemies,80a14b30,fn_80a14b30,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a14b30_FUN_80a14b30.c; contact compare 0x80064A30 for other id 0x5A reflects +0xE8 and requests sound 0x2D6,src/game/enemies.rs
+game::enemies,80a14c90,fn_80a14c90,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a14c90_FUN_80a14c90.c; steps holder +0x544 slot +0x14 and returns 1,src/game/enemies.rs
+game::enemies,80a14de0,fn_80a14de0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a14de0_FUN_80a14de0.c; volume from 0x80B2B0FC times max of absolute +0xEC and +0xE8,src/game/enemies.rs
+game::enemies,80a14e80,fn_80a14e80,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a14e80_FUN_80a14e80.c; Wm_en_iron main frame - controller refresh wall byte action mask 0x15 effects and sounds 0x2D5/0x2D6,src/game/enemies.rs
+game::enemies,80a151e0,fn_80a151e0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a151e0_FUN_80a151e0.c; empty 4-byte blr hook,src/game/enemies.rs
+game::enemies,80a151f0,fn_80a151f0,translated,high,work/ghidra/rel-d_enemiesNP/export/80a151f0_FUN_80a151f0.c; spawns Wm_en_iron effect through helper +0x65C slot +0xA0,src/game/enemies.rs
+game::enemies,80a15260,fn_80a15260,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a15260_FUN_80a15260.c; landing smoke selects Wm_en_sndlandsmk_s or Wm_en_landsmoke_s on controller value 0xC,src/game/enemies.rs
+game::enemies,80a15310,fn_80a15310,translated,high,work/ghidra/rel-d_enemiesNP/export/80a15310_FUN_80a15310.c; flips facing and scales +0xE8 by 0x80B2B130 entry then sound 0x2D6,src/game/enemies.rs
+game::enemies,80a153e0,fn_80a153e0,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a153e0_FUN_80a153e0.c; updates +0xB8 via 0x801C1650 and wobbles roll +0x104 by 0x802BE470 scaled angle,src/game/enemies.rs
+game::enemies,80a15490,fn_80a15490,translated,medium,work/ghidra/rel-d_enemiesNP/export/80a15490_FUN_80a15490.c; phase word +0x11C from 0x80B2B13C and +0xF4 from 0x80B2B0D8 or the 0x80B2B0C0 direction table,src/game/enemies.rs

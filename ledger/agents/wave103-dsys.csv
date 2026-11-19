@@ -1,0 +1,16 @@
+module,address,name,status,confidence,evidence,rust_file
+engine::dsys,800e20a0,fn_800e20a0,translated,medium,"work/ghidra/main-gb/export/800e20a0_FUN_800e20a0.c; notification pose push; low word is the object, ten-entry table, two sound paths",src/engine/dsys.rs
+engine::dsys,800e28a0,fn_800e28a0,translated,medium,"work/ghidra/main-gb/export/800e28a0_FUN_800e28a0.c; packed pair of the two display metrics with the sign-flipped four-entry table",src/engine/dsys.rs
+engine::dsys,800e2de0,fn_800e2de0,translated,medium,"work/ghidra/main-gb/export/800e2de0_FUN_800e2de0.c; three-float strip decoder; 0x802DCD68 pair bounds, mode 0/1 finishing branch",src/engine/dsys.rs
+engine::dsys,800e2f10,fn_800e2f10,translated,medium,"work/ghidra/main-gb/export/800e2f10_FUN_800e2f10.c; two-float twin of 800e2de0",src/engine/dsys.rs
+engine::dsys,800e3040,fn_800e3040,translated,medium,"work/ghidra/main-gb/export/800e3040_FUN_800e3040.c; three-float vertex transform with the three quadratic weights; returns the advanced cursor",src/engine/dsys.rs
+engine::dsys,800e3160,fn_800e3160,translated,medium,"work/ghidra/main-gb/export/800e3160_FUN_800e3160.c; two-float vertex transform, stride 8",src/engine/dsys.rs
+engine::dsys,800e3ba0,fn_800e3ba0,translated,medium,"work/ghidra/main-gb/export/800e3ba0_FUN_800e3ba0.c; eight sprite slot resets, mask bits 0x21..0x3F and the stage effect words",src/engine/dsys.rs
+engine::dsys,800e6090,fn_800e6090,translated,medium,"work/ghidra/main-gb/export/800e6090_FUN_800e6090.c; effect frame accumulation over the mode chain ending at 0xF",src/engine/dsys.rs
+engine::dsys,800e63a0,fn_800e63a0,translated,medium,"work/ghidra/main-gb/export/800e63a0_FUN_800e63a0.c; effect step accumulation and two-float window clamp",src/engine/dsys.rs
+engine::dsys,800eeae0,fn_800eeae0,translated,medium,"work/ghidra/main-gb/export/800eeae0_FUN_800eeae0.c; two-pass resource name scan, RW/F name test and the 4-byte handle buffer",src/engine/dsys.rs
+engine::dsys,800eeff0,fn_800eeff0,translated,medium,"work/ghidra/main-gb/export/800eeff0_FUN_800eeff0.c; two-slot variant rebuild; slot choice from count-leading-zeros of the low word",src/engine/dsys.rs
+engine::dsys,800ef570,fn_800ef570,translated,medium,"work/ghidra/main-gb/export/800ef570_FUN_800ef570.c; effect record selector and the create/release toggle at +0xB7C",src/engine/dsys.rs
+engine::dsys,800ef770,fn_800ef770,translated,medium,"work/ghidra/main-gb/export/800ef770_FUN_800ef770.c; keyed track rebuild; the second loop continues at the first loop's count",src/engine/dsys.rs
+engine::dsys,800ef890,fn_800ef890,translated,medium,"work/ghidra/main-gb/export/800ef890_FUN_800ef890.c; +0x70 frame snap with the wrap to position minus bias",src/engine/dsys.rs
+engine::dsys,800ef940,fn_800ef940,translated,medium,"work/ghidra/main-gb/export/800ef940_FUN_800ef940.c; +0x9C frame snap; same guard and bias write as 800ef890",src/engine/dsys.rs

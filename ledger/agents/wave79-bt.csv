@@ -1,0 +1,27 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::bt,802011d8,fn_802011d8,translated,high,"work/ghidra/main-gb/export/802011d8_FUN_802011d8.c; returns the G_DISCONNECT_REASON byte",src/runtime/bt.rs
+runtime::bt,802011e8,fn_802011e8,translated,high,"work/ghidra/main-gb/export/802011e8_FUN_802011e8.c; four-slot BD_ADDR lookup, returns the slot id or 0xFFFF",src/runtime/bt.rs
+runtime::bt,80201284,fn_80201284,translated,medium,"work/ghidra/main-gb/export/80201284_FUN_80201284.c; stores a u16 at slot+6 for the slot owning a handle",src/runtime/bt.rs
+runtime::bt,80201514,fn_80201514,translated,medium,"work/ghidra/main-gb/export/80201514_FUN_80201514.c; fires G_ROLE_CALLBACK with a ten-byte event block",src/runtime/bt.rs
+runtime::bt,80201570,fn_80201570,translated,medium,"work/ghidra/main-gb/export/80201570_FUN_80201570.c; packet-type mask to ACL payload size, clamped to G_HCI_BUFFER_SIZE",src/runtime/bt.rs
+runtime::bt,80201aa4,fn_80201aa4,translated,high,"work/ghidra/main-gb/export/80201aa4_FUN_80201aa4.c; read-RSSI completion: timer cancel, nine-byte event block, callback",src/runtime/bt.rs
+runtime::bt,80201bc0,fn_80201bc0,translated,high,"work/ghidra/main-gb/export/80201bc0_FUN_80201bc0.c; link-quality completion, twin of fn_80201aa4",src/runtime/bt.rs
+runtime::bt,80201cd8,fn_80201cd8,translated,medium,"work/ghidra/main-gb/export/80201cd8_FUN_80201cd8.c; HCI 0x0406 disconnect for the handle bound to a BD_ADDR",src/runtime/bt.rs
+runtime::bt,802024e8,fn_802024e8,translated,medium,"work/ghidra/main-gb/export/802024e8_FUN_802024e8.c; two-pass minimum-load scan over the sixteen BTM device records",src/runtime/bt.rs
+runtime::bt,802057e8,fn_802057e8,translated,medium,"work/ghidra/main-gb/export/802057e8_FUN_802057e8.c; inquiry-complete teardown and callback",src/runtime/bt.rs
+runtime::bt,80205fec,fn_80205fec,translated,high,"work/ghidra/main-gb/export/80205fec_FUN_80205fec.c; clears one 0x22-byte SCO pool record",src/runtime/bt.rs
+runtime::bt,802068c4,fn_802068c4,translated,medium,"work/ghidra/main-gb/export/802068c4_FUN_802068c4.c; copies four ROM link-parameter words into the BTM block",src/runtime/bt.rs
+runtime::bt,80208988,fn_80208988,translated,high,"work/ghidra/main-gb/export/80208988_FUN_80208988.c; security mode store plus six-byte 0xFF key scratch",src/runtime/bt.rs
+runtime::bt,802089a4,fn_802089a4,translated,high,"work/ghidra/main-gb/export/802089a4_FUN_802089a4.c; re-sends the two HCI builders when the security mode is 3",src/runtime/bt.rs
+runtime::bt,8020ae04,fn_8020ae04,translated,medium,"work/ghidra/main-gb/export/8020ae04_FUN_8020ae04.c; connect request: handle, 12-bit length, reversed address, two call paths",src/runtime/bt.rs
+runtime::bt,8020aee0,fn_8020aee0,translated,medium,"work/ghidra/main-gb/export/8020aee0_FUN_8020aee0.c; splits a three-byte tag and reversed address, forwards to one of two handlers",src/runtime/bt.rs
+runtime::bt,8020af6c,fn_8020af6c,translated,medium,"work/ghidra/main-gb/export/8020af6c_FUN_8020af6c.c; repacks four little-endian words into the QoS completion block",src/runtime/bt.rs
+runtime::bt,8020b06c,fn_8020b06c,translated,medium,"work/ghidra/main-gb/export/8020b06c_FUN_8020b06c.c; builds the 0x0E-byte config block and calls the connection dispatcher",src/runtime/bt.rs
+runtime::bt,8020b14c,fn_8020b14c,translated,high,"work/ghidra/main-gb/export/8020b14c_FUN_8020b14c.c; opcode dispatch tree over the command-complete handlers plus the 0xFC00 vendor range",src/runtime/bt.rs
+runtime::bt,8020b2a4,fn_8020b2a4,translated,medium,"work/ghidra/main-gb/export/8020b2a4_FUN_8020b2a4.c; command-complete queue match, retry timer and dispatch",src/runtime/bt.rs
+runtime::bt,8020b3bc,fn_8020b3bc,translated,medium,"work/ghidra/main-gb/export/8020b3bc_FUN_8020b3bc.c; status-aware per-opcode dispatch including 0x0405 and 0x0428",src/runtime/bt.rs
+runtime::bt,8020b5bc,fn_8020b5bc,translated,medium,"work/ghidra/main-gb/export/8020b5bc_FUN_8020b5bc.c; command-status handler, r3 recovered from the register-save prologue",src/runtime/bt.rs
+runtime::bt,8020b6e4,fn_8020b6e4,translated,medium,"work/ghidra/main-gb/export/8020b6e4_FUN_8020b6e4.c; command timeout redispatch, 0x1F status",src/runtime/bt.rs
+runtime::bt,8020b83c,fn_8020b83c,translated,medium,"work/ghidra/main-gb/export/8020b83c_FUN_8020b83c.c; link-key notification: address, sixteen key bytes, key type",src/runtime/bt.rs
+runtime::bt,8020d244,fn_8020d244,translated,high,"work/ghidra/main-gb/export/8020d244_FUN_8020d244.c; builds and queues HCI 0x040C with a reversed six-byte address",src/runtime/bt.rs
+runtime::bt,8020fe8c,fn_8020fe8c,translated,high,"work/ghidra/main-gb/export/8020fe8c_FUN_8020fe8c.c; HID device-pool teardown over sixteen 0x34-byte records",src/runtime/bt.rs

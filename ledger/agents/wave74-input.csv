@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+runtime::input,801f1620,fn_801f1620,translated,high,"work/ghidra/main-gb/export/801f1620_FUN_801f1620.c; trace + byte 0x803A312D != 0 -> 8",src/runtime/input.rs
+runtime::input,801f1680,fn_801f1680,translated,high,"work/ghidra/main-gb/export/801f1680_FUN_801f1680.c; 10 + 6 records of 0x60, guard byte +0x59 > 1, key at +0x40 -> 0x80201CD8; returns 3",src/runtime/input.rs
+runtime::input,801f1f20,fn_801f1f20,translated,high,"work/ghidra/main-gb/export/801f1f20_FUN_801f1f20.c; trace + byte 0x803A3130 = 5",src/runtime/input.rs
+runtime::input,801f2cc0,fn_801f2cc0,translated,high,"work/ghidra/main-gb/export/801f2cc0_FUN_801f2cc0.c; trace + byte 0x803A3131 = 3",src/runtime/input.rs
+runtime::input,801f2d10,fn_801f2d10,translated,medium,"work/ghidra/main-gb/export/801f2d10_FUN_801f2d10.c; shutdown state 1/3 machine; mask AND of r13-0x4B4C and two queries",src/runtime/input.rs
+runtime::input,801f32b0,fn_801f32b0,translated,high,"work/ghidra/main-gb/export/801f32b0_FUN_801f32b0.c; lock, 0x803A3814/0x803A3818 = two words, unlock",src/runtime/input.rs
+runtime::input,801f35c0,fn_801f35c0,translated,medium,"work/ghidra/main-gb/export/801f35c0_FUN_801f35c0.c; 9-byte record (count twice, 1, 0, flag 2/0) -> 0x80205CEC",src/runtime/input.rs
+runtime::input,801f3630,fn_801f3630,translated,high,"work/ghidra/main-gb/export/801f3630_FUN_801f3630.c; swap callback 0x803A3124 under the OS lock; returns old",src/runtime/input.rs
+runtime::input,801f3690,fn_801f3690,translated,high,"work/ghidra/main-gb/export/801f3690_FUN_801f3690.c; swap callback 0x803A3128 under the OS lock; returns old",src/runtime/input.rs
+runtime::input,801f3840,fn_801f3840,translated,high,"work/ghidra/main-gb/export/801f3840_FUN_801f3840.c; 0x801F36F0(1, 0xFFFFFFFF, 0, 1)",src/runtime/input.rs
+runtime::input,801f3860,fn_801f3860,translated,high,"work/ghidra/main-gb/export/801f3860_FUN_801f3860.c; r13-0x4B48 = 1; link state 3 -> clear 0x803A3808, maybe 0x801FD0A8; returns 1",src/runtime/input.rs
+runtime::input,801f38f0,fn_801f38f0,translated,high,"work/ghidra/main-gb/export/801f38f0_FUN_801f38f0.c; same poll as 801F3860 without the r13-0x4B48 store",src/runtime/input.rs
+runtime::input,801f3aa0,fn_801f3aa0,translated,medium,"work/ghidra/main-gb/export/801f3aa0_FUN_801f3aa0.c; AFH window (channel+1)*5 +/-14 clamped 0..0x4E -> 0x80202930; returns 1 on success",src/runtime/input.rs
+runtime::input,801f3b90,fn_801f3b90,translated,high,"work/ghidra/main-gb/export/801f3b90_FUN_801f3b90.c; swap callback 0x803A380C under the OS lock; returns old",src/runtime/input.rs
+runtime::input,801f3bf0,fn_801f3bf0,translated,high,"work/ghidra/main-gb/export/801f3bf0_FUN_801f3bf0.c; swap callback 0x803A3810 under the OS lock; returns old",src/runtime/input.rs
+runtime::input,801f3c50,fn_801f3c50,translated,high,"work/ghidra/main-gb/export/801f3c50_FUN_801f3c50.c; lock, byte 0x803A380B and 0x803A380A, then 0x801FCFCC with both",src/runtime/input.rs
+runtime::input,801f3cb0,fn_801f3cb0,translated,high,"work/ghidra/main-gb/export/801f3cb0_FUN_801f3cb0.c; firmware banner trace + 0x801F4350",src/runtime/input.rs
+runtime::input,801f5c80,fn_801f5c80,translated,high,"work/ghidra/main-gb/export/801f5c80_FUN_801f5c80.c; trace; status 2 -> USB fatal warning via 0x8015F730",src/runtime/input.rs
+runtime::input,801f7f60,fn_801f7f60,translated,high,"work/ghidra/main-gb/export/801f7f60_FUN_801f7f60.c; 42 zero word stores 0x803CDB00..0x803CDBA4",src/runtime/input.rs
+runtime::input,801f92c0,fn_801f92c0,translated,medium,"work/ghidra/main-gb/export/801f92c0_FUN_801f92c0.c; free, count 0x803CDE28, pop 0x803CDE1C, 9-arg 0x801EFE60 opcode 0x20",src/runtime/input.rs
+runtime::input,801f93b0,fn_801f93b0,translated,medium,"work/ghidra/main-gb/export/801f93b0_FUN_801f93b0.c; free, count 0x803CDE18, pop 0x803CDE0C, 6-arg 0x801EF810",src/runtime/input.rs
+runtime::input,801fab34,fn_801fab34,translated,medium,"work/ghidra/main-gb/export/801fab34_FUN_801fab34.c; BTM bring-up: two memsets, class memcpy, 0x803D1864 = config+8, 13 registrations",src/runtime/input.rs
+runtime::input,801fadb8,fn_801fadb8,translated,medium,"work/ghidra/main-gb/export/801fadb8_FUN_801fadb8.c; relays event +8 and +9 through 0x8020413C / 0x802045B8",src/runtime/input.rs
+runtime::input,801fae00,fn_801fae00,translated,medium,"work/ghidra/main-gb/export/801fae00_FUN_801fae00.c; 8-byte peer key (0x8020A68C) then 0x80207D90(+8, +0xE, +0xF, key)",src/runtime/input.rs
+runtime::input,801fae70,fn_801fae70,translated,medium,"work/ghidra/main-gb/export/801fae70_FUN_801fae70.c; 8-byte peer key then 0x80207AF0 opcode 0x0B or (0, +0xF, +0x10)",src/runtime/input.rs
+runtime::input,801faf0c,fn_801faf0c,translated,medium,"work/ghidra/main-gb/export/801faf0c_FUN_801faf0c.c; 8-byte peer key, feature bit from 0x802F6E18, 0x80207BB4 opcode 0x0B/0",src/runtime/input.rs
+runtime::input,801fafe0,fn_801fafe0,translated,high,"work/ghidra/main-gb/export/801fafe0_FUN_801fafe0.c; 0x803D1798 = +0x18, 0x803D17A0 = +0x14, install 801FBE08/801FBE98",src/runtime/input.rs
+runtime::input,801fb040,fn_801fb040,translated,medium,"work/ghidra/main-gb/export/801fb040_FUN_801fb040.c; discovery active? stop + app cb(4,0) + post 0x207, else deferred start",src/runtime/input.rs

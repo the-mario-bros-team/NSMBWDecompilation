@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806fa310,fn_806fa310,translated,medium,"work/ghidra/rel-d_basesNP/export/806fa310_FUN_806fa310.c; mode-1 gate then three animation steps on +0x60C/+0x550/+0x590",src/game/bases.rs
+game::bases,806fa3d0,fn_806fa3d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806fa3d0_FUN_806fa3d0.c; layout index from 0x8042A220 and character ids 4..6; 0x800B4D70(uVar3)",src/game/bases.rs
+game::bases,806fa500,fn_806fa500,translated,medium,"work/ghidra/rel-d_basesNP/export/806fa500_FUN_806fa500.c; +0x348 variant; 0x8042C1A4 limit table; +0x638 timer and 0x80166F30 reload",src/game/bases.rs
+game::bases,806fa9b0,fn_806fa9b0,translated,high,"work/ghidra/rel-d_basesNP/export/806fa9b0_FUN_806fa9b0.c; null guard; 0x8015F800 + conditional 0x802B9280",src/game/bases.rs
+game::bases,806fab30,fn_806fab30,translated,medium,"work/ghidra/rel-d_basesNP/export/806fab30_FUN_806fab30.c; 0x908-byte constructor; vtable 0x80802E78; rings 8x0xC at +0x5F8 and 6x0xC at +0x658",src/game/bases.rs
+game::bases,806fad30,fn_806fad30,translated,high,"work/ghidra/rel-d_basesNP/export/806fad30_FUN_806fad30.c; 0x80095240 gate; +0x8FF copied to +0x8FE then cleared",src/game/bases.rs
+game::bases,806fae40,fn_806fae40,translated,high,"work/ghidra/rel-d_basesNP/export/806fae40_FUN_806fae40.c; +0x7C matrix from +0x100..+0x104 angles; layout +0x544 flush; returns 1",src/game/bases.rs
+game::bases,806fb130,fn_806fb130,translated,medium,"work/ghidra/rel-d_basesNP/export/806fb130_FUN_806fb130.c; 0x8005F900/0x801336E0 probe; +0x744/+0x754/+0x764 offsets; +0x8C0/+0x8C4 flags",src/game/bases.rs
+game::bases,806fb880,fn_806fb880,translated,medium,"work/ghidra/rel-d_basesNP/export/806fb880_FUN_806fb880.c; four-slot loop; 0x806FB540 angle helper and 0x80133860",src/game/bases.rs
+game::bases,806fb910,fn_806fb910,translated,high,"work/ghidra/rel-d_basesNP/export/806fb910_FUN_806fb910.c; four-slot loop; 0x801339E0(player, +0x8B4)",src/game/bases.rs
+game::bases,806fb9d0,fn_806fb9d0,translated,high,"work/ghidra/rel-d_basesNP/export/806fb9d0_FUN_806fb9d0.c; cue 0x5EA; clears +0x8B0/+0x8B4 and four flags; manager slot +0x7D",src/game/bases.rs
+game::bases,806fba90,fn_806fba90,translated,medium,"work/ghidra/rel-d_basesNP/export/806fba90_FUN_806fba90.c; step table 0x807CC3F4; miss stages 0x71B/0x1FFF; Wm_mg_panelopen at 0x80802D20",src/game/bases.rs
+game::bases,806fbcc0,fn_806fbcc0,translated,high,"work/ghidra/rel-d_basesNP/export/806fbcc0_FUN_806fbcc0.c; variant 0..8 maps to frames 1..9; 0x80166EF0 + 0x80166F10 on +0x8D0",src/game/bases.rs
+game::bases,806fbda0,fn_806fbda0,translated,high,"work/ghidra/rel-d_basesNP/export/806fbda0_FUN_806fbda0.c; single vtable slot +0xD4 dispatch with 0x8082EEC8",src/game/bases.rs
+game::bases,806fbdc0,fn_806fbdc0,translated,high,"work/ghidra/rel-d_basesNP/export/806fbdc0_FUN_806fbdc0.c; frames 10..18; tail call to 0x806FBEB0",src/game/bases.rs
+game::bases,806fbeb0,fn_806fbeb0,translated,high,"work/ghidra/rel-d_basesNP/export/806fbeb0_FUN_806fbeb0.c; nine Wm_mg_itemget/panelmiss names 0x80802D78..0x80802E18; 0x8016C890 spawn",src/game/bases.rs
+game::bases,806fbf90,fn_806fbf90,translated,high,"work/ghidra/rel-d_basesNP/export/806fbf90_FUN_806fbf90.c; stage 7 selects 0x80802E50 else 0x80802E64; 0x8016C890 spawn",src/game/bases.rs
+game::bases,806fc020,fn_806fc020,translated,medium,"work/ghidra/rel-d_basesNP/export/806fc020_FUN_806fc020.c; step table 0x807CC3FC; round reset and 0x8082EF08 dispatch",src/game/bases.rs
+game::bases,806fc1a0,fn_806fc1a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806fc1a0_FUN_806fc1a0.c; +0x360 state 1 -> 2; 0x806FCF90 publish; manager +0x1D4 close gate",src/game/bases.rs
+game::bases,806fc2a0,fn_806fc2a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806fc2a0_FUN_806fc2a0.c; selector from 0x806FCF80 chooses shifts 8/0xC/0x10/0x14/0x18/0x1C of +0x04",src/game/bases.rs
+game::bases,806fc360,fn_806fc360,translated,high,"work/ghidra/rel-d_basesNP/export/806fc360_FUN_806fc360.c; ring and animation teardown; 0x80095130 base dtor; 0x80162920 when free>0",src/game/bases.rs
+game::bases,806fcf80,fn_806fcf80,translated,high,"work/ghidra/rel-d_basesNP/export/806fcf80_FUN_806fcf80.c; single load of manager+0x1D0",src/game/bases.rs
+game::bases,806fcf90,fn_806fcf90,translated,high,"work/ghidra/rel-d_basesNP/export/806fcf90_FUN_806fcf90.c; 0x10-byte slot record at +0x74; counters +0x70/+0x700; +0x704 on variant 8",src/game/bases.rs
+game::bases,806fcff0,fn_806fcff0,translated,medium,"work/ghidra/rel-d_basesNP/export/806fcff0_FUN_806fcff0.c; 19-slot scan; cues 0x5EB..0x5EF; returns 1 on match; args inferred from 0x806FBA90 call site",src/game/bases.rs
+game::bases,806fd310,fn_806fd310,translated,high,"work/ghidra/rel-d_basesNP/export/806fd310_FUN_806fd310.c; +0x1E8 total plus one of six variant counters",src/game/bases.rs
+game::bases,806fd3d0,fn_806fd3d0,translated,high,"work/ghidra/rel-d_basesNP/export/806fd3d0_FUN_806fd3d0.c; 0x8005F900(+0x208) then vtable +0x434 with 0x45 and 0x46",src/game/bases.rs
+game::bases,806fd440,fn_806fd440,translated,medium,"work/ghidra/rel-d_basesNP/export/806fd440_FUN_806fd440.c; +0x210>1 gate; mode 0 arms +0x6A1; else alpha 0xFF at +0x6A2; layout +0x224 slot +0x58",src/game/bases.rs
+game::bases,806fd510,fn_806fd510,translated,medium,"work/ghidra/rel-d_basesNP/export/806fd510_FUN_806fd510.c; four character colour pairs from +0x14D4; uWm_mg_cursor_2d at 0x808032E8",src/game/bases.rs
+game::bases,806fd6e0,fn_806fd6e0,translated,high,"work/ghidra/rel-d_basesNP/export/806fd6e0_FUN_806fd6e0.c; +0x6A2 -= 0x19; below 6 clears +0x6A1/+0x220/+0x460; layout +0x224 slot +0x58",src/game/bases.rs

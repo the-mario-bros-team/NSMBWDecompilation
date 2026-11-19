@@ -1,0 +1,26 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,802b1d60,fn_802b1d60,translated,medium,"work/ghidra/main-gb/export/802b1d60_FUN_802b1d60.c; 12-float billboard; wrap arithmetic and both trig calls are literal",src/resource/archive.rs
+resource::archive,802b4b50,fn_802b4b50,translated,medium,"work/ghidra/main-gb/export/802b4b50_FUN_802b4b50.c; three GX attribute calls selected by the +0x18 kind nibble",src/resource/archive.rs
+resource::archive,802b4ee0,fn_802b4ee0,translated,medium,"work/ghidra/main-gb/export/802b4ee0_FUN_802b4ee0.c; cubic spline binary search plus both clamps",src/resource/archive.rs
+resource::archive,802bac30,fn_802bac30,translated,medium,"work/ghidra/main-gb/export/802bac30_FUN_802bac30.c; two virtual calls on the manager chain",src/resource/archive.rs
+resource::archive,802baf70,fn_802baf70,translated,medium,"work/ghidra/main-gb/export/802baf70_FUN_802baf70.c; tick delta and bus-clock division",src/resource/archive.rs
+resource::archive,802bb580,fn_802bb580,translated,medium,"work/ghidra/main-gb/export/802bb580_FUN_802bb580.c; vtable + five cleared fields + singleton publish",src/resource/archive.rs
+resource::archive,802bb840,fn_802bb840,translated,medium,"work/ghidra/main-gb/export/802bb840_FUN_802bb840.c; frame budget and render-mode hand-off",src/resource/archive.rs
+resource::archive,802bb9a0,fn_802bb9a0,translated,medium,"work/ghidra/main-gb/export/802bb9a0_FUN_802bb9a0.c; eight-argument replay into 0x802BBA30",src/resource/archive.rs
+resource::archive,802bbe30,fn_802bbe30,translated,medium,"work/ghidra/main-gb/export/802bbe30_FUN_802bbe30.c; render-mode swap with viewport and scissor",src/resource/archive.rs
+resource::archive,802bbf40,fn_802bbf40,translated,low,"work/ghidra/main-gb/export/802bbf40_FUN_802bbf40.c; mode-selected divisor and one f64 callback",src/resource/archive.rs
+resource::archive,802bbfa0,fn_802bbfa0,translated,high,"work/ghidra/main-gb/export/802bbfa0_FUN_802bbfa0.c; two literal calls in order",src/resource/archive.rs
+resource::archive,802bc9c0,fn_802bc9c0,translated,medium,"work/ghidra/main-gb/export/802bc9c0_FUN_802bc9c0.c; guard at +0xB48 then 0x802BDDF0",src/resource/archive.rs
+resource::archive,802bd970,fn_802bd970,translated,low,"work/ghidra/main-gb/export/802bd970_FUN_802bd970.c; per-channel mirror refresh through two lock slots",src/resource/archive.rs
+resource::archive,802bde60,fn_802bde60,translated,medium,"work/ghidra/main-gb/export/802bde60_FUN_802bde60.c; list split by the 0x802BDC10 threshold",src/resource/archive.rs
+resource::archive,802be470,fn_802be470,translated,medium,"work/ghidra/main-gb/export/802be470_FUN_802be470.c; square-root wrapper with f32 narrowing",src/resource/archive.rs
+resource::archive,802be4a0,fn_802be4a0,translated,medium,"work/ghidra/main-gb/export/802be4a0_FUN_802be4a0.c; cosine wrapper with f32 narrowing",src/resource/archive.rs
+resource::archive,802be4d0,fn_802be4d0,translated,medium,"work/ghidra/main-gb/export/802be4d0_FUN_802be4d0.c; sine wrapper with f32 narrowing",src/resource/archive.rs
+resource::archive,802be500,fn_802be500,translated,medium,"work/ghidra/main-gb/export/802be500_FUN_802be500.c; tangent wrapper with f32 narrowing",src/resource/archive.rs
+resource::archive,802bf080,fn_802bf080,translated,medium,"work/ghidra/main-gb/export/802bf080_FUN_802bf080.c; three basis rows added to a position triple",src/resource/archive.rs
+resource::archive,802bf540,fn_802bf540,translated,low,"work/ghidra/main-gb/export/802bf540_FUN_802bf540.c; quad placement from the render-mode size",src/resource/archive.rs
+resource::archive,802bf650,fn_802bf650,translated,medium,"work/ghidra/main-gb/export/802bf650_FUN_802bf650.c; six-coordinate blit submit",src/resource/archive.rs
+resource::archive,802bf930,fn_802bf930,translated,medium,"work/ghidra/main-gb/export/802bf930_FUN_802bf930.c; vtable + five defaults + two derived sizes",src/resource/archive.rs
+resource::archive,802bfda0,fn_802bfda0,translated,medium,"work/ghidra/main-gb/export/802bfda0_FUN_802bfda0.c; angle plus three derived trig components",src/resource/archive.rs
+resource::archive,802bfe90,fn_802bfe90,translated,medium,"work/ghidra/main-gb/export/802bfe90_FUN_802bfe90.c; sprite quad draw",src/resource/archive.rs
+resource::archive,802bff70,fn_802bff70,translated,medium,"work/ghidra/main-gb/export/802bff70_FUN_802bff70.c; four signed-word conversions and one flush",src/resource/archive.rs

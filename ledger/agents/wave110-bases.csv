@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80710120,fn_80710120,translated,high,"work/ghidra/rel-d_basesNP/export/80710120_FUN_80710120.c; range callback: 0xD4 state query switches to 0x8082F7C8, event 0x51 switches to 0x8082F808",src/game/bases.rs
+game::bases,807101f0,fn_807101f0,translated,high,"work/ghidra/rel-d_basesNP/export/807101f0_FUN_807101f0.c; 0xD4-only variant of 0x80710120, no 0x51 branch",src/game/bases.rs
+game::bases,80710290,fn_80710290,translated,medium,"work/ghidra/rel-d_basesNP/export/80710290_FUN_80710290.c; 0xD4 transition plus kind-1 hand-off to 0x80056370 with id 5 or 6",src/game/bases.rs
+game::bases,80710520,fn_80710520,translated,high,"work/ghidra/rel-d_basesNP/export/80710520_FUN_80710520.c; binds magic_boss_kameck_block pane, starts frame 1.0, rearms +0x5B0",src/game/bases.rs
+game::bases,807105c0,fn_807105c0,translated,medium,"work/ghidra/rel-d_basesNP/export/807105c0_FUN_807105c0.c; per-frame animation plus mode-word timer reload or range release and state 0x8082F808",src/game/bases.rs
+game::bases,80710690,fn_80710690,translated,high,"work/ghidra/rel-d_basesNP/export/80710690_FUN_80710690.c; spawns Wm_ka_change_s/m/l through +0x7C0 slot +0xA0 and plays sound 0x590",src/game/bases.rs
+game::bases,80711270,fn_80711270,translated,medium,"work/ghidra/rel-d_basesNP/export/80711270_FUN_80711270.c; boss_kameck_block_S/M/L model switch, Wm_ka_block_s/m/l spawn, sound 0x592",src/game/bases.rs
+game::bases,80711550,fn_80711550,translated,high,"work/ghidra/rel-d_basesNP/export/80711550_FUN_80711550.c; releases the +0x5B0 range and zeroes the +0x1610 timer",src/game/bases.rs
+game::bases,807116c0,fn_807116c0,translated,high,"work/ghidra/rel-d_basesNP/export/807116c0_FUN_807116c0.c; counts +0x1610 down by 1/90 per frame and switches to 0x8082F788 at zero",src/game/bases.rs
+game::bases,80711d10,fn_80711d10,translated,high,"work/ghidra/rel-d_basesNP/export/80711d10_FUN_80711d10.c; generic state release with optional free, returns the object",src/game/bases.rs
+game::bases,80712030,fn_80712030,translated,high,"work/ghidra/rel-d_basesNP/export/80712030_FUN_80712030.c; calls 0x800DAE80 on the four 0x60-byte slots at +0x504",src/game/bases.rs
+game::bases,80712080,fn_80712080,translated,high,"work/ghidra/rel-d_basesNP/export/80712080_FUN_80712080.c; virtual +0x0C release on the four 0x60-byte slots at +0x504",src/game/bases.rs
+game::bases,807120e0,fn_807120e0,translated,high,"work/ghidra/rel-d_basesNP/export/807120e0_FUN_807120e0.c; calls 0x800DAED0 on the four 0x60-byte slots at +0x504",src/game/bases.rs
+game::bases,80712130,fn_80712130,translated,medium,"work/ghidra/rel-d_basesNP/export/80712130_FUN_80712130.c; collects the player mask of the four attached lists and forwards it to 0x802DCDB8",src/game/bases.rs
+game::bases,80712610,fn_80712610,translated,high,"work/ghidra/rel-d_basesNP/export/80712610_FUN_80712610.c; builds the +0x7C matrix from position and the two angles, returns 1",src/game/bases.rs
+game::bases,80712870,fn_80712870,translated,high,"work/ghidra/rel-d_basesNP/export/80712870_FUN_80712870.c; returns the main.dol pointer 0x80377A04",src/game/bases.rs
+game::bases,80712880,fn_80712880,translated,high,"work/ghidra/rel-d_basesNP/export/80712880_FUN_80712880.c; returns the main.dol pointer 0x80377A04",src/game/bases.rs
+game::bases,80712890,fn_80712890,translated,high,"work/ghidra/rel-d_basesNP/export/80712890_FUN_80712890.c; returns the main.dol pointer 0x80377A04",src/game/bases.rs
+game::bases,807128a0,fn_807128a0,translated,high,"work/ghidra/rel-d_basesNP/export/807128a0_FUN_807128a0.c; returns the main.dol pointer 0x80377A04",src/game/bases.rs
+game::bases,80712ff0,fn_80712ff0,translated,medium,"work/ghidra/rel-d_basesNP/export/80712ff0_FUN_80712ff0.c; uniform scale, angle rotation, model re-attach and the 128-scaled animation byte",src/game/bases.rs
+game::bases,80713690,fn_80713690,translated,high,"work/ghidra/rel-d_basesNP/export/80713690_FUN_80713690.c; normalised position of an unsigned halfword in an interval, 0.0/1.0/ratio",src/game/bases.rs
+game::bases,807137a0,fn_807137a0,translated,high,"work/ghidra/rel-d_basesNP/export/807137a0_FUN_807137a0.c; signed-halfword twin of 0x80713690",src/game/bases.rs
+game::bases,80715e20,fn_80715e20,translated,high,"work/ghidra/rel-d_basesNP/export/80715e20_FUN_80715e20.c; writes the +0x664 byte into the model record and advances it, returns 1",src/game/bases.rs
+game::bases,80716240,fn_80716240,translated,high,"work/ghidra/rel-d_basesNP/export/80716240_FUN_80716240.c; height +0x670 + 16.0, binds the +0x634 handle and starts frame 1.0",src/game/bases.rs
+game::bases,807162e0,fn_807162e0,translated,high,"work/ghidra/rel-d_basesNP/export/807162e0_FUN_807162e0.c; virtual +0x1C on the model and +0x14 on the binding",src/game/bases.rs
+game::bases,807164b0,fn_807164b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807164b0_FUN_807164b0.c; (600-h)^2*300/600^2 clamped at 15.9 into +0xEC, then the 160.0 floor and state 0x8082FC60",src/game/bases.rs
+game::bases,807166b0,fn_807166b0,translated,medium,"work/ghidra/rel-d_basesNP/export/807166b0_FUN_807166b0.c; clamps +0xB0 up to +0x670 and arms state 0x8082FAE0",src/game/bases.rs
+game::bases,80716750,fn_80716750,translated,medium,"work/ghidra/rel-d_basesNP/export/80716750_FUN_80716750.c; clamps +0xB0 at +0x670 - 22.0 and arms state 0x8082FD20",src/game/bases.rs
+game::bases,80716860,fn_80716860,translated,medium,"work/ghidra/rel-d_basesNP/export/80716860_FUN_80716860.c; clamps +0xB0 down to +0x670 and arms state 0x8082FAE0",src/game/bases.rs
+game::bases,807168f0,fn_807168f0,translated,medium,"work/ghidra/rel-d_basesNP/export/807168f0_FUN_807168f0.c; clamps +0xB0 at +0x680 and arms state 0x8082FDE0",src/game/bases.rs

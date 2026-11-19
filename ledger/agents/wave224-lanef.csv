@@ -1,0 +1,11 @@
+module,address,name,status,confidence,evidence,rust_file
+game::stage,800a78d0,fn_800a78d0,translated,high,work/ghidra/main-gb/export/800a78d0_FUN_800a78d0.c; 196 bytes no prologue li r0 8 at 0x800A78D0 to bclr at 0x800A7990; 8x4 unrolled scan of the +0x00 values against the +0x80 keys with the index+1 compare,src/game/stage.rs
+game::stage,800a7c00,fn_800a7c00,translated,high,work/ghidra/main-gb/export/800a7c00_FUN_800a7c00.c; 88 bytes prologue 0x800A7C00 to bclr 0x800A7C54; pre-increments +0x154 and fires 0x800CE8C0 on the eighth slot then clamps at 8,src/game/stage.rs
+game::stage,800a7c60,fn_800a7c60,translated,high,work/ghidra/main-gb/export/800a7c60_FUN_800a7c60.c; 196 bytes prologue 0x800A7C60 to bclr 0x800A7D20; one-time seed of the nine 0x19D..0x1A3 ids at 0x80357FD0 then 0x8006A4B0 plus 0x80197F00 for slot<7,src/game/stage.rs
+game::stage,800a7db0,fn_800a7db0,translated,high,work/ghidra/main-gb/export/800a7db0_FUN_800a7db0.c; 12 bytes no prologue; raw words 3C608037 38637A04 4E800020 return 0x80377A04,src/game/stage.rs
+game::stage,800a7dc0,fn_800a7dc0,translated,high,work/ghidra/main-gb/export/800a7dc0_FUN_800a7dc0.c; 12 bytes no prologue; raw words 3C608037 38637A04 4E800020 return 0x80377A04,src/game/stage.rs
+game::stage,800a8790,fn_800a8790,translated,high,work/ghidra/main-gb/export/800a8790_FUN_800a8790.c; 12 bytes no prologue; raw words 3C608037 38637A04 4E800020 return 0x80377A04,src/game/stage.rs
+game::stage,800a87a0,fn_800a87a0,translated,high,work/ghidra/main-gb/export/800a87a0_FUN_800a87a0.c; 12 bytes no prologue; raw words 3C608037 38637A04 4E800020 return 0x80377A04,src/game/stage.rs
+game::stage,800a8850,fn_800a8850,translated,high,work/ghidra/main-gb/export/800a8850_FUN_800a8850.c; 12 bytes no prologue; raw words 3C608037 38637A04 4E800020 return 0x80377A04,src/game/stage.rs
+game::stage,800a8860,fn_800a8860,translated,high,work/ghidra/main-gb/export/800a8860_FUN_800a8860.c; 12 bytes no prologue; raw words 3C608037 38637A04 4E800020 return 0x80377A04,src/game/stage.rs
+game::stage,800a8ab0,fn_800a8ab0,translated,high,work/ghidra/main-gb/export/800a8ab0_FUN_800a8ab0.c; 88 bytes prologue 0x800A8AB0 to bclr 0x800A8B04; 0x802D7AA0 base ctor then vtable 0x80329958 at +0 and six clears at +0x114..+0x124,src/game/stage.rs

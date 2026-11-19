@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,806629f0,fn_806629f0,translated,high,"work/ghidra/rel-d_basesNP/export/806629f0_FUN_806629f0.c; allocates 0x490; vtable 0x807E79A4 at +0x60; embedded ctor at +0x43C",src/game/bases.rs
+game::bases,80662d30,fn_80662d30,translated,medium,"work/ghidra/rel-d_basesNP/export/80662d30_FUN_80662d30.c; gathers four players at +0x408 and bubble-sorts by x at +0xAC",src/game/bases.rs
+game::bases,80663000,fn_80663000,translated,high,"work/ghidra/rel-d_basesNP/export/80663000_FUN_80663000.c; abs(+0x3EC - chosen+0xAC) below threshold 0x807C8BC4",src/game/bases.rs
+game::bases,80663180,fn_80663180,translated,high,"work/ghidra/rel-d_basesNP/export/80663180_FUN_80663180.c; bit slot of global mask 0x80429CA8",src/game/bases.rs
+game::bases,80663210,fn_80663210,translated,medium,"work/ghidra/rel-d_basesNP/export/80663210_FUN_80663210.c; character gate 0x800FBFB0/0x800FAE40 plus 0x80429F80 bit 0x10",src/game/bases.rs
+game::bases,80663290,fn_80663290,translated,medium,"work/ghidra/rel-d_basesNP/export/80663290_FUN_80663290.c; countLeadingZeros idiom returns 0x8042A180 only when 0x80315B98 is zero",src/game/bases.rs
+game::bases,806632d0,fn_806632d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806632d0_FUN_806632d0.c; 0x8005C930 on 0x80429C94; sets +0x15C of 0x80429F10",src/game/bases.rs
+game::bases,80664050,fn_80664050,translated,medium,"work/ghidra/rel-d_basesNP/export/80664050_FUN_80664050.c; 0x8001D090; clears +0x15C of 0x80429F10",src/game/bases.rs
+game::bases,80664580,fn_80664580,translated,medium,"work/ghidra/rel-d_basesNP/export/80664580_FUN_80664580.c; start-up: three globals, 0x800E3910, fn_80662d30, state +0x360 = 1",src/game/bases.rs
+game::bases,80665440,fn_80665440,translated,high,"work/ghidra/rel-d_basesNP/export/80665440_FUN_80665440.c; allocates 0x530; vtable 0x807E7DA8; four embedded ctors; zeros +0x518..+0x528",src/game/bases.rs
+game::bases,80665750,fn_80665750,translated,medium,"work/ghidra/rel-d_basesNP/export/80665750_FUN_80665750.c; transform writer: 0x8016A150, 0x8006CED0, 0x80064AF0, 0x801C0BD0 and three angle setters",src/game/bases.rs
+game::bases,80666a60,fn_80666a60,translated,high,"work/ghidra/rel-d_basesNP/export/80666a60_FUN_80666a60.c; allocates 0x528; vtable 0x807E8108; ctors at +0x3D0/+0x3F0/+0x430",src/game/bases.rs
+game::bases,80666d00,fn_80666d00,translated,medium,"work/ghidra/rel-d_basesNP/export/80666d00_FUN_80666d00.c; uniform scale 0x807C8C98, position offset by 0x807E80D8..E0, matrix at +0x7C",src/game/bases.rs
+game::bases,80666e40,fn_80666e40,translated,high,"work/ghidra/rel-d_basesNP/export/80666e40_FUN_80666e40.c; starts timer at +0x430 via 0x8007F950; returns 1",src/game/bases.rs
+game::bases,80667d00,fn_80667d00,translated,medium,"work/ghidra/rel-d_basesNP/export/80667d00_FUN_80667d00.c; collision probe, flag 0x8000 at +0x274, ground test via 0x80075270 returns 0/1/2",src/game/bases.rs
+game::bases,80667de0,fn_80667de0,translated,medium,"work/ghidra/rel-d_basesNP/export/80667de0_FUN_80667de0.c; point vector from +0xAC/+0xB0 and 0x807C8D1C passed to 0x800943B0",src/game/bases.rs
+game::bases,80667e20,fn_80667e20,translated,medium,"work/ghidra/rel-d_basesNP/export/80667e20_FUN_80667e20.c; actor virtual +0x98 and interface virtual +0x18 with 0x80829208",src/game/bases.rs
+game::bases,80667f60,fn_80667f60,translated,medium,"work/ghidra/rel-d_basesNP/export/80667f60_FUN_80667f60.c; frame driver: 0x8006CD90/CE70/CD40, contact gate, sound cue 0x271, 0x80162510",src/game/bases.rs
+game::bases,80668300,fn_80668300,translated,high,"work/ghidra/rel-d_basesNP/export/80668300_FUN_80668300.c; 0x8015F800 object destructor with free guard 0x802B9280",src/game/bases.rs
+game::bases,80668480,fn_80668480,translated,high,"work/ghidra/rel-d_basesNP/export/80668480_FUN_80668480.c; allocates 0x3D8; vtable 0x807E85E0 at +0x60",src/game/bases.rs
+game::bases,80668720,fn_80668720,translated,medium,"work/ghidra/rel-d_basesNP/export/80668720_FUN_80668720.c; matrix at +0x7C from position and +0x104 angle; copies to +0x40C; virtual +0x14",src/game/bases.rs
+game::bases,806687a0,fn_806687a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806687a0_FUN_806687a0.c; variant from +0x04 bits 8..10 indexes 0x807C8D40/44/48; fn_80668670; 0x80062600 over 6 x 0xE4",src/game/bases.rs
+game::bases,80668840,fn_80668840,translated,high,"work/ghidra/rel-d_basesNP/export/80668840_FUN_80668840.c; 0x802DCA98 over six 0xE4 objects at +0x418; three releases; optional free",src/game/bases.rs
+game::bases,80669230,fn_80669230,translated,medium,"work/ghidra/rel-d_basesNP/export/80669230_FUN_80669230.c; slot byte +0x766, player fetch 0x8005F900 and mask 0x80429CA8",src/game/bases.rs
+game::bases,806692b0,fn_806692b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806692b0_FUN_806692b0.c; interface virtuals +0x28/+0x14; x-span test with 0x807C8E10/E14/E18",src/game/bases.rs
+game::bases,806693d0,fn_806693d0,translated,high,"work/ghidra/rel-d_basesNP/export/806693d0_FUN_806693d0.c; writes slot byte +0x766 only when it is 0xFF",src/game/bases.rs
+game::bases,806693f0,fn_806693f0,translated,high,"work/ghidra/rel-d_basesNP/export/806693f0_FUN_806693f0.c; initialises two 0x60-byte elements at +0x69C via 0x800DAE80 and sets +0x764",src/game/bases.rs
+game::bases,80669460,fn_80669460,translated,medium,"work/ghidra/rel-d_basesNP/export/80669460_FUN_80669460.c; dispatches element virtual +0x0C over +0x69C..+0x75C when +0x764 is set",src/game/bases.rs
+game::bases,806694c0,fn_806694c0,translated,high,"work/ghidra/rel-d_basesNP/export/806694c0_FUN_806694c0.c; 0x800DAED0 over both elements at +0x69C and clears +0x764",src/game/bases.rs
+game::bases,80669530,fn_80669530,translated,medium,"work/ghidra/rel-d_basesNP/export/80669530_FUN_80669530.c; stores 0x807C8DC0 + variant*8 (variant = +0x04 & 0xF, clamped below 7) at +0x760",src/game/bases.rs

@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::archive,80262200,fn_80262200,translated,medium,"work/ghidra/main-gb/export/80262200_FUN_80262200.c; masked store to handle +0x96 and bit 0x800 of +0x1C",src/resource/archive.rs
+resource::archive,802624a0,fn_802624a0,translated,medium,"work/ghidra/main-gb/export/802624a0_FUN_802624a0.c; +0x10 word inside inclusive [low high] span",src/resource/archive.rs
+resource::archive,802626f0,fn_802626f0,translated,high,"work/ghidra/main-gb/export/802626f0_FUN_802626f0.c; clears +0x14 node and inserts it through fn_80265060",src/resource/archive.rs
+resource::archive,80262750,fn_80262750,translated,high,"work/ghidra/main-gb/export/80262750_FUN_80262750.c; three-mode rate conversion with wrapped unsigned arithmetic",src/resource/archive.rs
+resource::archive,802627c0,fn_802627c0,translated,medium,"work/ghidra/main-gb/export/802627c0_FUN_802627c0.c; guarded release of the +0x00 handle",src/resource/archive.rs
+resource::archive,80262fe0,fn_80262fe0,translated,high,"work/ghidra/main-gb/export/80262fe0_FUN_80262fe0.c; twelve-halfword compare with the (a-b | b-a) >> 31 tail",src/resource/archive.rs
+resource::archive,80263110,fn_80263110,translated,medium,"work/ghidra/main-gb/export/80263110_FUN_80263110.c; six-byte copy to handle +0xDC for mode 3 and bit 0x40000",src/resource/archive.rs
+resource::archive,80263810,fn_80263810,translated,high,"work/ghidra/main-gb/export/80263810_FUN_80263810.c; eight halfwords interleaved with zeros then fn_80264760",src/resource/archive.rs
+resource::archive,80264680,fn_80264680,translated,medium,"work/ghidra/main-gb/export/80264680_FUN_80264680.c; five-case +0x30/+0x32 mode ladder and +0x04 bit 0",src/resource/archive.rs
+resource::archive,80264ae0,fn_80264ae0,translated,medium,"work/ghidra/main-gb/export/80264ae0_FUN_80264ae0.c; three self-linked lists at 0x803FC91C and 0x802DC780 registration",src/resource/archive.rs
+resource::archive,80264b70,fn_80264b70,translated,high,"work/ghidra/main-gb/export/80264b70_FUN_80264b70.c; clears +0x18 +0x0C and +0x00 then conditional free",src/resource/archive.rs
+resource::archive,80264c10,fn_80264c10,translated,medium,"work/ghidra/main-gb/export/80264c10_FUN_80264c10.c; one-shot split into 0x48-byte descriptors; callee prototype mismatch noted",src/resource/archive.rs
+resource::archive,80264f90,fn_80264f90,translated,high,"work/ghidra/main-gb/export/80264f90_FUN_80264f90.c; releases the node handle destroys it and re-links +0x40",src/resource/archive.rs
+resource::archive,80265060,fn_80265060,translated,high,"work/ghidra/main-gb/export/80265060_FUN_80265060.c; double lock pair and two insert calls for node +0x40",src/resource/archive.rs
+resource::archive,802656f0,fn_802656f0,translated,medium,"work/ghidra/main-gb/export/802656f0_FUN_802656f0.c; RBKN magic and version gate then the two relative pointers",src/resource/archive.rs
+resource::archive,80265db0,fn_80265db0,translated,high,"work/ghidra/main-gb/export/80265db0_FUN_80265db0.c; 0xAC-byte block filled with the two r2 default words",src/resource/archive.rs
+resource::archive,80265e80,fn_80265e80,translated,medium,"work/ghidra/main-gb/export/80265e80_FUN_80265e80.c; vtable 0x8034E9B8 three 0x18-byte blocks and two fn_80265db0 calls",src/resource/archive.rs
+resource::archive,802667d0,fn_802667d0,translated,high,"work/ghidra/main-gb/export/802667d0_FUN_802667d0.c; +0x88 mode is 1 or 2",src/resource/archive.rs
+resource::archive,80266d80,fn_80266d80,translated,high,"work/ghidra/main-gb/export/80266d80_FUN_80266d80.c; two saturating counters at +0x70 and +0xAC",src/resource/archive.rs
+resource::archive,802676c0,fn_802676c0,translated,medium,"work/ghidra/main-gb/export/802676c0_FUN_802676c0.c; virtual +0x10 slot with the +0x0C word and the caller value",src/resource/archive.rs
+resource::archive,80268620,fn_80268620,translated,medium,"work/ghidra/main-gb/export/80268620_FUN_80268620.c; +0xB0 store block reset rate and child re-bind",src/resource/archive.rs
+resource::archive,802686a0,fn_802686a0,translated,high,"work/ghidra/main-gb/export/802686a0_FUN_802686a0.c; forces state 4 releases +0xD0 once and clears +0x35",src/resource/archive.rs
+resource::archive,80268710,fn_80268710,translated,high,"work/ghidra/main-gb/export/80268710_FUN_80268710.c; same transition gated on the +0x3A hold byte",src/resource/archive.rs
+resource::archive,80268d80,fn_80268d80,translated,medium,"work/ghidra/main-gb/export/80268d80_thunk_FUN_80229190.c; four-byte thunk with the 0x80229190 unlink body inlined",src/resource/archive.rs
+resource::archive,80269660,fn_80269660,translated,medium,"work/ghidra/main-gb/export/80269660_FUN_80269660.c; seven-field initialiser with the product of two r2 floats",src/resource/archive.rs
+resource::archive,802696b0,fn_802696b0,translated,medium,"work/ghidra/main-gb/export/802696b0_FUN_802696b0.c; same layout scaled by the caller float",src/resource/archive.rs
+resource::archive,80269e10,fn_80269e10,translated,medium,"work/ghidra/main-gb/export/80269e10_FUN_80269e10.c; min-cost node scan with 0..0x7F clamps and final threshold",src/resource/archive.rs
+resource::archive,8026a1b0,fn_8026a1b0,translated,medium,"work/ghidra/main-gb/export/8026a1b0_FUN_8026a1b0.c; drains the +0x04 list calls each +0x10 slot and closes the +0x00 handle",src/resource/archive.rs
+resource::archive,8026f630,fn_8026f630,translated,low,"work/ghidra/main-gb/export/8026f630_FUN_8026f630.c; single call to 0x8026D9B0 with this+8; other two arguments missing",src/resource/archive.rs

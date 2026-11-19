@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,80622eb0,fn_80622eb0,translated,medium,"work/ghidra/rel-d_basesNP/export/80622eb0_FUN_80622eb0.c; no-sub-object release: 802B9280 when this!=0 and free>0, returns this",src/game/bases.rs
+game::bases,80622ef0,fn_80622ef0,translated,medium,"work/ghidra/rel-d_basesNP/export/80622ef0_FUN_80622ef0.c; second copy of the no-sub-object release (802B9280 guard, returns this)",src/game/bases.rs
+game::bases,80622f30,fn_80622f30,translated,medium,"work/ghidra/rel-d_basesNP/export/80622f30_FUN_80622f30.c; destroys the member at +0x18 through 8015F9F0 then frees with 802B9280",src/game/bases.rs
+game::bases,80622f90,fn_80622f90,translated,medium,"work/ghidra/rel-d_basesNP/export/80622f90_FUN_80622f90.c; second copy of the +0x18 teardown plus 802B9280 free",src/game/bases.rs
+game::bases,80623170,fn_80623170,translated,high,"work/ghidra/rel-d_basesNP/export/80623170_FUN_80623170.c; modeSelect.arc plus modeSelect_09.brlyt; layout +0x74; handles +0x244/+0x248/+0x24C/+0x254",src/game/bases.rs
+game::bases,80623260,fn_80623260,translated,medium,"work/ghidra/rel-d_basesNP/export/80623260_FUN_80623260.c; 8006C5C0 gate, 800B3B50(-1) pad scan, 80600510 probe folded with countLeadingZeros>>5",src/game/bases.rs
+game::bases,806233a0,fn_806233a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806233a0_FUN_806233a0.c; +0x270 gate; handle+0x2C scroll minus +0x260, clamp at +0x25C, wrap to +0x258",src/game/bases.rs
+game::bases,806234d0,fn_806234d0,translated,high,"work/ghidra/rel-d_basesNP/export/806234d0_FUN_806234d0.c; layout stop 800C9500 then 800C93D0 ids 1 and 2 then 800C92F0 id 0",src/game/bases.rs
+game::bases,80623530,fn_80623530,translated,high,"work/ghidra/rel-d_basesNP/export/80623530_FUN_80623530.c; animation-end guard 800C9640 then descriptor 80825600 at slot +0x18",src/game/bases.rs
+game::bases,806235b0,fn_806235b0,translated,high,"work/ghidra/rel-d_basesNP/export/806235b0_FUN_806235b0.c; exit animation previous+5, copy +0x264 to +0x268, enter animation chosen+1",src/game/bases.rs
+game::bases,80623620,fn_80623620,translated,high,"work/ghidra/rel-d_basesNP/export/80623620_FUN_80623620.c; animation-end guard 800C9610(layout,-1) then descriptor 80825640",src/game/bases.rs
+game::bases,806236b0,fn_806236b0,translated,medium,"work/ghidra/rel-d_basesNP/export/806236b0_FUN_806236b0.c; player flags +0x1C of 80429F50[8042A464]+4 choose row; 8042A468 vtable +0x20 hit test; descriptors 80825680/80825600; sound 0x78",src/game/bases.rs
+game::bases,806237e0,fn_806237e0,translated,high,"work/ghidra/rel-d_basesNP/export/806237e0_FUN_806237e0.c; animation-end guard then descriptor 808256C0",src/game/bases.rs
+game::bases,80623860,fn_80623860,translated,medium,"work/ghidra/rel-d_basesNP/export/80623860_FUN_80623860.c; animation-end guard then clears +0x26D, sets +0x26F and dispatches 80825580",src/game/bases.rs
+game::bases,80625560,fn_80625560,translated,medium,"work/ghidra/rel-d_basesNP/export/80625560_FUN_80625560.c; no-sub-object release: 802B9280 when this!=0 and free>0, returns this",src/game/bases.rs
+game::bases,806255a0,fn_806255a0,translated,medium,"work/ghidra/rel-d_basesNP/export/806255a0_FUN_806255a0.c; second copy of the no-sub-object release",src/game/bases.rs
+game::bases,806255e0,fn_806255e0,translated,medium,"work/ghidra/rel-d_basesNP/export/806255e0_FUN_806255e0.c; destroys the state object at +0x18 through 8015F9F0 then frees with 802B9280",src/game/bases.rs
+game::bases,80625640,fn_80625640,translated,medium,"work/ghidra/rel-d_basesNP/export/80625640_FUN_80625640.c; second copy of the +0x18 teardown plus 802B9280 free",src/game/bases.rs
+game::bases,806257e0,fn_806257e0,translated,high,"work/ghidra/rel-d_basesNP/export/806257e0_FUN_806257e0.c; modelPlayBase.arc plus modelPlayBase_07.brlyt; layout +0xAC; handles +0x244/+0x248/+0x24C",src/game/bases.rs
+game::bases,806258d0,fn_806258d0,translated,medium,"work/ghidra/rel-d_basesNP/export/806258d0_FUN_806258d0.c; 800E0380 record set scanned 10 x 0x2A x 3 through 800CE210, count stored at +0x288",src/game/bases.rs
+game::bases,80625ac0,fn_80625ac0,translated,medium,"work/ghidra/rel-d_basesNP/export/80625ac0_FUN_80625ac0.c; fifteen-word record from the +0x248 handle, 800B37E0 init, 8016C890 Wm_2d_moviecoinvanish",src/game/bases.rs
+game::bases,80625bf0,fn_80625bf0,translated,high,"work/ghidra/rel-d_basesNP/export/80625bf0_FUN_80625bf0.c; widget +0x244 bit 0 of +0xBB; 800C9500 then 800C93D0(1) and 800C92F0(0); sound 0xA7; +0x27F set",src/game/bases.rs
+game::bases,80625c70,fn_80625c70,translated,high,"work/ghidra/rel-d_basesNP/export/80625c70_FUN_80625c70.c; animation-end guard then descriptor 80825908 Action at slot +0x18 of +0x70",src/game/bases.rs
+game::bases,80625d90,fn_80625d90,translated,high,"work/ghidra/rel-d_basesNP/export/80625d90_FUN_80625d90.c; mode +0x284 selects animation 2 or 1; +0x27F set; sound 0x7D",src/game/bases.rs
+game::bases,80625e10,fn_80625e10,translated,high,"work/ghidra/rel-d_basesNP/export/80625e10_FUN_80625e10.c; animation-end guard then descriptor 80825908 Action",src/game/bases.rs
+game::bases,80625e70,fn_80625e70,translated,high,"work/ghidra/rel-d_basesNP/export/80625e70_FUN_80625e70.c; 800C93D0 animation 2 or 1 from mode +0x284; clears +0x27F",src/game/bases.rs
+game::bases,80625ed0,fn_80625ed0,translated,medium,"work/ghidra/rel-d_basesNP/export/80625ed0_FUN_80625ed0.c; decrement +0x288; call 80625970 (halt export, address only); animation 3; 80625AC0; sound 0xA8",src/game/bases.rs
+game::bases,80625f40,fn_80625f40,translated,high,"work/ghidra/rel-d_basesNP/export/80625f40_FUN_80625f40.c; third copy of the animation-end guard plus descriptor 80825908",src/game/bases.rs
+game::bases,80625fb0,fn_80625fb0,translated,high,"work/ghidra/rel-d_basesNP/export/80625fb0_FUN_80625fb0.c; animation 4 through 800C92F0 and +0x27F set",src/game/bases.rs
+game::bases,80625ff0,fn_80625ff0,translated,high,"work/ghidra/rel-d_basesNP/export/80625ff0_FUN_80625ff0.c; animation-end guard then descriptor 80825888 StartWait",src/game/bases.rs

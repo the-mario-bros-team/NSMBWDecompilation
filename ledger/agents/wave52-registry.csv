@@ -1,0 +1,29 @@
+module,address,name,status,confidence,evidence,rust_file
+resource::registry,80161700,fn_80161700,translated,high,"work/ghidra/main-gb/export/80161700_FUN_80161700.c; first non-zero +0x0C payload while walking +0x00 next links",src/resource/registry.rs
+resource::registry,80161750,fn_80161750,translated,high,"work/ghidra/main-gb/export/80161750_FUN_80161750.c; append node at tail and store key at +0x00",src/resource/registry.rs
+resource::registry,80161800,fn_80161800,translated,high,"work/ghidra/main-gb/export/80161800_FUN_80161800.c; unlink node when *node == key and clear both links",src/resource/registry.rs
+resource::registry,801618c0,fn_801618c0,translated,high,"work/ghidra/main-gb/export/801618c0_FUN_801618c0.c; detach head and zero every node's two link words",src/resource/registry.rs
+resource::registry,80161920,fn_80161920,translated,medium,"work/ghidra/main-gb/export/80161920_FUN_80161920.c; pop entry array via virtual +0x10 down to index -1",src/resource/registry.rs
+resource::registry,801619b0,fn_801619b0,translated,medium,"work/ghidra/main-gb/export/801619b0_FUN_801619b0.c; poll virtual +0x0C while state 2, advance cursor, clear +0x0E",src/resource/registry.rs
+resource::registry,80161a70,fn_80161a70,translated,high,"work/ghidra/main-gb/export/80161a70_FUN_80161a70.c; if state 1 advance once and return state != 1",src/resource/registry.rs
+resource::registry,80161c40,fn_80161c40,translated,high,"work/ghidra/main-gb/export/80161c40_FUN_80161c40.c; unlink +0x54 list via fn_80162ca0, store 0x80329410 at +0x60, optional fn_80162920",src/resource/registry.rs
+resource::registry,80163a60,fn_80163a60,translated,medium,"work/ghidra/main-gb/export/80163a60_FUN_80163a60.c; pass +0x94 bit 0 to virtual +0x38 of object at +0x10",src/resource/registry.rs
+resource::registry,80163a90,fn_80163a90,translated,medium,"work/ghidra/main-gb/export/80163a90_FUN_80163a90.c; 0x802AD520 reads four words into +0x64..+0x70, then virtual +0x30",src/resource/registry.rs
+resource::registry,80163c70,fn_80163c70,translated,medium,"work/ghidra/main-gb/export/80163c70_FUN_80163c70.c; create child via 0x801636A0 and publish through +0x0C; +0x84 fallback",src/resource/registry.rs
+resource::registry,80163e10,fn_80163e10,translated,medium,"work/ghidra/main-gb/export/80163e10_FUN_80163e10.c; call 0x80163D40 with +0x20 and three args, return result != 2",src/resource/registry.rs
+resource::registry,80163fb0,fn_80163fb0,translated,medium,"work/ghidra/main-gb/export/80163fb0_FUN_80163fb0.c; release +0x14 via 0x802B9290, clear it, return 1",src/resource/registry.rs
+resource::registry,80164080,fn_80164080,translated,medium,"work/ghidra/main-gb/export/80164080_FUN_80164080.c; circular +0x10 list, key lookup via 0x801641B0, virtual +0x5C",src/resource/registry.rs
+resource::registry,80164120,fn_80164120,translated,medium,"work/ghidra/main-gb/export/80164120_FUN_80164120.c; circular +0x10 list, forward f64 and key to fn_801642c0",src/resource/registry.rs
+resource::registry,801642c0,fn_801642c0,translated,medium,"work/ghidra/main-gb/export/801642c0_FUN_801642c0.c; virtual +0x58 match then +0x64/+0x6C child sweep, store f32 at +0x10",src/resource/registry.rs
+resource::registry,80164460,fn_80164460,translated,high,"work/ghidra/main-gb/export/80164460_FUN_80164460.c; fn_80164080 then set/clear bit 0 at +0x0C",src/resource/registry.rs
+resource::registry,801644d0,fn_801644d0,translated,high,"work/ghidra/main-gb/export/801644d0_FUN_801644d0.c; unpack {object,key,list} and forward object +0x08 float to fn_80164120",src/resource/registry.rs
+resource::registry,80168100,fn_80168100,translated,medium,"work/ghidra/main-gb/export/80168100_FUN_80168100.c; store vtable 0x803295F0, call pointer at 0x80329600, fn_8016a030, optional free",src/resource/registry.rs
+resource::registry,80168180,fn_80168180,translated,medium,"work/ghidra/main-gb/export/80168180_FUN_80168180.c; cast +0x04 with descriptor 0x802F8FD8 then 0x8025B420(cast,out,1,arg)",src/resource/registry.rs
+resource::registry,80168230,fn_80168230,translated,medium,"work/ghidra/main-gb/export/80168230_FUN_80168230.c; fn_80168180 into 52-byte local then fn_8016f130 to value",src/resource/registry.rs
+resource::registry,8016a030,fn_8016a030,translated,high,"work/ghidra/main-gb/export/8016a030_FUN_8016a030.c; store vtable 0x80329670, fn_8016a090 child teardown, optional free",src/resource/registry.rs
+resource::registry,8016a090,fn_8016a090,translated,high,"work/ghidra/main-gb/export/8016a090_FUN_8016a090.c; release +0x04 via 0x80249AC0 and clear the field",src/resource/registry.rs
+resource::registry,80168b40,fn_80168b40,translated,high,"work/ghidra/main-gb/export/80168b40_FUN_80168b40.c; vtable 0x80329610 and six constant stores from r2-0x53D8/-0x53D4",src/resource/registry.rs
+resource::registry,80168b90,fn_80168b90,translated,high,"work/ghidra/main-gb/export/80168b90_FUN_80168b90.c; restore +0x04,+0x08,+0x10,+0x14,+0x18 from the two constants",src/resource/registry.rs
+resource::registry,80168cb0,fn_80168cb0,translated,high,"work/ghidra/main-gb/export/80168cb0_FUN_80168cb0.c; compare +0x04 with r2-0x53D8",src/resource/registry.rs
+resource::registry,80168d10,fn_80168d10,translated,medium,"work/ghidra/main-gb/export/80168d10_FUN_80168d10.c; base vtable, fn_8016a5e0 at +0x0C, active vtable and two +0x28/+0x30 words",src/resource/registry.rs
+resource::registry,80168d80,fn_80168d80,translated,high,"work/ghidra/main-gb/export/80168d80_FUN_80168d80.c; 0x80167EC0 reset then optional 0x802B9280 free",src/resource/registry.rs

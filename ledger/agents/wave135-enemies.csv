@@ -1,0 +1,30 @@
+module,address,name,status,confidence,evidence,rust_file
+game::enemies,80a79750,fn_80a79750,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a79750_FUN_80a79750.c; four-frame E9A/E9E/E9F flag, EA9 countdown copied to EAA, SE at a+0x61C",src/game/enemies.rs
+game::enemies,80aff0d0,fn_80aff0d0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80aff0d0_FUN_80aff0d0.c; sanbo model binder; g3d/sanbo.brres; sanbo_body/sanbo_head selected by (this+4)&1",src/game/enemies.rs
+game::enemies,80a3f8f0,fn_80a3f8f0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a3f8f0_FUN_80a3f8f0.c; +0xAC += 4.0 * base[+0x398]; SE token dispatched below |delta| 0.1",src/game/enemies.rs
+game::enemies,80a7ed20,fn_80a7ed20,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a7ed20_FUN_80a7ed20.c; +0x548 slot +0x1C reset; effect 0x2D9 at +0xAC; 0x80A7E630 thunk",src/game/enemies.rs
+game::enemies,80b19fa0,fn_80b19fa0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b19fa0_FUN_80b19fa0.c; four-player probe via 0x8005F900/0x80B19CB0 then class-word dispatch",src/game/enemies.rs
+game::enemies,80a46bf0,fn_80a46bf0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a46bf0_FUN_80a46bf0.c; spin step +0xAC += +0xAE0 * f398 and +0x102 ramp at 1024.0",src/game/enemies.rs
+game::enemies,80b27980,fn_80b27980,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b27980_FUN_80b27980.c; per-player +0x744/+0x754/+0x764 deltas and +0x8C0/+0x8C4 bytes",src/game/enemies.rs
+game::enemies,80b0cfd0,fn_80b0cfd0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0cfd0_FUN_80b0cfd0.c; six sub-object vtable resets at +0x588/+0x6B4/+0x73C/+0x5C8/+0x6E0/+0x774",src/game/enemies.rs
+game::enemies,80b0db90,fn_80b0db90,translated,high,"work/ghidra/rel-d_enemiesNP/export/80b0db90_FUN_80b0db90.c; 300-frame retry arm, SE 0x1E4, four tail stores",src/game/enemies.rs
+game::enemies,80a369b0,fn_80a369b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a369b0_FUN_80a369b0.c; side-indexed step from 0x8042C1A8 and clamp against 0x8042C1A4 (step table not published)",src/game/enemies.rs
+game::enemies,80a2f910,fn_80a2f910,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a2f910_FUN_80a2f910.c; node-name match after the last colon via 0x802E1C40/0x802E1AB4",src/game/enemies.rs
+game::enemies,80ade3a0,fn_80ade3a0,translated,high,"work/ghidra/rel-d_enemiesNP/export/80ade3a0_FUN_80ade3a0.c; block_pata step; +0xAC delta sets +0x348 through the fcmpo/cror predicate",src/game/enemies.rs
+game::enemies,80a90ae0,fn_80a90ae0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a90ae0_FUN_80a90ae0.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x18 not modelled",src/game/enemies.rs
+game::enemies,80a90b10,fn_80a90b10,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a90b10_FUN_80a90b10.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x24 not modelled",src/game/enemies.rs
+game::enemies,80a915e0,fn_80a915e0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a915e0_FUN_80a915e0.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x18 not modelled",src/game/enemies.rs
+game::enemies,80a91610,fn_80a91610,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a91610_FUN_80a91610.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x24 not modelled",src/game/enemies.rs
+game::enemies,80a93ab0,fn_80a93ab0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a93ab0_FUN_80a93ab0.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x18 not modelled",src/game/enemies.rs
+game::enemies,80a93ae0,fn_80a93ae0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a93ae0_FUN_80a93ae0.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x24 not modelled",src/game/enemies.rs
+game::enemies,80a95d00,fn_80a95d00,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a95d00_FUN_80a95d00.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x18 not modelled",src/game/enemies.rs
+game::enemies,80a95d30,fn_80a95d30,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a95d30_FUN_80a95d30.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x24 not modelled",src/game/enemies.rs
+game::enemies,80a981f0,fn_80a981f0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a981f0_FUN_80a981f0.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x18 not modelled",src/game/enemies.rs
+game::enemies,80a98220,fn_80a98220,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a98220_FUN_80a98220.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x24 not modelled",src/game/enemies.rs
+game::enemies,80a9a7a0,fn_80a9a7a0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a9a7a0_FUN_80a9a7a0.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x18 not modelled",src/game/enemies.rs
+game::enemies,80a9a7d0,fn_80a9a7d0,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a9a7d0_FUN_80a9a7d0.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x24 not modelled",src/game/enemies.rs
+game::enemies,80a9d960,fn_80a9d960,partial,medium,"work/ghidra/rel-d_enemiesNP/export/80a9d960_FUN_80a9d960.c; 0x802DCBFC state trampoline; r12 this-adjustor +0x18 not modelled",src/game/enemies.rs
+game::enemies,80a91d10,fn_80a91d10,translated,high,"work/ghidra/rel-d_enemiesNP/export/80a91d10_FUN_80a91d10.c; spawns Wm_mr_cloud_on (0x80B508E8) at this+0x6EC via 0x8016C890",src/game/enemies.rs
+game::enemies,80a9e0d0,fn_80a9e0d0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9e0d0_FUN_80a9e0d0.c; writes +0x175=9 and +0x178=0x8F then tail-calls 0x800646E0 with r4=3",src/game/enemies.rs
+game::enemies,80a9f770,fn_80a9f770,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9f770_FUN_80a9f770.c; +0x872 gate then SE 0x1D2 at +0xAC; 0x80A9F750 r4 is not set by this stream",src/game/enemies.rs
+game::enemies,80a9e5b0,fn_80a9e5b0,translated,medium,"work/ghidra/rel-d_enemiesNP/export/80a9e5b0_FUN_80a9e5b0.c; 0x880-byte actor constructor (vtable 0x80B52918) with two 0x802DC9A0 record arrays",src/game/enemies.rs

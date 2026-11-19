@@ -1,0 +1,31 @@
+module,address,name,status,confidence,evidence,rust_file
+game::bases,8063b680,fn_8063b680,translated,high,"work/ghidra/rel-d_basesNP/export/8063b680_FUN_8063b680.c; pointResultMulti_18.brlyt + inWindow/A00 sets; root +0x24C; 12 + 2 + 1 panes",src/game/bases.rs
+game::bases,8063b8d0,fn_8063b8d0,translated,high,"work/ghidra/rel-d_basesNP/export/8063b8d0_FUN_8063b8d0.c; table 0x807C8018[(count-1)*0x10 + column*4]",src/game/bases.rs
+game::bases,8063bba0,fn_8063bba0,translated,high,"work/ghidra/rel-d_basesNP/export/8063bba0_FUN_8063bba0.c; +0x920 frame counter vs +0x924 limit, reset on wrap",src/game/bases.rs
+game::bases,8063bbd0,fn_8063bbd0,translated,high,"work/ghidra/rel-d_basesNP/export/8063bbd0_FUN_8063bbd0.c; 0x807C8068/0x807C8060 style table by +0x93C; 800C9A60 on +0x280/+0x284",src/game/bases.rs
+game::bases,8063bc90,fn_8063bc90,translated,medium,"work/ghidra/rel-d_basesNP/export/8063bc90_FUN_8063bc90.c; profile pair 0x80315B9C/9D -> 10000; 5-entry 0x807C.. scan at +0x400/+0x770; returns 10-index",src/game/bases.rs
+game::bases,8063bd90,fn_8063bd90,translated,high,"work/ghidra/rel-d_basesNP/export/8063bd90_FUN_8063bd90.c; 10 x 14 x 3 score scan at +0x28C/+0x290/+0x294, hundred bucket, clears on no match",src/game/bases.rs
+game::bases,8063bec0,fn_8063bec0,translated,high,"work/ghidra/rel-d_basesNP/export/8063bec0_FUN_8063bec0.c; first entry <= score, row/column out-params, 10 rows x 0x2A",src/game/bases.rs
+game::bases,8063bf30,fn_8063bf30,translated,high,"work/ghidra/rel-d_basesNP/export/8063bf30_FUN_8063bf30.c; probes 8063BEC0 then scales other entries by 0x5F/100",src/game/bases.rs
+game::bases,8063c160,fn_8063c160,translated,medium,"work/ghidra/rel-d_basesNP/export/8063c160_FUN_8063c160.c; save board 0x8042A040+0x20; profile +100 clamp 10000; per-cell x100 or x0x5F",src/game/bases.rs
+game::bases,8063c360,fn_8063c360,translated,high,"work/ghidra/rel-d_basesNP/export/8063c360_FUN_8063c360.c; 5-entry x2 presence test at +0x400/+0x408 or +0x770/+0x778",src/game/bases.rs
+game::bases,8063c440,fn_8063c440,translated,high,"work/ghidra/rel-d_basesNP/export/8063c440_FUN_8063c440.c; root +0x24C shown, anims 4/5/1 stopped, anim 7 started, +0x278/+0x27C swap",src/game/bases.rs
+game::bases,8063c520,fn_8063c520,translated,medium,"work/ghidra/rel-d_basesNP/export/8063c520_FUN_8063c520.c; world 9 + flag 0x10 -> 80826FE0; player count == 1 -> 80827020",src/game/bases.rs
+game::bases,8063c620,fn_8063c620,translated,high,"work/ghidra/rel-d_basesNP/export/8063c620_FUN_8063c620.c; anim 0 idle -> 80827460",src/game/bases.rs
+game::bases,8063c6c0,fn_8063c6c0,translated,high,"work/ghidra/rel-d_basesNP/export/8063c6c0_FUN_8063c6c0.c; paired -> 80827060; split clears +0x93C and +0x288 then 808271A0",src/game/bases.rs
+game::bases,8063c780,fn_8063c780,translated,high,"work/ghidra/rel-d_basesNP/export/8063c780_FUN_8063c780.c; anim 1 idle -> 808270A0",src/game/bases.rs
+game::bases,8063c7f0,fn_8063c7f0,translated,high,"work/ghidra/rel-d_basesNP/export/8063c7f0_FUN_8063c7f0.c; anim 2 start, +0x91E=0, +0x924=0x3C",src/game/bases.rs
+game::bases,8063c840,fn_8063c840,translated,high,"work/ghidra/rel-d_basesNP/export/8063c840_FUN_8063c840.c; counter wrap -> 808270E0",src/game/bases.rs
+game::bases,8063c8a0,fn_8063c8a0,translated,high,"work/ghidra/rel-d_basesNP/export/8063c8a0_FUN_8063c8a0.c; anim 2 finish, anim 3 stop, +0x924=0",src/game/bases.rs
+game::bases,8063c8f0,fn_8063c8f0,translated,high,"work/ghidra/rel-d_basesNP/export/8063c8f0_FUN_8063c8f0.c; anim 3 idle + wrap -> +0x93C=0, 808271A0",src/game/bases.rs
+game::bases,8063c990,fn_8063c990,translated,high,"work/ghidra/rel-d_basesNP/export/8063c990_FUN_8063c990.c; counter wrap -> 80827160",src/game/bases.rs
+game::bases,8063ca00,fn_8063ca00,translated,high,"work/ghidra/rel-d_basesNP/export/8063ca00_FUN_8063ca00.c; anim 6 idle -> 808271A0",src/game/bases.rs
+game::bases,8063ca70,fn_8063ca70,translated,medium,"work/ghidra/rel-d_basesNP/export/8063ca70_FUN_8063ca70.c; anims 5/4, slot table 0x80354E6C, +0x928 count, +0x924 hold, sound 0x93; 8063BA50/B900 address-only",src/game/bases.rs
+game::bases,8063cc40,fn_8063cc40,translated,high,"work/ghidra/rel-d_basesNP/export/8063cc40_FUN_8063cc40.c; style 0 placement re-run; 80827220/80827320/80827360 by +0x93C and mask 0x20",src/game/bases.rs
+game::bases,8063cd50,fn_8063cd50,translated,medium,"work/ghidra/rel-d_basesNP/export/8063cd50_FUN_8063cd50.c; +0x92C/+0x940 reset from 0x807C8070/74, four panes by 800B4710, 8063B900",src/game/bases.rs
+game::bases,8063ce40,fn_8063ce40,translated,medium,"work/ghidra/rel-d_basesNP/export/8063ce40_FUN_8063ce40.c; 3 x 2 rise steps at +0x940, floor 0x807C8058, four landings -> 80827220",src/game/bases.rs
+game::bases,8063cf80,fn_8063cf80,translated,high,"work/ghidra/rel-d_basesNP/export/8063cf80_FUN_8063cf80.c; counter wrap -> 80827260",src/game/bases.rs
+game::bases,8063d040,fn_8063d040,translated,high,"work/ghidra/rel-d_basesNP/export/8063d040_FUN_8063d040.c; counter wrap -> 808272E0",src/game/bases.rs
+game::bases,8063d160,fn_8063d160,translated,high,"work/ghidra/rel-d_basesNP/export/8063d160_FUN_8063d160.c; input 0x900 on 0x8042A468 vtable 0x20; 80108160; 800E1E60(0xB); 808273A0/80827460",src/game/bases.rs
+game::bases,8063d2b0,fn_8063d2b0,translated,medium,"work/ghidra/rel-d_basesNP/export/8063d2b0_FUN_8063d2b0.c; 10 x 0x2A writeback /100 via 800CE660 (paired) or 800CE620 (split)",src/game/bases.rs
+game::bases,8063d3f0,fn_8063d3f0,translated,medium,"work/ghidra/rel-d_basesNP/export/8063d3f0_FUN_8063d3f0.c; 800E0430 idle gate; 80107F10/80108160 input off; 800E1E60(0xB); 80827460 or 80827420",src/game/bases.rs

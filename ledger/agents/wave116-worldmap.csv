@@ -1,0 +1,2 @@
+module,address,name,status,confidence,evidence,rust_file
+game::worldmap,801469d0,fn_801469d0,translated,medium,"work/ghidra/main-gb/export/801469d0_FUN_801469d0.c; 812 bytes; player action-entry dispatcher: guards 0x8004DD00 and status bits 4/3/0x53, +0x410 pose call with 0.5*f1/0.5*f2, +0x40C clear, +0x294 messages from 0x80375C20, +0xEA4 re-arm; GQR0 block is the f30/f31 spill and the r3..r6 split is from main.elf",src/game/worldmap.rs
