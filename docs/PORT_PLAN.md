@@ -1646,6 +1646,37 @@ the opening cutscene's load (field 3121, 29 ms of guest string and
 resource searches) and the course clear (fields 9406-9413) leave a second
 below 99%. Shown fps (the renderer, branch `render-400`) dipped to 252.
 
+14. **Catch-up of at most two fields** (11.6). A paced field up to 33 ms
+   late keeps the schedule; the next fields skip their sleep until it is
+   met. Later than that, the schedule restarts from now as before. Paced
+   at 360 fps over the whole script on a quiet machine: game speed 100% in
+   every second (minimum and median); after step 13 the opening
+   cutscene's load and the course clear left seconds at 97-98%. Shown fps: median 360,
+   minimum 286 (this branch's renderer; `render-400` has its own). With a
+   build starting during the run, seconds dropped to 80-94% at fields
+   that are never slow headless, with 80-150 ms render stalls: other
+   load, which the catch-up does not cover and should not.
+15. **Exit report: slow fields.** Every run, headless too, ends with how
+   many fields took longer than 16.7 ms to emulate and the eight slowest.
+   1-1 headless: 10 fields, all boot (0-36), the opening cutscene's load
+   (3121, 3122, 3128, 18-25 ms) and 9407 (19 ms).
+16. **Four players** (`scripts/1-1-4p.press`, `--frames 11000`). Remotes
+   2-4 switch on at field 2000; Select Players picks 4 and the three
+   press OK. With four players the World 1 map comes at ~3600, without
+   the opening cutscene. All four run 1-1 on 1-1.press's inputs (with hops
+   every 40 frames after), die and come back in bubbles, and Luigi takes
+   the flagpole at ~10250; by 11000 all four are back on the map.
+   - Lockstep: recompiled and interpreter identical at all 111 hash points
+     and 19,912,994,930 instructions, headless and windowed. (A windowed
+     run with `--shot` and `--watch-player` ran 11.8 million more
+     instructions, 4 more light-texture redraws, with the same RAM at all
+     111 points: renderer timing reaching the game, not the engine.)
+   - P6's check, 60 fps with headroom in 4-player 1-1: paced at 60 fps,
+     game 100% (the lowest second 98%, a 59-field second), emulation
+     8.2 ms per field on average in 1-1 and 12.9 ms in its worst second;
+     headless, only boot and the map load after Start Game (3524-3525,
+     26-30 ms) take over 16.7 ms.
+
 **Result** (1-1 hash script, windowed, the first build of this pass
 against the last, alternating, best of two, same machine state):
 
@@ -1679,12 +1710,11 @@ windowed.
   the timings above were taken at 4 jobs.
 
 **Still to do (engine):**
-1. **Hooks unwind.** A call to a hooked address (`strcmp` 5 million times
-   in the script, the DC range loops 2 million, `sqrt` 0.6 million)
-   returns through every native frame to the dispatcher, which runs the
-   hook and climbs back up. Letting generated code call the hook handler
-   (through a callback, as slice ends do) needs `System::before`'s state
-   shared; it touches the hook code the other sessions work on.
+1. **Scene loads** still have single fields of 18-29 ms (the opening
+   cutscene's load: guest `strncmp`, `breftSearchName`, `getResInfo`,
+   `ARCConvertPathToEntrynum`), which step 14 makes up. Native versions
+   of those searches would remove them; they would be new hooks, left
+   for later.
 2. **The GX decode thread** limits heavy scenes (it is what the game
    waits for on the world map): `Layout::read` (per-format loaders),
    the 150-byte `RawVertex` per vertex, and the vertex transform on the
