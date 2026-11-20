@@ -210,6 +210,46 @@ pub struct DrawRecord {
     pub fixed: bool,
 }
 
+/// The world draws of a field, so a player's window can be applied to them
+/// after the transform ([`World::apply`]).
+#[derive(Clone, Debug, Default)]
+pub struct World {
+    /// Ranges of [`Output::vertices`] (first, count) drawn through the game
+    /// camera's projection.
+    pub ranges: Vec<(u32, u32)>,
+    /// The game camera's size (world units) those draws used.
+    pub camera: [f32; 2],
+    /// How projected coordinates map to clip space (x scale, x offset,
+    /// y scale, y offset, per unit of w), from their viewport.
+    pub map: [f32; 4],
+}
+
+impl World {
+    /// Moves the world vertices in `vertices` (laid out as the field's
+    /// output) from the game camera to `view`.
+    pub fn apply(&self, vertices: &mut [Vertex], view: &xf::View) {
+        if self.ranges.is_empty() || view.size[0] <= 0.0 || view.size[1] <= 0.0 {
+            return;
+        }
+        // Projected x' = k x - d, so clip X' = k X + (o (1 - k) - s d) W.
+        let axis = |i: usize| {
+            let k = self.camera[i] / view.size[i];
+            let d = 2.0 * view.offset[i] / view.size[i];
+            let (s, o) = (self.map[2 * i], self.map[2 * i + 1]);
+            (k, o * (1.0 - k) - s * d)
+        };
+        let ((kx, bx), (ky, by)) = (axis(0), axis(1));
+        for &(first, count) in &self.ranges {
+            let Some(vs) = vertices.get_mut(first as usize..(first + count) as usize) else { continue };
+            for v in vs {
+                let w = v.pos[3];
+                v.pos[0] = kx * v.pos[0] + bx * w;
+                v.pos[1] = ky * v.pos[1] + by * w;
+            }
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct Output {
     /// Each draw's vertices once, in order; [`Output::indices`] makes them
@@ -225,6 +265,10 @@ pub struct Output {
     pub cmds: Vec<Cmd>,
     pub new_textures: Vec<texture::NewTexture>,
     pub evicted: Vec<u32>,
+    /// The world draws, while a game camera is set ([`Gpu::set_world`]).
+    pub world: World,
+    /// Each player's window, as last set ([`Gpu::set_views`]).
+    pub views: [Option<xf::View>; 4],
 }
 
 /// What the stream asked the PE to signal.
@@ -395,9 +439,16 @@ impl Gpu {
         }
     }
 
-    /// The host's view for the draws decoded from now on ([`xf::View`]).
-    pub fn set_view(&mut self, view: Option<xf::View>) {
-        self.batch.ops.push(Op::View(view));
+    /// The game camera's size for the draws decoded from now on: draws
+    /// through its projection are recorded in [`Output::world`]. `None`
+    /// outside a course.
+    pub fn set_world(&mut self, camera: Option<[f32; 2]>) {
+        self.batch.ops.push(Op::World(camera));
+    }
+
+    /// Each player's window ([`xf::View`]), kept in the output from here on.
+    pub fn set_views(&mut self, views: [Option<xf::View>; 4]) {
+        self.batch.ops.push(Op::Views(views));
     }
 
     /// An XF write, for both halves.
@@ -888,6 +939,25 @@ pub(crate) fn point_quad(out: &mut Vec<Vertex>, p: Vertex, size: f32) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn world_window_matches_projecting_through_it() {
+        // A world point in view space (the camera at the origin), the world
+        // viewport, and the game camera's projection.
+        let (cam, win, off) = ([2000.0f32, 1100.0], [480.0f32, 264.0], [700.0f32, -200.0]);
+        let vp = [320.0, -228.0, 16_777_216.0, 662.0, 570.0, 16_777_216.0];
+        let screen = xf::Screen { offset_x: 342.0, offset_y: 342.0 };
+        let proj = |w: f32, h: f32, ox: f32, oy: f32| [2.0 / w, -2.0 / w * ox, 2.0 / h, -2.0 / h * oy, -5e-5, -1.0];
+        let p = [640.0, -150.0, -10.0];
+        let mut v = Vertex { pos: xf::project(p, &proj(cam[0], cam[1], 0.0, 0.0), true, &vp, screen), ..Default::default() };
+        let half = (EFB_WIDTH / 2.0, EFB_HEIGHT / 2.0);
+        let world = World { ranges: vec![(0, 1)], camera: cam, map: [vp[0] / half.0, (vp[3] - screen.offset_x) / half.0 - 1.0, vp[1] / half.1, (vp[4] - screen.offset_y) / half.1 - 1.0] };
+        world.apply(std::slice::from_mut(&mut v), &xf::View { offset: off, size: win });
+        let want = xf::project(p, &proj(win[0], win[1], off[0], off[1]), true, &vp, screen);
+        for i in 0..4 {
+            assert!((v.pos[i] - want[i]).abs() < 1e-4, "{i}: {:?} vs {:?}", v.pos, want);
+        }
+    }
 
     fn bp(v: u32) -> [u8; 5] {
         let b = v.to_be_bytes();

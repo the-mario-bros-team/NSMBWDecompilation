@@ -11,7 +11,7 @@
 //! Hotkeys (F1 shows them) change the display settings and save them to
 //! `settings.toml`.
 
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
@@ -54,6 +54,25 @@ const QUEUE: usize = 3;
 /// A field whose emulation takes longer than this is logged.
 const SLOW_FIELD: Duration = Duration::from_millis(20);
 
+/// Another local player's own window (docs/PORT_PLAN.md, section 12): the
+/// same fields as the main window, through that player's view. It shows
+/// each field as it comes (no in-between frames).
+struct PlayerWindow {
+    player: usize,
+    // Declared before `window`: the Vulkan surface must be destroyed first.
+    renderer: Renderer,
+    window: Window,
+}
+
+/// `vertices` (the field's own, or in-between ones laid out like them) into
+/// `dst`, with the world draws moved to `player`'s window when the field has
+/// one.
+fn fill_view(out: &gx::Output, player: usize, dst: &mut [gx::Vertex]) {
+    if let Some(view) = out.views.get(player).copied().flatten() {
+        out.world.apply(dst, &view);
+    }
+}
+
 struct App {
     opts: Options,
     settings: Settings,
@@ -88,6 +107,13 @@ struct App {
     /// A `--shot` to take from the next in-between frame.
     pending_shot: Option<PathBuf>,
     remotes: [RemoteStatus; REMOTES],
+    /// The player the main window shows, and windows of other local players.
+    main_player: usize,
+    players: Vec<PlayerWindow>,
+    /// Textures uploaded and not yet evicted, for a player window opened
+    /// later (a renderer only receives a texture in the field it is new).
+    textures: HashMap<u32, gx::texture::NewTexture>,
+    online: bool,
 }
 
 /// Sleeps until `deadline`, then spins the last stretch: a sleep can
@@ -201,6 +227,7 @@ impl App {
         if !native {
             self.present_interpolated()?;
         }
+        self.open_player_windows(event_loop)?;
         self.update_title();
         if let Some(w) = &self.window {
             w.request_redraw();
@@ -243,6 +270,29 @@ impl App {
             println!("frame {}: {} draws, {} texture copies", f.index + 1, f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count(), f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).count());
         }
         renderer.overlay = rects;
+        (self.main_player, self.online) = (f.main_player, f.online);
+        if !self.online {
+            for t in &f.out.new_textures {
+                self.textures.insert(t.id, t.clone());
+            }
+            for id in &f.out.evicted {
+                self.textures.remove(id);
+            }
+        }
+        for pw in &mut self.players {
+            let size = pw.window.inner_size();
+            if let Some((_, path)) = self.opts.shots.iter().find(|(n, _)| *n == f.index + 1) {
+                pw.renderer.screenshot = Some(path.with_file_name(format!("{}-p{}.png", path.file_stem().and_then(|s| s.to_str()).unwrap_or("shot"), pw.player + 1)));
+            }
+            let (out, player) = (&f.out, pw.player);
+            let mut fill = |dst: &mut [gx::Vertex]| {
+                dst.copy_from_slice(&out.vertices);
+                fill_view(out, player, dst);
+            };
+            pw.renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, size.width, size.height).map_err(|e| e.to_string())?;
+            // Only the main window's EFB copies go back to the game.
+            let _ = pw.renderer.take_writebacks();
+        }
         let started = Instant::now();
         if skip {
             let uploads = gx::Output { new_textures: std::mem::take(&mut f.out.new_textures), ..Default::default() };
@@ -254,7 +304,13 @@ impl App {
             let uploads = gx::Output { new_textures: std::mem::take(&mut f.out.new_textures), cmds, ..Default::default() };
             renderer.render(&uploads, &[], true, f.xfb, 0, 0).map_err(|e| e.to_string())?;
         } else {
-            renderer.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
+            let main = self.main_player;
+            let out = &f.out;
+            let mut fill = |dst: &mut [gx::Vertex]| {
+                dst.copy_from_slice(&out.vertices);
+                fill_view(out, main, dst);
+            };
+            renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, w, h).map_err(|e| e.to_string())?;
         }
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         let writebacks = renderer.take_writebacks();
@@ -286,6 +342,9 @@ impl App {
             let old = self.queue.pop_front().unwrap();
             if let Some(r) = &mut self.renderer {
                 r.evict(&old.out.evicted);
+            }
+            for pw in &mut self.players {
+                pw.renderer.evict(&old.out.evicted);
             }
             if let Some(emu) = &self.emu {
                 let _ = emu.to_emu.send(ToEmu::Recycle(Box::new(old.out)));
@@ -339,14 +398,46 @@ impl App {
         let (fa, fb) = (&self.queue[a], &self.queue[b]);
         let pairs = &self.pairs;
         // The in-between vertices go straight into the frame's vertex buffer.
-        let mut fill = |dst: &mut [gx::Vertex]| match pairs {
-            Some(p) if a != b => gx::interp::interpolate_into(&fa.out, &fb.out, &p.2, t.clamp(0.0, 1.0), dst),
-            _ => dst.copy_from_slice(&fb.out.vertices),
+        let main = self.main_player;
+        let mut fill = |dst: &mut [gx::Vertex]| {
+            match pairs {
+                Some(p) if a != b => gx::interp::interpolate_into(&fa.out, &fb.out, &p.2, t.clamp(0.0, 1.0), dst),
+                _ => dst.copy_from_slice(&fb.out.vertices),
+            }
+            fill_view(&fb.out, main, dst);
         };
         let started = Instant::now();
         renderer.render_with(&fb.out, fb.out.vertices.len(), &mut fill, false, fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.presented_now();
+        Ok(())
+    }
+
+    /// Opens a window for each other local player in a course (one whose
+    /// window the last field has). Online, the other players are on their
+    /// own machines. A window stays open once opened, until it is closed.
+    fn open_player_windows(&mut self, event_loop: &ActiveEventLoop) -> Result<(), String> {
+        if self.online {
+            return Ok(());
+        }
+        let Some(last) = self.queue.back() else { return Ok(()) };
+        let wanted: Vec<usize> = (0..last.out.views.len()).filter(|&p| p != self.main_player && last.out.views[p].is_some() && self.players.iter().all(|w| w.player != p)).collect();
+        for player in wanted {
+            let attrs = Window::default_attributes().with_title(format!("New Super Mario Bros. Wii - Rust port - player {}", player + 1)).with_inner_size(LogicalSize::new(960.0, 540.0));
+            let window = event_loop.create_window(attrs).map_err(|e| e.to_string())?;
+            let display = window.display_handle().map_err(|e| e.to_string())?.as_raw();
+            let handle = window.window_handle().map_err(|e| e.to_string())?.as_raw();
+            let scale = self.renderer.as_ref().map_or(1, |r| r.scale());
+            // No pipeline cache file: the main window's renderer owns it.
+            let ropts = vk_render::Options { scale, vsync: false, pipeline_cache: None, efb_copies_to_ram: false };
+            let mut renderer = Renderer::new(display, handle, ropts).map_err(|e| e.to_string())?;
+            renderer.aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
+            // Every texture the game still uses, before the first field.
+            let uploads = gx::Output { new_textures: self.textures.values().cloned().collect(), ..Default::default() };
+            renderer.render(&uploads, &[], true, last.xfb, 0, 0).map_err(|e| e.to_string())?;
+            println!("player {}: own window", player + 1);
+            self.players.push(PlayerWindow { player, renderer, window });
+        }
         Ok(())
     }
 
@@ -497,7 +588,22 @@ impl ApplicationHandler for App {
         }
     }
 
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
+        // A player's own window: closing it closes only that window.
+        if let Some(i) = self.players.iter().position(|w| w.window.id() == id) {
+            match event {
+                WindowEvent::CloseRequested => {
+                    self.players.remove(i);
+                    return;
+                }
+                WindowEvent::Resized(_) => {
+                    self.players[i].renderer.resized();
+                    return;
+                }
+                WindowEvent::RedrawRequested => return,
+                _ => {}
+            }
+        }
         match event {
             WindowEvent::CloseRequested => event_loop.exit(),
             WindowEvent::Resized(_) => {
@@ -542,6 +648,7 @@ impl ApplicationHandler for App {
                 println!("light textures: {} of {} redraws skipped (nothing they read changed)", t.light_texture_skips, t.light_texture_calls);
             }
         }
+        self.players.clear();
         self.renderer = None;
     }
 }
@@ -582,6 +689,10 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         sent_interpolate: None,
         pending_shot: None,
         remotes: [RemoteStatus::default(); REMOTES],
+        main_player: 0,
+        players: Vec::new(),
+        textures: HashMap::new(),
+        online: false,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     match app.error {

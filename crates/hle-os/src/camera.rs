@@ -184,7 +184,8 @@ fn bg_camera(mem: &Mem, bg: u32) -> Option<Rect> {
 
 #[derive(Default)]
 pub struct SharedCamera {
-    /// Use the box (every PC in a session must agree).
+    /// Use the box (every PC in a session must agree; on for normal play,
+    /// off only in tests of the game's own camera).
     pub enabled: bool,
     /// Words the box wrote: (address, the game's value, the box's value).
     saved: Vec<(u32, u32, u32)>,
@@ -192,13 +193,13 @@ pub struct SharedCamera {
     /// box was written: if either has changed by the next `execute`, the
     /// scene or zone was set up again, and the saved values are stale.
     saved_scene: [u32; 5],
-    /// Host only: the player this PC shows (0-based), and the share of the
-    /// game camera's size it shows (1, or more for testing).
-    pub view_player: Option<usize>,
+    /// Host only: the share of the game camera's size a player's window
+    /// shows (1, or more for testing).
     pub view_zoom: f32,
-    /// Host only: the view for the draws from here on, set at the end of
-    /// each `dBgGm_c::execute`; `None` draws the game's camera as it is.
-    pub view: Option<gx::xf::View>,
+    /// Host only, set at the end of each `dBgGm_c::execute`: the size of the
+    /// camera the game draws with, and each player's window on it.
+    pub drawn: [f32; 2],
+    pub views: [Option<gx::xf::View>; 4],
     /// Host only: `dBgGm_c::execute` ended since this was last cleared.
     pub ran: bool,
 }
@@ -225,7 +226,7 @@ impl SharedCamera {
     /// and works out this PC's view.
     pub fn apply(&mut self, mem: &mut Mem) {
         self.ran = true;
-        self.view = None;
+        self.views = [None; 4];
         let (Some(bg), Some(param)) = (read32(mem, BG_PTR).filter(|&p| p >= 0x8000_0000), read32(mem, PARAM_PTR).filter(|&p| p >= 0x8000_0000)) else { return };
         let Some(own) = bg_camera(mem, bg) else { return };
         let players = followed_players(mem);
@@ -237,14 +238,17 @@ impl SharedCamera {
             }
             None => (own, own),
         };
-        self.view = self.view_for(mem, own, drawn, area);
+        self.drawn = [drawn.w, drawn.h];
+        self.views = std::array::from_fn(|p| self.view_for(mem, p, own, drawn, area));
     }
 
     /// The box around every player, or `None` where the game's own camera
     /// is used: one player, another camera mode, auto-scroll, or nobody
     /// outside the game's camera.
     fn shared_box(&self, mem: &Mem, bg: u32, own: Rect, players: &[[f32; 2]]) -> Option<Rect> {
-        if players.len() < 2 {
+        // Two players or more, in a course played normally (not the title's
+        // demo, mode 2).
+        if players.len() < 2 || read32(mem, SDA - 0x547C) != Some(0) {
             return None;
         }
         let byte = |o: u32| mem.ram(bg + o, 1).map(|b| b[0]);
@@ -301,21 +305,17 @@ impl SharedCamera {
         }
     }
 
-    /// The window this PC draws: the game camera's own size (1/zoom of it
-    /// when testing) around its player, inside `area` (the box before it
-    /// was given the camera's shape, so the window stays in the zone).
-    /// `drawn` is what the game draws with.
-    fn view_for(&self, mem: &Mem, own: Rect, drawn: Rect, area: Rect) -> Option<gx::xf::View> {
-        let p = self.view_player?;
+    /// Player `p`'s window: the game camera's own size (1/zoom of it when
+    /// testing) around the player, inside `area` (the box before it was
+    /// given the camera's shape, so the window stays in the zone), relative
+    /// to `drawn`, what the game draws with. `None` without that player.
+    fn view_for(&self, mem: &Mem, p: usize, own: Rect, drawn: Rect, area: Rect) -> Option<gx::xf::View> {
+        let at = player_position(mem, p)?;
         let zoom = self.view_zoom.max(1.0);
-        if drawn == own && zoom == 1.0 {
-            return None;
-        }
         let window = Rect { w: own.w / zoom, h: own.h / zoom, ..own };
-        let at = player_position(mem, p).unwrap_or_else(|| own.centre());
         let w = window.around(at, &area);
         let ([dx, dy], [ox, oy]) = (drawn.centre(), w.centre());
-        Some(gx::xf::View::window([drawn.w, drawn.h], [w.w, w.h], [ox - dx, oy - dy]))
+        Some(gx::xf::View { offset: [ox - dx, oy - dy], size: [w.w, w.h] })
     }
 }
 

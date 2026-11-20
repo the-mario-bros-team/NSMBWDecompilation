@@ -35,6 +35,12 @@ pub struct GameFrame {
     /// The game read the EFB recently: send a snapshot back.
     pub wants_efb: bool,
     pub remotes: [RemoteStatus; REMOTES],
+    /// The player the main window shows (0-based): this machine's remote
+    /// online, `--view-player`, or player 1.
+    pub main_player: usize,
+    /// Online: other players have their own machines, so no window opens
+    /// for them here.
+    pub online: bool,
 }
 
 /// Scripted input (`--press`): `input` is held on remote `player` (0-based)
@@ -155,15 +161,16 @@ pub struct EmuOptions {
     pub no_feedback: bool,
     /// Online multiplayer (`--host`, `--join`).
     pub net: crate::net::Mode,
-    /// Draw the world centred on this player (0-based), within the game's
-    /// camera (`--view-player`; a net session uses its own remote).
+    /// The player the main window shows (0-based; `--view-player`; a net
+    /// session uses its own remote). Other local players get windows of
+    /// their own.
     pub view_player: Option<usize>,
     /// Show 1/n of the game camera's width and height around that player
     /// (`--view-zoom`, for testing the view on one player).
     pub view_zoom: f32,
-    /// The game's camera becomes a box around every player
-    /// (`--shared-camera`; always on online).
-    pub shared_camera: bool,
+    /// Keep the game's own camera in multiplayer instead of a box around
+    /// every player (`--game-camera`, for comparisons; not online).
+    pub game_camera: bool,
     /// Write MEM1 and MEM2 (0x80000000 and 0x90000000, back to back) to a
     /// file at the start of these fields, for reverse engineering.
     pub dump_ram: Vec<(u64, PathBuf)>,
@@ -235,7 +242,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, shared_camera, wav, audio, code_profile, interpreter } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, mut game_camera, wav, audio, code_profile, interpreter } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -279,6 +286,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     // Each machine draws its own view, and only the game's own state may
     // differ by nothing: nothing from the renderer reaches the game.
     no_feedback |= session.is_some();
+    game_camera &= session.is_none();
     if let Some(s) = &session {
         view_player = Some(s.slot);
     }
@@ -292,8 +300,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     // Reverb, delay and chorus: the game's own effect callbacks, mixed back
     // by the DSP (NSMBW_AUXFX=off skips both).
     sys.aux_effects = std::env::var("NSMBW_AUXFX").map_or(true, |v| v != "off");
-    sys.camera.enabled = shared_camera || session.is_some();
-    sys.camera.view_player = view_player;
+    sys.camera.enabled = !game_camera;
     sys.camera.view_zoom = view_zoom;
     let mut fields_without_camera = 0u32;
     sys.hw.borrow_mut().dsp.ax.aux_return = sys.aux_effects;
@@ -392,16 +399,16 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             for (i, input) in inputs.into_iter().enumerate() {
                 hw.ios.bt.set_input(i, input);
             }
-            // The view is set each time the game's camera runs; outside a
-            // course (no camera for a few fields) the world is drawn as is.
-            if view_player.is_some() {
-                if std::mem::take(&mut sys.camera.ran) {
-                    fields_without_camera = 0;
-                } else {
-                    fields_without_camera += 1;
-                    if fields_without_camera == 4 {
-                        hw.gpu.set_view(None);
-                    }
+            // The world camera and the players' windows are set each time the
+            // game's camera runs; outside a course (no camera for a few
+            // fields) there are no world draws, and every window shows the
+            // whole screen.
+            if std::mem::take(&mut sys.camera.ran) {
+                fields_without_camera = 0;
+            } else {
+                fields_without_camera += 1;
+                if fields_without_camera == 4 {
+                    hw.gpu.set_world(None);
                 }
             }
         }
@@ -455,7 +462,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         let wants_efb = now_peeks != peeks && !no_feedback;
         peeks = now_peeks;
         let time = if unpaced { Instant::now() } else { due };
-        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes })).is_err() {
+        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some() })).is_err() {
             break;
         }
         index += 1;

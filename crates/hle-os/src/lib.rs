@@ -326,8 +326,10 @@ impl System {
             self.camera.apply(&mut self.mem);
             // The game's draws for this frame come after: nothing of them
             // is in the FIFO yet.
-            if self.camera.view_player.is_some() {
-                self.hw.borrow_mut().gpu.set_view(self.camera.view);
+            {
+                let mut hw = self.hw.borrow_mut();
+                hw.gpu.set_world(Some(self.camera.drawn));
+                hw.gpu.set_views(self.camera.views);
             }
             let near = camera::followed_players(&self.mem).first().copied();
             if let Some(slot) = self.joins.start(&mut self.cpu, &mut self.mem, near) {
