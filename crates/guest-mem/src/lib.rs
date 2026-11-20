@@ -180,63 +180,76 @@ impl Mem {
     }
 
     /// `N` bytes at `addr`, which the caller knows is RAM (recompiled code:
-    /// stack and small-data accesses), with no lookup. Without the flat
-    /// mapping, the checked path.
+    /// stack and small-data accesses), with no lookup and no error to
+    /// handle: an address with nothing mapped faults (an access violation).
+    /// Without the flat mapping, the checked path, out of line, and an
+    /// address with no RAM panics.
     #[inline(always)]
-    fn raw_read<const N: usize>(&mut self, addr: u32) -> Result<[u8; N], Fault> {
+    fn raw_read<const N: usize>(&mut self, addr: u32) -> [u8; N] {
         if self.flat.is_null() {
-            return self.read_n(addr);
+            return self.raw_read_checked(addr);
         }
         // SAFETY: the reservation spans every 32-bit address, so this stays
         // inside it (bar the last N-1 bytes of the address space, which no
         // stack or small-data access reaches); RAM is mapped there, and
         // anything else faults (access violation) instead of reading other
         // memory.
-        Ok(unsafe { self.flat.add(addr as usize).cast::<[u8; N]>().read_unaligned() })
+        unsafe { self.flat.add(addr as usize).cast::<[u8; N]>().read_unaligned() }
     }
 
     /// Like [`Mem::raw_read`]. It does not count writes to code pages:
     /// stacks and small data hold no code.
     #[inline(always)]
-    fn raw_write<const N: usize>(&mut self, addr: u32, bytes: [u8; N]) -> Result<(), Fault> {
+    fn raw_write<const N: usize>(&mut self, addr: u32, bytes: [u8; N]) {
         if self.flat.is_null() {
-            return self.write_n(addr, bytes);
+            return self.raw_write_checked(addr, bytes);
         }
         // SAFETY: as in `raw_read`.
         unsafe { self.flat.add(addr as usize).cast::<[u8; N]>().write_unaligned(bytes) };
-        Ok(())
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn raw_read_checked<const N: usize>(&mut self, addr: u32) -> [u8; N] {
+        self.read_n(addr).unwrap_or_else(|_| panic!("stack or small-data read at {addr:#010x}: no RAM there"))
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn raw_write_checked<const N: usize>(&mut self, addr: u32, bytes: [u8; N]) {
+        self.write_n(addr, bytes).unwrap_or_else(|_| panic!("stack or small-data write at {addr:#010x}: no RAM there"))
     }
 
     #[inline(always)]
-    pub fn raw_read_u8(&mut self, addr: u32) -> Result<u8, Fault> {
-        Ok(self.raw_read::<1>(addr)?[0])
+    pub fn raw_read_u8(&mut self, addr: u32) -> u8 {
+        self.raw_read::<1>(addr)[0]
     }
     #[inline(always)]
-    pub fn raw_read_u16(&mut self, addr: u32) -> Result<u16, Fault> {
-        Ok(u16::from_be_bytes(self.raw_read(addr)?))
+    pub fn raw_read_u16(&mut self, addr: u32) -> u16 {
+        u16::from_be_bytes(self.raw_read(addr))
     }
     #[inline(always)]
-    pub fn raw_read_u32(&mut self, addr: u32) -> Result<u32, Fault> {
-        Ok(u32::from_be_bytes(self.raw_read(addr)?))
+    pub fn raw_read_u32(&mut self, addr: u32) -> u32 {
+        u32::from_be_bytes(self.raw_read(addr))
     }
     #[inline(always)]
-    pub fn raw_read_u64(&mut self, addr: u32) -> Result<u64, Fault> {
-        Ok(u64::from_be_bytes(self.raw_read(addr)?))
+    pub fn raw_read_u64(&mut self, addr: u32) -> u64 {
+        u64::from_be_bytes(self.raw_read(addr))
     }
     #[inline(always)]
-    pub fn raw_write_u8(&mut self, addr: u32, v: u8) -> Result<(), Fault> {
+    pub fn raw_write_u8(&mut self, addr: u32, v: u8) {
         self.raw_write(addr, [v])
     }
     #[inline(always)]
-    pub fn raw_write_u16(&mut self, addr: u32, v: u16) -> Result<(), Fault> {
+    pub fn raw_write_u16(&mut self, addr: u32, v: u16) {
         self.raw_write(addr, v.to_be_bytes())
     }
     #[inline(always)]
-    pub fn raw_write_u32(&mut self, addr: u32, v: u32) -> Result<(), Fault> {
+    pub fn raw_write_u32(&mut self, addr: u32, v: u32) {
         self.raw_write(addr, v.to_be_bytes())
     }
     #[inline(always)]
-    pub fn raw_write_u64(&mut self, addr: u32, v: u64) -> Result<(), Fault> {
+    pub fn raw_write_u64(&mut self, addr: u32, v: u64) {
         self.raw_write(addr, v.to_be_bytes())
     }
 
@@ -427,16 +440,16 @@ mod tests {
         assert!(m.is_flat(), "the flat mapping should work on this system");
         m.write_u32(0x8000_1230, 0x1122_3344).unwrap();
         for a in [0x0000_1230, 0x8000_1230, 0xC000_1230] {
-            assert_eq!(m.raw_read_u32(a), Ok(0x1122_3344), "{a:#x}");
+            assert_eq!(m.raw_read_u32(a), 0x1122_3344, "{a:#x}");
         }
-        m.raw_write_u64(0xD100_0008, 0x0102_0304_0506_0708).unwrap();
+        m.raw_write_u64(0xD100_0008, 0x0102_0304_0506_0708);
         assert_eq!(m.read_u64(0x9100_0008), Ok(0x0102_0304_0506_0708));
         assert_eq!(m.ram(0x1100_0008, 2), Some(&[1u8, 2][..]));
-        m.raw_write_u16(0xE000_0010, 0xBEEF).unwrap();
+        m.raw_write_u16(0xE000_0010, 0xBEEF);
         assert_eq!(m.read_u16(0xE000_0010), Ok(0xBEEF));
         // Two machines do not share memory.
         let mut other = Mem::new(Box::new(NullMmio));
-        assert_eq!(other.raw_read_u32(0x8000_1230), Ok(0));
+        assert_eq!(other.raw_read_u32(0x8000_1230), 0);
     }
 
     #[test]

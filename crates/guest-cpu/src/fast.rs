@@ -78,7 +78,47 @@ macro_rules! access {
     };
 }
 access!(Checked, read_u8, read_u16, read_u32, read_u64, write_u8, write_u16, write_u32, write_u64);
-access!(Raw, raw_read_u8, raw_read_u16, raw_read_u32, raw_read_u64, raw_write_u8, raw_write_u16, raw_write_u32, raw_write_u64);
+
+/// Never an error ([`Mem::raw_read_u32`] and co.), so the handlers'
+/// error paths fold away.
+impl Access for Raw {
+    #[inline(always)]
+    fn r8(m: &mut Mem, a: u32) -> Result<u8, guest_mem::Fault> {
+        Ok(m.raw_read_u8(a))
+    }
+    #[inline(always)]
+    fn r16(m: &mut Mem, a: u32) -> Result<u16, guest_mem::Fault> {
+        Ok(m.raw_read_u16(a))
+    }
+    #[inline(always)]
+    fn r32(m: &mut Mem, a: u32) -> Result<u32, guest_mem::Fault> {
+        Ok(m.raw_read_u32(a))
+    }
+    #[inline(always)]
+    fn r64(m: &mut Mem, a: u32) -> Result<u64, guest_mem::Fault> {
+        Ok(m.raw_read_u64(a))
+    }
+    #[inline(always)]
+    fn w8(m: &mut Mem, a: u32, v: u8) -> Result<(), guest_mem::Fault> {
+        m.raw_write_u8(a, v);
+        Ok(())
+    }
+    #[inline(always)]
+    fn w16(m: &mut Mem, a: u32, v: u16) -> Result<(), guest_mem::Fault> {
+        m.raw_write_u16(a, v);
+        Ok(())
+    }
+    #[inline(always)]
+    fn w32(m: &mut Mem, a: u32, v: u32) -> Result<(), guest_mem::Fault> {
+        m.raw_write_u32(a, v);
+        Ok(())
+    }
+    #[inline(always)]
+    fn w64(m: &mut Mem, a: u32, v: u64) -> Result<(), guest_mem::Fault> {
+        m.raw_write_u64(a, v);
+        Ok(())
+    }
+}
 
 /// Whether recompiled code may use [`Raw`] for the load or store `w`: its
 /// base register is r1 (stack), r2 or r13 (small data).
