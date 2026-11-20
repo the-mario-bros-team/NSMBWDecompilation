@@ -21,6 +21,8 @@ gx = { path = "../gx" }
 hle-ios = { path = "../hle-ios" }
 input = { path = "../input" }
 cpal = "0.15"
+egui = "0.36"
+egui-winit = { version = "0.36", default-features = false }
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_System_Threading"] }

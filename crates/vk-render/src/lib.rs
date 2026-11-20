@@ -199,6 +199,20 @@ struct Prepared {
     moves: Option<[(u64, u64); 3]>,
 }
 
+/// The menus drawn over the picture (the settings window): egui's output for
+/// the frames shown until the next one ([`Renderer::set_ui`]).
+pub struct UiFrame {
+    pub primitives: Vec<egui::ClippedPrimitive>,
+    pub pixels_per_point: f32,
+}
+
+/// egui's Vulkan renderer, made the first time a menu is drawn, for the
+/// swapchain's format.
+struct UiLayer {
+    renderer: egui_ash_renderer::Renderer<egui_ash_renderer::allocator::DefaultAllocator>,
+    format: vk::Format,
+}
+
 /// The vertex stage's push constant: fraction between the two fields
 /// (f32 bits), and whether to move vertices at all.
 type Push = [u32; 2];
@@ -247,6 +261,11 @@ pub struct Renderer {
     swapchain_fn: Option<swapchain::Device>,
     swapchain: vk::SwapchainKHR,
     swap_images: Vec<vk::Image>,
+    /// Views of the swapchain images, for drawing the menus into them.
+    swap_views: Vec<vk::ImageView>,
+    swap_format: vk::Format,
+    ui: Option<UiLayer>,
+    ui_frame: Option<UiFrame>,
     swap_extent: vk::Extent2D,
     /// Per swapchain image: signalled when its frame is done, waited on by present.
     rendered: Vec<vk::Semaphore>,
@@ -587,6 +606,10 @@ impl Renderer {
                 swapchain_fn,
                 swapchain: vk::SwapchainKHR::null(),
                 swap_images: Vec::new(),
+                swap_views: Vec::new(),
+                swap_format: vk::Format::UNDEFINED,
+                ui: None,
+                ui_frame: None,
                 swap_extent: vk::Extent2D::default(),
                 rendered: Vec::new(),
                 needs_rebuild: true,
@@ -893,6 +916,36 @@ impl Renderer {
         Ok(p)
     }
 
+    /// What the menus draw over the frames shown from now on (`None`: no
+    /// menu), with egui's texture changes: new and changed textures are
+    /// uploaded now; freed ones go once the GPU is done with them.
+    pub fn set_ui(&mut self, frame: Option<UiFrame>, textures: &egui::TexturesDelta) -> Res<()> {
+        if self.ui.as_ref().is_none_or(|u| u.format != self.swap_format) && self.swap_format != vk::Format::UNDEFINED && !self.swap_views.is_empty() {
+            unsafe { self.device.device_wait_idle()? };
+            self.ui = None;
+            let mode = egui_ash_renderer::RenderMode::DynamicRendering(egui_ash_renderer::DynamicRendering { color_attachment_format: self.swap_format, depth_attachment_format: None, stencil_attachment_format: None });
+            // The swapchain is UNORM: egui's shader outputs sRGB itself.
+            let options = egui_ash_renderer::Options { in_flight_frames: FRAMES_IN_FLIGHT, enable_depth_test: false, enable_depth_write: false, srgb_framebuffer: false };
+            let renderer = egui_ash_renderer::Renderer::with_default_allocator(&self.instance, self.physical, self.device.clone(), mode, options).map_err(|e| format!("menus: {e}"))?;
+            self.ui = Some(UiLayer { renderer, format: self.swap_format });
+        }
+        if let Some(ui) = &mut self.ui {
+            for (id, deltas) in &textures.set {
+                for delta in deltas {
+                    ui.renderer.set_texture(self.queue, self.pool, *id, delta).map_err(|e| format!("menus: {e}"))?;
+                }
+            }
+            if !textures.free.is_empty() {
+                unsafe { self.device.device_wait_idle()? };
+                for id in &textures.free {
+                    ui.renderer.free_texture(*id).map_err(|e| format!("menus: {e}"))?;
+                }
+            }
+        }
+        self.ui_frame = frame;
+        Ok(())
+    }
+
     pub fn resized(&mut self) {
         self.needs_rebuild = true;
     }
@@ -907,6 +960,8 @@ impl Renderer {
             if !caps.supported_usage_flags.contains(vk::ImageUsageFlags::TRANSFER_DST) {
                 return Err("swapchain images cannot be written by transfers (no TRANSFER_DST usage)".into());
             }
+            // The menus are drawn into the images too, where the surface allows it.
+            let usage = vk::ImageUsageFlags::TRANSFER_DST | (caps.supported_usage_flags & vk::ImageUsageFlags::COLOR_ATTACHMENT);
             let extent = if caps.current_extent.width != u32::MAX {
                 caps.current_extent
             } else {
@@ -946,7 +1001,7 @@ impl Renderer {
                     .image_color_space(format.color_space)
                     .image_extent(extent)
                     .image_array_layers(1)
-                    .image_usage(vk::ImageUsageFlags::TRANSFER_DST)
+                    .image_usage(usage)
                     .image_sharing_mode(vk::SharingMode::EXCLUSIVE)
                     .pre_transform(caps.current_transform)
                     .composite_alpha(alpha)
@@ -958,8 +1013,18 @@ impl Renderer {
             if old != vk::SwapchainKHR::null() {
                 swapchain_fn.destroy_swapchain(old, None);
             }
+            for v in self.swap_views.drain(..) {
+                self.device.destroy_image_view(v, None);
+            }
             self.swap_images = swapchain_fn.get_swapchain_images(self.swapchain)?;
             self.swap_extent = extent;
+            self.swap_format = format.format;
+            if usage.contains(vk::ImageUsageFlags::COLOR_ATTACHMENT) {
+                for &image in &self.swap_images {
+                    let info = vk::ImageViewCreateInfo::default().image(image).view_type(vk::ImageViewType::TYPE_2D).format(format.format).subresource_range(range(vk::ImageAspectFlags::COLOR, 1));
+                    self.swap_views.push(self.device.create_image_view(&info, None)?);
+                }
+            }
             for s in self.rendered.drain(..) {
                 self.device.destroy_semaphore(s, None);
             }
@@ -1682,6 +1747,21 @@ impl Renderer {
                 if !regions.is_empty() {
                     dev.cmd_blit_image(cmd, self.palette.image, vk::ImageLayout::TRANSFER_SRC_OPTIMAL, target.image, vk::ImageLayout::TRANSFER_DST_OPTIMAL, &regions, vk::Filter::NEAREST);
                 }
+                if let (Some(frame), Some(ui), Some(&view)) = (&self.ui_frame, &mut self.ui, self.swap_views.get(i as usize)) {
+                    if !frame.primitives.is_empty() && ui.format == self.swap_format {
+                        transition(&dev, cmd, &mut target, vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+                        let color = [vk::RenderingAttachmentInfo::default()
+                            .image_view(view)
+                            .image_layout(vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL)
+                            .load_op(vk::AttachmentLoadOp::LOAD)
+                            .store_op(vk::AttachmentStoreOp::STORE)];
+                        let area = rect2d(0, 0, target.w, target.h);
+                        dev.cmd_begin_rendering(cmd, &vk::RenderingInfo::default().render_area(area).layer_count(1).color_attachments(&color));
+                        let drawn = ui.renderer.cmd_draw(cmd, self.swap_extent, frame.pixels_per_point, &frame.primitives);
+                        dev.cmd_end_rendering(cmd);
+                        drawn.map_err(|e| format!("menus: {e}"))?;
+                    }
+                }
                 transition(&dev, cmd, &mut target, vk::ImageLayout::PRESENT_SRC_KHR);
             }
         }
@@ -1826,6 +1906,10 @@ impl Drop for Renderer {
             for &s in &self.rendered {
                 self.device.destroy_semaphore(s, None);
             }
+            for &v in &self.swap_views {
+                self.device.destroy_image_view(v, None);
+            }
+            self.ui = None;
             self.device.destroy_command_pool(self.pool, None);
             if let Some(f) = &self.swapchain_fn {
                 if self.swapchain != vk::SwapchainKHR::null() {

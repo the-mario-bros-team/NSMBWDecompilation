@@ -9,7 +9,8 @@
 //!   advances 59.94 times a second.
 //!
 //! Hotkeys (F1 shows them) change the display settings and save them to
-//! `settings.toml`.
+//! `settings.toml`; F10 opens the Settings window (`ui`), which pauses the
+//! game while it is up.
 
 use std::collections::VecDeque;
 use std::sync::mpsc::{self, Receiver, Sender};
@@ -32,6 +33,7 @@ use hle_ios::wiimote::Input;
 use crate::overlay;
 use crate::say::{say, say_err};
 use crate::settings::{self, Settings};
+use crate::ui;
 
 pub struct Options {
     pub game: PathBuf,
@@ -140,6 +142,16 @@ struct App {
     /// A `--shot` to take from the next in-between frame.
     pending_shot: Option<PathBuf>,
     remotes: [RemoteStatus; REMOTES],
+    /// The Settings window and the port's other menus.
+    menus: Option<ui::Menus>,
+    /// Player 1's buttons held when a menu was up: kept from the game until
+    /// let go, so the press that closed the menu does not reach it.
+    menu_mask: u16,
+    /// What the game thread was last told: paused (a menu is up) or not.
+    sent_pause: bool,
+    /// The Settings window changed something not saved yet (saved when it
+    /// closes: a slider drag changes it every frame).
+    unsaved: bool,
 }
 
 /// Sleeps until `deadline`, then spins the last stretch: a sleep can
@@ -154,6 +166,19 @@ fn wait_until(deadline: Instant) {
     }
     while Instant::now() < deadline {
         std::thread::yield_now();
+    }
+}
+
+fn gameplay_options(s: &Settings) -> crate::gameplay::Options {
+    crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives }
+}
+
+/// The console's language number (SYSCONF IPL.LNG) for a settings code.
+fn language_code(language: &str) -> u8 {
+    match language {
+        "fr" => 3,
+        "es" => 4,
+        _ => 1,
     }
 }
 
@@ -205,13 +230,20 @@ impl App {
             settings::fps_label(self.settings.fps),
             on(self.settings.vsync)
         );
-        println!("keys: F1 help, F3 performance monitor, F4 battery saver, F5/F6 frame rate, F7 V-Sync, F9 aspect, F11 fullscreen");
+        println!("keys: F1 help, F3 performance monitor, F4 battery saver, F5/F6 frame rate, F7 V-Sync, F9 aspect, F10 settings, F11 fullscreen");
         println!("controls (sideways Wii Remote): arrows D-pad, X/Space 2, Z/Shift 1, C/Ctrl shake, Q/E tilt, B the A button, Enter/Esc +, Tab/- minus, Home HOME; gamepads too");
         // The game reads its aspect ratio from SYSCONF once, at boot.
         if let Err(e) = hle_ios::nand::set_widescreen(Path::new("saves/nand"), self.settings.widescreen) {
             eprintln!("SYSCONF: {e}");
         }
-        self.emu = Some(Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, ..self.opts.emu.clone() }));
+        if let Err(e) = hle_ios::nand::set_language(Path::new("saves/nand"), language_code(&self.settings.language)) {
+            eprintln!("SYSCONF: {e}");
+        }
+        crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed);
+        self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
+        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, ..self.opts.emu.clone() });
+        let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
+        self.emu = Some(emu);
         self.renderer = Some(renderer);
         self.window = Some(window);
         let now = Instant::now();
@@ -226,11 +258,26 @@ impl App {
             let _ = emu.to_emu.send(ToEmu::Interpolate(interpolate));
             self.sent_interpolate = Some(interpolate);
         }
-        let controls = self.inputs.poll();
+        let mut controls = self.inputs.poll();
+        // A menu up: the game is paused and player 1's buttons move the
+        // menu's cursor instead.
+        let open = self.menus.as_ref().is_some_and(ui::Menus::is_open);
+        let p1 = controls[0].buttons;
+        self.menu_mask = if open { p1 } else { self.menu_mask & p1 };
+        controls[0].buttons &= !self.menu_mask;
+        if open {
+            controls[0].shake = false;
+        }
+        if self.sent_pause != open {
+            let _ = emu.to_emu.send(ToEmu::Pause(open));
+            self.sent_pause = open;
+        }
         if self.sent_input != Some(controls) {
             let _ = emu.to_emu.send(ToEmu::Input(controls));
             self.sent_input = Some(controls);
         }
+        self.update_menus(p1)?;
+        let Some(emu) = &self.emu else { return Ok(()) };
         let mut new = Vec::new();
         loop {
             match emu.frames.try_recv() {
@@ -258,6 +305,9 @@ impl App {
         }
         if !native {
             self.present_interpolated()?;
+        } else if count == 0 && open {
+            // Paused under a menu: the last field again, with the menu.
+            self.present_still()?;
         }
         self.update_counters();
         Ok(())
@@ -437,6 +487,84 @@ impl App {
         Ok(())
     }
 
+    /// The newest field shown again as it is (the game is paused under a
+    /// menu, and the menu moves).
+    fn present_still(&mut self) -> Result<(), String> {
+        let Some(size) = self.window.as_ref().map(|w| w.inner_size()) else { return Ok(()) };
+        let rects = self.overlay_rects(size.width, size.height);
+        let (Some(renderer), Some(fb)) = (&mut self.renderer, self.queue.back()) else { return Ok(()) };
+        renderer.overlay = rects;
+        let key = (fb.index, fb.index);
+        if renderer.prepared() != Some(key) {
+            renderer.prepare(key, &fb.out, None).map_err(|e| e.to_string())?;
+        }
+        renderer.render_prepared(&fb.out, 1.0, fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
+        self.presented_now();
+        Ok(())
+    }
+
+    /// The menus' next frame to the renderer, and what they changed applied.
+    fn update_menus(&mut self, buttons: u16) -> Result<(), String> {
+        let (Some(menus), Some(window)) = (&mut self.menus, &self.window) else { return Ok(()) };
+        let Some((frame, textures, changes)) = menus.frame(window, &mut self.settings, buttons) else { return Ok(()) };
+        let closed = frame.is_none();
+        if let Some(r) = &mut self.renderer {
+            r.set_ui(frame, &textures).map_err(|e| e.to_string())?;
+        }
+        for change in changes {
+            self.unsaved = true;
+            match change {
+                ui::Change::Fps => {
+                    self.next_display = Instant::now();
+                    if let Some(w) = &self.window {
+                        w.set_title(&self.title());
+                    }
+                }
+                ui::Change::VSync => {
+                    if let Some(r) = &mut self.renderer {
+                        r.set_vsync(self.settings.vsync);
+                    }
+                }
+                ui::Change::Fullscreen => {
+                    if let Some(w) = &self.window {
+                        w.set_fullscreen(self.settings.fullscreen.then_some(Fullscreen::Borderless(None)));
+                    }
+                }
+                ui::Change::Aspect => {
+                    if let Some(r) = &mut self.renderer {
+                        r.aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
+                    }
+                    if let Err(e) = hle_ios::nand::set_widescreen(Path::new("saves/nand"), self.settings.widescreen) {
+                        say_err!("SYSCONF: {e}");
+                    }
+                }
+                ui::Change::Volume => crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed),
+                ui::Change::Language => {
+                    if let Err(e) = hle_ios::nand::set_language(Path::new("saves/nand"), language_code(&self.settings.language)) {
+                        say_err!("SYSCONF: {e}");
+                    }
+                }
+                ui::Change::Gameplay => {
+                    if let Some(emu) = &self.emu {
+                        let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
+                    }
+                }
+                ui::Change::PowerUp(p) => {
+                    if let Some(emu) = &self.emu {
+                        let _ = emu.to_emu.send(ToEmu::PowerUp(p));
+                    }
+                }
+                // From the next start, or read every frame.
+                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver => {}
+            }
+        }
+        if closed && self.unsaved {
+            self.settings.save(Path::new(settings::FILE));
+            self.unsaved = false;
+        }
+        Ok(())
+    }
+
     fn presented_now(&mut self) {
         let now = Instant::now();
         self.times.push_back((now - self.last_present).as_secs_f32() * 1000.0);
@@ -502,6 +630,8 @@ impl App {
                     format!("WII REMOTES {}", if on.is_empty() { "NONE".to_string() } else { on.join(" ") })
                 }),
             ];
+            // Its size (Settings > Display): 50% is the base size.
+            let px = ((px * self.settings.perf_size as i32 + 25) / 50).max(1);
             let (_, h) = overlay::panel(&mut out, margin, margin, px, &lines);
             let times: Vec<f32> = self.times.iter().copied().collect();
             overlay::graph(&mut out, margin, margin + h + px, px, &times, budget);
@@ -514,6 +644,7 @@ impl App {
                 format!("F5/F6  FRAME RATE ({})", settings::fps_label(self.settings.fps)),
                 format!("F7  V-SYNC ({})", on(self.settings.vsync)),
                 format!("F9  ASPECT ({}; GAME AT NEXT START)", if self.settings.widescreen { "16:9" } else { "4:3" }),
+                "F10 SETTINGS".to_string(),
                 format!("F11 FULLSCREEN ({})", on(self.settings.fullscreen)),
             ]
             .into_iter()
@@ -565,6 +696,12 @@ impl App {
                 }
                 true
             }
+            KeyCode::F10 => {
+                if let Some(m) = &mut self.menus {
+                    m.toggle();
+                }
+                false
+            }
             KeyCode::F11 => {
                 self.settings.fullscreen = !self.settings.fullscreen;
                 if let Some(w) = &self.window {
@@ -592,6 +729,11 @@ impl ApplicationHandler for App {
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+        if let (Some(menus), Some(window)) = (&mut self.menus, &self.window) {
+            if menus.on_event(window, &event) {
+                return;
+            }
+        }
         match event {
             WindowEvent::CloseRequested => event_loop.exit(),
             WindowEvent::Resized(_) => {
@@ -710,6 +852,10 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         sent_interpolate: None,
         pending_shot: None,
         remotes: [RemoteStatus::default(); REMOTES],
+        menus: None,
+        menu_mask: 0,
+        sent_pause: false,
+        unsaved: false,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     match app.error {

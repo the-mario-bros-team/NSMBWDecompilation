@@ -8,6 +8,7 @@
 mod audio;
 mod boot;
 mod emu;
+mod gameplay;
 mod gamefiles;
 mod net;
 mod overlay;
@@ -15,6 +16,7 @@ mod play;
 mod replay;
 mod say;
 mod settings;
+mod ui;
 mod win;
 
 use std::path::{Path, PathBuf};

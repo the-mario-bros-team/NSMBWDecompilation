@@ -31,11 +31,24 @@ pub struct Settings {
     /// Also write EFB-to-texture copies into guest RAM (slower; off keeps
     /// them on the GPU, as Dolphin does by default).
     pub efb_copies_to_ram: bool,
+    /// The performance monitor's size, 5..200 percent.
+    pub perf_size: u32,
+    /// Volumes in percent: master, music, sound effects, menu sounds.
+    pub volume: [u32; 4],
+    /// The game's language (the console's, which it reads at boot): "en",
+    /// "es" or "fr".
+    pub language: String,
+    /// Gameplay: the course timer stands still.
+    pub no_time_limit: bool,
+    /// Gameplay: a miss costs no life.
+    pub infinite_lives: bool,
+    /// Gameplay: the power-up last picked to give player 1 (`gameplay::POWER_UPS`).
+    pub power_up: u32,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1 }
     }
 }
 
@@ -79,6 +92,23 @@ impl Settings {
             Some(toml::Value::Integer(n)) => s.scale = (*n).clamp(1, 8) as u32,
             _ => {}
         }
+        let number = |k: &str| t.get(k).and_then(toml::Value::as_integer);
+        if let Some(n) = number("perf_size") {
+            s.perf_size = n.clamp(5, 200) as u32;
+        }
+        for (i, k) in ["volume", "music_volume", "sound_volume", "menu_volume"].into_iter().enumerate() {
+            if let Some(n) = number(k) {
+                s.volume[i] = n.clamp(0, 100) as u32;
+            }
+        }
+        if let Some(l) = t.get("language").and_then(toml::Value::as_str).filter(|l| ["en", "es", "fr"].contains(l)) {
+            s.language = l.into();
+        }
+        s.no_time_limit = flag("no_time_limit", s.no_time_limit);
+        s.infinite_lives = flag("infinite_lives", s.infinite_lives);
+        if let Some(n) = number("power_up") {
+            s.power_up = n.clamp(0, crate::gameplay::POWER_UPS.len() as i64 - 1) as u32;
+        }
         s
     }
 
@@ -94,13 +124,30 @@ impl Settings {
              # \"16:9\" or \"4:3\" (the game reads it at boot).\n\
              aspect = \"{}\"\nperf_monitor = {}\nbattery_saver = {}\n\
              # Also write EFB copies into guest RAM (slower; NSMBW does not need it).\n\
-             efb_copies_to_ram = {}\n",
+             efb_copies_to_ram = {}\n\
+             # The performance monitor's size (5..200 percent).\n\
+             perf_size = {}\n\
+             # Volumes in percent.\n\
+             volume = {}\nmusic_volume = {}\nsound_volume = {}\nmenu_volume = {}\n\
+             # The game's language: \"en\", \"es\" or \"fr\" (the game reads it at boot).\n\
+             language = \"{}\"\n\
+             # Gameplay options (the Settings window's Gameplay tab).\n\
+             no_time_limit = {}\ninfinite_lives = {}\npower_up = {}\n",
             self.vsync,
             self.fullscreen,
             if self.widescreen { "16:9" } else { "4:3" },
             self.perf_monitor,
             self.battery_saver,
-            self.efb_copies_to_ram
+            self.efb_copies_to_ram,
+            self.perf_size,
+            self.volume[0],
+            self.volume[1],
+            self.volume[2],
+            self.volume[3],
+            self.language,
+            self.no_time_limit,
+            self.infinite_lives,
+            self.power_up
         );
         if let Err(e) = std::fs::write(path, text) {
             eprintln!("{}: {e}", path.display());
@@ -124,7 +171,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("nsmbw-settings-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(FILE);
-        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true };
+        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7 };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3, ..Settings::default() };

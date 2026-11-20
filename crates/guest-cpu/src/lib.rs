@@ -82,6 +82,7 @@ impl Stop {
     }
 }
 
+#[derive(Clone)]
 pub struct Cpu {
     pub pc: u32,
     pub gpr: [u32; 32],

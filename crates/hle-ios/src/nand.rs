@@ -258,6 +258,18 @@ pub fn set_widescreen(root: &Path, widescreen: bool) -> std::io::Result<()> {
     Ok(())
 }
 
+/// Sets the console's language in SYSCONF (`IPL.LNG`: 1 English, 3 French,
+/// 4 Spanish), which the game reads at boot.
+pub fn set_language(root: &Path, language: u8) -> std::io::Result<()> {
+    ensure_system_files(root)?;
+    let path = root.join("shared2/sys/SYSCONF");
+    let mut conf = std::fs::read(&path)?;
+    if set_sysconf_byte(&mut conf, "IPL.LNG", language) {
+        std::fs::write(&path, conf)?;
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

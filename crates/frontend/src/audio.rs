@@ -32,6 +32,9 @@ struct Queue {
 
 /// Output to the default device. Keep it on the thread that made it (the
 /// stream is not `Send` on every platform).
+/// The master volume in percent (the Settings window's Audio tab).
+pub static VOLUME: std::sync::atomic::AtomicU8 = std::sync::atomic::AtomicU8::new(100);
+
 pub struct Audio {
     queue: Arc<Mutex<Queue>>,
     _stream: cpal::Stream,
@@ -109,7 +112,8 @@ impl Audio {
             q.pos = 0.0;
             q.rate = rate;
         }
-        q.frames.extend(samples.chunks_exact(2).map(|f| [f32::from(f[0]) / 32768.0, f32::from(f[1]) / 32768.0]));
+        let gain = f32::from(VOLUME.load(std::sync::atomic::Ordering::Relaxed)) / 100.0 / 32768.0;
+        q.frames.extend(samples.chunks_exact(2).map(|f| [f32::from(f[0]) * gain, f32::from(f[1]) * gain]));
         let max = rate as usize * MAX_MS / 1000;
         if q.frames.len() > max {
             let drop = q.frames.len() - rate as usize * TARGET_MS / 1000;

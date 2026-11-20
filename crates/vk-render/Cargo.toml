@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 ash = "0.38"
+egui = "0.36"
+egui-ash-renderer = "0.13"
 ash-window = "0.13"
 raw-window-handle = "0.6"
 gpu-allocator = { version = "0.28", default-features = false, features = ["std", "vulkan"] }

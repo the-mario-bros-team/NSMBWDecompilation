@@ -63,6 +63,14 @@ pub enum ToEmu {
     Recycle(Box<gx::Output>),
     /// Whether fields should carry frame-interpolation records.
     Interpolate(bool),
+    /// Stop running fields until `Pause(false)` (the Settings window is
+    /// open). Ignored in a net game, which the other players keep running.
+    Pause(bool),
+    /// The Settings window's Gameplay options (not in a net game).
+    Gameplay(crate::gameplay::Options),
+    /// Give player 1 this power-up (`gameplay::POWER_UPS`) in a course or on
+    /// the world map, as soon as the game is in one.
+    PowerUp(u8),
 }
 
 /// Totals for the exit report.
@@ -179,6 +187,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Input(i) => *live = i,
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
+        ToEmu::Pause(_) | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) => {}
     }
 }
 
@@ -416,12 +425,27 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     // Wii Remote 1 is on from the start, as when the game is launched with it.
     let mut live = [Input::default(); REMOTES];
     live[0].connected = true;
+    let mut paused = false;
+    let mut gameplay = crate::gameplay::Gameplay::default();
+    let mut gameplay_options = crate::gameplay::Options::default();
     while !stop.load(Ordering::Relaxed) && last_field.is_none_or(|l| index <= l) {
-        while let Ok(msg) = to_emu.try_recv() {
-            if no_feedback && matches!(msg, ToEmu::Writebacks(_) | ToEmu::Efb(_)) {
-                continue;
+        loop {
+            while let Ok(msg) = to_emu.try_recv() {
+                match msg {
+                    ToEmu::Pause(p) => paused = p && session.is_none(),
+                    ToEmu::Gameplay(o) => gameplay_options = o,
+                    ToEmu::PowerUp(p) => gameplay.pending = Some(p),
+                    ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
+                    msg => apply(&mut sys, &mut live, msg),
+                }
             }
-            apply(&mut sys, &mut live, msg);
+            if !paused || stop.load(Ordering::Relaxed) {
+                break;
+            }
+            // Paused: no field runs, and the schedule starts again from the
+            // end of the pause.
+            std::thread::sleep(Duration::from_millis(5));
+            due = Instant::now() + FIELD;
         }
         for (_, path) in save_states.iter().filter(|s| s.0 == index) {
             let state = sys.save_state();
@@ -472,6 +496,12 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         if let Err(e) = r {
             let _ = frames.send(Err(e));
             break;
+        }
+        // Net games keep the game's own rules.
+        if session.is_none() {
+            if let Some(line) = gameplay.after_field(&mut sys, gameplay_options) {
+                say!("{line}");
+            }
         }
         let emu = started.elapsed();
         let gx_wait = sys.hw.borrow().gpu.waited() - waited;
