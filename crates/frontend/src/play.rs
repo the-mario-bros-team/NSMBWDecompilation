@@ -126,7 +126,7 @@ impl App {
     }
 
     fn start(&mut self, event_loop: &ActiveEventLoop) -> Result<(), String> {
-        let mut attrs = Window::default_attributes().with_title("New Super Mario Bros. Wii - Rust port").with_inner_size(LogicalSize::new(1280.0, 720.0));
+        let mut attrs = Window::default_attributes().with_title(self.title()).with_inner_size(LogicalSize::new(1280.0, 720.0));
         if self.settings.fullscreen {
             attrs = attrs.with_fullscreen(Some(Fullscreen::Borderless(None)));
         }
@@ -208,7 +208,7 @@ impl App {
         if !native {
             self.present_interpolated()?;
         }
-        self.update_title();
+        self.update_counters();
         Ok(())
     }
 
@@ -380,7 +380,7 @@ impl App {
         self.title_presents += 1;
     }
 
-    fn update_title(&mut self) {
+    fn update_counters(&mut self) {
         let now = Instant::now();
         let secs = (now - self.title_at).as_secs_f32();
         if secs < 1.0 {
@@ -403,15 +403,16 @@ impl App {
                 self.render_ms
             );
         }
-        if let (Some(w), Some(r)) = (&self.window, &self.renderer) {
-            w.set_title(&format!(
-                "New Super Mario Bros. Wii - Rust port - {:.1} fps (target {}), game {:.1} fps, {} draws",
-                self.shown_fps,
-                settings::fps_label(self.settings.fps).to_lowercase(),
-                self.game_fps,
-                r.stats.draws
-            ));
-        }
+    }
+
+    /// The window title names the frame-rate target. It is not rewritten
+    /// with live numbers every second, as it once was: setting a title can
+    /// block the window's thread for 15-40 ms (more with overlays and
+    /// accessibility tools hooked into the window), long enough to drop
+    /// frames at 400 fps. The live numbers are in the performance monitor
+    /// (F3) and `--log-fps`.
+    fn title(&self) -> String {
+        format!("New Super Mario Bros. Wii - Rust port - {} fps", settings::fps_label(self.settings.fps).to_lowercase())
     }
 
     fn overlay_rects(&self, width: u32, height: u32) -> Vec<vk_render::OverlayRect> {
@@ -474,6 +475,9 @@ impl App {
                 self.settings.step_fps(code == KeyCode::F6);
                 self.next_display = Instant::now();
                 println!("frame rate: {}", settings::fps_label(self.settings.fps));
+                if let Some(w) = &self.window {
+                    w.set_title(&self.title());
+                }
                 true
             }
             KeyCode::F7 => {
