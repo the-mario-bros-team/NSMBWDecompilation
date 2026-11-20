@@ -1604,6 +1604,39 @@ thread (35 s) is 74% `Xf::transform`.
    draws use. Paced: 30.0 fps shown, game 100% throughout. Screenshots of
    fields 6201, 6461 and 6501 are byte-identical at 30 and 60 fps.
 
+9. **Priorities.** The process stays at normal priority (it raised itself
+   to above normal); inside it the game thread and both GX threads run
+   above normal (`win::raise_this_thread`, run first by each GX thread),
+   so a window drawing hundreds of frames a second does not slow
+   emulation, and the rest of the PC stays responsive.
+10. **Hooks called from recompiled code.** The hooks that replace a whole
+   function (return at once, the reverb, `strcmp`, `sqrt`) became one
+   function, `hle_os::replace`, that `System::before` uses and that
+   recompiled code calls through `Rt::set_hook` at a call, jump or
+   fall-through to a hook address, instead of unwinding. A hook that
+   declines changes nothing, so the dispatcher then decides the same way;
+   the light-texture, idle and `OSLink` hooks stay in the dispatcher. The
+   hook list is unchanged. Dispatcher entries 16.7 -> 5.3 million; scene
+   loads (`strcmp` runs about 5 million times in the script) 30-45 ms ->
+   17-32 ms per field.
+11. **Vertex loader, part 1.** `Layout::read` called `comp` (not inlined)
+   for every component; `comps` picks the format once per attribute. GX
+   waits on the world map down 25-40%, whole script 12.0 -> 8.6 s.
+12. **`strcmp` reads each string's RAM once** (`ram_from`) instead of a
+   byte at a time through `Mem::ram`, which was 10% of the game thread
+   during the opening cutscene's load.
+13. **Vertex loader, part 2.** Vertices are read straight into the batch
+   (`Layout::read_into` over a template): built on the stack and copied
+   out, every vertex stalled on reading back its own fresh stores. World
+   map GX waits another 20% lower.
+
+After 13, headless: `run_field` for the whole script 48.1 s, of which
+6.7 s waiting for the GX thread. Paced at 360 fps over the whole script,
+with two other builds running: game speed median 100%, minimum 97%; only
+the opening cutscene's load (field 3121, 29 ms of guest string and
+resource searches) and the course clear (fields 9406-9413) leave a second
+below 99%. Shown fps (the renderer, branch `render-400`) dipped to 252.
+
 **Result** (1-1 hash script, windowed, the first build of this pass
 against the last, alternating, best of two, same machine state):
 
