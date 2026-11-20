@@ -27,7 +27,7 @@ use hle_ios::wiimote::Input;
 use hle_os::System;
 
 /// Bumped when messages or the save-state layout change.
-const PROTOCOL: u32 = 1;
+const PROTOCOL: u32 = 2;
 /// Fields between sampling a local input and the field it is used in, once
 /// another machine is in the session (33 ms; a solo host has none).
 pub const DELAY: u64 = 2;

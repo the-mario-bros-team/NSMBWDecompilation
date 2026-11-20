@@ -799,6 +799,7 @@ version = "0.1.0"
 dependencies = [
  "guest-cpu",
  "guest-mem",
+ "gx",
  "hle-ios",
  "hw",
 ]

@@ -90,57 +90,7 @@ fn run_field(sys: &mut System) -> Result<(), String> {
     sys.run_field(limit).map_err(|s| format!("guest stopped at {:#010x}: {s:?}", sys.cpu.pc))
 }
 
-/// Player `i`'s position: `daPyMng_c`'s player IDs (0x80354E10, one word per
-/// player), looked up
-/// as `fManager_c::searchBaseByID` does (lists at 0x80377A70 by ID & 7, nodes
-/// linked at +4 with their `fBase_c` at +8, its ID at +0), then the actor's
-/// position (`dBaseActor_c`, +0xAC).
-pub fn player_position(mem: &guest_mem::Mem, i: usize) -> Option<[f32; 2]> {
-    let r = |a: u32| mem.ram(a, 4).map(|b| u32::from_be_bytes(b.try_into().unwrap()));
-    let id = r(0x8035_4E10 + 4 * i as u32)?;
-    if id == 0 {
-        return None;
-    }
-    let mut node = r(0x8037_7A70 + 8 * (id & 7))?;
-    for _ in 0..10_000 {
-        if node == 0 {
-            return None;
-        }
-        let base = r(node + 8)?;
-        if r(base)? == id {
-            return Some([f32::from_bits(r(base + 0xAC)?), f32::from_bits(r(base + 0xB0)?)]);
-        }
-        node = r(node + 4)?;
-    }
-    None
-}
-
-/// `_SDA_BASE_` (r13) of this build.
-const SDA: u32 = 0x8042_F680;
-
-/// The game's camera in a course: (left, top, width, height) in world units
-/// (y up). `dBg_c::m_bg_p` (r13 - 0x58B0) keeps it at +0x8FE88 (left, top)
-/// and +0x8FE78 (size); the world projection is `2 / width`, `2 / height`.
-pub fn game_camera(mem: &guest_mem::Mem) -> Option<[f32; 4]> {
-    let r = |a: u32| mem.ram(a, 4).map(|b| u32::from_be_bytes(b.try_into().unwrap()));
-    let bg = r(SDA - 0x58B0).filter(|&p| p >= 0x8000_0000)?;
-    let f = |o: u32| r(bg + o).map(f32::from_bits);
-    let cam = [f(0x8FE88)?, f(0x8FE8C)?, f(0x8FE78)?, f(0x8FE7C)?];
-    (cam.iter().all(|v| v.is_finite()) && (16.0..20_000.0).contains(&cam[2]) && (16.0..20_000.0).contains(&cam[3])).then_some(cam)
-}
-
-/// The view centred on player `p`: a window the game camera's size (or
-/// 1/`zoom` of it) around the player, kept inside the camera, which is all
-/// the game draws.
-fn player_view(mem: &guest_mem::Mem, p: usize, zoom: f32) -> Option<gx::xf::View> {
-    let [left, top, w, h] = game_camera(mem)?;
-    let [px, py] = player_position(mem, p)?;
-    let size = [w / zoom.max(1.0), h / zoom.max(1.0)];
-    let (cx, cy) = (left + w / 2.0, top - h / 2.0);
-    let vx = px.clamp(left + size[0] / 2.0, left + w - size[0] / 2.0);
-    let vy = py.clamp(top - h + size[1] / 2.0, top - size[1] / 2.0);
-    Some(gx::xf::View::window([w, h], size, [vx - cx, vy - cy]))
-}
+pub use hle_os::camera::player_position;
 
 fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
     match msg {
@@ -211,6 +161,9 @@ pub struct EmuOptions {
     /// Show 1/n of the game camera's width and height around that player
     /// (`--view-zoom`, for testing the view on one player).
     pub view_zoom: f32,
+    /// The game's camera becomes a box around every player
+    /// (`--shared-camera`; always on online).
+    pub shared_camera: bool,
     /// Write MEM1 and MEM2 (0x80000000 and 0x90000000, back to back) to a
     /// file at the start of these fields, for reverse engineering.
     pub dump_ram: Vec<(u64, PathBuf)>,
@@ -282,7 +235,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, shared_camera, wav, audio, code_profile, interpreter } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -339,6 +292,10 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     // Reverb, delay and chorus: the game's own effect callbacks, mixed back
     // by the DSP (NSMBW_AUXFX=off skips both).
     sys.aux_effects = std::env::var("NSMBW_AUXFX").map_or(true, |v| v != "off");
+    sys.camera.enabled = shared_camera || session.is_some();
+    sys.camera.view_player = view_player;
+    sys.camera.view_zoom = view_zoom;
+    let mut fields_without_camera = 0u32;
     sys.hw.borrow_mut().dsp.ax.aux_return = sys.aux_effects;
     if code_profile.is_some() {
         sys.blocks.starts = Some(Default::default());
@@ -426,13 +383,21 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
         }
         {
-            let view = view_player.and_then(|p| player_view(&sys.mem, p, view_zoom));
             let mut hw = sys.hw.borrow_mut();
             for (i, input) in inputs.into_iter().enumerate() {
                 hw.ios.bt.set_input(i, input);
             }
+            // The view is set each time the game's camera runs; outside a
+            // course (no camera for a few fields) the world is drawn as is.
             if view_player.is_some() {
-                hw.gpu.set_view(view);
+                if std::mem::take(&mut sys.camera.ran) {
+                    fields_without_camera = 0;
+                } else {
+                    fields_without_camera += 1;
+                    if fields_without_camera == 4 {
+                        hw.gpu.set_view(None);
+                    }
+                }
             }
         }
         let started = Instant::now();
