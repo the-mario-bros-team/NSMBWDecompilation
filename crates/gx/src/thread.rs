@@ -316,9 +316,12 @@ impl GxThread {
         }
     }
 
-    fn take_output(&mut self) -> Output {
+    fn request_output(&mut self) {
         self.flush();
         self.send(Msg::TakeOutput);
+    }
+
+    fn finish_output(&mut self) -> Output {
         match self.reply() {
             Reply::Output(out) => *out,
             _ => unreachable!("unrequested reply"),
@@ -445,9 +448,25 @@ impl GpuPort {
 
     /// The field's output (see [`Gpu::take_output`]).
     pub fn take_output(&mut self) -> Output {
+        self.request_output();
+        self.finish_output()
+    }
+
+    /// Asks for the field's output without waiting for it: the GX threads
+    /// finish it while the caller does something else (a paced game thread
+    /// sleeps until the field's slot ends). [`GpuPort::finish_output`] takes
+    /// it; nothing else may reach the GPU in between.
+    pub fn request_output(&mut self) {
+        if let Self::Thread(t) = self {
+            t.request_output();
+        }
+    }
+
+    /// The output asked for with [`GpuPort::request_output`].
+    pub fn finish_output(&mut self) -> Output {
         match self {
             Self::Inline(gpu) => gpu.take_output(),
-            Self::Thread(t) => t.take_output(),
+            Self::Thread(t) => t.finish_output(),
         }
     }
 

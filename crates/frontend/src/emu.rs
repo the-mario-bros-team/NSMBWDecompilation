@@ -499,24 +499,18 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         totals.recomp_entries = sys.recomp_entries;
         totals.recomp_changed = sys.recomp.as_ref().map_or(0, |r| r.changed);
         (totals.light_texture_calls, totals.light_texture_skips) = (sys.light_textures.calls, sys.light_textures.skips);
-        let (out, xfb, now_peeks, remotes) = {
+        let (xfb, now_peeks, remotes) = {
             let mut hw = sys.hw.borrow_mut();
             let remotes = std::array::from_fn(|i| hw.ios.bt.remote_status(i));
-            let waited = hw.gpu.waited();
-            let out = hw.gpu.take_output();
-            totals.output_wait += hw.gpu.waited() - waited;
-            if hash_gx {
-                gx_digest = (gx_digest.rotate_left(13) ^ out.digest()).wrapping_mul(0x9E37_79B9_7F4A_7C15);
-            }
-            (out, hw.xfb_addr(), hw.efb_peeks, remotes)
+            // The GX threads finish the field's output (transform, and the
+            // interpolation records above 60 fps) while this thread sleeps
+            // until the field's slot ends; it used to wait for them first.
+            hw.gpu.request_output();
+            (hw.xfb_addr(), hw.efb_peeks, remotes)
         };
         let wants_efb = now_peeks != peeks && !no_feedback;
         peeks = now_peeks;
         let time = if unpaced { Instant::now() } else { due };
-        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes })).is_err() {
-            break;
-        }
-        index += 1;
         if !unpaced {
             let now = Instant::now();
             if due > now {
@@ -530,6 +524,20 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
             due += FIELD;
         }
+        let out = {
+            let mut hw = sys.hw.borrow_mut();
+            let waited = hw.gpu.waited();
+            let out = hw.gpu.finish_output();
+            totals.output_wait += hw.gpu.waited() - waited;
+            if hash_gx {
+                gx_digest = (gx_digest.rotate_left(13) ^ out.digest()).wrapping_mul(0x9E37_79B9_7F4A_7C15);
+            }
+            out
+        };
+        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes })).is_err() {
+            break;
+        }
+        index += 1;
     }
     if profile {
         print_profile(&sys.slices.borrow().samples.clone().unwrap_or_default());
@@ -586,7 +594,9 @@ pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), St
 
 impl Emu {
     pub fn spawn(game: PathBuf, opts: EmuOptions) -> Self {
-        let (frames_tx, frames) = mpsc::sync_channel(2);
+        // Room for a few fields: the game thread sends a field's output
+        // when its slot ends, and must not wait there for a render.
+        let (frames_tx, frames) = mpsc::sync_channel(4);
         let (to_emu, to_emu_rx) = mpsc::channel();
         let stop = Arc::new(AtomicBool::new(false));
         let s = stop.clone();
