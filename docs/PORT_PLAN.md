@@ -1704,8 +1704,7 @@ below 99%. Shown fps (the renderer, branch `render-400`) dipped to 252.
    course on the disc (P7's `--course`, from a World 1 map state, holding
    right and hopping for 1,110 fields, as P7's smoke test does) and of the
    4-player script, merged with the 1-1 one, is
-   `D:
-smbw-p6\profile-all.txt` (182,815 block starts):
+   `D:\nsmbw-p6\profile-all.txt` (182,815 block starts):
    - 12,804 functions instead of 9,549; 80 MB of generated source instead
      of 58; the binary 89 MB instead of 65; a full build 17 minutes at 2
      jobs.
