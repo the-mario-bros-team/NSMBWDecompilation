@@ -60,6 +60,8 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
   --no-audio         no sound output (unpaced runs never play sound)
   --interpreter      do not run recompiled code (crates/game-recomp), only the interpreter
   --code-profile <file>  at exit, write every guest address a decoded block started at (input for ppc-recomp)
+  --course <w>-<l>[:<area>[:<entrance>]]  when the game next starts a course, start this one instead
+                     (numbered as Stage/WW-LL.arc; scripts/to-map.press enters World 1-1 from boot)
   flags override settings.toml for this run only";
 
 struct Args {
@@ -94,6 +96,22 @@ struct Args {
     no_audio: bool,
     code_profile: Option<PathBuf>,
     interpreter: bool,
+    course: Option<emu::Course>,
+}
+
+/// `<world>-<level>[:<area>[:<entrance>]]`, numbered as the files in
+/// `Stage/` (`3-24` is `Stage/03-24.arc`); entrance 255 is the default.
+fn parse_course(v: &str) -> Result<emu::Course, String> {
+    let bad = || format!("--course {v}: expected <world>-<level>[:<area>[:<entrance>]], e.g. 3-24");
+    let mut parts = v.split(':');
+    let (w, l) = parts.next().and_then(|c| c.split_once('-')).ok_or_else(bad)?;
+    let (world, level): (u8, u8) = (w.parse().map_err(|_| bad())?, l.parse().map_err(|_| bad())?);
+    if !(1..=9).contains(&world) || !(1..=99).contains(&level) {
+        return Err(bad());
+    }
+    let mut next = || parts.next().map(|n| n.parse::<u8>().map_err(|_| bad())).transpose();
+    let (area, entrance) = (next()?, next()?);
+    Ok(emu::Course { world: world - 1, level: level - 1, area, entrance })
 }
 
 /// `[p<n>:]<frame>:<buttons>[:<frames>]`
@@ -122,7 +140,7 @@ fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &st
 
 fn parse_args() -> Result<Args, String> {
     let settings = settings::Settings::load(Path::new(settings::FILE));
-    let mut args = Args { check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false };
+    let mut args = Args { check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, course: None };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -207,6 +225,7 @@ fn parse_args() -> Result<Args, String> {
                 args.shots.push((f.parse().map_err(|_| format!("--shot {v}: bad frame"))?, PathBuf::from(p)));
             }
             "--game" => args.game = Some(it.next().ok_or("--game needs a folder")?.into()),
+            "--course" => args.course = Some(parse_course(&it.next().ok_or("--course needs <world>-<level>")?)?),
             other => return Err(format!("unknown argument: {other}")),
         }
     }
@@ -271,7 +290,7 @@ fn main() -> ExitCode {
         return if ok { ExitCode::SUCCESS } else { ExitCode::FAILURE };
     }
 
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, course: args.course } };
     match play::run(opts) {
         Ok((games, presented)) => {
             let errors = vk_render::validation_errors();

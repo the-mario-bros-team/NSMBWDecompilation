@@ -493,6 +493,50 @@ impl System {
         Ok(branch)
     }
 
+    /// Calls guest function `addr` with `args` in r3.. from the host, between
+    /// fields, and returns its r3; the CPU is then put back as it was (the
+    /// clock keeps the time the call took). For debugging tools only
+    /// (`--course`): the call must not wait or switch threads.
+    ///
+    /// It runs with interrupts off and the FPU on (so no exception can reach
+    /// the guest OS), on a stack in 0x80001800..0x80003000, which the game
+    /// leaves unused (debuggers and cheat handlers live there on a real
+    /// Wii). `data` is copied to 0x80001800 first, for pointer arguments.
+    pub fn call_guest(&mut self, addr: u32, args: &[u32], data: &[u8]) -> Result<u32, String> {
+        const SCRATCH: u32 = 0x8000_1800;
+        const STACK_TOP: u32 = 0x8000_2FF0;
+        const RETURN: u32 = SCRATCH; // never executed: the call stops there
+        assert!(args.len() <= 8 && data.len() <= 0x400);
+        let saved = self.cpu.clone();
+        self.mem.ram_mut(SCRATCH, data.len()).ok_or("scratch memory")?.copy_from_slice(data);
+        let _ = self.mem.write_u32(STACK_TOP, 0); // end of the back chain
+        self.cpu.gpr[1] = STACK_TOP;
+        for (i, &a) in args.iter().enumerate() {
+            self.cpu.gpr[3 + i] = a;
+        }
+        self.cpu.lr = RETURN;
+        self.cpu.pc = addr;
+        self.cpu.msr = (self.cpu.msr & !MSR_EE) | guest_cpu::MSR_FP;
+        let mut result = Err(format!("call to {addr:#010x} did not return"));
+        for _ in 0..1000 {
+            match self.run_slice(10_000, |cpu, _, _| cpu.pc != RETURN) {
+                Ok(_) if self.cpu.pc == RETURN => {
+                    result = Ok(self.cpu.gpr[3]);
+                    break;
+                }
+                Ok(_) => {}
+                Err(e) => {
+                    result = Err(format!("call to {addr:#010x} stopped: {e:?}"));
+                    break;
+                }
+            }
+        }
+        let cycles = self.cpu.cycles;
+        self.cpu = saved;
+        self.cpu.cycles = cycles;
+        result
+    }
+
     fn record_link(&mut self, header: u32) {
         let m = &mut self.mem;
         let id = m.read_u32(header).unwrap_or(0);

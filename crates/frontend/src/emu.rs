@@ -142,6 +142,52 @@ fn player_view(mem: &guest_mem::Mem, p: usize, zoom: f32) -> Option<gx::xf::View
     Some(gx::xf::View::window([w, h], size, [vx - cx, vy - cy]))
 }
 
+/// `--course`: a course to play instead of the next one the game starts.
+/// `world` and `level` are 0-based (`Stage/03-24.arc` is world 2, level 23).
+#[derive(Clone, Copy, Debug)]
+pub struct Course {
+    pub world: u8,
+    pub level: u8,
+    pub area: Option<u8>,
+    pub entrance: Option<u8>,
+}
+
+/// `dScene_c`'s requested scene (r13 - 0x6F50, a u16): the id waits there
+/// until the new scene exists; 7 is a course. Its argument (entrance, and
+/// area << 8) is at r13 - 0x5638.
+const SCENE_REQUEST: u32 = SDA - 0x6F50;
+const SCENE_ARGUMENT: u32 = SDA - 0x5638;
+/// `dInfo_c::m_instance`, `dInfo_c::startGame`, and where `startGame` keeps
+/// its 16-byte record (entrance at +5, area at +6, then world and level, and
+/// the world and level shown, at +0xC..+0xF).
+const INFO: u32 = 0x8042_9F7C;
+const START_GAME: u32 = 0x800B_B780;
+const START_RECORD: u32 = 0x8031_5B90;
+
+/// Once the game has asked for a course (the world map's own entry: the
+/// players are set up for it), starts `c` instead: `dInfo_c::startGame`
+/// again with the game's record, changed. The scene request is already
+/// waiting, so `startGame` leaves it, and its argument is set here.
+fn switch_course(sys: &mut System, c: Course) -> Result<(), String> {
+    let mut record = sys.mem.ram(START_RECORD, 16).ok_or("course record")?.to_vec();
+    let was = (record[12], record[13]);
+    record[12..16].copy_from_slice(&[c.world, c.level, c.world, c.level]);
+    if let Some(e) = c.entrance {
+        record[5] = e;
+    }
+    if let Some(a) = c.area {
+        record[6] = a;
+    }
+    let info = sys.mem.read_u32(INFO).map_err(|_| "dInfo_c")?;
+    // As the world map does just before (d_basesNP 0x8079F790).
+    let _ = sys.mem.write_u32(info + 0x50, u32::from(c.world));
+    let _ = sys.mem.write_u32(info + 0x54, u32::from(c.level));
+    sys.call_guest(START_GAME, &[info, 0x8000_1800], &record)?;
+    let _ = sys.mem.write_u32(SCENE_ARGUMENT, u32::from(record[6] & 0xF) << 8 | u32::from(record[5]));
+    println!("course: {:02}-{:02} (area {}, entrance {}) instead of {:02}-{:02}", c.world + 1, c.level + 1, record[6], record[5], was.0 + 1, was.1 + 1);
+    Ok(())
+}
+
 fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
     match msg {
         ToEmu::Writebacks(list) => {
@@ -222,6 +268,8 @@ pub struct EmuOptions {
     pub interpreter: bool,
     /// Play sound on the default output device (paced runs only).
     pub audio: bool,
+    /// Start this course when the game next starts one (`--course`).
+    pub course: Option<Course>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -282,7 +330,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, mut course } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -408,6 +456,12 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             match std::fs::write(path, b) {
                 Ok(()) => println!("dumped RAM to {} at field {index} (r13 {:#010x}, r2 {:#010x})", path.display(), sys.cpu.gpr[13], sys.cpu.gpr[2]),
                 Err(e) => eprintln!("{}: {e}", path.display()),
+            }
+        }
+        if course.is_some() && sys.mem.read_u16(SCENE_REQUEST) == Ok(7) {
+            if let Err(e) = switch_course(&mut sys, course.take().unwrap()) {
+                let _ = frames.send(Err(format!("--course: {e}")));
+                break;
             }
         }
         if hash_every != 0 && index % hash_every == 0 {
