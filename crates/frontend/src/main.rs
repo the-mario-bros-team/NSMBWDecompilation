@@ -13,6 +13,7 @@ mod net;
 mod overlay;
 mod play;
 mod replay;
+mod say;
 mod settings;
 mod win;
 

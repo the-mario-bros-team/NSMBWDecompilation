@@ -14,6 +14,8 @@ use std::time::{Duration, Instant};
 use hle_ios::bt::{RemoteStatus, REMOTES};
 use hle_ios::wiimote::Input;
 use hle_os::System;
+
+use crate::say::{say, say_err};
 use vk_render::{EfbSnapshot, Writeback};
 
 /// One NTSC field.
@@ -424,22 +426,22 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         for (_, path) in save_states.iter().filter(|s| s.0 == index) {
             let state = sys.save_state();
             match write_state(path, index, &state) {
-                Ok(()) => println!("saved {} at field {index} ({} MB)", path.display(), state.len() >> 20),
-                Err(e) => eprintln!("{e}"),
+                Ok(()) => say!("saved {} at field {index} ({} MB)", path.display(), state.len() >> 20),
+                Err(e) => say_err!("{e}"),
             }
         }
         for (_, path) in dump_ram.iter().filter(|s| s.0 == index) {
             let mut b = sys.mem.ram(0x8000_0000, guest_mem::MEM1_SIZE).unwrap_or_default().to_vec();
             b.extend_from_slice(sys.mem.ram(0x9000_0000, guest_mem::MEM2_SIZE).unwrap_or_default());
             match std::fs::write(path, b) {
-                Ok(()) => println!("dumped RAM to {} at field {index} (r13 {:#010x}, r2 {:#010x})", path.display(), sys.cpu.gpr[13], sys.cpu.gpr[2]),
-                Err(e) => eprintln!("{}: {e}", path.display()),
+                Ok(()) => say!("dumped RAM to {} at field {index} (r13 {:#010x}, r2 {:#010x})", path.display(), sys.cpu.gpr[13], sys.cpu.gpr[2]),
+                Err(e) => say_err!("{}: {e}", path.display()),
             }
         }
         if hash_every != 0 && index % hash_every == 0 {
-            println!("hash at field {index}: {:016x}", sys.mem.hash());
+            say!("hash at field {index}: {:016x}", sys.mem.hash());
             if hash_gx {
-                println!("gx hash at field {index}: {gx_digest:016x}");
+                say!("gx hash at field {index}: {gx_digest:016x}");
             }
         }
         let mut inputs = controls(&live, &script, index);
@@ -486,7 +488,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
             if let Some(w) = &mut wav {
                 if let Err(e) = w.write(&played) {
-                    eprintln!("WAV: {e}");
+                    say_err!("WAV: {e}");
                     wav = None;
                 }
             }
@@ -501,7 +503,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             for i in 0..REMOTES {
                 if let Some([x, y]) = player_position(&sys.mem, i) {
                     let who = if i == 0 { String::new() } else { format!(" {}", i + 1) };
-                    println!("player{who} at field {index}: x {x:.1} y {y:.1}");
+                    say!("player{who} at field {index}: x {x:.1} y {y:.1}");
                 }
             }
         }
@@ -553,6 +555,8 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         index += 1;
     }
+    // Lines from the loop first.
+    crate::say::flush();
     if profile {
         print_profile(&sys.slices.borrow().samples.clone().unwrap_or_default());
     }

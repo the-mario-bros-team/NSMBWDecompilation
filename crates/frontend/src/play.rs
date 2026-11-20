@@ -28,6 +28,7 @@ use crate::emu::{Emu, EmuOptions, GameFrame, ToEmu, FIELD};
 use hle_ios::bt::{RemoteStatus, REMOTES};
 use hle_ios::wiimote::Input;
 use crate::overlay;
+use crate::say::{say, say_err};
 use crate::settings::{self, Settings};
 
 pub struct Options {
@@ -244,7 +245,7 @@ impl App {
             } else {
                 self.pending_shot = Some(path.clone());
             }
-            println!("frame {}: {} draws, {} texture copies", f.index + 1, f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count(), f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).count());
+            say!("frame {}: {} draws, {} texture copies", f.index + 1, f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count(), f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).count());
         }
         renderer.overlay = rects;
         let started = Instant::now();
@@ -289,14 +290,14 @@ impl App {
         self.emu_ms = f.emu.as_secs_f32() * 1000.0;
         for (i, (old, new)) in self.remotes.iter().zip(f.remotes).enumerate() {
             if old.connected != new.connected {
-                println!("Wii Remote {}: {}", i + 1, if new.connected { "connected" } else { "disconnected" });
+                say!("Wii Remote {}: {}", i + 1, if new.connected { "connected" } else { "disconnected" });
             }
         }
         self.remotes = f.remotes;
         if f.emu > SLOW_FIELD {
             self.slow_fields += 1;
             if self.slow_fields <= 20 || self.slow_fields.is_power_of_two() {
-                eprintln!("slow field {}: emulation {:.1} ms, render {:.1} ms ({} slow so far)", f.index, self.emu_ms, self.render_ms, self.slow_fields);
+                say_err!("slow field {}: emulation {:.1} ms, render {:.1} ms ({} slow so far)", f.index, self.emu_ms, self.render_ms, self.slow_fields);
             }
         }
         if show {
@@ -393,7 +394,7 @@ impl App {
             // Render-thread share of this second: taking fields in,
             // preparing them, showing frames.
             let [i, p, f] = std::mem::take(&mut self.spent).map(|d| d.as_secs_f32() / secs * 100.0);
-            println!(
+            say!(
                 "game frame {}: shown {:.1} fps, game {:.1} fps ({:.0}%), emulation {:.1} ms, render {:.2} ms (thread: fields {i:.0}%, prepare {p:.0}%, frames {f:.0}%)",
                 self.games,
                 self.shown_fps,
@@ -474,7 +475,7 @@ impl App {
             KeyCode::F5 | KeyCode::F6 => {
                 self.settings.step_fps(code == KeyCode::F6);
                 self.next_display = Instant::now();
-                println!("frame rate: {}", settings::fps_label(self.settings.fps));
+                say!("frame rate: {}", settings::fps_label(self.settings.fps));
                 if let Some(w) = &self.window {
                     w.set_title(&self.title());
                 }
@@ -493,7 +494,7 @@ impl App {
                     r.aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
                 }
                 if let Err(e) = hle_ios::nand::set_widescreen(Path::new("saves/nand"), self.settings.widescreen) {
-                    eprintln!("SYSCONF: {e}");
+                    say_err!("SYSCONF: {e}");
                 }
                 true
             }
@@ -561,6 +562,7 @@ impl ApplicationHandler for App {
     }
 
     fn exiting(&mut self, _: &ActiveEventLoop) {
+        crate::say::flush();
         if let Some(emu) = &mut self.emu {
             report(&emu.stop());
         }
