@@ -1363,7 +1363,9 @@ need the whole machine in `Cpu` and `Mem` at every slice end.
   ends its block there). With the FPU off, a block with FP instructions is
   left to the interpreter.
 - Generated code never runs through a hook address (`hle_os::SPECIAL`). The
-  generated list must match it, or the code is not used.
+  generated list must match it, or the code is not used. The game menus'
+  Settings buttons (`hle_os::menu_settings`) added 14 hooks, so code
+  generated before them must be generated again.
 - **Code checks:** guest memory counts writes to code pages (`code_epoch`).
   A function checks one number on entry; when it changed, it compares its
   pages' write generations, and if those changed, its words. A function

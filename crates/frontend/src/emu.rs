@@ -66,6 +66,9 @@ pub enum ToEmu {
     /// Stop running fields until `Pause(false)` (the Settings window is
     /// open). Ignored in a net game, which the other players keep running.
     Pause(bool),
+    /// The Settings window that a game menu's Settings button opened has
+    /// closed: that menu opens again (`hle_os::menu_settings`).
+    SettingsClosed,
     /// The Settings window's Gameplay options (not in a net game).
     Gameplay(crate::gameplay::Options),
     /// Give player 1 this power-up (`gameplay::POWER_UPS`) in a course or on
@@ -104,6 +107,9 @@ pub struct Totals {
 pub struct Emu {
     pub frames: Receiver<Result<GameFrame, String>>,
     pub to_emu: Sender<ToEmu>,
+    /// Set when a game menu's Settings button was picked and the menu has
+    /// gone: the Settings window should open.
+    pub settings_button: Arc<AtomicBool>,
     stop: Arc<AtomicBool>,
     thread: Option<JoinHandle<Totals>>,
 }
@@ -187,7 +193,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Input(i) => *live = i,
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
-        ToEmu::Pause(_) | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) => {}
     }
 }
 
@@ -255,6 +261,12 @@ pub struct EmuOptions {
     /// with `--frames`): a windowed `--frames` run gets through the same
     /// fields, the last while the window closes.
     pub stop_after: Option<u64>,
+    /// Give the pause window and the world map's menu their Settings
+    /// button, reading this (`hle_os::menu_layout`). Never in a net game
+    /// or a scripted run, which keep the game's own menus.
+    pub settings_label: Option<String>,
+    /// The Settings buttons in a scripted run too (`--settings-buttons`).
+    pub force_settings_buttons: bool,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -314,8 +326,8 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
     }
 }
 
-fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after } = opts;
+fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -364,13 +376,18 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     if let Some(s) = &session {
         view_player = Some(s.slot);
     }
-    let mut sys = match System::boot(&game, nand) {
+    let settings_label = settings_label.filter(|_| session.is_none() && (script.is_empty() || force_settings_buttons));
+    let mut sys = match System::boot_with(&game, nand, settings_label.as_deref()) {
         Ok(s) => s,
         Err(e) => {
             let _ = frames.send(Err(e));
             return totals;
         }
     };
+    if settings_label.is_some() {
+        let (pause, map) = sys.menu.buttons;
+        println!("Settings buttons: pause window {}, world map menu {}", if pause { "yes" } else { "no" }, if map { "yes" } else { "no" });
+    }
     // Reverb, delay and chorus: the game's own effect callbacks, mixed back
     // by the DSP (NSMBW_AUXFX=off skips both).
     sys.aux_effects = std::env::var("NSMBW_AUXFX").map_or(true, |v| v != "off");
@@ -433,6 +450,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             while let Ok(msg) = to_emu.try_recv() {
                 match msg {
                     ToEmu::Pause(p) => paused = p && session.is_none(),
+                    ToEmu::SettingsClosed => sys.menu.reopen(),
                     ToEmu::Gameplay(o) => gameplay_options = o,
                     ToEmu::PowerUp(p) => gameplay.pending = Some(p),
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
@@ -501,6 +519,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         if session.is_none() {
             if let Some(line) = gameplay.after_field(&mut sys, gameplay_options) {
                 say!("{line}");
+            }
+            // A game menu's Settings button: the Settings window once the
+            // pause window has closed (the map menu's is gone already).
+            let closed = !sys.menu.waiting_for_pause() || sys.pause_window_closed();
+            if closed && sys.menu.take_open() {
+                say!("field {index}: a game menu's Settings button");
+                settings_button.store(true, Ordering::Relaxed);
             }
         }
         let emu = started.elapsed();
@@ -647,9 +672,10 @@ impl Emu {
         let (frames_tx, frames) = mpsc::sync_channel(4);
         let (to_emu, to_emu_rx) = mpsc::channel();
         let stop = Arc::new(AtomicBool::new(false));
-        let s = stop.clone();
-        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s)).expect("spawn the game thread");
-        Self { frames, to_emu, stop, thread: Some(thread) }
+        let settings_button = Arc::new(AtomicBool::new(false));
+        let (s, b) = (stop.clone(), settings_button.clone());
+        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s, b)).expect("spawn the game thread");
+        Self { frames, to_emu, settings_button, stop, thread: Some(thread) }
     }
 
     /// Stops the game thread and returns its totals.

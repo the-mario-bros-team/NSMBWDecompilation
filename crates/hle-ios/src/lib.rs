@@ -59,7 +59,7 @@ struct Buf(u32, u32);
 
 pub struct Ios {
     nand: PathBuf,
-    disc: Disc,
+    pub disc: Disc,
     tmd: Vec<u8>,
     title_id: u64,
     fds: Vec<Option<Handle>>,

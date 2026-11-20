@@ -147,6 +147,8 @@ struct App {
     /// Player 1's buttons held when a menu was up: kept from the game until
     /// let go, so the press that closed the menu does not reach it.
     menu_mask: u16,
+    /// The Settings window was opened by a game menu's Settings button.
+    settings_from_game: bool,
     /// What the game thread was last told: paused (a menu is up) or not.
     sent_pause: bool,
     /// The Settings window changed something not saved yet (saved when it
@@ -171,6 +173,15 @@ fn wait_until(deadline: Instant) {
 
 fn gameplay_options(s: &Settings) -> crate::gameplay::Options {
     crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives }
+}
+
+/// The game menus' Settings button, in the game's language.
+fn settings_label(language: &str) -> &'static str {
+    match language {
+        "fr" => "Paramètres",
+        "es" => "Configuración",
+        _ => "Settings",
+    }
 }
 
 /// The console's language number (SYSCONF IPL.LNG) for a settings code.
@@ -242,7 +253,8 @@ impl App {
         crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed);
         self.inputs.set_keymap(self.settings.keymap.clone());
         self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
-        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, ..self.opts.emu.clone() });
+        let settings_label = Some(settings_label(&self.settings.language).to_string());
+        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
         self.emu = Some(emu);
         self.renderer = Some(renderer);
@@ -260,6 +272,13 @@ impl App {
             self.sent_interpolate = Some(interpolate);
         }
         let mut controls = self.inputs.poll();
+        // A game menu's Settings button was picked and its menu has gone.
+        if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
+            if let Some(m) = &mut self.menus {
+                m.open();
+                self.settings_from_game = true;
+            }
+        }
         // A menu up: the game is paused and player 1's buttons move the
         // menu's cursor instead.
         let open = self.menus.as_ref().is_some_and(ui::Menus::is_open);
@@ -272,6 +291,10 @@ impl App {
         if self.sent_pause != open {
             let _ = emu.to_emu.send(ToEmu::Pause(open));
             self.sent_pause = open;
+            // Back to the game menu the window came from, on Settings.
+            if !open && std::mem::take(&mut self.settings_from_game) {
+                let _ = emu.to_emu.send(ToEmu::SettingsClosed);
+            }
         }
         if self.sent_input != Some(controls) {
             let _ = emu.to_emu.send(ToEmu::Input(controls));
@@ -870,6 +893,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         menus: None,
         menu_mask: 0,
         sent_pause: false,
+        settings_from_game: false,
         unsaved: false,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;

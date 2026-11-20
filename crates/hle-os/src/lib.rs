@@ -4,6 +4,8 @@
 //! that records where each REL module was placed.
 
 pub mod light_texture;
+pub mod menu_layout;
+pub mod menu_settings;
 pub mod reverb;
 
 use std::cell::RefCell;
@@ -65,8 +67,8 @@ const EDOM: u32 = 0x21;
 /// Every address [`System::before`] acts on (`OSLink` returns aside).
 /// Recompiled code never runs through one of these (`ppc-recomp` bakes this
 /// list in, and [`guest_cpu::recomp::Rt::new`] checks it).
-pub const SPECIAL: [u32; 19] = {
-    let mut s = [0u32; 19];
+pub const SPECIAL: [u32; 33] = {
+    let mut s = [0u32; 33];
     let mut i = 0;
     while i < RETURN_AT_ONCE.len() {
         s[i] = RETURN_AT_ONCE[i];
@@ -77,6 +79,11 @@ pub const SPECIAL: [u32; 19] = {
     while j < rest.len() {
         s[i + j] = rest[j];
         j += 1;
+    }
+    let mut k = 0;
+    while k < menu_settings::HOOKS.len() {
+        s[i + j + k] = menu_settings::HOOKS[k];
+        k += 1;
     }
     s
 };
@@ -222,6 +229,8 @@ pub struct System {
     pub aux_effects: bool,
     /// Recompiled code (P6), if registered.
     pub recomp: Option<guest_cpu::recomp::Rt>,
+    /// The game menus' Settings buttons ([`menu_settings`]).
+    pub menu: menu_settings::MenuSettings,
     /// Instructions run by recompiled code (the rest were interpreted).
     pub recomp_steps: u64,
     /// Times the dispatcher entered recompiled code: after an interrupt, a
@@ -377,11 +386,24 @@ impl System {
     /// Loads the game from the extracted disc folder `game`; NAND files live
     /// under `nand`.
     pub fn boot(game: &Path, nand: PathBuf) -> Result<Self, String> {
+        Self::boot_with(game, nand, None)
+    }
+
+    /// [`System::boot`], with the pause window and the world map's menu
+    /// given their Settings button reading `settings_label`
+    /// ([`menu_layout`]) if it is `Some`; [`System::menu`] says which got it.
+    pub fn boot_with(game: &Path, nand: PathBuf, settings_label: Option<&str>) -> Result<Self, String> {
         let read = |p: &str| fs::read(game.join(p)).map_err(|e| format!("{p}: {e}"));
-        let (dol, fst, boot_bin, tmd) = (read("sys/main.dol")?, read("sys/fst.bin")?, read("sys/boot.bin")?, read("tmd.bin")?);
+        let (dol, boot_bin, tmd) = (read("sys/main.dol")?, read("sys/boot.bin")?, read("tmd.bin")?);
         let ios_version = tmd.get(0x18B).copied().ok_or("tmd.bin too short")? as u32;
 
-        let hw = Rc::new(RefCell::new(Hw::new(Ios::new(game, nand, TITLE_ID)?)));
+        let mut ios = Ios::new(game, nand, TITLE_ID)?;
+        let mut menu = menu_settings::MenuSettings::default();
+        if let Some(label) = settings_label {
+            menu.buttons = menu_layout::patch(&mut ios.disc, label);
+        }
+        let fst = ios.disc.fst().to_vec();
+        let hw = Rc::new(RefCell::new(Hw::new(ios)));
         let mut mem = Mem::new(Box::new(HwPort(hw.clone())));
         let entry = load_dol(&mut mem, &dol)?;
         setup_low_memory(&mut mem, &boot_bin, &fst, ios_version)?;
@@ -392,7 +414,7 @@ impl System {
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
         let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None, pending: None }));
-        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0 })
+        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu })
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
@@ -400,6 +422,9 @@ impl System {
     /// the clock then jumps to the next video line and the slice should end.
     fn before(&mut self, pc: u32) -> bool {
         if replace(&mut self.cpu, &mut self.mem, pc, self.aux_effects) || pc == STRCMP {
+            return false;
+        }
+        if menu_settings::HOOKS.contains(&pc) && self.menu_hook(pc) {
             return false;
         }
         // The run loops execute the instruction at `pc` right after this

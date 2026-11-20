@@ -91,6 +91,13 @@ impl Menus {
         self.window.capture_key(settings, code)
     }
 
+    /// Opens the Settings window (a game menu's Settings button).
+    pub fn open(&mut self) {
+        if !self.window.is_open() {
+            self.window.open(self.started.elapsed().as_secs_f64());
+        }
+    }
+
     /// Opens the Settings window, or closes it if open.
     pub fn toggle(&mut self) {
         let now = self.started.elapsed().as_secs_f64();
