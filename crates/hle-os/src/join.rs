@@ -29,6 +29,11 @@ const IN_GAME: u32 = 0x8035_4E50;
 const CHARACTER: u32 = 0x8035_4E60;
 const CHAR_FLAGS: u32 = 0x8035_4E80;
 const IN_BUBBLE: u32 = 4;
+/// `dRemoconMng_c`: per remote, a `dConnect_c` whose byte at +0x54 says the
+/// remote may stay connected; in a course the game disconnects any other
+/// remote that connects (`dConnect_c::executeState_Setup`).
+const REMOCON_MNG: u32 = SDA - 0x5658;
+const CONNECT_ALLOWED: u32 = 0x54;
 /// The stack frame given to the call: back chain, LR save word, `pos`.
 const FRAME: u32 = 0x20;
 
@@ -106,22 +111,25 @@ impl Joins {
     }
 
     /// At the end of `dBgGm_c::execute`, with the CPU at its `blr`: starts
-    /// bringing in a waiting player, near `near` (a player the camera
-    /// follows). True if the CPU now runs `daPyMng_c::create`.
-    pub fn start(&mut self, cpu: &mut Cpu, mem: &mut Mem, near: Option<[f32; 2]>) -> bool {
+    /// bringing in a waiting player below `near` (a player the camera
+    /// follows), under the zone where it waits out of sight, as a player
+    /// who lost a life does, until its bubble comes in from the screen edge.
+    /// Returns the slot if the CPU now runs `daPyMng_c::create`; that remote
+    /// may then connect (the caller lets it page the Wii).
+    pub fn start(&mut self, cpu: &mut Cpu, mem: &mut Mem, near: Option<[f32; 2]>) -> Option<usize> {
         if self.pending.is_empty() || read32(mem, GAME_MODE) != Some(0) {
-            return false;
+            return None;
         }
-        let Some([x, y]) = near else { return false };
+        let Some([x, y]) = near else { return None };
         // Already in the game (joined on the map with Add/Drop Players, or
         // created at the course start): nothing to do.
         self.pending.retain(|&s| read32(mem, IN_GAME + 4 * s as u32) == Some(0) && read32(mem, PLAYER_IDS + 4 * s as u32) == Some(0));
-        let Some(slot) = self.pending.first().copied() else { return false };
+        let Some(slot) = self.pending.first().copied() else { return None };
         self.pending.remove(0);
         // A character no player in the game has.
         let taken: Vec<u32> = (0..4).filter(|&j| j != slot && read32(mem, IN_GAME + 4 * j as u32).is_some_and(|v| v != 0)).filter_map(|j| read32(mem, CHARACTER + 4 * j as u32)).collect();
         let mine = read32(mem, CHARACTER + 4 * slot as u32).filter(|c| *c < 4 && !taken.contains(c));
-        let Some(ch) = mine.or_else(|| (0..4).find(|c| !taken.contains(c))) else { return false };
+        let Some(ch) = mine.or_else(|| (0..4).find(|c| !taken.contains(c))) else { return None };
         let flags = read32(mem, CHAR_FLAGS + 4 * ch).unwrap_or(0);
         let r1 = cpu.gpr[1];
         let sp = r1 - FRAME;
@@ -131,11 +139,11 @@ impl Joins {
             mem.write_u32(CHAR_FLAGS + 4 * ch, flags | IN_BUBBLE),
             mem.write_u32(sp, r1),
             mem.write_u32(sp + 8, x.to_bits()),
-            mem.write_u32(sp + 12, (y + 48.0).to_bits()),
+            mem.write_u32(sp + 12, crate::camera::zone_bottom(mem).map_or(y, |b| b - 64.0).to_bits()),
             mem.write_u32(sp + 16, 0),
         ];
         if ok.iter().any(Result::is_err) {
-            return false;
+            return None;
         }
         self.call = Some(Call { r1, r3: cpu.gpr[3], lr: cpu.lr, step: 0, slot: slot as u32, flags_at: CHAR_FLAGS + 4 * ch, flags });
         cpu.gpr[1] = sp;
@@ -145,8 +153,11 @@ impl Joins {
         cpu.gpr[6] = 0;
         cpu.lr = cpu.pc;
         cpu.pc = CREATE;
+        if let Some(c) = read32(mem, REMOCON_MNG).and_then(|m| read32(mem, m + 4 + 4 * slot as u32)).filter(|&c| c >= 0x8000_0000) {
+            let _ = mem.write_u8(c + CONNECT_ALLOWED, 1);
+        }
         self.joined += 1;
-        true
+        Some(slot)
     }
 }
 

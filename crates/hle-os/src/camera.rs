@@ -117,6 +117,13 @@ pub fn followed_players(mem: &Mem) -> Vec<[f32; 2]> {
         .collect()
 }
 
+/// The bottom of the current zone (y up), where a player waiting to come
+/// back in a bubble is out of sight.
+pub fn zone_bottom(mem: &Mem) -> Option<f32> {
+    let bg = read32(mem, BG_PTR).filter(|&p| p >= 0x8000_0000)?;
+    readf(mem, bg + ZONE[3])
+}
+
 /// A rectangle in world units, y up.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Rect {

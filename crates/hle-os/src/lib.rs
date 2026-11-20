@@ -330,7 +330,10 @@ impl System {
                 self.hw.borrow_mut().gpu.set_view(self.camera.view);
             }
             let near = camera::followed_players(&self.mem).first().copied();
-            self.joins.start(&mut self.cpu, &mut self.mem, near);
+            if let Some(slot) = self.joins.start(&mut self.cpu, &mut self.mem, near) {
+                // The game turns page scan off in a course.
+                self.hw.borrow_mut().ios.bt.force_connect(slot);
+            }
             return false;
         }
         if pc == OS_LINK || pc == OS_LINK_FIXED {
@@ -549,7 +552,7 @@ impl Default for LinkedModule {
 }
 
 /// First bytes of a save state; the number changes with the layout.
-const STATE_MAGIC: &[u8; 8] = b"NSMBWst5";
+const STATE_MAGIC: &[u8; 8] = b"NSMBWst6";
 
 impl System {
     /// The whole machine as bytes (docs/PORT_PLAN.md, section 12): CPU, RAM,

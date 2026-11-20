@@ -104,6 +104,9 @@ struct Remote {
     link: Link,
     /// The Wii dropped the link: stay off until a button is pressed.
     asleep: bool,
+    /// Page the Wii even with page scan off (a player joining online in a
+    /// course, where the game turns page scan off).
+    force_page: bool,
     control: Channel,
     interrupt: Channel,
     next_report: u64,
@@ -113,7 +116,7 @@ struct Remote {
 
 impl Remote {
     fn new() -> Self {
-        Self { hid: Wiimote::new(), link: Link::Off, asleep: false, control: Channel::default(), interrupt: Channel::default(), next_report: 0, rx: Vec::new() }
+        Self { hid: Wiimote::new(), link: Link::Off, asleep: false, force_page: false, control: Channel::default(), interrupt: Channel::default(), next_report: 0, rx: Vec::new() }
     }
 
     fn channel(&mut self, local: u16) -> Option<&mut Channel> {
@@ -591,8 +594,9 @@ impl Bt {
                 r.asleep = false;
             }
             match r.link {
-                Link::Off if r.hid.input.connected && !r.asleep && self.scan_enable & 2 != 0 => {
+                Link::Off if r.hid.input.connected && !r.asleep && (self.scan_enable & 2 != 0 || r.force_page) => {
                     r.link = Link::Paging;
+                    r.force_page = false;
                     let mut e = remote_address(i).to_vec();
                     e.extend([0x04, 0x25, 0x00, 1]); // class: Wii Remote; ACL
                     self.event(EV_CONNECTION_REQUEST, &e);
@@ -624,6 +628,15 @@ impl Bt {
                 }
                 _ => {}
             }
+        }
+    }
+
+    /// Remote `i` connects at its next chance even if the Wii is not
+    /// scanning for pages (see `Remote::force_page`).
+    pub fn force_connect(&mut self, i: usize) {
+        if let Some(r) = self.remotes.get_mut(i) {
+            r.force_page = true;
+            r.asleep = false;
         }
     }
 
@@ -800,7 +813,7 @@ impl Default for Remote {
 
 impl Snapshot for Remote {
     fn snap(&mut self, s: &mut Snap) {
-        guest_mem::snap!(s; self.hid, self.link, self.asleep, self.control, self.interrupt, self.next_report, self.rx);
+        guest_mem::snap!(s; self.hid, self.link, self.asleep, self.force_page, self.control, self.interrupt, self.next_report, self.rx);
     }
 }
 
