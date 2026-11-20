@@ -8,7 +8,7 @@ use std::path::Path;
 /// Frame-rate choices: 60 is the game's own rate; 30 shows every other
 /// field (as the battery saver), the game still running at 60; the others
 /// draw interpolated frames in between; 0 is unlocked.
-pub const FPS_CHOICES: [u32; 11] = [30, 60, 90, 120, 144, 165, 180, 240, 300, 360, 0];
+pub const FPS_CHOICES: [u32; 12] = [30, 60, 90, 120, 144, 165, 180, 240, 300, 360, 400, 0];
 
 pub const FILE: &str = "settings.toml";
 
@@ -48,7 +48,7 @@ pub fn fps_label(fps: u32) -> String {
     }
 }
 
-/// Parses `30`..`360` or `unlocked` into one of [`FPS_CHOICES`].
+/// Parses `30`..`400` or `unlocked` into one of [`FPS_CHOICES`].
 pub fn parse_fps(s: &str) -> Option<u32> {
     let v = if s.eq_ignore_ascii_case("unlocked") { 0 } else { s.parse().ok()? };
     FPS_CHOICES.contains(&v).then_some(v)

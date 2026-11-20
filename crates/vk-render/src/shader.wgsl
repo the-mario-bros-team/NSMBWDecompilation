@@ -45,6 +45,105 @@ struct Shading {
 @group(0) @binding(1) var textures: binding_array<texture_2d<f32>, 4096>;
 @group(0) @binding(2) var samplers: binding_array<sampler, 256>;
 
+// Frame interpolation on the GPU (`gx::interp::Moves`): for frames shown
+// between two fields, a paired draw's vertices are placed again from their
+// model positions with the two fields' matrices blended at `t` (rotation by
+// quaternion, scale and translation linearly), as `gx::interp::interpolate_into`
+// does on the CPU.
+struct Interp {
+    t: f32,
+    on: u32,
+}
+
+struct MatPair {
+    a0: vec4<f32>,
+    a1: vec4<f32>,
+    a2: vec4<f32>,
+    b0: vec4<f32>,
+    b1: vec4<f32>,
+    b2: vec4<f32>,
+    qa: vec4<f32>,
+    qb: vec4<f32>,
+    // w: 1 for a rigid blend, 0 for a linear one.
+    sa: vec4<f32>,
+    // w: index into `recs` (bits).
+    sb: vec4<f32>,
+}
+
+struct RecPair {
+    p0: vec4<f32>,
+    p1: vec4<f32>,
+    p2: vec4<f32>,
+    v0: vec4<f32>,
+    v1: vec4<f32>,
+    v2: vec4<f32>,
+    // Screen offset x, y; ortho (1/0).
+    s: vec4<f32>,
+}
+
+var<immediate> interp: Interp;
+// Per vertex: model position, and in w the bits of an index into `mats`.
+@group(0) @binding(3) var<storage, read> model: array<vec4<f32>>;
+@group(0) @binding(4) var<storage, read> mats: array<MatPair>;
+@group(0) @binding(5) var<storage, read> recs: array<RecPair>;
+
+const EFB_W: f32 = 640.0;
+const EFB_H: f32 = 528.0;
+
+// `gx::xf::project`: a view-space position to Vulkan clip space, with the
+// projection's six values in `pa`, `pb` and the viewport's (wd, ht,
+// zRange, xOrig, yOrig, farZ) in `va`, `vb`.
+fn project(p: vec3<f32>, pa: vec4<f32>, pb: vec2<f32>, ortho: bool, va: vec4<f32>, vb: vec2<f32>, screen: vec2<f32>) -> vec4<f32> {
+    var clip: vec4<f32>;
+    if ortho {
+        clip = vec4<f32>(pa.x * p.x + pa.y, pa.z * p.y + pa.w, pb.x * p.z + pb.y, 1.0);
+    } else {
+        clip = vec4<f32>(pa.x * p.x + pa.y * p.z, pa.z * p.y + pa.w * p.z, pb.x * p.z + pb.y, -p.z);
+    }
+    let w = clip.w;
+    let cx = vb.x - screen.x;
+    let cy = vb.y - screen.y;
+    return vec4<f32>(
+        w * (cx / (EFB_W / 2.0) - 1.0) + clip.x * (va.x / (EFB_W / 2.0)),
+        w * (cy / (EFB_H / 2.0) - 1.0) + clip.y * (va.y / (EFB_H / 2.0)),
+        (w * va.w + clip.z * va.z) / 16777216.0,
+        w,
+    );
+}
+
+// The vertex at model position `p` under matrix pair `k`, at `t`.
+fn moved(p: vec3<f32>, k: u32, t: f32) -> vec4<f32> {
+    let m = mats[k];
+    var r0 = mix(m.a0, m.b0, t);
+    var r1 = mix(m.a1, m.b1, t);
+    var r2 = mix(m.a2, m.b2, t);
+    if m.sa.w != 0.0 {
+        let qm = mix(m.qa, m.qb, t);
+        let l = length(qm);
+        var q = vec4<f32>(0.0, 0.0, 0.0, 1.0);
+        if l > 0.0 {
+            q = qm / l;
+        }
+        let s = mix(m.sa.xyz, m.sb.xyz, t);
+        let x = q.x;
+        let y = q.y;
+        let z = q.z;
+        let qw = q.w;
+        r0 = vec4<f32>(vec3<f32>(1.0 - 2.0 * (y * y + z * z), 2.0 * (x * y - z * qw), 2.0 * (x * z + y * qw)) * s, r0.w);
+        r1 = vec4<f32>(vec3<f32>(2.0 * (x * y + z * qw), 1.0 - 2.0 * (x * x + z * z), 2.0 * (y * z - x * qw)) * s, r1.w);
+        r2 = vec4<f32>(vec3<f32>(2.0 * (x * z - y * qw), 2.0 * (y * z + x * qw), 1.0 - 2.0 * (x * x + y * y)) * s, r2.w);
+    }
+    let world = vec3<f32>(dot(r0.xyz, p) + r0.w, dot(r1.xyz, p) + r1.w, dot(r2.xyz, p) + r2.w);
+    let r = recs[bitcast<u32>(m.sb.w)];
+    // Projection a = (p0, p1.xy), b = (p1.zw, p2); viewports likewise.
+    let pr = mix(r.p0, vec4<f32>(r.p1.zw, r.p2.xy), t);
+    let pr2 = mix(r.p1.xy, r.p2.zw, t);
+    let vp = mix(r.v0, vec4<f32>(r.v1.zw, r.v2.xy), t);
+    let vp2 = mix(r.v1.xy, r.v2.zw, t);
+    // `project` takes (wd, ht, zRange, farZ) and (xOrig, yOrig).
+    return project(world, pr, pr2, r.s.z != 0.0, vec4<f32>(vp.x, vp.y, vp.z, vp2.y), vec2<f32>(vp.w, vp2.x), r.s.xy);
+}
+
 struct VIn {
     @location(0) pos: vec4<f32>,
     @location(1) c0: vec4<f32>,
@@ -91,9 +190,16 @@ struct FOutEarly {
 }
 
 @vertex
-fn vs(v: VIn, @builtin(instance_index) inst: u32) -> VOut {
+fn vs(v: VIn, @builtin(instance_index) inst: u32, @builtin(vertex_index) vi: u32) -> VOut {
     var o: VOut;
     o.pos = v.pos;
+    if interp.on != 0u {
+        let m = model[vi];
+        let k = bitcast<u32>(m.w);
+        if k != NONE {
+            o.pos = moved(m.xyz, k, interp.t);
+        }
+    }
     o.c0 = v.c0;
     o.c1 = v.c1;
     o.t0 = v.t0;

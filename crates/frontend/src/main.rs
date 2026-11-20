@@ -20,7 +20,7 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game <folder>] [--frames <n>] [--screenshot <file.png>]
-                   [--fps <30|60|90|120|144|165|180|240|300|360|unlocked>] [--vsync | --no-vsync] [--fullscreen] [--scale <n|native>] [--unpaced]
+                   [--fps <30|60|90|120|144|165|180|240|300|360|400|unlocked>] [--vsync | --no-vsync] [--fullscreen] [--scale <n|native>] [--unpaced]
                    [--press <frame>:<buttons>[:<frames>]]... [--shot <frame>:<file.png>]... [--trace-ios] [--profile-guest]
        nsmbw-port --replay <log.dff> [--frame <n>] [--scale <n>] [--screenshot <png>] [--compare <png>] [--min-psnr <dB>]
   (no mode)          run the game in a window (display settings from settings.toml; F1 lists the hotkeys)
@@ -142,7 +142,7 @@ fn parse_args() -> Result<Args, String> {
             }
             "--fps" => {
                 let v = it.next().ok_or("--fps needs a rate")?;
-                args.settings.fps = settings::parse_fps(&v).ok_or(format!("--fps: one of 60, 90, 120, 144, 165, 180, 240, 300, 360 or unlocked, not {v}"))?;
+                args.settings.fps = settings::parse_fps(&v).ok_or(format!("--fps: one of 30, 60, 90, 120, 144, 165, 180, 240, 300, 360, 400 or unlocked, not {v}"))?;
             }
             "--vsync" => args.settings.vsync = true,
             "--no-vsync" => args.settings.vsync = false,

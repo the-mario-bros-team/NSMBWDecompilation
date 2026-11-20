@@ -63,8 +63,6 @@ struct App {
     window: Option<Window>,
     error: Option<String>,
     queue: VecDeque<GameFrame>,
-    /// Draw pairing between two queued fields: (older index, newer index, pairs).
-    pairs: Option<(u64, u64, Vec<Option<u32>>)>,
     games: u64,
     presented: u64,
     last_present: Instant,
@@ -93,10 +91,12 @@ struct App {
 /// Sleeps until `deadline`, then spins the last stretch: a sleep can
 /// overshoot by a millisecond, a third of a 360 fps frame.
 fn wait_until(deadline: Instant) {
-    const SPIN: Duration = Duration::from_micros(1500);
+    // A high-resolution timer wakes within a fraction of a millisecond; the
+    // rest is a short spin (at 400 fps a frame is only 2.5 ms).
+    const SPIN: Duration = Duration::from_micros(250);
     let now = Instant::now();
     if deadline > now + SPIN {
-        std::thread::sleep(deadline - now - SPIN);
+        crate::win::sleep(deadline - now - SPIN);
     }
     while Instant::now() < deadline {
         std::thread::yield_now();
@@ -344,12 +344,6 @@ impl App {
             None if q.len() >= 2 && shown >= q[q.len() - 1].time => (q.len() - 2, q.len() - 1, 1.0),
             None => (0, 0, 1.0),
         };
-        if a != b {
-            let (fa, fb) = (&self.queue[a], &self.queue[b]);
-            if self.pairs.as_ref().is_none_or(|p| p.0 != fa.index || p.1 != fb.index) {
-                self.pairs = Some((fa.index, fb.index, gx::interp::pair(&fa.out, &fb.out)));
-            }
-        }
         let Some(size) = self.window.as_ref().map(|w| w.inner_size()) else { return Ok(()) };
         let rects = self.overlay_rects(size.width, size.height);
         let Some(renderer) = &mut self.renderer else { return Ok(()) };
@@ -358,14 +352,15 @@ impl App {
             renderer.screenshot = Some(path);
         }
         let (fa, fb) = (&self.queue[a], &self.queue[b]);
-        let pairs = &self.pairs;
-        // The in-between vertices go straight into the frame's vertex buffer.
-        let mut fill = |dst: &mut [gx::Vertex]| match pairs {
-            Some(p) if a != b => gx::interp::interpolate_into(&fa.out, &fb.out, &p.2, t.clamp(0.0, 1.0), dst),
-            _ => dst.copy_from_slice(&fb.out.vertices),
-        };
         let started = Instant::now();
-        renderer.render_with(&fb.out, fb.out.vertices.len(), &mut fill, false, fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
+        // Once per pair of fields: the newer one goes to the GPU with what
+        // moves its draws; every frame shown in between only records draws.
+        let key = (fa.index, fb.index);
+        if renderer.prepared() != Some(key) {
+            let moves = (a != b).then(|| gx::interp::moves(&fa.out, &fb.out, &gx::interp::pair(&fa.out, &fb.out)));
+            renderer.prepare(key, &fb.out, moves.as_ref()).map_err(|e| e.to_string())?;
+        }
+        renderer.render_prepared(&fb.out, t.clamp(0.0, 1.0), fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.presented_now();
         Ok(())
@@ -604,7 +599,6 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         window: None,
         error: None,
         queue: VecDeque::new(),
-        pairs: None,
         games: 0,
         presented: 0,
         last_present: now,

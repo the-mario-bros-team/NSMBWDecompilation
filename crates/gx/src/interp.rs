@@ -147,6 +147,93 @@ pub fn interpolate_into(prev: &Output, cur: &Output, pairs: &[Option<u32>], t: f
     }
 }
 
+/// No matrix: the vertex keeps `cur`'s position.
+pub const NO_MOVE: u32 = u32::MAX;
+
+/// What the GPU needs to place `cur`'s paired draws anywhere between `prev`
+/// and `cur` ([`interpolate_into`] done by the vertex shader, so frames
+/// shown in between cost no CPU work per vertex). Built once per pair of
+/// fields; the shader reads it with the fraction `t` alone.
+#[derive(Default)]
+pub struct Moves {
+    /// Per vertex of `cur`: model-space position, and in `w` the bits of an
+    /// index into `mats` ([`NO_MOVE`]: keep the vertex as it is).
+    pub model: Vec<[f32; 4]>,
+    /// Per matrix pair, ten vec4s: rows of the two matrices (a0..a2,
+    /// b0..b2), both rotations as quaternions (qb on qa's side), and the
+    /// scales (sa.w: 1 for a rigid blend, 0 for a linear one; sb.w: the bits
+    /// of the index into `recs`).
+    pub mats: Vec<[[f32; 4]; 10]>,
+    /// Per paired draw, seven vec4s: both projections, both viewports (six
+    /// floats each, back to back), then screen offset x, y and ortho (1/0).
+    pub recs: Vec<[[f32; 4]; 7]>,
+}
+
+/// [`Moves`] for `cur` after `prev`, with `pairs` from [`pair`].
+pub fn moves(prev: &Output, cur: &Output, pairs: &[Option<u32>]) -> Moves {
+    let mut m = Moves { model: Vec::with_capacity(cur.vertices.len()), ..Default::default() };
+    let none = f32::from_bits(NO_MOVE);
+    m.model.extend(cur.model.iter().map(|&(p, _)| [p[0], p[1], p[2], none]));
+    // Records cover the vertices; anything else stays put.
+    m.model.resize(cur.vertices.len(), [0.0, 0.0, 0.0, none]);
+    let mut slots: Vec<(u8, u32)> = Vec::new();
+    for (rc, pair) in cur.records.iter().zip(pairs) {
+        let Some(p) = pair else { continue };
+        let rp = &prev.records[*p as usize];
+        let rec = m.recs.len() as u32;
+        slots.clear();
+        for (slot, mc) in &rc.matrices {
+            let Some((_, mp)) = rp.matrices.iter().find(|m| m.0 == *slot) else { continue };
+            slots.push((*slot, m.mats.len() as u32));
+            m.mats.push(matrix_pair(mp, mc, rec));
+        }
+        if slots.is_empty() {
+            continue;
+        }
+        let (pa, pb, va, vb) = (&rp.projection, &rc.projection, &rp.viewport, &rc.viewport);
+        let ortho = if rc.ortho { 1.0 } else { 0.0 };
+        m.recs.push([
+            [pa[0], pa[1], pa[2], pa[3]],
+            [pa[4], pa[5], pb[0], pb[1]],
+            [pb[2], pb[3], pb[4], pb[5]],
+            [va[0], va[1], va[2], va[3]],
+            [va[4], va[5], vb[0], vb[1]],
+            [vb[2], vb[3], vb[4], vb[5]],
+            [rc.screen.offset_x, rc.screen.offset_y, ortho, 0.0],
+        ]);
+        let range = rc.first as usize..(rc.first + rc.count) as usize;
+        for (v, &(_, slot)) in m.model[range.clone()].iter_mut().zip(&cur.model[range]) {
+            if let Some(&(_, k)) = slots.iter().find(|s| s.0 == slot) {
+                v[3] = f32::from_bits(k);
+            }
+        }
+    }
+    m
+}
+
+/// One entry of [`Moves::mats`]: [`interpolate_matrix`] split into what the
+/// shader blends.
+fn matrix_pair(a: &Mat, b: &Mat, rec: u32) -> [[f32; 4]; 10] {
+    let mut e = [[0.0; 4]; 10];
+    e[..3].copy_from_slice(a);
+    e[3..6].copy_from_slice(b);
+    e[9][3] = f32::from_bits(rec);
+    if a == b {
+        return e;
+    }
+    if let (Some((ra, sa)), Some((rb, sb))) = (decompose(a), decompose(b)) {
+        let (qa, mut qb) = (quat(&ra), quat(&rb));
+        if dot4(qa, qb) < 0.0 {
+            qb = qb.map(|v| -v);
+        }
+        e[6] = qa;
+        e[7] = qb;
+        e[8] = [sa[0], sa[1], sa[2], 1.0];
+        e[9][..3].copy_from_slice(&sb);
+    }
+    e
+}
+
 /// Rigid interpolation of two affine transforms: the 3x3 part as rotation
 /// times per-column scale. Shears and degenerate matrices blend linearly.
 pub fn interpolate_matrix(a: &Mat, b: &Mat, t: f32) -> Mat {
@@ -292,6 +379,55 @@ mod tests {
         }
         interpolate(&a, &b, &pairs, 1.0, &mut out);
         assert_eq!(out, b.vertices);
+    }
+
+    /// `moved` in vk-render's shader.wgsl, line for line.
+    fn shader(m: &Moves, vertex: usize, cur: &Vertex, t: f32) -> [f32; 4] {
+        let mix = |a: f32, b: f32| a + (b - a) * t;
+        let mix4 = |a: [f32; 4], b: [f32; 4]| -> [f32; 4] { std::array::from_fn(|i| mix(a[i], b[i])) };
+        let [px, py, pz, kw] = m.model[vertex];
+        let k = kw.to_bits();
+        if k == NO_MOVE {
+            return cur.pos;
+        }
+        let e = &m.mats[k as usize];
+        let mut r = [mix4(e[0], e[3]), mix4(e[1], e[4]), mix4(e[2], e[5])];
+        if e[8][3] != 0.0 {
+            let q = normalize4(mix4(e[6], e[7]));
+            let s: [f32; 3] = std::array::from_fn(|i| mix(e[8][i], e[9][i]));
+            let rot = rotation(q);
+            for (row, rr) in r.iter_mut().enumerate() {
+                *rr = [rot[row][0] * s[0], rot[row][1] * s[1], rot[row][2] * s[2], rr[3]];
+            }
+        }
+        let world = std::array::from_fn(|i| r[i][0] * px + r[i][1] * py + r[i][2] * pz + r[i][3]);
+        let rec = &m.recs[e[9][3].to_bits() as usize];
+        let pa = [rec[0][0], rec[0][1], rec[0][2], rec[0][3], rec[1][0], rec[1][1]];
+        let pb = [rec[1][2], rec[1][3], rec[2][0], rec[2][1], rec[2][2], rec[2][3]];
+        let va = [rec[3][0], rec[3][1], rec[3][2], rec[3][3], rec[4][0], rec[4][1]];
+        let vb = [rec[4][2], rec[4][3], rec[5][0], rec[5][1], rec[5][2], rec[5][3]];
+        let pr = std::array::from_fn(|i| mix(pa[i], pb[i]));
+        let vp = std::array::from_fn(|i| mix(va[i], vb[i]));
+        project(world, &pr, rec[6][2] != 0.0, &vp, Screen { offset_x: rec[6][0], offset_y: rec[6][1] })
+    }
+
+    #[test]
+    fn gpu_moves_match_the_cpu() {
+        for (ma, mb) in [(rot_z(0.0, 0.0, 1.0), rot_z(0.0, 1.0, 1.0)), (rot_z(10.0, 0.0, 2.0), rot_z(50.0, 0.4, 2.5)), (rot_z(5.0, 0.0, 1.0), rot_z(5.0, 0.0, 1.0))] {
+            let (a, b) = (frame(ma), frame(mb));
+            let pairs = pair(&a, &b);
+            let m = moves(&a, &b, &pairs);
+            for t in [0.0, 0.3, 0.5, 1.0] {
+                let mut want = Vec::new();
+                interpolate(&a, &b, &pairs, t, &mut want);
+                for (i, w) in want.iter().enumerate() {
+                    let got = shader(&m, i, &b.vertices[i], t);
+                    for k in 0..4 {
+                        assert!((got[k] - w.pos[k]).abs() < 1e-4, "t {t} vertex {i}: {got:?} vs {:?}", w.pos);
+                    }
+                }
+            }
+        }
     }
 
     #[test]

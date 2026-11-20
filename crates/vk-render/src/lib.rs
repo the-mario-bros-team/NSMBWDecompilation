@@ -173,11 +173,33 @@ struct Frame {
     staging: Option<Buffer>,
     readback: Option<Buffer>,
     writebacks: Vec<PendingWriteback>,
+    /// What this frame's descriptor set and draw states were last written
+    /// for by [`Renderer::render_prepared`]: (prepare serial, texture
+    /// epoch); `None` after any other render.
+    described: Option<(u64, u64)>,
     /// Resources retired before this frame's last submission: free once its
     /// fence signals (submissions complete in order on the one queue).
     retired_images: Vec<Image>,
     retired_buffers: Vec<Buffer>,
 }
+
+/// A field kept on the GPU for the frames shown between it and the field
+/// before ([`Renderer::prepare`]): one buffer holding its vertices, its
+/// indices, and frame interpolation's data (`gx::interp::Moves`).
+struct Prepared {
+    key: (u64, u64),
+    /// Counts prepares, so descriptors written for one are never reused.
+    serial: u64,
+    buffer: Buffer,
+    index_offset: u64,
+    /// (offset, size) of the per-vertex model positions, matrix pairs and
+    /// draw pairs; `None` when nothing moves.
+    moves: Option<[(u64, u64); 3]>,
+}
+
+/// The vertex stage's push constant: fraction between the two fields
+/// (f32 bits), and whether to move vertices at all.
+type Push = [u32; 2];
 
 /// The copy pass: pipeline and the descriptor set binding the EFB.
 #[derive(Clone, Copy)]
@@ -251,7 +273,13 @@ pub struct Renderer {
     efb_ready: bool,
     /// Where this frame's indices start in its vertex buffer.
     index_offset: u64,
+    /// The vertex stage's push constant for the frame being recorded.
+    push: Push,
+    prepared: Option<Prepared>,
     textures: HashMap<u32, Image>,
+    /// Changes whenever `textures` does (descriptors written for one epoch
+    /// are stale in the next).
+    textures_epoch: u64,
     samplers: HashMap<u32, vk::Sampler>,
     /// XFB images by guest address, with the serial of their last copy.
     xfbs: HashMap<u32, (Image, u64)>,
@@ -445,8 +473,13 @@ impl Renderer {
                 vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT),
                 vk::DescriptorSetLayoutBinding::default().binding(1).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).descriptor_count(MAX_TEXTURES).stage_flags(vk::ShaderStageFlags::FRAGMENT),
                 vk::DescriptorSetLayoutBinding::default().binding(2).descriptor_type(vk::DescriptorType::SAMPLER).descriptor_count(MAX_SAMPLERS).stage_flags(vk::ShaderStageFlags::FRAGMENT),
+                // Frame interpolation (`Prepared`): model positions, matrix pairs, draw pairs.
+                vk::DescriptorSetLayoutBinding::default().binding(3).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
+                vk::DescriptorSetLayoutBinding::default().binding(4).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
+                vk::DescriptorSetLayoutBinding::default().binding(5).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
             ];
-            let flags = [vk::DescriptorBindingFlags::empty(), vk::DescriptorBindingFlags::PARTIALLY_BOUND, vk::DescriptorBindingFlags::PARTIALLY_BOUND];
+            let partial = vk::DescriptorBindingFlags::PARTIALLY_BOUND;
+            let flags = [vk::DescriptorBindingFlags::empty(), partial, partial, partial, partial, partial];
             let mut flag_info = vk::DescriptorSetLayoutBindingFlagsCreateInfo::default().binding_flags(&flags);
             let set_layout = device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings).push_next(&mut flag_info), None)?;
             let copy_bindings = [
@@ -456,7 +489,7 @@ impl Renderer {
             let copy_set_layout = device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&copy_bindings), None)?;
             let n = FRAMES_IN_FLIGHT as u32;
             let sizes = [
-                vk::DescriptorPoolSize { ty: vk::DescriptorType::STORAGE_BUFFER, descriptor_count: n },
+                vk::DescriptorPoolSize { ty: vk::DescriptorType::STORAGE_BUFFER, descriptor_count: 4 * n },
                 vk::DescriptorPoolSize { ty: vk::DescriptorType::SAMPLED_IMAGE, descriptor_count: n * MAX_TEXTURES + 2 },
                 vk::DescriptorPoolSize { ty: vk::DescriptorType::SAMPLER, descriptor_count: n * MAX_SAMPLERS },
             ];
@@ -466,7 +499,8 @@ impl Renderer {
             let copy_layouts = [copy_set_layout];
             let copy_set = device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(desc_pool).set_layouts(&copy_layouts))?[0];
             let set_layouts = [set_layout];
-            let pipeline_layout = device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().set_layouts(&set_layouts), None)?;
+            let vertex_push = [vk::PushConstantRange { stage_flags: vk::ShaderStageFlags::VERTEX, offset: 0, size: std::mem::size_of::<Push>() as u32 }];
+            let pipeline_layout = device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().set_layouts(&set_layouts).push_constant_ranges(&vertex_push), None)?;
             let push = [vk::PushConstantRange { stage_flags: vk::ShaderStageFlags::FRAGMENT, offset: 0, size: std::mem::size_of::<CopyParams>() as u32 }];
             let copy_pipeline_layout = device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().set_layouts(&copy_layouts).push_constant_ranges(&push), None)?;
 
@@ -500,6 +534,7 @@ impl Renderer {
                     staging: None,
                     readback: None,
                     writebacks: Vec::new(),
+                    described: None,
                     retired_images: Vec::new(),
                     retired_buffers: Vec::new(),
                 });
@@ -568,7 +603,10 @@ impl Renderer {
                 palette,
                 efb_ready: false,
                 index_offset: 0,
+                push: [0; 2],
+                prepared: None,
                 textures: HashMap::new(),
+                textures_epoch: 0,
                 samplers: HashMap::new(),
                 xfbs: HashMap::new(),
                 xfb_serial: 0,
@@ -1001,6 +1039,7 @@ impl Renderer {
                     }
                     let usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::COLOR_ATTACHMENT;
                     let img = Self::create_image(&dev, &mut self.alloc, w, h, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
+                    self.textures_epoch += 1;
                     if let Some(old) = self.textures.insert(c.id, img) {
                         self.trash_images.push(old);
                     }
@@ -1033,11 +1072,99 @@ impl Renderer {
         Ok(presented)
     }
 
+    /// The key of the field on the GPU for in-between frames, if any.
+    pub fn prepared(&self) -> Option<(u64, u64)> {
+        self.prepared.as_ref().map(|p| p.key)
+    }
+
+    /// Keeps `out` on the GPU for [`Renderer::render_prepared`], under `key`
+    /// (the two fields' indices), with `moves` placing its paired draws in
+    /// between (`gx::interp::moves`; `None`: shown as it is). Its textures
+    /// must have been uploaded (a `fresh` render of it).
+    pub fn prepare(&mut self, key: (u64, u64), out: &Output, moves: Option<&gx::interp::Moves>) -> Res<()> {
+        // Storage buffer offsets: 256 bytes is the largest alignment Vulkan allows.
+        const ALIGN: u64 = 256;
+        let vlen = (out.vertices.len() * VERTEX_SIZE as usize) as u64;
+        let index_offset = vlen.next_multiple_of(ALIGN);
+        let mut at = index_offset + (out.indices.len() as u64 * 4);
+        let mut ranges = [(0u64, 0u64); 3];
+        let parts: Option<[&[u8]; 3]> = moves.filter(|m| !m.mats.is_empty()).map(|m| [as_bytes(&m.model), as_bytes(&m.mats), as_bytes(&m.recs)]);
+        if let Some(parts) = &parts {
+            for (r, part) in ranges.iter_mut().zip(parts) {
+                at = at.next_multiple_of(ALIGN);
+                *r = (at, (part.len() as u64).max(16));
+                at += r.1;
+            }
+        }
+        let usage = vk::BufferUsageFlags::VERTEX_BUFFER | vk::BufferUsageFlags::INDEX_BUFFER | vk::BufferUsageFlags::STORAGE_BUFFER;
+        let mut buffer = self.create_buffer(at.max(16), usage, MemoryLocation::CpuToGpu)?;
+        {
+            let dst = buffer.alloc.as_mut().and_then(|a| a.mapped_slice_mut()).ok_or("prepared buffer not mapped")?;
+            dst[..vlen as usize].copy_from_slice(as_bytes(&out.vertices));
+            let idx = as_bytes(&out.indices);
+            dst[index_offset as usize..index_offset as usize + idx.len()].copy_from_slice(idx);
+            if let Some(parts) = &parts {
+                for ((offset, _), part) in ranges.iter().zip(parts) {
+                    dst[*offset as usize..*offset as usize + part.len()].copy_from_slice(part);
+                }
+            }
+        }
+        let serial = self.prepared.as_ref().map_or(0, |p| p.serial + 1);
+        if let Some(old) = self.prepared.replace(Prepared { key, serial, buffer, index_offset, moves: parts.map(|_| ranges) }) {
+            // Frames in flight may still read it.
+            self.trash_buffers.push(old.buffer);
+        }
+        Ok(())
+    }
+
+    /// Renders the prepared field ([`Renderer::prepare`]; `out` is that
+    /// field) at fraction `t` between the field before and it, and presents
+    /// it like [`Renderer::render`]. Per frame shown, the CPU only records
+    /// the draws: the vertices are already on the GPU, the vertex shader
+    /// moves them, and the draw states and descriptors are written again only
+    /// when the field or the textures change.
+    pub fn render_prepared(&mut self, out: &Output, t: f32, xfb_addr: u32, width: u32, height: u32) -> Res<bool> {
+        let f = self.frame;
+        let dev = self.device.clone();
+        unsafe {
+            dev.wait_for_fences(&[self.frames[f].fence], true, u64::MAX)?;
+        }
+        self.collect_writebacks(f);
+        for img in std::mem::take(&mut self.frames[f].retired_images) {
+            self.destroy_image(img);
+        }
+        for b in std::mem::take(&mut self.frames[f].retired_buffers) {
+            self.destroy_buffer(b);
+        }
+        let cmd = self.frames[f].cmd;
+        unsafe {
+            dev.reset_command_buffer(cmd, vk::CommandBufferResetFlags::empty())?;
+            dev.begin_command_buffer(cmd, &vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT))?;
+        }
+        self.stats.uploads = 0;
+        let p = self.prepared.as_ref().ok_or("render_prepared: nothing prepared")?;
+        let (serial, vb, index_offset, moves) = (p.serial, p.buffer.buffer, p.index_offset, p.moves);
+        let described = (serial, self.textures_epoch);
+        if self.frames[f].described != Some(described) {
+            self.write_draw_states(f, out, moves.map(|m| (vb, m)))?;
+            self.frames[f].described = Some(described);
+        }
+        self.index_offset = index_offset;
+        self.push = [t.to_bits(), u32::from(moves.is_some())];
+        let recorded = self.record_efb(f, cmd, vb, out, false);
+        self.push = [0; 2];
+        recorded?;
+        let presented = self.present(f, cmd, xfb_addr, width, height)?;
+        self.frame = (f + 1) % FRAMES_IN_FLIGHT;
+        Ok(presented)
+    }
+
     /// Drops textures the GX texture cache evicted (`Output::evicted`). Call
     /// it once no output still to be rendered refers to them.
     pub fn evict(&mut self, ids: &[u32]) {
         for id in ids {
             if let Some(img) = self.textures.remove(id) {
+                self.textures_epoch += 1;
                 self.trash_images.push(img);
             }
         }
@@ -1134,6 +1261,7 @@ impl Renderer {
                 dev.cmd_copy_buffer_to_image(cmd, staging, img.image, vk::ImageLayout::TRANSFER_DST_OPTIMAL, &regions);
                 transition(&dev, cmd, &mut img, vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL);
             }
+            self.textures_epoch += 1;
             if let Some(old) = self.textures.insert(id, img) {
                 self.trash_images.push(old);
             }
@@ -1144,6 +1272,13 @@ impl Renderer {
     /// Fills frame `f`'s draw-state buffer (texture ids and sampler keys
     /// replaced by slots, the EFB scale filled in) and its descriptor set.
     fn write_descriptors(&mut self, f: usize, out: &Output) -> Res<()> {
+        self.frames[f].described = None;
+        self.write_draw_states(f, out, None)
+    }
+
+    /// [`Renderer::write_descriptors`], plus bindings 3..5 at `moves` (in
+    /// `buffer`) when given.
+    fn write_draw_states(&mut self, f: usize, out: &Output, moves: Option<(vk::Buffer, [(u64, u64); 3])>) -> Res<()> {
         let mut tex_slots: HashMap<u32, u32> = HashMap::new();
         let mut views = Vec::new();
         let mut sampler_slots: HashMap<u32, u32> = HashMap::new();
@@ -1199,6 +1334,12 @@ impl Renderer {
         if !samplers.is_empty() {
             writes.push(vk::WriteDescriptorSet::default().dst_set(set).dst_binding(2).descriptor_type(vk::DescriptorType::SAMPLER).image_info(&samplers));
         }
+        let move_infos = moves.map(|(buffer, ranges)| ranges.map(|(offset, range)| [vk::DescriptorBufferInfo { buffer, offset, range }]));
+        if let Some(infos) = &move_infos {
+            for (i, info) in infos.iter().enumerate() {
+                writes.push(vk::WriteDescriptorSet::default().dst_set(set).dst_binding(3 + i as u32).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(info));
+            }
+        }
         unsafe { self.device.update_descriptor_sets(&writes, &[]) };
         Ok(())
     }
@@ -1235,6 +1376,7 @@ impl Renderer {
             dev.cmd_bind_vertex_buffers(cmd, 0, &[vb], &[0]);
             dev.cmd_bind_index_buffer(cmd, vb, self.index_offset, vk::IndexType::UINT32);
             dev.cmd_bind_descriptor_sets(cmd, vk::PipelineBindPoint::GRAPHICS, self.pipeline_layout, 0, &[set], &[]);
+            dev.cmd_push_constants(cmd, self.pipeline_layout, vk::ShaderStageFlags::VERTEX, 0, as_bytes(&self.push));
         }
     }
 

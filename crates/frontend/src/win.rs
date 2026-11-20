@@ -32,8 +32,40 @@ pub fn raise_this_thread() {
     }
 }
 
+/// Sleeps for `d` on a high-resolution waitable timer (one per thread),
+/// which wakes far closer to time than `std::thread::sleep`.
+#[cfg(windows)]
+pub fn sleep(d: std::time::Duration) {
+    use windows_sys::Win32::Foundation::HANDLE;
+    use windows_sys::Win32::System::Threading::{CreateWaitableTimerExW, SetWaitableTimer, WaitForSingleObject, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, INFINITE, TIMER_ALL_ACCESS};
+    thread_local! {
+        // SAFETY: creates an unnamed timer; null attributes and name are allowed.
+        static TIMER: HANDLE = unsafe { CreateWaitableTimerExW(std::ptr::null(), std::ptr::null(), CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS) };
+    }
+    let timer = TIMER.with(|t| *t);
+    if timer.is_null() {
+        std::thread::sleep(d);
+        return;
+    }
+    // Relative due time, in 100 ns units.
+    let due = -((d.as_nanos() / 100).max(1) as i64);
+    // SAFETY: a valid timer handle and due time; no completion routine.
+    unsafe {
+        if SetWaitableTimer(timer, &due, 0, None, std::ptr::null(), 0) == 0 {
+            std::thread::sleep(d);
+            return;
+        }
+        WaitForSingleObject(timer, INFINITE);
+    }
+}
+
 #[cfg(not(windows))]
 pub fn raise_this_thread() {}
+
+#[cfg(not(windows))]
+pub fn sleep(d: std::time::Duration) {
+    std::thread::sleep(d);
+}
 
 /// CPU time the calling thread has used so far (kernel plus user). Unlike
 /// wall time, it does not grow while other processes take the CPU, so speed
