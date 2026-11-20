@@ -3,5 +3,12 @@
 # guest code (crates/game-recomp) and everything else. Float results do not
 # change: Rust never fuses multiply-adds on its own, and the guest's fused ones
 # already use f64::mul_add.
-[build]
+# Only for the Windows (x86-64) build. The Android build (android/, arm64)
+# names the baseline arm64 CPU explicitly: a checkout under another one
+# (a worktree in .claude/worktrees) also reads that one's config, and a
+# target's own flags override a [build] flag found there.
+[target.x86_64-pc-windows-msvc]
 rustflags = ["-C", "target-cpu=x86-64-v3"]
+
+[target.aarch64-linux-android]
+rustflags = ["-C", "target-cpu=generic"]

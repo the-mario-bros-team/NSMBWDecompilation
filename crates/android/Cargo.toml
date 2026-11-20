@@ -1,0 +1,27 @@
+[package]
+name = "nsmbw-android"
+version = "0.1.0"
+edition = "2021"
+
+# The Android app's native library, libnsmbw.so, loaded by the Java shell in
+# android/ (docs/PORT_PLAN.md, "Android"). Built only for Android:
+#   android\build.ps1   (or cargo build -p nsmbw-android --target aarch64-linux-android)
+# On other targets the library is empty.
+[lib]
+name = "nsmbw"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[target.'cfg(target_os = "android")'.dependencies]
+guest-mem = { path = "../guest-mem" }
+guest-cpu = { path = "../guest-cpu" }
+hle-os = { path = "../hle-os" }
+hle-ios = { path = "../hle-ios" }
+gx = { path = "../gx" }
+vk-render = { path = "../vk-render" }
+game-recomp = { path = "../game-recomp" }
+raw-window-handle = "0.6"
+miniz_oxide = "0.8"
+jni = "0.21"
+ndk = { version = "0.9", default-features = false, features = ["audio", "api-level-28"] }
+libc = "0.2"

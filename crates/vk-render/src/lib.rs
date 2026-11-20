@@ -241,6 +241,8 @@ pub struct Renderer {
     debug: Option<(debug_utils::Instance, vk::DebugUtilsMessengerEXT)>,
     surface: Option<(surface::Instance, vk::SurfaceKHR)>,
     physical: vk::PhysicalDevice,
+    /// The queue family drawn and presented with.
+    family: u32,
     device: Device,
     queue: vk::Queue,
     alloc: ManuallyDrop<Allocator>,
@@ -581,6 +583,7 @@ impl Renderer {
                 debug,
                 surface,
                 physical,
+                family,
                 device,
                 queue,
                 alloc: ManuallyDrop::new(alloc),
@@ -897,18 +900,78 @@ impl Renderer {
         self.needs_rebuild = true;
     }
 
+    /// Whether frames can be presented: made with a window that is attached.
+    fn has_window(&self) -> bool {
+        self.surface.as_ref().is_some_and(|(_, s)| *s != vk::SurfaceKHR::null())
+    }
+
+    /// Lets go of the window (Android destroys an app's surface when it
+    /// leaves the screen): its swapchain and surface are destroyed, and
+    /// frames are rendered without being presented until
+    /// [`Renderer::attach_window`]. Textures and every other GPU resource stay.
+    pub fn detach_window(&mut self) {
+        let Some((surface_fn, surface)) = &mut self.surface else { return };
+        unsafe {
+            let _ = self.device.device_wait_idle();
+            if let Some(f) = &self.swapchain_fn {
+                if self.swapchain != vk::SwapchainKHR::null() {
+                    f.destroy_swapchain(self.swapchain, None);
+                }
+            }
+            self.swapchain = vk::SwapchainKHR::null();
+            self.swap_images.clear();
+            if *surface != vk::SurfaceKHR::null() {
+                surface_fn.destroy_surface(*surface, None);
+                *surface = vk::SurfaceKHR::null();
+            }
+        }
+    }
+
+    /// Presents to `window` from now on (after [`Renderer::detach_window`],
+    /// or in place of the window it was made with). Only for a renderer made
+    /// with a window: a headless one has no surface or swapchain support.
+    pub fn attach_window(&mut self, display: RawDisplayHandle, window: RawWindowHandle) -> Res<()> {
+        self.detach_window();
+        let Some((surface_fn, surface)) = &mut self.surface else { return Err("a headless renderer cannot present to a window".into()) };
+        unsafe {
+            let s = ash_window::create_surface(&self._entry, &self.instance, display, window, None)?;
+            if !surface_fn.get_physical_device_surface_support(self.physical, self.family, s)? {
+                surface_fn.destroy_surface(s, None);
+                return Err("the GPU's queue cannot present to this window".into());
+            }
+            *surface = s;
+        }
+        self.needs_rebuild = true;
+        Ok(())
+    }
+
     fn rebuild(&mut self, width: u32, height: u32) -> Res<()> {
         let (Some((surface_fn, surface)), Some(swapchain_fn)) = (&self.surface, &self.swapchain_fn) else {
             return Ok(());
         };
+        if *surface == vk::SurfaceKHR::null() {
+            return Ok(());
+        }
         unsafe {
             self.device.device_wait_idle()?;
             let caps = surface_fn.get_physical_device_surface_capabilities(self.physical, *surface)?;
             if !caps.supported_usage_flags.contains(vk::ImageUsageFlags::TRANSFER_DST) {
                 return Err("swapchain images cannot be written by transfers (no TRANSFER_DST usage)".into());
             }
+            // A display turned from its natural orientation (Android: a
+            // landscape game on a phone whose panel is portrait) reports the
+            // turn and its extent unturned. The swapchain stays upright
+            // (identity) and the compositor turns it, so its extent is the
+            // turned one.
+            let quarter_turn = vk::SurfaceTransformFlagsKHR::ROTATE_90 | vk::SurfaceTransformFlagsKHR::ROTATE_270;
+            let upright = caps.current_transform != vk::SurfaceTransformFlagsKHR::IDENTITY && caps.supported_transforms.contains(vk::SurfaceTransformFlagsKHR::IDENTITY);
             let extent = if caps.current_extent.width != u32::MAX {
-                caps.current_extent
+                let e = caps.current_extent;
+                if upright && caps.current_transform.intersects(quarter_turn) {
+                    vk::Extent2D { width: e.height, height: e.width }
+                } else {
+                    e
+                }
             } else {
                 vk::Extent2D {
                     width: width.clamp(caps.min_image_extent.width, caps.max_image_extent.width),
@@ -948,7 +1011,7 @@ impl Renderer {
                     .image_array_layers(1)
                     .image_usage(vk::ImageUsageFlags::TRANSFER_DST)
                     .image_sharing_mode(vk::SharingMode::EXCLUSIVE)
-                    .pre_transform(caps.current_transform)
+                    .pre_transform(if upright { vk::SurfaceTransformFlagsKHR::IDENTITY } else { caps.current_transform })
                     .composite_alpha(alpha)
                     .present_mode(mode)
                     .clipped(true)
@@ -1624,7 +1687,7 @@ impl Renderer {
         }
 
         let mut index = None;
-        if width > 0 && height > 0 && self.surface.is_some() {
+        if width > 0 && height > 0 && self.has_window() {
             if self.needs_rebuild {
                 self.rebuild(width, height)?;
             }
@@ -1834,7 +1897,9 @@ impl Drop for Renderer {
             }
             self.device.destroy_device(None);
             if let Some((f, s)) = &self.surface {
-                f.destroy_surface(*s, None);
+                if *s != vk::SurfaceKHR::null() {
+                    f.destroy_surface(*s, None);
+                }
             }
             if let Some((f, m)) = &self.debug {
                 f.destroy_debug_utils_messenger(*m, None);
