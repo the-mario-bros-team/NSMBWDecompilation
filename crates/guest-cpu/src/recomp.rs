@@ -61,8 +61,11 @@ pub struct FnInfo {
     pub f: GuestFn,
 }
 
-/// Ends a slice (see [`Rt::set_slice_end`]).
-pub type SliceEnd = Box<dyn FnMut(&mut Cpu, &mut Mem) -> Option<u64>>;
+/// Ends a slice without changing the CPU (see [`Rt::set_slice_end`]).
+pub type SliceEnd = Box<dyn FnMut(&Cpu, &mut Mem) -> Option<u64>>;
+
+/// Delivers what made a slice end leave (see [`Rt::set_slice_end`]).
+pub type SliceLeave = Box<dyn FnMut(&mut Cpu)>;
 
 /// Runs a function-replacing hook (see [`Rt::set_hook`]).
 pub type Hook = Box<dyn FnMut(&mut Cpu, &mut Mem, u32) -> bool>;
@@ -96,6 +99,7 @@ pub struct Rt {
     /// Functions found changed in memory (not run until they match again).
     pub changed: u64,
     slice_end: Option<SliceEnd>,
+    slice_leave: Option<SliceLeave>,
     hook: Option<Hook>,
 }
 
@@ -131,13 +135,19 @@ impl Rt {
         // (0, None) is right for address 0 (no function), the only one that
         // could match an untouched entry: it maps to entry 0.
         let cache = vec![(0, None); CACHE].into_boxed_slice();
-        Ok(Self { end: 0, depth: 0, fns, checked: vec![UNCHECKED; fns.len()], intact: vec![false; fns.len()], gen_sum: vec![0; fns.len()], pages, table, cache, changed: 0, slice_end: None, hook: None })
+        Ok(Self { end: 0, depth: 0, fns, checked: vec![UNCHECKED; fns.len()], intact: vec![false; fns.len()], gen_sum: vec![0; fns.len()], pages, table, cache, changed: 0, slice_end: None, slice_leave: None, hook: None })
     }
 
-    /// What ends a slice: advance the hardware and deliver interrupts, then
-    /// `Some(next end)` to carry on, or `None` to return to the dispatcher.
-    pub fn set_slice_end(&mut self, f: SliceEnd) {
-        self.slice_end = Some(f);
+    /// What ends a slice, in two steps. `end` advances the hardware without
+    /// changing the CPU (it only sees `&Cpu`), then gives `Some(next end)`
+    /// to carry on, or `None` to return to the dispatcher; `leave` then
+    /// takes the interrupt that made it `None`, if one did. Because the
+    /// carry-on path never hands out the CPU mutably, the compiler keeps
+    /// guest registers in host registers across slice checks instead of
+    /// reloading them after every branch.
+    pub fn set_slice_end(&mut self, end: SliceEnd, leave: SliceLeave) {
+        self.slice_end = Some(end);
+        self.slice_leave = Some(leave);
     }
 
     /// What runs the hook at `pc` (a function the host replaces)
@@ -157,13 +167,21 @@ impl Rt {
 
     #[cold]
     #[inline(never)]
-    fn end_slice(&mut self, c: &mut Cpu, m: &mut Mem) -> bool {
+    fn end_slice(&mut self, c: &Cpu, m: &mut Mem) -> bool {
         match self.slice_end.as_mut().and_then(|f| f(c, m)) {
             Some(end) => {
                 self.end = end;
                 true
             }
             None => false,
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn leave(&mut self, c: &mut Cpu) {
+        if let Some(f) = self.slice_leave.as_mut() {
+            f(c);
         }
     }
 
@@ -241,7 +259,11 @@ impl Rt {
 #[inline(always)]
 pub fn slice(c: &mut Cpu, m: &mut Mem, rt: &mut Rt, next: u32) -> bool {
     c.pc = next;
-    c.cycles < rt.end || rt.end_slice(c, m)
+    if c.cycles < rt.end || rt.end_slice(c, m) {
+        return true;
+    }
+    rt.leave(c);
+    false
 }
 
 /// A direct call (`bl`): `lr` = `ret`, run `f` from `target`; true if it

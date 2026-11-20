@@ -244,6 +244,14 @@ pub struct Slices {
     pub decrementers: u64,
     /// The PC after each slice end, counted (`--profile-guest`).
     pub samples: Option<std::collections::HashMap<u32, u64>>,
+    /// The interrupt [`Slices::advance`] found to take, for [`Slices::take`].
+    pending: Option<Pending>,
+}
+
+#[derive(Clone, Copy)]
+enum Pending {
+    External,
+    Decrementer,
 }
 
 impl Slices {
@@ -252,28 +260,57 @@ impl Slices {
     /// running natively must return to the dispatcher (an interrupt was
     /// taken, or the run is over).
     pub fn end_slice(&mut self, cpu: &mut Cpu, mem: &mut Mem) -> bool {
+        let go = self.advance(cpu, mem);
+        self.take(cpu);
+        go
+    }
+
+    /// [`Slices::end_slice`] up to the CPU: the hardware runs up to the CPU
+    /// clock, the stop and the next slice are decided, and an interrupt to
+    /// take is noted for [`Slices::take`]. False as `end_slice` returns.
+    pub fn advance(&mut self, cpu: &Cpu, mem: &mut Mem) -> bool {
         let mut hw = self.hw.borrow_mut();
         hw.advance(cpu.cycles, mem);
-        let mut taken = false;
-        if cpu.msr & MSR_EE != 0 {
-            if hw.interrupt_pending() {
-                self.interrupts += 1;
-                cpu.exception(0x500, cpu.pc);
-                taken = true;
-            } else if cpu.take_decrementer() {
-                self.decrementers += 1;
-                taken = true;
-            }
-        }
+        self.pending = if cpu.msr & MSR_EE == 0 {
+            None
+        } else if hw.interrupt_pending() {
+            Some(Pending::External)
+        } else if cpu.decrementer_pending() {
+            Some(Pending::Decrementer)
+        } else {
+            None
+        };
         if hw.retraces > self.until_retraces || cpu.cycles >= self.limit {
             self.stop = true;
         }
         drop(hw);
-        if let Some(s) = &mut self.samples {
-            *s.entry(cpu.pc).or_default() += 1;
+        if self.pending.is_none() {
+            self.sample(cpu.pc);
         }
         self.end = cpu.cycles + SLICE;
-        !taken && !self.stop
+        self.pending.is_none() && !self.stop
+    }
+
+    /// Takes the interrupt [`Slices::advance`] noted, if any.
+    pub fn take(&mut self, cpu: &mut Cpu) {
+        match self.pending.take() {
+            Some(Pending::External) => {
+                self.interrupts += 1;
+                cpu.exception(0x500, cpu.pc);
+            }
+            Some(Pending::Decrementer) => {
+                self.decrementers += 1;
+                cpu.take_decrementer();
+            }
+            None => return,
+        }
+        self.sample(cpu.pc);
+    }
+
+    fn sample(&mut self, pc: u32) {
+        if let Some(s) = &mut self.samples {
+            *s.entry(pc).or_default() += 1;
+        }
     }
 }
 
@@ -354,7 +391,7 @@ impl System {
         cpu.msr = 0x2030; // FP available, instruction and data translation on
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
-        let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None }));
+        let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None, pending: None }));
         Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0 })
     }
 
@@ -406,11 +443,14 @@ impl System {
     /// [`Slices::end_slice`], and calls the function-replacing hooks itself
     /// ([`replace`]; set `aux_effects` first).
     pub fn set_recomp(&mut self, mut rt: guest_cpu::recomp::Rt) {
-        let slices = self.slices.clone();
-        rt.set_slice_end(Box::new(move |c, m| {
-            let mut s = slices.borrow_mut();
-            s.end_slice(c, m).then_some(s.end)
-        }));
+        let (slices, leave) = (self.slices.clone(), self.slices.clone());
+        rt.set_slice_end(
+            Box::new(move |c, m| {
+                let mut s = slices.borrow_mut();
+                s.advance(c, m).then_some(s.end)
+            }),
+            Box::new(move |c| leave.borrow_mut().take(c)),
+        );
         let aux_effects = self.aux_effects;
         rt.set_hook(Box::new(move |c, m, pc| replace(c, m, pc, aux_effects)));
         self.recomp = Some(rt);
