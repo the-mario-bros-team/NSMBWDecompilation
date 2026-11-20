@@ -1750,3 +1750,82 @@ windowed.
    the slice budget, and loops go back through the `match` on `pc`.
 4. **Interrupts and thread switches** still unwind and climb (16.7
    million dispatcher entries); a native return stack would be needed.
+
+## 15. 400 fps with the game at 100% (frames shown, 2026-11-20)
+
+Goal (WitherBlitz, 2026-11-20): 400 frames shown a second with the game
+capped at 100%. The engine's side (game speed) is section 14's second
+pass; this is the window thread's side: frames shown between fields
+(11.6) at 400 a second, and nothing on that thread holding up the game.
+
+**Check:** the whole 1-1 script (and `scripts/1-1-4p.press`) paced at
+`--fps 400 --no-vsync --log-fps`, recompiled code, on a quiet machine
+(no build or other emulator running: the build and bench locks in
+`D:\nsmbw-p6`). `--log-fps` prints, every second, frames shown, game
+speed, and the window thread's time taking fields in, preparing them, and
+showing frames.
+
+**What changed:**
+1. **Frame interpolation on the GPU.** Frames shown between two fields
+   rebuilt every vertex on the CPU (11 MB a frame on the world map: 2.7 ms
+   of window thread per frame, 310-350 fps at most). Now, once per pair of
+   fields, the newer field goes to the GPU in one buffer (vertices,
+   indices, and `gx::interp::Moves`: model positions, each matrix pair
+   split into quaternions, scales and translations, and each draw's two
+   projections and viewports). The vertex shader blends them at the
+   fraction `t`, a push constant, as `interp::interpolate_into` does (a
+   test runs the shader's maths against it). Draw states and descriptors
+   are written again per frame slot only when the field or the textures
+   change. `Renderer::prepare`, `render_prepared`.
+2. **Less to prepare per field.** The world map has about 80,700 vertices
+   in 11,600 draws a field. Draws that did not move are left out of the
+   moves (their vertices are already right); each distinct camera pair
+   and matrix pair is built once; pairing walks records sorted by
+   identity; records keep their matrices in one list per field (the
+   transform thread allocated one `Vec` per record). Prepared-field
+   buffers are reused. The pairing and moves are built by an `interp`
+   thread as soon as a field arrives, so the window thread only uploads.
+3. **Per frame shown:** draws set only the dynamic state that changed;
+   the wait for the next frame sleeps on a high-resolution waitable timer
+   and spins only the last 250 us (it spun 1.5 ms).
+4. **Frames driven every turn of the event loop** (`about_to_wait`), not
+   by redraw requests: Windows delivers those as paint messages and held
+   them back to ~9 ms (or far longer while the window was covered),
+   which capped one run at ~110 fps.
+5. **Nothing on the window thread waits on the outside world:**
+   - The title no longer shows live numbers: setting it blocked the
+     window thread 15-40 ms every few seconds (overlays and accessibility
+     tools hook it). They are in the performance monitor (F3) and
+     `--log-fps`.
+   - Lines printed while the game runs go through an output thread
+     (`crate::say`). A kernel trace (xperf: context switches with
+     stacks, and file I/O) of a run that stalled for 0.3-1 s at scene
+     loads showed the window thread blocked on writes to its redirected
+     log on this PC's laptop hard drive, each flushing the NTFS journal
+     and the disk cache (38-350 ms apiece, 18 s over the run); a console
+     in selection mode blocks writes the same way. The game thread then
+     waited on the full frame channel.
+6. `--fps 400` (and in the F5/F6 cycle, with engine-speed's 30).
+
+**Measured** (World 1 map, unlocked frame rate, no V-Sync): 310-350 fps
+shown at 2.7 ms of window thread per frame before; ~600 after 1-2. At
+`--fps 400`, recompiled: frames shown ~400 at 98-101% game; window thread
+about 25-40% busy on the map (it was 80%), 15-20% in 1-1.
+
+**Result** (render-400 on engine-speed's a2dbf3f, recompiled code
+regenerated, quiet machine, `--fps 400 --no-vsync`, per-second readings):
+
+| Run | Seconds | Frames shown min / median | Game min / median |
+|---|---|---|---|
+| Whole 1-1 script (9,700 fields) | 159 | 385 / 400 | 97% / 100% |
+| Four players, `scripts/1-1-4p.press` (11,000 fields) | 181 | 389 / 400 | 97% / 100% |
+
+A one-second window holds 59 or 60 fields, so 97-98% is the reading's
+grain, not a slowdown. The only second under 388 fps was the opening
+cutscene's load (field ~3161, 384.7 fps). Instruction counts are the
+lockstep references' (13,194,609,027 and 19,912,994,930).
+
+**Lessons for measuring:** other sessions' builds and game runs on this
+PC (CPU and GPU) and output redirected to the hard drive both produced
+dips that looked like engine problems. Take timings with the build and
+bench locks held, and log through a pipe or to the SSD.
