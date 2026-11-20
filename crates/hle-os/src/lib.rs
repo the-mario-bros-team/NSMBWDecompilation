@@ -99,6 +99,73 @@ fn may_be_special(pc: u32) -> bool {
     SPECIAL_FILTER[(b >> 6) as usize] & (1 << (b & 63)) != 0
 }
 
+/// The hooks that replace a whole function: return at once (DC loops,
+/// AXFX callbacks), the native reverb, [`STRCMP`] and [`SQRT`]. Runs the
+/// one at `pc` if it applies, returning to `lr`; true if it ran. One that
+/// does not apply changes nothing, so recompiled code calls this at a call
+/// to a hook (`Rt::set_hook`) instead of unwinding to the dispatcher, and
+/// unwinds only when it declines ([`System::before`] then asks again).
+fn replace(cpu: &mut Cpu, mem: &mut Mem, pc: u32, aux_effects: bool) -> bool {
+    if RETURN_AT_ONCE.contains(&pc) && (!aux_effects || !AXFX.contains(&pc)) {
+        cpu.pc = cpu.lr;
+        return true;
+    }
+    if pc == reverb::UPDATE_BUFFER && aux_effects && reverb::update_buffer(mem, cpu.gpr[3], cpu.gpr[5], cpu.gpr[8]) {
+        cpu.pc = cpu.lr;
+        return true;
+    }
+    if pc == STRCMP {
+        if let Some(r) = strcmp(mem, cpu.gpr[3], cpu.gpr[4]) {
+            cpu.gpr[3] = r as u32;
+            cpu.pc = cpu.lr;
+            return true;
+        }
+        return false;
+    }
+    // With the FPU off, f1 may still be another thread's: let the real
+    // code run and take the FP-unavailable exception first.
+    if pc == SQRT && cpu.msr & guest_cpu::MSR_FP != 0 {
+        cpu.fpr[1][0] = sqrt(cpu, mem, cpu.fpr[1][0]);
+        cpu.pc = cpu.lr;
+        return true;
+    }
+    false
+}
+
+/// [`STRCMP`]'s result, or `None` (run the guest's own) if a string
+/// leaves RAM.
+fn strcmp(mem: &Mem, a: u32, b: u32) -> Option<i32> {
+    for i in 0.. {
+        let x = mem.ram(a.wrapping_add(i), 1)?[0];
+        let y = mem.ram(b.wrapping_add(i), 1)?[0];
+        if x != y {
+            return Some(i32::from(x) - i32::from(y));
+        }
+        if x == 0 {
+            return Some(0);
+        }
+    }
+    unreachable!()
+}
+
+/// [`SQRT`]'s result, with its special cases and `errno`.
+fn sqrt(cpu: &Cpu, mem: &mut Mem, x: f64) -> f64 {
+    let errno = cpu.gpr[13].wrapping_sub(ERRNO_OFFSET);
+    if !x.is_finite() {
+        // NaN stays NaN, +inf stays +inf, -inf becomes NaN.
+        let _ = mem.write_u32(errno, EDOM);
+        return x + x * x;
+    }
+    if x == 0.0 {
+        return x;
+    }
+    if x < 0.0 {
+        let _ = mem.write_u32(errno, EDOM);
+        return f64::from_bits(0x7FFF_FFFF_0000_0000);
+    }
+    x.sqrt()
+}
+
 fn be32(b: &[u8], at: usize) -> u32 {
     u32::from_be_bytes(b[at..at + 4].try_into().unwrap())
 }
@@ -278,32 +345,13 @@ impl System {
     /// returns. Returns true when the scheduler is idle with interrupts on;
     /// the clock then jumps to the next video line and the slice should end.
     fn before(&mut self, pc: u32) -> bool {
-        if RETURN_AT_ONCE.contains(&pc) && (!self.aux_effects || !AXFX.contains(&pc)) {
-            self.cpu.pc = self.cpu.lr;
-            return false;
-        }
-        if pc == reverb::UPDATE_BUFFER && self.aux_effects && reverb::update_buffer(&mut self.mem, self.cpu.gpr[3], self.cpu.gpr[5], self.cpu.gpr[8]) {
-            self.cpu.pc = self.cpu.lr;
-            return false;
-        }
-        if pc == STRCMP {
-            if let Some(r) = self.strcmp(self.cpu.gpr[3], self.cpu.gpr[4]) {
-                self.cpu.gpr[3] = r as u32;
-                self.cpu.pc = self.cpu.lr;
-            }
+        if replace(&mut self.cpu, &mut self.mem, pc, self.aux_effects) || pc == STRCMP {
             return false;
         }
         // The run loops execute the instruction at `pc` right after this
         // (no interrupt in between), so a call the hook lets run is drawn
         // before the hook can see it again.
         if pc == light_texture::DRAW_AND_CAPTURE && self.light_textures.skip(&self.cpu, &mut self.mem) {
-            self.cpu.pc = self.cpu.lr;
-            return false;
-        }
-        // With the FPU off, f1 may still be another thread's: let the real
-        // code run and take the FP-unavailable exception first.
-        if pc == SQRT && self.cpu.msr & guest_cpu::MSR_FP != 0 {
-            self.cpu.fpr[1][0] = self.sqrt(self.cpu.fpr[1][0]);
             self.cpu.pc = self.cpu.lr;
             return false;
         }
@@ -322,39 +370,6 @@ impl System {
         false
     }
 
-    /// [`STRCMP`]'s result, or `None` (run the guest's own) if a string
-    /// leaves RAM.
-    fn strcmp(&self, a: u32, b: u32) -> Option<i32> {
-        for i in 0.. {
-            let x = self.mem.ram(a.wrapping_add(i), 1)?[0];
-            let y = self.mem.ram(b.wrapping_add(i), 1)?[0];
-            if x != y {
-                return Some(i32::from(x) - i32::from(y));
-            }
-            if x == 0 {
-                return Some(0);
-            }
-        }
-        unreachable!()
-    }
-
-    /// [`SQRT`]'s result, with its special cases and `errno`.
-    fn sqrt(&mut self, x: f64) -> f64 {
-        let errno = self.cpu.gpr[13].wrapping_sub(ERRNO_OFFSET);
-        if !x.is_finite() {
-            // NaN stays NaN, +inf stays +inf, -inf becomes NaN.
-            let _ = self.mem.write_u32(errno, EDOM);
-            return x + x * x;
-        }
-        if x == 0.0 {
-            return x;
-        }
-        if x < 0.0 {
-            let _ = self.mem.write_u32(errno, EDOM);
-            return f64::from_bits(0x7FFF_FFFF_0000_0000);
-        }
-        x.sqrt()
-    }
 
     /// Advances the hardware to the CPU clock and delivers a pending
     /// external or decrementer interrupt.
@@ -371,13 +386,16 @@ impl System {
     }
 
     /// Registers recompiled code; it ends slices itself through
-    /// [`Slices::end_slice`].
+    /// [`Slices::end_slice`], and calls the function-replacing hooks itself
+    /// ([`replace`]; set `aux_effects` first).
     pub fn set_recomp(&mut self, mut rt: guest_cpu::recomp::Rt) {
         let slices = self.slices.clone();
         rt.set_slice_end(Box::new(move |c, m| {
             let mut s = slices.borrow_mut();
             s.end_slice(c, m).then_some(s.end)
         }));
+        let aux_effects = self.aux_effects;
+        rt.set_hook(Box::new(move |c, m, pc| replace(c, m, pc, aux_effects)));
         self.recomp = Some(rt);
     }
 

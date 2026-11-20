@@ -64,6 +64,9 @@ pub struct FnInfo {
 /// Ends a slice (see [`Rt::set_slice_end`]).
 pub type SliceEnd = Box<dyn FnMut(&mut Cpu, &mut Mem) -> Option<u64>>;
 
+/// Runs a function-replacing hook (see [`Rt::set_hook`]).
+pub type Hook = Box<dyn FnMut(&mut Cpu, &mut Mem, u32) -> bool>;
+
 /// Calls deeper than this unwind to the dispatcher (bounds the host stack).
 const MAX_DEPTH: u32 = 400;
 /// Entries of [`Rt`]'s lookup cache (a power of two).
@@ -93,6 +96,7 @@ pub struct Rt {
     /// Functions found changed in memory (not run until they match again).
     pub changed: u64,
     slice_end: Option<SliceEnd>,
+    hook: Option<Hook>,
 }
 
 const TABLE_BASE: u32 = 0x8000_0000;
@@ -127,13 +131,28 @@ impl Rt {
         // (0, None) is right for address 0 (no function), the only one that
         // could match an untouched entry: it maps to entry 0.
         let cache = vec![(0, None); CACHE].into_boxed_slice();
-        Ok(Self { end: 0, depth: 0, fns, checked: vec![UNCHECKED; fns.len()], intact: vec![false; fns.len()], gen_sum: vec![0; fns.len()], pages, table, cache, changed: 0, slice_end: None })
+        Ok(Self { end: 0, depth: 0, fns, checked: vec![UNCHECKED; fns.len()], intact: vec![false; fns.len()], gen_sum: vec![0; fns.len()], pages, table, cache, changed: 0, slice_end: None, hook: None })
     }
 
     /// What ends a slice: advance the hardware and deliver interrupts, then
     /// `Some(next end)` to carry on, or `None` to return to the dispatcher.
     pub fn set_slice_end(&mut self, f: SliceEnd) {
         self.slice_end = Some(f);
+    }
+
+    /// What runs the hook at `pc` (a function the host replaces)
+    /// for code calling or jumping to it, instead of unwinding to the
+    /// dispatcher: true if it ran, with `pc` at the return address. It
+    /// must change nothing when it declines: the code then unwinds and the
+    /// dispatcher asks again.
+    pub fn set_hook(&mut self, f: Hook) {
+        self.hook = Some(f);
+    }
+
+    /// Runs the hook at `pc` (see [`Rt::set_hook`]).
+    #[inline(never)]
+    pub fn hook(&mut self, c: &mut Cpu, m: &mut Mem, pc: u32) -> bool {
+        self.hook.as_mut().is_some_and(|h| h(c, m, pc))
     }
 
     #[cold]

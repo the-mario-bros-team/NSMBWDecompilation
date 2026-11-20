@@ -289,6 +289,9 @@ impl Gen<'_> {
             let _ = match self.callee(to, self.shard.get()) {
                 Some(Callee::Direct(name)) => write!(out, "return tail(c, m, rt, {name}, {to:#010x}); "),
                 Some(Callee::Index(i)) => write!(out, "return tail_index(c, m, rt, {i}, {to:#010x}); "),
+                // A hook: run it here if it applies (it returns to `lr`,
+                // our caller), else leave for the dispatcher.
+                None if self.special.contains(&to) => write!(out, "c.pc = {to:#010x}; rt.hook(c, m, {to:#010x}); return Ok(()); "),
                 None => write!(out, "c.pc = {to:#010x}; return Ok(()); "),
             };
         }
@@ -427,6 +430,12 @@ impl Gen<'_> {
                             Callee::Direct(name) => write!(s, "if !call(c, m, rt, {name}, {t:#010x}, {next:#010x})? {{ return Ok(()); }} "),
                             Callee::Index(i) => write!(s, "if !call_index(c, m, rt, {i}, {t:#010x}, {next:#010x})? {{ return Ok(()); }} "),
                         };
+                        self.goto(f, next, s);
+                    }
+                    // A call to a hook: run it here if it applies, else
+                    // leave for the dispatcher.
+                    None if self.special.contains(&t) => {
+                        let _ = write!(s, "if !rt.hook(c, m, {t:#010x}) {{ return Ok(()); }} ");
                         self.goto(f, next, s);
                     }
                     None => {
