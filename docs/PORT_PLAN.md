@@ -1685,6 +1685,17 @@ below 99%. Shown fps (the renderer, branch `render-400`) dipped to 252.
      builds).
 17. **Fields that wait for GX** are shown in the slow-field report (each
    field's GX wait), which is how the above was told apart.
+18. **Vertex transform in place.** `Xf::transform` built each 144-byte
+   vertex on the stack and returned it: its texture coordinates, stored a
+   float at a time, were copied out with 32-byte loads that cannot take
+   their data from those stores, and every vertex paid a call's prologue,
+   bounds checks on XF memory, and one or two calls to `light_channel`.
+   `Xf::transform_into` writes a draw's vertices into the output in place,
+   with the vertex body and `light_channel` inlined. The course clear has
+   80,000 vertices a field (4-player 1-1 25,000-30,000): 80-85 -> 62-69 ns
+   a vertex before inlining `light_channel`; with it, the game thread's
+   end-of-field wait for GX output at the course clear fell from 1.8 to
+   0.45 ms a field (headless, from field 9380). GX digests identical.
 
 With the frame rate unlocked (`--fps unlocked`, this branch's renderer),
 the whole 1-1 script shows a median of 645 fps (minimum 303) with the
@@ -1729,10 +1740,11 @@ windowed.
    `ARCConvertPathToEntrynum`), which step 14 makes up. Native versions
    of those searches would remove them; they would be new hooks, left
    for later.
-2. **The GX decode thread** limits heavy scenes (it is what the game
-   waits for on the world map): `Layout::read` (per-format loaders),
-   the 150-byte `RawVertex` per vertex, and the vertex transform on the
-   GPU (11.6).
+2. **The GX threads** in heavy scenes: the transform is still about
+   60 ns a vertex (normalising and dividing for lighting and texture
+   coordinates; doing several vertices at once with SIMD, or the transform
+   on the GPU, 11.6, would be the next step); the decode thread's
+   `Layout::read_into`, and the 150-byte `RawVertex` per vertex.
 3. **Generated code** is still about 120 bytes per guest instruction:
    checked loads and stores inline their slow paths, every branch checks
    the slice budget, and loops go back through the `match` on `pc`.
