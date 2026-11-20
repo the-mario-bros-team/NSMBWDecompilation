@@ -254,7 +254,11 @@ impl SharedCamera {
         // Windows are the game camera's normal size (`dBg_c`'s; the live
         // camera may be zoomed out to fit the players).
         let size = Rect { w: own.w, h: own.h, ..live };
-        self.views = std::array::from_fn(|p| self.view_for(mem, p, size, drawn, area));
+        // Players' windows only in a course played normally: the title's
+        // demo has four players of its own, shown as the game shows them.
+        if read32(mem, SDA - 0x547C) == Some(0) {
+            self.views = std::array::from_fn(|p| self.view_for(mem, p, size, drawn, area));
+        }
     }
 
     /// The box around every player, or `None` where the game's own camera
