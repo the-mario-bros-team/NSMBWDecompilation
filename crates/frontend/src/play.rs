@@ -12,6 +12,8 @@
 //! `settings.toml`.
 
 use std::collections::VecDeque;
+use std::sync::mpsc::{self, Receiver, Sender};
+use std::sync::Arc;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
@@ -52,6 +54,53 @@ pub struct Options {
 /// Fields kept for interpolation; older ones are dropped and their evicted
 /// textures released.
 const QUEUE: usize = 3;
+
+/// A field kept for frames shown in between; its output is shared with the
+/// [`Mover`] thread while it pairs the field with the one before.
+struct Queued {
+    index: u64,
+    time: Instant,
+    xfb: u32,
+    out: Arc<gx::Output>,
+}
+
+/// What moves a field's draws between it and the field before
+/// (`gx::interp::pair` and `moves`, about 3 ms a field on the world map),
+/// built on a thread of its own as soon as the field arrives: by the time
+/// frames are shown between the two (a field later), the window thread only
+/// uploads it.
+struct Mover {
+    jobs: Sender<(u64, u64, Arc<gx::Output>, Arc<gx::Output>)>,
+    done: Receiver<((u64, u64), gx::interp::Moves)>,
+    ready: VecDeque<((u64, u64), gx::interp::Moves)>,
+}
+
+impl Mover {
+    fn spawn() -> Self {
+        let (jobs, rx) = mpsc::channel::<(u64, u64, Arc<gx::Output>, Arc<gx::Output>)>();
+        let (tx, done) = mpsc::channel();
+        std::thread::Builder::new()
+            .name("interp".into())
+            .spawn(move || {
+                for (ia, ib, a, b) in rx {
+                    let moves = gx::interp::moves(&a, &b, &gx::interp::pair(&a, &b));
+                    if tx.send(((ia, ib), moves)).is_err() {
+                        break;
+                    }
+                }
+            })
+            .expect("spawn the interpolation thread");
+        Self { jobs, done, ready: VecDeque::new() }
+    }
+
+    /// The moves for `key` if they are built; older ones are dropped.
+    fn take(&mut self, key: (u64, u64)) -> Option<gx::interp::Moves> {
+        self.ready.extend(self.done.try_iter());
+        self.ready.retain(|(k, _)| k.1 >= key.1);
+        let i = self.ready.iter().position(|(k, _)| *k == key)?;
+        self.ready.remove(i).map(|(_, m)| m)
+    }
+}
 /// A field whose emulation takes longer than this is logged.
 const SLOW_FIELD: Duration = Duration::from_millis(20);
 
@@ -63,7 +112,8 @@ struct App {
     renderer: Option<Renderer>,
     window: Option<Window>,
     error: Option<String>,
-    queue: VecDeque<GameFrame>,
+    queue: VecDeque<Queued>,
+    mover: Option<Mover>,
     games: u64,
     presented: u64,
     last_present: Instant,
@@ -303,14 +353,23 @@ impl App {
         if show {
             self.presented_now();
         }
-        self.queue.push_back(f);
+        let queued = Queued { index: f.index, time: f.time, xfb: f.xfb, out: Arc::new(f.out) };
+        if !native {
+            if let Some(prev) = self.queue.back() {
+                let mover = self.mover.get_or_insert_with(Mover::spawn);
+                let _ = mover.jobs.send((prev.index, queued.index, prev.out.clone(), queued.out.clone()));
+            }
+        }
+        self.queue.push_back(queued);
         while self.queue.len() > QUEUE {
             let old = self.queue.pop_front().unwrap();
             if let Some(r) = &mut self.renderer {
                 r.evict(&old.out.evicted);
             }
-            if let Some(emu) = &self.emu {
-                let _ = emu.to_emu.send(ToEmu::Recycle(Box::new(old.out)));
+            // Its buffers go back to the GX threads unless the mover still
+            // holds it (then they are freed).
+            if let (Some(emu), Ok(out)) = (&self.emu, Arc::try_unwrap(old.out)) {
+                let _ = emu.to_emu.send(ToEmu::Recycle(Box::new(out)));
             }
         }
         if last {
@@ -347,18 +406,26 @@ impl App {
         };
         let Some(size) = self.window.as_ref().map(|w| w.inner_size()) else { return Ok(()) };
         let rects = self.overlay_rects(size.width, size.height);
+        let started = Instant::now();
+        // Once per pair of fields: the newer one goes to the GPU with what
+        // moves its draws (built by the mover, or here if it has not got to
+        // them yet); every frame shown in between only records draws.
+        let key = (self.queue[a].index, self.queue[b].index);
+        let prepare = self.renderer.as_ref().is_some_and(|r| r.prepared() != Some(key));
+        let moves = if prepare && a != b {
+            let built = self.mover.as_mut().and_then(|m| m.take(key));
+            let (fa, fb) = (&self.queue[a], &self.queue[b]);
+            Some(built.unwrap_or_else(|| gx::interp::moves(&fa.out, &fb.out, &gx::interp::pair(&fa.out, &fb.out))))
+        } else {
+            None
+        };
         let Some(renderer) = &mut self.renderer else { return Ok(()) };
         renderer.overlay = rects;
         if let Some(path) = self.pending_shot.take() {
             renderer.screenshot = Some(path);
         }
-        let (fa, fb) = (&self.queue[a], &self.queue[b]);
-        let started = Instant::now();
-        // Once per pair of fields: the newer one goes to the GPU with what
-        // moves its draws; every frame shown in between only records draws.
-        let key = (fa.index, fb.index);
-        if renderer.prepared() != Some(key) {
-            let moves = (a != b).then(|| gx::interp::moves(&fa.out, &fb.out, &gx::interp::pair(&fa.out, &fb.out)));
+        let fb = &self.queue[b];
+        if prepare {
             renderer.prepare(key, &fb.out, moves.as_ref()).map_err(|e| e.to_string())?;
             self.spent[1] += started.elapsed();
         }
@@ -621,6 +688,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         window: None,
         error: None,
         queue: VecDeque::new(),
+        mover: None,
         games: 0,
         presented: 0,
         last_present: now,
