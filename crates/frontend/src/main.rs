@@ -49,6 +49,7 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
   --save-state <f>:<file>  save the whole machine at the start of game frame f (repeatable)
   --load-state <file>  start from a saved state (frame numbers carry on from it)
   --hash-every <n>   print a hash of guest RAM every n game frames
+  --hash-gx          with --hash-every: also print a running digest of the GX output (what the renderer gets)
   --dump-ram <f>:<file>  write MEM1 then MEM2 to a file at the start of game frame f (repeatable)
   --view-player <n>  in a course, centre the world on player n within the game's camera (online: your own)
   --view-zoom <z>    with --view-player: show 1/z of the camera around the player (for testing)
@@ -87,6 +88,7 @@ struct Args {
     save_states: Vec<(u64, PathBuf)>,
     load_state: Option<PathBuf>,
     hash_every: u64,
+    hash_gx: bool,
     no_feedback: bool,
     net: net::Mode,
     dump_ram: Vec<(u64, PathBuf)>,
@@ -125,7 +127,7 @@ fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &st
 
 fn parse_args() -> Result<Args, String> {
     let settings = settings::Settings::load(Path::new(settings::FILE));
-    let mut args = Args { check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
+    let mut args = Args { check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -189,6 +191,7 @@ fn parse_args() -> Result<Args, String> {
             "--view-zoom" => args.view_zoom = number(&mut it, "--view-zoom")?,
             "--load-state" => args.load_state = Some(it.next().ok_or("--load-state needs a file")?.into()),
             "--hash-every" => args.hash_every = number(&mut it, "--hash-every")?,
+            "--hash-gx" => args.hash_gx = true,
             "--no-feedback" => args.no_feedback = true,
             "--host" => {
                 let wait_join = match &args.net {
@@ -278,7 +281,7 @@ fn main() -> ExitCode {
         return if ok { ExitCode::SUCCESS } else { ExitCode::FAILURE };
     }
 
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None } };
     if args.headless {
         // As a window would, before the game boots: the game reads its
         // aspect ratio from SYSCONF once.

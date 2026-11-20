@@ -204,6 +204,10 @@ pub struct EmuOptions {
     pub load_state: Option<PathBuf>,
     /// Print a hash of RAM every this many fields (0: never).
     pub hash_every: u64,
+    /// With `hash_every`: also print a running digest of every field's GX
+    /// output so far (`gx::Output::digest`), to check that a change to GX
+    /// decoding leaves what the renderer gets alone.
+    pub hash_gx: bool,
     /// Ignore what the renderer sends back (EFB copies to RAM, EFB
     /// snapshots for CPU peeks), so a paced run is as deterministic as an
     /// unpaced one; peeks then read zero. Net sessions need this.
@@ -291,7 +295,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -394,6 +398,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         println!("loaded {} at field {index}", path.display());
     }
     let last_field = stop_after.map(|n| index + n);
+    let mut gx_digest = 0u64;
     let mut due = Instant::now() + FIELD;
     let mut peeks = sys.hw.borrow().efb_peeks;
     // Wii Remote 1 is on from the start, as when the game is launched with it.
@@ -423,6 +428,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         if hash_every != 0 && index % hash_every == 0 {
             println!("hash at field {index}: {:016x}", sys.mem.hash());
+            if hash_gx {
+                println!("gx hash at field {index}: {gx_digest:016x}");
+            }
         }
         let mut inputs = controls(&live, &script, index);
         if let Some(session) = &mut session {
@@ -494,6 +502,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let waited = hw.gpu.waited();
             let out = hw.gpu.take_output();
             totals.output_wait += hw.gpu.waited() - waited;
+            if hash_gx {
+                gx_digest = (gx_digest.rotate_left(13) ^ out.digest()).wrapping_mul(0x9E37_79B9_7F4A_7C15);
+            }
             (out, hw.xfb_addr(), hw.efb_peeks, remotes)
         };
         let wants_efb = now_peeks != peeks && !no_feedback;

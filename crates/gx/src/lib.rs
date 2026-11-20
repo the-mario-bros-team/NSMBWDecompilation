@@ -227,6 +227,40 @@ pub struct Output {
     pub evicted: Vec<u32>,
 }
 
+impl Output {
+    /// A hash of everything the renderer gets from this field (vertices,
+    /// indices, shading blocks, commands, new textures, evictions), to check
+    /// that a change to decoding leaves its output alone (`--hash-gx`).
+    /// Interpolation data (`model`, `records`) is left out.
+    pub fn digest(&self) -> u64 {
+        let mut h = 0xCBF2_9CE4_8422_2325u64;
+        for v in &self.vertices {
+            let w: Vec<u32> = v.pos.iter().chain(v.color.iter().flatten()).chain(v.tex.iter().flatten()).map(|f| f.to_bits()).collect();
+            hash_words(&mut h, &w);
+        }
+        hash_words(&mut h, &self.indices);
+        for s in &self.shadings {
+            hash_words(&mut h, &s.0);
+        }
+        for c in &self.cmds {
+            hash_words(&mut h, &format!("{c:?}").bytes().map(u32::from).collect::<Vec<_>>());
+        }
+        for t in &self.new_textures {
+            hash_words(&mut h, &[t.id, t.width, t.height, t.levels.len() as u32]);
+            // Its own hash, so a change to `texture::hash` does not move it.
+            for l in &t.levels {
+                for c in l.chunks(8) {
+                    let mut b = [0u8; 8];
+                    b[..c.len()].copy_from_slice(c);
+                    h = (h.rotate_left(5) ^ u64::from_le_bytes(b)).wrapping_mul(0x517C_C1B7_2722_0A95);
+                }
+            }
+        }
+        hash_words(&mut h, &self.evicted);
+        h
+    }
+}
+
 /// What the stream asked the PE to signal.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Event {
