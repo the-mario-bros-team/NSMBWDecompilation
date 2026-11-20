@@ -184,7 +184,7 @@ enum Msg {
     Sync,
     /// Reply with the field's output.
     TakeOutput,
-    World(Option<[f32; 2]>),
+    World(Option<crate::WorldCamera>),
     Views([Option<crate::xf::View>; 4]),
     /// Reply with the registers saved ([`Gpu::snap_regs`]).
     SaveRegs,
@@ -445,9 +445,9 @@ impl GpuPort {
     }
 
     /// Whether fields from the next one carry interpolation records.
-    /// The game camera's size for the draws sent from now on (see
+    /// The game camera for the draws sent from now on (see
     /// [`Gpu::set_world`]).
-    pub fn set_world(&mut self, camera: Option<[f32; 2]>) {
+    pub fn set_world(&mut self, camera: Option<crate::WorldCamera>) {
         match self {
             Self::Inline(gpu) => gpu.set_world(camera),
             Self::Thread(t) => {

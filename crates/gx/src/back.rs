@@ -18,8 +18,8 @@ pub(crate) enum Op {
     Cmd(Cmd),
     /// A clear of colour or alpha only, as a masked full-rectangle draw.
     ClearQuad { rect: Rect, color: [u8; 4], z: u32, color_update: bool },
-    /// The game camera's size for the draws after it (`Gpu::set_world`).
-    World(Option<[f32; 2]>),
+    /// The game camera for the draws after it (`Gpu::set_world`).
+    World(Option<crate::WorldCamera>),
     /// Each player's window (`Gpu::set_views`).
     Views([Option<xf::View>; 4]),
 }
@@ -69,8 +69,8 @@ pub(crate) struct Back {
     scratch_model: Vec<([f32; 3], u8)>,
     /// Depth plane of the last triangle drawn without z-freeze.
     zplane: [f32; 3],
-    /// The game camera's size while in a course (`Op::World`).
-    world_camera: Option<[f32; 2]>,
+    /// The game camera while in a course (`Op::World`).
+    world_camera: Option<crate::WorldCamera>,
     out: Output,
 }
 
@@ -118,6 +118,7 @@ impl Back {
         old.new_textures = Vec::new();
         old.evicted = Vec::new();
         old.world.ranges.clear();
+        old.world.layers.clear();
         self.spare = Some(old);
     }
 
@@ -214,7 +215,7 @@ impl Back {
         let vcount = self.out.vertices.len() as u32 - base;
         if let Some(camera) = self.world_camera {
             let (pr, ortho) = self.xf.projection();
-            if ortho && vcount != 0 && xf::is_camera_projection(&pr, camera) {
+            if ortho && vcount != 0 && xf::is_camera_projection(&pr, camera.size) {
                 let vp = self.xf.viewport();
                 let (half_w, half_h) = (crate::EFB_WIDTH / 2.0, crate::EFB_HEIGHT / 2.0);
                 // As `xf::project` maps projected coordinates to clip space.
@@ -222,6 +223,14 @@ impl Back {
                 match self.out.world.ranges.last_mut() {
                     Some(r) if r.0 + r.1 == base => r.1 += vcount,
                     _ => self.out.world.ranges.push((base, vcount)),
+                }
+                let m = self.xf.position_matrix(raw[0].pnmtx);
+                if m[2][3] < crate::LAYER_Z {
+                    let layer = crate::Layer { first: base, count: vcount, z: m[2][3].round() as i32, scale: m[0][0].hypot(m[1][0]), t: [m[0][3], m[1][3]] };
+                    match self.out.world.layers.last_mut() {
+                        Some(l) if l.first + l.count == base && (l.z, l.scale, l.t) == (layer.z, layer.scale, layer.t) => l.count += vcount,
+                        _ => self.out.world.layers.push(layer),
+                    }
                 }
             }
         }

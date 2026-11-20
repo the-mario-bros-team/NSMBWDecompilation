@@ -67,9 +67,9 @@ struct PlayerWindow {
 /// `vertices` (the field's own, or in-between ones laid out like them) into
 /// `dst`, with the world draws moved to `player`'s window when the field has
 /// one.
-fn fill_view(out: &gx::Output, player: usize, dst: &mut [gx::Vertex]) {
+fn fill_view(out: &gx::Output, player: usize, dst: &mut [gx::Vertex], backdrop: &gx::backdrop::Backdrop) {
     if let Some(view) = out.views.get(player).copied().flatten() {
-        out.world.apply(dst, &view);
+        out.world.apply(dst, &view, Some(backdrop));
     }
 }
 
@@ -114,6 +114,9 @@ struct App {
     /// later (a renderer only receives a texture in the field it is new).
     textures: HashMap<u32, gx::texture::NewTexture>,
     online: bool,
+    /// Background layers as the game draws them with its own camera, for
+    /// drawing them in each player's window.
+    backdrop: gx::backdrop::Backdrop,
 }
 
 /// Sleeps until `deadline`, then spins the last stretch: a sleep can
@@ -271,6 +274,7 @@ impl App {
         }
         renderer.overlay = rects;
         (self.main_player, self.online) = (f.main_player, f.online);
+        self.backdrop.learn(&f.out.world);
         if !self.online {
             for t in &f.out.new_textures {
                 self.textures.insert(t.id, t.clone());
@@ -284,10 +288,10 @@ impl App {
             if let Some((_, path)) = self.opts.shots.iter().find(|(n, _)| *n == f.index + 1) {
                 pw.renderer.screenshot = Some(path.with_file_name(format!("{}-p{}.png", path.file_stem().and_then(|s| s.to_str()).unwrap_or("shot"), pw.player + 1)));
             }
-            let (out, player) = (&f.out, pw.player);
+            let (out, player, backdrop) = (&f.out, pw.player, &self.backdrop);
             let mut fill = |dst: &mut [gx::Vertex]| {
                 dst.copy_from_slice(&out.vertices);
-                fill_view(out, player, dst);
+                fill_view(out, player, dst, backdrop);
             };
             pw.renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, size.width, size.height).map_err(|e| e.to_string())?;
             // Only the main window's EFB copies go back to the game.
@@ -304,11 +308,10 @@ impl App {
             let uploads = gx::Output { new_textures: std::mem::take(&mut f.out.new_textures), cmds, ..Default::default() };
             renderer.render(&uploads, &[], true, f.xfb, 0, 0).map_err(|e| e.to_string())?;
         } else {
-            let main = self.main_player;
-            let out = &f.out;
+            let (main, out, backdrop) = (self.main_player, &f.out, &self.backdrop);
             let mut fill = |dst: &mut [gx::Vertex]| {
                 dst.copy_from_slice(&out.vertices);
-                fill_view(out, main, dst);
+                fill_view(out, main, dst, backdrop);
             };
             renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, w, h).map_err(|e| e.to_string())?;
         }
@@ -398,13 +401,13 @@ impl App {
         let (fa, fb) = (&self.queue[a], &self.queue[b]);
         let pairs = &self.pairs;
         // The in-between vertices go straight into the frame's vertex buffer.
-        let main = self.main_player;
+        let (main, backdrop) = (self.main_player, &self.backdrop);
         let mut fill = |dst: &mut [gx::Vertex]| {
             match pairs {
                 Some(p) if a != b => gx::interp::interpolate_into(&fa.out, &fb.out, &p.2, t.clamp(0.0, 1.0), dst),
                 _ => dst.copy_from_slice(&fb.out.vertices),
             }
-            fill_view(&fb.out, main, dst);
+            fill_view(&fb.out, main, dst, backdrop);
         };
         let started = Instant::now();
         renderer.render_with(&fb.out, fb.out.vertices.len(), &mut fill, false, fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
@@ -693,6 +696,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         players: Vec::new(),
         textures: HashMap::new(),
         online: false,
+        backdrop: gx::backdrop::Backdrop::default(),
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     match app.error {

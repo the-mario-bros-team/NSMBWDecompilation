@@ -176,6 +176,15 @@ fn scene_key(mem: &Mem) -> Option<[u32; 5]> {
     Some([bg, read32(mem, bg + ZONE[0])?, read32(mem, bg + ZONE[1])?, read32(mem, bg + ZONE[2])?, read32(mem, bg + ZONE[3])?])
 }
 
+/// The game's camera as `dBgParameter_c` publishes it: what the game draws
+/// with. In a multiplayer course `dBg_c`'s own rectangle (below) can lag
+/// behind it (it stayed at x 630 at the start of 1-1 while the screen
+/// followed Mario to x 4400).
+fn live_camera(mem: &Mem, param: u32) -> Option<Rect> {
+    let r = Rect { left: readf(mem, param + P_LEFT)?, top: readf(mem, param + P_TOP)?, w: readf(mem, param + P_W)?, h: readf(mem, param + P_H)? };
+    ((16.0..20_000.0).contains(&r.w) && (16.0..20_000.0).contains(&r.h)).then_some(r)
+}
+
 /// The game's camera rectangle in `dBg_c`.
 fn bg_camera(mem: &Mem, bg: u32) -> Option<Rect> {
     let r = Rect { left: readf(mem, bg + BG_LEFT)?, top: readf(mem, bg + BG_TOP)?, w: readf(mem, bg + BG_W)?, h: readf(mem, bg + BG_H)? };
@@ -196,9 +205,9 @@ pub struct SharedCamera {
     /// Host only: the share of the game camera's size a player's window
     /// shows (1, or more for testing).
     pub view_zoom: f32,
-    /// Host only, set at the end of each `dBgGm_c::execute`: the size of the
-    /// camera the game draws with, and each player's window on it.
-    pub drawn: [f32; 2],
+    /// Host only, set at the end of each `dBgGm_c::execute`: the camera the
+    /// game draws with, and each player's window on it.
+    pub drawn: gx::WorldCamera,
     pub views: [Option<gx::xf::View>; 4],
     /// Host only: `dBgGm_c::execute` ended since this was last cleared.
     pub ran: bool,
@@ -229,6 +238,9 @@ impl SharedCamera {
         self.views = [None; 4];
         let (Some(bg), Some(param)) = (read32(mem, BG_PTR).filter(|&p| p >= 0x8000_0000), read32(mem, PARAM_PTR).filter(|&p| p >= 0x8000_0000)) else { return };
         let Some(own) = bg_camera(mem, bg) else { return };
+        // What the game draws with when there is no box (in a multiplayer
+        // course `dBg_c`'s rectangle can lag behind it).
+        let live = live_camera(mem, param).unwrap_or(own);
         let players = followed_players(mem);
         let (drawn, area) = match self.enabled.then(|| self.shared_box(mem, bg, own, &players)).flatten() {
             Some(area) => {
@@ -236,10 +248,13 @@ impl SharedCamera {
                 self.write_box(mem, bg, param, drawn);
                 (drawn, area)
             }
-            None => (own, own),
+            None => (live, live),
         };
-        self.drawn = [drawn.w, drawn.h];
-        self.views = std::array::from_fn(|p| self.view_for(mem, p, own, drawn, area));
+        self.drawn = gx::WorldCamera { size: [drawn.w, drawn.h], centre: drawn.centre(), normal: drawn == live, normal_size: [own.w, own.h] };
+        // Windows are the game camera's normal size (`dBg_c`'s; the live
+        // camera may be zoomed out to fit the players).
+        let size = Rect { w: own.w, h: own.h, ..live };
+        self.views = std::array::from_fn(|p| self.view_for(mem, p, size, drawn, area));
     }
 
     /// The box around every player, or `None` where the game's own camera
