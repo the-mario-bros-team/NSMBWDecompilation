@@ -394,10 +394,11 @@ impl Gpu {
         }
     }
 
-    /// Runs the transform half on its own thread from now on.
-    pub fn start_transform_thread(&mut self) {
+    /// Runs the transform half on its own thread from now on; the thread
+    /// runs `on_start` first.
+    pub fn start_transform_thread(&mut self, on_start: fn()) {
         self.flush_back();
-        self.sink.start_thread();
+        self.sink.start_thread(on_start);
     }
 
     /// Consumes bytes the GP reads from its FIFO; PE events go to `events`.

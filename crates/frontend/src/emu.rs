@@ -310,6 +310,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     };
     let mut wav = wav.and_then(|p| crate::audio::Wav::create(&p, 32_000).map_err(|e| eprintln!("{}: {e}", p.display())).ok());
     let mut totals = Totals::default();
+    crate::win::raise_this_thread();
     let cpu_at_start = crate::win::thread_cpu_time();
     let light_textures = hle_os::light_texture::LightTextures::default().on();
     let mut nand = PathBuf::from("saves/nand");
@@ -373,7 +374,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     }
     if !gx_inline {
         let ram = sys.mem.view();
-        sys.hw.borrow_mut().gpu.start_thread(ram);
+        sys.hw.borrow_mut().gpu.start_thread(ram, crate::win::raise_this_thread);
     }
     if trace_ios {
         let mut hw = sys.hw.borrow_mut();

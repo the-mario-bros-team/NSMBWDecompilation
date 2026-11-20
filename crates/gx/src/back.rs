@@ -295,13 +295,14 @@ pub(crate) struct BackThread {
 }
 
 impl BackThread {
-    pub fn spawn(mut back: Back) -> Self {
+    pub fn spawn(mut back: Back, on_start: fn()) -> Self {
         let (to, msgs) = std::sync::mpsc::channel::<Msg>();
         let (replies, from) = std::sync::mpsc::channel();
         let (spare, spares) = std::sync::mpsc::channel();
         let handle = std::thread::Builder::new()
             .name("gx-transform".into())
             .spawn(move || {
+                on_start();
                 for msg in msgs {
                     match msg {
                         Msg::Batch(mut b) => {
@@ -370,10 +371,11 @@ impl Sink {
         }
     }
 
-    /// Moves the transform to its own thread (no-op if it already is).
-    pub fn start_thread(&mut self) {
+    /// Moves the transform to its own thread (no-op if it already is),
+    /// which runs `on_start` first.
+    pub fn start_thread(&mut self, on_start: fn()) {
         if let Self::Local(back) = std::mem::replace(self, Self::Local(Box::default())) {
-            *self = Self::Thread(BackThread::spawn(*back));
+            *self = Self::Thread(BackThread::spawn(*back, on_start));
         }
     }
 }

@@ -266,12 +266,19 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
 
 impl GxThread {
     /// Moves `gpu` to a new thread reading RAM through `ram`, with its
-    /// transform half on a third.
-    pub fn spawn(mut gpu: Gpu, ram: RamView) -> Self {
-        gpu.start_transform_thread();
+    /// transform half on a third. Both threads run `on_start` first (the
+    /// frontend raises their priority with it).
+    pub fn spawn(mut gpu: Gpu, ram: RamView, on_start: fn()) -> Self {
+        gpu.start_transform_thread(on_start);
         let (to, msgs) = channel();
         let (replies, from) = channel();
-        let handle = std::thread::Builder::new().name("gx".into()).spawn(move || worker(gpu, ram, msgs, replies)).expect("GX thread");
+        let handle = std::thread::Builder::new()
+            .name("gx".into())
+            .spawn(move || {
+                on_start();
+                worker(gpu, ram, msgs, replies)
+            })
+            .expect("GX thread");
         Self { scanner: Scanner::new(), batch: Vec::with_capacity(BATCH * 2), to: Some(to), from, handle: Some(handle), waited: Default::default() }
     }
 
@@ -421,10 +428,11 @@ impl GpuPort {
         }
     }
 
-    /// Moves decoding to its own thread (no-op if it already is).
-    pub fn start_thread(&mut self, ram: RamView) {
+    /// Moves decoding to its own thread (no-op if it already is); its
+    /// threads run `on_start` first.
+    pub fn start_thread(&mut self, ram: RamView, on_start: fn()) {
         if let Self::Inline(gpu) = std::mem::take(self) {
-            *self = Self::Thread(Box::new(GxThread::spawn(*gpu, ram)));
+            *self = Self::Thread(Box::new(GxThread::spawn(*gpu, ram, on_start)));
         }
     }
 
@@ -550,7 +558,7 @@ mod tests {
 
         let mut inline = GpuPort::default();
         let mut threaded = GpuPort::default();
-        threaded.start_thread(mem.view());
+        threaded.start_thread(mem.view(), || {});
         let (mut e1, mut e2) = (Vec::new(), Vec::new());
         // Fed in uneven pieces, as bursts arrive.
         for piece in s.chunks(7) {
