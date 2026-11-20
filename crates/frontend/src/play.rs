@@ -76,6 +76,9 @@ struct App {
     game_fps: f32,
     emu_ms: f32,
     render_ms: f32,
+    /// Render-thread time this second (for --log-fps): new fields taken in,
+    /// fields prepared for in-between frames, and frames shown.
+    spent: [Duration; 3],
     help: bool,
     slow_fields: u64,
     done: bool,
@@ -278,6 +281,7 @@ impl App {
             renderer.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
         }
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
+        self.spent[0] += started.elapsed();
         let writebacks = renderer.take_writebacks();
         if !writebacks.is_empty() {
             let _ = emu.to_emu.send(ToEmu::Writebacks(writebacks));
@@ -359,8 +363,11 @@ impl App {
         if renderer.prepared() != Some(key) {
             let moves = (a != b).then(|| gx::interp::moves(&fa.out, &fb.out, &gx::interp::pair(&fa.out, &fb.out)));
             renderer.prepare(key, &fb.out, moves.as_ref()).map_err(|e| e.to_string())?;
+            self.spent[1] += started.elapsed();
         }
+        let shown = Instant::now();
         renderer.render_prepared(&fb.out, t.clamp(0.0, 1.0), fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
+        self.spent[2] += shown.elapsed();
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.presented_now();
         Ok(())
@@ -387,8 +394,11 @@ impl App {
         self.game_fps = self.title_games as f32 / secs;
         (self.title_at, self.title_presents, self.title_games) = (now, 0, 0);
         if self.opts.log_fps {
+            // Render-thread share of this second: taking fields in,
+            // preparing them, showing frames.
+            let [i, p, f] = std::mem::take(&mut self.spent).map(|d| d.as_secs_f32() / secs * 100.0);
             println!(
-                "game frame {}: shown {:.1} fps, game {:.1} fps ({:.0}%), emulation {:.1} ms, render {:.2} ms",
+                "game frame {}: shown {:.1} fps, game {:.1} fps ({:.0}%), emulation {:.1} ms, render {:.2} ms (thread: fields {i:.0}%, prepare {p:.0}%, frames {f:.0}%)",
                 self.games,
                 self.shown_fps,
                 self.game_fps,
@@ -611,6 +621,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         game_fps: 0.0,
         emu_ms: 0.0,
         render_ms: 0.0,
+        spent: [Duration::ZERO; 3],
         help: false,
         slow_fields: 0,
         done: false,

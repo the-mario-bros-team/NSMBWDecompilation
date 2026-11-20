@@ -181,6 +181,8 @@ struct Frame {
     /// fence signals (submissions complete in order on the one queue).
     retired_images: Vec<Image>,
     retired_buffers: Vec<Buffer>,
+    /// Prepared-field buffers retired the same way, reused afterwards.
+    retired_spare: Vec<Buffer>,
 }
 
 /// A field kept on the GPU for the frames shown between it and the field
@@ -276,6 +278,11 @@ pub struct Renderer {
     /// The vertex stage's push constant for the frame being recorded.
     push: Push,
     prepared: Option<Prepared>,
+    /// Prepared-field buffers no frame uses any more, kept for the next
+    /// fields (they are megabytes, and come at 60 a second); and those
+    /// retired since the last submission.
+    spare: Vec<Buffer>,
+    trash_spare: Vec<Buffer>,
     textures: HashMap<u32, Image>,
     /// Changes whenever `textures` does (descriptors written for one epoch
     /// are stale in the next).
@@ -537,6 +544,7 @@ impl Renderer {
                     described: None,
                     retired_images: Vec::new(),
                     retired_buffers: Vec::new(),
+                    retired_spare: Vec::new(),
                 });
             }
 
@@ -605,6 +613,8 @@ impl Renderer {
                 index_offset: 0,
                 push: [0; 2],
                 prepared: None,
+                spare: Vec::new(),
+                trash_spare: Vec::new(),
                 textures: HashMap::new(),
                 textures_epoch: 0,
                 samplers: HashMap::new(),
@@ -1023,6 +1033,7 @@ impl Renderer {
         for b in std::mem::take(&mut self.frames[f].retired_buffers) {
             self.destroy_buffer(b);
         }
+        self.reuse_spares(f);
         let cmd = self.frames[f].cmd;
         unsafe {
             dev.reset_command_buffer(cmd, vk::CommandBufferResetFlags::empty())?;
@@ -1072,6 +1083,20 @@ impl Renderer {
         Ok(presented)
     }
 
+    /// Frame `f` is done: its retired prepared-field buffers can be reused.
+    /// A few are kept (the largest); the rest are freed.
+    fn reuse_spares(&mut self, f: usize) {
+        const KEEP: usize = 3;
+        let back = std::mem::take(&mut self.frames[f].retired_spare);
+        self.spare.extend(back);
+        if self.spare.len() > KEEP {
+            self.spare.sort_by_key(|b| std::cmp::Reverse(b.size));
+            for b in self.spare.split_off(KEEP) {
+                self.destroy_buffer(b);
+            }
+        }
+    }
+
     /// The key of the field on the GPU for in-between frames, if any.
     pub fn prepared(&self) -> Option<(u64, u64)> {
         self.prepared.as_ref().map(|p| p.key)
@@ -1096,8 +1121,15 @@ impl Renderer {
                 at += r.1;
             }
         }
-        let usage = vk::BufferUsageFlags::VERTEX_BUFFER | vk::BufferUsageFlags::INDEX_BUFFER | vk::BufferUsageFlags::STORAGE_BUFFER;
-        let mut buffer = self.create_buffer(at.max(16), usage, MemoryLocation::CpuToGpu)?;
+        let need = at.max(16);
+        let mut buffer = match self.spare.iter().position(|b| b.size >= need) {
+            Some(i) => self.spare.swap_remove(i),
+            None => {
+                let usage = vk::BufferUsageFlags::VERTEX_BUFFER | vk::BufferUsageFlags::INDEX_BUFFER | vk::BufferUsageFlags::STORAGE_BUFFER;
+                // Rounded up, so the next fields fit in it too.
+                self.create_buffer(need.next_power_of_two(), usage, MemoryLocation::CpuToGpu)?
+            }
+        };
         {
             let dst = buffer.alloc.as_mut().and_then(|a| a.mapped_slice_mut()).ok_or("prepared buffer not mapped")?;
             dst[..vlen as usize].copy_from_slice(as_bytes(&out.vertices));
@@ -1111,8 +1143,8 @@ impl Renderer {
         }
         let serial = self.prepared.as_ref().map_or(0, |p| p.serial + 1);
         if let Some(old) = self.prepared.replace(Prepared { key, serial, buffer, index_offset, moves: parts.map(|_| ranges) }) {
-            // Frames in flight may still read it.
-            self.trash_buffers.push(old.buffer);
+            // Frames in flight may still read it: reused once they are done.
+            self.trash_spare.push(old.buffer);
         }
         Ok(())
     }
@@ -1136,6 +1168,7 @@ impl Renderer {
         for b in std::mem::take(&mut self.frames[f].retired_buffers) {
             self.destroy_buffer(b);
         }
+        self.reuse_spares(f);
         let cmd = self.frames[f].cmd;
         unsafe {
             dev.reset_command_buffer(cmd, vk::CommandBufferResetFlags::empty())?;
@@ -1654,6 +1687,7 @@ impl Renderer {
             // Retired so far: possibly used by this or an earlier submission.
             self.frames[f].retired_images.append(&mut self.trash_images);
             self.frames[f].retired_buffers.append(&mut self.trash_buffers);
+            self.frames[f].retired_spare.append(&mut self.trash_spare);
             if let (Some(i), Some(swapchain_fn)) = (index, &self.swapchain_fn) {
                 let swapchains = [self.swapchain];
                 let indices = [i];
@@ -1723,9 +1757,13 @@ impl Drop for Renderer {
         images.extend(self.xfbs.drain().map(|(_, (i, _))| i));
         images.append(&mut self.trash_images);
         let mut buffers = std::mem::take(&mut self.trash_buffers);
+        buffers.append(&mut self.trash_spare);
+        buffers.append(&mut self.spare);
+        buffers.extend(self.prepared.take().map(|p| p.buffer));
         for f in &mut self.frames {
             images.append(&mut f.retired_images);
             buffers.append(&mut f.retired_buffers);
+            buffers.append(&mut f.retired_spare);
             buffers.extend(f.vertices.take());
             buffers.extend(f.shadings.take());
             buffers.extend(f.staging.take());
