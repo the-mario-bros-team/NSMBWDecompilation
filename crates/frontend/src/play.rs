@@ -532,6 +532,12 @@ impl ApplicationHandler for App {
             if !t.gx_wait.is_zero() {
                 println!("of which {:.2}s waiting for the GX thread", t.gx_wait.as_secs_f64());
             }
+            if !t.output_wait.is_zero() {
+                println!("and {:.2}s more waiting for the GX thread's output at the ends of fields", t.output_wait.as_secs_f64());
+            }
+            if !t.thread_cpu.is_zero() {
+                println!("game thread: {:.2}s of CPU time", t.thread_cpu.as_secs_f64());
+            }
             if t.recomp_steps > 0 {
                 println!("recompiled code ran {:.2}% of them ({} functions found changed in memory)", 100.0 * t.recomp_steps as f64 / t.steps.max(1) as f64, t.recomp_changed);
             }
