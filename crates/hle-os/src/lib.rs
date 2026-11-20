@@ -133,11 +133,13 @@ fn replace(cpu: &mut Cpu, mem: &mut Mem, pc: u32, aux_effects: bool) -> bool {
 }
 
 /// [`STRCMP`]'s result, or `None` (run the guest's own) if a string
-/// leaves RAM.
+/// leaves RAM. Each string's RAM is taken once, to the end of its bank
+/// ([`ram_from`]); scene loads call this hundreds of thousands of times.
 fn strcmp(mem: &Mem, a: u32, b: u32) -> Option<i32> {
+    let (sa, sb) = (ram_from(mem, a), ram_from(mem, b));
     for i in 0.. {
-        let x = mem.ram(a.wrapping_add(i), 1)?[0];
-        let y = mem.ram(b.wrapping_add(i), 1)?[0];
+        let x = *sa?.get(i)?;
+        let y = *sb?.get(i)?;
         if x != y {
             return Some(i32::from(x) - i32::from(y));
         }
@@ -146,6 +148,21 @@ fn strcmp(mem: &Mem, a: u32, b: u32) -> Option<i32> {
         }
     }
     unreachable!()
+}
+
+/// The RAM from `addr` to the end of the bank it is in (MEM1, MEM2 or the
+/// locked cache, at any of their addresses), or `None` if `addr` is not
+/// RAM. The bytes after a bank's end are never RAM, so reading a string
+/// from this slice stops where reading it a byte at a time would.
+fn ram_from(mem: &Mem, addr: u32) -> Option<&[u8]> {
+    let low = (addr & 0x0FFF_FFFF) as usize;
+    let size = match addr >> 28 {
+        0x0 | 0x8 | 0xC => guest_mem::MEM1_SIZE,
+        0x1 | 0x9 | 0xD => guest_mem::MEM2_SIZE,
+        0xE => guest_mem::LOCKED_CACHE_SIZE,
+        _ => return None,
+    };
+    mem.ram(addr, size.checked_sub(low)?)
 }
 
 /// [`SQRT`]'s result, with its special cases and `errno`.
