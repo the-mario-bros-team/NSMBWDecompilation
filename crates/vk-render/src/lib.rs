@@ -1471,6 +1471,10 @@ impl Renderer {
         let mut readback_at = 0usize;
         let mut rendering = false;
         let mut bound = None;
+        // Dynamic state as last set inside this rendering pass (scissor, cull
+        // mode, depth mode): neighbouring draws mostly share it, and the
+        // world map has over 10,000 draws a frame.
+        let mut state: Option<(vk::Rect2D, u32, u32)> = None;
         let mut draws = 0;
         for c in &out.cmds {
             match *c {
@@ -1482,6 +1486,7 @@ impl Renderer {
                         self.begin_efb(cmd, vb, set);
                         rendering = true;
                         bound = None;
+                        state = None;
                     }
                     let early = out.shadings.get(d.shading as usize).is_some_and(|s| rasterised_depth(&s.0));
                     let p = self.pipeline(blend_key(&d.raster) | if early { EARLY_DEPTH } else { 0 })?;
@@ -1491,15 +1496,24 @@ impl Renderer {
                             dev.cmd_bind_pipeline(cmd, vk::PipelineBindPoint::GRAPHICS, p);
                             bound = Some(p);
                         }
-                        dev.cmd_set_scissor(cmd, 0, &[self.scaled(d.scissor)]);
-                        dev.cmd_set_cull_mode(cmd, match d.raster.cull {
-                            1 => vk::CullModeFlags::BACK,
-                            2 => vk::CullModeFlags::FRONT,
-                            _ => vk::CullModeFlags::NONE,
-                        });
-                        dev.cmd_set_depth_test_enable(cmd, z & 1 != 0);
-                        dev.cmd_set_depth_write_enable(cmd, z & 1 != 0 && z & 0x10 != 0);
-                        dev.cmd_set_depth_compare_op(cmd, vk::CompareOp::from_raw(((z >> 1) & 7) as i32));
+                        let scissor = self.scaled(d.scissor);
+                        let last = state.unwrap_or((rect2d(0, 0, 0, 0), u32::MAX, u32::MAX));
+                        if last.0 != scissor {
+                            dev.cmd_set_scissor(cmd, 0, &[scissor]);
+                        }
+                        if last.1 != d.raster.cull {
+                            dev.cmd_set_cull_mode(cmd, match d.raster.cull {
+                                1 => vk::CullModeFlags::BACK,
+                                2 => vk::CullModeFlags::FRONT,
+                                _ => vk::CullModeFlags::NONE,
+                            });
+                        }
+                        if last.2 != z {
+                            dev.cmd_set_depth_test_enable(cmd, z & 1 != 0);
+                            dev.cmd_set_depth_write_enable(cmd, z & 1 != 0 && z & 0x10 != 0);
+                            dev.cmd_set_depth_compare_op(cmd, vk::CompareOp::from_raw(((z >> 1) & 7) as i32));
+                        }
+                        state = Some((scissor, d.raster.cull, z));
                         dev.cmd_draw_indexed(cmd, d.count, 1, d.first, 0, d.shading);
                     }
                     draws += 1;
