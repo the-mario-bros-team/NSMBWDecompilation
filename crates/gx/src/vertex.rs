@@ -202,9 +202,7 @@ impl Layout {
         let (pd, pn) = self.pos;
         if pd != 0 {
             let b = fetch(pd, 0, pn.size(), &mut cur);
-            for i in 0..pn.count {
-                v.pos[i] = comp(b, i, pn.fmt) * pn.scale;
-            }
+            comps(b, pn.fmt, pn.scale, &mut v.pos[..pn.count]);
         }
         let (nd, nn) = self.nrm;
         if nd != 0 {
@@ -222,9 +220,7 @@ impl Layout {
             } else {
                 fetch(nd, 1, nn.size(), &mut cur)
             };
-            for i in 0..nn.count {
-                v.nbt[i / 3][i % 3] = comp(b, i, nn.fmt) * nn.scale;
-            }
+            comps(b, nn.fmt, nn.scale, &mut v.nbt.as_flattened_mut()[..nn.count]);
         }
         for c in 0..2 {
             let (d, f) = self.color[c];
@@ -237,9 +233,7 @@ impl Layout {
             let (d, n) = self.tex[t];
             if d != 0 {
                 let b = fetch(d, 4 + t, n.size(), &mut cur);
-                for i in 0..n.count {
-                    v.tex[t][i] = comp(b, i, n.fmt) * n.scale;
-                }
+                comps(b, n.fmt, n.scale, &mut v.tex[t][..n.count]);
             }
         }
         v
@@ -307,7 +301,29 @@ impl<'a> Cursor<'a> {
     }
 }
 
+/// `out.len()` components of format `fmt` from `b`, each [`comp`] times
+/// `scale` (the same values), with the format chosen once for all of them:
+/// this runs for every attribute of every vertex, and a call to `comp` per
+/// component was most of the GX decode thread's time on the world map.
+#[inline(always)]
+fn comps(b: &[u8], fmt: u32, scale: f32, out: &mut [f32]) {
+    fn each<const N: usize>(b: &[u8], scale: f32, out: &mut [f32], f: impl Fn([u8; N]) -> f32) {
+        for (i, o) in out.iter_mut().enumerate() {
+            *o = b.get(i * N..i * N + N).map_or(0.0, |c| f(c.try_into().unwrap())) * scale;
+        }
+    }
+    match fmt {
+        0 => each::<1>(b, scale, out, |c| f32::from(c[0])),
+        1 => each::<1>(b, scale, out, |c| f32::from(c[0] as i8)),
+        2 => each::<2>(b, scale, out, |c| f32::from(u16::from_be_bytes(c))),
+        3 => each::<2>(b, scale, out, |c| f32::from(i16::from_be_bytes(c))),
+        4 => each::<4>(b, scale, out, |c| f32::from_bits(u32::from_be_bytes(c))),
+        _ => out.iter_mut().for_each(|o| *o = 0.0 * scale),
+    }
+}
+
 /// Component `i` of format `fmt` (u8, s8, u16, s16, f32) as an unscaled float.
+#[cfg(test)]
 fn comp(b: &[u8], i: usize, fmt: u32) -> f32 {
     let s = comp_size(fmt);
     let Some(c) = b.get(i * s..i * s + s) else { return 0.0 };
@@ -347,6 +363,27 @@ fn color(b: &[u8], fmt: u32) -> [f32; 4] {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// `comps` gives `comp`'s values times the scale, bit for bit, for every
+    /// format, short buffers included.
+    #[test]
+    fn comps_match_comp() {
+        let bytes: Vec<u8> = (0..40u32).map(|i| (i.wrapping_mul(97) ^ 0xA5) as u8).collect();
+        for fmt in 0..8 {
+            for count in 1..=9 {
+                for len in [0, 3, 7, 40] {
+                    for scale in [1.0, 1.0 / 64.0, 1.0 / 16384.0, 0.25] {
+                        let b = &bytes[..len];
+                        let mut out = [7.0f32; 9];
+                        comps(b, fmt, scale, &mut out[..count]);
+                        for (i, o) in out[..count].iter().enumerate() {
+                            assert_eq!(o.to_bits(), (comp(b, i, fmt) * scale).to_bits(), "fmt {fmt} count {count} len {len} i {i}");
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     #[test]
     fn direct_and_indexed_attributes() {
