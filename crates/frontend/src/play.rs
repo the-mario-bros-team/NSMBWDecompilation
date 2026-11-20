@@ -577,7 +577,8 @@ pub fn report(t: &crate::emu::Totals) {
     if !t.slow_fields.is_empty() {
         let mut worst = t.slow_fields.clone();
         worst.sort_by(|a, b| b.1.cmp(&a.1));
-        let list: Vec<String> = worst.iter().take(8).map(|(i, d)| format!("{i} ({:.1} ms)", d.as_secs_f64() * 1e3)).collect();
+        let ms = |d: &Duration| d.as_secs_f64() * 1e3;
+        let list: Vec<String> = worst.iter().take(8).map(|(i, d, gx)| format!("{i} ({:.1} ms, GX wait {:.1})", ms(d), ms(gx))).collect();
         println!("{} fields took longer than 16.7 ms to emulate; slowest: {}", t.slow_fields.len(), list.join(", "));
     }
     if t.audio_dropouts > 0 {

@@ -86,8 +86,9 @@ pub struct Totals {
     pub output_wait: Duration,
     /// The game thread's own CPU time over the whole run (`win::thread_cpu_time`).
     pub thread_cpu: Duration,
-    /// Fields whose emulation took longer than [`FIELD`] (index, time).
-    pub slow_fields: Vec<(u64, Duration)>,
+    /// Fields whose emulation took longer than [`FIELD`]: index, time, and
+    /// of that, waiting for the GX thread.
+    pub slow_fields: Vec<(u64, Duration, Duration)>,
 }
 
 pub struct Emu {
@@ -471,10 +472,11 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             break;
         }
         let emu = started.elapsed();
+        let gx_wait = sys.hw.borrow().gpu.waited() - waited;
         if emu > FIELD {
-            totals.slow_fields.push((index, emu));
+            totals.slow_fields.push((index, emu, gx_wait));
         }
-        totals.gx_wait += sys.hw.borrow().gpu.waited() - waited;
+        totals.gx_wait += gx_wait;
         {
             let mut hw = sys.hw.borrow_mut();
             let rate = hw.dsp.audio_rate;
