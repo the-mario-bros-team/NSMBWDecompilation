@@ -1696,6 +1696,41 @@ below 99%. Shown fps (the renderer, branch `render-400`) dipped to 252.
    a vertex before inlining `light_channel`; with it, the game thread's
    end-of-field wait for GX output at the course clear fell from 1.8 to
    0.45 ms a field (headless, from field 9380). GX digests identical.
+19. **Recompiled code for every course.** `ppc-recomp` generates the
+   functions a code profile touches, and the profile came from the 1-1
+   script alone, so later worlds ran their enemies and objects in the
+   interpreter: in 8-1, 22% of the game thread was the interpreter and 5%
+   the dispatcher, against 48% generated code. A code profile of every
+   course on the disc (P7's `--course`, from a World 1 map state, holding
+   right and hopping for 1,110 fields, as P7's smoke test does) and of the
+   4-player script, merged with the 1-1 one, is
+   `D:\nsmbw-p6\profile-all.txt` (182,815 block starts):
+   - 12,804 functions instead of 9,549; 80 MB of generated source instead
+     of 58; the binary 89 MB instead of 65; a full build 17 minutes at 2
+     jobs.
+   - Game-thread CPU per field (headless, 800 fields from a state in the
+     course, old and new builds alternating, three rounds): 8-1
+     8.24 -> 6.54 ms (-21%), 4-2 6.84 -> 5.35 ms (-22%), 8-24
+     7.33 -> 6.40 ms (-13%). Dispatcher entries in later courses fell 3-4x
+     (8-1: 3.28 -> 0.85 million in 800 fields).
+   - Lockstep: the 1-1 script (98 hashes, 13,194,609,027 instructions,
+     GX digests unchanged) and the 4-player script (111 hashes) in both
+     engines, and 35 courses across all nine worlds from a state at their
+     start, 850 fields each, RAM hashes every 50 fields: identical in both
+     engines, with identical instruction counts.
+   - Regenerate with it (after `--dump-ram` as above):
+     `cargo run --release -p ppc-recomp -- --ram ram.bin --map MAP.txt --profile profile-all.txt`.
+     A new profile is collected with `--code-profile` on any run; with
+     recompiled code it lists only the blocks the interpreter ran, so
+     merge it with the previous one (`sort -u`).
+   - Every course averages 4-7 ms a field headless (1-1 5.0, 3-24 4.1,
+     6-33 4.5, 7-6 5.2, 4-2 5.4-6.1, 8-24 6.4, 8-1 6.5); single fields of
+     17-26 ms come at deaths and course reloads, which the catch-up (14)
+     makes up.
+   - The save file: World 9 courses (9-1, 9-2, 9-4, 9-6, 9-7, 9-8, 9-28)
+     write `saves/nand/.../wiimj2d.sav` within such a run, and the 1-1
+     scripts start from that save, so their hashes then change in both
+     engines. Keep a copy of the save and put it back after course runs.
 
 With the frame rate unlocked (`--fps unlocked`, this branch's renderer),
 the whole 1-1 script shows a median of 645 fps (minimum 303) with the
