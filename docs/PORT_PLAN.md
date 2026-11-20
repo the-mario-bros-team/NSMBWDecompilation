@@ -1349,9 +1349,10 @@ need the whole machine in `Cpu` and `Mem` at every slice end.
   The code carries on natively unless an interrupt was taken or the field
   is over.
 - `mftb` and `mfspr`/`mtspr` of DEC or TB see the exact cycle count.
-- Generated code stops before `sc`, `rfi` and `mtmsr`, which the interpreter
-  runs. With the FPU off, a block with FP instructions is left to the
-  interpreter.
+- Generated code stops before `sc` and `rfi`, which the interpreter runs
+  (`mtmsr` too until the second pass, which runs it in generated code and
+  ends its block there). With the FPU off, a block with FP instructions is
+  left to the interpreter.
 - Generated code never runs through a hook address (`hle_os::SPECIAL`). The
   generated list must match it, or the code is not used.
 - **Code checks:** guest memory counts writes to code pages (`code_epoch`).
@@ -1447,3 +1448,207 @@ part of the source tree.
 5. **The GX threads** (vertex loading, transform) now hold up the game
    thread for about a fifth of its time in the 1-1 script: the vertex
    transform on the GPU (11.6) is the next step there.
+
+### Second pass: engine speed and the build-test loop (2026-11-19)
+
+Work in its own worktree (branch `claude/engine-speed-aa0f93`), under the
+user's rule of at most 4 of the 16 hardware threads. Every change below
+passed the 1-1 hash script (98 points, recompiled and `--interpreter`,
+13,194,609,027 instructions) before it was committed.
+
+**The last first-pass commit's untested changes** (flat guest memory,
+`fast::Raw` accesses for r1/r2/r13-relative D-form loads and stores, the
+always-inlined FP conversions, `recomp::at` without the CPU): verified.
+Recompiled and interpreter runs match at all 98 points with the same
+instruction count. (An interpreter run made in the shared checkout just
+before diverged from field 100 on, with 14.0 billion instructions; it did
+not reproduce here and was most likely another session's settings or
+saves at the time.)
+
+**Measuring on a shared machine.** Other sessions build and run the port
+at the same time, and wall time moved by up to 25% between identical
+runs. Three tools came out of that:
+- the exit report also prints the game thread's own CPU time
+  (`GetThreadTimes`) and the wait for the GX thread's output at the end
+  of each field, which `run_field`'s timer leaves out (about 0.5-1 s);
+- `--headless` (with `--frames`) runs the game thread without a window or
+  renderer and stops after the same fields a windowed run gets through
+  (9701 for `--frames 9700`), so its hashes and instruction count compare
+  directly; it needs no Vulkan (the console session lost its Vulkan
+  driver for a while during this work) and takes no host input;
+- a benchmark from a save state at field 6000 (just before 1-1) over 2000
+  fields, run alternately with the two builds being compared, best of
+  three. Saving a state resets the light-texture keys, so runs from a
+  state are deterministic but leave the continuous run's hashes after the
+  state's field; they compare builds with each other, not with the
+  reference.
+
+**Build times** (4 jobs, this PC, other sessions building too):
+
+| Build | Time |
+|---|---|
+| Full release build, dependencies included | 12 m 51 s |
+| of which the 16 shards | 70-113 s each, about 5.7 min in all |
+| of which the final thin-LTO link (`frontend`) | 6 m 21 s |
+| Release after a frontend-only change | 5 m 59 s |
+| Without cross-crate LTO, after a frontend change | 16 s |
+| Without cross-crate LTO, after an hle-os change | 20 s |
+
+Thin LTO re-optimises every module of the generated code at the final link,
+so any change at all costs about 6 minutes; the shards themselves never
+rebuild for changes outside guest-cpu and guest-mem. Without cross-crate
+LTO the port runs about a third slower (game thread 108.7 s of CPU time
+against 80.7 s), so the release profile keeps it, and a new `quick`
+profile (release without cross-crate LTO, `target/quick`) serves checks,
+whose results do not depend on optimisation.
+
+**Profile of the game thread** (release build, xperf at 1 kHz, 79 s of
+CPU time): generated code 58%; the dispatcher (`run_field`) 8.9%, mostly
+cache misses in the entry table (the page of `Rt::table`, then `fns`);
+gather-pipe writes through `Mmio::write` 2.3%; the reverb HLE 2.0%; AX
+mixing 1.7%; `Rt::enter_slow` 1.6%; ntdll 6% and the C runtime 4% (callers
+to be found). In generated code, prologue pushes alone took 7% of its
+samples: each call saved 8 general registers and xmm6..xmm15 (LLVM keeps
+float constants there) under the Windows calling convention, and every
+call went through a binary search of the function's `match` on `pc`. The
+code is large: 80 MB of `.text` for 534K guest instructions, about 150
+bytes each. `psq_l`/`psq_st` called `powi` for the GQR scale even for float
+data. The GX decode thread (54 s of CPU) spends 33% in `Layout::read`,
+11% in `Gpu::run`, 7% each in `Layout::new` (twice per draw) and texture
+lookups (hashing every texture used, once per field), 5% reading arrays
+through a virtual call per attribute, and 13% in the kernel; the transform
+thread (35 s) is 74% `Xf::transform`.
+
+**Changes:**
+
+1. **Generated functions use the `sysv64` calling convention** (`GuestFn`,
+   `GUEST_FN_ABI`): no callee-saved vector registers, two fewer saved
+   general ones, and the 16-byte result in registers. A call entered at
+   the function's start skips its `match`. Stack and small-data accesses
+   cannot fail (`Mem::raw_read_u32` and co. return values; without the
+   flat mapping the checked fallback is out of line and panics on no
+   RAM), so they carry no error path. The binary shrank from 86 to 65 MB.
+   Benchmark (game-thread CPU, best of three): 22.86 s against 23.75 s.
+2. **Exact GQR scales, an entry cache, code tracking by line.** `psq_l`/
+   `psq_st` build 2^n from its bits instead of calling `powi`. `Rt::lookup`
+   goes through a direct-mapped cache of 8192 entries. Memory marks code
+   per 32-byte line as well as per page, and a write to a code page that
+   touches no code line (the OS globals beside the exception vectors)
+   leaves its generation alone. Dispatcher 8.9% -> 6.9% of the game
+   thread (plus 0.8% of cache misses), `Rt::enter_slow` 1.6% -> gone;
+   benchmark 13.17 s against 13.53 s (a quieter machine by then).
+3. **Allocation churn in the GX FIFO path** (about 7% of the game thread,
+   found with stack sampling): the scanner allocated twice per 32-byte
+   gather-pipe burst, display lists were copied before scanning, and
+   `Hw::flush_gather` took a new burst vector every slice. On the decode
+   thread, each VAT's vertex layout is now kept until the next CP load,
+   and indexed arrays are looked up once per draw instead of through a
+   virtual call per attribute. RAM hashes and GX output digests
+   (`--hash-gx`, new) identical; benchmark 19.5 s against 21.0-21.4 s in
+   like-for-like pairs.
+4. **`mtmsr` runs in generated code** (it was an island: generated code
+   unwound before it, the dispatcher stepped it and climbed back up the
+   guest stack). It ends its block, so the next block re-checks MSR[FP]
+   as before. Recompiled share 99.34% -> 99.57%; single-stepped
+   instructions 67 -> 36 million; dispatcher iterations 635 -> 529
+   million.
+5. **Tail calls instead of unwinding** (the biggest step). Temporary
+   counters showed the dispatcher entering recompiled code 487 million
+   times in the 1-1 script, once per 27 guest instructions, nearly all
+   at 0x802dcd48..0x802dcdd0: CodeWarrior's `_savegpr_N`/`_restgpr_N`
+   (and `_save_fpr`/`_rest_fpr`), which most prologues and epilogues
+   call. The map lists each entry point as a one-instruction function
+   that falls through into the next; falling off a function's end
+   returned with `pc` there, so every native frame unwound, and the
+   dispatcher ran the rest one instruction per entry and climbed back up
+   the guest stack. Code continuing in another function's entry is now a
+   tail call, and a `bctr` out of the function an indirect tail call
+   (`tail_indirect`). Hook addresses are no longer table entries, so an
+   indirect call or jump to one always reaches the dispatcher. The exit
+   report now counts the dispatcher's entries: 487 million -> 16.7
+   million. Whole script: `run_field` 65.7 s, 51.3 s net of GX waits
+   (it was 83-105 s, 61-82 s net). Benchmark: 11.73 s against 14.70 s.
+6. **GX batches recycled.** The transform thread dropped each applied
+   batch, so the decode thread grew every new one's vectors from nothing
+   (150 bytes per vertex): page faults and heap calls were about a third
+   of the decode thread on the world map, where it is what the game
+   waits for. Applied batches now go back emptied (`Sink::spare`).
+   World map (fields 6000-6240): GX waits 1.92 -> 0.87 s, `run_field`
+   16.5 -> 10.7 ms per field.
+
+**Tried and not kept** (verified identical, but no gain worth the code):
+- `Cpu::spr` as a fixed array (one load per GQR read instead of a vector
+  access with a bounds check) and `psq_l`/`psq_st` with the integer GQR
+  types out of line: 4% less machine code, no measurable change.
+- The reverb HLE working on one slice over all its buffers (a new
+  `Mem::data_mut`): about 0.6 points of the game thread, because its
+  loop is float maths and strided delay-line accesses, not the checks.
+- Without cross-crate LTO (see the build times above): a third slower.
+7. **Paced: the field's GX output is collected after the sleep.** The
+   game thread used to wait at each field's end for the transform thread
+   to finish the output (with interpolation records above 60 fps), then
+   sleep until the field's slot ended. It now asks for the output
+   (`GpuPort::request_output`), sleeps, and collects it
+   (`finish_output`); the frame's display time was already the slot's
+   end. The channel to the window holds four fields instead of two.
+   Paced from field 6000 (world map, then 1-1), two other builds running:
+   end-of-field waits 0.27/0.76/0.87 s at 60/240/360 fps became
+   0.02/0.18/0.08 s, and the world map holds 100% at 240 and 360 fps (it
+   was 92-98%; at 60 fps it was already 98-100%).
+8. **30 fps.** `--fps 30` (F5/F6; the battery saver shares the path) shows
+   every other field with the game at 59.94. The battery saver skipped a
+   field only if it made no EFB-to-texture copy, which in courses and on
+   the world map is never, so it showed 60 fps. A skipped field now runs
+   its draws up to its last texture copy, and its clears and copies after
+   that, but not the draws after it, and uploads only the vertices those
+   draws use. Paced: 30.0 fps shown, game 100% throughout. Screenshots of
+   fields 6201, 6461 and 6501 are byte-identical at 30 and 60 fps.
+
+**Result** (1-1 hash script, windowed, the first build of this pass
+against the last, alternating, best of two, same machine state):
+
+| | Before | After |
+|---|---|---|
+| `run_field` (host time) | 89.6 s | 58.5 s |
+| of which waiting for the GX thread | 20.6 s | 12.9 s |
+| net (the game thread's own work) | 69.0 s | 45.6 s (-34%) |
+| game thread CPU time | 70.3 s | 47.3 s |
+| dispatcher entries into recompiled code | (~560 million) | 16.7 million |
+| interpreter, net | 156.8 s | 149.0 s (-5%) |
+
+The binary went from 86 to 65 MB. Every step kept all 98 hashes and the
+instruction count (13,194,609,027) in both engines, headless and
+windowed.
+
+**The build-test loop now:**
+- `cargo build --profile quick -p frontend` for checks: release without
+  cross-crate LTO; a change outside guest-cpu, guest-mem and the
+  generated code relinks in 16-20 s (release: about 6 minutes).
+- `--headless --frames N` for hash checks: no window or renderer, no
+  Vulkan needed, the same fields and instruction count as a windowed run.
+- `--hash-gx` with `--hash-every`: digests of the GX output, to check
+  that a GX change leaves what the renderer gets alone.
+- A state at field 6000 (`--save-state 6000:st6000.bin`, then
+  `--load-state st6000.bin --frames 2000`) makes a 15-30 s benchmark;
+  compare builds alternately, by game-thread CPU (the exit report).
+- Since 2026-11-20 builds run through `D:\nsmbw-p6\cargo-limited.ps1`
+  (2 jobs, below-normal priority, one build on the PC at a time), so a
+  full rebuild takes 15-30 minutes including waits for other sessions;
+  the timings above were taken at 4 jobs.
+
+**Still to do (engine):**
+1. **Hooks unwind.** A call to a hooked address (`strcmp` 5 million times
+   in the script, the DC range loops 2 million, `sqrt` 0.6 million)
+   returns through every native frame to the dispatcher, which runs the
+   hook and climbs back up. Letting generated code call the hook handler
+   (through a callback, as slice ends do) needs `System::before`'s state
+   shared; it touches the hook code the other sessions work on.
+2. **The GX decode thread** limits heavy scenes (it is what the game
+   waits for on the world map): `Layout::read` (per-format loaders),
+   the 150-byte `RawVertex` per vertex, and the vertex transform on the
+   GPU (11.6).
+3. **Generated code** is still about 120 bytes per guest instruction:
+   checked loads and stores inline their slow paths, every branch checks
+   the slice budget, and loops go back through the `match` on `pc`.
+4. **Interrupts and thread switches** still unwind and climb (16.7
+   million dispatcher entries); a native return stack would be needed.
