@@ -73,6 +73,8 @@ pub struct Totals {
     /// memory (so interpreted instead).
     pub recomp_steps: u64,
     pub recomp_changed: u64,
+    /// Times the dispatcher entered recompiled code.
+    pub recomp_entries: u64,
     /// Of `cpu_time`, waiting for the GX thread (syncs at PE events).
     pub gx_wait: Duration,
     /// Waiting for the GX thread's output at the end of each field (not in
@@ -494,6 +496,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         totals.cpu_time += emu;
         totals.steps = sys.steps;
         totals.recomp_steps = sys.recomp_steps;
+        totals.recomp_entries = sys.recomp_entries;
         totals.recomp_changed = sys.recomp.as_ref().map_or(0, |r| r.changed);
         (totals.light_texture_calls, totals.light_texture_skips) = (sys.light_textures.calls, sys.light_textures.skips);
         let (out, xfb, now_peeks, remotes) = {

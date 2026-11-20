@@ -115,6 +115,11 @@ impl Rt {
         for (i, f) in fns.iter().enumerate() {
             pages.push(mem.mark_code(f.start, 4 * f.words.len()));
             for &e in f.entries {
+                // Only the dispatcher runs hooks; an indirect call or jump
+                // to one must reach it.
+                if special.contains(&e) {
+                    continue;
+                }
                 let Some(page) = e.checked_sub(TABLE_BASE).map(|o| (o >> 12) as usize).filter(|&p| p < TABLE_PAGES) else { continue };
                 table[page].get_or_insert_with(|| Box::new([0; 1024]))[((e >> 2) & 1023) as usize] = i as u32 + 1;
             }
@@ -256,6 +261,19 @@ pub fn call_indirect(c: &mut Cpu, m: &mut Mem, rt: &mut Rt, target: u32, ret: u3
             c.lr = ret;
             c.pc = target;
             Ok(false)
+        }
+    }
+}
+
+/// A computed jump (`bctr`) out of the function: run the function with an
+/// entry at `target` and return as it does, or return to the dispatcher.
+#[inline(always)]
+pub fn tail_indirect(c: &mut Cpu, m: &mut Mem, rt: &mut Rt, target: u32) -> R {
+    match rt.lookup(target) {
+        Some(f) => tail(c, m, rt, f, target),
+        None => {
+            c.pc = target;
+            Ok(())
         }
     }
 }

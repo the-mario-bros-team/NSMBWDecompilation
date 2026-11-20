@@ -546,7 +546,12 @@ pub fn report(t: &crate::emu::Totals) {
         println!("game thread: {:.2}s of CPU time", t.thread_cpu.as_secs_f64());
     }
     if t.recomp_steps > 0 {
-        println!("recompiled code ran {:.2}% of them ({} functions found changed in memory)", 100.0 * t.recomp_steps as f64 / t.steps.max(1) as f64, t.recomp_changed);
+        println!(
+            "recompiled code ran {:.2}% of them, entered from the dispatcher {} times ({} functions found changed in memory)",
+            100.0 * t.recomp_steps as f64 / t.steps.max(1) as f64,
+            t.recomp_entries,
+            t.recomp_changed
+        );
     }
     if t.audio_dropouts > 0 {
         println!("audio: {} dropouts (the game fell behind)", t.audio_dropouts);

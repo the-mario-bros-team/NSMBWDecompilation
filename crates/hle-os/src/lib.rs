@@ -140,6 +140,10 @@ pub struct System {
     pub recomp: Option<guest_cpu::recomp::Rt>,
     /// Instructions run by recompiled code (the rest were interpreted).
     pub recomp_steps: u64,
+    /// Times the dispatcher entered recompiled code: after an interrupt, a
+    /// thread switch, a hook or interpreted code (calls within recompiled
+    /// code stay native).
+    pub recomp_entries: u64,
 }
 
 /// What happens at the end of each slice ([`SLICE`]).
@@ -267,7 +271,7 @@ impl System {
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
         let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None }));
-        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0 })
+        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0 })
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
@@ -440,6 +444,7 @@ impl System {
             // nothing run if its code changed or the FPU is off.
             if let Some(rt) = self.recomp.as_mut().filter(|_| self.link_calls.is_empty()) {
                 if let Some(f) = rt.lookup(pc) {
+                    self.recomp_entries += 1;
                     let before = self.cpu.cycles;
                     rt.end = end;
                     rt.depth = 0;
