@@ -388,7 +388,8 @@ impl Gpu {
     /// Hands what was decoded so far to the transform half.
     pub fn flush_back(&mut self) {
         if !self.batch.is_empty() {
-            let batch = std::mem::take(&mut self.batch);
+            let spare = self.sink.spare();
+            let batch = std::mem::replace(&mut self.batch, spare);
             self.sink.send(batch);
         }
     }

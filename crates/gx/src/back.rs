@@ -50,6 +50,13 @@ impl Batch {
     pub fn is_empty(&self) -> bool {
         self.ops.is_empty()
     }
+
+    /// Empty, keeping the capacity.
+    fn clear(&mut self) {
+        self.ops.clear();
+        self.raws.clear();
+        self.shadings.clear();
+    }
 }
 
 pub(crate) struct Back {
@@ -279,6 +286,11 @@ enum Msg {
 pub(crate) struct BackThread {
     to: Option<std::sync::mpsc::Sender<Msg>>,
     from: std::sync::mpsc::Receiver<Box<Output>>,
+    /// Batches applied and emptied, sent back for the first half to fill
+    /// again: a fresh batch grew its vectors (a vertex is 150 bytes) from
+    /// nothing, and the page faults and heap calls for that took about a
+    /// third of the decode thread on the world map.
+    spares: std::sync::mpsc::Receiver<Batch>,
     handle: Option<std::thread::JoinHandle<()>>,
 }
 
@@ -286,12 +298,17 @@ impl BackThread {
     pub fn spawn(mut back: Back) -> Self {
         let (to, msgs) = std::sync::mpsc::channel::<Msg>();
         let (replies, from) = std::sync::mpsc::channel();
+        let (spare, spares) = std::sync::mpsc::channel();
         let handle = std::thread::Builder::new()
             .name("gx-transform".into())
             .spawn(move || {
                 for msg in msgs {
                     match msg {
-                        Msg::Batch(b) => back.apply(&b),
+                        Msg::Batch(mut b) => {
+                            back.apply(&b);
+                            b.clear();
+                            let _ = spare.send(b);
+                        }
                         Msg::Recycle(out) => back.recycle(*out),
                         Msg::TakeOutput(records_next) => {
                             if replies.send(Box::new(back.take_output(records_next))).is_err() {
@@ -302,7 +319,7 @@ impl BackThread {
                 }
             })
             .expect("GX transform thread");
-        Self { to: Some(to), from, handle: Some(handle) }
+        Self { to: Some(to), from, spares, handle: Some(handle) }
     }
 
     fn send(&self, msg: Msg) {
@@ -320,6 +337,15 @@ impl Drop for BackThread {
 }
 
 impl Sink {
+    /// An empty batch to fill, with the capacity of one already applied
+    /// when there is one.
+    pub fn spare(&mut self) -> Batch {
+        match self {
+            Self::Local(_) => Batch::default(),
+            Self::Thread(t) => t.spares.try_recv().unwrap_or_default(),
+        }
+    }
+
     pub fn send(&mut self, batch: Batch) {
         match self {
             Self::Local(back) => back.apply(&batch),
