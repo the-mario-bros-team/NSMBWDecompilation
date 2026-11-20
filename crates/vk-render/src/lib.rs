@@ -640,6 +640,13 @@ impl Renderer {
         self.scale
     }
 
+    /// Textures held, and GPU memory allocated and reserved (bytes), for
+    /// diagnostics.
+    pub fn memory(&self) -> (usize, u64, u64) {
+        let r = self.alloc.generate_report();
+        (self.textures.len(), r.total_allocated_bytes, r.total_capacity_bytes)
+    }
+
     /// Switches V-Sync; the swapchain is rebuilt before the next present.
     pub fn set_vsync(&mut self, on: bool) {
         if self.vsync != on {
@@ -960,18 +967,13 @@ impl Renderer {
             }
             // A display turned from its natural orientation (Android: a
             // landscape game on a phone whose panel is portrait) reports the
-            // turn and its extent unturned. The swapchain stays upright
-            // (identity) and the compositor turns it, so its extent is the
-            // turned one.
-            let quarter_turn = vk::SurfaceTransformFlagsKHR::ROTATE_90 | vk::SurfaceTransformFlagsKHR::ROTATE_270;
+            // turn as the current transform, with the extent already the
+            // window's own (landscape). The swapchain stays upright
+            // (identity) at that extent and the compositor turns it, instead
+            // of the frames being drawn turned.
             let upright = caps.current_transform != vk::SurfaceTransformFlagsKHR::IDENTITY && caps.supported_transforms.contains(vk::SurfaceTransformFlagsKHR::IDENTITY);
             let extent = if caps.current_extent.width != u32::MAX {
-                let e = caps.current_extent;
-                if upright && caps.current_transform.intersects(quarter_turn) {
-                    vk::Extent2D { width: e.height, height: e.width }
-                } else {
-                    e
-                }
+                caps.current_extent
             } else {
                 vk::Extent2D {
                     width: width.clamp(caps.min_image_extent.width, caps.max_image_extent.width),

@@ -665,7 +665,7 @@ rebuilt here following its design. Windows first.
 | Fill, 16:10, ultrawide (Hor+, via the widened `EGG::Screen` canvas) | P8: a game-side hook like their `dynamic_aspect.cpp`. Needs P4 to verify in levels. |
 | Resolution 0.5×–4× and Native | Integer 1–8× and native done; 0.5× not. |
 | Graphics on a second core, above-normal priority, drop reports, pipeline cache | Done. |
-| Direct3D 12/11 renderers, Android, Linux builds | Not planned now (Windows, Vulkan 1.3). |
+| Direct3D 12/11 renderers, Android, Linux builds | Android started (16); the others not planned now (Windows, Vulkan 1.3). |
 | Keyboard, mouse, controllers, rebinding, combinations, Space Smart Spin, mouse as gyro, key prompts, rumble, real Wiimotes, Bluetooth passthrough | P4 (`crates/input`, emulated Bluetooth Wiimotes); rebinding UI in P8. |
 | Clicking the game's menus and map | P8 (needs input plus game hooks). |
 | Gameplay options (character pick, autosave, exit course, no time limit, infinite lives, power-up) | P8, as game hooks once P4 makes them testable. |
@@ -1829,3 +1829,128 @@ lockstep references' (13,194,609,027 and 19,912,994,930).
 PC (CPU and GPU) and output redirected to the hard drive both produced
 dips that looked like engine problems. Take timings with the build and
 bench locks held, and log through a pipe or to the SSD.
+
+## 16. Android (first milestone, 2026-11-20)
+
+Goal (WitherBlitz, 2026-11-20): an Android version (arm64, Android 9 and
+up, Vulkan) with the app shell, touch controls and Android features of
+WitherBlitz's NSMB-Wii-Recompilation, whose Java app is adapted here.
+Branch `claude/android-7bd682`.
+
+**Pieces:**
+- `crates/android` builds `libnsmbw.so` (package `nsmbw-android`; empty on
+  other targets). It runs the desktop game thread unchanged: `emu.rs`,
+  `net.rs` and `say.rs` are included from `crates/frontend/src` with
+  `#[path]`. Its own `audio` (AAudio through the `ndk` crate, the same
+  queue and resampling as the `cpal` one) and `win` (thread priority nice
+  -8, thread CPU time) stand in for the frontend modules of those names.
+  stdout and stderr go to logcat (`adb logcat -s nsmbw`).
+- A render thread takes each field and presents it at the game's own 60
+  fps, as the desktop window does at 60 (`play.rs`'s native path; no frame
+  interpolation yet). The renderer is kept for the whole run: Android
+  destroys the surface whenever the app leaves the screen, so
+  `vk_render::Renderer` gained `detach_window` and `attach_window` (only the
+  surface and swapchain go; textures stay). A display turned from its
+  natural orientation (a landscape game on a portrait phone) gets an
+  upright swapchain with the turned extent, and the compositor turns it.
+- `android/` is a Gradle project (Android Gradle Plugin 8.13.2, Gradle
+  8.13, JDK 17, no AndroidX), app id `com.wither.nsmbwport` so it installs
+  beside the recomp's `com.wither.nsmbw`. From the recomp's app (its own
+  code; the SDL Java files are not used):
+  - the start menu (Play, Language, Help, Settings, Edit Touch Controls,
+    Skip Start Menu, and importing the extracted disc as a folder through
+    the system picker or as a zip, with the recomp's SMNE01 rev 1 and
+    file-list checks) and the Settings screen, cut to the settings this
+    port has (Video: resolution, V-Sync, aspect; Controls: touch, opacity,
+    tilt, shake, Reverse Tilt, vibration; Language);
+  - the on-screen sideways Wii Remote (`TouchControlsView`: D-pad, 1, 2, A,
+    Shake, + and -, opacity, vibration) and its layout editor with profiles;
+    it hides while a controller is used and a tap brings it back;
+  - tilt and shake from the phone's gravity and accelerometer sensors
+    (`MotionInput`), with Reverse Tilt on by default;
+  - controllers as Wii Remotes 1-4 with the desktop's Xbox-layout defaults
+    (`ControllerInput`, as `crates/input`);
+  - the game's rumble on the phone's vibrator;
+  - the Back gesture's menu (Start Menu, Edit Touch Controls, Quit Game);
+  - leaving the app pauses the game (no fields are taken, so the game
+    thread stops at its next one; sound plays silence).
+- The game's language is the Wii's (`SYSCONF` `IPL.LNG`, set at each start
+  with the aspect ratio): English, French or Spanish from the USA disc;
+  Italian menus keep the game in English.
+
+**Build** (this PC: through `D:\nsmbw-p6\cargo-limited.ps1` and
+`android\gradle-limited.ps1`, which take the build lock):
+
+```
+rustup target add aarch64-linux-android        # once
+powershell -NoProfile -File android\build.ps1 [-Profile quick] [-Install]
+```
+
+`build.ps1` finds the NDK (`ANDROID_NDK_HOME`, else the newest under
+`%LOCALAPPDATA%\Android\Sdk\ndk`), builds `libnsmbw.so` for API 28 with
+the NDK's clang as linker, stages it in `android\native\jniLibs`
+(ignored), and runs Gradle offline: `android\app\build\outputs\apk\debug\app-debug.apk`.
+Set `CARGO_TARGET_DIR` to keep the arm64 build off a full drive.
+`.cargo/config.toml` now gives `target-cpu=x86-64-v3` to the Windows
+target only, and `generic` to arm64 (a worktree under the main checkout
+also reads the main checkout's config).
+
+**Run:** install the APK, open NSMBW Port, import the folder Dolphin's
+Extract Entire Disc made (or a zip of it), and tap Play. For testing over
+adb, a debug build's storage can be filled directly:
+
+```
+adb push <disc>\sys <disc>\files <disc>\tmd.bin /data/local/tmp/nsmbw-game/
+adb shell run-as com.wither.nsmbwport sh -c "mkdir -p files/game && cp -r /data/local/tmp/nsmbw-game/* files/game/"
+adb shell rm -r /data/local/tmp/nsmbw-game
+```
+
+(From Git Bash, set `MSYS_NO_PATHCONV=1` first.) The game needs `sys/`,
+`files/` and `tmd.bin`, which the import checks for.
+
+**Checked** (2026-11-20) on WitherBlitz's Galaxy SM-S948U (Android 16,
+Snapdragon 8 Elite Gen 5, Adreno 840, 3120x1440 at 120 Hz), debug APK,
+release `libnsmbw.so`, interpreter only, EFB 1x, V-Sync on:
+- the start menu finds the imported game and passes its checks; Play
+  boots it: strap screen, title screen, Select a File and Select
+  Players, all through the on-screen remote's A, 2 and 1 (logcat shows
+  each button reaching Wii Remote 1);
+- the picture is upright, 16:9 between bars, the remote drawn over it;
+- the game runs at full speed: 98-100%, 7-9 ms of emulation and 4-5 ms of
+  rendering a field on the strap and title screens; 11-16 ms and 10-21 ms
+  in the title's attract demo (courses), where some 10-second readings fall
+  to 78-90%;
+- leaving the app (Home) stops the game (no fields run while away) and
+  coming back carries on, drawing to the new surface; the Back gesture
+  opens the menu; an error from the game or the GPU shows in a dialog with
+  Start Menu and Quit Game.
+
+Every 10 s the render thread logs the game's speed, the emulation and
+render times, the textures held and the GPU memory in use.
+
+**Open: the device is lost in the attract demo's snow course** (World 3's
+look), about 250 fields after it starts, each time at the same point
+(field ~7,150 of a run, where the desktop run's EFB copies go from 8 to
+28 a field). The Adreno driver logs GPU fault snapshots, then every call
+returns `VK_ERROR_DEVICE_LOST`. Ruled out by experiments on the device
+(each tried, then taken out again): GPU memory (68 of 320 MB in use),
+out-of-range buffer and image reads (robust access on: still lost),
+local array indices in the shaders (naga clamping them: still lost),
+transfer regions outside their images (cut to bounds and logged: none
+happened), Z copies (none in that scene). Skipping every EFB copy
+moves the fault to a later scene (the skipped copies' textures are then
+sampled unwritten, a fault of its own), so the copy pass is the lead. The
+next step is the Khronos validation layer: on the phone (its Android
+build), or on this PC, where the loader ignores `VK_LAYER_PATH` because
+processes run elevated (a manifest registered under
+`HKCU\SOFTWARE\Khronos\Vulkan\ExplicitLayers` would do).
+
+**Not yet:** recompiled code (`ppc-recomp` writes the host's calling
+convention, `extern "sysv64"`, into `gen/`, which arm64 cannot compile; the
+Android build interprets everything), the flat guest-memory mapping
+(`guest-mem/flat.rs` has only the Windows one; Android would use
+`memfd_create` and `mmap`), frame interpolation above 60 fps, Fill Screen
+(the recomp's Hor+ widening; Fill shows 16:9 here), tapping the game's
+menus, the Power-Up button, the quick-save backup when leaving the app, and
+the in-game settings window (built on another branch; options will meet
+through a shared settings file).

@@ -66,7 +66,9 @@ final class GameFiles {
         }
         final String problem = headerProblem(header);
         if (problem != null) return problem;
-        if (!GameFileList.missing(root, 1).isEmpty()) return Lang.t(INCOMPLETE);
+        // The port also reads the partition's title metadata (tmd.bin, beside sys/ in Dolphin's
+        // extraction) for the IOS layer and the boot.
+        if (!new File(root, "tmd.bin").isFile() || !GameFileList.missing(root, 1).isEmpty()) return Lang.t(INCOMPLETE);
         return moduleProblem(root);
     }
 

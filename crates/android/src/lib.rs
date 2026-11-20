@@ -32,7 +32,7 @@ use std::path::{Path, PathBuf};
 use std::sync::mpsc::{self, Receiver, Sender, SyncSender};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Mutex, OnceLock};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use hle_ios::bt::REMOTES;
 use hle_ios::wiimote::Input;
@@ -95,7 +95,13 @@ struct Render {
     failed: bool,
     kept: VecDeque<gx::Output>,
     sent: Option<[Input; REMOTES]>,
+    /// Speed over the last [`SPEED_EVERY`]: since when, fields, and their
+    /// emulation and render times.
+    speed: (Instant, u32, Duration, Duration),
 }
+
+/// How often the game's speed goes to logcat.
+const SPEED_EVERY: Duration = Duration::from_secs(10);
 
 impl Render {
     fn fail(&mut self, e: String) {
@@ -169,7 +175,27 @@ impl Render {
     fn ingest(&mut self, f: GameFrame) -> Result<(), String> {
         let (w, h) = self.window.as_ref().map_or((0, 0), |w| (w.width().max(0) as u32, w.height().max(0) as u32));
         let (Some(r), Some(emu)) = (&mut self.renderer, &self.emu) else { return Ok(()) };
+        let started = Instant::now();
         r.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
+        self.speed.1 += 1;
+        self.speed.2 += f.emu;
+        self.speed.3 += started.elapsed();
+        let secs = self.speed.0.elapsed().as_secs_f32();
+        if secs >= SPEED_EVERY.as_secs_f32() {
+            let (n, ms) = (self.speed.1.max(1), |d: Duration| d.as_secs_f32() * 1000.0);
+            let (textures, used, reserved) = r.memory();
+            println!(
+                "field {}: game {:.0}% ({:.1} fields/s), emulation {:.1} ms and render {:.1} ms a field; {textures} textures, GPU memory {} MB used of {} MB",
+                f.index,
+                self.speed.1 as f32 / secs / 59.94 * 100.0,
+                self.speed.1 as f32 / secs,
+                ms(self.speed.2) / n as f32,
+                ms(self.speed.3) / n as f32,
+                used >> 20,
+                reserved >> 20
+            );
+            self.speed = (Instant::now(), 0, Duration::ZERO, Duration::ZERO);
+        }
         let writebacks = r.take_writebacks();
         if !writebacks.is_empty() {
             let _ = emu.to_emu.send(ToEmu::Writebacks(writebacks));
@@ -214,6 +240,10 @@ impl Render {
             let Some(emu) = &self.emu else { continue };
             let inputs = SHARED.get().map(|s| *s.inputs.lock().unwrap()).unwrap_or_default();
             if self.sent != Some(inputs) {
+                let was = self.sent.map(|s| (s[0].buttons, s[0].shake));
+                if was != Some((inputs[0].buttons, inputs[0].shake)) {
+                    println!("Wii Remote 1: buttons {:#06x}{}", inputs[0].buttons, if inputs[0].shake { ", shaking" } else { "" });
+                }
                 let _ = emu.to_emu.send(ToEmu::Input(inputs));
                 self.sent = Some(inputs);
             }
@@ -274,7 +304,7 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_start<'l>(mut env: JNIEn
         SHARED.set(Shared { tx: Mutex::new(tx), inputs: Mutex::new(inputs), error: Mutex::new(None), rumble: AtomicBool::new(false) }).map_err(|_| "already started".to_string())?;
         let cfg = Config { game: PathBuf::from(game), scale: scale.clamp(0, 8) as u32, widescreen: widescreen != 0, vsync: vsync != 0, language: u8::try_from(language).unwrap_or(1) };
         println!("starting: game {}, files {files}", cfg.game.display());
-        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None };
+        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None, speed: (Instant::now(), 0, Duration::ZERO, Duration::ZERO) };
         std::thread::Builder::new().name("render".into()).spawn(move || render.run(rx)).map_err(|e| e.to_string())?;
         Ok(())
     })();
