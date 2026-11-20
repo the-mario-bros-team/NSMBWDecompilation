@@ -50,13 +50,28 @@ impl Scanner {
     /// commands go to `out` (rewritten where needed) and PE events to
     /// `events`. Returns true if it met an invalid opcode (the worker should
     /// then drop the rest of its batch, as inline decoding drops its buffer).
+    ///
+    /// This runs for every 32-byte burst, so it allocates nothing: with
+    /// nothing left over (the usual case) it scans `bytes` where they are,
+    /// and otherwise appends them to the leftover and scans that buffer.
     fn feed(&mut self, bytes: &[u8], mem: &Mem, out: &mut Vec<u8>, events: &mut Vec<Event>) -> bool {
-        self.pending.extend_from_slice(bytes);
-        let buf = std::mem::take(&mut self.pending);
-        let (at, bad) = self.scan(&buf, mem, out, events, false);
-        if !bad {
-            self.pending = buf[at.min(buf.len())..].to_vec();
+        let mut buf = std::mem::take(&mut self.pending);
+        let bad = if buf.is_empty() {
+            let (at, bad) = self.scan(bytes, mem, out, events, false);
+            if !bad {
+                buf.extend_from_slice(&bytes[at.min(bytes.len())..]);
+            }
+            bad
+        } else {
+            buf.extend_from_slice(bytes);
+            let (at, bad) = self.scan(&buf, mem, out, events, false);
+            buf.drain(..at.min(buf.len()));
+            bad
+        };
+        if bad {
+            buf.clear();
         }
+        self.pending = buf;
         bad
     }
 
@@ -139,9 +154,10 @@ impl Scanner {
                     // A display list: its complete commands inline (a list
                     // cannot call another, so any call in it is dropped).
                     let (addr, size) = (be32(&cmd[1..]), be32(&cmd[5..]) as usize);
+                    // Read in place: nothing writes RAM while the game
+                    // thread scans.
                     if let Some(list) = mem.ram(addr, size) {
-                        let list = list.to_vec();
-                        self.scan(&list, mem, out, events, true);
+                        self.scan(list, mem, out, events, true);
                     }
                 }
                 0x40 => {}

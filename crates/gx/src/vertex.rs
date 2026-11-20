@@ -89,7 +89,8 @@ impl Num {
     }
 }
 
-/// The vertex layout for one VAT, resolved once per draw.
+/// The vertex layout for one VAT (kept until the CP registers change).
+#[derive(Clone, Copy)]
 pub struct Layout {
     pnmtx: bool,
     texmtx: [bool; 8],
@@ -167,8 +168,9 @@ impl Layout {
         self.color[i].0 != 0
     }
 
-    /// Reads one vertex from `data` (exactly `self.size` bytes).
-    pub fn read<'a>(&self, cp: &Cp, data: &'a [u8], mem: &'a dyn Ram, default_pnmtx: u8, default_texmtx: [u8; 8]) -> RawVertex {
+    /// Reads one vertex from `data` (exactly `self.size` bytes); indexed
+    /// attributes come from `arrays` (made for this layout from `mem`).
+    pub fn read<'a>(&self, cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram, default_pnmtx: u8, default_texmtx: [u8; 8]) -> RawVertex {
         let mut v = RawVertex { pnmtx: default_pnmtx, texmtx: default_texmtx, color: [[1.0; 4]; 2], ..Default::default() };
         let mut cur = Cursor { data, at: 0 };
         if self.pnmtx {
@@ -187,8 +189,12 @@ impl Layout {
                 2 | 3 => {
                     let ib = cur.take(if d == 2 { 1 } else { 2 });
                     let idx = ib.iter().fold(0u32, |a, &b| (a << 8) | u32::from(b));
-                    let addr = cp.array_base[array].wrapping_add(idx * cp.array_stride[array]);
-                    mem.ram(addr, size).unwrap_or(&ZEROS[..size.min(ZEROS.len())])
+                    let off = (idx * cp.array_stride[array]) as usize;
+                    match arrays.bank[array] {
+                        Some(bank) => bank.get(off..off + size),
+                        None => mem.ram(cp.array_base[array].wrapping_add(off as u32), size),
+                    }
+                    .unwrap_or(&ZEROS[..size.min(ZEROS.len())])
                 }
                 _ => &[],
             }
@@ -242,6 +248,51 @@ impl Layout {
 
 /// Stands in for array data outside RAM.
 static ZEROS: [u8; 64] = [0; 64];
+
+/// For one draw, each indexed attribute array's RAM from its base to the
+/// end of the bank it is in (MEM1, MEM2 or the locked cache), looked up once
+/// instead of per vertex. An index reaches at most 65535 * 255 bytes past
+/// the base, never into another bank, so an attribute is in RAM exactly when
+/// it lies inside this slice. Arrays based outside RAM are read per access.
+pub struct Arrays<'a> {
+    bank: [Option<&'a [u8]>; 12],
+}
+
+impl<'a> Arrays<'a> {
+    pub fn new(cp: &Cp, layout: &Layout, mem: &'a dyn Ram) -> Self {
+        let mut bank = [None; 12];
+        let mut used = [false; 12];
+        used[0] = layout.pos.0 >= 2;
+        used[1] = layout.nrm.0 >= 2;
+        for c in 0..2 {
+            used[2 + c] = layout.color[c].0 >= 2;
+        }
+        for t in 0..8 {
+            used[4 + t] = layout.tex[t].0 >= 2;
+        }
+        for (a, slot) in bank.iter_mut().enumerate() {
+            if used[a] {
+                let base = cp.array_base[a];
+                *slot = bank_rest(base).and_then(|n| mem.ram(base, n));
+            }
+        }
+        Self { bank }
+    }
+}
+
+/// Bytes from `addr` to the end of the RAM bank it would be in, at any of
+/// the bank's addresses (`guest_mem` maps MEM1 at 0x0, 0x8 and 0xC
+/// prefixes, MEM2 at 0x1, 0x9 and 0xD, the locked cache at 0xE).
+fn bank_rest(addr: u32) -> Option<usize> {
+    let low = (addr & 0x0FFF_FFFF) as usize;
+    let size = match addr >> 28 {
+        0x0 | 0x8 | 0xC => guest_mem::MEM1_SIZE,
+        0x1 | 0x9 | 0xD => guest_mem::MEM2_SIZE,
+        0xE => guest_mem::LOCKED_CACHE_SIZE,
+        _ => return None,
+    };
+    (low < size).then(|| size - low)
+}
 
 struct Cursor<'a> {
     data: &'a [u8],
@@ -310,6 +361,7 @@ mod tests {
         mem.write_u32(0x8000_1008, 0x11223344).unwrap(); // colour index 2
         let l = Layout::new(&cp, 2);
         assert_eq!(l.size, 6 + 1 + 8);
+        let arrays = Arrays::new(&cp, &l, &mem);
         let mut d = Vec::new();
         for c in [16i16, -32, 8] {
             d.extend(c.to_be_bytes());
@@ -317,7 +369,7 @@ mod tests {
         d.push(2);
         d.extend(0.5f32.to_be_bytes());
         d.extend(2.0f32.to_be_bytes());
-        let v = l.read(&cp, &d, &mem, 0, [0; 8]);
+        let v = l.read(&cp, &d, &arrays, &mem, 0, [0; 8]);
         assert_eq!(v.pos, [1.0, -2.0, 0.5]);
         assert_eq!(v.color[0], [0x11 as f32 / 255.0, 0x22 as f32 / 255.0, 0x33 as f32 / 255.0, 0x44 as f32 / 255.0]);
         assert_eq!(v.color[1], [1.0; 4]);

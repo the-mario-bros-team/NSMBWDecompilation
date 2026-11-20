@@ -420,7 +420,9 @@ impl Hw {
         if self.bursts.is_empty() {
             return;
         }
-        let bursts = std::mem::take(&mut self.bursts);
+        // Taken out while the GPU reads them, then put back emptied: a new
+        // vector every slice cost an allocation and its regrowth.
+        let mut bursts = std::mem::take(&mut self.bursts);
         let mut events = Vec::new();
         for b in &bursts {
             match *b {
@@ -435,6 +437,8 @@ impl Hw {
                 Burst::Poke { x, y, value, z } => self.gpu.poke(x, y, value, z),
             }
         }
+        bursts.clear();
+        self.bursts = bursts;
         for e in events {
             match e {
                 gx::Event::Finish => {

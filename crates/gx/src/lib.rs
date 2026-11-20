@@ -292,6 +292,8 @@ pub struct Gpu {
     bp: [u32; 256],
     bp_mask: u32,
     cp: Cp,
+    /// Per VAT, its vertex layout, valid until the next CP load.
+    layouts: [Option<Layout>; 8],
     xf: xf::Xf,
     tev_color: [[u32; 2]; 4],
     tev_konst: [[u32; 2]; 4],
@@ -317,6 +319,7 @@ impl Default for Gpu {
             bp: [0; 256],
             bp_mask: 0xFF_FFFF,
             cp: Cp::default(),
+            layouts: [None; 8],
             xf: xf::Xf::default(),
             tev_color: [[0; 2]; 4],
             tev_konst: [[0; 2]; 4],
@@ -398,10 +401,17 @@ impl Gpu {
 
     /// Consumes bytes the GP reads from its FIFO; PE events go to `events`.
     pub fn feed(&mut self, bytes: &[u8], mem: &dyn Ram, events: &mut Vec<Event>) {
-        self.pending.extend_from_slice(bytes);
-        let buf = std::mem::take(&mut self.pending);
-        let at = self.run(&buf, mem, events, false);
-        self.pending = buf[at.min(buf.len())..].to_vec();
+        // Without allocating or copying `bytes` (as `Scanner::feed`).
+        let mut buf = std::mem::take(&mut self.pending);
+        if buf.is_empty() {
+            let at = self.run(bytes, mem, events, false);
+            buf.extend_from_slice(&bytes[at.min(bytes.len())..]);
+        } else {
+            buf.extend_from_slice(bytes);
+            let at = self.run(&buf, mem, events, false);
+            buf.drain(..at.min(buf.len()));
+        }
+        self.pending = buf;
         // Inline, the transform half runs at once; on its thread, in batches.
         if matches!(self.sink, Sink::Local(_)) || self.batch.ops.len() >= BACK_BATCH {
             self.flush_back();
@@ -416,6 +426,7 @@ impl Gpu {
         s.tag(b"GXR ");
         guest_mem::snap!(s; self.pending, self.bp, self.bp_mask, self.cp, self.xf.mem, self.xf.regs, self.tev_color, self.tev_konst, self.tmem);
         if s.loading() {
+            self.layouts = [None; 8];
             self.xf.setup_gen += 1;
             self.tex_memo = [None; 8];
             self.textures.epoch += 1;
@@ -495,7 +506,7 @@ impl Gpu {
                         break;
                     }
                     let n = u16::from_be_bytes([rest[1], rest[2]]) as usize;
-                    3 + n * Layout::new(&self.cp, (op & 7) as usize).size
+                    3 + n * self.layout((op & 7) as usize).size
                 }
                 _ => {
                     self.stats.bad_opcodes += 1;
@@ -507,7 +518,10 @@ impl Gpu {
                 break;
             }
             match op {
-                0x08 => self.cp.load(rest[1], be32(&rest[2..])),
+                0x08 => {
+                    self.cp.load(rest[1], be32(&rest[2..]));
+                    self.layouts = [None; 8];
+                }
                 0x10 => {
                     let h = be32(&rest[1..]);
                     let addr = h & 0xFFFF;
@@ -837,6 +851,12 @@ impl Gpu {
         Shading(s)
     }
 
+    /// VAT `vat`'s vertex layout under the current CP registers.
+    fn layout(&mut self, vat: usize) -> Layout {
+        let cp = &self.cp;
+        *self.layouts[vat].get_or_insert_with(|| Layout::new(cp, vat))
+    }
+
     fn draw(&mut self, op: u8, n: usize, data: &[u8], mem: &dyn Ram) {
         self.stats.draws += 1;
         self.stats.vertices += n as u64;
@@ -859,13 +879,15 @@ impl Gpu {
         if !draws {
             return;
         }
-        let layout = Layout::new(&self.cp, (op & 7) as usize);
+        let layout = self.layout((op & 7) as usize);
         let (pm, tm) = self.xf.default_matrices();
         let (ox, oy) = self.scissor_offset();
         let screen = xf::Screen { offset_x: ox, offset_y: oy };
         let has_color = [layout.has_color(0), layout.has_color(1)];
         let first = self.batch.raws.len() as u32;
-        self.batch.raws.extend(data.chunks_exact(layout.size.max(1)).take(n).map(|d| layout.read(&self.cp, d, mem, pm, tm)));
+        let arrays = vertex::Arrays::new(&self.cp, &layout, mem);
+        self.batch.raws.reserve(n);
+        self.batch.raws.extend(data.chunks_exact(layout.size.max(1)).take(n).map(|d| layout.read(&self.cp, d, &arrays, mem, pm, tm)));
         let n = self.batch.raws.len() as u32 - first;
         let shading = self.shading(mem);
         let shading = match self.batch.shadings.last() {
