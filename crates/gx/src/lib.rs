@@ -204,8 +204,10 @@ pub struct DrawRecord {
     pub ortho: bool,
     pub viewport: [f32; 6],
     pub screen: xf::Screen,
-    /// The position matrices the vertices use, by slot.
-    pub matrices: Vec<(u8, [[f32; 4]; 3])>,
+    /// The position matrices the vertices use, by slot: this range of
+    /// [`Output::matrices`] ([`Output::record_matrices`]). One list per field
+    /// instead of one per record: the world map has over 10,000 records.
+    pub matrices: std::ops::Range<u32>,
     /// Lines and points: expanded in screen space, not re-placeable.
     pub fixed: bool,
 }
@@ -221,6 +223,8 @@ pub struct Output {
     /// Per vertex: model-space position and position-matrix slot.
     pub model: Vec<([f32; 3], u8)>,
     pub records: Vec<DrawRecord>,
+    /// The records' position matrices, by slot (see [`DrawRecord::matrices`]).
+    pub matrices: Vec<(u8, [[f32; 4]; 3])>,
     pub shadings: Vec<Shading>,
     pub cmds: Vec<Cmd>,
     pub new_textures: Vec<texture::NewTexture>,
@@ -228,6 +232,11 @@ pub struct Output {
 }
 
 impl Output {
+    /// Record `r`'s position matrices, by slot.
+    pub fn record_matrices(&self, r: &DrawRecord) -> &[(u8, [[f32; 4]; 3])] {
+        &self.matrices[r.matrices.start as usize..r.matrices.end as usize]
+    }
+
     /// A hash of everything the renderer gets from this field (vertices,
     /// indices, shading blocks, commands, new textures, evictions), to check
     /// that a change to decoding leaves its output alone (`--hash-gx`).

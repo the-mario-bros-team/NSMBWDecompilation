@@ -109,6 +109,7 @@ impl Back {
         old.indices.clear();
         old.model.clear();
         old.records.clear();
+        old.matrices.clear();
         old.shadings.clear();
         old.cmds.clear();
         old.new_textures = Vec::new();
@@ -261,7 +262,10 @@ impl Back {
             slots |= 1 << (slot & 63);
             h = (h ^ u64::from(*slot)).wrapping_mul(0x0000_0100_0000_01B3);
         }
-        let matrices = (0..64u8).filter(|i| slots & (1 << i) != 0).map(|i| (i, self.xf.position_matrix(i))).collect();
+        let start = self.out.matrices.len() as u32;
+        let xf = &self.xf;
+        self.out.matrices.extend((0..64u8).filter(|i| slots & (1 << i) != 0).map(|i| (i, xf.position_matrix(i))));
+        let matrices = start..self.out.matrices.len() as u32;
         let (projection, ortho) = self.xf.projection();
         self.out.records.push(DrawRecord { first, count, identity: h, projection, ortho, viewport: self.xf.viewport(), screen, matrices, fixed });
     }

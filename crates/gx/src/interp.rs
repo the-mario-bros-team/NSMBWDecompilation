@@ -98,7 +98,7 @@ fn screen_points(out: &Output) -> Vec<Option<(f32, f32, bool)>> {
         .iter()
         .map(|r| {
             let (pos, slot) = *out.model.get(r.first as usize)?;
-            let m = &r.matrices.iter().find(|m| m.0 == slot)?.1;
+            let m = &out.record_matrices(r).iter().find(|m| m.0 == slot)?.1;
             let a = project(apply(m, pos), &r.projection, r.ortho, &r.viewport, r.screen);
             (a[3].abs() >= 1e-9).then(|| (a[0] / a[3], a[1] / a[3], a[3] > 0.0))
         })
@@ -139,8 +139,8 @@ pub fn interpolate_into(prev: &Output, cur: &Output, pairs: &[Option<u32>], t: f
         let Some(p) = pair else { continue };
         let rp = &prev.records[*p as usize];
         matrices.clear();
-        matrices.extend(rc.matrices.iter().filter_map(|(slot, mc)| {
-            let mp = &rp.matrices.iter().find(|m| m.0 == *slot)?.1;
+        matrices.extend(cur.record_matrices(rc).iter().filter_map(|(slot, mc)| {
+            let mp = &prev.record_matrices(rp).iter().find(|m| m.0 == *slot)?.1;
             Some((*slot, interpolate_matrix(mp, mc, t)))
         }));
         let projection = lerp6(&rp.projection, &rc.projection);
@@ -198,8 +198,8 @@ pub fn moves(prev: &Output, cur: &Output, pairs: &[Option<u32>]) -> Moves {
         let rp = &prev.records[*p as usize];
         matched.clear();
         let mut moving = rp.projection != rc.projection || rp.viewport != rc.viewport;
-        for (slot, mc) in &rc.matrices {
-            let Some((_, mp)) = rp.matrices.iter().find(|m| m.0 == *slot) else { continue };
+        for (slot, mc) in cur.record_matrices(rc) {
+            let Some((_, mp)) = prev.record_matrices(rp).iter().find(|m| m.0 == *slot) else { continue };
             moving |= mp != mc;
             matched.push((*slot, mp, mc));
         }
@@ -405,12 +405,12 @@ mod tests {
             ortho: false,
             viewport: [320.0, -240.0, 16_777_215.0, 662.0, 582.0, 16_777_215.0],
             screen: Screen { offset_x: 342.0, offset_y: 342.0 },
-            matrices: vec![(0, m)],
+            matrices: 0..1,
             fixed: false,
         };
         let model = vec![([0.0, 0.0, 0.0], 0), ([1.0, 0.0, 0.0], 0), ([0.0, 1.0, 0.0], 0)];
         let vertices = model.iter().map(|(p, _)| Vertex { pos: project(apply(&m, *p), &rec.projection, false, &rec.viewport, rec.screen), ..Default::default() }).collect();
-        Output { vertices, model, records: vec![rec], ..Default::default() }
+        Output { vertices, model, records: vec![rec], matrices: vec![(0, m)], ..Default::default() }
     }
 
     #[test]
