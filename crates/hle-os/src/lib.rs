@@ -552,7 +552,7 @@ impl Default for LinkedModule {
 }
 
 /// First bytes of a save state; the number changes with the layout.
-const STATE_MAGIC: &[u8; 8] = b"NSMBWst6";
+const STATE_MAGIC: &[u8; 8] = b"NSMBWst7";
 
 impl System {
     /// The whole machine as bytes (docs/PORT_PLAN.md, section 12): CPU, RAM,

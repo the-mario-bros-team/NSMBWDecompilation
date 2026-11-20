@@ -30,9 +30,8 @@ const SDA: u32 = 0x8042_F680;
 /// `dBg_c::m_bg_p` and `dBgParameter_c::ms_Instance_p`.
 const BG_PTR: u32 = SDA - 0x58B0;
 const PARAM_PTR: u32 = SDA - 0x5880;
-/// The camera's size at zoom 1 (408.7 x 224).
+/// The camera's width at zoom 1 (408.7; 224 high).
 const BASE_W: u32 = SDA - 0x5594;
-const BASE_H: u32 = SDA - 0x5590;
 
 // `dBg_c` fields (y up).
 const BG_LEFT: u32 = 0x8FE88;
@@ -146,6 +145,14 @@ impl Rect {
         [self.left + self.w / 2.0, self.top - self.h / 2.0]
     }
 
+    /// This rectangle grown about its centre to `shape`'s width:height.
+    fn with_shape_of(&self, shape: &Rect) -> Rect {
+        let aspect = shape.w / shape.h;
+        let (w, h) = if self.w / self.h > aspect { (self.w, self.w / aspect) } else { (self.h * aspect, self.h) };
+        let [cx, cy] = self.centre();
+        Rect { left: cx - w / 2.0, top: cy + h / 2.0, w, h }
+    }
+
     fn union(&self, o: &Rect) -> Rect {
         let (l, r) = (self.left.min(o.left), self.right().max(o.right()));
         let (t, b) = (self.top.max(o.top), self.bottom().min(o.bottom()));
@@ -162,6 +169,13 @@ impl Rect {
     }
 }
 
+/// The `dBg_c` pointer and its zone's bounds (bits), which change when a
+/// scene or zone is set up.
+fn scene_key(mem: &Mem) -> Option<[u32; 5]> {
+    let bg = read32(mem, BG_PTR)?;
+    Some([bg, read32(mem, bg + ZONE[0])?, read32(mem, bg + ZONE[1])?, read32(mem, bg + ZONE[2])?, read32(mem, bg + ZONE[3])?])
+}
+
 /// The game's camera rectangle in `dBg_c`.
 fn bg_camera(mem: &Mem, bg: u32) -> Option<Rect> {
     let r = Rect { left: readf(mem, bg + BG_LEFT)?, top: readf(mem, bg + BG_TOP)?, w: readf(mem, bg + BG_W)?, h: readf(mem, bg + BG_H)? };
@@ -174,6 +188,10 @@ pub struct SharedCamera {
     pub enabled: bool,
     /// Words the box wrote: (address, the game's value, the box's value).
     saved: Vec<(u32, u32, u32)>,
+    /// The `dBg_c` and its zone (left, right, top, bottom as bits) when the
+    /// box was written: if either has changed by the next `execute`, the
+    /// scene or zone was set up again, and the saved values are stale.
+    saved_scene: [u32; 5],
     /// Host only: the player this PC shows (0-based), and the share of the
     /// game camera's size it shows (1, or more for testing).
     pub view_player: Option<usize>,
@@ -187,10 +205,17 @@ pub struct SharedCamera {
 
 impl SharedCamera {
     /// At the start of `dBgGm_c::execute`: the game's own values come
-    /// back, where nothing else has written since the box did.
+    /// back, so its camera code (`calcScroll` and the multiplayer zoom,
+    /// which also run outside `execute` and would otherwise build on the
+    /// box) always works from its own state. Not after the scene or zone
+    /// was set up again (`InitialScrollSet`), whose values stand.
     pub fn restore(&mut self, mem: &mut Mem) {
-        for (a, game, boxed) in self.saved.drain(..) {
-            if read32(mem, a) == Some(boxed) {
+        if self.saved.is_empty() {
+            return;
+        }
+        let same_scene = scene_key(mem) == Some(self.saved_scene);
+        for (a, game, _) in self.saved.drain(..) {
+            if same_scene {
                 let _ = mem.write_u32(a, game);
             }
         }
@@ -204,14 +229,15 @@ impl SharedCamera {
         let (Some(bg), Some(param)) = (read32(mem, BG_PTR).filter(|&p| p >= 0x8000_0000), read32(mem, PARAM_PTR).filter(|&p| p >= 0x8000_0000)) else { return };
         let Some(own) = bg_camera(mem, bg) else { return };
         let players = followed_players(mem);
-        let drawn = match self.enabled.then(|| self.shared_box(mem, bg, own, &players)).flatten() {
-            Some(b) => {
-                self.write_box(mem, bg, param, b);
-                b
+        let (drawn, area) = match self.enabled.then(|| self.shared_box(mem, bg, own, &players)).flatten() {
+            Some(area) => {
+                let drawn = area.with_shape_of(&own);
+                self.write_box(mem, bg, param, drawn);
+                (drawn, area)
             }
-            None => own,
+            None => (own, own),
         };
-        self.view = self.view_for(mem, own, drawn);
+        self.view = self.view_for(mem, own, drawn, area);
     }
 
     /// The box around every player, or `None` where the game's own camera
@@ -238,10 +264,15 @@ impl SharedCamera {
         (!(same(b.left, own.left) && same(b.top, own.top) && same(b.w, own.w) && same(b.h, own.h))).then_some(b)
     }
 
+    /// Writes `b`, which already has the game camera's shape, so the zoom
+    /// (size = base ÷ zoom) agrees with the width and the height and the
+    /// game draws it without stretching.
     fn write_box(&mut self, mem: &mut Mem, bg: u32, param: u32, b: Rect) {
-        let (Some(base_w), Some(base_h)) = (readf(mem, BASE_W), readf(mem, BASE_H)) else { return };
-        // The zoom that fits the box, and an activity screen that covers it.
-        let fit = (base_w / b.w).min(base_h / b.h);
+        let Some(base_w) = readf(mem, BASE_W) else { return };
+        let Some(scene) = scene_key(mem) else { return };
+        self.saved_scene = scene;
+        // The zoom of the box, and an activity screen that covers it.
+        let fit = base_w / b.w;
         let zoom_out = readf(mem, bg + BG_ZOOM_OUT).map_or(fit, |z| z.min(fit));
         let [cx, cy] = b.centre();
         let mut words = vec![
@@ -271,8 +302,10 @@ impl SharedCamera {
     }
 
     /// The window this PC draws: the game camera's own size (1/zoom of it
-    /// when testing) around its player, inside what the game draws.
-    fn view_for(&self, mem: &Mem, own: Rect, drawn: Rect) -> Option<gx::xf::View> {
+    /// when testing) around its player, inside `area` (the box before it
+    /// was given the camera's shape, so the window stays in the zone).
+    /// `drawn` is what the game draws with.
+    fn view_for(&self, mem: &Mem, own: Rect, drawn: Rect, area: Rect) -> Option<gx::xf::View> {
         let p = self.view_player?;
         let zoom = self.view_zoom.max(1.0);
         if drawn == own && zoom == 1.0 {
@@ -280,7 +313,7 @@ impl SharedCamera {
         }
         let window = Rect { w: own.w / zoom, h: own.h / zoom, ..own };
         let at = player_position(mem, p).unwrap_or_else(|| own.centre());
-        let w = window.around(at, &drawn);
+        let w = window.around(at, &area);
         let ([dx, dy], [ox, oy]) = (drawn.centre(), w.centre());
         Some(gx::xf::View::window([drawn.w, drawn.h], [w.w, w.h], [ox - dx, oy - dy]))
     }
@@ -290,7 +323,7 @@ impl SharedCamera {
 /// at the same point; `enabled` and the view are each machine's own.
 impl Snapshot for SharedCamera {
     fn snap(&mut self, s: &mut Snap) {
-        guest_mem::snap!(s; self.saved);
+        guest_mem::snap!(s; self.saved, self.saved_scene);
     }
 }
 
@@ -306,6 +339,11 @@ mod tests {
         assert_eq!((w.left, w.top), (0.0, -200.0));
         let u = cam.union(&w);
         assert_eq!((u.left, u.top, u.w, u.h), (0.0, -50.0, 700.0, 350.0));
+        // Given the camera's 2:1 shape, about its centre.
+        let s = u.with_shape_of(&cam);
+        assert_eq!((s.left, s.top, s.w, s.h), (0.0, -50.0, 700.0, 350.0));
+        let t = Rect { left: 0.0, top: 0.0, w: 100.0, h: 100.0 }.with_shape_of(&cam);
+        assert_eq!((t.left, t.top, t.w, t.h), (-50.0, 0.0, 200.0, 100.0));
         // Taller than the zone: centred on it.
         let tall = Rect { left: 0.0, top: 0.0, w: 100.0, h: 500.0 };
         assert_eq!(tall.around([500.0, -10.0], &zone).top, 50.0);
