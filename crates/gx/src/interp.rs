@@ -26,55 +26,62 @@ const IN_ORDER_STEP: f32 = 0.05;
 
 /// For each record of `cur`, the record of `prev` it continues, if any.
 pub fn pair(prev: &Output, cur: &Output) -> Vec<Option<u32>> {
-    let mut by_identity: HashMap<u64, (Vec<usize>, Vec<usize>)> = HashMap::new();
-    for (i, r) in prev.records.iter().enumerate() {
-        if !r.fixed {
-            by_identity.entry(r.identity).or_default().0.push(i);
-        }
-    }
-    for (i, r) in cur.records.iter().enumerate() {
-        if !r.fixed {
-            by_identity.entry(r.identity).or_default().1.push(i);
-        }
-    }
+    // Records by identity: sorted (identity, index) lists, walked together.
+    // The world map has over 10,000 small draws a field.
+    let keyed = |out: &Output| {
+        let mut v: Vec<(u64, u32)> = out.records.iter().enumerate().filter(|(_, r)| !r.fixed).map(|(i, r)| (r.identity, i as u32)).collect();
+        v.sort_unstable();
+        v
+    };
+    let (kp, kc) = (keyed(prev), keyed(cur));
     // Each record's first vertex on screen, once per frame.
     let (sp, sc) = (screen_points(prev), screen_points(cur));
     let step = |p: usize, c: usize| step(prev, p, &sp, cur, c, &sc);
     let mut pairs = vec![None; cur.records.len()];
-    for (prevs, curs) in by_identity.values() {
+    let mut used = vec![false; prev.records.len()];
+    let (mut prevs, mut curs, mut edges) = (Vec::new(), Vec::new(), Vec::new());
+    let (mut i, mut j) = (0, 0);
+    while i < kp.len() && j < kc.len() {
+        let id = kp[i].0.min(kc[j].0);
+        prevs.clear();
+        while i < kp.len() && kp[i].0 == id {
+            prevs.push(kp[i].1 as usize);
+            i += 1;
+        }
+        curs.clear();
+        while j < kc.len() && kc[j].0 == id {
+            curs.push(kc[j].1 as usize);
+            j += 1;
+        }
         if prevs.is_empty() || curs.is_empty() {
             continue;
         }
         // Usually a group's draws come in the same order and barely move:
         // pair them in order when every such pair stays this close.
-        if prevs.len() == curs.len() {
-            let steps: Option<Vec<f32>> = curs.iter().zip(prevs).map(|(&c, &p)| step(p, c)).collect();
-            if steps.is_some_and(|s| s.iter().all(|&d| d <= IN_ORDER_STEP * IN_ORDER_STEP)) {
-                for (&c, &p) in curs.iter().zip(prevs) {
-                    pairs[c] = Some(p as u32);
-                }
-                continue;
+        if prevs.len() == curs.len() && curs.iter().zip(&prevs).all(|(&c, &p)| step(p, c).is_some_and(|d| d <= IN_ORDER_STEP * IN_ORDER_STEP)) {
+            for (&c, &p) in curs.iter().zip(&prevs) {
+                pairs[c] = Some(p as u32);
             }
+            continue;
         }
         if prevs.len() > MAX_GROUP || curs.len() > MAX_GROUP {
-            for (&c, &p) in curs.iter().zip(prevs) {
+            for (&c, &p) in curs.iter().zip(&prevs) {
                 if step(p, c).is_some() {
                     pairs[c] = Some(p as u32);
                 }
             }
             continue;
         }
-        let mut edges = Vec::new();
-        for &c in curs {
-            for &p in prevs {
+        edges.clear();
+        for &c in &curs {
+            for &p in &prevs {
                 if let Some(d) = step(p, c) {
                     edges.push((d, c, p));
                 }
             }
         }
         edges.sort_by(|a, b| a.0.total_cmp(&b.0));
-        let mut used = vec![false; prev.records.len()];
-        for (_, c, p) in edges {
+        for &(_, c, p) in &edges {
             if pairs[c].is_none() && !used[p] {
                 pairs[c] = Some(p as u32);
                 used[p] = true;
@@ -170,29 +177,38 @@ pub struct Moves {
 }
 
 /// [`Moves`] for `cur` after `prev`, with `pairs` from [`pair`].
+///
+/// A draw whose matrices, projection and viewport did not change is left
+/// out: its vertices are already where every in-between frame puts them.
+/// Draws share a few cameras and many share matrices, so each distinct
+/// camera pair and matrix pair is built once.
 pub fn moves(prev: &Output, cur: &Output, pairs: &[Option<u32>]) -> Moves {
     let mut m = Moves { model: Vec::with_capacity(cur.vertices.len()), ..Default::default() };
     let none = f32::from_bits(NO_MOVE);
     m.model.extend(cur.model.iter().map(|&(p, _)| [p[0], p[1], p[2], none]));
     // Records cover the vertices; anything else stays put.
     m.model.resize(cur.vertices.len(), [0.0, 0.0, 0.0, none]);
+    let mut rec_ids: HashMap<[u32; 27], u32, Fx> = HashMap::default();
+    let mut mat_ids: HashMap<([u32; 12], [u32; 12], u32), u32, Fx> = HashMap::default();
+    let bits = |m: &Mat| -> [u32; 12] { std::array::from_fn(|i| m[i / 4][i % 4].to_bits()) };
+    let mut matched: Vec<(u8, &Mat, &Mat)> = Vec::new();
     let mut slots: Vec<(u8, u32)> = Vec::new();
     for (rc, pair) in cur.records.iter().zip(pairs) {
         let Some(p) = pair else { continue };
         let rp = &prev.records[*p as usize];
-        let rec = m.recs.len() as u32;
-        slots.clear();
+        matched.clear();
+        let mut moving = rp.projection != rc.projection || rp.viewport != rc.viewport;
         for (slot, mc) in &rc.matrices {
             let Some((_, mp)) = rp.matrices.iter().find(|m| m.0 == *slot) else { continue };
-            slots.push((*slot, m.mats.len() as u32));
-            m.mats.push(matrix_pair(mp, mc, rec));
+            moving |= mp != mc;
+            matched.push((*slot, mp, mc));
         }
-        if slots.is_empty() {
+        if !moving || matched.is_empty() {
             continue;
         }
         let (pa, pb, va, vb) = (&rp.projection, &rc.projection, &rp.viewport, &rc.viewport);
         let ortho = if rc.ortho { 1.0 } else { 0.0 };
-        m.recs.push([
+        let entry = [
             [pa[0], pa[1], pa[2], pa[3]],
             [pa[4], pa[5], pb[0], pb[1]],
             [pb[2], pb[3], pb[4], pb[5]],
@@ -200,7 +216,20 @@ pub fn moves(prev: &Output, cur: &Output, pairs: &[Option<u32>]) -> Moves {
             [va[4], va[5], vb[0], vb[1]],
             [vb[2], vb[3], vb[4], vb[5]],
             [rc.screen.offset_x, rc.screen.offset_y, ortho, 0.0],
-        ]);
+        ];
+        let key: [u32; 27] = std::array::from_fn(|i| entry[i / 4][i % 4].to_bits());
+        let rec = *rec_ids.entry(key).or_insert_with(|| {
+            m.recs.push(entry);
+            m.recs.len() as u32 - 1
+        });
+        slots.clear();
+        for &(slot, mp, mc) in &matched {
+            let k = *mat_ids.entry((bits(mp), bits(mc), rec)).or_insert_with(|| {
+                m.mats.push(matrix_pair(mp, mc, rec));
+                m.mats.len() as u32 - 1
+            });
+            slots.push((slot, k));
+        }
         let range = rc.first as usize..(rc.first + rc.count) as usize;
         for (v, &(_, slot)) in m.model[range.clone()].iter_mut().zip(&cur.model[range]) {
             if let Some(&(_, k)) = slots.iter().find(|s| s.0 == slot) {
@@ -209,6 +238,26 @@ pub fn moves(prev: &Output, cur: &Output, pairs: &[Option<u32>]) -> Moves {
         }
     }
     m
+}
+
+/// A small fast hasher for the keys above (bits of floats; no untrusted input).
+type Fx = std::hash::BuildHasherDefault<FxHasher>;
+
+#[derive(Default)]
+struct FxHasher(u64);
+
+impl std::hash::Hasher for FxHasher {
+    fn finish(&self) -> u64 {
+        self.0
+    }
+
+    fn write(&mut self, bytes: &[u8]) {
+        for c in bytes.chunks(8) {
+            let mut b = [0u8; 8];
+            b[..c.len()].copy_from_slice(c);
+            self.0 = (self.0.rotate_left(5) ^ u64::from_le_bytes(b)).wrapping_mul(0x517C_C1B7_2722_0A95);
+        }
+    }
 }
 
 /// One entry of [`Moves::mats`]: [`interpolate_matrix`] split into what the
