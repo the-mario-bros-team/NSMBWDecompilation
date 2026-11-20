@@ -171,7 +171,20 @@ impl Layout {
     /// Reads one vertex from `data` (exactly `self.size` bytes); indexed
     /// attributes come from `arrays` (made for this layout from `mem`).
     pub fn read<'a>(&self, cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram, default_pnmtx: u8, default_texmtx: [u8; 8]) -> RawVertex {
-        let mut v = RawVertex { pnmtx: default_pnmtx, texmtx: default_texmtx, color: [[1.0; 4]; 2], ..Default::default() };
+        let mut v = Self::template(default_pnmtx, default_texmtx);
+        self.read_into(&mut v, cp, data, arrays, mem);
+        v
+    }
+
+    /// A vertex with no attributes read yet: the default matrices, white.
+    pub fn template(default_pnmtx: u8, default_texmtx: [u8; 8]) -> RawVertex {
+        RawVertex { pnmtx: default_pnmtx, texmtx: default_texmtx, color: [[1.0; 4]; 2], ..Default::default() }
+    }
+
+    /// [`Layout::read`] into `v`, which holds [`Layout::template`]: only the
+    /// attributes the vertex has are written. Built on the stack and copied
+    /// out, every vertex stalled on reading back its own fresh stores.
+    pub fn read_into<'a>(&self, v: &mut RawVertex, cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram) {
         let mut cur = Cursor { data, at: 0 };
         if self.pnmtx {
             v.pnmtx = cur.take(1).first().copied().unwrap_or(0) & 0x3F;
@@ -236,7 +249,6 @@ impl Layout {
                 comps(b, n.fmt, n.scale, &mut v.tex[t][..n.count]);
             }
         }
-        v
     }
 }
 

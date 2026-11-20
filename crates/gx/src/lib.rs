@@ -888,8 +888,14 @@ impl Gpu {
         let has_color = [layout.has_color(0), layout.has_color(1)];
         let first = self.batch.raws.len() as u32;
         let arrays = vertex::Arrays::new(&self.cp, &layout, mem);
-        self.batch.raws.reserve(n);
-        self.batch.raws.extend(data.chunks_exact(layout.size.max(1)).take(n).map(|d| layout.read(&self.cp, d, &arrays, mem, pm, tm)));
+        // Each vertex is read straight into its slot, which starts as the
+        // template (defaults); see `Layout::read_into`.
+        let chunks = data.chunks_exact(layout.size.max(1)).take(n);
+        let start = self.batch.raws.len();
+        self.batch.raws.resize(start + chunks.len(), vertex::Layout::template(pm, tm));
+        for (v, d) in self.batch.raws[start..].iter_mut().zip(chunks) {
+            layout.read_into(v, &self.cp, d, &arrays, mem);
+        }
         let n = self.batch.raws.len() as u32 - first;
         let shading = self.shading(mem);
         let shading = match self.batch.shadings.last() {
