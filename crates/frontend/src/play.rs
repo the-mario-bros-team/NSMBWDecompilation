@@ -161,7 +161,6 @@ impl App {
             eprintln!("SYSCONF: {e}");
         }
         self.emu = Some(Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, ..self.opts.emu.clone() }));
-        window.request_redraw();
         self.renderer = Some(renderer);
         self.window = Some(window);
         let now = Instant::now();
@@ -210,9 +209,6 @@ impl App {
             self.present_interpolated()?;
         }
         self.update_title();
-        if let Some(w) = &self.window {
-            w.request_redraw();
-        }
         Ok(())
     }
 
@@ -540,13 +536,23 @@ impl ApplicationHandler for App {
                 }
             }
             WindowEvent::Focused(false) => self.inputs.release_keys(),
-            WindowEvent::RedrawRequested => {
-                if let Err(e) = self.frame(event_loop) {
-                    self.error = Some(e);
-                    event_loop.exit();
-                }
-            }
             _ => {}
+        }
+    }
+
+    /// Frames are driven from here, every turn of the event loop, rather than
+    /// by redraw requests: Windows delivers those as paint messages, which it
+    /// may hold back (every ~9 ms, or far longer, while the window is covered
+    /// or in the background), and that capped the frame rate whatever the
+    /// renderer could do. `frame` paces itself (the next field, or the next
+    /// frame's time).
+    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
+        if self.window.is_none() || self.done {
+            return;
+        }
+        if let Err(e) = self.frame(event_loop) {
+            self.error = Some(e);
+            event_loop.exit();
         }
     }
 
