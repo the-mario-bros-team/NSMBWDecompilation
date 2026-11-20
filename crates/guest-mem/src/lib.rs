@@ -146,10 +146,16 @@ pub struct Mem {
     pages: Box<[u32; 1024]>,
     pub mmio: Box<dyn Mmio>,
     /// Per 4 KiB of `ram`: whether decoded code lives there, and a
-    /// generation bumped by every write to such a page (stores and
+    /// generation bumped by every write to code in such a page (stores and
     /// [`Mem::ram_mut`]), so code caches can tell when to decode again.
     code: Vec<bool>,
     code_gen: Vec<u32>,
+    /// One bit per [`CODE_LINE`] bytes of `ram`: decoded code lives there.
+    /// A write to a code page that touches none of these lines (data next
+    /// to code: the OS globals below the exception vectors, a module's data
+    /// after its code) leaves the page's generation alone. Only the cold
+    /// path reads it; `code` filters first.
+    code_lines: Vec<u64>,
     /// Bumped with any code page's generation: unchanged means no code
     /// anywhere was written (recompiled code checks only this on a call).
     code_epoch: u32,
@@ -159,6 +165,8 @@ pub struct Mem {
 
 /// Granularity of code-write tracking.
 pub const CODE_PAGE_SHIFT: u32 = 12;
+/// Bytes per bit of `Mem::code_lines`.
+const CODE_LINE: usize = 32;
 
 impl Mem {
     pub fn new(mmio: Box<dyn Mmio>) -> Self {
@@ -171,7 +179,8 @@ impl Mem {
         // SAFETY: `buf` owns the memory and lives as long as `self`; the
         // slice never leaves `Mem` with the `'static` lifetime.
         let ram = unsafe { std::slice::from_raw_parts_mut(ptr, size) };
-        Self { ram, buf, pages: page_table(), mmio, code: vec![false; code_pages], code_gen: vec![0; code_pages], code_epoch: 0, flat }
+        let code_lines = vec![0; (size / CODE_LINE).div_ceil(64)];
+        Self { ram, buf, pages: page_table(), mmio, code: vec![false; code_pages], code_gen: vec![0; code_pages], code_lines, code_epoch: 0, flat }
     }
 
     /// Whether guest addresses map straight to host memory ([`Mem::raw_read_u32`] and co.).
@@ -265,18 +274,41 @@ impl Mem {
         // SAFETY: `off + len` lies within `ram`, and `code` has an entry per
         // 4 KiB of it.
         if unsafe { *self.code.get_unchecked(a) | *self.code.get_unchecked(b) } {
-            self.wrote_code(a, b);
+            self.wrote_code(off, len);
         }
     }
 
+    /// `ram[off..off + len]` was written: bump each code page whose code
+    /// lines it touched.
     #[cold]
-    fn wrote_code(&mut self, a: usize, b: usize) {
-        for p in a..=b {
-            if self.code[p] {
+    fn wrote_code(&mut self, off: usize, len: usize) {
+        let end = (off + len.max(1)).min(self.ram.len());
+        if off >= end {
+            return;
+        }
+        let page = 1usize << CODE_PAGE_SHIFT;
+        for p in off >> CODE_PAGE_SHIFT..=(end - 1) >> CODE_PAGE_SHIFT {
+            if self.code[p] && self.has_code_line(off.max(p * page), end.min((p + 1) * page)) {
                 self.code_gen[p] = self.code_gen[p].wrapping_add(1);
                 self.code_epoch = self.code_epoch.wrapping_add(1);
             }
         }
+    }
+
+    /// Whether any byte of `ram[from..to]` (non-empty) is in a code line.
+    fn has_code_line(&self, from: usize, to: usize) -> bool {
+        let (first, last) = (from / CODE_LINE, (to - 1) / CODE_LINE);
+        let mut l = first;
+        while l <= last {
+            let word = self.code_lines[l / 64] >> (l % 64);
+            let n = (64 - l % 64).min(last - l + 1);
+            let mask = if n == 64 { u64::MAX } else { (1 << n) - 1 };
+            if word & mask != 0 {
+                return true;
+            }
+            l += n;
+        }
+        false
     }
 
     /// Marks the `len` bytes at `addr` as code and returns their first and
@@ -285,6 +317,9 @@ impl Mem {
         let Some(Loc::Ram(off)) = locate(addr, len) else { return None };
         let (a, b) = (off >> CODE_PAGE_SHIFT, (off + len.max(1) - 1) >> CODE_PAGE_SHIFT);
         self.code[a..=b].fill(true);
+        for l in off / CODE_LINE..=(off + len.max(1) - 1) / CODE_LINE {
+            self.code_lines[l / 64] |= 1 << (l % 64);
+        }
         Some((a as u32, b as u32))
     }
 
@@ -330,8 +365,7 @@ impl Mem {
         match locate(addr, len)? {
             Loc::Ram(off) => {
                 // Bulk writes (DMA, IOS replies) count as writes to any code there.
-                let (a, b) = (off >> CODE_PAGE_SHIFT, (off + len.max(1) - 1) >> CODE_PAGE_SHIFT);
-                self.wrote_code(a, b.min(self.code.len() - 1));
+                self.wrote_code(off, len);
                 Some(&mut self.ram[off..off + len])
             }
             Loc::Mmio => None,
@@ -450,6 +484,26 @@ mod tests {
         // Two machines do not share memory.
         let mut other = Mem::new(Box::new(NullMmio));
         assert_eq!(other.raw_read_u32(0x8000_1230), 0);
+    }
+
+    #[test]
+    fn only_writes_to_code_lines_count() {
+        let mut m = Mem::new(Box::new(NullMmio));
+        let (p, _) = m.mark_code(0x8000_0100, 8).unwrap();
+        let (g, e) = (m.code_gen(p), m.code_epoch());
+        // Data in the same page, below and above the code's lines.
+        m.write_u32(0x8000_00F8, 1).unwrap();
+        m.write_u32(0x8000_0140, 1).unwrap();
+        m.ram_mut(0x8000_0000, 0x100).unwrap().fill(0);
+        assert_eq!((m.code_gen(p), m.code_epoch()), (g, e));
+        // The code itself, through a mirror, a straddling store and DMA.
+        m.write_u32(0xC000_0104, 1).unwrap();
+        assert_eq!(m.code_gen(p), g + 1);
+        m.write_u64(0x8000_00FC, 1).unwrap();
+        assert_eq!(m.code_gen(p), g + 2);
+        m.ram_mut(0x0000_0000, 0x1000).unwrap()[0] = 1;
+        assert_eq!(m.code_gen(p), g + 3);
+        assert_ne!(m.code_epoch(), e);
     }
 
     #[test]

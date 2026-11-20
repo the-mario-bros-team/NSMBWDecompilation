@@ -795,12 +795,20 @@ fn sext6(v: u32) -> i32 {
     ((v & 0x3F) as i32 ^ 0x20) - 0x20
 }
 
+/// 2^n for a GQR scale (n in -32..=32), built from its bits: the exact
+/// value `powi` gives, without a call (which made every `psq_l` and
+/// `psq_st` spill registers, even for float data, which has no scale).
+#[inline(always)]
+fn pow2(n: i32) -> f64 {
+    f64::from_bits(((1023 + n) as u64) << 52)
+}
+
 /// `psq_l*`: loads one or two values through GQR `i`. A single load sets ps1 = 1.0.
 #[inline(always)]
 fn quantized_load(cpu: &mut Cpu, mem: &mut Mem, ea: u32, i: usize, single: bool) -> Result<[f64; 2], Stop> {
     let gqr = cpu.gqr(i);
     let ty = (gqr >> 16) & 7;
-    let scale = (2.0f64).powi(-sext6(gqr >> 24));
+    let scale = pow2(-sext6(gqr >> 24));
     let size = match ty {
         4 | 6 => 1,
         5 | 7 => 2,
@@ -825,7 +833,7 @@ fn quantized_load(cpu: &mut Cpu, mem: &mut Mem, ea: u32, i: usize, single: bool)
 fn quantized_store(cpu: &mut Cpu, mem: &mut Mem, ea: u32, i: usize, single: bool, v: [f64; 2]) -> R {
     let gqr = cpu.gqr(i);
     let ty = gqr & 7;
-    let scale = (2.0f64).powi(sext6(gqr >> 8));
+    let scale = pow2(sext6(gqr >> 8));
     let size = match ty {
         4 | 6 => 1,
         5 | 7 => 2,

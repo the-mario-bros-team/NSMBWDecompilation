@@ -66,6 +66,8 @@ pub type SliceEnd = Box<dyn FnMut(&mut Cpu, &mut Mem) -> Option<u64>>;
 
 /// Calls deeper than this unwind to the dispatcher (bounds the host stack).
 const MAX_DEPTH: u32 = 400;
+/// Entries of [`Rt`]'s lookup cache (a power of two).
+const CACHE: usize = 1 << 13;
 /// `checked` value for a function never checked.
 const UNCHECKED: u32 = u32::MAX;
 
@@ -83,6 +85,11 @@ pub struct Rt {
     pages: Vec<Option<(u32, u32)>>,
     /// Entry address -> function index + 1, per 4 KiB of MEM1.
     table: Vec<Option<Box<[u32; 1024]>>>,
+    /// Recent lookups (address, function), direct-mapped by address: a hit
+    /// is one load from a small table instead of two from large ones (the
+    /// page of `table`, then `fns`), which miss the cache. The dispatcher
+    /// and indirect calls (`bctrl`, virtual functions) look up all the time.
+    cache: Box<[(u32, Option<GuestFn>)]>,
     /// Functions found changed in memory (not run until they match again).
     pub changed: u64,
     slice_end: Option<SliceEnd>,
@@ -112,7 +119,10 @@ impl Rt {
                 table[page].get_or_insert_with(|| Box::new([0; 1024]))[((e >> 2) & 1023) as usize] = i as u32 + 1;
             }
         }
-        Ok(Self { end: 0, depth: 0, fns, checked: vec![UNCHECKED; fns.len()], intact: vec![false; fns.len()], gen_sum: vec![0; fns.len()], pages, table, changed: 0, slice_end: None })
+        // (0, None) is right for address 0 (no function), the only one that
+        // could match an untouched entry: it maps to entry 0.
+        let cache = vec![(0, None); CACHE].into_boxed_slice();
+        Ok(Self { end: 0, depth: 0, fns, checked: vec![UNCHECKED; fns.len()], intact: vec![false; fns.len()], gen_sum: vec![0; fns.len()], pages, table, cache, changed: 0, slice_end: None })
     }
 
     /// What ends a slice: advance the hardware and deliver interrupts, then
@@ -145,7 +155,22 @@ impl Rt {
 
     /// The function with an entry at `pc`.
     #[inline(always)]
-    pub fn lookup(&self, pc: u32) -> Option<GuestFn> {
+    pub fn lookup(&mut self, pc: u32) -> Option<GuestFn> {
+        let (at, f) = self.cache[(pc >> 2) as usize & (CACHE - 1)];
+        if at == pc {
+            return f;
+        }
+        self.lookup_miss(pc)
+    }
+
+    #[inline(never)]
+    fn lookup_miss(&mut self, pc: u32) -> Option<GuestFn> {
+        let f = self.find(pc);
+        self.cache[(pc >> 2) as usize & (CACHE - 1)] = (pc, f);
+        f
+    }
+
+    fn find(&self, pc: u32) -> Option<GuestFn> {
         let page = (pc.wrapping_sub(TABLE_BASE) >> 12) as usize;
         let i = self.table.get(page)?.as_ref()?[((pc >> 2) & 1023) as usize];
         (i != 0).then(|| self.fns[i as usize - 1].f)
