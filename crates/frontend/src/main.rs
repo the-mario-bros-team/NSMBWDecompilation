@@ -20,7 +20,7 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game <folder>] [--frames <n>] [--screenshot <file.png>]
-                   [--fps <60|90|120|144|165|180|240|300|360|unlocked>] [--vsync | --no-vsync] [--fullscreen] [--scale <n|native>] [--unpaced]
+                   [--fps <30|60|90|120|144|165|180|240|300|360|unlocked>] [--vsync | --no-vsync] [--fullscreen] [--scale <n|native>] [--unpaced]
                    [--press <frame>:<buttons>[:<frames>]]... [--shot <frame>:<file.png>]... [--trace-ios] [--profile-guest]
        nsmbw-port --replay <log.dff> [--frame <n>] [--scale <n>] [--screenshot <png>] [--compare <png>] [--min-psnr <dB>]
   (no mode)          run the game in a window (display settings from settings.toml; F1 lists the hotkeys)
@@ -31,7 +31,8 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
   --game <folder>    extracted disc (holds sys/ and files/); default: game_dir in port.toml, else ./game
   --frames <n>       exit after presenting n frames and print the Vulkan validation summary
   --screenshot <png> with --frames: save the last frame's XFB
-  --fps <rate>       frames shown per second; above 60, in-between frames are interpolated (the game still runs at 59.94)
+  --fps <rate>       frames shown per second; 30 shows every other field; above 60, in-between frames are interpolated
+                     (the game always runs at 59.94)
   --vsync, --no-vsync  wait for the display's refresh, or not
   --fullscreen       borderless fullscreen (F11 toggles)
   --scale <n|native> EFB resolution: 1..8 times 480 lines, or the window's height

@@ -112,9 +112,14 @@ fn on(b: bool) -> &'static str {
 }
 
 impl App {
-    /// 60 fps, or unpaced runs: show every field, no interpolation.
+    /// 60 or 30 fps, or unpaced runs: no interpolation.
     fn native(&self) -> bool {
-        self.settings.fps == 60 || self.opts.unpaced
+        self.settings.fps == 60 || self.settings.fps == 30 || self.opts.unpaced
+    }
+
+    /// Every other field is not shown (30 fps, or the battery saver).
+    fn half_rate(&self) -> bool {
+        (self.settings.fps == 30 || self.settings.battery_saver) && !self.opts.unpaced
     }
 
     fn start(&mut self, event_loop: &ActiveEventLoop) -> Result<(), String> {
@@ -214,10 +219,10 @@ impl App {
         self.games += 1;
         self.title_games += 1;
         let last = self.opts.max_frames.is_some_and(|m| self.games >= m);
-        // Battery saver: every other field is not drawn at all (unless it
-        // copies the EFB to a texture something later may sample).
+        // 30 fps (or the battery saver): every other field is not shown,
+        // and only partly drawn (below), unless its EFB is read back.
         let copies = f.out.cmds.iter().any(|c| matches!(c, gx::Cmd::CopyTex(_)));
-        let skip = self.settings.battery_saver && f.index % 2 == 1 && !copies && !last;
+        let skip = self.half_rate() && f.index % 2 == 1 && !last && !f.wants_efb;
         // Interpolating, a new field is only shown by the in-between frames,
         // which draw it again: unless its EFB is read back (copies to RAM, CPU
         // peeks, a screenshot), it only needs its textures uploaded and its
@@ -245,8 +250,24 @@ impl App {
         renderer.overlay = rects;
         let started = Instant::now();
         if skip {
-            let uploads = gx::Output { new_textures: std::mem::take(&mut f.out.new_textures), ..Default::default() };
-            renderer.render(&uploads, &[], true, f.xfb, 0, 0).map_err(|e| e.to_string())?;
+            // Its draws up to its last EFB-to-texture copy still run (later
+            // fields sample the copies: light textures, every field in a
+            // course), and its clears and copies after that (the next field
+            // finds the EFB cleared as the game left it); the draws after
+            // the last copy, the bulk of the scene, do not. It used to be
+            // skipped only without copies, which in practice was never.
+            let cmds = std::mem::take(&mut f.out.cmds);
+            let last_copy = cmds.iter().rposition(|c| matches!(c, gx::Cmd::CopyTex(_)));
+            f.out.cmds = cmds.iter().enumerate().filter(|&(i, c)| last_copy.is_some_and(|l| i <= l) || !matches!(c, gx::Cmd::Draw(_))).map(|(_, c)| *c).collect();
+            // Only the vertices those draws use go to the GPU.
+            let used = f.out.cmds.iter().filter_map(|c| match c {
+                gx::Cmd::Draw(d) => f.out.indices.get(d.first as usize..(d.first + d.count) as usize)?.iter().max().map(|&m| m as usize + 1),
+                _ => None,
+            });
+            let used = used.max().unwrap_or(0).min(f.out.vertices.len());
+            let r = renderer.render(&f.out, &f.out.vertices[..used], true, f.xfb, 0, 0);
+            f.out.cmds = cmds;
+            r.map_err(|e| e.to_string())?;
         } else if prepare_only {
             // The copies make their target textures (their contents come
             // from the in-between frames, which run them again).

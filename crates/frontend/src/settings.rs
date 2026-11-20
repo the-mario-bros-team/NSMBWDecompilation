@@ -5,9 +5,10 @@
 
 use std::path::Path;
 
-/// Frame-rate choices: 60 is the game's own rate; the others draw
-/// interpolated frames in between; 0 is unlocked.
-pub const FPS_CHOICES: [u32; 10] = [60, 90, 120, 144, 165, 180, 240, 300, 360, 0];
+/// Frame-rate choices: 60 is the game's own rate; 30 shows every other
+/// field (as the battery saver), the game still running at 60; the others
+/// draw interpolated frames in between; 0 is unlocked.
+pub const FPS_CHOICES: [u32; 11] = [30, 60, 90, 120, 144, 165, 180, 240, 300, 360, 0];
 
 pub const FILE: &str = "settings.toml";
 
@@ -41,12 +42,13 @@ impl Default for Settings {
 pub fn fps_label(fps: u32) -> String {
     match fps {
         0 => "UNLOCKED".into(),
+        30 => "30 (HALF)".into(),
         60 => "60 (NATIVE)".into(),
         n => format!("{n}"),
     }
 }
 
-/// Parses `60`..`360` or `unlocked` into one of [`FPS_CHOICES`].
+/// Parses `30`..`360` or `unlocked` into one of [`FPS_CHOICES`].
 pub fn parse_fps(s: &str) -> Option<u32> {
     let v = if s.eq_ignore_ascii_case("unlocked") { 0 } else { s.parse().ok()? };
     FPS_CHOICES.contains(&v).then_some(v)
@@ -85,7 +87,7 @@ impl Settings {
         let scale = if self.scale == 0 { "\"native\"".to_string() } else { self.scale.to_string() };
         let text = format!(
             "# NSMBW port display settings (hotkeys change them while playing; see F1).\n\
-             # fps: 60, 90, 120, 144, 165, 180, 240, 300, 360 or \"unlocked\"; above 60 draws interpolated frames.\n\
+             # fps: 30, 60, 90, 120, 144, 165, 180, 240, 300, 360 or \"unlocked\"; 30 shows every other field; above 60 draws interpolated frames.\n\
              fps = {fps}\nvsync = {}\nfullscreen = {}\n\
              # EFB resolution: 1..8 times 480 lines, or \"native\" for the window's height (next start).\n\
              scale = {scale}\n\
@@ -135,7 +137,10 @@ mod tests {
     fn fps_steps_wrap() {
         let mut s = Settings::default();
         s.step_fps(false);
+        assert_eq!(s.fps, 30);
+        s.step_fps(false);
         assert_eq!(s.fps, 0);
+        s.step_fps(true);
         s.step_fps(true);
         s.step_fps(true);
         assert_eq!(s.fps, 90);
