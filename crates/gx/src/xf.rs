@@ -272,103 +272,158 @@ impl Xf {
 
     /// Transforms one loaded vertex of a draw set up by [`Xf::setup`].
     pub fn transform(&self, v: &RawVertex, d: &DrawSetup) -> Vertex {
-        let (screen, has_color) = (d.screen, d.has_color);
-        let p = [v.pos[0], v.pos[1], v.pos[2], 1.0];
-        let pm = v.pnmtx as usize;
-        let world: [f32; 3] = std::array::from_fn(|r| {
-            let row = self.row(pm, r);
-            row[0] * p[0] + row[1] * p[1] + row[2] * p[2] + row[3]
-        });
-        let nb = 0x400 + (pm & 31) * 3;
-        let nrm_row = |r: usize| -> [f32; 3] { std::array::from_fn(|c| f(self.mem[(nb + r * 3 + c) & 0x7FF])) };
-        let n_rows = if d.need_nrm_mtx { [nrm_row(0), nrm_row(1), nrm_row(2)] } else { [[0.0; 3]; 3] };
-        let xform_n = |n: [f32; 3]| -> [f32; 3] { std::array::from_fn(|r| dot3(n_rows[r], n)) };
-        let normal = if d.need_normal { normalize(xform_n(v.nbt[0])) } else { [0.0; 3] };
-
-        let pos = project(world, &d.projection, d.ortho, &d.viewport, screen);
-
-        // Lighting channels.
-        let mut color = [[0.0f32; 4]; 2];
-        for c in 0..d.chans {
-            let vc = if has_color[c] { v.color[c] } else { [1.0; 4] };
-            let [cc, ac] = d.ctl[c];
-            let rgb = light_channel(d, cc, vc, c, world, normal);
-            let a = if ac == cc { rgb } else { light_channel(d, ac, vc, c, world, normal) };
-            color[c] = [rgb[0], rgb[1], rgb[2], a[3]];
+        let mut out = std::mem::MaybeUninit::<Vertex>::uninit();
+        // SAFETY: `transform_one` writes every field of `out`.
+        unsafe {
+            transform_one(self.words(), v, d, out.as_mut_ptr());
+            out.assume_init()
         }
-
-        // Texture coordinate generation.
-        let (gens, dual) = (d.gens, d.dual);
-        let mut tex = [[0.0f32; 3]; 8];
-        for i in 0..gens {
-            let info = d.gen_info[i];
-            let stq = (info >> 1) & 1 != 0;
-            let ab11 = (info >> 2) & 1 == 0;
-            let kind = (info >> 4) & 7;
-            let src_row = (info >> 7) & 31;
-            let mut src = match src_row {
-                0 => [v.pos[0], v.pos[1], v.pos[2], 1.0],
-                1 => [v.nbt[0][0], v.nbt[0][1], v.nbt[0][2], 1.0],
-                2 => [color[0][0], color[0][1], color[0][2], 1.0],
-                3 => [v.nbt[1][0], v.nbt[1][1], v.nbt[1][2], 1.0],
-                4 => [v.nbt[2][0], v.nbt[2][1], v.nbt[2][2], 1.0],
-                5..=12 => {
-                    let t = v.tex[(src_row - 5) as usize];
-                    [t[0], t[1], 1.0, 1.0]
-                }
-                _ => [0.0, 0.0, 1.0, 1.0],
-            };
-            if ab11 {
-                src[2] = 1.0;
-            }
-            let mut c = match kind {
-                // Colour texgens take s and t from the lit colour.
-                2 => [color[0][0], color[0][1], 1.0],
-                3 => [color[1][0], color[1][1], 1.0],
-                // Emboss: the source texgen's coordinates moved by the light
-                // direction in the surface's tangent space.
-                1 => {
-                    let s = ((info >> 12) & 7) as usize;
-                    let light = ((info >> 15) & 7) as usize;
-                    let base = if s < i { tex[s] } else { [0.0, 0.0, 1.0] };
-                    let b = 0x600 + light * 16;
-                    let lpos: [f32; 3] = std::array::from_fn(|k| f(self.mem[b + 10 + k]));
-                    let ldir = normalize(sub3(lpos, world));
-                    let tangent = normalize(xform_n(v.nbt[1]));
-                    let binormal = normalize(xform_n(v.nbt[2]));
-                    [base[0] + dot3(ldir, tangent), base[1] + dot3(ldir, binormal), base[2]]
-                }
-                _ => {
-                    let m = v.texmtx[i] as usize;
-                    let d = |r: usize| {
-                        let row = self.row(m, r);
-                        row[0] * src[0] + row[1] * src[1] + row[2] * src[2] + row[3] * src[3]
-                    };
-                    [d(0), d(1), if stq { d(2) } else { 1.0 }]
-                }
-            };
-            if dual && kind == 0 {
-                let (norm, rows) = &d.post[i];
-                if *norm {
-                    c = normalize(c);
-                }
-                let prow = |r: usize| -> f32 {
-                    let w = rows[r];
-                    w[0] * c[0] + w[1] * c[1] + w[2] * c[2] + w[3]
-                };
-                c = [prow(0), prow(1), if stq { prow(2) } else { 1.0 }];
-            }
-            if c[2] == 0.0 {
-                c[2] = 1.0;
-            }
-            tex[i] = c;
-        }
-        Vertex { pos, color, tex }
     }
 
+    /// Transforms a draw's vertices and appends them to `out`, each written
+    /// in place. Built on the stack and copied out, a vertex's texture
+    /// coordinates (stored a float at a time) were read back with wide loads
+    /// that cannot take their data from those stores, and every vertex paid
+    /// a call's prologue: about 80 ns a vertex.
+    pub fn transform_into(&self, raws: &[RawVertex], d: &DrawSetup, out: &mut Vec<Vertex>) {
+        let mem = self.words();
+        out.reserve(raws.len());
+        let start = out.len();
+        for (v, slot) in raws.iter().zip(out.spare_capacity_mut()) {
+            // SAFETY: `transform_one` writes every field of the slot.
+            unsafe { transform_one(mem, v, d, slot.as_mut_ptr()) };
+        }
+        // SAFETY: the first `raws.len()` spare slots were written above.
+        unsafe { out.set_len(start + raws.len()) };
+    }
+
+    /// XF memory as a fixed-size array, so masked indices need no bounds
+    /// checks.
+    fn words(&self) -> &[u32; 0x800] {
+        self.mem.as_slice().try_into().expect("XF memory is 0x800 words")
+    }
 }
 
-/// One channel control word (colour or alpha) for channel `c`.
+/// Row `r` of the matrix at row index `idx` (see [`Xf::row`]).
+#[inline(always)]
+fn row_of(mem: &[u32; 0x800], idx: usize, r: usize) -> [f32; 4] {
+    let b = (idx * 4 + r * 4) & 0xFF;
+    std::array::from_fn(|c| f(mem[(b + c) & 0x3FF]))
+}
+
+/// [`Xf::transform`] into `out`, writing every field.
+///
+/// # Safety
+/// `out` must be valid for writes of a [`Vertex`].
+#[inline(always)]
+unsafe fn transform_one(mem: &[u32; 0x800], v: &RawVertex, d: &DrawSetup, out: *mut Vertex) {
+    let (screen, has_color) = (d.screen, d.has_color);
+    let p = [v.pos[0], v.pos[1], v.pos[2], 1.0];
+    let pm = v.pnmtx as usize;
+    let world: [f32; 3] = std::array::from_fn(|r| {
+        let row = row_of(mem, pm, r);
+        row[0] * p[0] + row[1] * p[1] + row[2] * p[2] + row[3]
+    });
+    let nb = 0x400 + (pm & 31) * 3;
+    let nrm_row = |r: usize| -> [f32; 3] { std::array::from_fn(|c| f(mem[(nb + r * 3 + c) & 0x7FF])) };
+    let n_rows = if d.need_nrm_mtx { [nrm_row(0), nrm_row(1), nrm_row(2)] } else { [[0.0; 3]; 3] };
+    let xform_n = |n: [f32; 3]| -> [f32; 3] { std::array::from_fn(|r| dot3(n_rows[r], n)) };
+    let normal = if d.need_normal { normalize(xform_n(v.nbt[0])) } else { [0.0; 3] };
+
+    let pos = project(world, &d.projection, d.ortho, &d.viewport, screen);
+
+    // Lighting channels.
+    let mut color = [[0.0f32; 4]; 2];
+    for c in 0..d.chans {
+        let vc = if has_color[c] { v.color[c] } else { [1.0; 4] };
+        let [cc, ac] = d.ctl[c];
+        let rgb = light_channel(d, cc, vc, c, world, normal);
+        let a = if ac == cc { rgb } else { light_channel(d, ac, vc, c, world, normal) };
+        color[c] = [rgb[0], rgb[1], rgb[2], a[3]];
+    }
+
+    // Texture coordinate generation.
+    let (gens, dual) = (d.gens, d.dual);
+    // Written in place, entry by entry; emboss reads earlier entries back.
+    // SAFETY (all uses): `out` is valid for writes, and entries are read
+    // only after being written.
+    let tex = unsafe { std::ptr::addr_of_mut!((*out).tex) }.cast::<[f32; 3]>();
+    for i in 0..gens {
+        let info = d.gen_info[i];
+        let stq = (info >> 1) & 1 != 0;
+        let ab11 = (info >> 2) & 1 == 0;
+        let kind = (info >> 4) & 7;
+        let src_row = (info >> 7) & 31;
+        let mut src = match src_row {
+            0 => [v.pos[0], v.pos[1], v.pos[2], 1.0],
+            1 => [v.nbt[0][0], v.nbt[0][1], v.nbt[0][2], 1.0],
+            2 => [color[0][0], color[0][1], color[0][2], 1.0],
+            3 => [v.nbt[1][0], v.nbt[1][1], v.nbt[1][2], 1.0],
+            4 => [v.nbt[2][0], v.nbt[2][1], v.nbt[2][2], 1.0],
+            5..=12 => {
+                let t = v.tex[(src_row - 5) as usize];
+                [t[0], t[1], 1.0, 1.0]
+            }
+            _ => [0.0, 0.0, 1.0, 1.0],
+        };
+        if ab11 {
+            src[2] = 1.0;
+        }
+        let mut c = match kind {
+            // Colour texgens take s and t from the lit colour.
+            2 => [color[0][0], color[0][1], 1.0],
+            3 => [color[1][0], color[1][1], 1.0],
+            // Emboss: the source texgen's coordinates moved by the light
+            // direction in the surface's tangent space.
+            1 => {
+                let s = ((info >> 12) & 7) as usize;
+                let light = ((info >> 15) & 7) as usize;
+                let base = if s < i { unsafe { tex.add(s).read() } } else { [0.0, 0.0, 1.0] };
+                let b = 0x600 + light * 16;
+                let lpos: [f32; 3] = std::array::from_fn(|k| f(mem[b + 10 + k]));
+                let ldir = normalize(sub3(lpos, world));
+                let tangent = normalize(xform_n(v.nbt[1]));
+                let binormal = normalize(xform_n(v.nbt[2]));
+                [base[0] + dot3(ldir, tangent), base[1] + dot3(ldir, binormal), base[2]]
+            }
+            _ => {
+                let m = v.texmtx[i] as usize;
+                let d = |r: usize| {
+                    let row = row_of(mem, m, r);
+                    row[0] * src[0] + row[1] * src[1] + row[2] * src[2] + row[3] * src[3]
+                };
+                [d(0), d(1), if stq { d(2) } else { 1.0 }]
+            }
+        };
+        if dual && kind == 0 {
+            let (norm, rows) = &d.post[i];
+            if *norm {
+                c = normalize(c);
+            }
+            let prow = |r: usize| -> f32 {
+                let w = rows[r];
+                w[0] * c[0] + w[1] * c[1] + w[2] * c[2] + w[3]
+            };
+            c = [prow(0), prow(1), if stq { prow(2) } else { 1.0 }];
+        }
+        if c[2] == 0.0 {
+            c[2] = 1.0;
+        }
+        unsafe { tex.add(i).write(c) };
+    }
+    for i in gens..8 {
+        unsafe { tex.add(i).write([0.0; 3]) };
+    }
+    unsafe {
+        std::ptr::addr_of_mut!((*out).pos).write(pos);
+        std::ptr::addr_of_mut!((*out).color).write(color);
+    }
+}
+
+/// One channel control word (colour or alpha) for channel `c`. Inlined into
+/// the vertex loop: as a call, made once or twice a vertex, it saved and
+/// restored eight vector registers each time.
+#[inline(always)]
 fn light_channel(d: &DrawSetup, ctl: u32, vertex: [f32; 4], c: usize, pos: [f32; 3], normal: [f32; 3]) -> [f32; 4] {
     let mat = if ctl & 1 != 0 { vertex } else { d.mat[c] };
     if ctl & 2 == 0 {

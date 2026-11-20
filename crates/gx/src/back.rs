@@ -158,11 +158,10 @@ impl Back {
         let base = self.out.vertices.len() as u32;
         verts.clear();
         if fixed {
-            verts.extend(raw.iter().map(|r| self.xf.transform(r, setup)));
+            self.xf.transform_into(raw, setup, &mut verts);
         } else {
             // Triangles keep their vertices as they are: straight to the output.
-            let xf = &self.xf;
-            self.out.vertices.extend(raw.iter().map(|r| xf.transform(r, setup)));
+            self.xf.transform_into(raw, setup, &mut self.out.vertices);
         }
         model.clear();
         if self.records {
