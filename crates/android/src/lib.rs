@@ -164,7 +164,13 @@ impl Render {
         if let Err(e) = set_sysconf(Path::new("saves/nand"), self.cfg.widescreen, self.cfg.language) {
             eprintln!("SYSCONF: {e}");
         }
-        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio: true, ..EmuOptions::default() });
+        // For silent test runs: a file named `no-audio` in the app's files
+        // (`adb shell run-as com.wither.nsmbwport touch files/no-audio`).
+        let audio = !Path::new("no-audio").exists();
+        if !audio {
+            println!("sound off (files/no-audio)");
+        }
+        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, ..EmuOptions::default() });
         let _ = emu.to_emu.send(ToEmu::Interpolate(false));
         self.emu = Some(emu);
         Ok(())

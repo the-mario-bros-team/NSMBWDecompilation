@@ -1908,6 +1908,15 @@ adb shell rm -r /data/local/tmp/nsmbw-game
 (From Git Bash, set `MSYS_NO_PATHCONV=1` first.) The game needs `sys/`,
 `files/` and `tmd.bin`, which the import checks for.
 
+For silent test runs, a file named `no-audio` in the app's files starts
+the game without sound (as `--no-audio` does on the PC); remove it to
+hear the game again:
+
+```
+adb shell run-as com.wither.nsmbwport touch files/no-audio
+adb shell run-as com.wither.nsmbwport rm files/no-audio
+```
+
 **Checked** (2026-11-20) on WitherBlitz's Galaxy SM-S948U (Android 16,
 Snapdragon 8 Elite Gen 5, Adreno 840, 3120x1440 at 120 Hz), debug APK,
 release `libnsmbw.so`, interpreter only, EFB 1x, V-Sync on:
