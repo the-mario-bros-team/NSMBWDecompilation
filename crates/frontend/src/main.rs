@@ -59,6 +59,8 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
   --wav <file>       also write the sound the game plays (16-bit stereo, 32 kHz) to a WAV file
   --no-audio         no sound output (unpaced runs never play sound)
   --interpreter      do not run recompiled code (crates/game-recomp), only the interpreter
+  --headless         with --frames: no window or renderer (for checks such as --hash-every): runs the same
+                     fields as a windowed run, without input from the host or anything the renderer sends back
   --code-profile <file>  at exit, write every guest address a decoded block started at (input for ppc-recomp)
   flags override settings.toml for this run only";
 
@@ -94,6 +96,7 @@ struct Args {
     no_audio: bool,
     code_profile: Option<PathBuf>,
     interpreter: bool,
+    headless: bool,
 }
 
 /// `[p<n>:]<frame>:<buttons>[:<frames>]`
@@ -122,7 +125,7 @@ fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &st
 
 fn parse_args() -> Result<Args, String> {
     let settings = settings::Settings::load(Path::new(settings::FILE));
-    let mut args = Args { check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false };
+    let mut args = Args { check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -155,6 +158,7 @@ fn parse_args() -> Result<Args, String> {
             "--wav" => args.wav = Some(it.next().ok_or("--wav needs a file")?.into()),
             "--no-audio" => args.no_audio = true,
             "--interpreter" => args.interpreter = true,
+            "--headless" => args.headless = true,
             "--code-profile" => args.code_profile = Some(it.next().ok_or("--code-profile needs a file")?.into()),
             "--press" => args.script.push(parse_press(&it.next().ok_or("--press needs <frame>:<buttons>")?)?),
             "--press-file" => {
@@ -212,6 +216,9 @@ fn parse_args() -> Result<Args, String> {
     }
     if args.screenshot.is_some() && args.frames.is_none() && args.replay.is_none() {
         return Err("--screenshot needs --frames".into());
+    }
+    if args.headless && (args.frames.is_none() || args.screenshot.is_some() || !args.shots.is_empty()) {
+        return Err("--headless needs --frames, and draws no screenshots".into());
     }
     Ok(args)
 }
@@ -271,7 +278,27 @@ fn main() -> ExitCode {
         return if ok { ExitCode::SUCCESS } else { ExitCode::FAILURE };
     }
 
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None } };
+    if args.headless {
+        // As a window would, before the game boots: the game reads its
+        // aspect ratio from SYSCONF once.
+        if let Err(e) = hle_ios::nand::set_widescreen(Path::new("saves/nand"), opts.settings.widescreen) {
+            eprintln!("SYSCONF: {e}");
+        }
+        win::tune_process();
+        let emu = emu::EmuOptions { stop_after: opts.max_frames, ..opts.emu };
+        return match emu::run_headless(opts.game, emu) {
+            Ok((totals, fields)) => {
+                play::report(&totals);
+                println!("{fields} game frames, headless");
+                ExitCode::SUCCESS
+            }
+            Err(e) => {
+                eprintln!("error: {e}");
+                ExitCode::FAILURE
+            }
+        };
+    }
     match play::run(opts) {
         Ok((games, presented)) => {
             let errors = vk_render::validation_errors();

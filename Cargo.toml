@@ -19,6 +19,15 @@ panic = "abort"
 # module (21 minutes on one thread); thin LTO links it in parallel.
 lto = "thin"
 
+# Release without cross-crate LTO, for checks that only need the same
+# results (the `--hash-every` script): after a change outside guest-cpu,
+# guest-mem and the generated code it rebuilds in seconds instead of
+# minutes, but runs about a third slower. Never measure speed with it.
+# `cargo build --profile quick -p frontend` (output in target/quick).
+[profile.quick]
+inherits = "release"
+lto = false
+
 # Release plus debug info, for sampling profilers: `cargo build --profile profiling -p frontend`.
 [profile.profiling]
 inherits = "release"

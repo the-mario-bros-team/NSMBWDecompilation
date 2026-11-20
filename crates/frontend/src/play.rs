@@ -526,29 +526,33 @@ impl ApplicationHandler for App {
 
     fn exiting(&mut self, _: &ActiveEventLoop) {
         if let Some(emu) = &mut self.emu {
-            let t = emu.stop();
-            let secs = t.cpu_time.as_secs_f64();
-            println!("guest: {} instructions in {secs:.2}s of host time ({:.1} M/s)", t.steps, t.steps as f64 / secs.max(1e-9) / 1e6);
-            if !t.gx_wait.is_zero() {
-                println!("of which {:.2}s waiting for the GX thread", t.gx_wait.as_secs_f64());
-            }
-            if !t.output_wait.is_zero() {
-                println!("and {:.2}s more waiting for the GX thread's output at the ends of fields", t.output_wait.as_secs_f64());
-            }
-            if !t.thread_cpu.is_zero() {
-                println!("game thread: {:.2}s of CPU time", t.thread_cpu.as_secs_f64());
-            }
-            if t.recomp_steps > 0 {
-                println!("recompiled code ran {:.2}% of them ({} functions found changed in memory)", 100.0 * t.recomp_steps as f64 / t.steps.max(1) as f64, t.recomp_changed);
-            }
-            if t.audio_dropouts > 0 {
-                println!("audio: {} dropouts (the game fell behind)", t.audio_dropouts);
-            }
-            if t.light_texture_calls > 0 {
-                println!("light textures: {} of {} redraws skipped (nothing they read changed)", t.light_texture_skips, t.light_texture_calls);
-            }
+            report(&emu.stop());
         }
         self.renderer = None;
+    }
+}
+
+/// The exit report: guest speed, waits, recompiled share, light textures.
+pub fn report(t: &crate::emu::Totals) {
+    let secs = t.cpu_time.as_secs_f64();
+    println!("guest: {} instructions in {secs:.2}s of host time ({:.1} M/s)", t.steps, t.steps as f64 / secs.max(1e-9) / 1e6);
+    if !t.gx_wait.is_zero() {
+        println!("of which {:.2}s waiting for the GX thread", t.gx_wait.as_secs_f64());
+    }
+    if !t.output_wait.is_zero() {
+        println!("and {:.2}s more waiting for the GX thread's output at the ends of fields", t.output_wait.as_secs_f64());
+    }
+    if !t.thread_cpu.is_zero() {
+        println!("game thread: {:.2}s of CPU time", t.thread_cpu.as_secs_f64());
+    }
+    if t.recomp_steps > 0 {
+        println!("recompiled code ran {:.2}% of them ({} functions found changed in memory)", 100.0 * t.recomp_steps as f64 / t.steps.max(1) as f64, t.recomp_changed);
+    }
+    if t.audio_dropouts > 0 {
+        println!("audio: {} dropouts (the game fell behind)", t.audio_dropouts);
+    }
+    if t.light_texture_calls > 0 {
+        println!("light textures: {} of {} redraws skipped (nothing they read changed)", t.light_texture_skips, t.light_texture_calls);
     }
 }
 

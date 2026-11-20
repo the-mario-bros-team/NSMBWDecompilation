@@ -227,6 +227,10 @@ pub struct EmuOptions {
     pub interpreter: bool,
     /// Play sound on the default output device (paced runs only).
     pub audio: bool,
+    /// Stop by itself after this many fields and one more (`--headless`
+    /// with `--frames`): a windowed `--frames` run gets through the same
+    /// fields, the last while the window closes.
+    pub stop_after: Option<u64>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -287,7 +291,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -389,12 +393,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         println!("loaded {} at field {index}", path.display());
     }
+    let last_field = stop_after.map(|n| index + n);
     let mut due = Instant::now() + FIELD;
     let mut peeks = sys.hw.borrow().efb_peeks;
     // Wii Remote 1 is on from the start, as when the game is launched with it.
     let mut live = [Input::default(); REMOTES];
     live[0].connected = true;
-    while !stop.load(Ordering::Relaxed) {
+    while !stop.load(Ordering::Relaxed) && last_field.is_none_or(|l| index <= l) {
         while let Ok(msg) = to_emu.try_recv() {
             if no_feedback && matches!(msg, ToEmu::Writebacks(_) | ToEmu::Efb(_)) {
                 continue;
@@ -535,6 +540,34 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     }
     totals.thread_cpu = crate::win::thread_cpu_time() - cpu_at_start;
     totals
+}
+
+/// Runs the game thread with no window or renderer (`--headless`) until it
+/// stops by itself (`opts.stop_after`), dropping each field's output.
+/// Nothing comes back from a renderer (EFB copies, EFB snapshots for CPU
+/// peeks) and no host input arrives, so a run depends on its options only.
+/// Returns the totals and the fields run.
+pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), String> {
+    let mut emu = Emu::spawn(game, opts);
+    // As a window at 60 fps (no frame interpolation) asks for.
+    let _ = emu.to_emu.send(ToEmu::Interpolate(false));
+    let mut fields = 0;
+    let mut error = None;
+    // Ends when the game thread stops and drops its sender.
+    for f in emu.frames.iter() {
+        match f {
+            Ok(f) => {
+                fields += 1;
+                let _ = emu.to_emu.send(ToEmu::Recycle(Box::new(f.out)));
+            }
+            Err(e) => {
+                error = Some(e);
+                break;
+            }
+        }
+    }
+    let totals = emu.stop();
+    error.map_or(Ok((totals, fields)), Err)
 }
 
 impl Emu {
