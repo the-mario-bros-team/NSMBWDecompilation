@@ -18,6 +18,10 @@ use vk_render::{EfbSnapshot, Writeback};
 
 /// One NTSC field.
 pub const FIELD: Duration = Duration::from_nanos(1_000_000_000 * 1001 / 60_000);
+/// How late (paced) a field may finish and still have the time made up by
+/// the next fields skipping their sleep; later than this, the schedule
+/// restarts from now (PORT_PLAN 11.6).
+const CATCH_UP: Duration = Duration::from_nanos(2 * 1_000_000_000 * 1001 / 60_000);
 /// Guest cycles per field; a field that runs 4x longer without a retrace
 /// (video interrupts off) is cut short so the window stays responsive.
 const FIELD_CYCLES: u64 = 729_000_000 * 1001 / 60_000;
@@ -516,11 +520,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let now = Instant::now();
             if due > now {
                 std::thread::sleep(due - now);
-            } else if now - due > FIELD / 2 {
-                // Behind (a slow field): carry on from now rather than run
-                // the next fields quickly to catch up, so the game never goes
-                // faster than 100%. Smaller lateness is sleep overshoot,
-                // which the schedule absorbs.
+            } else if now - due > CATCH_UP {
+                // Far behind (a stall): carry on from now rather than run
+                // fields back to back to catch up. Up to CATCH_UP late (a
+                // scene load's slow field, or sleep overshoot), the next
+                // fields skip their sleep until the schedule is met again.
+                // No field starts before its slot, so the game never runs
+                // ahead of real time.
                 due = now;
             }
             due += FIELD;

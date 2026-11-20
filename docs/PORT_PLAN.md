@@ -864,6 +864,15 @@ Measured in real time (paced) with `--fps 240 --log-fps` at EFB 2x in a
    game briefly ran at 106%). Lateness over half a field restarts the
    schedule from now. No field starts before its slot, so the game cannot
    run faster than 59.94 fields a second.
+   - Later (section 14): a field up to two fields late (33 ms, a scene
+     load's slow field) keeps the schedule, and the next fields skip their
+     sleep until it is met again; later than that restarts from now. This
+     is not the old catch-up: it never makes up more than two fields, and
+     still no field starts before its slot, so over anything longer than a
+     couple of fields the game never runs faster than real time. A field's
+     frame keeps its scheduled time (`GameFrame::time`), so interpolated
+     frames stay evenly placed during the catch-up. The per-second game
+     speed reading can show up to ~103% just after such a field.
 2. **GPU time per frame** (world map, timestamp queries): 3.65 ms became
    1.2 ms, with identical pixels (world map frame 5700, and the 4:3 strap
    screen).
