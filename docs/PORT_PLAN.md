@@ -1676,6 +1676,20 @@ below 99%. Shown fps (the renderer, branch `render-400`) dipped to 252.
      8.2 ms per field on average in 1-1 and 12.9 ms in its worst second;
      headless, only boot and the map load after Start Game (3524-3525,
      26-30 ms) take over 16.7 ms.
+   - Paced at 360 fps from field 6290 on a quiet machine: game 100% in
+     every second; 5 fields over 16.7 ms (the level's start and the map
+     load after the course clear), none waiting on GX. The same run with
+     three builds going took 48-51 s of game-thread CPU instead of 29.6 s
+     and dipped to 81-95%: other processes sharing the cores, not the
+     emulator. Timing runs need a quiet machine (`bench.lock`, and no
+     builds).
+17. **Fields that wait for GX** are shown in the slow-field report (each
+   field's GX wait), which is how the above was told apart.
+
+With the frame rate unlocked (`--fps unlocked`, this branch's renderer),
+the whole 1-1 script shows a median of 645 fps (minimum 303) with the
+game at 100% (median; the lowest second, 98%, is a 59-field second at
+boot).
 
 **Result** (1-1 hash script, windowed, the first build of this pass
 against the last, alternating, best of two, same machine state):
