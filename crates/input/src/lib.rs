@@ -10,7 +10,9 @@
 //! Keyboard defaults follow WitherBlitz's NSMB-Wii-Recompilation: arrows
 //! D-pad, X or Space 2 (jump), Z or Left Shift 1 (run), C or Ctrl shake,
 //! Q/E tilt, B the A button, Enter or Esc +, Minus or Tab -, plus Home for
-//! the HOME button.
+//! the HOME button. All but Home can be rebound ([`keymap`]).
+
+pub mod keymap;
 
 use std::collections::HashSet;
 
@@ -51,24 +53,23 @@ enum Action {
     Tilt(f32),
 }
 
-fn key_action(k: KeyCode) -> Option<Action> {
+/// What a [`keymap::ACTIONS`] entry does.
+fn keymap_action(action: usize) -> Action {
     use Action::*;
-    Some(match k {
-        KeyCode::ArrowUp => Buttons(sideways(Dir::Up)),
-        KeyCode::ArrowDown => Buttons(sideways(Dir::Down)),
-        KeyCode::ArrowLeft => Buttons(sideways(Dir::Left)),
-        KeyCode::ArrowRight => Buttons(sideways(Dir::Right)),
-        KeyCode::KeyX | KeyCode::Space => Buttons(button::TWO),
-        KeyCode::KeyZ | KeyCode::ShiftLeft => Buttons(button::ONE),
-        KeyCode::KeyB => Buttons(button::A),
-        KeyCode::Enter | KeyCode::Escape => Buttons(button::PLUS),
-        KeyCode::Minus | KeyCode::Tab => Buttons(button::MINUS),
-        KeyCode::Home => Buttons(button::HOME),
-        KeyCode::KeyC | KeyCode::ControlLeft | KeyCode::ControlRight => Shake,
-        KeyCode::KeyQ => Tilt(-1.0),
-        KeyCode::KeyE => Tilt(1.0),
-        _ => return None,
-    })
+    match action {
+        keymap::UP => Buttons(sideways(Dir::Up)),
+        keymap::DOWN => Buttons(sideways(Dir::Down)),
+        keymap::LEFT => Buttons(sideways(Dir::Left)),
+        keymap::RIGHT => Buttons(sideways(Dir::Right)),
+        keymap::JUMP => Buttons(button::TWO),
+        keymap::RUN => Buttons(button::ONE),
+        keymap::A => Buttons(button::A),
+        keymap::SHAKE => Shake,
+        keymap::TILT_LEFT => Tilt(-1.0),
+        keymap::TILT_RIGHT => Tilt(1.0),
+        keymap::PLUS => Buttons(button::PLUS),
+        _ => Buttons(button::MINUS),
+    }
 }
 
 /// Xbox layout: A jumps (2), B and X run (1), Y and the bumpers shake,
@@ -119,6 +120,7 @@ fn apply(input: &mut Input, a: Action) {
 
 pub struct Inputs {
     keys: HashSet<KeyCode>,
+    keymap: keymap::Keymap,
     gilrs: Option<Gilrs>,
     /// Gamepads in the order they connected; index = player.
     pads: Vec<GamepadId>,
@@ -142,7 +144,7 @@ impl Inputs {
                 None
             }
         };
-        let mut s = Self { keys: HashSet::new(), gilrs, pads: Vec::new(), on: [true, false, false, false] };
+        let mut s = Self { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs, pads: Vec::new(), on: [true, false, false, false] };
         if let Some(g) = &s.gilrs {
             let ids: Vec<GamepadId> = g.gamepads().filter(|(_, p)| p.is_connected()).map(|(id, _)| id).collect();
             for id in ids {
@@ -163,9 +165,22 @@ impl Inputs {
         self.pads.push(id);
     }
 
+    /// The keys from now on.
+    pub fn set_keymap(&mut self, keymap: keymap::Keymap) {
+        self.keymap = keymap;
+    }
+
+    /// What a key does: its keymap action, or Home's HOME.
+    fn key_action(&self, k: KeyCode) -> Option<Action> {
+        match self.keymap.action(k) {
+            Some(a) => Some(keymap_action(a)),
+            None => (k == KeyCode::Home).then_some(Action::Buttons(button::HOME)),
+        }
+    }
+
     /// A key went down or up. Returns whether the key is a game control.
     pub fn key(&mut self, code: KeyCode, down: bool) -> bool {
-        if key_action(code).is_none() {
+        if self.key_action(code).is_none() && !self.keys.contains(&code) {
             return false;
         }
         if down {
@@ -196,8 +211,14 @@ impl Inputs {
         }
         let mut out = [Input::default(); PLAYERS];
         for k in &self.keys {
-            if let Some(a) = key_action(*k) {
-                apply(&mut out[0], a);
+            // Every action the key plays (a key may be bound to several).
+            for (i, keys) in self.keymap.keys.iter().enumerate() {
+                if keys.contains(k) {
+                    apply(&mut out[0], keymap_action(i));
+                }
+            }
+            if *k == KeyCode::Home {
+                apply(&mut out[0], Action::Buttons(button::HOME));
             }
         }
         if let Some(g) = &self.gilrs {
@@ -268,7 +289,7 @@ mod tests {
 
     #[test]
     fn keyboard_plays_a_sideways_remote() {
-        let mut i = Inputs { keys: HashSet::new(), gilrs: None, pads: Vec::new(), on: [true, false, false, false] };
+        let mut i = Inputs { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false] };
         assert!(i.key(KeyCode::ArrowRight, true));
         assert!(i.key(KeyCode::Space, true));
         assert!(i.key(KeyCode::KeyC, true));

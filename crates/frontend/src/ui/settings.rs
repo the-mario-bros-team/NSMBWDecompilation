@@ -160,21 +160,23 @@ const VOLUMES: [(&str, &str); 4] = [
     ("Menu Sounds", "The menus' cursor, select and back sounds."),
 ];
 const SLIDER_H: f32 = 34.0;
-// Keybinds: 1-12 the controls (two columns of six).
-const ACTIONS: [(&str, &str, &str); 12] = [
-    ("Up", "Up", "The D-pad's up: climb vines, and go through doors and pipes."),
-    ("Down", "Down", "The D-pad's down: crouch, and ground-pound in the air."),
-    ("Left", "Left", "The D-pad's left: walk left, and move a menu's cursor."),
-    ("Right", "Right", "The D-pad's right: walk right, and move a menu's cursor."),
-    ("Jump (2)", "X / Space", "The 2 button: jump and swim, and choose in menus."),
-    ("Run (1)", "Z / Shift", "The 1 button: run, throw fireballs, and go back in menus."),
-    ("A", "B", "The A button: view the whole world map."),
-    ("Shake", "C / Ctrl", "Shakes the Wii Remote: a spin jump, or picking up and throwing."),
-    ("Tilt Left", "Q", "Tilts the Wii Remote left, for the platforms that tilt."),
-    ("Tilt Right", "E", "Tilts the Wii Remote right, for the platforms that tilt."),
-    ("+", "Enter / Esc", "The + button: pause a course, or open the world map's menu."),
-    ("-", "Minus / Tab", "The - button: open Select a World on the world map."),
+// Keybinds: 1-12 the controls (two columns of six, `input::keymap::ACTIONS`).
+const KEY_HELP: [&str; 12] = [
+    "The D-pad's up: climb vines, and go through doors and pipes.",
+    "The D-pad's down: crouch, and ground-pound in the air.",
+    "The D-pad's left: walk left, and move a menu's cursor.",
+    "The D-pad's right: walk right, and move a menu's cursor.",
+    "The 2 button: jump and swim, and choose in menus.",
+    "The 1 button: run, throw fireballs, and go back in menus.",
+    "The A button: view the whole world map.",
+    "Shakes the Wii Remote: a spin jump, or picking up and throwing.",
+    "Tilts the Wii Remote left, for the platforms that tilt.",
+    "Tilts the Wii Remote right, for the platforms that tilt.",
+    "The + button: pause a course, or open the world map's menu.",
+    "The - button: open Select a World on the world map.",
 ];
+/// A key capture with nothing pressed for this long is cancelled.
+const CAPTURE_TIMEOUT: f64 = 10.0;
 // Language rows: 1-3.
 const LANGUAGES: [(&str, &str, &str); 3] = [
     ("en", "English", "Restart the game to play in this language."),
@@ -281,6 +283,8 @@ pub struct SettingsWindow {
     drag_slider: Option<usize>,
     /// When Power-Up was last pressed, for its note.
     power_up_at: Option<f64>,
+    /// The Keybinds row waiting for its new key, and since when.
+    capturing: Option<(usize, f64)>,
     // This frame.
     list: DrawList,
     now: f64,
@@ -301,6 +305,31 @@ fn pulse(t: f64) -> f32 {
 impl SettingsWindow {
     pub fn is_open(&self) -> bool {
         self.open
+    }
+
+    pub fn capturing(&self) -> bool {
+        self.capturing.is_some()
+    }
+
+    /// A key pressed while a Keybinds row waits for one: it becomes that
+    /// action's key. Esc cancels; Delete or Backspace leaves it no key; F10
+    /// and F11 keep their own jobs; keys without a name are not taken.
+    pub fn capture_key(&mut self, s: &mut Settings, code: winit::keyboard::KeyCode) -> Vec<Change> {
+        use winit::keyboard::KeyCode;
+        let Some((action, _)) = self.capturing else { return Vec::new() };
+        match code {
+            KeyCode::Escape => {}
+            KeyCode::Delete | KeyCode::Backspace => s.keymap.keys[action].clear(),
+            KeyCode::F10 | KeyCode::F11 => return Vec::new(),
+            k if input::keymap::key_name(k).is_some() => s.keymap.bind(action, k),
+            _ => return Vec::new(),
+        }
+        self.capturing = None;
+        if code == KeyCode::Escape {
+            Vec::new()
+        } else {
+            vec![Change::Keymap]
+        }
     }
 
     pub fn open(&mut self, now: f64) {
@@ -785,7 +814,7 @@ impl SettingsWindow {
             }
         }
         if let Some(row) = self.drag_slider {
-            if let (Some((px, _)), true) = (self.pointer, self.held) {
+            if let (Some((px, _)), true) = (self.pointer, self.pressed || self.held) {
                 let t = ((px - COL_X0) / (COL_X1 - COL_X0)).clamp(0.0, 1.0);
                 let percent = (t * 100.0).round() as u32;
                 if percent != s.volume[row] {
@@ -813,20 +842,30 @@ impl SettingsWindow {
         self.help_line(a, c, note, u32::MAX);
     }
 
-    fn draw_keybinds(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas) {
-        for (i, (name, keys, _)) in ACTIONS.iter().enumerate() {
+    fn draw_keybinds(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
+        if self.capturing.is_some_and(|(_, at)| self.now - at > CAPTURE_TIMEOUT) {
+            self.capturing = None;
+        }
+        for (i, (_, name)) in input::keymap::ACTIONS.iter().enumerate() {
             let (column, row) = (i / 6, i % 6);
             let x0 = if column == 0 { -190.0 } else { 190.0 };
             let y = 86.0 - 31.0 * row as f32;
             let color = if self.cursor == 1 + i as i32 { u32::MAX } else { LABEL_DIM };
             self.text(a, c, name, x0 - 168.0, y, 21.0, 0, color);
+            let keys = match s.keymap.label(i) {
+                _ if self.capturing.is_some_and(|(r, _)| r == i) => "Press a key...".to_string(),
+                l if l.is_empty() => "None".to_string(),
+                l => l,
+            };
             let size = if keys.len() > 16 { 17.0 } else if keys.len() > 11 { 19.0 } else { 22.0 };
-            self.pause_button(ctx, a, c, 1 + i as i32, keys, x0 + 78.0, y, 180.0, 23.0, self.cursor == 1 + i as i32, true, size, false, 0.0, true);
-            self.add_hit(x0 + 78.0, y, 186.0, 31.0, 1 + i as i32, 0);
+            let waiting = self.capturing.is_some_and(|(r, _)| r == i);
+            self.pause_button(ctx, a, c, 1 + i as i32, &keys, x0 + 78.0, y, 180.0, 23.0, self.cursor == 1 + i as i32, true, size, waiting, 0.0, true);
+            self.add_hit(x0 + 78.0, y, 186.0, 31.0, 1 + i as i32, EV_CONFIRM);
         }
-        let note = match self.cursor {
-            0 => Tab::Keybinds.help(),
-            n if (1..=12).contains(&n) => ACTIONS[n as usize - 1].2,
+        let note = match (self.capturing, self.cursor) {
+            (Some(_), _) => "Press the new key. Esc cancels; Delete or Backspace leaves it no key.",
+            (None, 0) => Tab::Keybinds.help(),
+            (None, n) if (1..=12).contains(&n) => KEY_HELP[n as usize - 1],
             _ => "",
         };
         self.help_line(a, c, note, u32::MAX);
@@ -995,6 +1034,7 @@ impl SettingsWindow {
                 *v = if left { v.saturating_sub(1) / 5 * 5 } else { ((*v + 5) / 5 * 5).min(100) };
                 changes.push(Change::Volume);
             }
+            (Tab::Keybinds, n) if confirm && (1..=12).contains(&n) => self.capturing = Some((n as usize - 1, self.now)),
             (Tab::Gameplay, ROW_TIME) if toggle => {
                 s.no_time_limit = !s.no_time_limit;
                 changes.push(Change::Gameplay);
@@ -1078,7 +1118,9 @@ impl SettingsWindow {
         let unit = (screen.height() / 456.0).min(screen.width() / SCREEN_W);
         let mut c = Canvas { view: View { center_x: screen.center().x, center_y: screen.center().y, scale: unit }, alpha: 1.0 };
         // The pointer in layout units.
-        let (pos, pressed, held) = ctx.input(|i| (i.pointer.latest_pos(), i.pointer.primary_pressed(), i.pointer.primary_down()));
+        // Where the pointer last was, even once it has left the window (a
+        // touch lifts off; a click can be pressed and let go in one frame).
+        let (pos, pressed, held) = ctx.input(|i| (i.pointer.interact_pos(), i.pointer.primary_pressed(), i.pointer.primary_down()));
         self.pointer = pos.map(|p| ((p.x - c.view.center_x) / unit, (c.view.center_y - p.y) / unit));
         self.pressed = pressed;
         self.held = held;
@@ -1090,7 +1132,7 @@ impl SettingsWindow {
         moves.down |= nav.down;
         moves.confirm |= nav.confirm;
         moves.back |= nav.back;
-        if !self.closing {
+        if !self.closing && self.capturing.is_none() {
             self.handle(moves, s, changes);
         }
         self.hits.clear();
@@ -1121,7 +1163,7 @@ impl SettingsWindow {
             Tab::Display => self.draw_display(ctx, &a, &c, s),
             Tab::Graphics => self.draw_graphics(ctx, &a, &c, s),
             Tab::Audio => self.draw_audio(ctx, &a, &c, s, changes),
-            Tab::Keybinds => self.draw_keybinds(ctx, &a, &c),
+            Tab::Keybinds => self.draw_keybinds(ctx, &a, &c, s),
             Tab::Gameplay => self.draw_gameplay(ctx, &a, &c, s),
             Tab::Language => self.draw_language(ctx, &a, &c, s, &at_boot),
         }

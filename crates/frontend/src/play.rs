@@ -240,6 +240,7 @@ impl App {
             eprintln!("SYSCONF: {e}");
         }
         crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed);
+        self.inputs.set_keymap(self.settings.keymap.clone());
         self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
@@ -511,6 +512,16 @@ impl App {
         if let Some(r) = &mut self.renderer {
             r.set_ui(frame, &textures).map_err(|e| e.to_string())?;
         }
+        self.apply_changes(changes);
+        if closed && self.unsaved {
+            self.settings.save(Path::new(settings::FILE));
+            self.unsaved = false;
+        }
+        Ok(())
+    }
+
+    /// What the Settings window changed, put into effect (saved when it closes).
+    fn apply_changes(&mut self, changes: Vec<ui::Change>) {
         for change in changes {
             self.unsaved = true;
             match change {
@@ -554,15 +565,11 @@ impl App {
                         let _ = emu.to_emu.send(ToEmu::PowerUp(p));
                     }
                 }
+                ui::Change::Keymap => self.inputs.set_keymap(self.settings.keymap.clone()),
                 // From the next start, or read every frame.
                 ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver => {}
             }
         }
-        if closed && self.unsaved {
-            self.settings.save(Path::new(settings::FILE));
-            self.unsaved = false;
-        }
-        Ok(())
     }
 
     fn presented_now(&mut self) {
@@ -744,6 +751,14 @@ impl ApplicationHandler for App {
             WindowEvent::KeyboardInput { event, .. } => {
                 if let PhysicalKey::Code(code) = event.physical_key {
                     let down = event.state == ElementState::Pressed;
+                    // The Keybinds tab waiting for a key takes the next one.
+                    if down && self.menus.as_ref().is_some_and(ui::Menus::capturing) {
+                        if !event.repeat {
+                            let changes = self.menus.as_mut().map(|m| m.capture_key(&mut self.settings, code)).unwrap_or_default();
+                            self.apply_changes(changes);
+                        }
+                        return;
+                    }
                     if !event.repeat && !self.inputs.key(code, down) && down {
                         self.key(code);
                     }

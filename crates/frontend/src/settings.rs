@@ -5,6 +5,8 @@
 
 use std::path::Path;
 
+use input::keymap::{Keymap, ACTIONS};
+
 /// Frame-rate choices: 60 is the game's own rate; 30 shows every other
 /// field (as the battery saver), the game still running at 60; the others
 /// draw interpolated frames in between; 0 is unlocked.
@@ -44,11 +46,13 @@ pub struct Settings {
     pub infinite_lives: bool,
     /// Gameplay: the power-up last picked to give player 1 (`gameplay::POWER_UPS`).
     pub power_up: u32,
+    /// The keys for the remote's buttons (`[keyboard]`).
+    pub keymap: Keymap,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1 }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, keymap: Keymap::default() }
     }
 }
 
@@ -109,6 +113,13 @@ impl Settings {
         if let Some(n) = number("power_up") {
             s.power_up = n.clamp(0, crate::gameplay::POWER_UPS.len() as i64 - 1) as u32;
         }
+        if let Some(keyboard) = t.get("keyboard").and_then(toml::Value::as_table) {
+            for (i, (key, _)) in ACTIONS.iter().enumerate() {
+                if let Some(label) = keyboard.get(*key).and_then(toml::Value::as_str) {
+                    s.keymap.set_label(i, label);
+                }
+            }
+        }
         s
     }
 
@@ -149,6 +160,12 @@ impl Settings {
             self.infinite_lives,
             self.power_up
         );
+        // Last: a table ends the file's top-level keys.
+        let mut text = text;
+        text.push_str("\n# Keys for the Wii Remote's buttons, by name, separated by commas (\"\" for none).\n[keyboard]\n");
+        for (i, (key, _)) in ACTIONS.iter().enumerate() {
+            text.push_str(&format!("{key} = {}\n", toml::Value::String(self.keymap.label(i))));
+        }
         if let Err(e) = std::fs::write(path, text) {
             eprintln!("{}: {e}", path.display());
         }
@@ -171,7 +188,12 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("nsmbw-settings-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(FILE);
-        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7 };
+        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, keymap: {
+            let mut k = Keymap::default();
+            k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
+            k.keys[input::keymap::SHAKE].clear();
+            k
+        } };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3, ..Settings::default() };

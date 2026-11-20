@@ -48,6 +48,8 @@ pub enum Change {
     Gameplay,
     /// Give player 1 this power-up (`gameplay::POWER_UPS`).
     PowerUp(u8),
+    /// A key was rebound.
+    Keymap,
 }
 
 pub struct Menus {
@@ -78,6 +80,15 @@ impl Menus {
 
     pub fn is_open(&self) -> bool {
         self.window.is_open()
+    }
+
+    /// The Keybinds tab waits for a key: key presses go to [`Menus::capture_key`].
+    pub fn capturing(&self) -> bool {
+        self.window.is_open() && self.window.capturing()
+    }
+
+    pub fn capture_key(&mut self, settings: &mut Settings, code: winit::keyboard::KeyCode) -> Vec<Change> {
+        self.window.capture_key(settings, code)
     }
 
     /// Opens the Settings window, or closes it if open.
