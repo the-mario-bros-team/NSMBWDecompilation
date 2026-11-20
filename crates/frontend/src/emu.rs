@@ -375,7 +375,12 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             // Online, this machine's player 1 controls (and `p1` presses)
             // are its own remote; the others come from the network.
             match session.inputs(&mut sys, index, inputs[0], &|| stop.load(Ordering::Relaxed)) {
-                Ok(i) => inputs = i,
+                Ok(i) => {
+                    inputs = i;
+                    for slot in session.joining_at(index) {
+                        sys.joins.request(slot);
+                    }
+                }
                 Err(e) => {
                     let _ = frames.send(Err(e));
                     break;

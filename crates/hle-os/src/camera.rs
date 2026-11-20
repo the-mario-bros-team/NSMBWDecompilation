@@ -84,7 +84,7 @@ pub fn player_position(mem: &Mem, i: usize) -> Option<[f32; 2]> {
 }
 
 /// Player `i`'s actor (see [`player_position`]).
-fn player_actor(mem: &Mem, i: usize) -> Option<u32> {
+pub fn player_actor(mem: &Mem, i: usize) -> Option<u32> {
     let id = read32(mem, 0x8035_4E10 + 4 * i as u32)?;
     if id == 0 {
         return None;
@@ -107,7 +107,7 @@ fn player_actor(mem: &Mem, i: usize) -> Option<u32> {
 /// (0x8005FC70) picks them: in the game (0x80354E50, one word per player)
 /// and not in a bubble (actor +0x153C is 1 there). A player in a bubble is
 /// placed by the camera, so the box must not follow it.
-fn followed_players(mem: &Mem) -> Vec<[f32; 2]> {
+pub fn followed_players(mem: &Mem) -> Vec<[f32; 2]> {
     (0..4)
         .filter(|&i| read32(mem, 0x8035_4E50 + 4 * i as u32).is_some_and(|v| v != 0))
         .filter_map(|i| {

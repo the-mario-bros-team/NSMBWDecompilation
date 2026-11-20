@@ -4,6 +4,7 @@
 //! that records where each REL module was placed.
 
 pub mod camera;
+pub mod join;
 pub mod light_texture;
 pub mod reverb;
 
@@ -143,6 +144,8 @@ pub struct System {
     pub recomp_steps: u64,
     /// The shared camera for online play, and this PC's view.
     pub camera: camera::SharedCamera,
+    /// Players joining a course in progress.
+    pub joins: join::Joins,
 }
 
 /// What happens at the end of each slice ([`SLICE`]).
@@ -270,7 +273,7 @@ impl System {
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
         let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None }));
-        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, camera: Default::default() })
+        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, camera: Default::default(), joins: Default::default() })
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
@@ -317,12 +320,17 @@ impl System {
             return false;
         }
         if pc == camera::BG_EXECUTE_END {
+            if self.joins.returned(&mut self.cpu, &mut self.mem) {
+                return false;
+            }
             self.camera.apply(&mut self.mem);
             // The game's draws for this frame come after: nothing of them
             // is in the FIFO yet.
             if self.camera.view_player.is_some() {
                 self.hw.borrow_mut().gpu.set_view(self.camera.view);
             }
+            let near = camera::followed_players(&self.mem).first().copied();
+            self.joins.start(&mut self.cpu, &mut self.mem, near);
             return false;
         }
         if pc == OS_LINK || pc == OS_LINK_FIXED {
@@ -541,7 +549,7 @@ impl Default for LinkedModule {
 }
 
 /// First bytes of a save state; the number changes with the layout.
-const STATE_MAGIC: &[u8; 8] = b"NSMBWst2";
+const STATE_MAGIC: &[u8; 8] = b"NSMBWst5";
 
 impl System {
     /// The whole machine as bytes (docs/PORT_PLAN.md, section 12): CPU, RAM,
@@ -572,7 +580,7 @@ impl System {
         self.hw.borrow_mut().snap(s);
         {
             let mut sl = self.slices.borrow_mut();
-            guest_mem::snap!(s; self.linked, self.link_calls, self.steps, sl.interrupts, sl.decrementers, self.idle_cycles, self.light_textures, self.camera);
+            guest_mem::snap!(s; self.linked, self.link_calls, self.steps, sl.interrupts, sl.decrementers, self.idle_cycles, self.light_textures, self.camera, self.joins);
         }
         s.tag(b"END ");
     }
