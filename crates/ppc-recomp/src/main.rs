@@ -69,9 +69,14 @@ enum Kind {
     Bclr(u32, u32, bool),
     /// `bcctr`: BO, BI, link.
     Bcctr(u32, u32, bool),
-    /// Left to the interpreter: `sc`, `rfi`, `mtmsr` (they change the MSR or
-    /// take an exception).
+    /// Left to the interpreter: `sc`, `rfi` (they take an exception or
+    /// return from one).
     Island,
+    /// `mtmsr`: run here, but it ends its block, so the next one checks
+    /// MSR[FP] again if it has floating-point instructions (as when the
+    /// dispatcher stepped it, which unwound every native frame first:
+    /// `OSDisableInterrupts` and `OSRestoreInterrupts` run it all the time).
+    Msr,
     Plain,
 }
 
@@ -94,7 +99,7 @@ fn kind(pc: u32, w: u32) -> Kind {
             50 => Kind::Island,
             _ => Kind::Plain,
         },
-        31 if (w >> 1) & 0x3FF == 146 => Kind::Island,
+        31 if (w >> 1) & 0x3FF == 146 => Kind::Msr,
         _ => Kind::Plain,
     }
 }
@@ -185,6 +190,12 @@ fn descend(ram: &Ram, special: &BTreeSet<u32>, start: u32, end: u32, seeds: &[u3
             match kind(a, w) {
                 Kind::Island => {
                     work.push(a);
+                    break;
+                }
+                Kind::Msr => {
+                    if inside(a + 4) {
+                        work.push(a + 4);
+                    }
                     break;
                 }
                 Kind::Plain => {}
@@ -335,7 +346,7 @@ impl Gen<'_> {
             let _ = writeln!(s, "c.cycles += {n};");
             for (i, &(a, w)) in words.iter().enumerate() {
                 let k = kind(a, w);
-                if k != Kind::Plain {
+                if !matches!(k, Kind::Plain | Kind::Msr) {
                     self.branch(f, idx, a, k, &mut s, specials);
                     break;
                 }
@@ -492,7 +503,7 @@ impl Gen<'_> {
                 let _ = write!(s, "}} ");
                 self.goto(f, next, s);
             }
-            Kind::Island | Kind::Plain => unreachable!(),
+            Kind::Island | Kind::Msr | Kind::Plain => unreachable!(),
         }
         s.push('\n');
     }
