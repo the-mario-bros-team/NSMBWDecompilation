@@ -169,6 +169,27 @@ struct App {
     restart: Option<PathBuf>,
     /// Where the mouse is in the window (pixels).
     pointer: Option<(f64, f64)>,
+    /// The LAN tab's search for rooms, while it is up.
+    finder: Option<crate::lan::Finder>,
+    /// Join, host or leave a LAN room: the game starts again with these
+    /// network options (none: on its own) once the window has closed.
+    relaunch: Option<Vec<String>>,
+}
+
+/// This run's options without its network ones, then `net`: the options
+/// a game starting again into (or out of) a LAN room gets.
+fn relaunch_args(net: &[String]) -> Vec<std::ffi::OsString> {
+    let mut out = Vec::new();
+    let mut args = std::env::args_os().skip(1);
+    while let Some(a) = args.next() {
+        if matches!(a.to_str(), Some("--host" | "--join" | "--wait-join")) {
+            args.next();
+        } else {
+            out.push(a);
+        }
+    }
+    out.extend(net.iter().map(Into::into));
+    out
 }
 
 /// How long a newer release found is said on screen.
@@ -304,6 +325,9 @@ impl App {
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
         let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));
+        if let crate::net::Mode::Host { port, .. } = self.opts.emu.net {
+            crate::lan::announce(port, crate::lan::computer_name());
+        }
         self.emu = Some(emu);
         self.renderer = Some(renderer);
         self.window = Some(window);
@@ -358,6 +382,30 @@ impl App {
                 self.restart = std::env::current_exe().ok();
                 event_loop.exit();
             }
+        }
+        // The LAN tab: the rooms on the network, and this game's own.
+        if self.menus.as_ref().is_some_and(ui::Menus::wants_rooms) {
+            if self.finder.is_none() {
+                self.finder = crate::lan::Finder::new().map_err(|e| say_err!("LAN: {e}")).ok();
+            }
+            let rooms = self.finder.as_mut().map(|f| f.poll()).unwrap_or_default();
+            let here = self.finder.as_ref().and_then(|f| f.here).map_or_else(|| "this PC".to_string(), |ip| ip.to_string());
+            let (mode, addr) = match &self.opts.emu.net {
+                crate::net::Mode::Host { port, .. } => (1, format!("{here}:{port}")),
+                crate::net::Mode::Join { addr } => (2, addr.clone()),
+                crate::net::Mode::Off => (0, String::new()),
+            };
+            let view = ui::LanView { mode, addr, rooms: rooms.into_iter().map(|r| (r.name, r.addr.to_string())).collect() };
+            if let Some(m) = &mut self.menus {
+                m.set_lan(view);
+            }
+        } else {
+            self.finder = None;
+        }
+        if self.relaunch.is_some() && self.restart.is_none() {
+            self.settings.save(Path::new(settings::FILE));
+            self.restart = std::env::current_exe().ok();
+            event_loop.exit();
         }
         // A game menu's Settings button was picked and its menu has gone.
         if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
@@ -717,6 +765,9 @@ impl App {
                     });
                     self.updater = Some((state, cancel));
                 }
+                ui::Change::LanHost => self.relaunch = Some(vec!["--host".into(), crate::lan::GAME_PORT.to_string()]),
+                ui::Change::LanJoin(addr) => self.relaunch = Some(vec!["--join".into(), crate::lan::with_port(&addr)]),
+                ui::Change::LanLeave => self.relaunch = Some(Vec::new()),
                 ui::Change::UpdateCancel => {
                     if let Some((_, cancel)) = &self.updater {
                         cancel.store(true, std::sync::atomic::Ordering::Relaxed);
@@ -1078,14 +1129,20 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         updater: None,
         restart: None,
         pointer: None,
+        finder: None,
+        relaunch: None,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     // An update was installed: the new program, now the window and the
     // game have closed.
     if let Some(program) = app.restart.take() {
         crate::say::flush();
-        if let Err(e) = port_update::install::restart(&program) {
-            eprintln!("update: could not start the new version: {e}");
+        let started = match app.relaunch.take() {
+            Some(net) => std::process::Command::new(&program).args(relaunch_args(&net)).spawn().map(|_| ()).map_err(|e| e.to_string()),
+            None => port_update::install::restart(&program),
+        };
+        if let Err(e) = started {
+            eprintln!("could not start the game again: {e}");
         }
     }
     match app.error {

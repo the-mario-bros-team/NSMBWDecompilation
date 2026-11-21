@@ -7,6 +7,7 @@
 
 pub mod layout;
 mod settings;
+pub mod text;
 
 use std::time::Instant;
 
@@ -33,7 +34,7 @@ impl Nav {
 }
 
 /// A setting the window changed that the app applies (and saves).
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Change {
     Fps,
     VSync,
@@ -66,6 +67,23 @@ pub enum Change {
     /// Play the game's system sound `id` (the window's cursor, decide and
     /// back sounds).
     Sound(u32),
+    /// Host a LAN room (the game starts again with `--host`).
+    LanHost,
+    /// Join the LAN room at this address (`--join`).
+    LanJoin(String),
+    /// Stop hosting, or leave the room (the game starts again on its own).
+    LanLeave,
+}
+
+/// What the LAN tab shows, from the window's thread.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct LanView {
+    /// 0 not in a room, 1 hosting one, 2 in someone's.
+    pub mode: u8,
+    /// Hosting: where others join; in a room: its address.
+    pub addr: String,
+    /// The rooms found on the network: their names and addresses.
+    pub rooms: Vec<(String, String)>,
 }
 
 /// An update being installed, as the Settings window shows it.
@@ -104,6 +122,16 @@ impl Menus {
         let mut settings_window = settings::SettingsWindow::default();
         settings_window.active_file = -1;
         Self { ctx, winit, window: settings_window, started: Instant::now(), held: 0, repeat: None, shown: false }
+    }
+
+    /// The LAN tab's rooms and this game's own.
+    pub fn set_lan(&mut self, view: LanView) {
+        self.window.lan = view;
+    }
+
+    /// The LAN tab is up: rooms are worth looking for.
+    pub fn wants_rooms(&self) -> bool {
+        self.window.is_open() && self.window.on_lan_tab()
     }
 
     /// The save file being played (0-2), or -1 before the save select.

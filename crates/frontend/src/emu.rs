@@ -86,6 +86,11 @@ pub enum ToEmu {
     Volumes([u32; 3]),
 }
 
+/// The save cards' "Cheated", in the language the Settings buttons read.
+fn cheated_word(settings: &str) -> &'static str {
+    ["fr", "es"].into_iter().find(|l| crate::ui::text::tr(l, "Settings") == settings).map_or("Cheated", |l| crate::ui::text::tr(l, "Cheated"))
+}
+
 /// The Settings window's sounds, played as the game plays its menus' own:
 /// `SndAudioMgr::startSystemSe(SndAudioMgr::sInstance, id, 1)`.
 fn play_menu_sounds(sys: &mut System, sounds: &mut Vec<u32>) {
@@ -409,7 +414,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     }
     let settings_label = settings_label.filter(|_| session.is_none() && (script.is_empty() || force_settings_buttons));
     // The save cards' text is "Cheated" in every language for now.
-    let mut sys = match System::boot_with(&game, nand, settings_label.as_deref().map(|s| (s, "Cheated"))) {
+    let mut sys = match System::boot_with(&game, nand, settings_label.as_deref().map(|s| (s, cheated_word(s)))) {
         Ok(s) => s,
         Err(e) => {
             let _ = frames.send(Err(e));

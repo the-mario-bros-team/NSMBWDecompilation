@@ -11,6 +11,7 @@ mod click;
 mod emu;
 mod gameplay;
 mod gamefiles;
+mod lan;
 mod net;
 mod overlay;
 mod play;

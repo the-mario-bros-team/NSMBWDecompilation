@@ -8,7 +8,7 @@
 use std::sync::Arc;
 
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
-use super::{Change, Nav, UpdateState};
+use super::{Change, LanView, Nav, UpdateState};
 use crate::gameplay::POWER_UPS;
 use crate::settings::Settings;
 
@@ -109,9 +109,10 @@ enum Tab {
     Keybinds,
     Gameplay,
     Language,
+    Lan,
 }
 
-const TABS: [Tab; 6] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Language];
+const TABS: [Tab; 7] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Language, Tab::Lan];
 
 impl Tab {
     fn name(self) -> &'static str {
@@ -122,6 +123,7 @@ impl Tab {
             Tab::Keybinds => "Keybinds",
             Tab::Gameplay => "Gameplay",
             Tab::Language => "Language",
+            Tab::Lan => "LAN Play",
         }
     }
 
@@ -133,9 +135,16 @@ impl Tab {
             Tab::Keybinds => "Which keys play the Wii Remote's buttons.",
             Tab::Gameplay => "Optional helpers; net games always keep the game's own rules.",
             Tab::Language => "The language of the game's text and these menus.",
+            Tab::Lan => "Play with other PCs on your network; each one needs the game.",
         }
     }
 }
+
+// LAN Play rows: host (or stop, or leave), join by address, then the rooms found.
+const ROW_LAN_ROOM: i32 = 1;
+const ROW_LAN_ADDRESS: i32 = 2;
+const ROW_LAN_FOUND: i32 = 3;
+const LAN_ROOMS_SHOWN: usize = 3;
 
 // Display rows.
 const ROW_RESOLUTION: i32 = 1;
@@ -309,6 +318,12 @@ pub struct SettingsWindow {
     ask: Option<(Ask, i32)>,
     /// Its cursor: 0 Yes, 1 No.
     ask_cursor: i32,
+    /// The menus' language this frame (`settings.language`).
+    lang: String,
+    /// The LAN tab's rooms and this game's own, from the window's thread.
+    pub lan: LanView,
+    /// The address being typed on the LAN tab.
+    typing: Option<String>,
     /// A newer release of the port is out: its version, and whether it can
     /// be installed from here (it has a download for Windows).
     pub update: Option<(String, bool)>,
@@ -333,6 +348,21 @@ pub struct SettingsWindow {
     held: bool,
 }
 
+/// The character a key types into an address: digits, `.` and `:`.
+fn address_char(k: winit::keyboard::KeyCode) -> Option<char> {
+    use winit::keyboard::KeyCode as K;
+    let digits = [K::Digit0, K::Digit1, K::Digit2, K::Digit3, K::Digit4, K::Digit5, K::Digit6, K::Digit7, K::Digit8, K::Digit9];
+    let pad = [K::Numpad0, K::Numpad1, K::Numpad2, K::Numpad3, K::Numpad4, K::Numpad5, K::Numpad6, K::Numpad7, K::Numpad8, K::Numpad9];
+    if let Some(n) = digits.iter().chain(&pad).position(|&d| d == k) {
+        return char::from_digit((n % 10) as u32, 10);
+    }
+    match k {
+        K::Period | K::NumpadDecimal => Some('.'),
+        K::Semicolon => Some(':'),
+        _ => None,
+    }
+}
+
 fn pulse(t: f64) -> f32 {
     0.5 + 0.5 * ((t * 60.0) as f32 * 0.12).sin()
 }
@@ -342,8 +372,12 @@ impl SettingsWindow {
         self.open
     }
 
+    pub fn on_lan_tab(&self) -> bool {
+        self.tab() == Tab::Lan
+    }
+
     pub fn capturing(&self) -> bool {
-        self.capturing.is_some()
+        self.capturing.is_some() || self.typing.is_some()
     }
 
     /// A key pressed while a Keybinds row waits for one: it becomes that
@@ -351,6 +385,34 @@ impl SettingsWindow {
     /// and F11 keep their own jobs; keys without a name are not taken.
     pub fn capture_key(&mut self, s: &mut Settings, code: winit::keyboard::KeyCode) -> Vec<Change> {
         use winit::keyboard::KeyCode;
+        if let Some(text) = &mut self.typing {
+            return match code {
+                KeyCode::Escape => {
+                    self.typing = None;
+                    vec![Change::Sound(122)]
+                }
+                KeyCode::Enter | KeyCode::NumpadEnter => {
+                    let addr = std::mem::take(text);
+                    self.typing = None;
+                    if addr.is_empty() {
+                        vec![Change::Sound(122)]
+                    } else {
+                        vec![Change::Sound(121), Change::LanJoin(addr)]
+                    }
+                }
+                KeyCode::Backspace | KeyCode::Delete => {
+                    text.pop();
+                    vec![Change::Sound(120)]
+                }
+                k => match address_char(k) {
+                    Some(ch) if text.len() < 40 => {
+                        text.push(ch);
+                        vec![Change::Sound(120)]
+                    }
+                    _ => Vec::new(),
+                },
+            };
+        }
         let Some((action, _)) = self.capturing else { return Vec::new() };
         match code {
             KeyCode::Escape => {}
@@ -407,6 +469,7 @@ impl SettingsWindow {
         if !a.message.ready() {
             return;
         }
+        let text = super::text::tr(&self.lang, text);
         layout::draw_text(&mut self.list, &c.view, &a.message, text, x + 2.5, y - 2.5, size, 0x3020_0AFF, 0x3020_0AFF, 0.55 * c.alpha, origin_h, 1);
         layout::draw_text(&mut self.list, &c.view, &a.message, text, x, y, size, color, color, c.alpha, origin_h, 1);
     }
@@ -447,6 +510,7 @@ impl SettingsWindow {
     #[allow(clippy::too_many_arguments)]
     fn yes_no_button(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, label: &str, x: f32, y: f32, w: f32, h: f32, selected: bool, enabled: bool, text_size: f32) {
         let Some(yn) = &a.yes_no else { return };
+        let label = super::text::tr(&self.lang, label);
         let mut p = DrawParams::new();
         p.alpha = c.alpha * if enabled { 1.0 } else { 0.55 };
         let (ax, ay, aw, ah) = yn.pane_rect("P_centerBase_00").unwrap_or((0.0, -118.0, 240.0, 53.0));
@@ -485,6 +549,7 @@ impl SettingsWindow {
     /// the cursor (the open tab, the setting in force).
     #[allow(clippy::too_many_arguments)]
     fn pause_button(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, key: i32, label: &str, x: f32, y: f32, w: f32, h: f32, selected: bool, enabled: bool, text_size: f32, lit: bool, grow: f32, cursor: bool) {
+        let label = super::text::tr(&self.lang, label);
         let Some(pause) = &a.pause else {
             self.yes_no_button(ctx, a, c, label, x, y, w, h, selected && cursor, enabled, text_size);
             return;
@@ -685,6 +750,7 @@ impl SettingsWindow {
 
     /// The help line over the prompts, smaller if it would run past the sides.
     fn help_line(&mut self, a: &Assets, c: &Canvas, text: &str, color: u32) {
+        let text = super::text::tr(&self.lang, text);
         let mut size = 22.0;
         if a.message.ready() && !text.is_empty() {
             let width = layout::measure_text(&a.message, text, size);
@@ -702,7 +768,8 @@ impl SettingsWindow {
             return;
         }
         let (size, icon, gap) = (24.0 * scale, 30.0 * scale, 22.0 * scale);
-        let items: Vec<(f32, f32)> = prompts.iter().map(|(code, word, _)| (layout::measure_text(&a.picture, code, icon), layout::measure_text(&a.message, word, size))).collect();
+        let lang = self.lang.clone();
+        let items: Vec<(f32, f32)> = prompts.iter().map(|(code, word, _)| (layout::measure_text(&a.picture, code, icon), layout::measure_text(&a.message, super::text::tr(&lang, word), size))).collect();
         let total: f32 = items.iter().map(|(i, w)| i + 4.0 + w + gap).sum();
         let mut x = right - total + gap;
         for ((code, word, event), (iw, ww)) in prompts.iter().zip(items) {
@@ -762,7 +829,7 @@ impl SettingsWindow {
         let mut size = 30.0;
         if a.message.ready() {
             for tab in TABS {
-                let name = tab.name();
+                let name = super::text::tr(&self.lang, tab.name());
                 let (room, width) = (w - margin, layout::measure_text(&a.message, name, size));
                 let spacing = 2.0 * (name.chars().count() - 1) as f32;
                 if width + spacing > room && width > 0.0 {
@@ -827,6 +894,43 @@ impl SettingsWindow {
             _ => "Draws frames in between for smoother motion on screens above 60Hz.",
         };
         self.help_line(a, c, note, u32::MAX);
+    }
+
+    fn draw_lan(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas) {
+        let rows = 5;
+        let in_room = self.lan.mode != 0;
+        let room = match self.lan.mode {
+            1 => "Stop Hosting",
+            2 => "Leave the Room",
+            _ => "Host a Room",
+        };
+        let label = if in_room { "This Game" } else { "Your Room" };
+        self.row_button(ctx, a, c, rows, 0, label, room, ROW_LAN_ROOM, true, 1.0, false);
+        let typed = match &self.typing {
+            Some(t) => format!("{t}_"),
+            None => super::text::tr(&self.lang, "Type an address").to_string(),
+        };
+        self.row_button(ctx, a, c, rows, 1, "Join by Address", &typed, ROW_LAN_ADDRESS, !in_room, 1.0, false);
+        let rooms = self.lan.rooms.clone();
+        for (i, (name, addr)) in rooms.iter().take(LAN_ROOMS_SHOWN).enumerate() {
+            let row = ROW_LAN_FOUND + i as i32;
+            self.row_button(ctx, a, c, rows, 2 + i as i32, name, addr, row, !in_room, 1.0, false);
+        }
+        if rooms.is_empty() && !in_room {
+            let y = rows_top(rows) - 2.0 * row_step(rows);
+            self.text(a, c, "Looking for rooms...", 0.0, y, 24.0, 1, LABEL_DIM);
+        }
+        let addr = self.lan.addr.clone();
+        let note = match (self.cursor, self.lan.mode) {
+            _ if self.typing.is_some() => super::text::tr(&self.lang, "Type the host's address, then Enter. Esc cancels.").to_string(),
+            (ROW_LAN_ROOM, 0) => super::text::tr(&self.lang, "Others on your network can then join this PC. The game restarts.").to_string(),
+            (ROW_LAN_ROOM, 1) => super::text::tr(&self.lang, "Others join at {addr}. Stopping restarts the game.").replace("{addr}", &addr),
+            (ROW_LAN_ROOM, _) => super::text::tr(&self.lang, "In the room at {addr}. Leaving restarts the game.").replace("{addr}", &addr),
+            (ROW_LAN_ADDRESS, 0) => super::text::tr(&self.lang, "A room by its address, such as 192.168.1.20.").to_string(),
+            (n, 0) if n >= ROW_LAN_FOUND => super::text::tr(&self.lang, "Join this room. The game restarts and joins it.").to_string(),
+            _ => Tab::Lan.help().to_string(),
+        };
+        self.help_line(a, c, &note, u32::MAX);
     }
 
     fn draw_gameplay(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
@@ -943,7 +1047,8 @@ impl SettingsWindow {
         if s.language == code && code != at_boot {
             self.help_line(a, c, restart, 0xFFF0_B0FF);
         } else {
-            self.help_line(a, c, &format!("Shows the game's text and these menus in {name}."), u32::MAX);
+            let line = super::text::tr(&self.lang, "Shows the game's text and these menus in {name}.").replace("{name}", name);
+            self.help_line(a, c, &line, u32::MAX);
         }
     }
 
@@ -1039,8 +1144,8 @@ impl SettingsWindow {
         let (title, line) = match ask {
             Ask::Cheat(_) => ("Are you sure?", "This will mark your save as cheated.".to_string()),
             Ask::Update => match &self.update {
-                Some((v, true)) => ("Update available", format!("Version {v} is out. Update and restart the game?")),
-                Some((v, false)) => ("Update available", format!("Version {v} is out. Open its web page?")),
+                Some((v, true)) => ("Update available", super::text::tr(&self.lang, "Version {v} is out. Update and restart the game?").replace("{v}", v)),
+                Some((v, false)) => ("Update available", super::text::tr(&self.lang, "Version {v} is out. Open its web page?").replace("{v}", v)),
                 None => ("Update available", String::new()),
             },
         };
@@ -1051,7 +1156,7 @@ impl SettingsWindow {
         // Smaller if it would run past the window's sides.
         let mut size = 24.0;
         if a.message.ready() {
-            let width = layout::measure_text(&a.message, &line, size);
+            let width = layout::measure_text(&a.message, super::text::tr(&self.lang, &line), size);
             if width > 560.0 {
                 size *= 560.0 / width;
             }
@@ -1082,9 +1187,10 @@ impl SettingsWindow {
             UpdateState::Downloading { done, total } => {
                 let percent = if *total > 0 { (done * 100 / total).min(100) as u32 } else { 0 };
                 self.slider_bar(ctx, a, c, -240.0, 240.0, -28.0, 26.0, percent, false);
-                ("Updating", format!("Downloading version {version}: {percent}%"), Some("Cancel"))
+                let line = super::text::tr(&self.lang, "Downloading version {version}: {percent}%").replace("{version}", &version).replace("{percent}", &percent.to_string());
+                ("Updating", line, Some("Cancel"))
             }
-            UpdateState::Installing => ("Updating", format!("Installing version {version}..."), None),
+            UpdateState::Installing => ("Updating", super::text::tr(&self.lang, "Installing version {version}...").replace("{version}", &version), None),
             UpdateState::Restarting => ("Updating", "Done. The game is restarting.".to_string(), None),
             UpdateState::Failed(e) => {
                 let mut chars = e.chars();
@@ -1095,7 +1201,7 @@ impl SettingsWindow {
         self.text(a, c, title, 0.0, 62.0, 32.0, 1, u32::MAX);
         let mut size = 24.0;
         if a.message.ready() {
-            let width = layout::measure_text(&a.message, &line, size);
+            let width = layout::measure_text(&a.message, super::text::tr(&self.lang, &line), size);
             if width > 560.0 {
                 size *= 560.0 / width;
             }
@@ -1193,6 +1299,7 @@ impl SettingsWindow {
             Tab::Keybinds => 12,
             Tab::Gameplay => GAMEPLAY_LAST,
             Tab::Language => LANGUAGES.len() as i32,
+            Tab::Lan => ROW_LAN_FOUND - 1 + self.lan.rooms.len().min(LAN_ROOMS_SHOWN) as i32,
         };
         if up {
             self.cursor -= 1;
@@ -1248,6 +1355,13 @@ impl SettingsWindow {
                 changes.push(Change::Gameplay);
             }
             (Tab::Gameplay, ROW_POWER_UP) if confirm => self.ask_cheat(Cheat::PowerUp, s, changes),
+            (Tab::Lan, ROW_LAN_ROOM) if confirm => changes.push(if self.lan.mode == 0 { Change::LanHost } else { Change::LanLeave }),
+            (Tab::Lan, ROW_LAN_ADDRESS) if confirm && self.lan.mode == 0 => self.typing = Some(String::new()),
+            (Tab::Lan, n) if confirm && n >= ROW_LAN_FOUND && self.lan.mode == 0 => {
+                if let Some((_, addr)) = self.lan.rooms.get((n - ROW_LAN_FOUND) as usize) {
+                    changes.push(Change::LanJoin(addr.clone()));
+                }
+            }
             (Tab::Language, n) if confirm && (1..=3).contains(&n) => {
                 s.language = LANGUAGES[n as usize - 1].0.into();
                 changes.push(Change::Language);
@@ -1267,7 +1381,7 @@ impl SettingsWindow {
             self.ask.is_some() as i32,
             self.dropdown.is_some() as i32,
             self.closing as i32,
-            self.capturing.is_some() as i32,
+            (self.capturing.is_some() || self.typing.is_some()) as i32,
         ]
     }
 
@@ -1341,6 +1455,7 @@ impl SettingsWindow {
         static AT_BOOT: std::sync::OnceLock<String> = std::sync::OnceLock::new();
         let at_boot = AT_BOOT.get_or_init(|| s.language.clone()).clone();
         self.now = now;
+        self.lang = s.language.clone();
         self.list = DrawList::default();
         let a = self.assets.get_or_insert_with(|| Arc::new(Assets::load(ctx))).clone();
         let screen = ctx.content_rect();
@@ -1382,7 +1497,7 @@ impl SettingsWindow {
             c.view.scale *= scale;
             self.panel(ctx, &a, &c, WIDTH, HEIGHT);
             if a.mario.ready() {
-                layout::draw_text(&mut self.list, &c.view, &a.mario, "Settings", 0.0, TITLE_Y, 52.0, u32::MAX, u32::MAX, c.alpha, 1, 1);
+                layout::draw_text(&mut self.list, &c.view, &a.mario, super::text::tr(&self.lang, "Settings"), 0.0, TITLE_Y, 52.0, u32::MAX, u32::MAX, c.alpha, 1, 1);
             }
             self.rule(ctx, &c, -WIDTH / 2.0 + 14.0, WIDTH / 2.0 - 14.0, PROMPT_RULE_Y);
             // The picture font's 2 and 1.
@@ -1405,6 +1520,7 @@ impl SettingsWindow {
             Tab::Keybinds => self.draw_keybinds(ctx, &a, &c, s),
             Tab::Gameplay => self.draw_gameplay(ctx, &a, &c, s),
             Tab::Language => self.draw_language(ctx, &a, &c, s, &at_boot),
+            Tab::Lan => self.draw_lan(ctx, &a, &c),
         }
         self.defer_cursor = false;
         if let Some((cc, x, y, w, h)) = self.deferred.take().filter(|_| self.dropdown.is_none()) {

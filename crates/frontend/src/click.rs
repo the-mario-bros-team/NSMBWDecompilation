@@ -16,6 +16,7 @@
 //! - the save select: its files, Free-for-All, Coin Battle, Copy and Erase,
 //!   and the port's Settings button;
 //! - Select Players: 1 to 4 players, and Back;
+//! - the character screen: player 1's OK bar, its arrows, and Back;
 //! - the world map: its button hints (Menu, Select World, View Map,
 //!   Items), the Star Coins screen's Back, Select a World's islands and
 //!   Back, and its courses, Toad houses, towers and castles: the player
@@ -380,9 +381,8 @@ fn start(sys: &mut System, c: Click) -> Option<Job> {
     let squeeze = squeeze(sys);
     let steer = Job::Cursor(Steer { x: c.x * squeeze, y: c.y, steps: 0, stuck: 0, last: None, pressed: None, blocked: None });
     if scene == SCENE_GAME_SETUP {
-        if has(PROFILE_CHARACTER) {
-            return cursor_box(sys).map(|_| steer);
-        }
+        // The save select and Select Players while they wait for a choice
+        // (the character screen's object is there all along).
         if let Some(fs) = objects.iter().find(|o| o.0 == PROFILE_FILE_SELECT).map(|o| o.1) {
             if r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT {
                 return file_select(sys, fs, c, squeeze);
@@ -393,7 +393,12 @@ fn start(sys: &mut System, c: Click) -> Option<Job> {
                 return select_players(c);
             }
         }
-        return None;
+        if has(PROFILE_CHARACTER) {
+            if let Some(job) = character_screen(sys, &objects, c, squeeze) {
+                return Some(job);
+            }
+        }
+        return cursor_box(sys).map(|_| steer);
     }
     let object = |p: u16| objects.iter().find(|o| o.0 == p).map(|o| o.1);
     let r = c.half_width;
@@ -639,6 +644,81 @@ impl Walk {
             (false, _, _) => SCREEN_DOWN,
         })
     }
+}
+
+/// A pane and every pane above it are visible, and it isn't faded out.
+fn shown(sys: &System, pane: u32) -> bool {
+    if !in_ram(pane) || r8(sys, pane + PANE_GLOBAL_ALPHA) == 0 {
+        return false;
+    }
+    let mut p = pane;
+    for _ in 0..16 {
+        if !in_ram(p) {
+            return true;
+        }
+        if r8(sys, p + PANE_FLAGS) & 1 == 0 {
+            return false;
+        }
+        p = r32(sys, p + 0xC);
+    }
+    true
+}
+
+/// The character screen (after Select Players): each player's card has an
+/// OK bar (`P_InfoBase_00`) with arrows beside it, lit lamps say whose
+/// card it is, and `N_back` is Back. A click on player 1's OK bar presses
+/// 2, on one of its arrows the D-pad that way, on Back 1; anything else is
+/// left to the cursor.
+fn character_screen(sys: &mut System, objects: &[(u16, u32)], c: Click, squeeze: f32) -> Option<Job> {
+    let x = c.x * squeeze;
+    let hit = |b: (f32, f32, f32, f32), margin: f32| (b.0 - margin..=b.2 + margin).contains(&x) && (b.1 - margin..=b.3 + margin).contains(&c.y);
+    let mut roots: Vec<u32> = Vec::new();
+    for &(_, o) in objects {
+        for off in (0..0x1000).step_by(4) {
+            let p = r32(sys, o + off);
+            if in_ram(p) && !roots.contains(&p) && pane_name(sys, p) == "RootPane" {
+                roots.push(p);
+            }
+        }
+    }
+    let mut back = None;
+    // Each card: its OK bar, right and left arrows, and lamps 08 and 09 lit.
+    let mut cards = Vec::new();
+    for root in roots {
+        let mut pane = |name: &str| {
+            let p = sys.find_pane(root, name, 0);
+            (p != 0 && shown(sys, p)).then(|| pane_box(sys, p)).flatten()
+        };
+        if let Some(b) = pane("N_back") {
+            back = Some(b);
+        }
+        if let Some(ok) = pane("P_InfoBase_00") {
+            let arrows = [pane("P_arrowR_00"), pane("P_arrowL_01")];
+            let lamps = [pane("P_lamp_08").is_some(), pane("P_lamp_09").is_some()];
+            cards.push((ok, arrows, lamps));
+        }
+    }
+    if let Some((_, y0, x1, y1)) = back {
+        let mid = (y0 + y1) / 2.0;
+        if hit((x1 - 150.0 * squeeze, mid - 20.0, x1, mid + 20.0), 8.0) {
+            return Some(Job::Once(button::ONE));
+        }
+    }
+    let p1 = if cards.len() == 1 { cards.first() } else { cards.iter().find(|c| c.2[0] && !c.2[1]) }?;
+    let (ok, arrows, _) = *p1;
+    if hit(ok, 6.0) {
+        return Some(Job::Once(button::TWO));
+    }
+    let reach = (ok.2 - ok.0) / 2.0 + 40.0 * squeeze;
+    let ok_x = (ok.0 + ok.2) / 2.0;
+    for (arrow, press) in arrows.into_iter().zip([SCREEN_RIGHT, SCREEN_LEFT]) {
+        if let Some(a) = arrow {
+            if ((a.0 + a.2) / 2.0 - ok_x).abs() <= reach && hit(a, 14.0) {
+                return Some(Job::Once(press));
+            }
+        }
+    }
+    None
 }
 
 /// The save select's buttons (only while it waits for a choice).
