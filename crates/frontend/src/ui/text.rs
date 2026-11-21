@@ -28,8 +28,10 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("How the game is shown on your screen.", "Comment le jeu s'affiche sur votre écran.", "Cómo se ve el juego en tu pantalla."),
     ("How the game is drawn, and how smoothly it moves.", "Comment le jeu est dessiné, et sa fluidité.", "Cómo se dibuja el juego y con qué fluidez se mueve."),
     ("How loud the game's music and sounds are.", "Le volume de la musique et des sons du jeu.", "El volumen de la música y los sonidos del juego."),
-    ("Which keys play the Wii Remote's buttons.", "Les touches qui jouent les boutons de la Wiimote.", "Las teclas que hacen de botones del mando de Wii."),
-    ("Optional helpers; net games always keep the game's own rules.", "Aides facultatives ; les parties en réseau gardent les règles du jeu.", "Ayudas opcionales; en red siempre rigen las reglas del juego."),
+    ("Which keys and controller buttons play the Wii Remote's buttons.", "Les touches et boutons de manette qui jouent les boutons de la Wiimote.", "Las teclas y botones del mando que hacen de botones del mando de Wii."),
+    ("Optional helpers. Online, only Exit Course applies, if every player has it on.", "Aides facultatives. En ligne, seul Quitter le niveau s'applique, si tous les joueurs l'ont activé.", "Ayudas opcionales. En línea solo se aplica Salir del nivel, si todos los jugadores lo tienen activado."),
+    ("Mods", "Mods", "Mods"),
+    ("HD textures, and mods that change the game's files.", "Textures HD, et mods qui changent les fichiers du jeu.", "Texturas HD y mods que cambian los archivos del juego."),
     ("The language of the game's text and these menus.", "La langue des textes du jeu et de ces menus.", "El idioma de los textos del juego y de estos menús."),
     // Display.
     ("Resolution", "Résolution", "Resolución"),
@@ -46,7 +48,16 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("Off: the game plays in a window.", "Non : le jeu s'affiche dans une fenêtre.", "No: el juego se muestra en una ventana."),
     ("No tearing: frames wait for the display, the game keeps its pace.", "Sans déchirement : les images attendent l'écran, le jeu garde son rythme.", "Sin cortes: las imágenes esperan a la pantalla y el juego mantiene su ritmo."),
     ("Shows the FPS and each frame's time at the top left; left and right set its size.", "Affiche les FPS et le temps de chaque image en haut à gauche ; gauche et droite règlent sa taille.", "Muestra los FPS y el tiempo de cada imagen arriba a la izquierda; izquierda y derecha cambian su tamaño."),
+    ("Ultrawide", "Ultra-large", "Ultrapanorámica"),
+    ("The Wii's original 4:3 picture.", "L'image 4:3 d'origine de la Wii.", "La imagen 4:3 original de la Wii."),
+    ("The game's 16:9 widescreen picture.", "L'image 16:9 du jeu en écran large.", "La imagen panorámica 16:9 del juego."),
+    ("For a 16:10 screen: fills it, with a slightly narrower view.", "Pour un écran 16:10 : le remplit, avec une vue un peu plus étroite.", "Para una pantalla 16:10: la llena, con una vista algo más estrecha."),
+    ("Fills a screen wider than 16:9 with a wider view (16:9 on others).", "Remplit un écran plus large que 16:9 avec une vue plus large (16:9 sur les autres).", "Llena una pantalla más ancha que 16:9 con una vista más amplia (16:9 en las demás)."),
     // Graphics.
+    ("Spinning Coins", "Pièces animées", "Monedas giratorias"),
+    ("Depth Blur", "Flou de profondeur", "Desenfoque de profundidad"),
+    ("Animates coins and blocks; off saves a little GPU work.", "Anime les pièces et les blocs ; désactivé, épargne un peu le GPU.", "Anima las monedas y los bloques; desactivado ahorra algo de trabajo a la GPU."),
+    ("The blur and heat haze of desert, beach, water and lava areas.", "Le flou et la brume de chaleur des zones de désert, de plage, d'eau et de lave.", "El desenfoque y la calima de las zonas de desierto, playa, agua y lava."),
     ("Renderer", "Rendu", "Renderizador"),
     ("Battery Saver", "Économie d'énergie", "Ahorro de batería"),
     ("Frame Interpolation", "Interpolation", "Interpolación"),
@@ -92,6 +103,23 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("Tilts the Wii Remote right, for the platforms that tilt.", "Incline la Wiimote à droite, pour les plateformes qui basculent.", "Inclina el mando de Wii a la derecha, para las plataformas que se inclinan."),
     ("The + button: pause a course, or open the world map's menu.", "Le bouton + : mettre un niveau en pause, ou ouvrir le menu de la carte.", "El botón +: pausar un nivel, o abrir el menú del mapa."),
     ("The - button: open Select a World on the world map.", "Le bouton - : ouvrir le choix du monde sur la carte.", "El botón -: abrir la selección de mundo en el mapa."),
+    ("Bindings", "Commandes", "Asignación"),
+    ("Keyboard", "Clavier", "Teclado"),
+    ("Controller", "Manette", "Mando"),
+    ("Rumble", "Vibrations", "Vibración"),
+    ("Wii Remotes", "Wiimotes", "Mandos de Wii"),
+    ("Space Smart Spin", "Vrille intelligente (Espace)", "Giro inteligente (Espacio)"),
+    ("Reverse Tilt", "Inclinaison inversée", "Inclinación invertida"),
+    ("Mouse as Gyro", "Souris en gyroscope", "Ratón como giroscopio"),
+    ("Shows the keyboard's keys or the controllers' buttons above.", "Affiche ci-dessus les touches du clavier ou les boutons des manettes.", "Muestra arriba las teclas del teclado o los botones de los mandos."),
+    ("Controllers rumble when the game rumbles the Wii Remote.", "Les manettes vibrent quand le jeu fait vibrer la Wiimote.", "Los mandos vibran cuando el juego hace vibrar el mando de Wii."),
+    ("Wii Remotes paired with Windows play as players 1 to 4 (not in net games).", "Les Wiimotes appairées à Windows jouent les joueurs 1 à 4 (pas en réseau).", "Los mandos de Wii emparejados con Windows juegan como jugadores 1 a 4 (no en red)."),
+    ("With Space as a Jump key, Space in the air does a spin.", "Avec Espace comme touche de saut, Espace en l'air fait une vrille.", "Con Espacio como tecla de salto, Espacio en el aire hace un giro."),
+    ("Platforms you tilt lean the way the keys or the stick go.", "Les plateformes à incliner penchent du côté des touches ou du stick.", "Las plataformas que inclinas se ladean hacia donde van las teclas o el stick."),
+    ("Moving the mouse tilts the remote; moving it back quickly shakes it.", "Bouger la souris incline la Wiimote ; la ramener vite la secoue.", "Mover el ratón inclina el mando; devolverlo rápido lo agita."),
+    ("Press a button...", "Appuyez sur un bouton...", "Pulsa un botón..."),
+    ("Hold a button, or 2 or 3 together, then let go. Esc cancels, Delete clears.", "Maintenez un bouton, ou 2 ou 3 ensemble, puis relâchez. Échap annule, Suppr efface.", "Mantén un botón, o 2 o 3 a la vez, y suelta. Esc cancela, Supr borra."),
+    ("Hold a key or mouse button, or 2 or 3 together, then let go. Esc cancels, Delete clears.", "Maintenez une touche ou un bouton de souris, ou 2 ou 3 ensemble, puis relâchez. Échap annule, Suppr efface.", "Mantén una tecla o un botón del ratón, o 2 o 3 a la vez, y suelta. Esc cancela, Supr borra."),
     // Gameplay.
     ("No Time Limit", "Sans limite de temps", "Sin límite de tiempo"),
     ("Infinite Lives", "Vies infinies", "Vidas infinitas"),
@@ -111,6 +139,12 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("Are you sure?", "Vous êtes sûr ?", "¿Seguro?"),
     ("This will mark your save as cheated.", "Votre sauvegarde sera marquée comme trichée.", "Tu partida quedará marcada como hecha con trucos."),
     ("Cheated", "Triche", "Trucos"),
+    ("Autosave", "Sauvegarde auto", "Autoguardado"),
+    ("Exit Course", "Quitter le niveau", "Salir del nivel"),
+    ("P1 Character", "Personnage J1", "Personaje J1"),
+    ("The game is saved after every course you clear, as the map's Save does.", "Le jeu est sauvegardé après chaque niveau terminé, comme avec Sauvegarder sur la carte.", "La partida se guarda tras cada nivel superado, como hace Guardar en el mapa."),
+    ("The pause menu's Exit Course in every course, cleared or not.", "Quitter le niveau dans le menu pause de chaque niveau, terminé ou non.", "Salir del nivel en el menú de pausa de cada nivel, superado o no."),
+    ("Player 1 picks a character too, on the game's own screen (from the next start).", "Le joueur 1 choisit aussi un personnage, sur l'écran du jeu (au prochain démarrage).", "El jugador 1 también elige personaje, en la pantalla del propio juego (desde el próximo inicio)."),
     // Language.
     ("Shows the game's text and these menus in {name}.", "Affiche les textes du jeu et ces menus en {name}.", "Muestra los textos del juego y estos menús en {name}."),
     // LAN Play.
@@ -130,6 +164,22 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("In the room at {addr}. Leaving restarts the game.", "Dans la salle à {addr}. Quitter redémarre le jeu.", "En la sala de {addr}. Salir reinicia el juego."),
     ("A room by its address, such as 192.168.1.20.", "Une salle par son adresse, par exemple 192.168.1.20.", "Una sala por su dirección, por ejemplo 192.168.1.20."),
     ("Join this room. The game restarts and joins it.", "Rejoindre cette salle. Le jeu redémarre et la rejoint.", "Unirse a esta sala. El juego se reinicia y se une a ella."),
+    // Mods.
+    ("HD Texture Pack", "Pack de textures HD", "Pack de texturas HD"),
+    ("Download", "Télécharger", "Descargar"),
+    ("Installing...", "Installation...", "Instalando..."),
+    ("Try Again", "Réessayer", "Reintentar"),
+    ("Pack", "Pack", "Pack"),
+    ("File mods: folders in {dir} laid out as the disc's files.", "Mods de fichiers : des dossiers dans {dir} organisés comme les fichiers du disque.", "Mods de archivos: carpetas en {dir} organizadas como los archivos del disco."),
+    ("Downloading from the pack's own download page.", "Téléchargement depuis la page de téléchargement du pack.", "Descargando desde la página de descarga del pack."),
+    ("Unpacking the textures.", "Décompression des textures.", "Descomprimiendo las texturas."),
+    ("HD textures by Bighead and friends: a 23 MB download. Or put a Dolphin pack in {dir}.", "Textures HD de Bighead et ses amis : 23 Mo à télécharger. Ou placez un pack Dolphin dans {dir}.", "Texturas HD de Bighead y compañía: una descarga de 23 MB. O pon un pack de Dolphin en {dir}."),
+    ("HD textures by {by}.", "Textures HD de {by}.", "Texturas HD de {by}."),
+    ("HD textures from {dir}\\{p}.", "Textures HD de {dir}\\{p}.", "Texturas HD de {dir}\\{p}."),
+    ("Off: the game's own textures.", "Désactivé : les textures d'origine du jeu.", "Desactivado: las texturas originales del juego."),
+    ("Left and right pick one of the {n} packs in {dir}.", "Gauche et droite choisissent l'un des {n} packs de {dir}.", "Izquierda y derecha eligen uno de los {n} packs de {dir}."),
+    ("The pack in {dir}\\{p}; put others beside it to choose.", "Le pack de {dir}\\{p} ; placez-en d'autres à côté pour choisir.", "El pack de {dir}\\{p}; pon otros a su lado para elegir."),
+    ("From the next start, the files in {dir}\\{name} replace the game's.", "Au prochain démarrage, les fichiers de {dir}\\{name} remplacent ceux du jeu.", "Desde el próximo inicio, los archivos de {dir}\\{name} sustituyen a los del juego."),
     // Updates.
     ("Update available", "Mise à jour disponible", "Actualización disponible"),
     ("Version {v} is out. Update and restart the game?", "La version {v} est sortie. Mettre à jour et redémarrer le jeu ?", "Ha salido la versión {v}. ¿Actualizar y reiniciar el juego?"),
@@ -177,7 +227,7 @@ mod tests {
         let mut seen = std::collections::HashSet::new();
         for (en, fr, es) in TABLE {
             assert!(seen.insert(en), "{en} twice");
-            for field in ["{v}", "{name}", "{version}", "{percent}", "{addr}"] {
+            for field in ["{v}", "{name}", "{version}", "{percent}", "{addr}", "{dir}", "{p}", "{by}", "{n}"] {
                 assert_eq!(en.contains(field), fr.contains(field), "{en} / {fr}");
                 assert_eq!(en.contains(field), es.contains(field), "{en} / {es}");
             }

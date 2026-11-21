@@ -1259,7 +1259,7 @@ impl SettingsWindow {
             let (x, y) = Self::switch_at(i);
             let (on, value) = sw.state(s, self.pad_view);
             let key = SWITCH_CURSOR + i as i32;
-            let label = format!("{}: {value}", sw.name());
+            let label = format!("{}: {}", super::text::tr(&self.lang, sw.name()), super::text::tr(&self.lang, value));
             self.pause_button(ctx, a, c, key, &label, x, y, SWITCH_W, SWITCH_H, self.cursor == key, true, 21.0, on, 0.0, true);
             self.add_hit(x, y, SWITCH_W + 6.0, SWITCH_STEP, key, EV_CONFIRM);
         }
@@ -1509,7 +1509,7 @@ impl SettingsWindow {
         }
         if self.mods.is_empty() {
             let y = rows_top(rows) - (first - 1) as f32 * step;
-            let line = format!("File mods: folders in {} laid out as the disc's files.", crate::mods::full_path(crate::mods::MODS));
+            let line = super::text::tr(&self.lang, "File mods: folders in {dir} laid out as the disc's files.").replace("{dir}", &crate::mods::full_path(crate::mods::MODS));
             let mut text_size = 20.0;
             if a.message.ready() {
                 let width = layout::measure_text(&a.message, &line, text_size);
@@ -1521,6 +1521,7 @@ impl SettingsWindow {
         }
         let mod_row = (first..=self.mods_last()).contains(&self.cursor).then(|| names[(self.cursor - first) as usize].clone());
         let mut color = u32::MAX;
+        let tr = |english: &str| super::text::tr(&self.lang, english).to_string();
         let note = match (self.cursor, &pack, mod_row) {
             (ROW_HD, None, _) => match &self.pack_download {
                 Some(PackDownload::Downloading { .. }) => "Downloading from the pack's own download page.".into(),
@@ -1529,16 +1530,16 @@ impl SettingsWindow {
                     color = 0xFFF0_B0FF;
                     why.clone()
                 }
-                _ => format!("HD textures by Bighead and friends: a 23 MB download. Or put a Dolphin pack in {}.", crate::mods::full_path(crate::mods::PACKS)),
+                _ => tr("HD textures by Bighead and friends: a 23 MB download. Or put a Dolphin pack in {dir}.").replace("{dir}", &crate::mods::full_path(crate::mods::PACKS)),
             },
             (ROW_HD, Some(p), _) if s.hd_textures => match crate::mods::credits(p) {
-                Some(by) => format!("HD textures by {by}."),
-                None => format!("HD textures from {}\\{p}.", crate::mods::PACKS),
+                Some(by) => tr("HD textures by {by}.").replace("{by}", by),
+                None => tr("HD textures from {dir}\\{p}.").replace("{dir}", crate::mods::PACKS).replace("{p}", p),
             },
             (ROW_HD, Some(_), _) => "Off: the game's own textures.".into(),
-            (ROW_PACK, Some(_), _) if self.packs.len() > 1 => format!("Left and right pick one of the {} packs in {}.", self.packs.len(), crate::mods::PACKS),
-            (ROW_PACK, Some(p), _) => format!("The pack in {}\\{p}; put others beside it to choose.", crate::mods::PACKS),
-            (_, _, Some(name)) => format!("From the next start, the files in {}\\{name} replace the game's.", crate::mods::MODS),
+            (ROW_PACK, Some(_), _) if self.packs.len() > 1 => tr("Left and right pick one of the {n} packs in {dir}.").replace("{n}", &self.packs.len().to_string()).replace("{dir}", crate::mods::PACKS),
+            (ROW_PACK, Some(p), _) => tr("The pack in {dir}\\{p}; put others beside it to choose.").replace("{dir}", crate::mods::PACKS).replace("{p}", p),
+            (_, _, Some(name)) => tr("From the next start, the files in {dir}\\{name} replace the game's.").replace("{dir}", crate::mods::MODS).replace("{name}", &name),
             _ => Tab::Mods.help().into(),
         };
         self.help_line(a, c, &note, color);
