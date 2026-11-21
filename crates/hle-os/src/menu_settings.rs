@@ -266,6 +266,12 @@ impl System {
     /// CPU is then put back as it was (the clock keeps the time the call
     /// took), so a hook changes no register but those it sets itself.
     pub fn call_nested(&mut self, addr: u32, args: &[u32], sp: u32) -> u32 {
+        self.call_nested_cpu(addr, args, sp).gpr[3]
+    }
+
+    /// [`System::call_nested`], returning the CPU as the call left it (its
+    /// results: r3, f1).
+    pub fn call_nested_cpu(&mut self, addr: u32, args: &[u32], sp: u32) -> guest_cpu::Cpu {
         let saved = self.cpu.clone();
         self.cpu.gpr[1] = sp;
         for (i, &a) in args.iter().enumerate() {
@@ -293,11 +299,9 @@ impl System {
             eprintln!("menu hook: call to {addr:#010x} did not return");
         }
         self.steps += n;
-        let r = self.cpu.gpr[3];
-        let cycles = self.cpu.cycles;
-        self.cpu = saved;
-        self.cpu.cycles = cycles;
-        r
+        let after = std::mem::replace(&mut self.cpu, saved);
+        self.cpu.cycles = after.cycles;
+        after
     }
 
     /// [`System::call_nested`] on the hooked thread's stack.

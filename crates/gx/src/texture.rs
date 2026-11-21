@@ -59,7 +59,7 @@ pub const C14X2: u32 = 0xA;
 pub const CMPR: u32 = 0xE;
 
 /// (block width, block height, bytes per block).
-fn block(fmt: u32) -> (usize, usize, usize) {
+pub fn block(fmt: u32) -> (usize, usize, usize) {
     match fmt {
         I4 | C4 | CMPR => (8, 8, 32),
         I8 | IA4 | C8 => (8, 4, 32),
@@ -271,6 +271,27 @@ pub fn encode(fmt: u32, w: usize, h: usize, rgba: &[u8]) -> Vec<u8> {
     out
 }
 
+/// Where an EFB copy of `w` x `h` texels in format `fmt` lies in RAM, from
+/// its address: each row of blocks' offset and length. The rows follow each
+/// other unless `stride` (bytes from one row of blocks to the next, BP 0x4D)
+/// is wider: the copy then patches part of a wider texture.
+pub fn copy_rows(fmt: u32, w: usize, h: usize, stride: usize) -> impl Iterator<Item = (usize, usize)> {
+    let (bw, bh, bytes) = block(fmt);
+    let row = w.div_ceil(bw) * bytes;
+    let step = stride.max(row);
+    (0..h.div_ceil(bh)).map(move |r| (r * step, row))
+}
+
+/// The RAM bytes an EFB copy covers ([`copy_rows`]), its rows one after
+/// another: what its texels encode to. `None` if a row is outside RAM.
+pub fn copy_bytes(mem: &dyn guest_mem::Ram, addr: u32, fmt: u32, w: usize, h: usize, stride: usize) -> Option<Vec<u8>> {
+    let mut out = Vec::new();
+    for (at, len) in copy_rows(fmt, w, h, stride) {
+        out.extend_from_slice(mem.ram(addr.wrapping_add(at as u32), len)?);
+    }
+    Some(out)
+}
+
 /// The texture format an EFB copy in copy format `fmt` (BP 0x52, after
 /// unscrambling) leaves in RAM.
 pub fn copy_texture_format(fmt: u32) -> u32 {
@@ -338,6 +359,9 @@ pub struct Cache {
     /// Keys whose contents were hashed this generation -> id.
     checked: FastMap<TexKey, u32>,
     efb_copies: FastMap<u32, EfbCopy>,
+    /// Each key's texture as last decided (id, generation), for EFB copies
+    /// that patch part of one ([`Cache::patch_targets`]).
+    live: FastMap<TexKey, (u32, u64)>,
     /// Changes whenever a lookup's answer could change (new generation, EFB
     /// copy, writeback, TMEM load); callers may memoise results per epoch.
     pub epoch: u64,
@@ -373,6 +397,7 @@ impl Cache {
                 }
                 keep
             });
+            self.live.retain(|_, (_, last)| g - *last < 60);
         }
     }
 
@@ -445,7 +470,35 @@ impl Cache {
             }
         };
         self.checked.insert(key, id);
+        self.live.insert(key, (id, generation));
         id
+    }
+
+    /// The textures an EFB copy to `addr` patches (`w` x `h` texels in
+    /// format `fmt`, rows `stride` bytes apart): each one used in this
+    /// generation or the last whose RAM holds `addr`, in the same format,
+    /// one level, `stride` its row of blocks, with the patch inside it.
+    /// For each, its id and where the patch goes (texels).
+    pub fn patch_targets(&self, addr: u32, fmt: u32, w: u32, h: u32, stride: u32) -> Vec<(u32, u32, u32)> {
+        let (bw, bh, bytes) = block(fmt);
+        let mut out = Vec::new();
+        for (key, &(id, used)) in &self.live {
+            if used + 1 < self.generation || key.levels != 1 || key.format != fmt || addr < key.addr {
+                continue;
+            }
+            let (kw, kh) = (usize::from(key.width), usize::from(key.height));
+            let per_row = kw.div_ceil(bw);
+            let at = (addr - key.addr) as usize;
+            if per_row * bytes != stride as usize || at >= level_size(fmt, kw, kh) || at % bytes != 0 {
+                continue;
+            }
+            let block = at / bytes;
+            let (x, y) = ((block % per_row * bw) as u32, (block / per_row * bh) as u32);
+            if x + w <= u32::from(key.width) && y + h <= u32::from(key.height) {
+                out.push((id, x, y));
+            }
+        }
+        out
     }
 }
 
@@ -499,6 +552,26 @@ mod tests {
             assert_eq!(once, twice, "format {fmt}");
         }
         assert_eq!(&decode(RGBA8, 16, 8, &encode(RGBA8, 16, 8, &rgba), &[], 0), &rgba);
+    }
+
+    #[test]
+    fn copy_patches_its_texture() {
+        // A 1024x512 RGB5A3 atlas (256 blocks of 32 bytes a row) and a 32x32
+        // copy into its blocks at (64, 8) texels.
+        let mut c = Cache::default();
+        let key = TexKey { addr: 0x10_0000, width: 1024, height: 512, format: RGB5A3, levels: 1, tlut: 0, tlut_format: 0 };
+        let data = vec![0u8; level_size(RGB5A3, 1024, 512)];
+        let id = c.lookup(key, &data, &[]);
+        let stride = 256 * 32;
+        let addr = 0x10_0000 + 2 * stride + 16 * 32;
+        assert_eq!(c.patch_targets(addr, RGB5A3, 32, 32, stride), vec![(id, 64, 8)]);
+        // Another format, or rows the copy does not share, patch nothing.
+        assert!(c.patch_targets(addr, RGBA8, 32, 32, stride).is_empty());
+        assert!(c.patch_targets(addr, RGB5A3, 32, 32, stride / 2).is_empty());
+        // Its rows in RAM: eight rows of 8 blocks, a stride apart.
+        let rows: Vec<_> = copy_rows(RGB5A3, 32, 32, stride as usize).collect();
+        assert_eq!((rows.len(), rows[1]), (8, (stride as usize, 256)));
+        assert_eq!(copy_rows(RGB5A3, 32, 32, 0).nth(1), Some((256, 256)));
     }
 
     #[test]

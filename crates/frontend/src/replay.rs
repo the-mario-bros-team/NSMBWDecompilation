@@ -84,10 +84,14 @@ pub fn run(o: &Options) -> Result<bool, String> {
         r.finish().map_err(|e| e.to_string())?;
         for wb in r.take_writebacks() {
             let data = gx::texture::encode(wb.tex_format, wb.width as usize, wb.height as usize, &wb.rgba);
-            if let Some(dst) = mem.ram_mut(wb.addr, data.len()) {
-                dst.copy_from_slice(&data);
-                gpu.note_writeback(wb.addr, &data);
+            let mut from = 0;
+            for (at, len) in gx::texture::copy_rows(wb.tex_format, wb.width as usize, wb.height as usize, wb.stride as usize) {
+                if let Some(dst) = mem.ram_mut(wb.addr + at as u32, len) {
+                    dst.copy_from_slice(&data[from..from + len]);
+                }
+                from += len;
             }
+            gpu.note_writeback(wb.addr, &data);
         }
     }
     let s = &gpu.stats;

@@ -14,6 +14,18 @@ pub const FPS_CHOICES: [u32; 12] = [30, 60, 90, 120, 144, 165, 180, 240, 300, 36
 
 pub const FILE: &str = "settings.toml";
 
+/// What the widescreen picture is (after WitherBlitz's port's aspect modes).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum WideMode {
+    /// The game's 16:9, with bars on a screen of another shape.
+    Sixteen9,
+    /// A 16:10 picture, the game's view a little narrower.
+    Sixteen10,
+    /// Ultrawide: on a screen wider than 16:9 the picture fills it, with a
+    /// wider view (Hor+); otherwise 16:9.
+    Fill,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Settings {
     /// One of [`FPS_CHOICES`].
@@ -26,6 +38,14 @@ pub struct Settings {
     /// 16:9, else 4:3. The game reads it at boot, so a change applies at the
     /// next start; the picture's shape changes at once.
     pub widescreen: bool,
+    /// The widescreen picture's shape (`aspect`); changes at once.
+    pub wide_mode: WideMode,
+    /// Coins, ? blocks and other animated tiles move (EFB copies patched
+    /// into their textures); off they stand still, for slow machines.
+    pub spinning_coins: bool,
+    /// The depth blur and heat haze of desert, beach, water, lava and
+    /// Bowser areas.
+    pub depth_blur: bool,
     /// FPS counter and frame-time graph.
     pub perf_monitor: bool,
     /// Show 30 frames a second while the game keeps running at 60.
@@ -55,7 +75,7 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default() }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default() }
     }
 }
 
@@ -102,7 +122,17 @@ impl Settings {
         }
         s.vsync = flag("vsync", s.vsync);
         s.fullscreen = flag("fullscreen", s.fullscreen);
-        s.widescreen = t.get("aspect").and_then(toml::Value::as_str).map_or(s.widescreen, |a| a != "4:3");
+        if let Some(a) = t.get("aspect").and_then(toml::Value::as_str) {
+            s.widescreen = a != "4:3";
+            match a {
+                "16:9" => s.wide_mode = WideMode::Sixteen9,
+                "16:10" => s.wide_mode = WideMode::Sixteen10,
+                "ultrawide" => s.wide_mode = WideMode::Fill,
+                _ => {}
+            }
+        }
+        s.spinning_coins = flag("spinning_coins", s.spinning_coins);
+        s.depth_blur = flag("depth_blur", s.depth_blur);
         s.perf_monitor = flag("perf_monitor", s.perf_monitor);
         s.battery_saver = flag("battery_saver", s.battery_saver);
         s.efb_copies_to_ram = flag("efb_copies_to_ram", s.efb_copies_to_ram);
@@ -153,8 +183,10 @@ impl Settings {
              fps = {fps}\nvsync = {}\nfullscreen = {}\n\
              # EFB resolution: 0.5..8 times 480 lines (0.5, 0.75, 1, 1.5, 2, 3, 4, 6 or 8), or \"native\" for the window's height (next start).\n\
              scale = {scale}\n\
-             # \"16:9\" or \"4:3\" (the game reads it at boot).\n\
+             # \"4:3\", \"16:9\", \"16:10\" or \"ultrawide\" (16:9 on a screen no wider); 4:3 or not is read at boot.\n\
              aspect = \"{}\"\nperf_monitor = {}\nbattery_saver = {}\n\
+             # Coins and blocks animate; the depth blur and heat haze of some areas.\n\
+             spinning_coins = {}\ndepth_blur = {}\n\
              # Also write EFB copies into guest RAM (slower; NSMBW does not need it).\n\
              efb_copies_to_ram = {}\n\
              # The performance monitor's size (5..200 percent).\n\
@@ -169,9 +201,11 @@ impl Settings {
              cheated = [{}, {}, {}]\n",
             self.vsync,
             self.fullscreen,
-            if self.widescreen { "16:9" } else { "4:3" },
+            self.aspect_name(),
             self.perf_monitor,
             self.battery_saver,
+            self.spinning_coins,
+            self.depth_blur,
             self.efb_copies_to_ram,
             self.perf_size,
             self.volume[0],
@@ -197,6 +231,16 @@ impl Settings {
         }
     }
 
+    /// The `aspect` key's value.
+    pub fn aspect_name(&self) -> &'static str {
+        match (self.widescreen, self.wide_mode) {
+            (false, _) => "4:3",
+            (true, WideMode::Sixteen9) => "16:9",
+            (true, WideMode::Sixteen10) => "16:10",
+            (true, WideMode::Fill) => "ultrawide",
+        }
+    }
+
     /// The next (`up`) or previous frame-rate choice.
     pub fn step_fps(&mut self, up: bool) {
         let i = FPS_CHOICES.iter().position(|&f| f == self.fps).unwrap_or(0);
@@ -214,7 +258,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("nsmbw-settings-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(FILE);
-        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0.0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], keymap: {
+        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0.0, widescreen: false, wide_mode: WideMode::Fill, spinning_coins: false, depth_blur: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], keymap: {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.keys[input::keymap::SHAKE].clear();
@@ -228,6 +272,11 @@ mod tests {
         let s = Settings { scale: 0.75, ..Settings::default() };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
+        for wide_mode in [WideMode::Sixteen9, WideMode::Sixteen10, WideMode::Fill] {
+            let s = Settings { wide_mode, ..Settings::default() };
+            s.save(&path);
+            assert_eq!(Settings::load(&path), s);
+        }
         std::fs::remove_dir_all(&dir).unwrap();
     }
 

@@ -85,6 +85,9 @@ pub struct Xf {
     pub regs: [u32; REGS],
     /// See [`View`]; set on the transform half only.
     pub view: Option<View>,
+    /// The picture's aspect when wider (or narrower) than the game's 16:9:
+    /// 16:9 projections are widened to it (0: none). Transform half only.
+    pub wide: f32,
     /// Bumped by writes that change a [`DrawSetup`] (registers, post
     /// matrices, lights), but not by position, normal or texture matrices.
     pub setup_gen: u64,
@@ -92,7 +95,7 @@ pub struct Xf {
 
 impl Default for Xf {
     fn default() -> Self {
-        Self { mem: vec![0; 0x800], regs: [0; REGS], view: None, setup_gen: 0 }
+        Self { mem: vec![0; 0x800], regs: [0; REGS], view: None, wide: 0.0, setup_gen: 0 }
     }
 }
 
@@ -195,7 +198,30 @@ impl Xf {
         if let Some(v) = self.view.filter(|v| ortho && v.is_world(&pr)) {
             pr[..4].copy_from_slice(&v.proj);
         }
+        // A wider picture: a camera set up for 16:9 (aspect 1.68 to 1.88)
+        // takes the picture's aspect, with the same view height and more
+        // to the sides (Hor+), around the same centre. Perspective cameras
+        // (the world map, the title) and screen-sized orthographic ones
+        // (the levels, 2D scenes); small orthographic views (render to
+        // texture) and cameras the game set up wider are left alone.
+        if self.wide > 0.0 && pr[0] != 0.0 && pr[2] != 0.0 {
+            let aspect = pr[2] / pr[0];
+            let screen_sized = !ortho || 2.0 / pr[2] > 150.0;
+            if aspect > 1.68 && aspect < 1.88 && screen_sized {
+                let widen = aspect / self.wide;
+                pr[0] *= widen;
+                pr[1] *= widen;
+            }
+        }
         (pr, ortho)
+    }
+
+    /// Sets the aspect 16:9 projections are widened to (0: none).
+    pub fn set_wide(&mut self, aspect: f32) {
+        if self.wide != aspect {
+            self.wide = aspect;
+            self.setup_gen += 1;
+        }
     }
 
     /// Sets the view (see [`View`]).

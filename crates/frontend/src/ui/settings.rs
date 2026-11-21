@@ -10,7 +10,7 @@ use std::sync::Arc;
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
 use super::{Change, Nav, UpdateState};
 use crate::gameplay::POWER_UPS;
-use crate::settings::Settings;
+use crate::settings::{Settings, WideMode};
 
 // ---------------------------------------------------------------- assets
 
@@ -146,9 +146,11 @@ const ROW_GRAPH: i32 = 5;
 const DISPLAY_LAST: i32 = 5;
 // Graphics rows.
 const ROW_RENDERER: i32 = 1;
-const ROW_BATTERY: i32 = 2;
-const ROW_INTERPOLATION: i32 = 3;
-const GRAPHICS_LAST: i32 = 3;
+const ROW_COINS: i32 = 2;
+const ROW_DEPTH_BLUR: i32 = 3;
+const ROW_BATTERY: i32 = 4;
+const ROW_INTERPOLATION: i32 = 5;
+const GRAPHICS_LAST: i32 = 5;
 // Gameplay rows.
 const ROW_TIME: i32 = 1;
 const ROW_LIVES: i32 = 2;
@@ -197,6 +199,14 @@ fn scale_label(scale: f32) -> String {
     } else {
         format!("{scale}x ({}p)", (480.0 * scale).round() as u32)
     }
+}
+
+/// Aspect Ratio's choices: (widescreen, its shape, label).
+const ASPECTS: [(bool, WideMode, &str); 4] = [(false, WideMode::Fill, "Original 4:3"), (true, WideMode::Sixteen9, "16:9"), (true, WideMode::Sixteen10, "16:10"), (true, WideMode::Fill, "Ultrawide")];
+
+/// The choice in [`ASPECTS`] that `s` has.
+fn aspect_index(s: &Settings) -> usize {
+    ASPECTS.iter().position(|&(wide, mode, _)| wide == s.widescreen && (!wide || mode == s.wide_mode)).unwrap_or(0)
 }
 
 fn rate_label(fps: u32) -> String {
@@ -305,6 +315,8 @@ pub struct SettingsWindow {
     capturing: Option<(usize, f64)>,
     /// The save file being played (0-2), or -1 before the save select.
     pub active_file: i8,
+    /// The game started in widescreen (4:3 or not changes at the next start).
+    pub booted_widescreen: bool,
     /// A question is up: what it asks, and the tab's row to go back to.
     ask: Option<(Ask, i32)>,
     /// Its cursor: 0 Yes, 1 No.
@@ -784,7 +796,7 @@ impl SettingsWindow {
     fn draw_display(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
         let rows = DISPLAY_LAST;
         self.row_button(ctx, a, c, rows, 0, "Resolution", &scale_label(s.scale), ROW_RESOLUTION, true, 1.0, true);
-        self.row_button(ctx, a, c, rows, 1, "Aspect Ratio", if s.widescreen { "16:9" } else { "Original 4:3" }, ROW_ASPECT, true, 1.0, true);
+        self.row_button(ctx, a, c, rows, 1, "Aspect Ratio", ASPECTS[aspect_index(s)].2, ROW_ASPECT, true, 1.0, true);
         self.row_toggle(ctx, a, c, rows, 2, "Fullscreen", s.fullscreen, ROW_FULLSCREEN);
         self.row_toggle(ctx, a, c, rows, 3, "V-Sync", s.vsync, ROW_VSYNC);
         // Performance Monitor: On / Off, then its size.
@@ -805,7 +817,13 @@ impl SettingsWindow {
             0 => Tab::Display.help(),
             ROW_RESOLUTION if s.scale == 0.0 => "The window's own resolution (from the next start).",
             ROW_RESOLUTION => "Rendered at this many lines, then scaled to the screen (from the next start).",
-            ROW_ASPECT => "Switching between 4:3 and widescreen takes effect after a restart.",
+            ROW_ASPECT if s.widescreen != self.booted_widescreen => "Switching between 4:3 and widescreen takes effect after a restart.",
+            ROW_ASPECT if !s.widescreen => "The Wii's original 4:3 picture.",
+            ROW_ASPECT => match s.wide_mode {
+                WideMode::Sixteen9 => "The game's 16:9 widescreen picture.",
+                WideMode::Sixteen10 => "For a 16:10 screen: fills it, with a slightly narrower view.",
+                WideMode::Fill => "Fills a screen wider than 16:9 with a wider view (16:9 on others).",
+            },
             ROW_FULLSCREEN if s.fullscreen => "Borderless: a window covering the whole screen (F11).",
             ROW_FULLSCREEN => "Off: the game plays in a window.",
             ROW_VSYNC => "No tearing: frames wait for the display, the game keeps its pace.",
@@ -815,13 +833,17 @@ impl SettingsWindow {
     }
 
     fn draw_graphics(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
-        let rows = 5;
+        let rows = GRAPHICS_LAST;
         self.row_button(ctx, a, c, rows, 0, "Renderer", "Vulkan", ROW_RENDERER, false, 1.0, false);
-        self.row_toggle(ctx, a, c, rows, 1, "Battery Saver", s.battery_saver, ROW_BATTERY);
-        self.row_button(ctx, a, c, rows, 2, "Frame Interpolation", &rate_label(s.fps), ROW_INTERPOLATION, true, 0.92, true);
+        self.row_toggle(ctx, a, c, rows, 1, "Spinning Coins", s.spinning_coins, ROW_COINS);
+        self.row_toggle(ctx, a, c, rows, 2, "Depth Blur", s.depth_blur, ROW_DEPTH_BLUR);
+        self.row_toggle(ctx, a, c, rows, 3, "Battery Saver", s.battery_saver, ROW_BATTERY);
+        self.row_button(ctx, a, c, rows, 4, "Frame Interpolation", &rate_label(s.fps), ROW_INTERPOLATION, true, 0.92, true);
         let note = match self.cursor {
             0 => Tab::Graphics.help(),
             ROW_RENDERER => "This port draws with Vulkan.",
+            ROW_COINS => "Animates coins and blocks; off saves a little GPU work.",
+            ROW_DEPTH_BLUR => "The blur and heat haze of desert, beach, water and lava areas.",
             ROW_BATTERY => "Shows 30 frames a second while the game keeps running at 60.",
             _ if s.fps == 0 => "Draws as many frames in between as the PC can, the game still at its own speed.",
             _ => "Draws frames in between for smoother motion on screens above 60Hz.",
@@ -950,7 +972,7 @@ impl SettingsWindow {
     fn open_dropdown(&mut self, kind: DropKind, s: &Settings) {
         let (row, labels, current): (i32, Vec<String>, i32) = match kind {
             DropKind::Resolution => (ROW_RESOLUTION, SCALES.iter().map(|&x| scale_label(x)).collect(), SCALES.iter().position(|&x| x == s.scale).map_or(-1, |i| i as i32)),
-            DropKind::Aspect => (ROW_ASPECT, vec!["Original 4:3".into(), "16:9".into()], i32::from(s.widescreen)),
+            DropKind::Aspect => (ROW_ASPECT, ASPECTS.iter().map(|a| a.2.to_string()).collect(), aspect_index(s) as i32),
             DropKind::Interpolation => (ROW_INTERPOLATION, FRAME_RATES.iter().map(|&f| rate_label(f)).collect(), FRAME_RATES.iter().position(|&f| f == s.fps).map_or(-1, |i| i as i32)),
         };
         self.dropdown = Some(Dropdown { row, highlight: current.max(0) as usize, current, labels, kind, y: self.row_y[row as usize], row_h: self.row_h });
@@ -963,7 +985,11 @@ impl SettingsWindow {
                 changes.push(Change::Scale);
             }
             DropKind::Aspect => {
-                s.widescreen = item == 1;
+                let (wide, mode, _) = ASPECTS[item];
+                s.widescreen = wide;
+                if wide {
+                    s.wide_mode = mode;
+                }
                 changes.push(Change::Aspect);
             }
             DropKind::Interpolation => {
@@ -1219,6 +1245,14 @@ impl SettingsWindow {
             (Tab::Display, ROW_GRAPH) if left || right => {
                 s.perf_size = (s.perf_size as i32 + if left { -5 } else { 5 }).clamp(5, 200) as u32;
                 changes.push(Change::PerfMonitor);
+            }
+            (Tab::Graphics, ROW_COINS) if toggle => {
+                s.spinning_coins = !s.spinning_coins;
+                changes.push(Change::Graphics);
+            }
+            (Tab::Graphics, ROW_DEPTH_BLUR) if toggle => {
+                s.depth_blur = !s.depth_blur;
+                changes.push(Change::Graphics);
             }
             (Tab::Graphics, ROW_BATTERY) if toggle => {
                 s.battery_saver = !s.battery_saver;

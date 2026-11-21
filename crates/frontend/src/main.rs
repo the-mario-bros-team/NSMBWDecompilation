@@ -64,6 +64,7 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
   --wav <file>       also write the sound the game plays (16-bit stereo, 32 kHz) to a WAV file
   --no-audio         no sound output (unpaced runs never play sound)
   --interpreter      do not run recompiled code (crates/game-recomp), only the interpreter
+  --wide <w:h>       headless: draw the game's view that wide, as Ultrawide in a window of that shape does (lockstep checks)
   --headless         with --frames: no window or renderer (for checks such as --hash-every): runs the same
                      fields as a windowed run, without input from the host or anything the renderer sends back
   --code-profile <file>  at exit, write every guest address a decoded block started at (input for ppc-recomp)
@@ -106,6 +107,7 @@ struct Args {
     code_profile: Option<PathBuf>,
     interpreter: bool,
     headless: bool,
+    wide: Option<f32>,
 }
 
 /// `[p<n>:]<frame>:<buttons>[:<frames>]`
@@ -134,7 +136,7 @@ fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &st
 
 fn parse_args() -> Result<Args, String> {
     let settings = settings::Settings::load(Path::new(settings::FILE));
-    let mut args = Args { settings_buttons: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
+    let mut args = Args { settings_buttons: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false, wide: None };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -167,6 +169,14 @@ fn parse_args() -> Result<Args, String> {
             "--wav" => args.wav = Some(it.next().ok_or("--wav needs a file")?.into()),
             "--no-audio" => args.no_audio = true,
             "--interpreter" => args.interpreter = true,
+            "--wide" => {
+                let v = it.next().ok_or("--wide needs <w:h>")?;
+                let ratio = match v.split_once(':') {
+                    Some((w, h)) => w.parse::<f32>().ok().zip(h.parse::<f32>().ok()).map(|(w, h)| w / h),
+                    None => v.parse::<f32>().ok(),
+                };
+                args.wide = Some(ratio.filter(|r| r.is_finite() && (1.0..=5.0).contains(r)).ok_or(format!("--wide: expected <w:h> such as 21:9, not {v}"))?);
+            }
             "--settings-buttons" => args.settings_buttons = true,
             "--headless" => args.headless = true,
             "--code-profile" => args.code_profile = Some(it.next().ok_or("--code-profile needs a file")?.into()),
@@ -289,7 +299,7 @@ fn main() -> ExitCode {
         return if ok { ExitCode::SUCCESS } else { ExitCode::FAILURE };
     }
 
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default() } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), wide: args.wide } };
     if args.headless {
         // As a window would, before the game boots: the game reads its
         // aspect ratio from SYSCONF once.

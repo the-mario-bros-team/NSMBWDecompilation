@@ -42,6 +42,8 @@ pub enum Change {
     Scale,
     PerfMonitor,
     BatterySaver,
+    /// Spinning Coins or Depth Blur.
+    Graphics,
     Volume,
     Language,
     /// No Time Limit or Infinite Lives.
@@ -101,6 +103,11 @@ impl Menus {
         let mut settings_window = settings::SettingsWindow::default();
         settings_window.active_file = -1;
         Self { ctx, winit, window: settings_window, started: Instant::now(), held: 0, repeat: None, shown: false }
+    }
+
+    /// The game started in widescreen (the Aspect Ratio row's note).
+    pub fn set_booted_widescreen(&mut self, wide: bool) {
+        self.window.booted_widescreen = wide;
     }
 
     /// The save file being played (0-2), or -1 before the save select.
