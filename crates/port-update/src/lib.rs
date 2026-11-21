@@ -6,8 +6,9 @@
 //! [`VERSION`]. The source is GitHub's "latest release" answer
 //! (`https://api.github.com/repos/<owner>/<repo>/releases/latest`), or any
 //! address or file that holds the same JSON: `tag_name`, `name`, `body`,
-//! `html_url`, and `assets` with `name`, `browser_download_url` and `size`.
-//! Nothing is downloaded or installed here.
+//! `html_url`, and `assets` with `name`, `browser_download_url`, `size` and
+//! (GitHub gives it) `digest`. [`install::update`] downloads a release and
+//! installs it in place, for the game to start again.
 //!
 //! ```no_run
 //! let folder = port_update::install_dir();
@@ -25,6 +26,7 @@
 use std::path::{Path, PathBuf};
 
 mod http;
+pub mod install;
 
 /// This build's version, as a release's tag names it (without the `v`).
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -115,6 +117,8 @@ pub struct Download {
     pub name: String,
     pub url: String,
     pub size: u64,
+    /// Its SHA-256 in lower-case hex, when the release gives it.
+    pub sha256: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -187,7 +191,8 @@ fn parse_release(json: &str) -> Result<Release, String> {
     let download = v.get("assets").and_then(|a| a.as_array()).and_then(|assets| {
         assets.iter().find_map(|a| {
             let (name, url) = (text(a, "name"), text(a, "browser_download_url"));
-            (name.to_ascii_lowercase().ends_with(ASSET_SUFFIX) && is_web_url(&url)).then(|| Download { name, url, size: a.get("size").and_then(|s| s.as_u64()).unwrap_or(0) })
+            let sha256 = text(a, "digest").strip_prefix("sha256:").map(str::to_ascii_lowercase).filter(|h| h.len() == 64 && h.bytes().all(|b| b.is_ascii_hexdigit()));
+            (name.to_ascii_lowercase().ends_with(ASSET_SUFFIX) && is_web_url(&url)).then(|| Download { name, url, size: a.get("size").and_then(|s| s.as_u64()).unwrap_or(0), sha256 })
         })
     });
     Ok(Release { version, name, notes: text(&v, "body"), page, download })
@@ -222,7 +227,7 @@ mod tests {
         "html_url": "https://github.com/example/port/releases/tag/v0.2.0",
         "assets": [
             {"name": "nsmbw-port-0.2.0-linux-x86_64.tar.gz", "browser_download_url": "https://github.com/example/a.tar.gz", "size": 5},
-            {"name": "nsmbw-port-0.2.0-windows-x64.zip", "browser_download_url": "https://github.com/example/a.zip", "size": 1234}
+            {"name": "nsmbw-port-0.2.0-windows-x64.zip", "browser_download_url": "https://github.com/example/a.zip", "size": 1234, "digest": "sha256:E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"}
         ]
     }"#;
 
@@ -252,7 +257,7 @@ mod tests {
         assert_eq!(r.name, "NSMBW port 0.2.0");
         assert_eq!(r.notes, "- Faster\n- Launcher");
         assert_eq!(r.page, "https://github.com/example/port/releases/tag/v0.2.0");
-        assert_eq!(r.download, Some(Download { name: "nsmbw-port-0.2.0-windows-x64.zip".into(), url: "https://github.com/example/a.zip".into(), size: 1234 }));
+        assert_eq!(r.download, Some(Download { name: "nsmbw-port-0.2.0-windows-x64.zip".into(), url: "https://github.com/example/a.zip".into(), size: 1234, sha256: Some("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".into()) }));
         assert!(parse_release("{}").is_err());
         assert!(parse_release("<html>").is_err());
     }

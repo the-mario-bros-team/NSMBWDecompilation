@@ -79,8 +79,8 @@ says why. Its folder can already be set (ID `SMNE03` with `files\NewerRes`).
 `crates/port-update` holds the check: `Config::load(folder)` reads
 `update.toml`, `check(&config)` asks the release source (GitHub's "latest
 release" JSON, or a file or address holding the same) and compares the tag
-with `port_update::VERSION`. Nothing is downloaded or installed: the notice
-offers the release's page.
+with `port_update::VERSION`. The launcher's notice offers the release's
+page; the game installs it (below).
 
 With Skip Launcher on, the launcher is not shown, so it makes the check
 after starting the game and, when a release is found, shows itself once at
@@ -88,9 +88,20 @@ the next start. The game makes the same check itself
 (`crates/frontend/src/play.rs`, `check_for_update`), so updates do not
 depend on the launcher: a newer release is said at the bottom left of the
 picture for ten seconds, and the Settings window (F10, or a game menu's
-Settings button) asks once a run whether to open its page. Test runs
-(`--frames`, `--press`, `--shot`, `--unpaced`, `--headless`) do not ask the
-release source.
+Settings button) asks once a run whether to update. Yes downloads the
+release's `-windows-x64.zip` (with a progress bar and Cancel), checks its
+size and, when GitHub gives one, its SHA-256, and installs it next to the
+programs (`port_update::install`): each replaced file is moved aside first
+and everything is put back if one fails; settings, saves, caches and logs
+are never touched. The game then closes and starts again with the same
+options. A release without a Windows download offers its web page instead.
+Test runs (`--frames`, `--press`, `--shot`, `--unpaced`, `--headless`) do
+not ask the release source.
+
+A release's zip holds the programs (`nsmbw-port.exe`, `nsmbw-launcher.exe`
+and what they need), at its root or in one folder. Raise
+`crates/port-update/Cargo.toml`'s version before building a release:
+otherwise the new build finds itself out of date.
 
 The release source defaults to this repository's releases
 (`port_update::DEFAULT_SOURCE`); `update.toml`'s `source`, or the

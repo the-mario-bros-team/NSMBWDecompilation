@@ -160,6 +160,11 @@ struct App {
     update_check: Option<Receiver<port_update::Release>>,
     /// The newer release found, and when (said on screen for a while).
     update: Option<(port_update::Release, Instant)>,
+    /// The update being installed on a thread of its own: how far it has
+    /// got, and the flag that cancels its download.
+    updater: Option<(Arc<std::sync::Mutex<ui::UpdateState>>, Arc<std::sync::atomic::AtomicBool>)>,
+    /// Installed: this program to start again once the window has closed.
+    restart: Option<PathBuf>,
 }
 
 /// How long a newer release found is said on screen.
@@ -174,6 +179,11 @@ fn check_for_update() -> Option<Receiver<port_update::Release>> {
         return None;
     }
     let (tx, rx) = mpsc::channel();
+    // The old files of the last update, now that the old program has exited.
+    std::thread::spawn(|| {
+        std::thread::sleep(Duration::from_secs(3));
+        port_update::install::cleanup(&port_update::install_dir());
+    });
     std::thread::spawn(move || match port_update::check(&config) {
         Ok(port_update::Status::Available(release)) => {
             let _ = tx.send(release);
@@ -316,11 +326,28 @@ impl App {
             // The release's own text: kept short and plain for the screen.
             release.version = release.version.chars().filter(char::is_ascii_graphic).take(16).collect();
             say!("update: version {} is out {}", release.version, release.page);
-            if let Some(m) = self.menus.as_mut().filter(|_| !release.page.is_empty()) {
-                m.set_update(&release.version);
+            let can_install = release.download.is_some();
+            if let Some(m) = self.menus.as_mut().filter(|_| can_install || !release.page.is_empty()) {
+                m.set_update(&release.version, can_install);
             }
             self.update = Some((release, Instant::now()));
             self.update_check = None;
+        }
+        // An update being installed: shown in the Settings window; once in
+        // place, the window closes and the new program starts (in `run`).
+        if let Some((state, cancel)) = &self.updater {
+            let state = state.lock().unwrap_or_else(|e| e.into_inner()).clone();
+            let cancelled = cancel.load(std::sync::atomic::Ordering::Relaxed) && matches!(state, ui::UpdateState::Failed(_));
+            if let Some(m) = &mut self.menus {
+                m.set_update_state((!cancelled).then(|| state.clone()));
+            }
+            if cancelled {
+                self.updater = None;
+            } else if state == ui::UpdateState::Restarting && self.restart.is_none() {
+                self.settings.save(Path::new(settings::FILE));
+                self.restart = std::env::current_exe().ok();
+                event_loop.exit();
+            }
         }
         // A game menu's Settings button was picked and its menu has gone.
         if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
@@ -641,6 +668,37 @@ impl App {
                 ui::Change::Keymap => self.inputs.set_keymap(self.settings.keymap.clone()),
                 ui::Change::Cheated(file) => {
                     self.cheats.marks.fetch_or(1 << file.min(2), std::sync::atomic::Ordering::Relaxed);
+                }
+                ui::Change::UpdateInstall => {
+                    let (Some((release, _)), Ok(program)) = (self.update.clone(), std::env::current_exe()) else { continue };
+                    let state = Arc::new(std::sync::Mutex::new(ui::UpdateState::Downloading { done: 0, total: 0 }));
+                    let cancel = Arc::new(std::sync::atomic::AtomicBool::new(false));
+                    let (s, c) = (state.clone(), cancel.clone());
+                    std::thread::spawn(move || {
+                        let name = program.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+                        let folder = port_update::install_dir();
+                        let set = |v: ui::UpdateState| *s.lock().unwrap_or_else(|e| e.into_inner()) = v;
+                        let r = port_update::install::update(&release, &folder, &name, &|p| set(match p {
+                            port_update::install::Progress::Downloading { done, total } => ui::UpdateState::Downloading { done, total },
+                            port_update::install::Progress::Installing => ui::UpdateState::Installing,
+                        }), &c);
+                        set(match r {
+                            Ok(()) => ui::UpdateState::Restarting,
+                            Err(e) => ui::UpdateState::Failed(e),
+                        });
+                    });
+                    self.updater = Some((state, cancel));
+                }
+                ui::Change::UpdateCancel => {
+                    if let Some((_, cancel)) = &self.updater {
+                        cancel.store(true, std::sync::atomic::Ordering::Relaxed);
+                    }
+                }
+                ui::Change::UpdateDismiss => {
+                    self.updater = None;
+                    if let Some(m) = &mut self.menus {
+                        m.set_update_state(None);
+                    }
                 }
                 ui::Change::UpdatePage => {
                     if let Some((release, _)) = &self.update {
@@ -966,8 +1024,18 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         unsaved: false,
         update_check,
         update: None,
+        updater: None,
+        restart: None,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
+    // An update was installed: the new program, now the window and the
+    // game have closed.
+    if let Some(program) = app.restart.take() {
+        crate::say::flush();
+        if let Err(e) = port_update::install::restart(&program) {
+            eprintln!("update: could not start the new version: {e}");
+        }
+    }
     match app.error {
         Some(e) => Err(e),
         None => Ok((app.games, app.presented)),

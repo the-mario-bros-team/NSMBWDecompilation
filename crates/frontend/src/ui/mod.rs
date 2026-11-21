@@ -53,8 +53,26 @@ pub enum Change {
     /// Mark this save file (0-2) "Cheated": Infinite Lives was turned on
     /// while it is the one being played.
     Cheated(u8),
-    /// Open the newer release's web page (Yes to the update question).
+    /// Open the newer release's web page (Yes to the update question, when
+    /// the release has no download for Windows).
     UpdatePage,
+    /// Download and install the newer release, then restart (Yes to the
+    /// update question).
+    UpdateInstall,
+    /// Stop the download.
+    UpdateCancel,
+    /// The failed update's message was read.
+    UpdateDismiss,
+}
+
+/// An update being installed, as the Settings window shows it.
+#[derive(Clone, Debug, PartialEq)]
+pub enum UpdateState {
+    Downloading { done: u64, total: u64 },
+    Installing,
+    /// Installed: the game closes and starts again.
+    Restarting,
+    Failed(String),
 }
 
 pub struct Menus {
@@ -91,9 +109,19 @@ impl Menus {
     }
 
     /// A newer release of the port is out: the Settings window asks, the
-    /// next time it is up, whether to open its page.
-    pub fn set_update(&mut self, version: &str) {
-        self.window.update = Some(version.into());
+    /// next time it is up, whether to install it (`can_install`: it has a
+    /// download for Windows) or else to open its page.
+    pub fn set_update(&mut self, version: &str, can_install: bool) {
+        self.window.update = Some((version.into(), can_install));
+    }
+
+    /// The update being installed (`None`: none), shown over the Settings
+    /// window, which stays open meanwhile.
+    pub fn set_update_state(&mut self, state: Option<UpdateState>) {
+        if state.is_some() && !self.window.is_open() {
+            self.window.open(self.started.elapsed().as_secs_f64());
+        }
+        self.window.update_state = state;
     }
 
     pub fn is_open(&self) -> bool {

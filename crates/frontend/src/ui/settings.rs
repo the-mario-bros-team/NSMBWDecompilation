@@ -8,7 +8,7 @@
 use std::sync::Arc;
 
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
-use super::{Change, Nav};
+use super::{Change, Nav, UpdateState};
 use crate::gameplay::POWER_UPS;
 use crate::settings::Settings;
 
@@ -309,8 +309,11 @@ pub struct SettingsWindow {
     ask: Option<(Ask, i32)>,
     /// Its cursor: 0 Yes, 1 No.
     ask_cursor: i32,
-    /// A newer release of the port is out: its version.
-    pub update: Option<String>,
+    /// A newer release of the port is out: its version, and whether it can
+    /// be installed from here (it has a download for Windows).
+    pub update: Option<(String, bool)>,
+    /// The update being installed, shown over everything.
+    pub update_state: Option<UpdateState>,
     /// The question about it has been asked (once a run).
     update_asked: bool,
     /// The question can be drawn (the yes/no window's layout is there).
@@ -374,6 +377,10 @@ impl SettingsWindow {
     }
 
     pub fn close(&mut self, now: f64) {
+        // Not while an update is being installed.
+        if self.update_state.as_ref().is_some_and(|s| !matches!(s, UpdateState::Failed(_))) {
+            return;
+        }
         if !self.closing {
             self.closing = true;
             self.closing_at = now;
@@ -1031,7 +1038,11 @@ impl SettingsWindow {
         const HEIGHT: f32 = 250.0;
         let (title, line) = match ask {
             Ask::Cheat(_) => ("Are you sure?", "This will mark your save as cheated.".to_string()),
-            Ask::Update => ("Update available", format!("Version {} is out. Open its web page?", self.update.as_deref().unwrap_or_default())),
+            Ask::Update => match &self.update {
+                Some((v, true)) => ("Update available", format!("Version {v} is out. Update and restart the game?")),
+                Some((v, false)) => ("Update available", format!("Version {v} is out. Open its web page?")),
+                None => ("Update available", String::new()),
+            },
         };
         self.hits.clear();
         self.list.fill_screen(ctx, screen, Rgba { r: 0.0, g: 0.0, b: 0.0, a: 110.0 / 255.0 * c.alpha });
@@ -1046,6 +1057,9 @@ impl SettingsWindow {
             }
         }
         self.text(a, c, &line, 0.0, 16.0, size, 1, u32::MAX);
+        if matches!((ask, &self.update), (Ask::Update, Some((_, true)))) {
+            self.text(a, c, "Progress since your last save will be lost.", 0.0, -24.0, 20.0, 1, LABEL_DIM);
+        }
         // Yes and No keep one size, chosen or not.
         let y = -HEIGHT / 2.0 + 43.0;
         self.button_scale = Some(1.0);
@@ -1056,10 +1070,57 @@ impl SettingsWindow {
         self.button_scale = None;
     }
 
+    /// The update being installed: its progress and Cancel, or why it
+    /// failed and OK.
+    fn draw_update(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, screen: egui::Rect, state: &UpdateState) {
+        const HEIGHT: f32 = 250.0;
+        let version = self.update.as_ref().map(|u| u.0.clone()).unwrap_or_default();
+        self.hits.clear();
+        self.list.fill_screen(ctx, screen, Rgba { r: 0.0, g: 0.0, b: 0.0, a: 110.0 / 255.0 * c.alpha });
+        self.small_window(ctx, a, c, 600.0, HEIGHT);
+        let (title, line, button) = match state {
+            UpdateState::Downloading { done, total } => {
+                let percent = if *total > 0 { (done * 100 / total).min(100) as u32 } else { 0 };
+                self.slider_bar(ctx, a, c, -240.0, 240.0, -28.0, 26.0, percent, false);
+                ("Updating", format!("Downloading version {version}: {percent}%"), Some("Cancel"))
+            }
+            UpdateState::Installing => ("Updating", format!("Installing version {version}..."), None),
+            UpdateState::Restarting => ("Updating", "Done. The game is restarting.".to_string(), None),
+            UpdateState::Failed(e) => ("The update failed", e.clone(), Some("OK")),
+        };
+        self.text(a, c, title, 0.0, 62.0, 32.0, 1, u32::MAX);
+        let mut size = 24.0;
+        if a.message.ready() {
+            let width = layout::measure_text(&a.message, &line, size);
+            if width > 560.0 {
+                size *= 560.0 / width;
+            }
+        }
+        self.text(a, c, &line, 0.0, 16.0, size, 1, u32::MAX);
+        if let Some(label) = button {
+            let y = -HEIGHT / 2.0 + 43.0;
+            self.button_scale = Some(1.0);
+            self.yes_no_button(ctx, a, c, label, 0.0, y, 232.0, 53.0, true, true, 30.0);
+            self.add_hit(0.0, y, 240.0, 60.0, -1, EV_CONFIRM);
+            self.button_scale = None;
+        }
+    }
+
     // ------------------------------------------------------------ input
 
     fn handle(&mut self, nav: Nav, s: &mut Settings, changes: &mut Vec<Change>) {
         let Nav { left, right, up, down, confirm, back } = nav;
+        // An update being installed takes every press: Cancel, or OK.
+        if let Some(state) = &self.update_state {
+            if confirm || back {
+                match state {
+                    UpdateState::Downloading { .. } => changes.push(Change::UpdateCancel),
+                    UpdateState::Failed(_) => changes.push(Change::UpdateDismiss),
+                    _ => {}
+                }
+            }
+            return;
+        }
         if let Some((ask, row)) = self.ask {
             // A press on Yes or No picks it.
             if self.cursor >= ASK_HIT {
@@ -1073,6 +1134,7 @@ impl SettingsWindow {
                 if confirm && self.ask_cursor == 0 {
                     match ask {
                         Ask::Cheat(cheat) => self.do_cheat(cheat, s, changes),
+                        Ask::Update if self.update.as_ref().is_some_and(|u| u.1) => changes.push(Change::UpdateInstall),
                         Ask::Update => changes.push(Change::UpdatePage),
                     }
                 }
@@ -1314,6 +1376,9 @@ impl SettingsWindow {
         self.settings_look = false;
         if let Some((ask, _)) = self.ask {
             self.draw_ask(ctx, &a, &c, screen, ask);
+        }
+        if let Some(state) = self.update_state.clone() {
+            self.draw_update(ctx, &a, &c, screen, &state);
         }
         std::mem::take(&mut self.list).into_shapes()
     }
