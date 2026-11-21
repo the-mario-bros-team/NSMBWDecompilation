@@ -51,11 +51,15 @@ pub struct Settings {
     pub cheated: [bool; 3],
     /// The keys for the remote's buttons (`[keyboard]`).
     pub keymap: Keymap,
+    // The controls (the Keybinds tab), after WitherBlitz's
+    // NSMB-Wii-Recompilation; in `[keyboard]` and `[controller]`.
+    /// `[controller] rumble`: controllers rumble when the game rumbles the remote.
+    pub rumble: bool,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default() }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), rumble: true }
     }
 }
 
@@ -128,6 +132,10 @@ impl Settings {
                 }
             }
         }
+        if let Some(controller) = t.get("controller").and_then(toml::Value::as_table) {
+            let flag = |k: &str, d: bool| controller.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
+            s.rumble = flag("rumble", s.rumble);
+        }
         s
     }
 
@@ -179,6 +187,8 @@ impl Settings {
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.keymap.label(i))));
         }
+        text.push_str("\n# Controllers: rumble when the game rumbles the Wii Remote.\n[controller]\n");
+        text.push_str(&format!("rumble = {}\n", self.rumble));
         if let Err(e) = std::fs::write(path, text) {
             eprintln!("{}: {e}", path.display());
         }
@@ -206,7 +216,7 @@ mod tests {
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.keys[input::keymap::SHAKE].clear();
             k
-        } };
+        }, rumble: false };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3, ..Settings::default() };

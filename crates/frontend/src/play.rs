@@ -289,7 +289,7 @@ impl App {
             eprintln!("SYSCONF: {e}");
         }
         crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed);
-        self.inputs.set_keymap(self.settings.keymap.clone());
+        self.apply_controls();
         self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
         let settings_label = Some(settings_label(&self.settings.language).to_string());
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), ..self.opts.emu.clone() });
@@ -364,6 +364,11 @@ impl App {
         controls[0].buttons &= !self.menu_mask;
         if open {
             controls[0].shake = false;
+        }
+        // The remotes' rumble on the players' controllers (not under a menu,
+        // where the game stands still).
+        for (i, r) in self.remotes.iter().enumerate() {
+            self.inputs.rumble(i, r.rumble && !open);
         }
         if self.sent_pause != open {
             let _ = emu.to_emu.send(ToEmu::Pause(open));
@@ -665,7 +670,7 @@ impl App {
                         let _ = emu.to_emu.send(ToEmu::PowerUp(p));
                     }
                 }
-                ui::Change::Keymap => self.inputs.set_keymap(self.settings.keymap.clone()),
+                ui::Change::Keymap => self.apply_controls(),
                 ui::Change::Cheated(file) => {
                     self.cheats.marks.fetch_or(1 << file.min(2), std::sync::atomic::Ordering::Relaxed);
                 }
@@ -711,6 +716,12 @@ impl App {
                 ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver => {}
             }
         }
+    }
+
+    /// The Keybinds tab's settings to the controls.
+    fn apply_controls(&mut self) {
+        self.inputs.set_keymap(self.settings.keymap.clone());
+        self.inputs.set_rumble_enabled(self.settings.rumble);
     }
 
     fn presented_now(&mut self) {

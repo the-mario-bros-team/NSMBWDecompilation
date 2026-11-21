@@ -118,6 +118,15 @@ fn apply(input: &mut Input, a: Action) {
     }
 }
 
+/// The game's rumble on a controller, as in WitherBlitz's
+/// NSMB-Wii-Recompilation (`hle/input/wpad.cpp`): a controller's motors are
+/// bigger than the remote's, so both run well under full strength (the
+/// strong, low-frequency one at 0x3000, the weak one at 0x7000); and a
+/// rumble lasts 2 s at most, so a missed stop can't run on.
+const RUMBLE_LOW: u16 = 0x3000;
+const RUMBLE_HIGH: u16 = 0x7000;
+const RUMBLE_MAX_MS: u32 = 2000;
+
 pub struct Inputs {
     keys: HashSet<KeyCode>,
     keymap: keymap::Keymap,
@@ -126,6 +135,12 @@ pub struct Inputs {
     pads: Vec<GamepadId>,
     /// Players whose remote has been switched on.
     on: [bool; PLAYERS],
+    /// The Keybinds tab's Rumble switch.
+    rumble_enabled: bool,
+    /// Players whose controller is rumbling.
+    rumbling: [bool; PLAYERS],
+    /// Each controller's rumble, made the first time it rumbles.
+    effects: Vec<(GamepadId, gilrs::ff::Effect)>,
 }
 
 impl Default for Inputs {
@@ -144,7 +159,7 @@ impl Inputs {
                 None
             }
         };
-        let mut s = Self { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs, pads: Vec::new(), on: [true, false, false, false] };
+        let mut s = Self { gilrs, ..Self::without_pads() };
         if let Some(g) = &s.gilrs {
             let ids: Vec<GamepadId> = g.gamepads().filter(|(_, p)| p.is_connected()).map(|(id, _)| id).collect();
             for id in ids {
@@ -152,6 +167,61 @@ impl Inputs {
             }
         }
         s
+    }
+
+    /// The keyboard alone (no gamepad library).
+    fn without_pads() -> Self {
+        Self { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+    }
+
+    /// The Rumble switch: off stops any rumble at once.
+    pub fn set_rumble_enabled(&mut self, on: bool) {
+        self.rumble_enabled = on;
+        if !on {
+            for player in 0..PLAYERS {
+                self.rumble(player, false);
+            }
+        }
+    }
+
+    /// Player `player`'s remote rumbles (its rumble bit, as the game last
+    /// set it) or not: their controller follows.
+    pub fn rumble(&mut self, player: usize, on: bool) {
+        let on = on && self.rumble_enabled;
+        if player >= PLAYERS || self.rumbling[player] == on {
+            return;
+        }
+        self.rumbling[player] = on;
+        let (Some(&id), Some(g)) = (self.pads.get(player), self.gilrs.as_mut()) else { return };
+        if !g.connected_gamepad(id).is_some_and(|p| p.is_ff_supported()) {
+            return;
+        }
+        let i = match self.effects.iter().position(|(p, _)| *p == id) {
+            Some(i) => i,
+            None => {
+                use gilrs::ff::{BaseEffect, BaseEffectType, EffectBuilder, Repeat, Replay, Ticks};
+                let replay = Replay { play_for: Ticks::from_ms(RUMBLE_MAX_MS), ..Replay::default() };
+                let motor = |kind| BaseEffect { kind, scheduling: replay, ..BaseEffect::default() };
+                let built = EffectBuilder::new()
+                    .add_effect(motor(BaseEffectType::Strong { magnitude: RUMBLE_LOW }))
+                    .add_effect(motor(BaseEffectType::Weak { magnitude: RUMBLE_HIGH }))
+                    .repeat(Repeat::For(Ticks::from_ms(RUMBLE_MAX_MS)))
+                    .gamepads(&[id])
+                    .finish(g);
+                match built {
+                    Ok(e) => {
+                        self.effects.push((id, e));
+                        self.effects.len() - 1
+                    }
+                    Err(e) => {
+                        eprintln!("rumble on gamepad {}: {e}", player + 1);
+                        return;
+                    }
+                }
+            }
+        };
+        let effect = &self.effects[i].1;
+        let _ = if on { effect.play() } else { effect.stop() };
     }
 
     fn add_pad(&mut self, id: GamepadId) {
@@ -289,7 +359,7 @@ mod tests {
 
     #[test]
     fn keyboard_plays_a_sideways_remote() {
-        let mut i = Inputs { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false] };
+        let mut i = Inputs::without_pads();
         assert!(i.key(KeyCode::ArrowRight, true));
         assert!(i.key(KeyCode::Space, true));
         assert!(i.key(KeyCode::KeyC, true));

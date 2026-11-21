@@ -48,7 +48,7 @@ pub enum Change {
     Gameplay,
     /// Give player 1 this power-up (`gameplay::POWER_UPS`).
     PowerUp(u8),
-    /// A key was rebound.
+    /// A key or button was rebound, or a Keybinds-tab switch flipped.
     Keymap,
     /// Mark this save file (0-2) "Cheated": Infinite Lives was turned on
     /// while it is the one being played.

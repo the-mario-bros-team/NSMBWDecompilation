@@ -179,6 +179,49 @@ const KEY_HELP: [&str; 12] = [
 ];
 /// A key capture with nothing pressed for this long is cancelled.
 const CAPTURE_TIMEOUT: f64 = 10.0;
+/// The controls' rows: the first's centre, the step down, a button's height.
+const KEY_TOP: f32 = 88.0;
+const KEY_STEP: f32 = 27.0;
+const KEY_H: f32 = 21.0;
+/// The Keybinds tab's switches under the controls, up to three a row; their
+/// cursors follow the controls' (13 on).
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum KeySwitch {
+    Rumble,
+}
+const KEY_SWITCHES: [KeySwitch; 1] = [KeySwitch::Rumble];
+const SWITCH_CURSOR: i32 = 13;
+const SWITCH_TOP: f32 = -76.0;
+const SWITCH_STEP: f32 = 28.0;
+const SWITCH_W: f32 = 236.0;
+const SWITCH_GAP: f32 = 250.0;
+const SWITCH_H: f32 = 24.0;
+
+impl KeySwitch {
+    fn name(self) -> &'static str {
+        match self {
+            KeySwitch::Rumble => "Rumble",
+        }
+    }
+
+    fn on(self, s: &Settings) -> bool {
+        match self {
+            KeySwitch::Rumble => s.rumble,
+        }
+    }
+
+    fn flip(self, s: &mut Settings) {
+        match self {
+            KeySwitch::Rumble => s.rumble = !s.rumble,
+        }
+    }
+
+    fn help(self) -> &'static str {
+        match self {
+            KeySwitch::Rumble => "Controllers rumble when the game rumbles the Wii Remote.",
+        }
+    }
+}
 // Language rows: 1-3.
 const LANGUAGES: [(&str, &str, &str); 3] = [
     ("en", "English", "Restart the game to play in this language."),
@@ -905,7 +948,7 @@ impl SettingsWindow {
         for (i, (_, name)) in input::keymap::ACTIONS.iter().enumerate() {
             let (column, row) = (i / 6, i % 6);
             let x0 = if column == 0 { -190.0 } else { 190.0 };
-            let y = 86.0 - 31.0 * row as f32;
+            let y = KEY_TOP - KEY_STEP * row as f32;
             let color = if self.cursor == 1 + i as i32 { u32::MAX } else { LABEL_DIM };
             self.text(a, c, name, x0 - 168.0, y, 21.0, 0, color);
             let keys = match s.keymap.label(i) {
@@ -913,19 +956,80 @@ impl SettingsWindow {
                 l if l.is_empty() => "None".to_string(),
                 l => l,
             };
-            let size = if keys.len() > 16 { 17.0 } else if keys.len() > 11 { 19.0 } else { 22.0 };
+            let size = if keys.len() > 16 { 17.0 } else if keys.len() > 11 { 19.0 } else { 21.0 };
             let waiting = self.capturing.is_some_and(|(r, _)| r == i);
-            self.pause_button(ctx, a, c, 1 + i as i32, &keys, x0 + 78.0, y, 180.0, 23.0, self.cursor == 1 + i as i32, true, size, waiting, 0.0, true);
-            self.add_hit(x0 + 78.0, y, 186.0, 31.0, 1 + i as i32, EV_CONFIRM);
+            self.pause_button(ctx, a, c, 1 + i as i32, &keys, x0 + 78.0, y, 180.0, KEY_H, self.cursor == 1 + i as i32, true, size, waiting, 0.0, true);
+            self.add_hit(x0 + 78.0, y, 186.0, KEY_STEP, 1 + i as i32, EV_CONFIRM);
         }
+        for (i, sw) in KEY_SWITCHES.into_iter().enumerate() {
+            let (x, y) = Self::switch_at(i);
+            let on = sw.on(s);
+            let key = SWITCH_CURSOR + i as i32;
+            let label = format!("{}: {}", sw.name(), if on { "On" } else { "Off" });
+            self.pause_button(ctx, a, c, key, &label, x, y, SWITCH_W, SWITCH_H, self.cursor == key, true, 21.0, on, 0.0, true);
+            self.add_hit(x, y, SWITCH_W + 6.0, SWITCH_STEP, key, EV_CONFIRM);
+        }
+        let switch = usize::try_from(self.cursor - SWITCH_CURSOR).ok().and_then(|i| KEY_SWITCHES.get(i));
         let note = match (self.capturing, self.cursor) {
             (Some(_), _) => "Press the new key. Esc cancels; Delete or Backspace leaves it no key.",
             (None, 0) => Tab::Keybinds.help(),
             (None, n) if (1..=12).contains(&n) => KEY_HELP[n as usize - 1],
-            _ => "",
+            _ => switch.map_or("", |sw| sw.help()),
         };
         self.help_line(a, c, note, u32::MAX);
-        self.text(a, c, "Controllers: A jumps, B and X run, Y shakes, Start is +, Back is -.", 0.0, -102.0, 20.0, 1, 0xFFF0_B0FF);
+    }
+
+    /// Where switch `i` is: three a row, centred.
+    fn switch_at(i: usize) -> (f32, f32) {
+        let (row, column) = (i / 3, i % 3);
+        let in_row = (KEY_SWITCHES.len() - row * 3).min(3);
+        ((column as f32 - (in_row - 1) as f32 / 2.0) * SWITCH_GAP, SWITCH_TOP - row as f32 * SWITCH_STEP)
+    }
+
+    /// The Keybinds tab's moves: the controls in two columns of six, the
+    /// switches under them in rows of three; a press picks a control's new
+    /// key or flips a switch.
+    fn keybinds_handle(&mut self, nav: Nav, s: &mut Settings, changes: &mut Vec<Change>) {
+        let Nav { left, right, up, down, confirm, .. } = nav;
+        let switches = KEY_SWITCHES.len() as i32;
+        let c = self.cursor;
+        if (1..=12).contains(&c) {
+            let (column, row) = ((c - 1) / 6, (c - 1) % 6);
+            if left || right {
+                self.cursor = 1 + (1 - column) * 6 + row;
+            } else if up {
+                self.cursor = if row == 0 { 0 } else { c - 1 };
+            } else if down && row < 5 {
+                self.cursor = c + 1;
+            } else if down && switches > 0 {
+                // The switch under the column.
+                let first_row = switches.min(3);
+                self.cursor = SWITCH_CURSOR + if column == 0 { 0 } else { first_row - 1 };
+            } else if confirm {
+                self.capturing = Some((c as usize - 1, self.now));
+            }
+        } else if c >= SWITCH_CURSOR && c < SWITCH_CURSOR + switches {
+            let i = c - SWITCH_CURSOR;
+            let (row, column) = (i / 3, i % 3);
+            if left && column > 0 {
+                self.cursor = c - 1;
+            } else if right && column < 2 && i + 1 < switches {
+                self.cursor = c + 1;
+            } else if up && row == 0 {
+                // The control above: the bottom of the nearer column.
+                let x = Self::switch_at(i as usize).0;
+                self.cursor = if x <= 0.0 { 6 } else { 12 };
+            } else if up {
+                self.cursor = c - 3;
+            } else if down && i + 3 < switches {
+                self.cursor = c + 3;
+            } else if confirm {
+                KEY_SWITCHES[i as usize].flip(s);
+                changes.push(Change::Keymap);
+            }
+        } else {
+            self.cursor = 1;
+        }
     }
 
     fn draw_language(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings, at_boot: &str) {
@@ -1186,6 +1290,10 @@ impl SettingsWindow {
             self.close(self.now);
             return;
         }
+        if self.tab() == Tab::Keybinds {
+            self.keybinds_handle(nav, s, changes);
+            return;
+        }
         let last = match self.tab() {
             Tab::Display => DISPLAY_LAST,
             Tab::Graphics => GRAPHICS_LAST,
@@ -1231,7 +1339,6 @@ impl SettingsWindow {
                 *v = if left { v.saturating_sub(1) / 5 * 5 } else { ((*v + 5) / 5 * 5).min(100) };
                 changes.push(Change::Volume);
             }
-            (Tab::Keybinds, n) if confirm && (1..=12).contains(&n) => self.capturing = Some((n as usize - 1, self.now)),
             (Tab::Gameplay, ROW_TIME) if toggle => {
                 s.no_time_limit = !s.no_time_limit;
                 changes.push(Change::Gameplay);
