@@ -318,6 +318,7 @@ impl App {
             let _ = emu.to_emu.send(ToEmu::Interpolate(interpolate));
             self.sent_interpolate = Some(interpolate);
         }
+        self.inputs.set_player(emu.player());
         let mut controls = self.inputs.poll();
         // A save file newly marked "Cheated" (or an erased one, unmarked) is
         // written down at once: it may happen long after the window closed.
@@ -732,6 +733,7 @@ impl App {
         self.inputs.set_keymap(self.settings.keymap.clone());
         self.inputs.set_padmap(self.settings.padmap.clone());
         self.inputs.set_rumble_enabled(self.settings.rumble);
+        self.inputs.set_smart_spin(self.settings.smart_spin);
     }
 
     fn presented_now(&mut self) {

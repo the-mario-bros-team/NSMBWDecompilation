@@ -190,8 +190,9 @@ enum KeySwitch {
     /// Which bindings the controls show: the keyboard's or the controllers'.
     Device,
     Rumble,
+    SmartSpin,
 }
-const KEY_SWITCHES: [KeySwitch; 2] = [KeySwitch::Device, KeySwitch::Rumble];
+const KEY_SWITCHES: [KeySwitch; 3] = [KeySwitch::Device, KeySwitch::Rumble, KeySwitch::SmartSpin];
 const SWITCH_CURSOR: i32 = 13;
 const SWITCH_TOP: f32 = -76.0;
 const SWITCH_STEP: f32 = 28.0;
@@ -204,6 +205,7 @@ impl KeySwitch {
         match self {
             KeySwitch::Device => "Bindings",
             KeySwitch::Rumble => "Rumble",
+            KeySwitch::SmartSpin => "Space Smart Spin",
         }
     }
 
@@ -212,6 +214,7 @@ impl KeySwitch {
         let on = match self {
             KeySwitch::Device => return (false, if pad_view { "Controller" } else { "Keyboard" }),
             KeySwitch::Rumble => s.rumble,
+            KeySwitch::SmartSpin => s.smart_spin,
         };
         (on, if on { "On" } else { "Off" })
     }
@@ -220,6 +223,7 @@ impl KeySwitch {
         match self {
             KeySwitch::Device => {}
             KeySwitch::Rumble => s.rumble = !s.rumble,
+            KeySwitch::SmartSpin => s.smart_spin = !s.smart_spin,
         }
     }
 
@@ -227,6 +231,7 @@ impl KeySwitch {
         match self {
             KeySwitch::Device => "Shows the keyboard's keys or the controllers' buttons above.",
             KeySwitch::Rumble => "Controllers rumble when the game rumbles the Wii Remote.",
+            KeySwitch::SmartSpin => "With Space as a Jump key, Space in the air does a spin.",
         }
     }
 }

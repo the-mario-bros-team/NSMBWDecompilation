@@ -58,11 +58,13 @@ pub struct Settings {
     pub padmap: Padmap,
     /// `[controller] rumble`: controllers rumble when the game rumbles the remote.
     pub rumble: bool,
+    /// `[keyboard] smart_spin`: with Space as a Jump key, Space in the air spins.
+    pub smart_spin: bool,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true }
     }
 }
 
@@ -150,6 +152,7 @@ impl Settings {
                 }
                 s.keymap.set_combo_names(i, &combo_names(keyboard, key));
             }
+            s.smart_spin = keyboard.get("smart_spin").and_then(toml::Value::as_bool).unwrap_or(s.smart_spin);
         }
         if let Some(controller) = t.get("controller").and_then(toml::Value::as_table) {
             let flag = |k: &str, d: bool| controller.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
@@ -213,6 +216,8 @@ impl Settings {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.keymap.label(i))));
             text.push_str(&combo_line(key, self.keymap.combo_names(i)));
         }
+        text.push_str("# Space Smart Spin: with Space as a Jump key, Space in the air spins.\n");
+        text.push_str(&format!("smart_spin = {}\n", self.smart_spin));
         text.push_str("\n# Controller buttons for the Wii Remote's, by their Xbox names (A, B, X, Y, LB, RB, LT, RT,\n# View, Menu, LS, RS, D-Pad Up, Left Stick Up, Right Stick Left...), separated by commas.\n# rumble: controllers rumble when the game rumbles the Wii Remote.\n[controller]\n");
         text.push_str(&format!("rumble = {}\n", self.rumble));
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
@@ -255,7 +260,7 @@ mod tests {
             p.buttons[input::keymap::TILT_LEFT].clear();
             p.take(input::keymap::PLUS, vec![input::padmap::by_name("LB").unwrap(), input::padmap::by_name("RB").unwrap()]);
             p
-        }, rumble: false };
+        }, rumble: false, smart_spin: false };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3, ..Settings::default() };

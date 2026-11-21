@@ -5,7 +5,7 @@
 //! GPU knows: EFB copies to write into RAM, and the EFB for CPU peeks.
 
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::mpsc::{self, Receiver, Sender, SyncSender};
 use std::sync::Arc;
 use std::thread::JoinHandle;
@@ -110,6 +110,10 @@ pub struct Emu {
     /// Set when a game menu's Settings button was picked and the menu has
     /// gone: the Settings window should open.
     pub settings_button: Arc<AtomicBool>,
+    /// This machine's player after the last field ([`player_motion`],
+    /// packed: the state in the high half, the move's bits in the low; 0
+    /// for no player), for Space Smart Spin.
+    player: Arc<AtomicU64>,
     stop: Arc<AtomicBool>,
     thread: Option<JoinHandle<Totals>>,
 }
@@ -120,12 +124,11 @@ fn run_field(sys: &mut System) -> Result<(), String> {
     sys.run_field(limit).map_err(|s| format!("guest stopped at {:#010x}: {s:?}", sys.cpu.pc))
 }
 
-/// Player `i`'s position: `daPyMng_c`'s player IDs (0x80354E10, one word per
-/// player), looked up
-/// as `fManager_c::searchBaseByID` does (lists at 0x80377A70 by ID & 7, nodes
-/// linked at +4 with their `fBase_c` at +8, its ID at +0), then the actor's
-/// position (`dBaseActor_c`, +0xAC).
-pub fn player_position(mem: &guest_mem::Mem, i: usize) -> Option<[f32; 2]> {
+/// Player `i`'s actor: `daPyMng_c`'s player IDs (0x80354E10, one word per
+/// player), looked up as `fManager_c::searchBaseByID` does (lists at
+/// 0x80377A70 by ID & 7, nodes linked at +4 with their `fBase_c` at +8, its
+/// ID at +0).
+fn player_actor(mem: &guest_mem::Mem, i: usize) -> Option<u32> {
     let r = |a: u32| mem.ram(a, 4).map(|b| u32::from_be_bytes(b.try_into().unwrap()));
     let id = r(0x8035_4E10 + 4 * i as u32)?;
     if id == 0 {
@@ -138,11 +141,31 @@ pub fn player_position(mem: &guest_mem::Mem, i: usize) -> Option<[f32; 2]> {
         }
         let base = r(node + 8)?;
         if r(base)? == id {
-            return Some([f32::from_bits(r(base + 0xAC)?), f32::from_bits(r(base + 0xB0)?)]);
+            return Some(base);
         }
         node = r(node + 4)?;
     }
     None
+}
+
+fn read32(mem: &guest_mem::Mem, a: u32) -> Option<u32> {
+    mem.ram(a, 4).map(|b| u32::from_be_bytes(b.try_into().unwrap()))
+}
+
+/// Player `i`'s position (`dBaseActor_c`, +0xAC).
+pub fn player_position(mem: &guest_mem::Mem, i: usize) -> Option<[f32; 2]> {
+    let base = player_actor(mem, i)?;
+    Some([f32::from_bits(read32(mem, base + 0xAC)?), f32::from_bits(read32(mem, base + 0xB0)?)])
+}
+
+/// Player `i`'s state and last frame's vertical move, for Space Smart Spin
+/// (after WitherBlitz's port, `game_menus.cpp` `PlayerInSpinnableAir`):
+/// the state manager at +0x1464 holds its method at +0x18, whose current
+/// `StateID` is at +0x1C; the move is `dBaseActor_c`'s +0xC8 (position
+/// minus the one before).
+pub fn player_motion(mem: &guest_mem::Mem, i: usize) -> Option<(u32, f32)> {
+    let base = player_actor(mem, i)?;
+    Some((read32(mem, base + 0x1464 + 0x18 + 0x1C)?, f32::from_bits(read32(mem, base + 0xC8)?)))
 }
 
 /// `_SDA_BASE_` (r13) of this build.
@@ -331,7 +354,8 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
     }
 }
 
-fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
+#[allow(clippy::too_many_arguments)]
+fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>, player: Arc<AtomicU64>) -> Totals {
     let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
@@ -545,6 +569,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                 sys.menu.reopen();
             }
         }
+        // This machine's player for Space Smart Spin (reading changes nothing).
+        let motion = player_motion(&sys.mem, view_player.unwrap_or(0));
+        player.store(motion.map_or(0, |(state, vertical)| u64::from(state) << 32 | u64::from(vertical.to_bits())), Ordering::Relaxed);
         let emu = started.elapsed();
         let gx_wait = sys.hw.borrow().gpu.waited() - waited;
         if emu > FIELD {
@@ -690,9 +717,17 @@ impl Emu {
         let (to_emu, to_emu_rx) = mpsc::channel();
         let stop = Arc::new(AtomicBool::new(false));
         let settings_button = Arc::new(AtomicBool::new(false));
-        let (s, b) = (stop.clone(), settings_button.clone());
-        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s, b)).expect("spawn the game thread");
-        Self { frames, to_emu, settings_button, stop, thread: Some(thread) }
+        let player = Arc::new(AtomicU64::new(0));
+        let (s, b, p) = (stop.clone(), settings_button.clone(), player.clone());
+        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s, b, p)).expect("spawn the game thread");
+        Self { frames, to_emu, settings_button, player, stop, thread: Some(thread) }
+    }
+
+    /// This machine's player after the last field: their state and vertical
+    /// move ([`player_motion`]); `None` outside a course.
+    pub fn player(&self) -> Option<(u32, f32)> {
+        let v = self.player.load(Ordering::Relaxed);
+        (v != 0).then(|| ((v >> 32) as u32, f32::from_bits(v as u32)))
     }
 
     /// Stops the game thread and returns its totals.

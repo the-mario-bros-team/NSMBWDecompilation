@@ -17,6 +17,7 @@ pub mod capture;
 pub mod combo;
 pub mod keymap;
 pub mod padmap;
+pub mod smart_spin;
 
 use std::collections::HashSet;
 use std::time::{Duration, Instant};
@@ -120,6 +121,9 @@ fn apply_bits(input: &mut Input, bits: u32) {
 /// A single let go while it waited for a combination (a tap) still plays
 /// its action this long, so a field reads it.
 const TAP: Duration = Duration::from_millis(40);
+/// A shake asked for by a press (a smart spin) lasts this long: ten fields,
+/// enough for the game to see one shake.
+const SHAKE_PULSE: Duration = Duration::from_millis(170);
 
 /// The game's rumble on a controller, as in WitherBlitz's
 /// NSMB-Wii-Recompilation (`hle/input/wpad.cpp`): a controller's motors are
@@ -144,6 +148,12 @@ pub struct Inputs {
     pulses: Vec<(usize, usize, Duration)>,
     /// Times are from here.
     epoch: Instant,
+    /// Space Smart Spin: on, Space's state, player 1 as the game left them.
+    smart_spin: bool,
+    space: smart_spin::SmartSpin,
+    player: Option<smart_spin::Player>,
+    /// Shaking until then (a smart spin), per player.
+    shake_until: [Duration; PLAYERS],
     gilrs: Option<Gilrs>,
     /// Gamepads in the order they connected; index = player.
     pads: Vec<GamepadId>,
@@ -185,7 +195,7 @@ impl Inputs {
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -259,6 +269,17 @@ impl Inputs {
     pub fn set_padmap(&mut self, padmap: padmap::Padmap) {
         self.pad_combos = std::array::from_fn(|_| combo::Engine::new(padmap.combo_setup()));
         self.padmap = padmap;
+    }
+
+    /// Space Smart Spin on or off.
+    pub fn set_smart_spin(&mut self, on: bool) {
+        self.smart_spin = on;
+    }
+
+    /// Player 1 as the game left them after its last field (`None` outside
+    /// a course): their state and vertical move.
+    pub fn set_player(&mut self, player: Option<(u32, f32)>) {
+        self.player = player.map(|(state, vertical)| smart_spin::Player { state, vertical });
     }
 
     /// A controller is connected.
@@ -351,13 +372,24 @@ impl Inputs {
         let mouse = (1..=5u8).filter(|n| self.mouse & (1 << (n - 1)) != 0).map(keymap::Key::Mouse);
         let held: Vec<keymap::Key> = self.keys.iter().map(|&k| keymap::Key::Code(k)).chain(mouse).collect();
         let combos = if self.key_combos.is_empty() { 0 } else { self.key_combos.step(&held, now) };
+        // Space as Jump in the air: a spin (`smart_spin`).
+        let space = keymap::Key::Code(KeyCode::Space);
+        let smart = self.smart_spin && self.keymap.keys[keymap::JUMP].contains(&space);
+        let space_down = (held.contains(&space) && !self.key_combos.silenced(space)) || self.key_combos.tapped().contains(&space);
+        let spin = self.space.update(space_down, smart, self.player, now);
+        if spin.spin {
+            self.shake_until[0] = now + SHAKE_PULSE;
+        }
+        if smart && spin.two {
+            apply(&mut out[0], keymap_action(keymap::JUMP));
+        }
         for &k in &held {
             if self.key_combos.silenced(k) {
                 continue;
             }
             // Every action the key plays (a key may be bound to several).
             for (i, keys) in self.keymap.keys.iter().enumerate() {
-                if keys.contains(&k) {
+                if keys.contains(&k) && !(smart && k == space && i == keymap::JUMP) {
                     apply(&mut out[0], keymap_action(i));
                 }
             }
@@ -367,7 +399,7 @@ impl Inputs {
         }
         for &k in self.key_combos.tapped() {
             for (i, keys) in self.keymap.keys.iter().enumerate() {
-                if keys.contains(&k) {
+                if keys.contains(&k) && !(smart && k == space && i == keymap::JUMP) {
                     self.pulses.push((0, i, now + TAP));
                 }
             }
@@ -413,6 +445,7 @@ impl Inputs {
         }
         for (i, input) in out.iter_mut().enumerate() {
             input.connected = self.on[i];
+            input.shake |= now < self.shake_until[i];
             input.tilt = input.tilt.clamp(-1.0, 1.0);
         }
         out
@@ -494,6 +527,36 @@ mod tests {
         // Space (also 2) is not in a combination: at once.
         i.key(KeyCode::Space, true);
         assert_eq!(i.poll_at(ms(200))[0].buttons, button::TWO);
+    }
+
+    #[test]
+    fn space_in_the_air_spins() {
+        let mut i = Inputs::without_pads();
+        let ms = Duration::from_millis;
+        // Rising: Space shakes, and plays no 2.
+        i.set_player(Some((0x8037_5C6C, 3.0)));
+        i.key(KeyCode::Space, true);
+        let s = i.poll_at(ms(0))[0];
+        assert_eq!((s.buttons, s.shake), (0, true));
+        assert!(i.poll_at(ms(100))[0].shake, "for a while");
+        assert!(!i.poll_at(ms(200))[0].shake);
+        i.key(KeyCode::Space, false);
+        i.poll_at(ms(210));
+        // X (also Jump) is not Space: 2 in the air.
+        i.key(KeyCode::KeyX, true);
+        assert_eq!(i.poll_at(ms(220))[0].buttons, button::TWO);
+        i.key(KeyCode::KeyX, false);
+        // On the ground Space jumps; switched off, it always does.
+        i.set_player(Some((0x8037_0000, 0.0)));
+        i.key(KeyCode::Space, true);
+        assert_eq!(i.poll_at(ms(300))[0].buttons, button::TWO);
+        i.key(KeyCode::Space, false);
+        i.poll_at(ms(310));
+        i.set_smart_spin(false);
+        i.set_player(Some((0x8037_5C6C, 3.0)));
+        i.key(KeyCode::Space, true);
+        let s = i.poll_at(ms(400))[0];
+        assert_eq!((s.buttons, s.shake), (button::TWO, false));
     }
 
     #[test]
