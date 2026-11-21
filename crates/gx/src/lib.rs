@@ -10,6 +10,7 @@
 mod back;
 pub mod dff;
 pub mod interp;
+pub mod replace;
 pub mod texture;
 pub mod thread;
 pub mod vertex;
@@ -256,6 +257,9 @@ impl Output {
         }
         for t in &self.new_textures {
             hash_words(&mut h, &[t.id, t.width, t.height, t.levels.len() as u32]);
+            if let Some(r) = &t.replacement {
+                hash_words(&mut h, &[r.width, r.height, r.levels.len() as u32]);
+            }
             // Its own hash, so a change to `texture::hash` does not move it.
             for l in &t.levels {
                 for c in l.chunks(8) {
@@ -491,6 +495,13 @@ impl Gpu {
     /// `texture::Cache::note_writeback`).
     pub fn note_writeback(&mut self, addr: u32, ram: &[u8]) {
         self.textures.note_writeback(addr, ram);
+    }
+
+    /// Draws textures from `pack` where it has them from now on (`None`:
+    /// the game's own); see [`replace`].
+    pub fn set_texture_pack(&mut self, pack: Option<replace::Pack>) {
+        self.textures.set_pack(pack);
+        self.tex_memo = [None; 8];
     }
 
     /// Runs whole commands in `buf`; returns the bytes consumed. Display
@@ -795,8 +806,10 @@ impl Gpu {
             &[]
         };
         let id = self.textures.lookup(key, data, tlut_bytes);
-        // Sampler key: wrap s/t, mag, min filter, LOD bias, max LOD (if mipmapped).
-        let sampler = (mode0 & 0x1_FFFF) | if mipmapped { (levels - 1) << 20 } else { 0 };
+        // Sampler key: wrap s/t, mag, min filter, LOD bias, max LOD (if
+        // mipmapped), and bit 24 for a texture pack's image, whose own mip
+        // levels are all used.
+        let sampler = (mode0 & 0x1_FFFF) | if mipmapped { (levels - 1) << 20 } else { 0 } | if self.textures.is_replaced(id) { 1 << 24 } else { 0 };
         let result = (id, sampler, w | h << 16);
         self.tex_memo[map] = Some((regs, self.textures.epoch, result));
         result

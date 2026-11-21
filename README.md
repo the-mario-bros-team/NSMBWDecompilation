@@ -96,6 +96,25 @@ coverage and progress. `cargo check` needs no linker; a Windows binary later
 requires Visual Studio Build Tools. The port plan is separate
 (`docs/PORT_WINDOWS.md`).
 
+## The port's HD textures and mods
+
+The port (`crates/frontend`) reads these from folders beside its `port.toml`,
+and the Settings window's **Mods** tab turns them on and off:
+
+- `texture_packs\<name>\`: a Dolphin texture pack (`tex1_*.png` or `.dds`,
+  anywhere under that folder, so Dolphin's `Load\Textures\SMN` folder works
+  as it is). It only changes what is drawn, so each player in a net game
+  chooses for themselves. The pack made for this game is the **New Super
+  Mario Bros. Wii HD Texture Pack** v2.81 (PNG edition) by **Bighead, razius,
+  jaco8, CDAMJC and Amon1995**. Get it from its own Dolphin forum thread and
+  put its `SMN` folder in `texture_packs\NSMBW_HD_v2.81\`. No pack is
+  included in this repository.
+- `texture_dumps = true` in `settings.toml`: every texture no pack replaces
+  is written to `texture_dumps\` under its pack name, to make a pack from.
+- `mods\<name>\`: files laid out like the disc's `files\` folder are used
+  instead of the disc's own from the next start. Mods load in name order,
+  and a later one's file wins. They are off in net games.
+
 ## Legal
 
 Use your own dump. No game assets or extracted content are redistributed here.

@@ -109,9 +109,10 @@ enum Tab {
     Keybinds,
     Gameplay,
     Language,
+    Mods,
 }
 
-const TABS: [Tab; 6] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Language];
+const TABS: [Tab; 7] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Language, Tab::Mods];
 
 impl Tab {
     fn name(self) -> &'static str {
@@ -122,6 +123,7 @@ impl Tab {
             Tab::Keybinds => "Keybinds",
             Tab::Gameplay => "Gameplay",
             Tab::Language => "Language",
+            Tab::Mods => "Mods",
         }
     }
 
@@ -133,6 +135,7 @@ impl Tab {
             Tab::Keybinds => "Which keys play the Wii Remote's buttons.",
             Tab::Gameplay => "Optional helpers; net games always keep the game's own rules.",
             Tab::Language => "The language of the game's text and these menus.",
+            Tab::Mods => "HD textures, and mods that change the game's files.",
         }
     }
 }
@@ -154,6 +157,12 @@ const ROW_TIME: i32 = 1;
 const ROW_LIVES: i32 = 2;
 const ROW_POWER_UP: i32 = 3;
 const GAMEPLAY_LAST: i32 = 3;
+// Mods rows: the HD Texture Pack, the pack in use (once one is installed),
+// then the file mods, one a row.
+const ROW_HD: i32 = 1;
+const ROW_PACK: i32 = 2;
+/// File mods with a row (the rest are still applied as set).
+const MODS_SHOWN: usize = 8;
 // Audio rows: 1-4 the sliders.
 const VOLUMES: [(&str, &str); 4] = [
     ("Master", "The volume of everything."),
@@ -318,6 +327,12 @@ pub struct SettingsWindow {
     update_asked: bool,
     /// The question can be drawn (the yes/no window's layout is there).
     can_ask: bool,
+    /// The Mods tab's texture packs and file mods, as installed when the
+    /// window opened.
+    packs: Vec<String>,
+    mods: Vec<String>,
+    /// The HD texture pack's download, if one was started.
+    pub pack_download: Option<crate::mods::PackDownload>,
     /// Draw yes/no buttons at this scale instead of their own.
     button_scale: Option<f32>,
     // This frame.
@@ -374,6 +389,17 @@ impl SettingsWindow {
         self.cursor = 0;
         self.dropdown = None;
         self.ask = None;
+        self.refresh_mods();
+    }
+
+    pub fn refresh_mods(&mut self) {
+        self.packs = crate::mods::packs();
+        self.mods = crate::mods::mods();
+    }
+
+    /// The HD pack is being downloaded or unpacked.
+    fn downloading(&self) -> bool {
+        matches!(self.pack_download, Some(crate::mods::PackDownload::Downloading { .. } | crate::mods::PackDownload::Installing))
     }
 
     pub fn close(&mut self, now: f64) {
@@ -947,6 +973,126 @@ impl SettingsWindow {
         }
     }
 
+    /// The Mods tab's first file-mod row.
+    fn first_mod_row(&self) -> i32 {
+        if self.packs.is_empty() {
+            ROW_HD + 1
+        } else {
+            ROW_PACK + 1
+        }
+    }
+
+    fn mods_last(&self) -> i32 {
+        self.first_mod_row() - 1 + self.mods.len().min(MODS_SHOWN) as i32
+    }
+
+    /// The pack row's left (-1) or right (1): the next installed pack.
+    fn step_pack(&self, s: &mut Settings, by: i32) {
+        let n = self.packs.len() as i32;
+        let at = crate::mods::pack_in_use(s, &self.packs).and_then(|p| self.packs.iter().position(|x| *x == p)).unwrap_or(0) as i32;
+        s.texture_pack = self.packs[(at + by).rem_euclid(n.max(1)) as usize].clone();
+    }
+
+    fn draw_mods(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
+        use crate::mods::PackDownload;
+        let rows = self.mods_last().max(5);
+        let (step, h, size) = (row_step(rows), row_h(rows), row_text(rows));
+        let pack = crate::mods::pack_in_use(s, &self.packs);
+        match (&pack, self.pack_download.clone()) {
+            (Some(_), _) => self.row_toggle(ctx, a, c, rows, 0, "HD Texture Pack", s.hd_textures, ROW_HD),
+            (None, Some(PackDownload::Downloading { done, total })) => {
+                // The slider's look as a progress bar, its percentage on it.
+                let y = rows_top(rows);
+                self.row_y[ROW_HD as usize] = y;
+                self.label(a, c, "HD Texture Pack", y, ROW_HD, size);
+                let percent = if total > 0 { (done * 100 / total).min(100) as u32 } else { 0 };
+                self.slider_bar(ctx, a, c, COL_X0, COL_X1, y, h, percent, self.cursor == ROW_HD);
+                self.mario_number(a, c, &format!("{percent}%"), COL_X, y, size);
+                if self.cursor == ROW_HD {
+                    self.column_cursor(ctx, a, c, y, h);
+                }
+                self.add_hit(COL_X, y, COL_W + 6.0, step - 2.0, ROW_HD, 0);
+            }
+            (None, Some(PackDownload::Installing)) => {
+                self.row_button(ctx, a, c, rows, 0, "HD Texture Pack", "Installing...", ROW_HD, false, 1.0, false);
+            }
+            (None, Some(PackDownload::Failed(_))) => {
+                self.row_button(ctx, a, c, rows, 0, "HD Texture Pack", "Try Again", ROW_HD, true, 1.0, false);
+            }
+            (None, _) => {
+                self.row_button(ctx, a, c, rows, 0, "HD Texture Pack", "Download", ROW_HD, true, 1.0, false);
+            }
+        }
+        if let Some(p) = &pack {
+            let y = rows_top(rows) - step;
+            self.row_y[ROW_PACK as usize] = y;
+            self.label(a, c, "Pack", y, ROW_PACK, size);
+            if self.packs.len() > 1 {
+                self.picker(ctx, a, c, ROW_PACK, p, y, h, self.cursor == ROW_PACK, size);
+                self.add_hit(COL_X0 + ARROW_W / 2.0, y, ARROW_W + 8.0, step - 2.0, ROW_PACK, EV_LEFT);
+                self.add_hit(COL_X1 - ARROW_W / 2.0, y, ARROW_W + 8.0, step - 2.0, ROW_PACK, EV_RIGHT);
+                self.add_hit(COL_X, y, COL_W - 2.0 * ARROW_W - 8.0, step - 2.0, ROW_PACK, EV_CONFIRM);
+            } else {
+                self.pause_button(ctx, a, c, ROW_PACK, p, COL_X, y, COL_W, h, self.cursor == ROW_PACK, true, size, false, 0.0, true);
+                self.add_hit(COL_X, y, COL_W + 6.0, step - 2.0, ROW_PACK, 0);
+            }
+        }
+        let first = self.first_mod_row();
+        let names: Vec<String> = self.mods.iter().take(MODS_SHOWN).cloned().collect();
+        for (i, name) in names.iter().enumerate() {
+            let row = first + i as i32;
+            let y = rows_top(rows) - (row - 1) as f32 * step;
+            self.row_y[row as usize] = y;
+            // A long name smaller, to stay left of the buttons.
+            let mut label_size = size;
+            if a.message.ready() {
+                let width = layout::measure_text(&a.message, name, size);
+                let room = COL_X0 - LABEL_X - 16.0;
+                if width > room {
+                    label_size *= room / width;
+                }
+            }
+            self.label(a, c, name, y, row, label_size);
+            self.on_off(ctx, a, c, row, y, h, s.mods.contains(name), self.cursor == row);
+            self.add_hit(COL_X, y, COL_W + 6.0, step - 2.0, row, EV_CONFIRM);
+        }
+        if self.mods.is_empty() {
+            let y = rows_top(rows) - (first - 1) as f32 * step;
+            let line = format!("File mods: folders in {} laid out as the disc's files.", crate::mods::full_path(crate::mods::MODS));
+            let mut text_size = 20.0;
+            if a.message.ready() {
+                let width = layout::measure_text(&a.message, &line, text_size);
+                if width > WIDTH - 60.0 {
+                    text_size *= (WIDTH - 60.0) / width;
+                }
+            }
+            self.text(a, c, &line, 0.0, y, text_size, 1, LABEL_DIM);
+        }
+        let mod_row = (first..=self.mods_last()).contains(&self.cursor).then(|| names[(self.cursor - first) as usize].clone());
+        let mut color = u32::MAX;
+        let note = match (self.cursor, &pack, mod_row) {
+            (ROW_HD, None, _) => match &self.pack_download {
+                Some(PackDownload::Downloading { .. }) => "Downloading from the pack's own download page.".into(),
+                Some(PackDownload::Installing) => "Unpacking the textures.".into(),
+                Some(PackDownload::Failed(why)) => {
+                    color = 0xFFF0_B0FF;
+                    why.clone()
+                }
+                _ => format!("HD textures by Bighead and friends: a 23 MB download. Or put a Dolphin pack in {}.", crate::mods::full_path(crate::mods::PACKS)),
+            },
+            (ROW_HD, Some(p), _) if s.hd_textures => match crate::mods::credits(p) {
+                Some(by) => format!("HD textures by {by}."),
+                None => format!("HD textures from {}\\{p}.", crate::mods::PACKS),
+            },
+            (ROW_HD, Some(_), _) => "Off: the game's own textures.".into(),
+            (ROW_PACK, Some(_), _) if self.packs.len() > 1 => format!("Left and right pick one of the {} packs in {}.", self.packs.len(), crate::mods::PACKS),
+            (ROW_PACK, Some(p), _) => format!("The pack in {}\\{p}; put others beside it to choose.", crate::mods::PACKS),
+            (_, _, Some(name)) => format!("From the next start, the files in {}\\{name} replace the game's.", crate::mods::MODS),
+            _ => Tab::Mods.help().into(),
+        };
+        self.help_line(a, c, &note, color);
+    }
+
     fn open_dropdown(&mut self, kind: DropKind, s: &Settings) {
         let (row, labels, current): (i32, Vec<String>, i32) = match kind {
             DropKind::Resolution => (ROW_RESOLUTION, SCALES.iter().map(|&x| scale_label(x)).collect(), SCALES.iter().position(|&x| x == s.scale).map_or(-1, |i| i as i32)),
@@ -1193,6 +1339,7 @@ impl SettingsWindow {
             Tab::Keybinds => 12,
             Tab::Gameplay => GAMEPLAY_LAST,
             Tab::Language => LANGUAGES.len() as i32,
+            Tab::Mods => self.mods_last(),
         };
         if up {
             self.cursor -= 1;
@@ -1248,6 +1395,27 @@ impl SettingsWindow {
                 changes.push(Change::Gameplay);
             }
             (Tab::Gameplay, ROW_POWER_UP) if confirm => self.ask_cheat(Cheat::PowerUp, s, changes),
+            (Tab::Mods, ROW_HD) if confirm && self.packs.is_empty() && !self.downloading() => {
+                self.pack_download = Some(crate::mods::PackDownload::Downloading { done: 0, total: 0 });
+                changes.push(Change::PackDownload);
+            }
+            (Tab::Mods, ROW_HD) if toggle && !self.packs.is_empty() => {
+                s.hd_textures = !s.hd_textures;
+                changes.push(Change::TexturePack);
+            }
+            (Tab::Mods, ROW_PACK) if (confirm || left || right) && self.packs.len() > 1 => {
+                self.step_pack(s, if left { -1 } else { 1 });
+                changes.push(if s.hd_textures { Change::TexturePack } else { Change::Mods });
+            }
+            (Tab::Mods, n) if toggle && n >= self.first_mod_row() && n <= self.mods_last() => {
+                let name = self.mods[(n - self.first_mod_row()) as usize].clone();
+                if s.mods.contains(&name) {
+                    s.mods.retain(|m| *m != name);
+                } else {
+                    s.mods.push(name);
+                }
+                changes.push(Change::Mods);
+            }
             (Tab::Language, n) if confirm && (1..=3).contains(&n) => {
                 s.language = LANGUAGES[n as usize - 1].0.into();
                 changes.push(Change::Language);
@@ -1368,6 +1536,7 @@ impl SettingsWindow {
             Tab::Keybinds => self.draw_keybinds(ctx, &a, &c, s),
             Tab::Gameplay => self.draw_gameplay(ctx, &a, &c, s),
             Tab::Language => self.draw_language(ctx, &a, &c, s, &at_boot),
+            Tab::Mods => self.draw_mods(ctx, &a, &c, s),
         }
         self.defer_cursor = false;
         if let Some((cc, x, y, w, h)) = self.deferred.take().filter(|_| self.dropdown.is_none()) {

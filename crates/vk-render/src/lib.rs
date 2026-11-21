@@ -795,8 +795,11 @@ impl Renderer {
         let mag = if (key >> 4) & 1 != 0 { vk::Filter::LINEAR } else { vk::Filter::NEAREST };
         let min = (key >> 5) & 7;
         let min_filter = if min >= 4 { vk::Filter::LINEAR } else { vk::Filter::NEAREST };
-        let mip = if min & 3 == 2 { vk::SamplerMipmapMode::LINEAR } else { vk::SamplerMipmapMode::NEAREST };
-        let max_lod = if min & 3 != 0 { ((key >> 20) & 0xF) as f32 } else { 0.0 };
+        // A texture pack's image (bit 24) has its own mip levels, however
+        // many: a linear-filtered texture without mips blends between them.
+        let replaced = key & (1 << 24) != 0;
+        let mip = if min & 3 == 2 || (replaced && min == 4) { vk::SamplerMipmapMode::LINEAR } else { vk::SamplerMipmapMode::NEAREST };
+        let max_lod = if replaced { vk::LOD_CLAMP_NONE } else if min & 3 != 0 { ((key >> 20) & 0xF) as f32 } else { 0.0 };
         // LOD bias: s2.5 fixed point in bits 9..16.
         let bias = ((((key >> 9) & 0xFF) as u8) as i8) as f32 / 32.0;
         let s = unsafe {
@@ -1323,7 +1326,14 @@ impl Renderer {
 
     fn upload_textures(&mut self, f: usize, cmd: vk::CommandBuffer, out: &Output) -> Res<()> {
         self.stats.uploads = out.new_textures.len();
-        let total: usize = out.new_textures.iter().flat_map(|t| &t.levels).map(Vec::len).sum();
+        // A texture pack's image instead of the decoded texture, at its own size.
+        fn source(t: &gx::texture::NewTexture) -> (u32, u32, &[Vec<u8>]) {
+            match &t.replacement {
+                Some(r) => (r.width, r.height, r.levels.as_slice()),
+                None => (t.width, t.height, t.levels.as_slice()),
+            }
+        }
+        let total: usize = out.new_textures.iter().flat_map(|t| source(t).2).map(Vec::len).sum();
         if total == 0 {
             return Ok(());
         }
@@ -1334,8 +1344,9 @@ impl Renderer {
             let mut at = 0;
             for t in &out.new_textures {
                 let mut regions = Vec::new();
-                let (mut w, mut h) = (t.width, t.height);
-                for (level, data) in t.levels.iter().enumerate() {
+                let (width, height, levels) = source(t);
+                let (mut w, mut h) = (width, height);
+                for (level, data) in levels.iter().enumerate() {
                     bytes[at..at + data.len()].copy_from_slice(data);
                     regions.push(
                         vk::BufferImageCopy::default()
@@ -1347,7 +1358,7 @@ impl Renderer {
                     w = (w / 2).max(1);
                     h = (h / 2).max(1);
                 }
-                copies.push((t.id, t.width, t.height, t.levels.len() as u32, regions));
+                copies.push((t.id, width, height, levels.len() as u32, regions));
             }
         }
         let dev = self.device.clone();
@@ -1362,6 +1373,13 @@ impl Renderer {
             self.textures_epoch += 1;
             if let Some(old) = self.textures.insert(id, img) {
                 self.trash_images.push(old);
+            }
+        }
+        // A texture pack's images at a course's start can make a staging
+        // buffer of hundreds of MB: not kept for the small uploads after.
+        if total > 32 << 20 {
+            if let Some(b) = self.slot(f, 2).take() {
+                self.trash_buffers.push(b);
             }
         }
         Ok(())

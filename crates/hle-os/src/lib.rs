@@ -386,21 +386,28 @@ impl System {
     /// Loads the game from the extracted disc folder `game`; NAND files live
     /// under `nand`.
     pub fn boot(game: &Path, nand: PathBuf) -> Result<Self, String> {
-        Self::boot_with(game, nand, None)
+        Self::boot_with(game, nand, None, Vec::new())
     }
 
     /// [`System::boot`], with the menus' additions ([`menu_layout`]) if
     /// `labels` is `Some`: the pause window, the world map's menu and the
     /// save-select screen get their Settings button reading its first
     /// word, and the save files' cards their hidden text reading its second
-    /// ("Cheated"). [`System::menu`] says which got theirs.
-    pub fn boot_with(game: &Path, nand: PathBuf, labels: Option<(&str, &str)>) -> Result<Self, String> {
+    /// ("Cheated"). [`System::menu`] says which got theirs. `mods`: files
+    /// served in place of the disc's (disc path, bytes), before the menus'
+    /// additions are made to them.
+    pub fn boot_with(game: &Path, nand: PathBuf, labels: Option<(&str, &str)>, mods: Vec<(String, Vec<u8>)>) -> Result<Self, String> {
         let read = |p: &str| fs::read(game.join(p)).map_err(|e| format!("{p}: {e}"));
         let (dol, boot_bin, tmd) = (read("sys/main.dol")?, read("sys/boot.bin")?, read("tmd.bin")?);
         let ios_version = tmd.get(0x18B).copied().ok_or("tmd.bin too short")? as u32;
 
         let mut ios = Ios::new(game, nand, TITLE_ID)?;
         let mut menu = menu_settings::MenuSettings::default();
+        for (path, data) in mods {
+            if !ios.disc.replace(&path, data) {
+                eprintln!("mods: {path} is not on the disc (only files the disc has can be replaced)");
+            }
+        }
         if let Some((settings, cheated)) = labels {
             menu.buttons = menu_layout::add_buttons(&mut ios.disc, settings);
             menu.cheated_label = menu_layout::add_cheated_label(&mut ios.disc, cheated);

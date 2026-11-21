@@ -205,6 +205,8 @@ enum Msg {
     SaveRegs,
     /// Load registers saved by `SaveRegs`.
     LoadRegs(Vec<u8>),
+    /// Use this texture pack ([`Gpu::set_texture_pack`]).
+    TexturePack(Option<Box<crate::replace::Pack>>),
 }
 
 enum Reply {
@@ -260,6 +262,7 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
                 // Checked by the game thread before it was sent.
                 gpu.snap_regs(&mut guest_mem::snap::Snap::loader(bytes));
             }
+            Msg::TexturePack(pack) => gpu.set_texture_pack(pack.map(|p| *p)),
         }
     }
 }
@@ -510,6 +513,18 @@ impl GpuPort {
             Self::Thread(t) => {
                 t.flush();
                 t.send(Msg::Writeback(addr, ram.to_vec()));
+            }
+        }
+    }
+
+    /// Draws textures from `pack` from the next draw on (`None`: the
+    /// game's own); see [`crate::replace`].
+    pub fn set_texture_pack(&mut self, pack: Option<crate::replace::Pack>) {
+        match self {
+            Self::Inline(gpu) => gpu.set_texture_pack(pack),
+            Self::Thread(t) => {
+                t.flush();
+                t.send(Msg::TexturePack(pack.map(Box::new)));
             }
         }
     }

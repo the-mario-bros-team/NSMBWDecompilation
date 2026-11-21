@@ -50,6 +50,12 @@ pub enum Change {
     PowerUp(u8),
     /// A key was rebound.
     Keymap,
+    /// The Mods tab's HD Texture Pack: turned on or off, or another pack.
+    TexturePack,
+    /// A file mod turned on or off (from the next start).
+    Mods,
+    /// Download and install the HD texture pack (`crate::mods`).
+    PackDownload,
     /// Mark this save file (0-2) "Cheated": Infinite Lives was turned on
     /// while it is the one being played.
     Cheated(u8),
@@ -126,6 +132,16 @@ impl Menus {
 
     pub fn is_open(&self) -> bool {
         self.window.is_open()
+    }
+
+    /// The HD texture pack's download, for the Mods tab (`None`: none).
+    pub fn set_pack_download(&mut self, state: Option<crate::mods::PackDownload>) {
+        self.window.pack_download = state;
+    }
+
+    /// Looks at the texture packs and file mods installed again.
+    pub fn refresh_mods(&mut self) {
+        self.window.refresh_mods();
     }
 
     /// The Keybinds tab waits for a key: key presses go to [`Menus::capture_key`].

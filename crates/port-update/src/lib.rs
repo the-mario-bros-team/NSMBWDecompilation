@@ -25,7 +25,7 @@
 
 use std::path::{Path, PathBuf};
 
-mod http;
+pub mod http;
 pub mod install;
 
 /// This build's version, as a release's tag names it (without the `v`).

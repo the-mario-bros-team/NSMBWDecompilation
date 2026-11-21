@@ -71,6 +71,8 @@ pub enum ToEmu {
     SettingsClosed,
     /// The Settings window's Gameplay options (not in a net game).
     Gameplay(crate::gameplay::Options),
+    /// Replace textures as this says from now on (the Mods tab).
+    TexturePack(crate::mods::PackSpec),
     /// Give player 1 this power-up (`gameplay::POWER_UPS`) in a course or on
     /// the world map, as soon as the game is in one.
     PowerUp(u8),
@@ -102,6 +104,8 @@ pub struct Totals {
     /// Fields whose emulation took longer than [`FIELD`]: index, time, and
     /// of that, waiting for the GX thread.
     pub slow_fields: Vec<(u64, Duration, Duration)>,
+    /// The texture pack's counts, if one was in use at the end.
+    pub texture_pack: Option<std::sync::Arc<gx::replace::Stats>>,
 }
 
 pub struct Emu {
@@ -193,8 +197,16 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Input(i) => *live = i,
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::TexturePack(_) => {}
     }
+}
+
+/// Opens the texture pack `spec` says for the GX thread; returns its counts.
+fn set_texture_pack(sys: &mut System, spec: &crate::mods::PackSpec) -> Option<Arc<gx::replace::Stats>> {
+    let pack = spec.open();
+    let stats = pack.as_ref().map(|p| p.stats.clone());
+    sys.hw.borrow_mut().gpu.set_texture_pack(pack);
+    stats
 }
 
 /// Live controls plus the presses scripted for field `index`.
@@ -272,6 +284,10 @@ pub struct EmuOptions {
     pub auto_close_settings: bool,
     /// The save files' "Cheated" marks, shared with the window's thread.
     pub cheats: Arc<crate::gameplay::Cheats>,
+    /// Textures replaced from a texture pack (the Mods tab).
+    pub texture_pack: crate::mods::PackSpec,
+    /// The file mods turned on (`crate::mods`; not in a net game).
+    pub mods: Vec<String>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -332,7 +348,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, texture_pack, mods } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -383,7 +399,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     }
     let settings_label = settings_label.filter(|_| session.is_none() && (script.is_empty() || force_settings_buttons));
     // The save cards' text is "Cheated" in every language for now.
-    let mut sys = match System::boot_with(&game, nand, settings_label.as_deref().map(|s| (s, "Cheated"))) {
+    // Every player in a net game would need the same mods.
+    let mods = if session.is_none() { crate::mods::mod_files(&mods) } else { Vec::new() };
+    let mut sys = match System::boot_with(&game, nand, settings_label.as_deref().map(|s| (s, "Cheated")), mods) {
         Ok(s) => s,
         Err(e) => {
             let _ = frames.send(Err(e));
@@ -418,6 +436,8 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         let ram = sys.mem.view();
         sys.hw.borrow_mut().gpu.start_thread(ram, crate::win::raise_this_thread);
     }
+    // Render-only, so a net game allows it.
+    let mut pack_stats = set_texture_pack(&mut sys, &texture_pack);
     if trace_ios {
         let mut hw = sys.hw.borrow_mut();
         hw.ios.trace = true;
@@ -462,6 +482,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                     ToEmu::SettingsClosed => sys.menu.reopen(),
                     ToEmu::Gameplay(o) => gameplay_options = o,
                     ToEmu::PowerUp(p) => gameplay.pending = Some(p),
+                    ToEmu::TexturePack(spec) => pack_stats = set_texture_pack(&mut sys, &spec),
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
                     msg => apply(&mut sys, &mut live, msg),
                 }
@@ -651,6 +672,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         totals.audio_dropouts = a.dropouts();
     }
     totals.thread_cpu = crate::win::thread_cpu_time() - cpu_at_start;
+    totals.texture_pack = pack_stats;
     totals
 }
 
