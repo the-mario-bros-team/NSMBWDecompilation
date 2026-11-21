@@ -50,6 +50,18 @@ pub struct Settings {
     /// Save files 1-3 marked "Cheated": Infinite Lives or the Power-Up was
     /// used on them.
     pub cheated: [bool; 3],
+    /// Gameplay: the game is saved after every course cleared.
+    pub autosave: bool,
+    /// Gameplay: the pause window's Exit Course in every course, cleared or
+    /// not (in a net game only if every player has it).
+    pub exit_course: bool,
+    /// Gameplay: player 1 picks a character too, on the game's own screen
+    /// (applies from the next start; never in scripted, headless or net
+    /// runs).
+    pub p1_character: bool,
+    /// Player 1's last character on each save file (0 Mario, 1 Luigi,
+    /// 2 Blue Toad, 3 Yellow Toad), where the character screen starts.
+    pub file_characters: [u32; 3],
     /// The keys for the remote's buttons (`[keyboard]`).
     pub keymap: Keymap,
     // The controls (the Keybinds tab), after WitherBlitz's
@@ -73,7 +85,7 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false }
     }
 }
 
@@ -154,6 +166,14 @@ impl Settings {
                 *mark = v.as_bool().unwrap_or(false);
             }
         }
+        s.autosave = flag("autosave", s.autosave);
+        s.exit_course = flag("exit_course", s.exit_course);
+        s.p1_character = flag("p1_character", s.p1_character);
+        for (i, c) in s.file_characters.iter_mut().enumerate() {
+            if let Some(n) = number(&format!("file{}_character", i + 1)) {
+                *c = n.clamp(0, 3) as u32;
+            }
+        }
         if let Some(keyboard) = t.get("keyboard").and_then(toml::Value::as_table) {
             for (i, (key, _)) in ACTIONS.iter().enumerate() {
                 if let Some(label) = keyboard.get(*key).and_then(toml::Value::as_str) {
@@ -202,7 +222,12 @@ impl Settings {
              # Gameplay options (the Settings window's Gameplay tab).\n\
              no_time_limit = {}\ninfinite_lives = {}\npower_up = {}\n\
              # Save files 1-3 marked \"Cheated\" (Infinite Lives or the Power-Up was used on them).\n\
-             cheated = [{}, {}, {}]\n",
+             cheated = [{}, {}, {}]\n\
+             # Save after every course cleared; Exit Course in every course (net games: if every player has it).\n\
+             autosave = {}\nexit_course = {}\n\
+             # Player 1 picks a character too (from the next start), and each save file's last one\n\
+             # (0 Mario, 1 Luigi, 2 Blue Toad, 3 Yellow Toad).\n\
+             p1_character = {}\nfile1_character = {}\nfile2_character = {}\nfile3_character = {}\n",
             self.vsync,
             self.fullscreen,
             if self.widescreen { "16:9" } else { "4:3" },
@@ -220,7 +245,13 @@ impl Settings {
             self.power_up,
             self.cheated[0],
             self.cheated[1],
-            self.cheated[2]
+            self.cheated[2],
+            self.autosave,
+            self.exit_course,
+            self.p1_character,
+            self.file_characters[0],
+            self.file_characters[1],
+            self.file_characters[2]
         );
         // Last: a table ends the file's top-level keys.
         let mut text = text;
@@ -265,7 +296,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("nsmbw-settings-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(FILE);
-        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], keymap: {
+        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], autosave: false, exit_course: false, p1_character: false, file_characters: [1, 3, 2], keymap: {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.bind(input::keymap::RUN, input::keymap::Key::Mouse(5));

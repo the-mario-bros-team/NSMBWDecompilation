@@ -69,7 +69,8 @@ pub enum ToEmu {
     /// The Settings window that a game menu's Settings button opened has
     /// closed: that menu opens again (`hle_os::menu_settings`).
     SettingsClosed,
-    /// The Settings window's Gameplay options (not in a net game).
+    /// The Settings window's Gameplay options (not in a net game, which
+    /// keeps what its players agreed on at the start).
     Gameplay(crate::gameplay::Options),
     /// Give player 1 this power-up (`gameplay::POWER_UPS`) in a course or on
     /// the world map, as soon as the game is in one.
@@ -330,6 +331,16 @@ pub struct EmuOptions {
     /// Scripted clicks on the game's menus (`--click`): the field and where,
     /// in layout units.
     pub clicks: Vec<(u64, crate::click::Click)>,
+    /// The Gameplay options to start with (a window's from settings.toml;
+    /// a headless run's all off, the game's own rules, unless
+    /// `--gameplay-options`). A net host offers its Exit Course to joiners.
+    pub gameplay: crate::gameplay::Options,
+    /// `--gameplay-options`: player 1's character pick in a scripted or
+    /// headless run too (otherwise, like the Settings buttons, only a
+    /// player's).
+    pub force_gameplay_options: bool,
+    /// Player 1's character on each save file, shared with the window's thread.
+    pub characters: Arc<crate::gameplay::Characters>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -391,7 +402,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 
 #[allow(clippy::too_many_arguments)]
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>, player: Arc<AtomicU64>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -414,14 +425,14 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut joined: Option<(u64, Vec<u8>)> = None;
     match &net {
         crate::net::Mode::Off => {}
-        crate::net::Mode::Host { port, wait_join } => match crate::net::Session::host(*port, *wait_join, &game, light_textures, nand.clone()) {
+        crate::net::Mode::Host { port, wait_join } => match crate::net::Session::host(*port, *wait_join, &game, light_textures, nand.clone(), gameplay_options.exit_course) {
             Ok(s) => session = Some(s),
             Err(e) => {
                 let _ = frames.send(Err(e));
                 return totals;
             }
         },
-        crate::net::Mode::Join { addr } => match crate::net::Session::join(addr, &game, light_textures) {
+        crate::net::Mode::Join { addr } => match crate::net::Session::join(addr, &game, light_textures, gameplay_options.exit_course) {
             Ok((s, field, state)) => {
                 nand = crate::net::joiner_nand();
                 session = Some(s);
@@ -449,6 +460,8 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             return totals;
         }
     };
+    // Exit Course: a net game's as its players agreed.
+    sys.menu.exit_course = session.as_ref().map_or(gameplay_options.exit_course, |s| s.exit_course);
     if settings_label.is_some() {
         let (pause, map, files) = sys.menu.buttons;
         let yes = |b| if b { "yes" } else { "no" };
@@ -501,6 +514,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         println!("loaded {} at field {index}", path.display());
     }
+    // Player 1's character pick: a player's game (not a scripted one unless
+    // asked, nor a net game), from the start: after a loaded state, whose
+    // modules are placed already.
+    if gameplay_options.p1_character && session.is_none() && (script.is_empty() || force_gameplay_options) {
+        let on = sys.enable_p1_character();
+        println!("player 1's character pick: {}", if on { "on" } else { "not applied (main.dol is not the one it is for)" });
+    }
     let last_field = stop_after.map(|n| index + n);
     let mut gx_digest = 0u64;
     let mut due = Instant::now() + FIELD;
@@ -517,7 +537,6 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut click = None;
     let mut click_buttons = 0u16;
     let mut gameplay = crate::gameplay::Gameplay::default();
-    let mut gameplay_options = crate::gameplay::Options::default();
     // With `auto_close_settings`: the field the Settings window "closes" at.
     let mut close_settings_at = None;
     while !stop.load(Ordering::Relaxed) && last_field.is_none_or(|l| index <= l) {
@@ -526,7 +545,12 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                 match msg {
                     ToEmu::Pause(p) => paused = p && session.is_none(),
                     ToEmu::SettingsClosed => sys.menu.reopen(),
-                    ToEmu::Gameplay(o) => gameplay_options = o,
+                    ToEmu::Gameplay(o) => {
+                        gameplay_options = o;
+                        if session.is_none() {
+                            sys.menu.exit_course = o.exit_course;
+                        }
+                    }
                     ToEmu::PowerUp(p) => gameplay.pending = Some(p),
                     // A sound waiting out a pause would play late.
                     ToEmu::Sound(id) => {
@@ -606,7 +630,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         // Net games keep the game's own rules.
         if session.is_none() {
-            if let Some(line) = gameplay.after_field(&mut sys, gameplay_options, &cheats) {
+            for line in gameplay.after_field(&mut sys, gameplay_options, &cheats, &characters) {
                 say!("{line}");
             }
             play_menu_sounds(&mut sys, &mut sounds);

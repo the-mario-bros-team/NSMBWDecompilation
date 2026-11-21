@@ -6,6 +6,7 @@
 pub mod light_texture;
 pub mod menu_layout;
 pub mod menu_settings;
+pub mod p1_character;
 pub mod reverb;
 
 use std::cell::RefCell;
@@ -63,18 +64,30 @@ const STRCMP: u32 = 0x802E_1AB4;
 /// Its `errno` (r13 - 0x4698) and the NaN it returns for negative inputs.
 const ERRNO_OFFSET: u32 = 0x4698;
 const EDOM: u32 = 0x21;
+/// [`System::call_guest`]'s data, in low memory the game leaves unused
+/// (up to [`p1_character::STUBS`]), and its 64 KiB stack in MEM2 above the
+/// game's (from 0x93400000: IOS's own memory on a real Wii, which nothing
+/// uses here).
+const CALL_SCRATCH: u32 = 0x8000_1800;
+const CALL_STACK_TOP: u32 = 0x9341_0000 - 0x10;
+/// The OS's current thread (`OSGetCurrentThread`), and `OSThread`'s size.
+const CURRENT_THREAD: u32 = 0x8000_00E4;
+const OS_THREAD_SIZE: usize = 0x318;
+/// The scheduler's hold count (r13 - 0x4F80; `OSDisableScheduler` adds
+/// one): `SelectThread` switches no thread while it is above 0.
+const RESCHEDULE: u32 = 0x8042_A700;
 
 /// Every address [`System::before`] acts on (`OSLink` returns aside).
 /// Recompiled code never runs through one of these (`ppc-recomp` bakes this
 /// list in, and [`guest_cpu::recomp::Rt::new`] checks it).
-pub const SPECIAL: [u32; 36] = {
-    let mut s = [0u32; 36];
+pub const SPECIAL: [u32; 38] = {
+    let mut s = [0u32; 38];
     let mut i = 0;
     while i < RETURN_AT_ONCE.len() {
         s[i] = RETURN_AT_ONCE[i];
         i += 1;
     }
-    let rest = [SQRT, STRCMP, light_texture::DRAW_AND_CAPTURE, reverb::UPDATE_BUFFER, IDLE_LOOP, OS_LINK, OS_LINK_FIXED];
+    let rest = [SQRT, STRCMP, light_texture::DRAW_AND_CAPTURE, reverb::UPDATE_BUFFER, IDLE_LOOP, OS_LINK, OS_LINK_FIXED, p1_character::PORTRAIT];
     let mut j = 0;
     while j < rest.len() {
         s[i + j] = rest[j];
@@ -231,6 +244,8 @@ pub struct System {
     pub recomp: Option<guest_cpu::recomp::Rt>,
     /// The game menus' Settings buttons ([`menu_settings`]).
     pub menu: menu_settings::MenuSettings,
+    /// Player 1's character pick ([`p1_character`]), if applied.
+    pub p1: p1_character::P1Character,
     /// Instructions run by recompiled code (the rest were interpreted).
     pub recomp_steps: u64,
     /// Times the dispatcher entered recompiled code: after an interrupt, a
@@ -417,7 +432,7 @@ impl System {
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
         let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None, pending: None }));
-        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu })
+        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default() })
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
@@ -429,6 +444,10 @@ impl System {
         }
         if menu_settings::HOOKS.contains(&pc) && self.menu_hook(pc) {
             return false;
+        }
+        // A card picks its picture; the displaced instruction runs after.
+        if pc == p1_character::PORTRAIT && self.p1.on {
+            self.card_portrait();
         }
         // The run loops execute the instruction at `pc` right after this
         // (no interrupt in between), so a call the hook lets run is drawn
@@ -607,18 +626,46 @@ impl System {
     /// Settings window's Power-Up: the call must not wait or switch threads.
     ///
     /// It runs with interrupts off and the FPU on (so no exception can reach
-    /// the guest OS), on a stack in 0x80001800..0x80003000, which the game
-    /// leaves unused (debuggers and cheat handlers live there on a real
-    /// Wii). `data` is copied to 0x80001800 first, for pointer arguments.
+    /// the guest OS), on a stack in MEM2 above the game's, which nothing
+    /// else uses. `data` is copied to 0x80001800 first, for pointer
+    /// arguments: low memory the game leaves unused (debuggers and cheat
+    /// handlers live there on a real Wii).
     pub fn call_guest(&mut self, addr: u32, args: &[u32], data: &[u8]) -> Result<u32, String> {
-        const SCRATCH: u32 = 0x8000_1800;
-        const STACK_TOP: u32 = 0x8000_2FF0;
-        const RETURN: u32 = SCRATCH; // never executed: the call stops there
+        self.call_guest_on(addr, args, data)
+    }
+
+    /// [`System::call_guest`] for a function that touches the OS's threads
+    /// (locks and unlocks a mutex, signals a condition) and needs a big
+    /// stack, such as the game's `SaveGame`, whose NAND copy takes 16 KiB.
+    /// It runs as a thread of its own that is never switched out: the OS's
+    /// current thread is a blank one at 0x80001800 and the scheduler is held
+    /// as `OSDisableScheduler` holds it (a thread it wakes runs at the next
+    /// reschedule), on [`System::call_guest`]'s 64 KiB stack.
+    /// `None`, and nothing run, where the guest stopped with interrupts off:
+    /// in a critical section, whose OS state may be half updated.
+    pub fn call_guest_as_thread(&mut self, addr: u32, args: &[u32]) -> Option<Result<u32, String>> {
+        // Interrupts on, or one just taken (only ever with them on) and its
+        // handler not started.
+        let just_taken = matches!(self.cpu.pc, 0x500 | 0x900) && self.cpu.spr[guest_cpu::SPR_SRR1] & MSR_EE != 0;
+        if self.cpu.msr & MSR_EE == 0 && !just_taken {
+            return None;
+        }
+        let (thread, held) = (self.mem.read_u32(CURRENT_THREAD).ok()?, self.mem.read_u32(RESCHEDULE).ok()?);
+        let _ = self.mem.write_u32(CURRENT_THREAD, CALL_SCRATCH);
+        let _ = self.mem.write_u32(RESCHEDULE, held.wrapping_add(1));
+        let r = self.call_guest_on(addr, args, &[0; OS_THREAD_SIZE]);
+        let _ = self.mem.write_u32(CURRENT_THREAD, thread);
+        let _ = self.mem.write_u32(RESCHEDULE, held);
+        Some(r)
+    }
+
+    fn call_guest_on(&mut self, addr: u32, args: &[u32], data: &[u8]) -> Result<u32, String> {
+        const RETURN: u32 = CALL_SCRATCH; // never executed: the call stops there
         assert!(args.len() <= 8 && data.len() <= 0x400);
         let saved = self.cpu.clone();
-        self.mem.ram_mut(SCRATCH, data.len()).ok_or("scratch memory")?.copy_from_slice(data);
-        let _ = self.mem.write_u32(STACK_TOP, 0); // end of the back chain
-        self.cpu.gpr[1] = STACK_TOP;
+        self.mem.ram_mut(CALL_SCRATCH, data.len()).ok_or("scratch memory")?.copy_from_slice(data);
+        let _ = self.mem.write_u32(CALL_STACK_TOP, 0); // end of the back chain
+        self.cpu.gpr[1] = CALL_STACK_TOP;
         for (i, &a) in args.iter().enumerate() {
             self.cpu.gpr[3 + i] = a;
         }
@@ -650,7 +697,7 @@ impl System {
         let id = m.read_u32(header).unwrap_or(0);
         let count = m.read_u32(header + 0xC).unwrap_or(0).min(64);
         let table = m.read_u32(header + 0x10).unwrap_or(0);
-        let sections = (0..count)
+        let sections: Vec<(u32, u32, bool)> = (0..count)
             .filter_map(|i| {
                 let off = m.read_u32(table + 8 * i).ok()?;
                 let size = m.read_u32(table + 8 * i + 4).ok()?;
@@ -658,6 +705,9 @@ impl System {
             })
             .collect();
         let ok = self.cpu.gpr[3] != 0;
+        if ok {
+            self.p1_linked(&sections);
+        }
         self.linked.push(LinkedModule { id, header, ok, sections, at_step: self.steps });
     }
 }

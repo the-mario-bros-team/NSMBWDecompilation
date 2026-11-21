@@ -20,8 +20,24 @@
 //!   select then shows "Cheated" on that file's card: a text the port built
 //!   into the card's layout (`hle_os::menu_layout`), shown here. An erased
 //!   file loses its mark.
+//! - Autosave (after `runtime/src/host_suspend.cpp`'s `AutoSaveFrame`): back
+//!   on the world map from a course left by its goal, the game is saved as
+//!   the map's own Save does (`SaveGame`), with no prompt, so closing the
+//!   game after a course loses nothing. The map records the clear in its
+//!   first moments: the save is made once the file's course flags change,
+//!   or after 5 s on the map (a replay that records nothing new still saves
+//!   its lives and items; a clear the map recorded before this first saw it
+//!   too), once the map's menu is closed and the NAND thread idle; it gives
+//!   up after 15 s. Not the title screen's demo, Free Mode or Coin Battle.
+//! - Exit Course is the hook in `hle_os::menu_settings`; this only sets it.
+//! - Player 1's character pick (`hle_os::p1_character`, applied at boot):
+//!   each save file remembers the character player 1 last played on its
+//!   world map ([`Characters`]), and the character screen's cards start on
+//!   it (the game's table of each slot's first card, the saved character's
+//!   swapped into player 1's); the screen's own tidying is hle-os's.
 //!
-//! Net games keep the game's own rules: every machine has to run the same.
+//! Net games keep the game's own rules: every machine has to run the same
+//! (Exit Course only if every player has it: `net`).
 
 use std::sync::atomic::{AtomicI8, AtomicU8, Ordering::Relaxed};
 
@@ -59,6 +75,30 @@ const FILE_SELECT_CURSOR: u32 = 0x2A4; // 0-2: on a file
 const SAVE_MNG: u32 = 0x8042_A040; // dSaveMng_c::m_instance
 const SAVE_GAMES: u32 = 0x6C0; // its three games; a game's +2 bit 0: new
 const SAVE_GAME_SIZE: u32 = 0x980;
+const SAVE_SLOT: u32 = 0x26; // the open file (a byte)
+const COURSE_FLAGS: u32 = 0x6C; // a game's goals and Star Coins: 10 worlds of 42 courses
+const COURSE_FLAG_WORDS: usize = 420;
+const EXIT_MODE: u32 = 0x8042_900C; // dScStage_c::m_exitMode: 0 the goal, 1 all lost, 2 quit
+const GAME_FLAG: u32 = 0x8042_9F80; // dInfo_c::mGameFlag
+const FREE_MODE_OR_COIN_BATTLE: u32 = 1 << 5 | 1 << 6;
+const NAND_THREAD: u32 = 0x8042_9FB8; // dNandThread_c::m_instance; +0x74 a command in progress
+const NAND_BUSY: u32 = 0x74;
+const SAVE_GAME: u32 = 0x8092_F5F0; // SaveGame(_, quick) in d_basesNP, the map's Save
+const SAVE_GAME_FIRST: u32 = 0x9421_FFF0; // its first word (stwu r1, -0x10(r1))
+const PROFILE_MAP_MENU: u16 = 0x2B5; // dCourseSelectMenu_c, the world map's + menu
+const MAP_MENU_STATE: u32 = 0x234;
+const MAP_MENU_CLOSED: u32 = 0x8099_15F0; // dCourseSelectMenu_c::StateID_InitWait
+/// Fields on the world map before a replay that recorded nothing new is
+/// saved anyway, and before the autosave gives up.
+const AUTOSAVE_REPLAY: u32 = 5 * 60;
+const AUTOSAVE_WATCH: u32 = 15 * 60;
+const PROFILE_CHARACTER_SCREEN: u16 = 0x2B6;
+/// The setup screens' first card for each player slot (d_basesNP data), in
+/// the cards' order (0 Mario, 1 Blue Toad, 2 Yellow Toad, 3 Luigi): the
+/// game's table, and each character's card.
+const CARD_STARTS: u32 = 0x8093_3D20;
+const GAME_CARD_STARTS: [u32; 4] = [0, 3, 2, 1];
+const CARD_OF_CHARACTER: [u32; 4] = [0, 3, 1, 2];
 const TIMER_STEP: i32 = 92;
 const TIMER_SLACK: i32 = 4 * TIMER_STEP;
 
@@ -66,10 +106,31 @@ const TIMER_SLACK: i32 = 4 * TIMER_STEP;
 pub const POWER_UPS: [&str; 8] = ["Small", "Super Mushroom", "Fire Flower", "Mini Mushroom", "Propeller Mushroom", "Penguin Suit", "Ice Flower", "Star"];
 const STAR: u8 = 7;
 
+/// The Gameplay options; all off (the default) is the game's own rules.
 #[derive(Clone, Copy, Default, PartialEq, Eq, Debug)]
 pub struct Options {
     pub no_time_limit: bool,
     pub infinite_lives: bool,
+    pub autosave: bool,
+    pub exit_course: bool,
+    /// Applied at boot only, and not in scripted, headless or net runs.
+    pub p1_character: bool,
+}
+
+/// Player 1's last character on each save file (0-3, as
+/// `daPyMng_c::mPlayerType`), shared with the window's thread, which keeps
+/// them in `settings.toml`.
+#[derive(Default)]
+pub struct Characters(pub [AtomicU8; 3]);
+
+impl Characters {
+    pub fn new(saved: [u32; 3]) -> Self {
+        Self(saved.map(|c| AtomicU8::new(c.min(3) as u8)))
+    }
+
+    pub fn get(&self) -> [u32; 3] {
+        std::array::from_fn(|i| u32::from(self.0[i].load(Relaxed)))
+    }
 }
 
 /// The save files' "Cheated" marks, shared by the game thread (which marks
@@ -121,6 +182,18 @@ pub struct Gameplay {
     /// The save select (the object and its unique number) and its three
     /// cards' "Cheated" panes, once found.
     cards: (u32, u32, [u32; 3]),
+    /// The scene at the last field.
+    last_scene: u16,
+    /// Back on the world map after a course's goal: the autosave's watch.
+    watch: Option<Watch>,
+}
+
+struct Watch {
+    /// Fields on the map so far.
+    fields: u32,
+    /// The course flags as found on arrival, or as last saved.
+    flags: u64,
+    saved: bool,
 }
 
 fn in_ram(a: u32) -> bool {
@@ -143,8 +216,8 @@ fn pointer(sys: &System, a: u32) -> Option<u32> {
 }
 
 impl Gameplay {
-    /// After a field. Returns a line to log when a power-up was given.
-    pub fn after_field(&mut self, sys: &mut System, opts: Options, cheats: &Cheats) -> Option<String> {
+    /// After a field. Returns lines to log: a power-up given, the autosave.
+    pub fn after_field(&mut self, sys: &mut System, opts: Options, cheats: &Cheats, characters: &Characters) -> Vec<String> {
         let scene = read32(sys, SCENE).map_or(0, |w| w as u16);
         self.hold_timer(sys, scene, opts.no_time_limit);
         self.hide_timer(sys, scene, opts.no_time_limit);
@@ -152,7 +225,11 @@ impl Gameplay {
             cheats.mark_active();
         }
         self.save_select(sys, scene, cheats);
-        let power_up = self.pending?;
+        if sys.p1.on {
+            character_pick(sys, scene, cheats, characters);
+        }
+        let mut lines: Vec<String> = self.autosave(sys, scene, opts.autosave).into_iter().collect();
+        let Some(power_up) = self.pending else { return lines };
         let given = match scene {
             SCENE_STAGE => give_in_course(sys, power_up),
             SCENE_WORLD_MAP => give_on_map(sys, power_up),
@@ -162,7 +239,51 @@ impl Gameplay {
             self.pending = None;
             cheats.mark_active();
         }
-        given
+        lines.extend(given);
+        lines
+    }
+
+    /// The autosave: a course left by its goal for the world map starts the
+    /// watch; the save is made once the map has recorded the clear (or a
+    /// replay's 5 s have passed), at a calm moment.
+    fn autosave(&mut self, sys: &mut System, scene: u16, on: bool) -> Option<String> {
+        let last = std::mem::replace(&mut self.last_scene, scene);
+        if scene != last {
+            self.watch = None;
+            // The title screen's demo is a course too.
+            let cleared = last == SCENE_STAGE && scene == SCENE_WORLD_MAP && read32(sys, EXIT_MODE) == Some(0) && !has_profile(sys, PROFILE_OPENING_TITLE);
+            let story = read32(sys, GAME_FLAG).is_some_and(|f| f & FREE_MODE_OR_COIN_BATTLE == 0);
+            if on && cleared && story {
+                self.watch = Some(Watch { fields: 0, flags: course_flags(sys), saved: false });
+            }
+        }
+        let w = self.watch.as_mut().filter(|_| on)?;
+        w.fields += 1;
+        if w.fields > AUTOSAVE_WATCH {
+            self.watch = None;
+            return None;
+        }
+        let flags = course_flags(sys);
+        let recorded = flags != 0 && flags != w.flags;
+        if !recorded && (w.saved || w.fields < AUTOSAVE_REPLAY) {
+            return None;
+        }
+        // The map's menu has its own Save; and one write at a time.
+        let menu_open = find_profile(sys, PROFILE_MAP_MENU).is_some_and(|m| read32(sys, m + MAP_MENU_STATE) != Some(MAP_MENU_CLOSED));
+        let nand_busy = pointer(sys, NAND_THREAD).is_none_or(|t| read32(sys, t + NAND_BUSY) != Some(0));
+        if menu_open || nand_busy || read32(sys, SAVE_GAME) != Some(SAVE_GAME_FIRST) {
+            return None;
+        }
+        // r3 unused, r4 = 0: a Save, not a Quick Save. None: not at a
+        // moment the guest's threads can be touched; the next field.
+        let done = sys.call_guest_as_thread(SAVE_GAME, &[0, 0])?;
+        let field = w.fields;
+        if let Err(e) = done {
+            self.watch = None;
+            return Some(format!("autosave: {e}"));
+        }
+        (w.flags, w.saved) = (flags, true);
+        Some(format!("autosave: saved {field} fields into the world map after a cleared course ({})", if recorded { "its course flags changed" } else { "5 s on the map" }))
     }
 
     /// The save select: the file its cursor is on is the one being played;
@@ -305,6 +426,60 @@ fn find_profile(sys: &System, profile: u16) -> Option<u32> {
 
 fn has_profile(sys: &System, profile: u16) -> bool {
     find_profile(sys, profile).is_some()
+}
+
+/// Player 1's character pick, after a field: on the setup screens the cards
+/// start on the save file's character and the character screen is tidied;
+/// on the world map, the character player 1 plays is the file's.
+fn character_pick(sys: &mut System, scene: u16, cheats: &Cheats, characters: &Characters) {
+    let file = usize::try_from(cheats.active.load(Relaxed)).ok().filter(|&f| f < 3);
+    match scene {
+        SCENE_GAME_SETUP => {
+            if let Some(f) = file {
+                start_cards(sys, characters.get()[f]);
+            }
+            if let Some(screen) = find_profile(sys, PROFILE_CHARACTER_SCREEN) {
+                sys.character_screen(screen);
+            }
+        }
+        SCENE_WORLD_MAP => {
+            if let (Some(f), Some(c)) = (file, read32(sys, PLAYER_TYPE).filter(|&t| t <= 3)) {
+                characters.0[f].store(c as u8, Relaxed);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// The game's table of each slot's first card, with `character`'s card
+/// swapped into player 1's (so no two slots start on the same card). Left
+/// alone unless it is a permutation (a mod's table, or no module yet).
+fn start_cards(sys: &mut System, character: u32) {
+    let Some(now) = sys.mem.ram(CARD_STARTS, 16).map(|b| std::array::from_fn::<u32, 4, _>(|i| u32::from_be_bytes([b[4 * i], b[4 * i + 1], b[4 * i + 2], b[4 * i + 3]]))) else { return };
+    let mut sorted = now;
+    sorted.sort_unstable();
+    if sorted != [0, 1, 2, 3] {
+        return;
+    }
+    let mut wanted = GAME_CARD_STARTS;
+    let card = CARD_OF_CHARACTER[character.min(3) as usize];
+    if let Some(i) = (1..4).find(|&i| wanted[i] == card) {
+        wanted.swap(0, i);
+    }
+    if wanted != now {
+        for (i, &w) in wanted.iter().enumerate() {
+            write32(sys, CARD_STARTS + 4 * i as u32, w);
+        }
+    }
+}
+
+/// FNV-1a over the open save file's course flags; 0 without a save manager
+/// or an open file.
+fn course_flags(sys: &System) -> u64 {
+    let Some(mng) = pointer(sys, SAVE_MNG) else { return 0 };
+    let slot = sys.mem.ram(mng + SAVE_SLOT, 1).map_or(3, |b| u32::from(b[0]));
+    let flags = (slot < 3).then(|| sys.mem.ram(mng + SAVE_GAMES + SAVE_GAME_SIZE * slot + COURSE_FLAGS, 4 * COURSE_FLAG_WORDS)).flatten();
+    flags.map_or(0, |b| b.chunks_exact(4).fold(0xCBF2_9CE4_8422_2325, |h, w| (h ^ u64::from(u32::from_be_bytes([w[0], w[1], w[2], w[3]]))).wrapping_mul(0x100_0000_01B3)))
 }
 
 /// In a course: once player 1 is in it (not the title screen's).

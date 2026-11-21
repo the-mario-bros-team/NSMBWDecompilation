@@ -3,7 +3,7 @@
 //! which `game-recomp` compiles into the port.
 //!
 //! ```text
-//! ppc-recomp --ram <image> --map <MAP.txt> --profile <file>... [--out <dir>]
+//! ppc-recomp --ram <image> --map <MAP.txt> --profile <file>... [--p1-character] [--out <dir>]
 //! ppc-recomp --empty [--out <dir>]
 //! ```
 //!
@@ -21,6 +21,10 @@
 //!   with one of them are generated, and every profiled address in a
 //!   function becomes a place it can be entered (switch-table targets, the
 //!   points where threads resume).
+//! - `--p1-character`: the image gets Player 1's character pick
+//!   (`hle_os::p1_character`), as a player's game has it, and each of its
+//!   inserts' returns is an entry; a run without it interprets the
+//!   functions it changes.
 //!
 //! Each function becomes `fn f_<addr>(c, m, rt)`: a `loop { match pc }` over
 //! its basic blocks. The functions are split by address into [`SHARDS`]
@@ -55,6 +59,13 @@ impl Ram {
         };
         let b = self.0.get(off..off + 4)?;
         Some(u32::from_be_bytes([b[0], b[1], b[2], b[3]]))
+    }
+
+    /// A byte of MEM1 (the image's first part).
+    fn put(&mut self, a: u32, v: u8) {
+        if let Some(b) = a.checked_sub(MEM1).and_then(|o| self.0.get_mut(o as usize)) {
+            *b = v;
+        }
     }
 }
 
@@ -543,7 +554,7 @@ fn main() {
 
 fn run() -> Result<(), String> {
     let mut args = std::env::args().skip(1);
-    let (mut ram, mut map, mut profiles, mut out, mut empty, mut max) = (None, None, Vec::new(), PathBuf::from("crates/game-recomp/gen"), false, usize::MAX);
+    let (mut ram, mut map, mut profiles, mut out, mut empty, mut max, mut p1) = (None, None, Vec::new(), PathBuf::from("crates/game-recomp/gen"), false, usize::MAX, false);
     while let Some(a) = args.next() {
         let mut val = |n: &str| args.next().ok_or(format!("{n} needs a value"));
         match a.as_str() {
@@ -552,6 +563,7 @@ fn run() -> Result<(), String> {
             "--profile" => profiles.push(PathBuf::from(val("--profile")?)),
             "--out" => out = PathBuf::from(val("--out")?),
             "--empty" => empty = true,
+            "--p1-character" => p1 = true,
             "--max" => max = val("--max")?.parse().map_err(|_| "--max: not a number")?,
             _ => return Err(format!("unknown argument {a}")),
         }
@@ -561,7 +573,18 @@ fn run() -> Result<(), String> {
     if empty {
         return write_all(&out, &special, &[], &[], &vec![String::new(); SHARDS]);
     }
-    let ram = Ram(std::fs::read(ram.ok_or("--ram is required")?).map_err(|e| format!("RAM image: {e}"))?);
+    let mut ram = Ram(std::fs::read(ram.ok_or("--ram is required")?).map_err(|e| format!("RAM image: {e}"))?);
+    let mut entries = Vec::new();
+    if p1 {
+        let (writes, returns) = hle_os::p1_character::writes();
+        for w in &writes {
+            for (i, &b) in w.bytes.iter().enumerate() {
+                ram.put(w.addr + i as u32, b);
+            }
+        }
+        println!("P1 character pick: {} writes, {} inserts", writes.len(), returns.len());
+        entries = returns;
+    }
     let map_path = map.ok_or("--map is required")?;
     let mut syms: Vec<(u32, String)> = std::fs::read_to_string(&map_path)
         .map_err(|e| format!("{}: {e}", map_path.display()))?
@@ -575,13 +598,15 @@ fn run() -> Result<(), String> {
     syms.dedup_by_key(|s| s.0);
     let mut seeds: BTreeMap<usize, Vec<u32>> = BTreeMap::new();
     let mut unmapped = 0;
+    let mut listed = Vec::new();
     for p in &profiles {
         let text = std::fs::read_to_string(p).map_err(|e| format!("{}: {e}", p.display()))?;
-        for a in text.lines().filter_map(|l| u32::from_str_radix(l.trim(), 16).ok()) {
-            match syms.partition_point(|s| s.0 <= a).checked_sub(1) {
-                Some(i) if a < MEM1 + MEM1_SIZE as u32 && a >= MEM1 => seeds.entry(i).or_default().push(a),
-                _ => unmapped += 1,
-            }
+        listed.extend(text.lines().filter_map(|l| u32::from_str_radix(l.trim(), 16).ok()));
+    }
+    for a in listed.into_iter().chain(entries) {
+        match syms.partition_point(|s| s.0 <= a).checked_sub(1) {
+            Some(i) if a < MEM1 + MEM1_SIZE as u32 && a >= MEM1 => seeds.entry(i).or_default().push(a),
+            _ => unmapped += 1,
         }
     }
     let mut funcs = Vec::new();

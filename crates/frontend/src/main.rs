@@ -72,11 +72,15 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
                      fields as a windowed run, without input from the host or anything the renderer sends back
   --code-profile <file>  at exit, write every guest address a decoded block started at (input for ppc-recomp)
   --settings-buttons the game menus' Settings buttons in a scripted (--press) or headless run too
+  --gameplay-options with --headless: settings.toml's Gameplay options, as a window has them (else all off);
+                     with --press or --headless: player 1's character pick too (otherwise a player's game only)
   flags override settings.toml for this run only";
 
 struct Args {
     /// `--settings-buttons`.
     settings_buttons: bool,
+    /// `--gameplay-options`.
+    gameplay_options: bool,
     check: bool,
     boot: bool,
     steps: u64,
@@ -139,7 +143,7 @@ fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &st
 
 fn parse_args() -> Result<Args, String> {
     let settings = settings::Settings::load(Path::new(settings::FILE));
-    let mut args = Args { settings_buttons: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), clicks: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
+    let mut args = Args { settings_buttons: false, gameplay_options: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), clicks: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -173,6 +177,7 @@ fn parse_args() -> Result<Args, String> {
             "--no-audio" => args.no_audio = true,
             "--interpreter" => args.interpreter = true,
             "--settings-buttons" => args.settings_buttons = true,
+            "--gameplay-options" => args.gameplay_options = true,
             "--headless" => args.headless = true,
             "--code-profile" => args.code_profile = Some(it.next().ok_or("--code-profile needs a file")?.into()),
             "--click" => {
@@ -302,7 +307,9 @@ fn main() -> ExitCode {
         return if ok { ExitCode::SUCCESS } else { ExitCode::FAILURE };
     }
 
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), clicks: args.clicks } };
+    // A window always applies settings.toml's Gameplay options (play.rs).
+    let gameplay = if args.gameplay_options { play::gameplay_options(&args.settings) } else { Default::default() };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), gameplay, force_gameplay_options: args.gameplay_options, characters: Default::default(), clicks: args.clicks } };
     if args.headless {
         // As a window would, before the game boots: the game reads its
         // aspect ratio from SYSCONF once.

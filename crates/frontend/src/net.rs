@@ -10,6 +10,9 @@
 //!   relays joiners' inputs to each other.
 //! - Every [`HASH_EVERY`] fields each machine sends a hash of guest RAM; a
 //!   mismatch stops the session.
+//! - The game's own rules apply, but for Exit Course in every course
+//!   ([`Session::exit_course`]): on while every player has it on. A joiner
+//!   without it turns it off for everyone from the field it joins at.
 //!
 //! Messages are framed as a kind byte, a little-endian u32 length and the
 //! body, over TCP with Nagle off.
@@ -27,7 +30,7 @@ use hle_ios::wiimote::Input;
 use hle_os::System;
 
 /// Bumped when messages or the save-state layout change.
-const PROTOCOL: u32 = 1;
+const PROTOCOL: u32 = 2;
 /// Fields between sampling a local input and the field it is used in, once
 /// another machine is in the session (33 ms; a solo host has none).
 pub const DELAY: u64 = 2;
@@ -86,7 +89,8 @@ fn decode(bytes: Vec<u8>, f: impl FnOnce(&mut Snap)) -> Result<(), String> {
     s.finish()
 }
 
-/// The game's identity and the settings both machines must share.
+/// The game's identity and the settings both machines must share. A
+/// joiner's hello is this, then a byte: 1 if it has Exit Course on.
 fn hello_body(game: &Path, light_textures: bool) -> Vec<u8> {
     let mut id = std::fs::read(game.join("sys/boot.bin")).map(|b| b[..8.min(b.len())].to_vec()).unwrap_or_default();
     let (mut proto, mut lt) = (PROTOCOL, light_textures);
@@ -140,11 +144,13 @@ struct Welcome {
     inputs: Vec<(u64, usize, Input)>,
     nand: Vec<(String, Vec<u8>)>,
     state: Vec<u8>,
+    /// The session's Exit Course from `field` on.
+    exit_course: bool,
 }
 
 impl Snapshot for Welcome {
     fn snap(&mut self, s: &mut Snap) {
-        guest_mem::snap!(s; self.slot, self.field, self.active_from, self.active_until, self.inputs, self.nand, self.state);
+        guest_mem::snap!(s; self.slot, self.field, self.active_from, self.active_until, self.inputs, self.nand, self.state, self.exit_course);
     }
 }
 
@@ -180,8 +186,11 @@ pub struct Session {
     pub slot: usize,
     host: bool,
     peers: Vec<Peer>,
-    /// Joiners that said hello, waiting for the next field boundary (host).
-    arrivals: Option<Receiver<TcpStream>>,
+    /// Joiners that said hello, waiting for the next field boundary (host),
+    /// and whether each has Exit Course on.
+    arrivals: Option<Receiver<(TcpStream, bool)>>,
+    /// Exit Course in every course: on while every player has it on.
+    pub exit_course: bool,
     wait_join: Option<u64>,
     /// Inputs by field and remote.
     inputs: BTreeMap<u64, [Option<Input>; REMOTES]>,
@@ -204,8 +213,9 @@ pub fn joiner_nand() -> PathBuf {
 }
 
 impl Session {
-    /// Starts listening; the game boots normally.
-    pub fn host(port: u16, wait_join: Option<u64>, game: &Path, light_textures: bool, nand: PathBuf) -> Result<Self, String> {
+    /// Starts listening; the game boots normally. `exit_course`: the host's
+    /// own setting.
+    pub fn host(port: u16, wait_join: Option<u64>, game: &Path, light_textures: bool, nand: PathBuf, exit_course: bool) -> Result<Self, String> {
         let listener = TcpListener::bind(("0.0.0.0", port)).map_err(|e| format!("listen on port {port}: {e}"))?;
         println!("net: hosting on port {port}");
         let (tx, rx) = mpsc::channel();
@@ -216,16 +226,19 @@ impl Session {
             .map_err(|e| e.to_string())?;
         let mut active_from = [None; REMOTES];
         active_from[0] = Some(0);
-        Ok(Self { slot: 0, host: true, peers: Vec::new(), arrivals: Some(rx), wait_join, inputs: BTreeMap::new(), active_from, active_until: [None; REMOTES], last_local: Input::default(), ours: BTreeMap::new(), theirs: BTreeMap::new(), nand })
+        Ok(Self { slot: 0, host: true, peers: Vec::new(), arrivals: Some(rx), exit_course, wait_join, inputs: BTreeMap::new(), active_from, active_until: [None; REMOTES], last_local: Input::default(), ours: BTreeMap::new(), theirs: BTreeMap::new(), nand })
     }
 
     /// Connects to a host and receives its machine. Returns the session,
     /// the field to carry on from and the state to load; the host's NAND
-    /// files are written to [`joiner_nand`] first.
-    pub fn join(addr: &str, game: &Path, light_textures: bool) -> Result<(Self, u64, Vec<u8>), String> {
+    /// files are written to [`joiner_nand`] first. `exit_course`: this
+    /// player's own setting (the session's comes back from the host).
+    pub fn join(addr: &str, game: &Path, light_textures: bool, exit_course: bool) -> Result<(Self, u64, Vec<u8>), String> {
         let mut stream = TcpStream::connect(addr).map_err(|e| format!("connect to {addr}: {e}"))?;
         stream.set_nodelay(true).map_err(|e| e.to_string())?;
-        send(&mut stream, HELLO, &hello_body(game, light_textures)).map_err(|e| e.to_string())?;
+        let mut hello = hello_body(game, light_textures);
+        hello.push(u8::from(exit_course));
+        send(&mut stream, HELLO, &hello).map_err(|e| e.to_string())?;
         println!("net: connected to {addr}, waiting for the host's game");
         let started = Instant::now();
         let (kind, body) = recv(&mut stream).map_err(|e| format!("{addr}: {e}"))?;
@@ -243,7 +256,10 @@ impl Session {
             inputs.entry(*f).or_default()[*slot] = Some(*i);
         }
         let peer = Peer::new(stream, 0).map_err(|e| e.to_string())?;
-        let s = Self { slot: w.slot, host: false, peers: vec![peer], arrivals: None, wait_join: None, inputs, active_from: w.active_from, active_until: w.active_until, last_local: Input::default(), ours: BTreeMap::new(), theirs: BTreeMap::new(), nand };
+        if exit_course && !w.exit_course {
+            println!("net: Exit Course in every course is off in this game: not every player has it on");
+        }
+        let s = Self { slot: w.slot, host: false, peers: vec![peer], arrivals: None, exit_course: w.exit_course, wait_join: None, inputs, active_from: w.active_from, active_until: w.active_until, last_local: Input::default(), ours: BTreeMap::new(), theirs: BTreeMap::new(), nand };
         Ok((s, w.field, std::mem::take(&mut w.state)))
     }
 
@@ -262,18 +278,25 @@ impl Session {
         if self.wait_join.is_some_and(|w| index < w) {
             return Ok(());
         }
-        let mut waiting: Vec<TcpStream> = arrivals.try_iter().collect();
+        let mut waiting: Vec<(TcpStream, bool)> = arrivals.try_iter().collect();
         if waiting.is_empty() && self.wait_join == Some(index) {
             println!("net: field {index}: waiting for a player to join");
             while waiting.is_empty() && !stop() {
                 waiting.extend(arrivals.recv_timeout(Duration::from_millis(50)).ok());
             }
         }
-        for mut stream in waiting {
+        for (mut stream, exit_course) in waiting {
             let Some(slot) = (1..REMOTES).find(|&s| self.active_from[s].is_none()) else {
                 let _ = send(&mut stream, 0, b"the game is full");
                 continue;
             };
+            // From this field on, on every machine: the state below does
+            // not hold it, so the welcome does.
+            if self.exit_course && !exit_course {
+                println!("net: player {} does not have Exit Course in every course on: it is off in this game from field {index}", slot + 1);
+            }
+            self.exit_course &= exit_course;
+            sys.menu.exit_course = self.exit_course;
             // Our own input over the delay, if we were alone until now.
             if self.peers.is_empty() {
                 for f in index..index + DELAY {
@@ -286,7 +309,7 @@ impl Session {
             let started = Instant::now();
             let state = sys.save_state();
             let inputs: Vec<(u64, usize, Input)> = self.inputs.range(index..).flat_map(|(&f, a)| a.iter().enumerate().filter_map(move |(s, i)| i.map(|i| (f, s, i)))).collect();
-            let mut w = Welcome { slot, field: index, active_from: self.active_from, active_until: self.active_until, inputs, nand: read_tree(&self.nand), state };
+            let mut w = Welcome { slot, field: index, active_from: self.active_from, active_until: self.active_until, inputs, nand: read_tree(&self.nand), state, exit_course: self.exit_course };
             let body = miniz_oxide::deflate::compress_to_vec(&encode(|s| w.snap(s)), 1);
             send(&mut stream, WELCOME, &body).map_err(|e| format!("net: sending the game: {e}"))?;
             println!("net: player {} joined at field {index}, playing from field {joins_at} ({} KB, {:.1} s)", slot + 1, body.len() >> 10, started.elapsed().as_secs_f32());
@@ -487,13 +510,13 @@ impl Session {
 }
 
 /// Host: accepts connections and checks each joiner's hello.
-fn accept_loop(listener: TcpListener, ours: Vec<u8>, tx: Sender<TcpStream>) {
+fn accept_loop(listener: TcpListener, ours: Vec<u8>, tx: Sender<(TcpStream, bool)>) {
     for stream in listener.incoming() {
         let Ok(mut stream) = stream else { continue };
         let _ = stream.set_nodelay(true);
         match recv(&mut stream) {
-            Ok((HELLO, body)) if body == ours => {
-                if tx.send(stream).is_err() {
+            Ok((HELLO, body)) if body.split_last().is_some_and(|(_, shared)| *shared == ours[..]) => {
+                if tx.send((stream, body.last() == Some(&1))).is_err() {
                     return;
                 }
             }
@@ -512,11 +535,11 @@ mod tests {
 
     #[test]
     fn welcome_round_trips() {
-        let mut w = Welcome { slot: 1, field: 77, active_from: [Some(0), Some(79), None, None], active_until: [None; REMOTES], inputs: vec![(78, 0, Input { connected: true, buttons: 3, shake: true, tilt: -0.5 })], nand: vec![("a/b".into(), vec![1, 2])], state: vec![9; 10] };
+        let mut w = Welcome { slot: 1, field: 77, active_from: [Some(0), Some(79), None, None], active_until: [None; REMOTES], inputs: vec![(78, 0, Input { connected: true, buttons: 3, shake: true, tilt: -0.5 })], nand: vec![("a/b".into(), vec![1, 2])], state: vec![9; 10], exit_course: true };
         let bytes = encode(|s| w.snap(s));
         let mut v = Welcome::default();
         decode(bytes, |s| v.snap(s)).unwrap();
-        assert_eq!((v.slot, v.field, v.active_from, v.inputs.len(), v.nand.len(), v.state.len()), (1, 77, w.active_from, 1, 1, 10));
+        assert_eq!((v.slot, v.field, v.active_from, v.inputs.len(), v.nand.len(), v.state.len(), v.exit_course), (1, 77, w.active_from, 1, 1, 10, true));
         assert_eq!(v.inputs[0].2, w.inputs[0].2);
     }
 

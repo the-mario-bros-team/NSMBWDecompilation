@@ -93,17 +93,17 @@ fn set_name(b: &mut [u8], at: usize, n: usize, name: &str) {
 
 // ---------------------------------------------------------------- U8
 
-struct Node {
-    kind: u8,
+pub(crate) struct Node {
+    pub(crate) kind: u8,
     /// File: data offset and size; folder: parent and next index.
     a: u32,
     b: u32,
-    name: String,
+    pub(crate) name: String,
     path: String,
-    data: Vec<u8>,
+    pub(crate) data: Vec<u8>,
 }
 
-fn read_u8(arc: &[u8]) -> Option<Vec<Node>> {
+pub(crate) fn read_u8(arc: &[u8]) -> Option<Vec<Node>> {
     if arc.len() < 0x20 || be32(arc, 0) != 0x55AA_382D {
         return None;
     }
