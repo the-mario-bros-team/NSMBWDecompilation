@@ -1,4 +1,5 @@
-//! RAM as a pagefile-backed section, mapped twice over:
+//! RAM as shared memory (a pagefile-backed section on Windows, a memory file
+//! on Linux and Android), mapped twice over:
 //! - once contiguously (MEM1, MEM2, the locked cache: [`Mem`](crate::Mem)'s
 //!   `ram`, DMA, save states, the GX thread's [`RamView`](crate::RamView));
 //! - at every guest address it appears at (MEM1 at `0x00`, `0x80` and
@@ -11,13 +12,15 @@
 //! cleanly (an access violation) instead of reaching other host memory,
 //! because the reservation covers every 32-bit address.
 //!
-//! If the system cannot do this (it needs Windows 10 1803 or newer), RAM is
-//! a plain allocation and every access takes the checked path.
+//! If the system cannot do this (it needs Windows 10 1803 or newer, or
+//! Linux 3.17 or newer; other systems have no version here), RAM is a plain
+//! allocation and every access takes the checked path.
 
 use crate::{LOCKED_CACHE_SIZE, MEM1_SIZE, MEM2_SIZE};
 
-/// Placeholders split at the allocation granularity, so the locked cache's
-/// view is padded to it.
+/// Windows splits placeholders at the allocation granularity, so the locked
+/// cache's view is padded to it. Every view's address, offset and size is
+/// then a multiple of it, and so of any page size up to 64 KiB (`mmap`).
 const GRANULE: usize = 64 << 10;
 /// Section layout: MEM1, MEM2, then the locked cache padded to [`GRANULE`].
 const LOCKED_OFFSET: usize = MEM1_SIZE + MEM2_SIZE;
@@ -54,6 +57,10 @@ impl Backing {
         if let Some((ptr, flat, os)) = win::map() {
             return Self { ptr, flat, os: Some(os) };
         }
+        #[cfg(any(target_os = "linux", target_os = "android"))]
+        if let Some((ptr, flat)) = linux::map() {
+            return Self { ptr, flat };
+        }
         let ptr = Box::into_raw(vec![0u8; SECTION_SIZE].into_boxed_slice()).cast::<u8>();
         Self {
             ptr,
@@ -71,8 +78,75 @@ impl Drop for Backing {
             os.unmap(self.ptr, self.flat);
             return;
         }
+        // Only `linux::map` gives a reservation there.
+        #[cfg(any(target_os = "linux", target_os = "android"))]
+        if !self.flat.is_null() {
+            linux::unmap(self.ptr, self.flat);
+            return;
+        }
         // SAFETY: `ptr` came from `Box::into_raw` of `SECTION_SIZE` bytes.
         unsafe { drop(Box::from_raw(std::ptr::slice_from_raw_parts_mut(self.ptr, SECTION_SIZE))) };
+    }
+}
+
+#[cfg(any(target_os = "linux", target_os = "android"))]
+mod linux {
+    use super::{SECTION_SIZE, VIEWS};
+    use libc::{c_void, MAP_FAILED, MAP_FIXED, MAP_SHARED, PROT_READ, PROT_WRITE};
+    use std::ptr::null_mut;
+
+    const SPAN: usize = 1 << 32;
+
+    /// The memory file's contiguous view and the reservation with every
+    /// guest view, or `None` if any step fails (everything made is undone).
+    pub fn map() -> Option<(*mut u8, *mut u8)> {
+        // SAFETY: plain system calls; the fixed mappings replace pages of
+        // the reservation made here and nothing else, and every mapping made
+        // is removed on failure here or by `unmap`.
+        unsafe {
+            // The system call itself: Android's C library has the function
+            // only from Android 11.
+            let fd = libc::syscall(libc::SYS_memfd_create, c"guest-ram".as_ptr(), libc::MFD_CLOEXEC) as libc::c_int;
+            if fd < 0 {
+                return None;
+            }
+            let mapped = views(fd);
+            // The mappings keep the file.
+            libc::close(fd);
+            mapped
+        }
+    }
+
+    unsafe fn views(fd: libc::c_int) -> Option<(*mut u8, *mut u8)> {
+        if libc::ftruncate(fd, SECTION_SIZE as libc::off_t) != 0 {
+            return None;
+        }
+        let view = libc::mmap(null_mut(), SECTION_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        if view == MAP_FAILED {
+            return None;
+        }
+        let base = libc::mmap(null_mut(), SPAN, libc::PROT_NONE, libc::MAP_PRIVATE | libc::MAP_ANONYMOUS | libc::MAP_NORESERVE, -1, 0);
+        if base == MAP_FAILED {
+            libc::munmap(view, SECTION_SIZE);
+            return None;
+        }
+        for &(addr, offset, size) in &VIEWS {
+            let at = base.cast::<u8>().add(addr as usize).cast::<c_void>();
+            if libc::mmap(at, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED, fd, offset as libc::off_t) == MAP_FAILED {
+                unmap(view.cast(), base.cast());
+                return None;
+            }
+        }
+        Some((view.cast(), base.cast()))
+    }
+
+    pub fn unmap(view: *mut u8, base: *mut u8) {
+        // SAFETY: undoes `map`: the reservation with the guest views in it,
+        // and the contiguous view.
+        unsafe {
+            libc::munmap(base.cast(), SPAN);
+            libc::munmap(view.cast(), SECTION_SIZE);
+        }
     }
 }
 
