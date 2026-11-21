@@ -53,6 +53,8 @@ pub enum Change {
     /// Mark this save file (0-2) "Cheated": Infinite Lives was turned on
     /// while it is the one being played.
     Cheated(u8),
+    /// Open the newer release's web page (Yes to the update question).
+    UpdatePage,
 }
 
 pub struct Menus {
@@ -86,6 +88,12 @@ impl Menus {
     /// The save file being played (0-2), or -1 before the save select.
     pub fn set_active_file(&mut self, file: i8) {
         self.window.active_file = file;
+    }
+
+    /// A newer release of the port is out: the Settings window asks, the
+    /// next time it is up, whether to open its page.
+    pub fn set_update(&mut self, version: &str) {
+        self.window.update = Some(version.into());
     }
 
     pub fn is_open(&self) -> bool {

@@ -914,6 +914,7 @@ dependencies = [
  "hle-os",
  "input",
  "miniz_oxide 0.8.9",
+ "port-update",
  "raw-window-handle",
  "toml",
  "vk-render",

@@ -156,6 +156,32 @@ struct App {
     /// The Settings window changed something not saved yet (saved when it
     /// closes: a slider drag changes it every frame).
     unsaved: bool,
+    /// The update check's answer, when it comes: a newer release.
+    update_check: Option<Receiver<port_update::Release>>,
+    /// The newer release found, and when (said on screen for a while).
+    update: Option<(port_update::Release, Instant)>,
+}
+
+/// How long a newer release found is said on screen.
+const UPDATE_NOTE: Duration = Duration::from_secs(10);
+
+/// Asks the release source for a newer release of the port, on a thread of
+/// its own (the answer can take seconds). `None` when `update.toml`, next to
+/// the program, turns the check off.
+fn check_for_update() -> Option<Receiver<port_update::Release>> {
+    let config = port_update::Config::load(&port_update::install_dir());
+    if !config.enabled {
+        return None;
+    }
+    let (tx, rx) = mpsc::channel();
+    std::thread::spawn(move || match port_update::check(&config) {
+        Ok(port_update::Status::Available(release)) => {
+            let _ = tx.send(release);
+        }
+        Ok(port_update::Status::UpToDate) => {}
+        Err(e) => say_err!("update check: {e}"),
+    });
+    Some(rx)
 }
 
 /// Sleeps until `deadline`, then spins the last stretch: a sleep can
@@ -283,6 +309,18 @@ impl App {
         }
         if let Some(m) = &mut self.menus {
             m.set_active_file(self.cheats.active.load(std::sync::atomic::Ordering::Relaxed));
+        }
+        // A newer release of the port: said on screen for a while, and the
+        // Settings window asks whether to open its page.
+        if let Some(mut release) = self.update_check.as_ref().and_then(|rx| rx.try_recv().ok()) {
+            // The release's own text: kept short and plain for the screen.
+            release.version = release.version.chars().filter(char::is_ascii_graphic).take(16).collect();
+            say!("update: version {} is out {}", release.version, release.page);
+            if let Some(m) = self.menus.as_mut().filter(|_| !release.page.is_empty()) {
+                m.set_update(&release.version);
+            }
+            self.update = Some((release, Instant::now()));
+            self.update_check = None;
         }
         // A game menu's Settings button was picked and its menu has gone.
         if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
@@ -604,6 +642,13 @@ impl App {
                 ui::Change::Cheated(file) => {
                     self.cheats.marks.fetch_or(1 << file.min(2), std::sync::atomic::Ordering::Relaxed);
                 }
+                ui::Change::UpdatePage => {
+                    if let Some((release, _)) = &self.update {
+                        if !crate::win::open_page(&release.page) {
+                            say_err!("update: could not open {}", release.page);
+                        }
+                    }
+                }
                 // From the next start, or read every frame.
                 ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver => {}
             }
@@ -697,6 +742,11 @@ impl App {
             .collect();
             let w = lines.iter().map(|(_, l)| l.len() as i32).max().unwrap_or(0) * 6 * px + 4 * px;
             overlay::panel(&mut out, (width as i32 - w - margin).max(0), margin, px, &lines);
+        }
+        if let Some((release, _)) = self.update.as_ref().filter(|(_, found)| found.elapsed() < UPDATE_NOTE) {
+            let lines = [(overlay::WHITE, format!("UPDATE {} IS OUT - SEE SETTINGS (F10)", release.version))];
+            let h = lines.len() as i32 * 9 * px + 3 * px;
+            overlay::panel(&mut out, margin, (height as i32 - h - margin).max(0), px, &lines);
         }
         out
     }
@@ -876,6 +926,8 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
     let now = Instant::now();
     let settings = opts.settings.clone();
     let cheats = Arc::new(crate::gameplay::Cheats::new(settings.cheated));
+    // Not in test runs (a frame count, scripted presses, screenshots).
+    let update_check = if opts.max_frames.is_none() && opts.emu.script.is_empty() && opts.shots.is_empty() && !opts.unpaced { check_for_update() } else { None };
     let mut app = App {
         opts,
         settings,
@@ -912,6 +964,8 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         settings_from_game: false,
         cheats,
         unsaved: false,
+        update_check,
+        update: None,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     match app.error {

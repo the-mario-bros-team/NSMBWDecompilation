@@ -84,15 +84,13 @@ offers the release's page.
 
 With Skip Launcher on, the launcher is not shown, so it makes the check
 after starting the game and, when a release is found, shows itself once at
-the next start. For updates not to depend on the launcher at all, the game
-should call the same crate itself (the session working on branch `ui`):
-
-1. add `port-update = { path = "../port-update" }` to `crates/frontend`;
-2. at start, off the main thread:
-   `port_update::Config::load(&port_update::install_dir())`, and when
-   `enabled`, `port_update::check(&config)`;
-3. on `Status::Available(release)`, show it in the game's own menus (its
-   version, `release.notes`, and `release.page` to open).
+the next start. The game makes the same check itself
+(`crates/frontend/src/play.rs`, `check_for_update`), so updates do not
+depend on the launcher: a newer release is said at the bottom left of the
+picture for ten seconds, and the Settings window (F10, or a game menu's
+Settings button) asks once a run whether to open its page. Test runs
+(`--frames`, `--press`, `--shot`, `--unpaced`, `--headless`) do not ask the
+release source.
 
 The release source defaults to this repository's releases
 (`port_update::DEFAULT_SOURCE`); `update.toml`'s `source`, or the

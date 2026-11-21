@@ -98,8 +98,8 @@ const EV_BACK: u32 = 32;
 const EV_TAB0: u32 = 64;
 
 const DROPDOWN_HIT: i32 = 5000;
-/// The cheat question's Yes (0) and No (1), as hit cursors.
-const CHEAT_HIT: i32 = 6000;
+/// A question's Yes (0) and No (1), as hit cursors.
+const ASK_HIT: i32 = 6000;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Tab {
@@ -266,6 +266,15 @@ enum Cheat {
     PowerUp,
 }
 
+/// A question over the window, in the game's yes/no window.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Ask {
+    /// "Are you sure? This will mark your save as cheated."
+    Cheat(Cheat),
+    /// A newer release of the port is out: open its web page?
+    Update,
+}
+
 #[derive(Default)]
 struct ButtonAnims {
     current: i32,
@@ -296,11 +305,14 @@ pub struct SettingsWindow {
     capturing: Option<(usize, f64)>,
     /// The save file being played (0-2), or -1 before the save select.
     pub active_file: i8,
-    /// "Are you sure? This will mark your save as cheated." is up: what it
-    /// asks about, and the tab's row to go back to.
-    cheat_ask: Option<(Cheat, i32)>,
+    /// A question is up: what it asks, and the tab's row to go back to.
+    ask: Option<(Ask, i32)>,
     /// Its cursor: 0 Yes, 1 No.
-    cheat_cursor: i32,
+    ask_cursor: i32,
+    /// A newer release of the port is out: its version.
+    pub update: Option<String>,
+    /// The question about it has been asked (once a run).
+    update_asked: bool,
     /// The question can be drawn (the yes/no window's layout is there).
     can_ask: bool,
     /// Draw yes/no buttons at this scale instead of their own.
@@ -358,7 +370,7 @@ impl SettingsWindow {
         self.opened_at = now;
         self.cursor = 0;
         self.dropdown = None;
-        self.cheat_ask = None;
+        self.ask = None;
     }
 
     pub fn close(&mut self, now: f64) {
@@ -992,8 +1004,8 @@ impl SettingsWindow {
             self.do_cheat(cheat, s, changes);
             return;
         }
-        self.cheat_ask = Some((cheat, self.cursor));
-        self.cheat_cursor = 1; // No first
+        self.ask = Some((Ask::Cheat(cheat), self.cursor));
+        self.ask_cursor = 1; // No first
     }
 
     fn do_cheat(&mut self, cheat: Cheat, s: &mut Settings, changes: &mut Vec<Change>) {
@@ -1015,19 +1027,31 @@ impl SettingsWindow {
 
     /// The question over the window: Yes and No, the only things that take
     /// a press while it is up.
-    fn draw_cheat_ask(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, screen: egui::Rect) {
+    fn draw_ask(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, screen: egui::Rect, ask: Ask) {
         const HEIGHT: f32 = 250.0;
+        let (title, line) = match ask {
+            Ask::Cheat(_) => ("Are you sure?", "This will mark your save as cheated.".to_string()),
+            Ask::Update => ("Update available", format!("Version {} is out. Open its web page?", self.update.as_deref().unwrap_or_default())),
+        };
         self.hits.clear();
         self.list.fill_screen(ctx, screen, Rgba { r: 0.0, g: 0.0, b: 0.0, a: 110.0 / 255.0 * c.alpha });
         self.small_window(ctx, a, c, 600.0, HEIGHT);
-        self.text(a, c, "Are you sure?", 0.0, 62.0, 32.0, 1, u32::MAX);
-        self.text(a, c, "This will mark your save as cheated.", 0.0, 16.0, 24.0, 1, u32::MAX);
+        self.text(a, c, title, 0.0, 62.0, 32.0, 1, u32::MAX);
+        // Smaller if it would run past the window's sides.
+        let mut size = 24.0;
+        if a.message.ready() {
+            let width = layout::measure_text(&a.message, &line, size);
+            if width > 560.0 {
+                size *= 560.0 / width;
+            }
+        }
+        self.text(a, c, &line, 0.0, 16.0, size, 1, u32::MAX);
         // Yes and No keep one size, chosen or not.
         let y = -HEIGHT / 2.0 + 43.0;
         self.button_scale = Some(1.0);
         for (i, (label, x)) in [("Yes", -126.0), ("No", 126.0)].into_iter().enumerate() {
-            self.yes_no_button(ctx, a, c, label, x, y, 232.0, 53.0, self.cheat_cursor == i as i32, true, 30.0);
-            self.add_hit(x, y, 240.0, 60.0, CHEAT_HIT + i as i32, EV_CONFIRM);
+            self.yes_no_button(ctx, a, c, label, x, y, 232.0, 53.0, self.ask_cursor == i as i32, true, 30.0);
+            self.add_hit(x, y, 240.0, 60.0, ASK_HIT + i as i32, EV_CONFIRM);
         }
         self.button_scale = None;
     }
@@ -1036,18 +1060,21 @@ impl SettingsWindow {
 
     fn handle(&mut self, nav: Nav, s: &mut Settings, changes: &mut Vec<Change>) {
         let Nav { left, right, up, down, confirm, back } = nav;
-        if let Some((cheat, row)) = self.cheat_ask {
+        if let Some((ask, row)) = self.ask {
             // A press on Yes or No picks it.
-            if self.cursor >= CHEAT_HIT {
-                self.cheat_cursor = (self.cursor - CHEAT_HIT).clamp(0, 1);
+            if self.cursor >= ASK_HIT {
+                self.ask_cursor = (self.cursor - ASK_HIT).clamp(0, 1);
             }
             self.cursor = row;
             if left || right {
-                self.cheat_cursor = 1 - self.cheat_cursor;
+                self.ask_cursor = 1 - self.ask_cursor;
             } else if confirm || back {
-                self.cheat_ask = None;
-                if confirm && self.cheat_cursor == 0 {
-                    self.do_cheat(cheat, s, changes);
+                self.ask = None;
+                if confirm && self.ask_cursor == 0 {
+                    match ask {
+                        Ask::Cheat(cheat) => self.do_cheat(cheat, s, changes),
+                        Ask::Update => changes.push(Change::UpdatePage),
+                    }
                 }
             }
             return;
@@ -1235,6 +1262,12 @@ impl SettingsWindow {
         moves.confirm |= nav.confirm;
         moves.back |= nav.back;
         self.can_ask = a.yes_no.is_some();
+        // A newer release: asked about once, the first time the window is up.
+        if self.update.is_some() && !self.update_asked && self.can_ask && !self.closing && self.ask.is_none() && self.dropdown.is_none() && self.capturing.is_none() {
+            self.update_asked = true;
+            self.ask = Some((Ask::Update, self.cursor));
+            self.ask_cursor = 0;
+        }
         if !self.closing && self.capturing.is_none() {
             self.handle(moves, s, changes);
         }
@@ -1279,8 +1312,8 @@ impl SettingsWindow {
         }
         self.draw_dropdown(ctx, &a, &c);
         self.settings_look = false;
-        if self.cheat_ask.is_some() {
-            self.draw_cheat_ask(ctx, &a, &c, screen);
+        if let Some((ask, _)) = self.ask {
+            self.draw_ask(ctx, &a, &c, screen, ask);
         }
         std::mem::take(&mut self.list).into_shapes()
     }

@@ -90,3 +90,23 @@ pub fn thread_cpu_time() -> std::time::Duration {
 pub fn thread_cpu_time() -> std::time::Duration {
     Default::default()
 }
+
+/// Opens a web page in the player's browser (a newer release's page). Only
+/// web addresses (`port_update::is_web_url`) are handed to Windows.
+#[cfg(windows)]
+pub fn open_page(url: &str) -> bool {
+    use windows_sys::Win32::UI::Shell::ShellExecuteW;
+    use windows_sys::Win32::UI::WindowsAndMessaging::SW_SHOWNORMAL;
+    if !port_update::is_web_url(url) {
+        return false;
+    }
+    let wide = |s: &str| -> Vec<u16> { s.encode_utf16().chain(Some(0)).collect() };
+    // SAFETY: both strings are NUL-terminated and outlive the call.
+    let r = unsafe { ShellExecuteW(std::ptr::null_mut(), wide("open").as_ptr(), wide(url).as_ptr(), std::ptr::null(), std::ptr::null(), SW_SHOWNORMAL) };
+    r as usize > 32
+}
+
+#[cfg(not(windows))]
+pub fn open_page(_: &str) -> bool {
+    false
+}
