@@ -74,6 +74,13 @@ pub struct Hw {
     pi_regs: [u32; 0x40],
     /// Gather pipe: bytes until a 32-byte burst is complete.
     gather: Vec<u8>,
+    /// Bytes written to the gather pipe, and those in bursts already given
+    /// to the GP: stream positions for `drops`.
+    gather_in: u64,
+    gather_out: u64,
+    /// Switches of the GX decoder's draw drop ([`Hw::drop_draws`]), at the
+    /// stream positions they were made.
+    drops: std::collections::VecDeque<(u64, bool)>,
     /// Gather-pipe bursts and EFB pokes, in program order.
     bursts: Vec<Burst>,
     /// GX command decoder fed from the CPU FIFO.
@@ -135,6 +142,9 @@ impl Hw {
             pi_mask: 0,
             pi_regs: [0; 0x40],
             gather: Vec::new(),
+            gather_in: 0,
+            gather_out: 0,
+            drops: Default::default(),
             bursts: Vec::new(),
             gpu: gx::thread::GpuPort::default(),
             ipc: Ipc::default(),
@@ -401,6 +411,7 @@ impl Hw {
     /// RAM at PI's write pointer, which advances (and wraps) right away so the
     /// guest sees consistent pointers; the copy happens in `advance`.
     fn gather_write(&mut self, bytes: &[u8]) {
+        self.gather_in += bytes.len() as u64;
         self.gather.extend_from_slice(bytes);
         while self.gather.len() >= 32 {
             let burst: [u8; 32] = self.gather[..32].try_into().unwrap();
@@ -430,8 +441,21 @@ impl Hw {
                     if let Some(d) = mem.ram_mut(addr, 32) {
                         d.copy_from_slice(data);
                     }
-                    if linked {
-                        self.gpu.feed(data, mem, &mut events);
+                    let start = self.gather_out;
+                    self.gather_out += 32;
+                    // Fed in pieces at the draw-drop switches inside it.
+                    let mut from = 0;
+                    while let Some(&(at, on)) = self.drops.front().filter(|d| d.0 < start + 32) {
+                        let cut = at.saturating_sub(start) as usize;
+                        if linked && cut > from {
+                            self.gpu.feed(&data[from..cut], mem, &mut events);
+                        }
+                        from = from.max(cut);
+                        self.gpu.set_drop(on);
+                        self.drops.pop_front();
+                    }
+                    if linked && from < 32 {
+                        self.gpu.feed(&data[from..], mem, &mut events);
                     }
                 }
                 Burst::Poke { x, y, value, z } => self.gpu.poke(x, y, value, z),
@@ -452,6 +476,14 @@ impl Hw {
                 gx::Event::Token(t) => self.pe_token = t,
             }
         }
+    }
+
+    /// From the bytes written to the gather pipe so far on, the GX decoder
+    /// drops draws (`on`) or draws them again: a switch in the command
+    /// stream, at the point the CPU has reached (the GX thread decodes
+    /// later). Guest memory never sees it.
+    pub fn drop_draws(&mut self, on: bool) {
+        self.drops.push_back((self.gather_in, on));
     }
 
     /// A CPU read of the EFB window (physical 0x08000000): x in bits 2..11,
@@ -588,5 +620,13 @@ impl Snapshot for Hw {
     fn snap(&mut self, s: &mut Snap) {
         s.tag(b"HW  ");
         guest_mem::snap!(s; self.now, self.ios, self.pi_mask, self.pi_regs, self.gather, self.bursts, self.gpu, self.ipc, self.hw_irq_flag, self.hw_irq_mask, self.hollywood, self.vi, self.vi_line, self.retraces, self.cp, self.pe, self.pe_token, self.pe_finishes, self.other, self.dsp, self.exi, self.si);
+        if s.loading() {
+            // Stream positions start again from the loaded bursts, with
+            // nothing dropped.
+            let queued = self.bursts.iter().filter(|b| matches!(b, Burst::Fifo { .. })).count() as u64;
+            (self.gather_out, self.gather_in) = (0, 32 * queued + self.gather.len() as u64);
+            self.drops.clear();
+            self.gpu.set_drop(false);
+        }
     }
 }

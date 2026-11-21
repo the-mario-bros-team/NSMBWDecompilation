@@ -96,8 +96,10 @@ pub mod sh {
     pub const CLEAR_COLOR: usize = 147;
     /// Z-freeze plane (f32): z24 = a * x + b * y + c in EFB pixels.
     pub const ZPLANE: usize = 148;
-    /// EFB scale (f32), filled in by the renderer.
+    /// EFB scale across (f32), filled in by the renderer.
     pub const SCALE: usize = 151;
+    /// EFB scale down (f32), filled in by the renderer.
+    pub const SCALE_Y: usize = 152;
 }
 
 /// The draw is a masked EFB clear: output `CLEAR_COLOR` as is.
@@ -178,6 +180,23 @@ pub struct CopyTex {
     /// texels reach RAM a frame or two later; if the game has written there
     /// in the meantime (the buffer was reused), they must not be written.
     pub ram_hash: u64,
+    /// Bytes from one row of blocks to the next in RAM when wider than the
+    /// copy's own (BP 0x4D), else 0: the copy patches part of a wider
+    /// texture ([`texture::copy_rows`]).
+    pub stride: u32,
+}
+
+/// An EFB copy (texture `copy`) drawn into part of texture `target` at
+/// (`x`, `y`), `w` x `h` texels: NSMBW animates coins, ? blocks and other
+/// tiles by copying each frame into its tile atlas.
+#[derive(Clone, Copy, Debug)]
+pub struct Patch {
+    pub copy: u32,
+    pub target: u32,
+    pub x: u32,
+    pub y: u32,
+    pub w: u32,
+    pub h: u32,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -186,6 +205,8 @@ pub enum Cmd {
     /// EFB rect to the XFB at `addr`, scaled to `height` lines.
     CopyXfb { src: Rect, addr: u32, height: u32 },
     CopyTex(CopyTex),
+    /// Follows the [`Cmd::CopyTex`] it draws from.
+    Patch(Patch),
     Clear(Clear),
 }
 
@@ -313,6 +334,11 @@ pub struct Gpu {
     /// Whether fields from the next one keep what frame interpolation needs
     /// ([`Output::model`], [`Output::records`]).
     pub records_next: bool,
+    /// EFB copies into part of a texture patch it ([`Cmd::Patch`]); off,
+    /// the animated tiles stand still.
+    pub patches: bool,
+    /// Draws are dropped (switched in the command stream: Depth Blur off).
+    drop_draws: bool,
     textures: texture::Cache,
     /// Loaded draws and other steps for the transform half, and where they
     /// go (see `back`).
@@ -335,6 +361,8 @@ impl Default for Gpu {
             tmem: vec![0; 1 << 20],
             tex_memo: [None; 8],
             records_next: true,
+            patches: true,
+            drop_draws: false,
             textures: texture::Cache::default(),
             batch: Batch::default(),
             sink: Sink::Local(Box::default()),
@@ -454,6 +482,17 @@ impl Gpu {
     /// The host's view for the draws decoded from now on ([`xf::View`]).
     pub fn set_view(&mut self, view: Option<xf::View>) {
         self.batch.ops.push(Op::View(view));
+    }
+
+    /// The draws decoded from now on are dropped (`on`) or drawn.
+    pub fn set_drop(&mut self, on: bool) {
+        self.drop_draws = on;
+    }
+
+    /// The draws decoded from now on widen 16:9 projections to `aspect`
+    /// (0: none; see [`xf::Xf::projection`]).
+    pub fn set_wide(&mut self, aspect: f32) {
+        self.batch.ops.push(Op::Wide(aspect));
     }
 
     /// An XF write, for both halves.
@@ -665,9 +704,16 @@ impl Gpu {
             let t = (ctl >> 3) & 0xF;
             let format = (t >> 1) | ((t & 1) << 3);
             let tex_format = texture::copy_texture_format(format);
-            let size = texture::level_size(tex_format, w as usize, h as usize);
-            let ram = mem.ram(addr, size).unwrap_or(&[]);
-            let ram_hash = texture::hash(ram);
+            // A stride wider than the copy's rows: a patch of a wider texture.
+            let (bw, _, block_bytes) = texture::block(tex_format);
+            let stride = (self.bp[0x4D] & 0x3FF) << 5;
+            let stride = if stride as usize > (w as usize).div_ceil(bw) * block_bytes { stride } else { 0 };
+            let ram_hash = if stride == 0 {
+                let size = texture::level_size(tex_format, w as usize, h as usize);
+                texture::hash(mem.ram(addr, size).unwrap_or(&[]))
+            } else {
+                texture::hash(&texture::copy_bytes(mem, addr, tex_format, w as usize, h as usize, stride as usize).unwrap_or_default())
+            };
             let id = self.textures.add_efb_copy(addr, w as u16, h as u16, ram_hash);
             self.stats.tex_copies += 1;
             self.batch.ops.push(Op::Cmd(Cmd::CopyTex(CopyTex {
@@ -683,7 +729,13 @@ impl Gpu {
                 addr,
                 tex_format,
                 ram_hash,
+                stride,
             })));
+            if stride != 0 && self.patches {
+                for (target, x, y) in self.textures.patch_targets(addr, tex_format, w, h, stride) {
+                    self.batch.ops.push(Op::Cmd(Cmd::Patch(Patch { copy: id, target, x, y, w, h })));
+                }
+            }
         }
         if ctl & (1 << 11) != 0 {
             self.clear(src);
@@ -869,6 +921,9 @@ impl Gpu {
     }
 
     fn draw(&mut self, op: u8, n: usize, data: &[u8], mem: &dyn Ram) {
+        if self.drop_draws {
+            return;
+        }
         self.stats.draws += 1;
         self.stats.vertices += n as u64;
         if n == 0 {

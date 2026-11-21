@@ -196,11 +196,14 @@ enum Msg {
     Writeback(u32, Vec<u8>),
     Recycle(Box<Output>),
     Records(bool),
+    Patches(bool),
     /// Reply once everything before has been decoded.
     Sync,
     /// Reply with the field's output.
     TakeOutput,
     View(Option<crate::xf::View>),
+    Drop(bool),
+    Wide(f32),
     /// Reply with the registers saved ([`Gpu::snap_regs`]).
     SaveRegs,
     /// Load registers saved by `SaveRegs`.
@@ -236,7 +239,10 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
             Msg::Writeback(addr, bytes) => gpu.note_writeback(addr, &bytes),
             Msg::Recycle(out) => gpu.recycle(*out),
             Msg::Records(on) => gpu.records_next = on,
+            Msg::Patches(on) => gpu.patches = on,
             Msg::View(v) => gpu.set_view(v),
+            Msg::Drop(on) => gpu.set_drop(on),
+            Msg::Wide(a) => gpu.set_wide(a),
             Msg::Sync => {
                 // Let the transform thread get on with what is decoded.
                 gpu.flush_back();
@@ -493,6 +499,37 @@ impl GpuPort {
             Self::Thread(t) => {
                 t.flush();
                 t.send(Msg::View(view));
+            }
+        }
+    }
+
+    /// Whether EFB copies into part of a texture patch it ([`crate::Cmd::Patch`]).
+    pub fn set_patches(&mut self, on: bool) {
+        match self {
+            Self::Inline(gpu) => gpu.patches = on,
+            Self::Thread(t) => t.send(Msg::Patches(on)),
+        }
+    }
+
+    /// The draws sent from now on are dropped (`on`) or drawn, in order
+    /// with the commands.
+    pub fn set_drop(&mut self, on: bool) {
+        match self {
+            Self::Inline(gpu) => gpu.set_drop(on),
+            Self::Thread(t) => {
+                t.flush();
+                t.send(Msg::Drop(on));
+            }
+        }
+    }
+
+    /// The draws sent from now on widen 16:9 projections to `aspect` (0: none).
+    pub fn set_wide(&mut self, aspect: f32) {
+        match self {
+            Self::Inline(gpu) => gpu.set_wide(aspect),
+            Self::Thread(t) => {
+                t.flush();
+                t.send(Msg::Wide(aspect));
             }
         }
     }

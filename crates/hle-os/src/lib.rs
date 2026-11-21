@@ -3,6 +3,7 @@
 //! decrementer interrupts between instruction slices, and the `OSLink` hook
 //! that records where each REL module was placed.
 
+pub mod display;
 pub mod light_texture;
 pub mod menu_layout;
 pub mod menu_settings;
@@ -80,8 +81,8 @@ const RESCHEDULE: u32 = 0x8042_A700;
 /// Every address [`System::before`] acts on (`OSLink` returns aside).
 /// Recompiled code never runs through one of these (`ppc-recomp` bakes this
 /// list in, and [`guest_cpu::recomp::Rt::new`] checks it).
-pub const SPECIAL: [u32; 38] = {
-    let mut s = [0u32; 38];
+pub const SPECIAL: [u32; 42] = {
+    let mut s = [0u32; 42];
     let mut i = 0;
     while i < RETURN_AT_ONCE.len() {
         s[i] = RETURN_AT_ONCE[i];
@@ -97,6 +98,11 @@ pub const SPECIAL: [u32; 38] = {
     while k < menu_settings::HOOKS.len() {
         s[i + j + k] = menu_settings::HOOKS[k];
         k += 1;
+    }
+    let mut d = 0;
+    while d < display::HOOKS.len() {
+        s[i + j + k + d] = display::HOOKS[d];
+        d += 1;
     }
     s
 };
@@ -246,6 +252,8 @@ pub struct System {
     pub menu: menu_settings::MenuSettings,
     /// Player 1's character pick ([`p1_character`]), if applied.
     pub p1: p1_character::P1Character,
+    /// Depth Blur and the widened picture ([`display`]).
+    pub display: display::Display,
     /// Instructions run by recompiled code (the rest were interpreted).
     pub recomp_steps: u64,
     /// Times the dispatcher entered recompiled code: after an interrupt, a
@@ -432,7 +440,7 @@ impl System {
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
         let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None, pending: None }));
-        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default() })
+        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default() })
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
@@ -442,12 +450,18 @@ impl System {
         if replace(&mut self.cpu, &mut self.mem, pc, self.aux_effects) || pc == STRCMP {
             return false;
         }
+        if self.display.watching() {
+            self.display_return(pc);
+        }
         if menu_settings::HOOKS.contains(&pc) && self.menu_hook(pc) {
             return false;
         }
         // A card picks its picture; the displaced instruction runs after.
         if pc == p1_character::PORTRAIT && self.p1.on {
             self.card_portrait();
+        }
+        if display::HOOKS.contains(&pc) && self.display_hook(pc) {
+            return false;
         }
         // The run loops execute the instruction at `pc` right after this
         // (no interrupt in between), so a call the hook lets run is drawn
@@ -554,7 +568,7 @@ impl System {
                 continue;
             }
             let pc = self.cpu.pc;
-            if (!self.link_calls.is_empty() || may_be_special(pc)) && self.before(pc) {
+            if (!self.link_calls.is_empty() || self.display.watching() || may_be_special(pc)) && self.before(pc) {
                 // Idle: the clock jumped; end the slice here.
                 if self.finish_slice(&mut end) {
                     return Ok(());
@@ -748,6 +762,7 @@ impl System {
     pub fn load_state(&mut self, bytes: Vec<u8>) -> Result<(), String> {
         let mut s = Snap::loader(bytes);
         self.snap_all(&mut s);
+        self.display.forget();
         s.finish()
     }
 

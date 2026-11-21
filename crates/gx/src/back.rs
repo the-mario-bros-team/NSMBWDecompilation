@@ -20,6 +20,8 @@ pub(crate) enum Op {
     ClearQuad { rect: Rect, color: [u8; 4], z: u32, color_update: bool },
     /// The host's view for the draws after it ([`xf::View`]).
     View(Option<xf::View>),
+    /// The aspect 16:9 projections are widened to from here (0: none).
+    Wide(f32),
 }
 
 /// A draw as the first half loaded it.
@@ -92,6 +94,7 @@ impl Back {
                 Op::Cmd(c) => self.out.cmds.push(*c),
                 Op::ClearQuad { rect, color, z, color_update } => self.clear_quad(*rect, *color, *z, *color_update),
                 Op::View(v) => self.xf.set_view(*v),
+                Op::Wide(a) => self.xf.set_wide(*a),
             }
         }
     }

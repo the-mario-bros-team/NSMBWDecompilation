@@ -87,8 +87,8 @@ unsafe extern "system" fn on_validation_message(
 /// How the renderer is set up.
 #[derive(Clone, Debug)]
 pub struct Options {
-    /// EFB resolution multiplier.
-    pub scale: u32,
+    /// EFB resolution multiplier (fractions too: 0.5 renders 320x264).
+    pub scale: f32,
     /// Present on vertical blank (FIFO); otherwise mailbox or immediate.
     pub vsync: bool,
     /// Where the Vulkan pipeline cache is loaded from and saved to.
@@ -101,7 +101,7 @@ pub struct Options {
 
 impl Default for Options {
     fn default() -> Self {
-        Self { scale: 2, vsync: true, pipeline_cache: None, efb_copies_to_ram: true }
+        Self { scale: 2.0, vsync: true, pipeline_cache: None, efb_copies_to_ram: true }
     }
 }
 
@@ -114,6 +114,9 @@ pub struct Writeback {
     pub tex_format: u32,
     pub width: u32,
     pub height: u32,
+    /// `gx::CopyTex::stride`: its rows' spacing in RAM when it patches a
+    /// wider texture (0: one after another).
+    pub stride: u32,
     pub rgba: Vec<u8>,
 }
 
@@ -160,6 +163,7 @@ struct PendingWriteback {
     tex_format: u32,
     w: u32,
     h: u32,
+    stride: u32,
     offset: usize,
 }
 
@@ -247,7 +251,12 @@ pub struct Renderer {
     pub device_name: String,
     pub validation: bool,
     /// Internal resolution multiplier for the EFB.
-    scale: u32,
+    scale: f32,
+    /// The EFB's width over its 16:9 one: the picture is wider (or
+    /// narrower) than the game's 16:9 ([`Renderer::set_stretch`]).
+    stretch: f32,
+    /// The EFB images are for another stretch: made again before the next frame.
+    efb_stale: bool,
     vsync: bool,
     copies_to_ram: bool,
     _entry: Entry,
@@ -353,6 +362,11 @@ fn offsets(x: u32, y: u32, w: u32, h: u32) -> [vk::Offset3D; 2] {
     [vk::Offset3D { x: x as i32, y: y as i32, z: 0 }, vk::Offset3D { x: (x + w) as i32, y: (y + h) as i32, z: 1 }]
 }
 
+/// `n` EFB pixels at scale `s`: rounded, and at least one.
+fn at_scale(n: u32, s: f32) -> u32 {
+    ((n as f32 * s).round() as u32).max(1)
+}
+
 fn rect2d(x: u32, y: u32, w: u32, h: u32) -> vk::Rect2D {
     vk::Rect2D { offset: vk::Offset2D { x: x as i32, y: y as i32 }, extent: vk::Extent2D { width: w, height: h } }
 }
@@ -407,7 +421,7 @@ impl Renderer {
     }
 
     fn create(window: Option<(RawDisplayHandle, RawWindowHandle)>, opts: Options) -> Res<Self> {
-        let scale = opts.scale.max(1);
+        let scale = opts.scale.max(0.25);
         unsafe {
             let entry = Entry::load()?;
             let layers_present = entry.enumerate_instance_layer_properties()?;
@@ -567,7 +581,7 @@ impl Renderer {
                 });
             }
 
-            let (ew, eh) = (EFB_W * scale, EFB_H * scale);
+            let (ew, eh) = (at_scale(EFB_W, scale), at_scale(EFB_H, scale));
             let usage = vk::ImageUsageFlags::COLOR_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_SRC | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
             let efb_color = Self::create_image(&device, &mut alloc, ew, eh, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
             let usage = vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
@@ -577,22 +591,14 @@ impl Renderer {
             let usage = vk::ImageUsageFlags::TRANSFER_SRC | vk::ImageUsageFlags::TRANSFER_DST;
             let palette = Self::create_image(&device, &mut alloc, PALETTE.len() as u32, 1, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
 
-            let views = [
-                vk::DescriptorImageInfo { sampler: vk::Sampler::null(), image_view: efb_color.view, image_layout: vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL },
-                vk::DescriptorImageInfo { sampler: vk::Sampler::null(), image_view: efb_depth.view, image_layout: vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL },
-            ];
-            device.update_descriptor_sets(
-                &[
-                    vk::WriteDescriptorSet::default().dst_set(copy_set).dst_binding(0).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).image_info(&views[..1]),
-                    vk::WriteDescriptorSet::default().dst_set(copy_set).dst_binding(1).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).image_info(&views[1..]),
-                ],
-                &[],
-            );
+            Self::bind_efb(&device, copy_set, &efb_color, &efb_depth);
 
             let mut r = Self {
                 device_name,
                 validation,
                 scale,
+                stretch: 1.0,
+                efb_stale: false,
                 vsync: opts.vsync,
                 copies_to_ram: opts.efb_copies_to_ram,
                 _entry: entry,
@@ -656,8 +662,63 @@ impl Renderer {
         }
     }
 
-    pub fn scale(&self) -> u32 {
+    pub fn scale(&self) -> f32 {
         self.scale
+    }
+
+    /// EFB pixels to EFB-image pixels, across and down.
+    fn sx(&self) -> f32 {
+        self.scale * self.stretch
+    }
+    fn sy(&self) -> f32 {
+        self.scale
+    }
+
+    /// The picture is `stretch` times as wide as the game's 16:9 (Ultrawide,
+    /// 16:10): the EFB keeps 640 x 528 EFB pixels, each that much wider, so
+    /// the picture keeps the resolution's pixels across. Its images are made
+    /// again before the next frame.
+    pub fn set_stretch(&mut self, stretch: f32) {
+        if self.stretch != stretch {
+            self.stretch = stretch;
+            self.efb_stale = true;
+        }
+    }
+
+    /// The copy pass reads `color` and `depth`.
+    fn bind_efb(device: &Device, set: vk::DescriptorSet, color: &Image, depth: &Image) {
+        let views = [
+            vk::DescriptorImageInfo { sampler: vk::Sampler::null(), image_view: color.view, image_layout: vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL },
+            vk::DescriptorImageInfo { sampler: vk::Sampler::null(), image_view: depth.view, image_layout: vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL },
+        ];
+        unsafe {
+            device.update_descriptor_sets(
+                &[
+                    vk::WriteDescriptorSet::default().dst_set(set).dst_binding(0).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).image_info(&views[..1]),
+                    vk::WriteDescriptorSet::default().dst_set(set).dst_binding(1).descriptor_type(vk::DescriptorType::SAMPLED_IMAGE).image_info(&views[1..]),
+                ],
+                &[],
+            );
+        }
+    }
+
+    /// New EFB images for the current stretch, once the GPU is done with
+    /// the old ones; they start cleared, as at the start.
+    fn remake_efb(&mut self) -> Res<()> {
+        unsafe { self.device.device_wait_idle()? };
+        let (ew, eh) = (at_scale(EFB_W, self.sx()), at_scale(EFB_H, self.sy()));
+        let usage = vk::ImageUsageFlags::COLOR_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_SRC | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
+        let color = Self::create_image(&self.device, &mut self.alloc, ew, eh, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
+        let usage = vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
+        let depth = Self::create_image(&self.device, &mut self.alloc, ew, eh, 1, DEPTH_FORMAT, usage, vk::ImageAspectFlags::DEPTH)?;
+        Self::bind_efb(&self.device, self.copy.set, &color, &depth);
+        let old = [std::mem::replace(&mut self.efb_color, color), std::mem::replace(&mut self.efb_depth, depth)];
+        for img in old {
+            self.destroy_image(img);
+        }
+        self.efb_ready = false;
+        self.efb_stale = false;
+        Ok(())
     }
 
     /// Switches V-Sync; the swapchain is rebuilt before the next present.
@@ -1089,6 +1150,9 @@ impl Renderer {
         unsafe {
             dev.wait_for_fences(&[self.frames[f].fence], true, u64::MAX)?;
         }
+        if self.efb_stale {
+            self.remake_efb()?;
+        }
         self.collect_writebacks(f);
         // What was retired before this frame's previous submission is no
         // longer in use by any frame.
@@ -1109,11 +1173,11 @@ impl Renderer {
             // Images that EFB copies will fill.
             for c in &out.cmds {
                 if let Cmd::CopyTex(c) = c {
-                    let (w, h) = (c.w * self.scale, c.h * self.scale);
+                    let (w, h) = (at_scale(c.w, self.sx()), at_scale(c.h, self.sy()));
                     if self.textures.get(&c.id).is_some_and(|i| i.w == w && i.h == h) {
                         continue;
                     }
-                    let usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::COLOR_ATTACHMENT;
+                    let usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::COLOR_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_SRC;
                     let img = Self::create_image(&dev, &mut self.alloc, w, h, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
                     self.textures_epoch += 1;
                     if let Some(old) = self.textures.insert(c.id, img) {
@@ -1226,6 +1290,9 @@ impl Renderer {
         unsafe {
             dev.wait_for_fences(&[self.frames[f].fence], true, u64::MAX)?;
         }
+        if self.efb_stale {
+            self.remake_efb()?;
+        }
         self.collect_writebacks(f);
         for img in std::mem::take(&mut self.frames[f].retired_images) {
             self.destroy_image(img);
@@ -1291,7 +1358,7 @@ impl Renderer {
         let bytes = self.frame_bytes(f, 3).to_vec();
         for p in pending {
             let len = (p.w * p.h * 4) as usize;
-            self.writebacks.push(Writeback { addr: p.addr, ram_hash: p.ram_hash, tex_format: p.tex_format, width: p.w, height: p.h, rgba: bytes[p.offset..p.offset + len].to_vec() });
+            self.writebacks.push(Writeback { addr: p.addr, ram_hash: p.ram_hash, tex_format: p.tex_format, width: p.w, height: p.h, stride: p.stride, rgba: bytes[p.offset..p.offset + len].to_vec() });
         }
     }
 
@@ -1382,10 +1449,11 @@ impl Renderer {
         let mut sampler_slots: HashMap<u32, u32> = HashMap::new();
         let mut samplers = Vec::new();
         let mut words: Vec<u32> = Vec::with_capacity(out.shadings.len().max(1) * SHADING_WORDS);
-        let scale = (self.scale as f32).to_bits();
+        let (scale_x, scale_y) = (self.sx().to_bits(), self.sy().to_bits());
         for s in &out.shadings {
             let mut w = s.0;
-            w[sh::SCALE] = scale;
+            w[sh::SCALE] = scale_x;
+            w[sh::SCALE_Y] = scale_y;
             for m in 0..8 {
                 let id = w[sh::TEX + m];
                 if id == NO_TEXTURE {
@@ -1442,14 +1510,20 @@ impl Renderer {
         Ok(())
     }
 
+    /// An EFB rectangle in EFB-image pixels: each edge rounded (so
+    /// neighbouring rectangles still meet), at least one pixel, inside the
+    /// image.
     fn scaled(&self, r: Rect) -> vk::Rect2D {
-        let s = self.scale;
-        rect2d(r.x * s, r.y * s, r.w * s, r.h * s)
+        let edge = |v: u32, s: f32, size: u32| ((v as f32 * s).round() as u32).min(size);
+        let (iw, ih) = (self.efb_color.w, self.efb_color.h);
+        let (x0, y0) = (edge(r.x, self.sx(), iw - 1), edge(r.y, self.sy(), ih - 1));
+        let (x1, y1) = (edge(r.x + r.w, self.sx(), iw).max(x0 + 1), edge(r.y + r.h, self.sy(), ih).max(y0 + 1));
+        rect2d(x0, y0, x1 - x0, y1 - y0)
     }
 
     fn scaled_f(&self, r: Rect) -> [f32; 4] {
-        let s = self.scale as f32;
-        [r.x as f32 * s, r.y as f32 * s, r.w as f32 * s, r.h as f32 * s]
+        let (sx, sy) = (self.sx(), self.sy());
+        [r.x as f32 * sx, r.y as f32 * sy, r.w as f32 * sx, r.h as f32 * sy]
     }
 
     fn begin_efb(&mut self, cmd: vk::CommandBuffer, vb: vk::Buffer, set: vk::DescriptorSet) {
@@ -1608,7 +1682,7 @@ impl Renderer {
                         unsafe { dev.cmd_end_rendering(cmd) };
                         rendering = false;
                     }
-                    let (w, h) = (src.w * self.scale, height * self.scale);
+                    let (w, h) = (at_scale(src.w, self.sx()), at_scale(height, self.sy()));
                     let stale = self.xfbs.get(&addr).is_some_and(|(img, _)| img.w != w || img.h != h);
                     if stale {
                         let (img, _) = self.xfbs.remove(&addr).unwrap();
@@ -1647,8 +1721,19 @@ impl Renderer {
                     if let Some(buffer) = readback {
                         let params = CopyParams { src, dst: [c.w as f32, c.h as f32], format: c.format, flags };
                         self.copy_to_native(cmd, params, buffer, readback_at as u64);
-                        self.frames[f].writebacks.push(PendingWriteback { addr: c.addr, ram_hash: c.ram_hash, tex_format: c.tex_format, w: c.w, h: c.h, offset: readback_at });
+                        self.frames[f].writebacks.push(PendingWriteback { addr: c.addr, ram_hash: c.ram_hash, tex_format: c.tex_format, w: c.w, h: c.h, stride: c.stride, offset: readback_at });
                         readback_at += (c.w * c.h * 4) as usize;
+                    }
+                }
+                Cmd::Patch(p) => {
+                    if rendering {
+                        unsafe { dev.cmd_end_rendering(cmd) };
+                        rendering = false;
+                    }
+                    if p.copy != p.target {
+                        if let [Some(src), Some(dst)] = self.textures.get_disjoint_mut([&p.copy, &p.target]) {
+                            Self::patch(&dev, cmd, src, dst, p);
+                        }
                     }
                 }
             }
@@ -1659,6 +1744,26 @@ impl Renderer {
         self.stats.draws = draws;
         self.stats.pipelines = self.pipelines.len();
         Ok(())
+    }
+
+    /// Draws EFB copy `src` (at the EFB's scale) into `dst` (a texture at
+    /// its own size) at the patch's place.
+    fn patch(dev: &Device, cmd: vk::CommandBuffer, src: &mut Image, dst: &mut Image, p: gx::Patch) {
+        if p.x + p.w > dst.w || p.y + p.h > dst.h {
+            return;
+        }
+        unsafe {
+            transition(dev, cmd, src, vk::ImageLayout::TRANSFER_SRC_OPTIMAL);
+            transition(dev, cmd, dst, vk::ImageLayout::TRANSFER_DST_OPTIMAL);
+            let region = vk::ImageBlit::default()
+                .src_subresource(sub_layers(vk::ImageAspectFlags::COLOR, 0))
+                .src_offsets(offsets(0, 0, src.w, src.h))
+                .dst_subresource(sub_layers(vk::ImageAspectFlags::COLOR, 0))
+                .dst_offsets(offsets(p.x, p.y, p.w, p.h));
+            dev.cmd_blit_image(cmd, src.image, vk::ImageLayout::TRANSFER_SRC_OPTIMAL, dst.image, vk::ImageLayout::TRANSFER_DST_OPTIMAL, &[region], vk::Filter::LINEAR);
+            transition(dev, cmd, src, vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+            transition(dev, cmd, dst, vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        }
     }
 
     /// Scales the EFB rectangle `src` onto all of `dst`.

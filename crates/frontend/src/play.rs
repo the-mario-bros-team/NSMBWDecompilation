@@ -32,7 +32,7 @@ use hle_ios::bt::{RemoteStatus, REMOTES};
 use hle_ios::wiimote::Input;
 use crate::overlay;
 use crate::say::{say, say_err};
-use crate::settings::{self, Settings};
+use crate::settings::{self, Settings, WideMode};
 use crate::ui;
 
 pub struct Options {
@@ -179,6 +179,10 @@ struct App {
     /// Looks for Wii Remotes paired with Windows (the Wii Remotes switch).
     #[cfg(windows)]
     wii_remotes: Option<input::wii_hid::Scanner>,
+    /// The game started in widescreen (it reads 4:3 or not at boot).
+    booted_widescreen: bool,
+    /// What the game thread was last told about the picture.
+    sent_display: Option<crate::emu::DisplayOptions>,
 }
 
 /// Set for a game the LAN tab started to join a room.
@@ -297,18 +301,17 @@ impl App {
         let display = window.display_handle().map_err(|e| e.to_string())?.as_raw();
         let handle = window.window_handle().map_err(|e| e.to_string())?.as_raw();
         // "Native" resolution: enough 480-line multiples to cover the window.
-        let scale = match self.settings.scale {
-            0 => {
-                let monitor = window.current_monitor().map(|m| m.size().height);
-                let h = if self.settings.fullscreen { monitor.unwrap_or(window.inner_size().height) } else { window.inner_size().height };
-                h.div_ceil(480).clamp(1, 8)
-            }
-            s => s,
+        let scale = if self.settings.scale == 0.0 {
+            let monitor = window.current_monitor().map(|m| m.size().height);
+            let h = if self.settings.fullscreen { monitor.unwrap_or(window.inner_size().height) } else { window.inner_size().height };
+            h.div_ceil(480).clamp(1, 8) as f32
+        } else {
+            self.settings.scale
         };
         let _ = std::fs::create_dir_all("cache");
         let ropts = vk_render::Options { scale, vsync: self.settings.vsync, pipeline_cache: Some(PathBuf::from("cache/pipelines.bin")), efb_copies_to_ram: self.settings.efb_copies_to_ram };
-        let mut renderer = Renderer::new(display, handle, ropts).map_err(|e| e.to_string())?;
-        renderer.aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
+        let renderer = Renderer::new(display, handle, ropts).map_err(|e| e.to_string())?;
+        self.booted_widescreen = self.settings.widescreen;
         println!(
             "vulkan device: {} (validation layer: {}); EFB {}x; {} fps; V-Sync {}",
             renderer.device_name,
@@ -328,7 +331,9 @@ impl App {
         }
         crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed);
         self.apply_controls();
-        self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
+        let mut menus = ui::Menus::new(&window, &self.opts.game, &self.settings.language);
+        menus.set_booted_widescreen(self.booted_widescreen);
+        self.menus = Some(menus);
         let settings_label = Some(settings_label(&self.settings.language).to_string());
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));
@@ -343,7 +348,52 @@ impl App {
         Ok(())
     }
 
+    /// The picture's aspect, and whether it widens the game's view: 4:3 (or
+    /// 16:9 while the game still runs in 4:3 until the next start), the
+    /// game's 16:9, 16:10, or for Ultrawide the window's when it is wider
+    /// than 16:9. Net games keep 16:9.
+    fn picture(&self) -> (f32, bool) {
+        const WIDE: f32 = hle_os::display::ASPECT_16_9;
+        let net = !matches!(self.opts.emu.net, crate::net::Mode::Off);
+        if !self.settings.widescreen {
+            return (4.0 / 3.0, false);
+        }
+        if !self.booted_widescreen || net {
+            return (WIDE, false);
+        }
+        match self.settings.wide_mode {
+            WideMode::Sixteen9 => (WIDE, false),
+            WideMode::Sixteen10 => (1.6, true),
+            WideMode::Fill => {
+                let size = self.window.as_ref().map(|w| w.inner_size()).filter(|s| s.width > 0 && s.height > 0);
+                // A window a little off 16:9 keeps the game's own picture.
+                match size.map(|s| s.width as f32 / s.height as f32) {
+                    Some(a) if a > WIDE * 1.01 => (a, true),
+                    _ => (WIDE, false),
+                }
+            }
+        }
+    }
+
+    /// The picture's shape to the renderer, and to the game thread with the
+    /// Graphics tab's options, when they change.
+    fn update_picture(&mut self) {
+        let (aspect, widened) = self.picture();
+        if let Some(r) = &mut self.renderer {
+            r.aspect = aspect;
+            r.set_stretch(if widened { aspect / hle_os::display::ASPECT_16_9 } else { 1.0 });
+        }
+        let d = crate::emu::DisplayOptions { aspect: if widened { aspect } else { hle_os::display::ASPECT_16_9 }, spinning_coins: self.settings.spinning_coins, depth_blur: self.settings.depth_blur };
+        if self.sent_display != Some(d) {
+            if let Some(emu) = &self.emu {
+                let _ = emu.to_emu.send(ToEmu::Display(d));
+                self.sent_display = Some(d);
+            }
+        }
+    }
+
     fn frame(&mut self, event_loop: &ActiveEventLoop) -> Result<(), String> {
+        self.update_picture();
         // The Keybinds tab: a controller connected, and a button being picked.
         let mut picked = Vec::new();
         if let Some(m) = &mut self.menus {
@@ -742,9 +792,7 @@ impl App {
                     }
                 }
                 ui::Change::Aspect => {
-                    if let Some(r) = &mut self.renderer {
-                        r.aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
-                    }
+                    // The picture follows in `update_picture`.
                     if let Err(e) = hle_ios::nand::set_widescreen(Path::new("saves/nand"), self.settings.widescreen) {
                         say_err!("SYSCONF: {e}");
                     }
@@ -816,7 +864,7 @@ impl App {
                     }
                 }
                 // From the next start, or read every frame.
-                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) => {}
+                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics => {}
             }
         }
     }
@@ -926,7 +974,7 @@ impl App {
                 format!("F4  BATTERY SAVER ({})", on(self.settings.battery_saver)),
                 format!("F5/F6  FRAME RATE ({})", settings::fps_label(self.settings.fps)),
                 format!("F7  V-SYNC ({})", on(self.settings.vsync)),
-                format!("F9  ASPECT ({}; GAME AT NEXT START)", if self.settings.widescreen { "16:9" } else { "4:3" }),
+                format!("F9  ASPECT ({}; GAME AT NEXT START)", self.settings.aspect_name().to_uppercase()),
                 "F10 SETTINGS".to_string(),
                 format!("F11 FULLSCREEN ({})", on(self.settings.fullscreen)),
             ]
@@ -990,9 +1038,6 @@ impl App {
             }
             KeyCode::F9 => {
                 self.settings.widescreen = !self.settings.widescreen;
-                if let Some(r) = &mut self.renderer {
-                    r.aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
-                }
                 if let Err(e) = hle_ios::nand::set_widescreen(Path::new("saves/nand"), self.settings.widescreen) {
                     say_err!("SYSCONF: {e}");
                 }
@@ -1220,6 +1265,8 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         menu_mask: 0,
         sent_pause: false,
         was_open: false,
+        booted_widescreen: true,
+        sent_display: None,
         settings_from_game: false,
         cheats,
         characters,

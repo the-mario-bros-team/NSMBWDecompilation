@@ -93,7 +93,7 @@ struct Rig {
 }
 
 fn rig() -> Option<Rig> {
-    match Renderer::headless(Options { scale: 2, ..Default::default() }) {
+    match Renderer::headless(Options { scale: 2.0, ..Default::default() }) {
         Ok(r) => Some(Rig { mem: Mem::new(Box::new(NullMmio)), gpu: Gpu::default(), r }),
         Err(e) => {
             eprintln!("skipped: no Vulkan device ({e})");

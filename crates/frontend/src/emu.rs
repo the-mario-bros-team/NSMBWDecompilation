@@ -88,6 +88,8 @@ pub enum ToEmu {
     /// A real Wii Remote for this player (0-3) in place of the emulated one,
     /// or (`None`) the emulated one again.
     RealRemote(usize, Option<Box<dyn hle_ios::bt::HidRemote>>),
+    /// The picture's shape and the Graphics tab's options.
+    Display(DisplayOptions),
 }
 
 /// The save cards' "Cheated", in the language the Settings buttons read.
@@ -105,6 +107,24 @@ fn play_menu_sounds(sys: &mut System, sounds: &mut Vec<u32>) {
         if manager != 0 {
             let _ = sys.call_guest(START_SYSTEM_SE, &[manager, id, 1], &[]);
         }
+    }
+}
+
+/// What the game thread does for the picture.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct DisplayOptions {
+    /// The picture's aspect: the game's 16:9 ([`hle_os::display::ASPECT_16_9`]),
+    /// or wider or narrower (Ultrawide, 16:10), which widens the game's
+    /// view. Net games always keep 16:9.
+    pub aspect: f32,
+    /// Animated tiles (`gx::Cmd::Patch`).
+    pub spinning_coins: bool,
+    pub depth_blur: bool,
+}
+
+impl Default for DisplayOptions {
+    fn default() -> Self {
+        Self { aspect: hle_os::display::ASPECT_16_9, spinning_coins: true, depth_blur: true }
     }
 }
 
@@ -235,13 +255,20 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
                 // The copy's texels arrive late: write them only where the
                 // game has not written since the copy (it may have reused
                 // the buffer).
-                if sys.mem.ram(wb.addr, bytes.len()).is_none_or(|now| gx::texture::hash(now) != wb.ram_hash) {
+                let (w, h, stride) = (wb.width as usize, wb.height as usize, wb.stride as usize);
+                if gx::texture::copy_bytes(&sys.mem, wb.addr, wb.tex_format, w, h, stride).is_none_or(|now| gx::texture::hash(&now) != wb.ram_hash) {
                     continue;
                 }
-                if let Some(dst) = sys.mem.ram_mut(wb.addr, bytes.len()) {
-                    dst.copy_from_slice(&bytes);
-                    sys.hw.borrow_mut().gpu.note_writeback(wb.addr, &bytes);
+                // Row by row: a copy into part of a wider texture has its
+                // rows that texture's row apart.
+                let mut from = 0;
+                for (at, len) in gx::texture::copy_rows(wb.tex_format, w, h, stride) {
+                    if let Some(dst) = sys.mem.ram_mut(wb.addr + at as u32, len) {
+                        dst.copy_from_slice(&bytes[from..from + len]);
+                    }
+                    from += len;
                 }
+                sys.hw.borrow_mut().gpu.note_writeback(wb.addr, &bytes);
             }
         }
         ToEmu::Efb(s) => sys.hw.borrow_mut().efb = Some((s.color, s.depth)),
@@ -249,7 +276,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
         ToEmu::RealRemote(i, remote) => sys.hw.borrow_mut().ios.bt.set_real(i, remote),
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::Display(_) => {}
     }
 }
 
@@ -341,6 +368,9 @@ pub struct EmuOptions {
     pub force_gameplay_options: bool,
     /// Player 1's character on each save file, shared with the window's thread.
     pub characters: Arc<crate::gameplay::Characters>,
+    /// The picture's aspect until the window says otherwise (`--wide`, for
+    /// headless runs).
+    pub wide: Option<f32>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -402,7 +432,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 
 #[allow(clippy::too_many_arguments)]
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>, player: Arc<AtomicU64>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters, wide } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -537,6 +567,10 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut click = None;
     let mut click_buttons = 0u16;
     let mut gameplay = crate::gameplay::Gameplay::default();
+    let mut display = DisplayOptions { aspect: wide.unwrap_or(hle_os::display::ASPECT_16_9), ..Default::default() };
+    // What the GX decoder was last told: the projections' widening and the
+    // animated tiles.
+    let mut sent_display = (0.0f32, true);
     // With `auto_close_settings`: the field the Settings window "closes" at.
     let mut close_settings_at = None;
     while !stop.load(Ordering::Relaxed) && last_field.is_none_or(|l| index <= l) {
@@ -563,6 +597,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                         let gains = if session.is_none() { v.map(|p| (p.min(100) * 0x8000 / 100) as u16) } else { [0x8000; 3] };
                         sys.hw.borrow_mut().dsp.ax.gains = gains;
                     }
+                    ToEmu::Display(d) => display = d,
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
                     msg => apply(&mut sys, &mut live, msg),
                 }
@@ -620,6 +655,23 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             if view_player.is_some() {
                 hw.gpu.set_view(view);
             }
+        }
+        {
+            // The picture: net games keep the game's 16:9, which decides
+            // what the game wakes and so must be the same on every machine.
+            let aspect = if session.is_some() { hle_os::display::ASPECT_16_9 } else { display.aspect };
+            let wide = if (aspect - hle_os::display::ASPECT_16_9).abs() < 1e-4 { 0.0 } else { aspect };
+            sys.set_screen_aspect(aspect);
+            sys.display.wide = wide;
+            sys.display.depth_blur = display.depth_blur;
+            let mut hw = sys.hw.borrow_mut();
+            if sent_display.0 != wide {
+                hw.gpu.set_wide(wide);
+            }
+            if sent_display.1 != display.spinning_coins {
+                hw.gpu.set_patches(display.spinning_coins);
+            }
+            sent_display = (wide, display.spinning_coins);
         }
         let started = Instant::now();
         let waited = sys.hw.borrow().gpu.waited();

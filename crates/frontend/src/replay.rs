@@ -14,7 +14,7 @@ pub struct Options {
     pub log: PathBuf,
     /// 0-based frame to capture; default the last.
     pub frame: Option<usize>,
-    pub scale: u32,
+    pub scale: f32,
     pub screenshot: Option<PathBuf>,
     /// Reference image (same size as the capture).
     pub compare: Option<PathBuf>,
@@ -84,10 +84,14 @@ pub fn run(o: &Options) -> Result<bool, String> {
         r.finish().map_err(|e| e.to_string())?;
         for wb in r.take_writebacks() {
             let data = gx::texture::encode(wb.tex_format, wb.width as usize, wb.height as usize, &wb.rgba);
-            if let Some(dst) = mem.ram_mut(wb.addr, data.len()) {
-                dst.copy_from_slice(&data);
-                gpu.note_writeback(wb.addr, &data);
+            let mut from = 0;
+            for (at, len) in gx::texture::copy_rows(wb.tex_format, wb.width as usize, wb.height as usize, wb.stride as usize) {
+                if let Some(dst) = mem.ram_mut(wb.addr + at as u32, len) {
+                    dst.copy_from_slice(&data[from..from + len]);
+                }
+                from += len;
             }
+            gpu.note_writeback(wb.addr, &data);
         }
     }
     let s = &gpu.stats;
@@ -181,7 +185,7 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         let (path, shot) = (dir.join("quad.dff"), dir.join("quad.png"));
         save(&path, &log());
-        let opts = Options { log: path.clone(), frame: None, scale: 1, screenshot: Some(shot.clone()), compare: None, min_psnr: 30.0 };
+        let opts = Options { log: path.clone(), frame: None, scale: 1.0, screenshot: Some(shot.clone()), compare: None, min_psnr: 30.0 };
         assert!(run(&opts).unwrap());
         let (w, h, px) = vk_render::load_png(&shot).unwrap();
         assert_eq!((w, h), (640, 528));

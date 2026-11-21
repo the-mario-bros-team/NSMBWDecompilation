@@ -44,6 +44,8 @@ pub enum Change {
     Scale,
     PerfMonitor,
     BatterySaver,
+    /// Spinning Coins or Depth Blur.
+    Graphics,
     Volume,
     Language,
     /// No Time Limit or Infinite Lives.
@@ -133,6 +135,11 @@ impl Menus {
     /// The LAN tab is up: rooms are worth looking for.
     pub fn wants_rooms(&self) -> bool {
         self.window.is_open() && self.window.on_lan_tab()
+    }
+
+    /// The game started in widescreen (the Aspect Ratio row's note).
+    pub fn set_booted_widescreen(&mut self, wide: bool) {
+        self.window.booted_widescreen = wide;
     }
 
     /// The save file being played (0-2), or -1 before the save select.
