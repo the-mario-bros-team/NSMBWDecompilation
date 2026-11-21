@@ -1988,6 +1988,9 @@ and shader patches loaded at start, all since removed):
   clean, while a control run without that change faulted at field 7,069
   the same evening. (The first workaround, sampling at the base level on
   Android, is gone: mipmaps are back.)
+- The committed build then ran the attract demo for 7 minutes (25,044
+  fields, through the snow course and round the loop) without a fault,
+  at 96-100% with 1-3 ms of rendering a field.
 
 **Not yet:** recompiled code (`ppc-recomp` writes the host's calling
 convention, `extern "sysv64"`, into `gen/`, which arm64 cannot compile; the
