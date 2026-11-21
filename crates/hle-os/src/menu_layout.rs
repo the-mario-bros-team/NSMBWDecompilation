@@ -12,8 +12,14 @@
 //!   Title Screen a button lower, the window grown and raised clear of its
 //!   Back hint; its group is `B01_noButton`.
 //!
+//! - The save-select screen (`/Layout/fileSelectBase/fileSelectBase.arc`,
+//!   `fileSelectBase_18`): a copy of the OK button as Settings at the right
+//!   of the title bar, under the title's own pane, so it comes in with the
+//!   title when the screen opens. Its group is `B00_yesButton` too.
+//!
 //! [`crate::menu_settings`] teaches the game's code the buttons. An archive
-//! whose panes aren't the expected ones is left as it is.
+//! whose panes aren't the expected ones is left as it is. Nothing is written
+//! to disk: the game is handed the changed archives from memory.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -21,20 +27,24 @@ use hle_ios::Disc;
 
 pub const PAUSE_ARC: &str = "/Layout/pauseMenu/pauseMenu.arc";
 pub const MAP_ARC: &str = "/Layout/corseSelectMenu/corseSelectMenu.arc";
+pub const FILE_ARC: &str = "/Layout/fileSelectBase/fileSelectBase.arc";
+/// The save-select screen's Settings button (its picture pane).
+pub const FILE_PANE: &str = "P_SBBase_02";
 /// The copies' group names: m2d keeps the pointer it is given, so each is a
 /// string in main.dol's constant data that no group of these menus uses.
 pub const PAUSE_GROUP: &str = "B00_yesButton";
 pub const MAP_GROUP: &str = "B01_noButton";
 
-/// Patches both archives on `disc`, the buttons reading `label`. Returns
-/// whether the pause window and the world map's menu got their button.
-pub fn patch(disc: &mut Disc, label: &str) -> (bool, bool) {
+/// Builds the Settings buttons into the three archives as `disc` serves
+/// them, the buttons reading `label`. Returns whether the pause window, the
+/// world map's menu and the save-select screen got theirs.
+pub fn add_buttons(disc: &mut Disc, label: &str) -> (bool, bool, bool) {
     let label: Vec<u16> = label.encode_utf16().collect();
     let mut one = |path: &str, f: fn(&mut Vec<u8>, &[u16]) -> Option<()>| {
         let Some(mut arc) = disc.file(path) else { return false };
         f(&mut arc, &label).is_some() && disc.replace(path, arc)
     };
-    (one(PAUSE_ARC, patch_pause_archive), one(MAP_ARC, patch_map_archive))
+    (one(PAUSE_ARC, patch_pause_archive), one(MAP_ARC, patch_map_archive), one(FILE_ARC, patch_file_archive))
 }
 
 fn be16(b: &[u8], at: usize) -> u16 {
@@ -292,9 +302,17 @@ fn copy_group(sections: &mut Vec<Section>, from: &str, to: &str, renames: &BTree
 }
 
 /// A BRLAN with each pane the copy came from also animated under the copy's
-/// name, and the copy's group bound beside `from_group`.
-fn patch_animation(file: &mut Vec<u8>, renames: &BTreeMap<String, String>, from_group: &str, to_group: &str) -> Option<()> {
+/// name, and the copy's group bound beside `from_group`. With `only_bound`,
+/// an animation not bound to `from_group` is left as it is.
+fn patch_animation(file: &mut Vec<u8>, renames: &BTreeMap<String, String>, from_group: &str, to_group: &str, only_bound: bool) -> Option<()> {
     let (header, mut sections) = read_sections(file, b"RLAN")?;
+    let bound = sections.iter().any(|s| {
+        let b = &s.bytes;
+        &s.kind == b"pat1" && b.len() >= 0x1C && (0..be16(b, 0x0A) as usize).any(|g| name_at(b, be32(b, 0x10) as usize + g * 20, 16) == from_group)
+    });
+    if only_bound && !bound {
+        return Some(());
+    }
     for s in &mut sections {
         let b = &mut s.bytes;
         // m2d binds an animation to the groups its pat1 lists.
@@ -502,8 +520,9 @@ fn patch_map_layout(file: &mut Vec<u8>, renames: &mut BTreeMap<String, String>, 
     Some(())
 }
 
-/// One archive: its layout `layout` patched by `f`, then every animation.
-fn patch_archive(arc: &mut Vec<u8>, layout: &str, label: &[u16], f: fn(&mut Vec<u8>, &mut BTreeMap<String, String>, &[u16]) -> Option<()>, from_group: &str, to_group: &str) -> Option<()> {
+/// One archive: its layout `layout` patched by `f`, then every animation
+/// (`only_bound`: see [`patch_animation`]).
+fn patch_archive(arc: &mut Vec<u8>, layout: &str, label: &[u16], f: fn(&mut Vec<u8>, &mut BTreeMap<String, String>, &[u16]) -> Option<()>, from_group: &str, to_group: &str, only_bound: bool) -> Option<()> {
     let mut nodes = read_u8(arc)?;
     let mut renames = BTreeMap::new();
     let mut found = false;
@@ -516,7 +535,7 @@ fn patch_archive(arc: &mut Vec<u8>, layout: &str, label: &[u16], f: fn(&mut Vec<
     }
     let mut animations = 0;
     for n in nodes.iter_mut().filter(|n| n.kind == 0 && n.path.ends_with(".brlan")) {
-        patch_animation(&mut n.data, &renames, from_group, to_group)?;
+        patch_animation(&mut n.data, &renames, from_group, to_group, only_bound)?;
         animations += 1;
     }
     if animations < 4 {
@@ -529,11 +548,103 @@ fn patch_archive(arc: &mut Vec<u8>, layout: &str, label: &[u16], f: fn(&mut Vec<
 fn patch_pause_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
     // Every animation: onButton, idleButton, offButon (sic) and hitButton for
     // the copy's group, and the window's own, which animate Exit's panes too.
-    patch_archive(arc, "pauseMenu_16", label, patch_pause_layout, "B02_menuButton", PAUSE_GROUP)
+    patch_archive(arc, "pauseMenu_16", label, patch_pause_layout, "B02_menuButton", PAUSE_GROUP, false)
 }
 
 fn patch_map_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
-    patch_archive(arc, "corseSelectMenu_11", label, patch_map_layout, "B03_Button", MAP_GROUP)
+    patch_archive(arc, "corseSelectMenu_11", label, patch_map_layout, "B03_Button", MAP_GROUP, false)
+}
+
+/// `fileSelectBase_18.brlyt` with the Settings button: the OK button's
+/// subtree copied under the title's pane (`N_titlePos_00`), at the right of
+/// the title bar and smaller, in the look the game gives a button that is
+/// not selected. `N_titlePos_00` is animated when the screen opens and
+/// closes, so the button comes and goes with the title.
+fn patch_file_layout(file: &mut Vec<u8>, renames: &mut BTreeMap<String, String>, label: &[u16]) -> Option<()> {
+    const NAMES: [(&str, &str); 5] = [("P_SBBase_01", FILE_PANE), ("T_ok_00", "T_set_00"), ("T_ok_01", "T_set_01"), ("W_SButton_1", "W_SButton_2"), ("P_shadow_01", "P_shadow_04")];
+    /// The button's size (the OK button is 262 by 53).
+    const SIZE: (f32, f32) = (184.0, 44.0);
+    /// Its frame's right edge, in the 4:3 picture (the screen ends at 304).
+    const RIGHT: f32 = 288.0;
+    let (header, mut sections) = read_sections(file, b"RLYT")?;
+    let ok = find_pane(&sections, "P_SBBase_01")?;
+    let title = find_pane(&sections, "N_titlePos_00")?;
+    let existing = pane_names(&sections);
+    if NAMES.iter().any(|n| existing.contains(n.1)) || existing.contains("N_setPos_00") {
+        return None;
+    }
+    let mut copy = sections[ok..=subtree_end(&sections, ok)].to_vec();
+    let (dw, dh) = (SIZE.0 - getf(&copy[0].bytes, 0x44), SIZE.1 - getf(&copy[0].bytes, 0x48));
+    if !(-200.0..=0.0).contains(&dw) || !(-40.0..=0.0).contains(&dh) {
+        return None;
+    }
+    // The label's size: the button's share of the OK button's, smaller if
+    // the word would not fit (about 0.58 of the font's height a letter).
+    let letters = label.len().max(1) as f32;
+    let text_scale = (SIZE.1 / (SIZE.1 - dh)).min(((SIZE.0 - 30.0) / letters - 2.0) / (0.58 * 32.0));
+    for (i, s) in copy.iter_mut().enumerate().filter(|(_, s)| is_pane(s)) {
+        let from = pane_name(s);
+        let to = NAMES.iter().find(|n| n.0 == from)?.1;
+        set_name(&mut s.bytes, 0x0C, 16, to);
+        renames.insert(from, to.into());
+        let (w, h) = (getf(&s.bytes, 0x44), getf(&s.bytes, 0x48));
+        putf(&mut s.bytes, 0x44, w + dw);
+        putf(&mut s.bytes, 0x48, h + dh);
+        if i == 0 {
+            // At its new parent's place, shown (the OK button starts at
+            // scale 0), keeping its shape on a 16:9 screen (bit 2).
+            s.bytes[8] |= 4;
+            putf(&mut s.bytes, 0x24, 0.0);
+            putf(&mut s.bytes, 0x28, 0.0);
+            putf(&mut s.bytes, 0x3C, 0.98);
+            putf(&mut s.bytes, 0x40, 0.98);
+        }
+        if &s.kind == b"txt1" && s.bytes.len() >= 0x74 {
+            for at in [0x64, 0x68] {
+                let size = getf(&s.bytes, at);
+                putf(&mut s.bytes, at, size * text_scale);
+            }
+            set_pane_text(s, label);
+        }
+    }
+    // Its place: a pane of its own under the title's, so the 16:9 shrink
+    // (which also moves a pane toward its parent) leaves it where it is.
+    let mut place = sections[title].clone();
+    if &place.kind != b"pan1" || place.bytes.len() < 0x4C {
+        return None;
+    }
+    place.bytes.truncate(0x4C);
+    put32(&mut place.bytes, 4, 0x4C);
+    set_name(&mut place.bytes, 0x0C, 16, "N_setPos_00");
+    place.bytes[8] = 1;
+    let title_x = getf(&sections[title].bytes, 0x24);
+    let title_y = find_pane(&sections, "T_title_00").map_or(12.0, |t| getf(&sections[t].bytes, 0x28));
+    putf(&mut place.bytes, 0x24, RIGHT - (SIZE.0 + 8.0) / 2.0 - title_x);
+    putf(&mut place.bytes, 0x28, title_y);
+    for at in [0x3C, 0x40] {
+        putf(&mut place.bytes, at, 1.0);
+    }
+    let mark = |kind: &[u8; 4]| Section { kind: *kind, bytes: [&kind[..], &[0, 0, 0, 8]].concat() };
+    // Last among the title pane's children.
+    let end = subtree_end(&sections, title);
+    if end == title || &sections[end].kind != b"pae1" {
+        return None;
+    }
+    let mut new = vec![place, mark(b"pas1")];
+    new.extend(copy);
+    new.push(mark(b"pae1"));
+    sections.splice(end..end, new);
+    if !copy_group(&mut sections, "G01_yesButton", PAUSE_GROUP, renames) {
+        return None;
+    }
+    *file = write_sections(header, &sections);
+    Some(())
+}
+
+fn patch_file_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
+    // Only the button animations (in, on, idle, hit, off, out): the others
+    // hold the OK button's tracks too, hiding it while the screen opens.
+    patch_archive(arc, "fileSelectBase_18", label, patch_file_layout, "G01_yesButton", PAUSE_GROUP, true)
 }
 
 #[cfg(test)]
@@ -548,8 +659,9 @@ mod tests {
         let game = std::env::var("NSMBW_GAME").expect("NSMBW_GAME");
         let mut disc = Disc::open(std::path::Path::new(&game)).unwrap();
         let (pause_before, map_before) = (disc.file(PAUSE_ARC).unwrap(), disc.file(MAP_ARC).unwrap());
-        assert_eq!(patch(&mut disc, "Settings"), (true, true));
-        for (path, before, layout, pane, group) in [(PAUSE_ARC, pause_before, "pauseMenu_16", "P_SBBase_03", PAUSE_GROUP), (MAP_ARC, map_before, "corseSelectMenu_11", "P_SBBase_06", MAP_GROUP)] {
+        let file_before = disc.file(FILE_ARC).unwrap();
+        assert_eq!(add_buttons(&mut disc, "Settings"), (true, true, true));
+        for (path, before, layout, pane, group) in [(PAUSE_ARC, pause_before, "pauseMenu_16", "P_SBBase_03", PAUSE_GROUP), (MAP_ARC, map_before, "corseSelectMenu_11", "P_SBBase_06", MAP_GROUP), (FILE_ARC, file_before, "fileSelectBase_18", FILE_PANE, PAUSE_GROUP)] {
             let after = disc.file(path).unwrap();
             assert!(after.len() > before.len(), "{path} grew");
             let nodes = read_u8(&after).unwrap();
@@ -558,7 +670,7 @@ mod tests {
             let (_, sections) = read_sections(&lyt.data, b"RLYT").unwrap();
             assert!(find_pane(&sections, pane).is_some(), "{pane}");
             assert!(sections.iter().any(|s| &s.kind == b"grp1" && name_at(&s.bytes, 8, 16) == group), "{group}");
-            let text: Vec<String> = sections.iter().filter(|s| &s.kind == b"txt1" && (pane_name(s).ends_with("06") || pane_name(s).contains("setting"))).map(pane_name).collect();
+            let text: Vec<String> = sections.iter().filter(|s| &s.kind == b"txt1" && (pane_name(s).ends_with("06") || pane_name(s).contains("setting") || pane_name(s).starts_with("T_set_"))).map(pane_name).collect();
             println!("{path}: {} bytes -> {}, text panes {text:?}", before.len(), after.len());
             for n in nodes.iter().filter(|n| n.path.ends_with(".brlan")) {
                 let (_, s) = read_sections(&n.data, b"RLAN").unwrap();

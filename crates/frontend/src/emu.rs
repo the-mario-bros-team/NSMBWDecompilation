@@ -267,6 +267,9 @@ pub struct EmuOptions {
     pub settings_label: Option<String>,
     /// The Settings buttons in a scripted run too (`--settings-buttons`).
     pub force_settings_buttons: bool,
+    /// No window (`--headless`): a Settings window a game menu asks for
+    /// counts as closed 30 fields later, so a scripted run carries on.
+    pub auto_close_settings: bool,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -327,7 +330,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -385,8 +388,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
     };
     if settings_label.is_some() {
-        let (pause, map) = sys.menu.buttons;
-        println!("Settings buttons: pause window {}, world map menu {}", if pause { "yes" } else { "no" }, if map { "yes" } else { "no" });
+        let (pause, map, files) = sys.menu.buttons;
+        let yes = |b| if b { "yes" } else { "no" };
+        println!("Settings buttons: pause window {}, world map menu {}, save select {}", yes(pause), yes(map), yes(files));
     }
     // Reverb, delay and chorus: the game's own effect callbacks, mixed back
     // by the DSP (NSMBW_AUXFX=off skips both).
@@ -445,6 +449,8 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut paused = false;
     let mut gameplay = crate::gameplay::Gameplay::default();
     let mut gameplay_options = crate::gameplay::Options::default();
+    // With `auto_close_settings`: the field the Settings window "closes" at.
+    let mut close_settings_at = None;
     while !stop.load(Ordering::Relaxed) && last_field.is_none_or(|l| index <= l) {
         loop {
             while let Ok(msg) = to_emu.try_recv() {
@@ -525,7 +531,15 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let closed = !sys.menu.waiting_for_pause() || sys.pause_window_closed();
             if closed && sys.menu.take_open() {
                 say!("field {index}: a game menu's Settings button");
-                settings_button.store(true, Ordering::Relaxed);
+                if auto_close_settings {
+                    close_settings_at = Some(index + 30);
+                } else {
+                    settings_button.store(true, Ordering::Relaxed);
+                }
+            }
+            if close_settings_at == Some(index) {
+                close_settings_at = None;
+                sys.menu.reopen();
             }
         }
         let emu = started.elapsed();

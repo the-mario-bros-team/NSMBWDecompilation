@@ -289,7 +289,7 @@ fn main() -> ExitCode {
         return if ok { ExitCode::SUCCESS } else { ExitCode::FAILURE };
     }
 
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false } };
     if args.headless {
         // As a window would, before the game boots: the game reads its
         // aspect ratio from SYSCONF once.
@@ -297,7 +297,7 @@ fn main() -> ExitCode {
             eprintln!("SYSCONF: {e}");
         }
         win::tune_process();
-        let emu = emu::EmuOptions { stop_after: opts.max_frames, ..opts.emu };
+        let emu = emu::EmuOptions { stop_after: opts.max_frames, auto_close_settings: true, ..opts.emu };
         return match emu::run_headless(opts.game, emu) {
             Ok((totals, fields)) => {
                 play::report(&totals);

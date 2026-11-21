@@ -25,6 +25,15 @@
 //! window opens once the menu is gone. When it closes, the menu opens again
 //! through StartWait, on Settings.
 //!
+//! The save-select screen (`dFileSelect_c`, also in `d_basesNP`) keeps its
+//! cursor as a number: its three files (0-2), Free-for-All (3) and Coin
+//! Battle (4). Settings, in the title bar, is 5: up from a file goes to it
+//! and down goes back, through the screen's own button-change state (the
+//! file's card and the button play their off and on animations, with the
+//! cursor sound); 2 or A plays the button's hit animation and the decide
+//! sound, then the Settings window opens, and closing it leaves the cursor
+//! on Settings.
+//!
 //! Each hook acts only while the live layout has its button (so never in a
 //! net game, whose archives are not patched); otherwise it declines and the
 //! game's function runs as it is. A hook calls the game's functions with
@@ -50,9 +59,14 @@ const MAP_BUTTON_CHANGE: u32 = 0x8077_AF10;
 const MAP_INPUT: u32 = 0x8077_B010;
 const MAP_HIT: u32 = 0x8077_B1A0;
 const MAP_HIT_WAIT: u32 = 0x8077_B1C0;
+/// `dFileSelect_c`: SelectWait's execute, and ButtonSelectAnimeEndWait's
+/// initialize and finalize.
+const FILE_SELECT_WAIT: u32 = 0x8078_3C10;
+const FILE_CHANGE: u32 = 0x8078_3A00;
+const FILE_CHANGE_END: u32 = 0x8078_3BB0;
 
 /// The hooked functions, for [`crate::SPECIAL`].
-pub const HOOKS: [u32; 14] = [
+pub const HOOKS: [u32; 17] = [
     GROUP_REGISTER,
     PAUSE_CURSOR_SETUP,
     PAUSE_OPEN,
@@ -67,11 +81,14 @@ pub const HOOKS: [u32; 14] = [
     MAP_INPUT,
     MAP_HIT,
     MAP_HIT_WAIT,
+    FILE_SELECT_WAIT,
+    FILE_CHANGE,
+    FILE_CHANGE_END,
 ];
 
-/// The map menu's functions are in a module: their first words, checked
-/// before a hook acts.
-const MAP_WORDS: [(u32, u32); 7] = [
+/// The map menu's and the save-select screen's functions are in a module:
+/// their first words, checked before a hook acts.
+const MODULE_WORDS: [(u32, u32); 10] = [
     (MAP_CURSOR_SETUP, 0x8803_0274),
     (MAP_START_WAIT, 0x9421_FFF0),
     (MAP_OPEN_END, 0x3880_0000),
@@ -79,6 +96,9 @@ const MAP_WORDS: [(u32, u32); 7] = [
     (MAP_INPUT, 0x9421_FFE0),
     (MAP_HIT, 0x8083_0268),
     (MAP_HIT_WAIT, 0x9421_FFF0),
+    (FILE_SELECT_WAIT, 0x9421_FFE0),
+    (FILE_CHANGE, 0x9421_FFF0),
+    (FILE_CHANGE_END, 0x8003_02A4),
 ];
 
 const PAUSEWINDOW: u32 = 0x8042_A33C; // Pausewindow_c::m_instance
@@ -142,6 +162,32 @@ const MAP_GROUPS: u32 = 19;
 const MAP_SETTINGS: u32 = 4;
 const SE_CURSOR: u32 = 0x78;
 const SE_DECIDE: u32 = 0x79;
+const SE_BACK: u32 = 0x7A;
+
+// dFileSelect_c: +0x74 the layout, +0x20C its state manager, +0x24C its
+// three file cards (a card's +0xDD8: 1 to light it up, 4 to put it out),
+// +0x2A4 the cursor, +0x2A8 where it was, +0x2CC the file it was last on.
+const FILE_LAYOUT: u32 = 0x74;
+const FILE_STATES: u32 = 0x20C;
+const FILE_CARDS: u32 = 0x24C;
+const FILE_CURSOR: u32 = 0x2A4;
+const FILE_PREV: u32 = 0x2A8;
+const FILE_LAST: u32 = 0x2CC;
+const CARD_COMMAND: u32 = 0xDD8;
+const FILE_SETTINGS: u32 = 5;
+const FILE_STATE_CHANGE: u32 = 0x8099_2010; // ButtonSelectAnimeEndWait
+const FILE_STATE_RETURN_TITLE: u32 = 0x8099_20D0;
+/// Its create's group names (45 of them; entries 4, 6, 8 and 10 are the OK
+/// button's on, idle, hit and off).
+const FILE_GROUP_NAMES: u32 = 0x8094_3B54;
+const FILE_GROUPS: u32 = 45;
+/// Settings' on, hit and off, after the game's groups (idle is 46).
+const FILE_ON: u32 = 45;
+const FILE_HIT: u32 = 47;
+const FILE_OFF: u32 = 48;
+/// The multi-player buttons' on animations (Free-for-All, Coin Battle).
+const FILE_MULTI_ON: u32 = 0x22;
+const IS_ANIME: u32 = 0x800C_9610; // LytBase_c::isAnime(int)
 
 /// Where nested calls return to; never executed (the call stops there).
 const NESTED_RETURN: u32 = 0x8000_1800;
@@ -155,9 +201,9 @@ fn guest_ram(a: u32) -> bool {
 /// The Settings buttons' state on the host.
 #[derive(Default)]
 pub struct MenuSettings {
-    /// The pause window and the world map's menu were given their button
-    /// ([`crate::menu_layout::patch`]).
-    pub buttons: (bool, bool),
+    /// The pause window, the world map's menu and the save-select screen
+    /// were given their button ([`crate::menu_layout::add_buttons`]).
+    pub buttons: (bool, bool, bool),
     /// The pause window's button was picked: the Settings window opens once
     /// the window has closed.
     open_requested: bool,
@@ -173,6 +219,12 @@ pub struct MenuSettings {
     map_settings: u8,
     /// The map menu is opening again after the Settings window: on Settings.
     map_back: bool,
+    /// The save-select screen's Settings after 2 or A: 0 not picked, 1 its
+    /// hit animation playing, 2 the Settings window is up.
+    file_settings: u8,
+    file_open_requested: bool,
+    /// The save-select screen and its Settings pane, once found.
+    file_pane: (u32, u32),
     /// A hooked function the next call runs as the game has it.
     bypass: Option<u32>,
     /// Main.dol's copies of the groups' names (0: not found yet).
@@ -183,7 +235,7 @@ impl MenuSettings {
     /// A Settings button was picked since the last call: true once its
     /// menu is gone, for the Settings window to open.
     pub fn take_open(&mut self) -> bool {
-        std::mem::take(&mut self.open_requested) | std::mem::take(&mut self.map_open_requested)
+        std::mem::take(&mut self.open_requested) | std::mem::take(&mut self.map_open_requested) | std::mem::take(&mut self.file_open_requested)
     }
 
     /// The pause window's Settings was picked, waiting for it to close.
@@ -194,7 +246,10 @@ impl MenuSettings {
     /// The Settings window opened from a game menu has closed: that menu
     /// opens again, on Settings.
     pub fn reopen(&mut self) {
-        if self.map_settings == 2 {
+        if self.file_settings == 2 {
+            // The save-select screen never left: its cursor is on Settings.
+            self.file_settings = 0;
+        } else if self.map_settings == 2 {
             self.map_reopen = true;
         } else {
             self.reopen = true;
@@ -276,7 +331,7 @@ impl System {
             self.menu.bypass = None;
             return false;
         }
-        if let Some(&(_, word)) = MAP_WORDS.iter().find(|w| w.0 == pc) {
+        if let Some(&(_, word)) = MODULE_WORDS.iter().find(|w| w.0 == pc) {
             if self.r32(pc) != word {
                 return false;
             }
@@ -296,6 +351,9 @@ impl System {
             MAP_INPUT => self.map_input(),
             MAP_HIT => self.map_hit(),
             MAP_HIT_WAIT => self.map_hit_wait(),
+            FILE_SELECT_WAIT => self.file_select_wait(),
+            FILE_CHANGE => self.file_change(),
+            FILE_CHANGE_END => self.file_change_end(),
             _ => false,
         };
         if ran {
@@ -405,16 +463,24 @@ impl System {
             // Copies of Quick Save's on, idle, hit and off.
             let a = [4, 8, 12, 16].map(|g| self.r32(MAP_GROUP_ANIMS + g * 4));
             (map_group, a)
+        } else if count == FILE_GROUPS && names == FILE_GROUP_NAMES {
+            // Copies of the OK button's on, idle, hit and off.
+            let a = [4, 6, 8, 10].map(|g| self.r32(anims + g * 4));
+            (pause_group, a)
         } else {
             return false;
         };
-        let pane = if count == WINDOW_GROUPS { "P_SBBase_03" } else { "P_SBBase_06" };
+        let pane = match count {
+            WINDOW_GROUPS => "P_SBBase_03",
+            MAP_GROUPS => "P_SBBase_06",
+            _ => crate::menu_layout::FILE_PANE,
+        };
         let root = self.root_pane(layout);
         if group == 0 || self.find_pane(root, pane, 0) == 0 {
             return false;
         }
         let sp = self.cpu.gpr[1];
-        let frame = (sp - 0x100) & !0xF;
+        let frame = (sp - 0x20 - (count + 4) * 8) & !0xF;
         let (new_names, new_anims) = (frame + 0x10, frame + 0x10 + (count + 4) * 4);
         self.w32(frame, sp); // a back chain, as a real frame has
         for i in 0..count {
@@ -561,6 +627,127 @@ impl System {
         self.w8(window + BUTTON_HIT, 1); // the hit animation, then the window closes
         self.sound(SE_DECIDE);
         self.menu.open_requested = true;
+        true
+    }
+
+    // ------------------------------------------------------------ the save-select screen
+
+    /// The save-select screen's Settings pane, 0 if its layout has none.
+    fn file_settings_pane(&mut self, this: u32) -> u32 {
+        let (screen, pane) = self.menu.file_pane;
+        if screen == this && pane != 0 && self.pane_name(pane) == crate::menu_layout::FILE_PANE {
+            return pane;
+        }
+        let root = self.root_pane(this + FILE_LAYOUT);
+        let pane = self.find_pane(root, crate::menu_layout::FILE_PANE, 0);
+        self.menu.file_pane = (this, pane);
+        pane
+    }
+
+    fn file_change_state(&mut self, this: u32, state: u32) {
+        let states = this + FILE_STATES;
+        let vtable = self.r32(states);
+        let change = self.r32(vtable + 0x18);
+        self.call(change, &[states, state]);
+    }
+
+    /// SelectWait: up from a file goes to Settings; on Settings, down goes
+    /// back to the file, 1 leaves the screen as it does anywhere on it, and
+    /// 2 or A picks Settings.
+    fn file_select_wait(&mut self) -> bool {
+        let this = self.cpu.gpr[3];
+        let cursor = self.r32(this + FILE_CURSOR);
+        if cursor != FILE_SETTINGS && cursor >= 3 {
+            return false;
+        }
+        if self.file_settings_pane(this) == 0 {
+            return false;
+        }
+        let player = self.r32(MAP_PLAYER);
+        let trigger = self.trigger(player);
+        if cursor < 3 {
+            // 0x2: up, the remote held sideways.
+            if trigger & 0x2 == 0 {
+                return false;
+            }
+            self.w32(this + FILE_PREV, cursor);
+            self.w32(this + FILE_CURSOR, FILE_SETTINGS);
+            self.file_change_state(this, FILE_STATE_CHANGE);
+            return true;
+        }
+        let layout = this + FILE_LAYOUT;
+        match self.menu.file_settings {
+            1 => {
+                // Once the hit animation has played, the Settings window.
+                if self.call(IS_ANIME, &[layout, 0xFFFF_FFFF]) == 0 {
+                    self.menu.file_settings = 2;
+                    self.menu.file_open_requested = true;
+                }
+                return true;
+            }
+            2 => return true,
+            _ => {}
+        }
+        if trigger & 0x1 != 0 {
+            let file = self.r32(this + FILE_LAST).min(2);
+            self.w32(this + FILE_PREV, FILE_SETTINGS);
+            self.w32(this + FILE_CURSOR, file);
+            self.file_change_state(this, FILE_STATE_CHANGE);
+        } else if self.call(MAP_CLOSE_KEY, &[0]) != 0 {
+            self.sound(SE_BACK);
+            self.file_change_state(this, FILE_STATE_RETURN_TITLE);
+        } else {
+            let keys = self.r32(MAP_KEYS);
+            let vtable = self.r32(keys);
+            let pressed = self.r32(vtable + 0x20);
+            if self.call(pressed, &[keys, 0x900]) != 0 {
+                self.sound(SE_DECIDE);
+                self.call(ANIME_START, &[layout, FILE_HIT, 0]);
+                self.menu.file_settings = 1;
+            }
+        }
+        true
+    }
+
+    /// ButtonSelectAnimeEndWait's start, to or from Settings: where the
+    /// cursor was goes out (with the cursor sound), where it goes lights up.
+    fn file_change(&mut self) -> bool {
+        let this = self.cpu.gpr[3];
+        let (prev, next) = (self.r32(this + FILE_PREV), self.r32(this + FILE_CURSOR));
+        if prev != FILE_SETTINGS && next != FILE_SETTINGS {
+            return false;
+        }
+        let layout = this + FILE_LAYOUT;
+        self.call(ALL_ANIME_END, &[layout]);
+        if prev == FILE_SETTINGS {
+            self.call(ANIME_START, &[layout, FILE_OFF, 0]);
+            self.sound(SE_CURSOR);
+        } else if prev < 3 {
+            let card = self.r32(this + FILE_CARDS + prev * 4);
+            self.w32(card + CARD_COMMAND, 4);
+            self.sound(SE_CURSOR);
+        }
+        if next == FILE_SETTINGS {
+            self.call(ANIME_START, &[layout, FILE_ON, 0]);
+        } else if next < 3 {
+            let card = self.r32(this + FILE_CARDS + next * 4);
+            self.w32(card + CARD_COMMAND, 1);
+        } else {
+            self.call(ANIME_START, &[layout, FILE_MULTI_ON + (next - 3).min(1), 0]);
+        }
+        true
+    }
+
+    /// ButtonSelectAnimeEndWait's end: the corner cursor onto Settings.
+    fn file_change_end(&mut self) -> bool {
+        let this = self.cpu.gpr[3];
+        if self.r32(this + FILE_CURSOR) != FILE_SETTINGS {
+            return false;
+        }
+        let pane = self.file_settings_pane(this);
+        if pane != 0 {
+            self.call(SELECT_CURSOR_SETUP, &[pane, 1, 0]); // the screen's cursor slot
+        }
         true
     }
 

@@ -67,8 +67,8 @@ const EDOM: u32 = 0x21;
 /// Every address [`System::before`] acts on (`OSLink` returns aside).
 /// Recompiled code never runs through one of these (`ppc-recomp` bakes this
 /// list in, and [`guest_cpu::recomp::Rt::new`] checks it).
-pub const SPECIAL: [u32; 33] = {
-    let mut s = [0u32; 33];
+pub const SPECIAL: [u32; 36] = {
+    let mut s = [0u32; 36];
     let mut i = 0;
     while i < RETURN_AT_ONCE.len() {
         s[i] = RETURN_AT_ONCE[i];
@@ -389,8 +389,8 @@ impl System {
         Self::boot_with(game, nand, None)
     }
 
-    /// [`System::boot`], with the pause window and the world map's menu
-    /// given their Settings button reading `settings_label`
+    /// [`System::boot`], with the pause window, the world map's menu and
+    /// the save-select screen given their Settings button reading `settings_label`
     /// ([`menu_layout`]) if it is `Some`; [`System::menu`] says which got it.
     pub fn boot_with(game: &Path, nand: PathBuf, settings_label: Option<&str>) -> Result<Self, String> {
         let read = |p: &str| fs::read(game.join(p)).map_err(|e| format!("{p}: {e}"));
@@ -400,7 +400,7 @@ impl System {
         let mut ios = Ios::new(game, nand, TITLE_ID)?;
         let mut menu = menu_settings::MenuSettings::default();
         if let Some(label) = settings_label {
-            menu.buttons = menu_layout::patch(&mut ios.disc, label);
+            menu.buttons = menu_layout::add_buttons(&mut ios.disc, label);
         }
         let fst = ios.disc.fst().to_vec();
         let hw = Rc::new(RefCell::new(Hw::new(ios)));
