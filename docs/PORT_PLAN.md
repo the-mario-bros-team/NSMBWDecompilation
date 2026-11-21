@@ -1925,10 +1925,12 @@ release `libnsmbw.so`, interpreter only, EFB 1x, V-Sync on:
   Players, all through the on-screen remote's A, 2 and 1 (logcat shows
   each button reaching Wii Remote 1);
 - the picture is upright, 16:9 between bars, the remote drawn over it;
-- the game runs at full speed: 98-100%, 7-9 ms of emulation and 4-5 ms of
-  rendering a field on the strap and title screens; 11-16 ms and 10-21 ms
-  in the title's attract demo (courses), where some 10-second readings fall
-  to 78-90%;
+- the game runs at full speed: 98-100%, 7-9 ms of emulation and about
+  2 ms of rendering a field on the strap and title screens; 11-16 ms and
+  2-4 ms in the title's attract demo (courses), at 96-100% (before the
+  swapchain fix below: 10-21 ms of rendering and 78-90% there). After an
+  hour of runs the phone throttles and emulation rises to 23-28 ms
+  (60-65%);
 - leaving the app (Home) stops the game (no fields run while away) and
   coming back carries on, drawing to the new surface; the Back gesture
   opens the menu; an error from the game or the GPU shows in a dialog with
@@ -1937,22 +1939,56 @@ release `libnsmbw.so`, interpreter only, EFB 1x, V-Sync on:
 Every 10 s the render thread logs the game's speed, the emulation and
 render times, the textures held and the GPU memory in use.
 
-**Open: the device is lost in the attract demo's snow course** (World 3's
-look), about 250 fields after it starts, each time at the same point
-(field ~7,150 of a run, where the desktop run's EFB copies go from 8 to
-28 a field). The Adreno driver logs GPU fault snapshots, then every call
-returns `VK_ERROR_DEVICE_LOST`. Ruled out by experiments on the device
-(each tried, then taken out again): GPU memory (68 of 320 MB in use),
-out-of-range buffer and image reads (robust access on: still lost),
-local array indices in the shaders (naga clamping them: still lost),
-transfer regions outside their images (cut to bounds and logged: none
-happened), Z copies (none in that scene). Skipping every EFB copy
-moves the fault to a later scene (the skipped copies' textures are then
-sampled unwritten, a fault of its own), so the copy pass is the lead. The
-next step is the Khronos validation layer: on the phone (its Android
-build), or on this PC, where the loader ignores `VK_LAYER_PATH` because
-processes run elevated (a manifest registered under
-`HKCU\SOFTWARE\Khronos\Vulkan\ExplicitLayers` would do).
+**Fixed with the validation layer** (Khronos's Android build, release
+1.4.363.1, packed into the APK by `build.ps1 -ValidationLayer <.so>` and
+switched on by a file named `validation` in the app's files; a release
+build enables the layer when `NSMBW_VALIDATION` is set; a repeated message
+is printed 20 times, then at powers of two):
+- **The swapchain was rebuilt at every present.** An upright swapchain on
+  a turned display is reported suboptimal each time; that is now ignored
+  for a swapchain the renderer chose to keep upright. Rendering fell from
+  5-21 ms to 2-4 ms a field, and the attract demo holds 96-100%.
+- **Draws used cull and depth state that a copy had invalidated.** After
+  an EFB copy (its own pipeline) a clear restarted the EFB pass without
+  forgetting the cached dynamic state, so the next draws did not set it
+  again. Desktop drivers keep the old state; the specification and Adreno
+  do not.
+- **Image views were made for images that are only copied** (XFBs, the
+  palette), which is not allowed; they get none now.
+- Still reported, not fixed: `naga`'s SPIR-V gives function-local
+  variables of buffer-layout struct types `Offset` decorations
+  (VUID-StandaloneSpirv-None-10684); drivers accept it.
+
+**Worked around, cause unknown: the device was lost in the attract
+demo's snow course**, about 250 fields in (field ~7,130 of a run; once at
+~8,270), with Adreno GPU-fault snapshots in logcat and then
+`VK_ERROR_DEVICE_LOST`. The validation layer reports nothing there. What
+32 runs on the phone established (temporary switches in the app's files,
+since removed):
+- Skipping the draws that use indirect texturing (the lit 3D models,
+  which sample the 32x32 light-texture copies) removes it. Removing the
+  indirect lookups, the indirect commands, or the copies does not, or
+  only moves it.
+- It needs the fragment shader's screen derivatives (`dpdx`, `dpdy`) to
+  be in use. Clean: `textureSampleLevel` at level 0; `textureSampleGrad`
+  with zero or constant gradients taken from a uniform (four runs, each
+  past field 11,800). Faulting: the real derivatives passed on, clamped
+  (to 8, to 0.001), zeroed unless under 64 (by `if`), or only added to
+  the coordinate of a level-0 fetch; all 27 runs with the derivatives in
+  use faulted.
+- It is not a bad value or index: it stays with the coordinates and
+  gradients made finite by their bits, the shading index clamped to the
+  buffer, every texture and sampler slot forced valid without a branch,
+  samplers limited to level 0 or to their image's levels, robust buffer
+  and image access, and `naga` clamping local array indices.
+
+So on Android the ubershader samples at the base level
+(`shaders::ubershader_source`), which leaves the derivatives unused: no
+mipmaps there (this game's textures are mostly drawn near 1:1). Desktop
+is unchanged. With it the attract demo ran 6 minutes (19,082 fields,
+through the snow course and round the loop) without a fault. To find the cause: which of the eight coordinates'
+derivatives matters, the same scene on another Adreno and on a Mali, and
+the kernel's GPU fault line (needs a bug report or root).
 
 **Not yet:** recompiled code (`ppc-recomp` writes the host's calling
 convention, `extern "sysv64"`, into `gen/`, which arm64 cannot compile; the

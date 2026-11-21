@@ -16,7 +16,8 @@
 //!   EFB peeks.
 //! - `Renderer::headless` renders without a window (tests, FIFO-log replay).
 //!
-//! Debug builds enable `VK_LAYER_KHRONOS_validation` when it is installed.
+//! Debug builds enable `VK_LAYER_KHRONOS_validation` when it is installed;
+//! so does any build with `NSMBW_VALIDATION` set in the environment.
 
 mod shaders;
 
@@ -74,12 +75,25 @@ unsafe extern "system" fn on_validation_message(
     } else {
         CStr::from_ptr((*data).p_message).to_string_lossy()
     };
-    if severity.contains(vk::DebugUtilsMessageSeverityFlagsEXT::ERROR) {
+    let error = severity.contains(vk::DebugUtilsMessageSeverityFlagsEXT::ERROR);
+    if error {
         VALIDATION_ERRORS.fetch_add(1, Ordering::Relaxed);
-        eprintln!("[vulkan error] {msg}");
     } else {
         VALIDATION_WARNINGS.fetch_add(1, Ordering::Relaxed);
-        eprintln!("[vulkan warning] {msg}");
+    }
+    // A message repeated every draw would bury the others (and overrun a
+    // phone's log): each kind is printed 20 times, then at every power of two.
+    static SEEN: std::sync::Mutex<Option<HashMap<i32, u64>>> = std::sync::Mutex::new(None);
+    let id = if data.is_null() { 0 } else { (*data).message_id_number };
+    let n = {
+        let mut seen = SEEN.lock().unwrap_or_else(|e| e.into_inner());
+        let n = seen.get_or_insert_with(HashMap::new).entry(id).or_insert(0);
+        *n += 1;
+        *n
+    };
+    if n <= 20 || n.is_power_of_two() {
+        let times = if n > 20 { format!(" ({n} times so far)") } else { String::new() };
+        eprintln!("[vulkan {}] {msg}{times}", if error { "error" } else { "warning" });
     }
     vk::FALSE
 }
@@ -253,6 +267,8 @@ pub struct Renderer {
     /// Per swapchain image: signalled when its frame is done, waited on by present.
     rendered: Vec<vk::Semaphore>,
     needs_rebuild: bool,
+    /// The swapchain is kept upright on a turned display (see `rebuild`).
+    upright: bool,
     pool: vk::CommandPool,
     frames: Vec<Frame>,
     frame: usize,
@@ -394,7 +410,7 @@ impl Renderer {
         unsafe {
             let entry = Entry::load()?;
             let layers_present = entry.enumerate_instance_layer_properties()?;
-            let validation = cfg!(debug_assertions) && layers_present.iter().any(|l| l.layer_name_as_c_str().is_ok_and(|n| n == VALIDATION_LAYER));
+            let validation = (cfg!(debug_assertions) || std::env::var_os("NSMBW_VALIDATION").is_some()) && layers_present.iter().any(|l| l.layer_name_as_c_str().is_ok_and(|n| n == VALIDATION_LAYER));
             let mut extensions: Vec<*const c_char> = match window {
                 Some((display, _)) => ash_window::enumerate_required_extensions(display)?.to_vec(),
                 None => Vec::new(),
@@ -593,6 +609,7 @@ impl Renderer {
                 swap_extent: vk::Extent2D::default(),
                 rendered: Vec::new(),
                 needs_rebuild: true,
+                upright: false,
                 pool,
                 frames,
                 frame: 0,
@@ -705,10 +722,17 @@ impl Renderer {
             let req = device.get_image_memory_requirements(image);
             let a = alloc.allocate(&AllocationCreateDesc { name: "image", requirements: req, location: MemoryLocation::GpuOnly, linear: false, allocation_scheme: AllocationScheme::GpuAllocatorManaged })?;
             device.bind_image_memory(image, a.memory(), a.offset())?;
-            let view = device.create_image_view(
-                &vk::ImageViewCreateInfo::default().image(image).view_type(vk::ImageViewType::TYPE_2D).format(format).subresource_range(range(aspect, levels)),
-                None,
-            )?;
+            // Images only ever copied or blitted (XFBs, the palette) get no
+            // view: one is not allowed without a usage it could serve.
+            let viewed = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::COLOR_ATTACHMENT | vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT;
+            let view = if usage.intersects(viewed) {
+                device.create_image_view(
+                    &vk::ImageViewCreateInfo::default().image(image).view_type(vk::ImageViewType::TYPE_2D).format(format).subresource_range(range(aspect, levels)),
+                    None,
+                )?
+            } else {
+                vk::ImageView::null()
+            };
             Ok(Image { image, view, alloc: Some(a), w, h, levels, aspect, layout: vk::ImageLayout::UNDEFINED })
         }
     }
@@ -1025,6 +1049,7 @@ impl Renderer {
             }
             self.swap_images = swapchain_fn.get_swapchain_images(self.swapchain)?;
             self.swap_extent = extent;
+            self.upright = upright;
             for s in self.rendered.drain(..) {
                 self.device.destroy_semaphore(s, None);
             }
@@ -1588,6 +1613,10 @@ impl Renderer {
                         self.begin_efb(cmd, vb, set);
                         rendering = true;
                         bound = None;
+                        // As for a draw: the copy pass's pipeline in between
+                        // left the dynamic state undefined (desktop drivers
+                        // keep it; Adreno does not).
+                        state = None;
                     }
                     let rect = [vk::ClearRect { rect: self.scaled(c.rect), base_array_layer: 0, layer_count: 1 }];
                     let mut atts = Vec::new();
@@ -1773,6 +1802,11 @@ impl Renderer {
                 let signal = [self.rendered[i as usize]];
                 match swapchain_fn.queue_present(self.queue, &vk::PresentInfoKHR::default().wait_semaphores(&signal).swapchains(&swapchains).image_indices(&indices)) {
                     Ok(false) => {}
+                    // An upright swapchain on a turned display is reported
+                    // suboptimal at every present (Android): that is the
+                    // choice made in `rebuild`, not a reason to rebuild it,
+                    // which this did once a frame.
+                    Ok(true) if self.upright => {}
                     Ok(true) | Err(vk::Result::ERROR_OUT_OF_DATE_KHR) => self.needs_rebuild = true,
                     Err(e) => return Err(e.into()),
                 }
