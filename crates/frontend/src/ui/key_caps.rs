@@ -12,15 +12,15 @@ use input::keymap::Key;
 use input::padmap::PadInput;
 
 /// The picture font's B and 1 buttons.
-const CODE_B: char = '#';
-const CODE_ONE: char = '\'';
+pub(super) const CODE_B: char = '#';
+pub(super) const CODE_ONE: char = '\'';
 /// The B button's letter's grey (labels on key caps).
-const LABEL: u32 = 0x3131_31FF;
+pub(super) const LABEL: u32 = 0x3131_31FF;
 /// A key cap's edges in texels, which keep their size when it is stretched:
 /// the border, the face's top band, its bottom curve.
-const EDGE_X: f32 = 5.0;
-const EDGE_TOP: f32 = 7.0;
-const EDGE_BOTTOM: f32 = 8.0;
+pub(super) const EDGE_X: f32 = 5.0;
+pub(super) const EDGE_TOP: f32 = 7.0;
+pub(super) const EDGE_BOTTOM: f32 = 8.0;
 
 /// One thing a cap shows.
 #[derive(Clone, Debug, PartialEq)]
@@ -50,7 +50,7 @@ fn luma(p: &[u8]) -> f32 {
 }
 
 /// The ink's bounds in a w x h RGBA cell: x, y, width, height.
-fn ink(w: usize, h: usize, rgba: &[u8]) -> Option<[usize; 4]> {
+pub(super) fn ink(w: usize, h: usize, rgba: &[u8]) -> Option<[usize; 4]> {
     let (mut x0, mut y0, mut x1, mut y1) = (usize::MAX, usize::MAX, 0, 0);
     for y in 0..h {
         for x in 0..w {
@@ -65,7 +65,7 @@ fn ink(w: usize, h: usize, rgba: &[u8]) -> Option<[usize; 4]> {
 /// The B button's letter taken out: across the face's middle rows, texels
 /// darker than the face (the letter) take the face's colour there, which is
 /// the same across a row (it shades from top to bottom).
-fn blank_key(w: usize, rgba: &mut [u8], b: [usize; 4]) {
+pub(super) fn blank_key(w: usize, rgba: &mut [u8], b: [usize; 4]) {
     let [bx, by, bw, bh] = b;
     for y in by + bh / 4..by + bh * 3 / 4 + 1 {
         let row = y * w * 4;
@@ -83,7 +83,7 @@ fn blank_key(w: usize, rgba: &mut [u8], b: [usize; 4]) {
 /// The 1 button's digit taken out: inside the ring, each run of grey
 /// (the digit; the face is white to blue) takes the colours either side of
 /// it, blended across.
-fn blank_round(w: usize, rgba: &mut [u8], b: [usize; 4]) {
+pub(super) fn blank_round(w: usize, rgba: &mut [u8], b: [usize; 4]) {
     let [bx, by, bw, bh] = b;
     let digit = |p: &[u8]| (i32::from(p[0]) - i32::from(p[2])).abs() < 14 && luma(p) < 205.0;
     for y in by + 3..by + bh - 3 {

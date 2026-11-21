@@ -171,6 +171,16 @@ struct App {
     pack_download: Option<Arc<std::sync::Mutex<crate::mods::PackDownload>>>,
     /// Installed: this program to start again once the window has closed.
     restart: Option<PathBuf>,
+    /// The game's button prompts: what they show now (keys or a
+    /// controller's buttons, after the last device used), their painted
+    /// images (sent with every texture pack), the art they are painted from
+    /// (read when first needed), and the last few paintings.
+    prompt_style: ui::prompts::Style,
+    prompt_images: Vec<(gx::replace::Key, Arc<gx::replace::Image>)>,
+    prompts: Option<Option<ui::prompts::Prompts>>,
+    prompt_cache: Vec<(Vec<ui::prompts::Content>, Vec<(gx::replace::Key, Arc<gx::replace::Image>)>)>,
+    /// `NSMBW_PROMPTS=keys` or `pad`: the prompts stay that way (tests).
+    prompt_pin: Option<ui::prompts::Style>,
     /// Where the mouse is in the window (pixels).
     pointer: Option<(f64, f64)>,
     /// The LAN tab's search for rooms, while it is up.
@@ -343,6 +353,9 @@ impl App {
             crate::lan::announce(port, crate::lan::computer_name());
         }
         self.emu = Some(emu);
+        if let Some(pin) = self.prompt_pin {
+            self.note_device(pin);
+        }
         self.renderer = Some(renderer);
         self.window = Some(window);
         let now = Instant::now();
@@ -405,6 +418,10 @@ impl App {
             }
         }
         self.apply_changes(picked);
+        // A controller pressed at the last poll: the prompts show its buttons.
+        if self.inputs.take_pad_pressed() {
+            self.note_device(ui::prompts::Style::Pad);
+        }
         let Some(emu) = &self.emu else { return Ok(()) };
         let interpolate = !self.native();
         if self.sent_interpolate != Some(interpolate) {
@@ -492,7 +509,7 @@ impl App {
                 self.settings.hd_textures = true;
                 self.settings.texture_pack = crate::mods::HD_PACK.into();
                 self.settings.save(Path::new(settings::FILE));
-                let _ = emu.to_emu.send(ToEmu::TexturePack(crate::mods::PackSpec::from_settings(&self.settings)));
+                let _ = emu.to_emu.send(ToEmu::TexturePack(self.texture_spec()));
                 self.pack_download = None;
             }
             if let Some(m) = &mut self.menus {
@@ -839,11 +856,14 @@ impl App {
                         let _ = emu.to_emu.send(ToEmu::PowerUp(p));
                     }
                 }
-                ui::Change::Keymap => self.apply_controls(),
+                ui::Change::Keymap => {
+                    self.apply_controls();
+                    self.refresh_prompts();
+                }
                 ui::Change::PackDownload => self.pack_download = Some(crate::mods::download_hd_pack()),
                 ui::Change::TexturePack => {
                     if let Some(emu) = &self.emu {
-                        let _ = emu.to_emu.send(ToEmu::TexturePack(crate::mods::PackSpec::from_settings(&self.settings)));
+                        let _ = emu.to_emu.send(ToEmu::TexturePack(self.texture_spec()));
                     }
                 }
                 ui::Change::Cheated(file) => {
@@ -893,6 +913,59 @@ impl App {
                 // From the next start, or read every frame.
                 ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics | ui::Change::Mods => {}
             }
+        }
+    }
+
+    /// The texture pack the Mods tab picked, with the button prompts' images.
+    fn texture_spec(&self) -> crate::mods::PackSpec {
+        let mut spec = crate::mods::PackSpec::from_settings(&self.settings);
+        spec.images = self.prompt_images.clone();
+        spec
+    }
+
+    /// The player used the keyboard or mouse (`Keys`) or a controller
+    /// (`Pad`): the game's prompts follow, except in scripted and net runs,
+    /// which keep the game's own.
+    fn note_device(&mut self, style: ui::prompts::Style) {
+        let scripted = !self.opts.emu.script.is_empty() || !matches!(self.opts.emu.net, crate::net::Mode::Off);
+        let style = self.prompt_pin.unwrap_or(style);
+        if scripted || style == self.prompt_style {
+            return;
+        }
+        self.prompt_style = style;
+        self.refresh_prompts();
+    }
+
+    /// The prompts painted for the style and bindings now, if they changed.
+    fn refresh_prompts(&mut self) {
+        // Still the game's own: nothing to send.
+        if self.prompt_style == ui::prompts::Style::Game && self.prompt_images.is_empty() {
+            return;
+        }
+        let contents = ui::prompts::contents(self.prompt_style, &self.settings.keymap, &self.settings.padmap);
+        let images = match self.prompt_cache.iter().position(|(c, _)| *c == contents) {
+            Some(i) if i + 1 == self.prompt_cache.len() => return,
+            Some(i) => {
+                let entry = self.prompt_cache.remove(i);
+                let images = entry.1.clone();
+                self.prompt_cache.push(entry);
+                images
+            }
+            None => {
+                let Some(prompts) = self.prompts.get_or_insert_with(ui::prompts::Prompts::load) else { return };
+                let started = Instant::now();
+                let images = prompts.paint(&contents);
+                say!("button prompts: {:?} ({} images, painted in {:.1} ms)", self.prompt_style, images.len(), started.elapsed().as_secs_f64() * 1000.0);
+                if self.prompt_cache.len() >= 4 {
+                    self.prompt_cache.remove(0);
+                }
+                self.prompt_cache.push((contents, images.clone()));
+                images
+            }
+        };
+        self.prompt_images = images;
+        if let Some(emu) = &self.emu {
+            let _ = emu.to_emu.send(ToEmu::TexturePack(self.texture_spec()));
         }
     }
 
@@ -1124,8 +1197,8 @@ impl ApplicationHandler for App {
             }
             // Let go always counts (it may have been pressed before a menu
             // opened); pressed only while no menu has the mouse.
-            if !down || !self.menus.as_ref().is_some_and(ui::Menus::is_open) {
-                self.inputs.mouse_button(n, down);
+            if (!down || !self.menus.as_ref().is_some_and(ui::Menus::is_open)) && self.inputs.mouse_button(n, down) && down {
+                self.note_device(ui::prompts::Style::Keys);
             }
         }
         if let (Some(menus), Some(window)) = (&mut self.menus, &self.window) {
@@ -1154,8 +1227,14 @@ impl ApplicationHandler for App {
                             return;
                         }
                     }
-                    if !event.repeat && !self.inputs.key(code, down) && down {
-                        self.key(code);
+                    if !event.repeat {
+                        if self.inputs.key(code, down) {
+                            if down {
+                                self.note_device(ui::prompts::Style::Keys);
+                            }
+                        } else if down {
+                            self.key(code);
+                        }
                     }
                 }
             }
@@ -1307,6 +1386,15 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         updater: None,
         pack_download: None,
         restart: None,
+        prompt_style: ui::prompts::Style::Game,
+        prompt_images: Vec::new(),
+        prompts: None,
+        prompt_cache: Vec::new(),
+        prompt_pin: match std::env::var("NSMBW_PROMPTS").as_deref() {
+            Ok("keys") => Some(ui::prompts::Style::Keys),
+            Ok("pad") => Some(ui::prompts::Style::Pad),
+            _ => None,
+        },
         pointer: None,
         finder: None,
         relaunch: None,

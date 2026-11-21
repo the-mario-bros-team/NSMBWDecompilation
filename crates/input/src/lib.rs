@@ -174,6 +174,10 @@ pub struct Inputs {
     rumbling: [bool; PLAYERS],
     /// Each controller's rumble, made the first time it rumbles.
     effects: Vec<(GamepadId, gilrs::ff::Effect)>,
+    /// What each controller had pressed at the last poll, and whether one
+    /// pressed something new since [`Inputs::take_pad_pressed`].
+    pad_was: [Vec<PadInput>; PLAYERS],
+    pad_pressed: bool,
 }
 
 impl Default for Inputs {
@@ -204,7 +208,7 @@ impl Inputs {
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new(), pad_was: Default::default(), pad_pressed: false }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -306,6 +310,12 @@ impl Inputs {
     /// a course): their state and vertical move.
     pub fn set_player(&mut self, player: Option<(u32, f32)>) {
         self.player = player.map(|(state, vertical)| smart_spin::Player { state, vertical });
+    }
+
+    /// A controller had a button pressed (or a stick or trigger pushed past
+    /// half) since the last call: the player is using it.
+    pub fn take_pad_pressed(&mut self) -> bool {
+        std::mem::take(&mut self.pad_pressed)
     }
 
     /// A controller is connected.
@@ -453,6 +463,8 @@ impl Inputs {
                 let input = &mut out[player];
                 let engine = &mut self.pad_combos[player];
                 let held: Vec<PadInput> = padmap::all().filter(|&p| pad_value(&pad, p) >= STICK_PRESS).collect();
+                self.pad_pressed |= held.iter().any(|p| !self.pad_was[player].contains(p));
+                self.pad_was[player].clone_from(&held);
                 let combos = if engine.is_empty() { 0 } else { engine.step(&held, now) };
                 // Tilt follows how far its buttons are pushed; the rest are
                 // pressed or not (and not taken by a combination).

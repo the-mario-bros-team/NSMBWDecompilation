@@ -7,6 +7,7 @@
 
 mod key_caps;
 pub mod layout;
+pub mod prompts;
 mod settings;
 pub mod text;
 
