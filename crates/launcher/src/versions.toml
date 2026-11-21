@@ -1,0 +1,159 @@
+# The games the launcher offers ("versions"). Adding one is a matter of adding
+# a [[version]] block: the launcher needs no new code. This list is built into
+# the launcher; a versions.toml next to nsmbw-launcher.exe replaces it.
+#
+# id        short name: folder name under versions\ and the key in launcher.toml
+# title     the game's name; tagline and short (button label) go with it
+# data      folder for its settings and saves, relative to the launcher
+#           (default versions\<id>); "." is the launcher's own folder
+# playable  whether the port's engine can run it today; when false, status
+#           says why and Play stays off
+# discs     the discs it accepts: game ID (sys\boot.bin bytes 0-5), revision
+#           (byte 7; left out = any), and a name for messages
+# with      files or folders the game folder must hold; without: must not hold
+# art       pictures read from the player's own game folder at run time: logo
+#           (one texture of a U8 archive), gallery (the archive's textures
+#           whose names start with prefix), background (the game's own
+#           course background: its models far to near, how many of their
+#           units the picture is tall, and the height at its middle) and
+#           banner (the game's Wii Menu banner, played as cover art; hide
+#           names panes of its layout to leave out, here the publisher's
+#           logo). Nothing of the game is stored here.
+# theme     the launcher's look while this version is selected (colours as
+#           #rrggbb): accent (two colours, the Play button), ink (text on the
+#           accent), and scene, the picture drawn behind everything:
+#   sky       top, middle, horizon
+#   glow      the sun or moon: color, x and y (0..1 of the picture), size
+#             (halo, in picture heights), disc (the body's radius; 0 = none)
+#   stars     how many (0 = none, 1 = a clear night)
+#   aurora    colours of the curtains of light (none = no aurora)
+#   clouds    color and amount (0 = none)
+#   particles color, amount, fall (true = drift down, false = rise)
+#   ridge     lines of hills or peaks, far to near: top and bottom colours,
+#             height (0..1, how far up the picture it reaches), amp (how
+#             uneven), rough (0 = rolling hills, 1 = jagged peaks), width (of
+#             its features), speed (drift)
+
+[[version]]
+id = "nsmbw"
+title = "New Super Mario Bros. Wii"
+short = "Original"
+tagline = "The original game"
+data = "."
+playable = true
+discs = [{ id = "SMNE01", revision = 1, name = "USA, revision 1" }]
+without = ["files/NewerRes"]
+
+[version.art]
+logo = { archive = "files/US/Layout/openingTitle/openingTitle.arc", name = "wiiMario_Title_logo_local_00.tpl" }
+gallery = { archive = "files/Layout/textures/MultiCorseSelectTexture.arc", prefix = "im_W" }
+background = { models = ["files/Object/bgB_0102.arc", "files/Object/bgA_0102.arc"], height = 300.0, center = 30.0 }
+banner = { file = "files/opening.bnr", hide = ["N_Left"] }
+
+[version.theme]
+accent = ["#ffd84a", "#ff9a1f"]
+ink = "#4a2400"
+
+[version.theme.scene]
+sky = ["#0a2f9e", "#1c6fe0", "#7fd6ff"]
+glow = { color = "#fff2b0", x = 0.80, y = 0.20, size = 0.55, disc = 0.050 }
+clouds = { color = "#f4fbff", amount = 1.0 }
+particles = { color = "#fff6b8", amount = 0.6, fall = false }
+
+[[version.theme.scene.ridge]]
+top = "#6fc3f5"
+bottom = "#4aa3ea"
+height = 0.50
+amp = 0.10
+rough = 0.75
+width = 0.55
+speed = 0.004
+
+[[version.theme.scene.ridge]]
+top = "#46cf8f"
+bottom = "#27a672"
+height = 0.38
+amp = 0.065
+rough = 0.0
+width = 0.50
+speed = 0.009
+
+[[version.theme.scene.ridge]]
+top = "#3cc254"
+bottom = "#178f40"
+height = 0.27
+amp = 0.060
+rough = 0.0
+width = 0.42
+speed = 0.016
+
+[[version.theme.scene.ridge]]
+top = "#22a03c"
+bottom = "#0a5a2a"
+height = 0.15
+amp = 0.050
+rough = 0.0
+width = 0.36
+speed = 0.028
+
+[[version]]
+id = "newer"
+title = "Newer Super Mario Bros. Wii"
+short = "Newer"
+tagline = "A fan-made adventure by the Newer Team"
+playable = false
+status = "The port's engine runs only the original USA disc's own code for now. Newer adds program code of its own on top of it, which the port cannot load yet."
+discs = [{ id = "SMNE03", name = "Newer Super Mario Bros. Wii, USA" }]
+with = ["files/NewerRes"]
+
+[version.art]
+logo = { archive = "files/US/Layout/openingTitle/openingTitle.arc", name = "" }
+gallery = { archive = "files/Layout/textures/MultiCorseSelectTexture.arc", prefix = "im_W" }
+banner = { file = "files/opening.bnr", hide = ["N_Left"] }
+
+[version.theme]
+accent = ["#ff7ac8", "#8a5bff"]
+ink = "#ffffff"
+
+[version.theme.scene]
+sky = ["#0d0630", "#3a1470", "#ff7a59"]
+glow = { color = "#ffd9a8", x = 0.60, y = 0.17, size = 0.30, disc = 0.034 }
+stars = 1.0
+aurora = ["#52ffc8", "#7a8cff", "#ff6ad5"]
+particles = { color = "#ffd0f0", amount = 0.5, fall = true }
+
+[[version.theme.scene.ridge]]
+top = "#9a4a9a"
+bottom = "#6a2a7c"
+height = 0.50
+amp = 0.15
+rough = 1.0
+width = 0.42
+speed = 0.004
+
+[[version.theme.scene.ridge]]
+top = "#6a2a86"
+bottom = "#3d1560"
+height = 0.38
+amp = 0.11
+rough = 0.95
+width = 0.36
+speed = 0.009
+
+[[version.theme.scene.ridge]]
+top = "#3c1263"
+bottom = "#220a44"
+height = 0.26
+amp = 0.075
+rough = 0.7
+width = 0.40
+speed = 0.016
+
+[[version.theme.scene.ridge]]
+top = "#1e0838"
+bottom = "#0e0420"
+height = 0.14
+amp = 0.045
+rough = 0.2
+width = 0.45
+speed = 0.028

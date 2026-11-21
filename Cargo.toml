@@ -10,7 +10,7 @@ path = "src/lib.rs"
 # plain `cargo check` (and scripts/check.ps1) on the reconstruction only; build
 # the port with `cargo run -p frontend`.
 [workspace]
-members = [".", "crates/frontend", "crates/guest-mem", "crates/guest-cpu", "crates/hle-ios", "crates/hw", "crates/hle-os", "crates/gx", "crates/vk-render", "crates/input", "crates/ppc-recomp", "crates/game-recomp", "crates/game-recomp/shards/*"]
+members = [".", "crates/frontend", "crates/guest-mem", "crates/guest-cpu", "crates/hle-ios", "crates/hw", "crates/hle-os", "crates/gx", "crates/vk-render", "crates/input", "crates/ppc-recomp", "crates/game-recomp", "crates/game-recomp/shards/*", "crates/port-update", "crates/launcher"]
 default-members = ["."]
 
 [profile.release]

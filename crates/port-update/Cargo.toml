@@ -1,0 +1,13 @@
+[package]
+name = "port-update"
+# The port's release version: the launcher and the game compare this with the
+# newest release's tag. Raise it when a release is cut.
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde_json = "1"
+toml = "0.8"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Networking_WinHttp"] }
