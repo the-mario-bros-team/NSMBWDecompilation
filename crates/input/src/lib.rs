@@ -10,18 +10,22 @@
 //! Keyboard defaults follow WitherBlitz's NSMB-Wii-Recompilation: arrows
 //! D-pad, X or Space 2 (jump), Z or Left Shift 1 (run), C or Ctrl shake,
 //! Q/E tilt, B the A button, Enter or Esc +, Minus or Tab -, plus Home for
-//! the HOME button. All but Home can be rebound ([`keymap`]).
+//! the HOME button. All but Home can be rebound ([`keymap`]), and so can a
+//! controller's buttons but its guide button, HOME ([`padmap`]).
 
+pub mod capture;
 pub mod keymap;
+pub mod padmap;
 
 use std::collections::HashSet;
 
-use gilrs::{Axis, Button, GamepadId, Gilrs};
+use gilrs::{Button, GamepadId, Gilrs};
 use hle_ios::wiimote::{button, Input};
+use padmap::PadInput;
 use winit::keyboard::KeyCode;
 
 pub const PLAYERS: usize = 4;
-/// Stick deflection that counts as a D-pad press.
+/// A stick or trigger pushed this far counts as pressed.
 const STICK_PRESS: f32 = 0.5;
 /// Analog tilt below this is ignored (stick drift).
 const TILT_DEAD_ZONE: f32 = 0.15;
@@ -72,43 +76,27 @@ fn keymap_action(action: usize) -> Action {
     }
 }
 
-/// Xbox layout: A jumps (2), B and X run (1), Y and the bumpers shake,
-/// Start is +, Back is -, the guide button is HOME; the triggers and the
-/// right stick tilt.
-fn pad_action(b: Button) -> Option<Action> {
-    use Action::*;
-    Some(match b {
-        Button::DPadUp => Buttons(sideways(Dir::Up)),
-        Button::DPadDown => Buttons(sideways(Dir::Down)),
-        Button::DPadLeft => Buttons(sideways(Dir::Left)),
-        Button::DPadRight => Buttons(sideways(Dir::Right)),
-        Button::South => Buttons(button::TWO),
-        Button::East | Button::West => Buttons(button::ONE),
-        Button::North | Button::LeftTrigger | Button::RightTrigger => Shake,
-        Button::Start => Buttons(button::PLUS),
-        Button::Select => Buttons(button::MINUS),
-        Button::Mode => Buttons(button::HOME),
-        _ => return None,
-    })
+/// How far `p` is pushed on `pad`, 0 to 1.
+fn pad_value(pad: &gilrs::Gamepad, p: PadInput) -> f32 {
+    match p {
+        PadInput::Button(b) => {
+            let v = pad.button_data(b).map_or(0.0, |d| d.value());
+            if pad.is_pressed(b) {
+                v.max(STICK_PRESS)
+            } else {
+                v
+            }
+        }
+        PadInput::Stick(axis, positive) => {
+            let v = pad.value(axis);
+            if positive {
+                v.max(0.0)
+            } else {
+                (-v).max(0.0)
+            }
+        }
+    }
 }
-
-const PAD_BUTTONS: [Button; 15] = [
-    Button::DPadUp,
-    Button::DPadDown,
-    Button::DPadLeft,
-    Button::DPadRight,
-    Button::South,
-    Button::East,
-    Button::West,
-    Button::North,
-    Button::LeftTrigger,
-    Button::RightTrigger,
-    Button::Start,
-    Button::Select,
-    Button::Mode,
-    Button::LeftThumb,
-    Button::RightThumb,
-];
 
 fn apply(input: &mut Input, a: Action) {
     match a {
@@ -130,6 +118,7 @@ const RUMBLE_MAX_MS: u32 = 2000;
 pub struct Inputs {
     keys: HashSet<KeyCode>,
     keymap: keymap::Keymap,
+    padmap: padmap::Padmap,
     gilrs: Option<Gilrs>,
     /// Gamepads in the order they connected; index = player.
     pads: Vec<GamepadId>,
@@ -171,7 +160,7 @@ impl Inputs {
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+        Self { keys: HashSet::new(), keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -240,6 +229,31 @@ impl Inputs {
         self.keymap = keymap;
     }
 
+    /// The controllers' buttons from now on.
+    pub fn set_padmap(&mut self, padmap: padmap::Padmap) {
+        self.padmap = padmap;
+    }
+
+    /// A controller is connected.
+    pub fn pad_connected(&self) -> bool {
+        self.gilrs.as_ref().is_some_and(|g| self.pads.iter().any(|&id| g.connected_gamepad(id).is_some()))
+    }
+
+    /// What is pressed on the connected controllers now (for picking a
+    /// button in the Keybinds tab).
+    pub fn pad_held(&self) -> Vec<PadInput> {
+        let Some(g) = &self.gilrs else { return Vec::new() };
+        let mut held = Vec::new();
+        for pad in self.pads.iter().filter_map(|&id| g.connected_gamepad(id)) {
+            for p in padmap::all() {
+                if pad_value(&pad, p) >= STICK_PRESS && !held.contains(&p) {
+                    held.push(p);
+                }
+            }
+        }
+        held
+    }
+
     /// What a key does: its keymap action, or Home's HOME.
     fn key_action(&self, k: KeyCode) -> Option<Action> {
         match self.keymap.action(k) {
@@ -298,23 +312,24 @@ impl Inputs {
                     continue;
                 }
                 let input = &mut out[player];
-                for b in PAD_BUTTONS {
-                    if pad.is_pressed(b) {
-                        if let Some(a) = pad_action(b) {
-                            apply(input, a);
-                        }
+                // Tilt follows how far its buttons are pushed; the rest are
+                // pressed or not.
+                let mut tilt = [0.0f32; 2];
+                for (i, bound) in self.padmap.buttons.iter().enumerate() {
+                    let v = bound.iter().map(|&p| pad_value(&pad, p)).fold(0.0, f32::max);
+                    match i {
+                        keymap::TILT_LEFT => tilt[0] = v,
+                        keymap::TILT_RIGHT => tilt[1] = v,
+                        _ if v >= STICK_PRESS => apply(input, keymap_action(i)),
+                        _ => {}
                     }
                 }
-                let (x, y) = (pad.value(Axis::LeftStickX), pad.value(Axis::LeftStickY));
-                for (on, d) in [(y > STICK_PRESS, Dir::Up), (y < -STICK_PRESS, Dir::Down), (x < -STICK_PRESS, Dir::Left), (x > STICK_PRESS, Dir::Right)] {
-                    if on {
-                        input.buttons |= sideways(d);
-                    }
-                }
-                let trigger = |b: Button| pad.button_data(b).map_or(0.0, |d| d.value());
-                let analog = pad.value(Axis::RightStickX) + trigger(Button::RightTrigger2) - trigger(Button::LeftTrigger2);
+                let analog = tilt[1] - tilt[0];
                 if analog.abs() > TILT_DEAD_ZONE {
                     input.tilt += analog;
+                }
+                if pad.is_pressed(Button::Mode) {
+                    input.buttons |= button::HOME;
                 }
             }
         }

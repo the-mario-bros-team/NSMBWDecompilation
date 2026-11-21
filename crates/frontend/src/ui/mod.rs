@@ -137,6 +137,22 @@ impl Menus {
         self.window.capture_key(settings, code)
     }
 
+    /// A controller is connected or not (the Keybinds tab opens on its
+    /// buttons if one is).
+    pub fn set_pad_connected(&mut self, connected: bool) {
+        self.window.pad_connected = connected;
+    }
+
+    /// The Keybinds tab waits for a controller button: hand it what is held
+    /// ([`Menus::capture_pad`]) every frame.
+    pub fn capturing_pad(&self) -> bool {
+        self.window.is_open() && self.window.capturing_pad()
+    }
+
+    pub fn capture_pad(&mut self, settings: &mut Settings, held: &[input::padmap::PadInput]) -> Vec<Change> {
+        self.window.capture_pad(settings, held)
+    }
+
     /// Opens the Settings window (a game menu's Settings button).
     pub fn open(&mut self) {
         if !self.window.is_open() {

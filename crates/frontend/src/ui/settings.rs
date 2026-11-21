@@ -130,7 +130,7 @@ impl Tab {
             Tab::Display => "How the game is shown on your screen.",
             Tab::Graphics => "How the game is drawn, and how smoothly it moves.",
             Tab::Audio => "How loud the game's music and sounds are.",
-            Tab::Keybinds => "Which keys play the Wii Remote's buttons.",
+            Tab::Keybinds => "Which keys and controller buttons play the Wii Remote's buttons.",
             Tab::Gameplay => "Optional helpers; net games always keep the game's own rules.",
             Tab::Language => "The language of the game's text and these menus.",
         }
@@ -187,9 +187,11 @@ const KEY_H: f32 = 21.0;
 /// cursors follow the controls' (13 on).
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum KeySwitch {
+    /// Which bindings the controls show: the keyboard's or the controllers'.
+    Device,
     Rumble,
 }
-const KEY_SWITCHES: [KeySwitch; 1] = [KeySwitch::Rumble];
+const KEY_SWITCHES: [KeySwitch; 2] = [KeySwitch::Device, KeySwitch::Rumble];
 const SWITCH_CURSOR: i32 = 13;
 const SWITCH_TOP: f32 = -76.0;
 const SWITCH_STEP: f32 = 28.0;
@@ -200,24 +202,30 @@ const SWITCH_H: f32 = 24.0;
 impl KeySwitch {
     fn name(self) -> &'static str {
         match self {
+            KeySwitch::Device => "Bindings",
             KeySwitch::Rumble => "Rumble",
         }
     }
 
-    fn on(self, s: &Settings) -> bool {
-        match self {
+    /// On, and its value's word.
+    fn state(self, s: &Settings, pad_view: bool) -> (bool, &'static str) {
+        let on = match self {
+            KeySwitch::Device => return (false, if pad_view { "Controller" } else { "Keyboard" }),
             KeySwitch::Rumble => s.rumble,
-        }
+        };
+        (on, if on { "On" } else { "Off" })
     }
 
     fn flip(self, s: &mut Settings) {
         match self {
+            KeySwitch::Device => {}
             KeySwitch::Rumble => s.rumble = !s.rumble,
         }
     }
 
     fn help(self) -> &'static str {
         match self {
+            KeySwitch::Device => "Shows the keyboard's keys or the controllers' buttons above.",
             KeySwitch::Rumble => "Controllers rumble when the game rumbles the Wii Remote.",
         }
     }
@@ -346,6 +354,12 @@ pub struct SettingsWindow {
     power_up_at: Option<f64>,
     /// The Keybinds row waiting for its new key, and since when.
     capturing: Option<(usize, f64)>,
+    /// The Keybinds tab shows the controllers' buttons, not the keys.
+    pad_view: bool,
+    /// A controller is connected (the Keybinds tab opens on its buttons).
+    pub pad_connected: bool,
+    /// Picking a controller button: what was held when it began, and since.
+    pad_capture: Option<input::capture::Capture<input::padmap::PadInput>>,
     /// The save file being played (0-2), or -1 before the save select.
     pub active_file: i8,
     /// A question is up: what it asks, and the tab's row to go back to.
@@ -389,6 +403,25 @@ impl SettingsWindow {
         self.capturing.is_some()
     }
 
+    /// The Keybinds tab waits for a controller button.
+    pub fn capturing_pad(&self) -> bool {
+        self.capturing.is_some() && self.pad_view
+    }
+
+    /// What is held on the controllers while a Keybinds row waits for a
+    /// button: once one was pressed and let go, it is that action's button.
+    pub fn capture_pad(&mut self, s: &mut Settings, held: &[input::padmap::PadInput]) -> Vec<Change> {
+        let Some((action, _)) = self.capturing.filter(|_| self.pad_view) else { return Vec::new() };
+        let capture = self.pad_capture.get_or_insert_with(|| input::capture::Capture::new(held, 1));
+        let Some(picked) = capture.step(held) else { return Vec::new() };
+        if let Some(&p) = picked.first() {
+            s.padmap.bind(action, p);
+        }
+        self.capturing = None;
+        self.pad_capture = None;
+        vec![Change::Keymap]
+    }
+
     /// A key pressed while a Keybinds row waits for one: it becomes that
     /// action's key. Esc cancels; Delete or Backspace leaves it no key; F10
     /// and F11 keep their own jobs; keys without a name are not taken.
@@ -397,12 +430,15 @@ impl SettingsWindow {
         let Some((action, _)) = self.capturing else { return Vec::new() };
         match code {
             KeyCode::Escape => {}
+            KeyCode::Delete | KeyCode::Backspace if self.pad_view => s.padmap.buttons[action].clear(),
             KeyCode::Delete | KeyCode::Backspace => s.keymap.keys[action].clear(),
+            _ if self.pad_view => return Vec::new(),
             KeyCode::F10 | KeyCode::F11 => return Vec::new(),
             k if input::keymap::key_name(k).is_some() => s.keymap.bind(action, k),
             _ => return Vec::new(),
         }
         self.capturing = None;
+        self.pad_capture = None;
         if code == KeyCode::Escape {
             Vec::new()
         } else {
@@ -417,6 +453,7 @@ impl SettingsWindow {
         self.cursor = 0;
         self.dropdown = None;
         self.ask = None;
+        self.pad_view = self.pad_connected;
     }
 
     pub fn close(&mut self, now: f64) {
@@ -944,6 +981,7 @@ impl SettingsWindow {
     fn draw_keybinds(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
         if self.capturing.is_some_and(|(_, at)| self.now - at > CAPTURE_TIMEOUT) {
             self.capturing = None;
+            self.pad_capture = None;
         }
         for (i, (_, name)) in input::keymap::ACTIONS.iter().enumerate() {
             let (column, row) = (i / 6, i % 6);
@@ -951,8 +989,9 @@ impl SettingsWindow {
             let y = KEY_TOP - KEY_STEP * row as f32;
             let color = if self.cursor == 1 + i as i32 { u32::MAX } else { LABEL_DIM };
             self.text(a, c, name, x0 - 168.0, y, 21.0, 0, color);
-            let keys = match s.keymap.label(i) {
-                _ if self.capturing.is_some_and(|(r, _)| r == i) => "Press a key...".to_string(),
+            let bound = if self.pad_view { s.padmap.label(i) } else { s.keymap.label(i) };
+            let keys = match bound {
+                _ if self.capturing.is_some_and(|(r, _)| r == i) => if self.pad_view { "Press a button..." } else { "Press a key..." }.to_string(),
                 l if l.is_empty() => "None".to_string(),
                 l => l,
             };
@@ -963,14 +1002,15 @@ impl SettingsWindow {
         }
         for (i, sw) in KEY_SWITCHES.into_iter().enumerate() {
             let (x, y) = Self::switch_at(i);
-            let on = sw.on(s);
+            let (on, value) = sw.state(s, self.pad_view);
             let key = SWITCH_CURSOR + i as i32;
-            let label = format!("{}: {}", sw.name(), if on { "On" } else { "Off" });
+            let label = format!("{}: {value}", sw.name());
             self.pause_button(ctx, a, c, key, &label, x, y, SWITCH_W, SWITCH_H, self.cursor == key, true, 21.0, on, 0.0, true);
             self.add_hit(x, y, SWITCH_W + 6.0, SWITCH_STEP, key, EV_CONFIRM);
         }
         let switch = usize::try_from(self.cursor - SWITCH_CURSOR).ok().and_then(|i| KEY_SWITCHES.get(i));
         let note = match (self.capturing, self.cursor) {
+            (Some(_), _) if self.pad_view => "Press the new button. Esc cancels; Delete or Backspace leaves it no button.",
             (Some(_), _) => "Press the new key. Esc cancels; Delete or Backspace leaves it no key.",
             (None, 0) => Tab::Keybinds.help(),
             (None, n) if (1..=12).contains(&n) => KEY_HELP[n as usize - 1],
@@ -1023,6 +1063,8 @@ impl SettingsWindow {
                 self.cursor = c - 3;
             } else if down && i + 3 < switches {
                 self.cursor = c + 3;
+            } else if confirm && KEY_SWITCHES[i as usize] == KeySwitch::Device {
+                self.pad_view = !self.pad_view;
             } else if confirm {
                 KEY_SWITCHES[i as usize].flip(s);
                 changes.push(Change::Keymap);

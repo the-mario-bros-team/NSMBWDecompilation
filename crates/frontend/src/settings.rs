@@ -6,6 +6,7 @@
 use std::path::Path;
 
 use input::keymap::{Keymap, ACTIONS};
+use input::padmap::Padmap;
 
 /// Frame-rate choices: 60 is the game's own rate; 30 shows every other
 /// field (as the battery saver), the game still running at 60; the others
@@ -53,13 +54,15 @@ pub struct Settings {
     pub keymap: Keymap,
     // The controls (the Keybinds tab), after WitherBlitz's
     // NSMB-Wii-Recompilation; in `[keyboard]` and `[controller]`.
+    /// The controllers' buttons for the remote's (`[controller]`).
+    pub padmap: Padmap,
     /// `[controller] rumble`: controllers rumble when the game rumbles the remote.
     pub rumble: bool,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), rumble: true }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true }
     }
 }
 
@@ -135,6 +138,11 @@ impl Settings {
         if let Some(controller) = t.get("controller").and_then(toml::Value::as_table) {
             let flag = |k: &str, d: bool| controller.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
             s.rumble = flag("rumble", s.rumble);
+            for (i, (key, _)) in ACTIONS.iter().enumerate() {
+                if let Some(label) = controller.get(*key).and_then(toml::Value::as_str) {
+                    s.padmap.set_label(i, label);
+                }
+            }
         }
         s
     }
@@ -187,8 +195,11 @@ impl Settings {
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.keymap.label(i))));
         }
-        text.push_str("\n# Controllers: rumble when the game rumbles the Wii Remote.\n[controller]\n");
+        text.push_str("\n# Controller buttons for the Wii Remote's, by their Xbox names (A, B, X, Y, LB, RB, LT, RT,\n# View, Menu, LS, RS, D-Pad Up, Left Stick Up, Right Stick Left...), separated by commas.\n# rumble: controllers rumble when the game rumbles the Wii Remote.\n[controller]\n");
         text.push_str(&format!("rumble = {}\n", self.rumble));
+        for (i, (key, _)) in ACTIONS.iter().enumerate() {
+            text.push_str(&format!("{key} = {}\n", toml::Value::String(self.padmap.label(i))));
+        }
         if let Err(e) = std::fs::write(path, text) {
             eprintln!("{}: {e}", path.display());
         }
@@ -216,6 +227,11 @@ mod tests {
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.keys[input::keymap::SHAKE].clear();
             k
+        }, padmap: {
+            let mut p = Padmap::default();
+            p.bind(input::keymap::A, input::padmap::by_name("RS").unwrap());
+            p.buttons[input::keymap::TILT_LEFT].clear();
+            p
         }, rumble: false };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);

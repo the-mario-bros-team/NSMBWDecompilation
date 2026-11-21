@@ -303,6 +303,15 @@ impl App {
     }
 
     fn frame(&mut self, event_loop: &ActiveEventLoop) -> Result<(), String> {
+        // The Keybinds tab: a controller connected, and a button being picked.
+        let mut picked = Vec::new();
+        if let Some(m) = &mut self.menus {
+            m.set_pad_connected(self.inputs.pad_connected());
+            if m.capturing_pad() {
+                picked = m.capture_pad(&mut self.settings, &self.inputs.pad_held());
+            }
+        }
+        self.apply_changes(picked);
         let Some(emu) = &self.emu else { return Ok(()) };
         let interpolate = !self.native();
         if self.sent_interpolate != Some(interpolate) {
@@ -721,6 +730,7 @@ impl App {
     /// The Keybinds tab's settings to the controls.
     fn apply_controls(&mut self) {
         self.inputs.set_keymap(self.settings.keymap.clone());
+        self.inputs.set_padmap(self.settings.padmap.clone());
         self.inputs.set_rumble_enabled(self.settings.rumble);
     }
 
