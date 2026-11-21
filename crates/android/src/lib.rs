@@ -157,7 +157,7 @@ impl Render {
         let opts = vk_render::Options { scale, vsync: self.cfg.vsync, pipeline_cache: Some(PathBuf::from("cache/pipelines.bin")), efb_copies_to_ram: false };
         let mut r = Renderer::new(display, handle, opts).map_err(|e| e.to_string())?;
         r.aspect = if self.cfg.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
-        println!("vulkan device: {}; EFB {scale}x; surface {}x{}; V-Sync {}", r.device_name, w.width(), w.height(), self.cfg.vsync);
+        println!("vulkan device: {}; EFB {scale}x; surface {}x{}; V-Sync {}{}", r.device_name, w.width(), w.height(), self.cfg.vsync, if r.validation { "; validation layer on" } else { "" });
         self.renderer = Some(r);
         self.window = Some(w);
         // The game reads its aspect ratio and language from SYSCONF once, at boot.
@@ -304,6 +304,13 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_start<'l>(mut env: JNIEn
             return Ok(());
         }
         std::env::set_current_dir(&files).map_err(|e| format!("{files}: {e}"))?;
+        // For finding renderer bugs: a file named `validation` in the app's
+        // files turns the Vulkan validation layer on, when the APK carries
+        // it (`android/build.ps1 -ValidationLayer`). Set before any other
+        // thread of ours runs.
+        if Path::new("validation").exists() {
+            std::env::set_var("NSMBW_VALIDATION", "1");
+        }
         let (tx, rx) = mpsc::channel();
         let mut inputs = [Input::default(); REMOTES];
         inputs[0].connected = true;

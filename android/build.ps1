@@ -1,6 +1,11 @@
 # Builds the Android app: libnsmbw.so (crates/android) for arm64, then the
 # debug APK (android/app/build/outputs/apk/debug/app-debug.apk).
 #   powershell -NoProfile -File android\build.ps1 [-Profile release|quick] [-NativeOnly] [-Install]
+#                                                 [-ValidationLayer <libVkLayer_khronos_validation.so>]
+# -ValidationLayer packs Khronos's Android validation layer (arm64, from the
+# Vulkan-ValidationLayers releases' android-binaries) into the APK, for
+# finding renderer bugs; the app uses it when its files hold a file named
+# "validation". Without the option the APK has no layer.
 # Needs the Rust target (rustup target add aarch64-linux-android), the
 # Android SDK with an NDK (ANDROID_HOME / ANDROID_NDK_HOME, else
 # %LOCALAPPDATA%\Android\Sdk and its newest ndk\*), a JDK 17 and Gradle 8
@@ -10,7 +15,8 @@
 param(
     [ValidateSet('release', 'quick')] [string] $Profile = 'release',
     [switch] $NativeOnly,
-    [switch] $Install
+    [switch] $Install,
+    [string] $ValidationLayer
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot
@@ -50,6 +56,13 @@ $jni = "$PSScriptRoot\native\jniLibs\arm64-v8a"
 New-Item -ItemType Directory -Force $jni | Out-Null
 Copy-Item $so "$jni\libnsmbw.so" -Force
 Write-Host "staged $so"
+$layer = "$jni\libVkLayer_khronos_validation.so"
+if ($ValidationLayer) {
+    Copy-Item $ValidationLayer $layer -Force
+    Write-Host "with the validation layer $ValidationLayer"
+} elseif (Test-Path $layer) {
+    Remove-Item $layer -Force
+}
 if ($NativeOnly) { exit 0 }
 
 & powershell -NoProfile -File "$PSScriptRoot\gradle-limited.ps1" -p $PSScriptRoot --offline assembleDebug
