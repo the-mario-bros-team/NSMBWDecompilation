@@ -38,6 +38,16 @@
 //! net game, whose archives are not patched); otherwise it declines and the
 //! game's function runs as it is. A hook calls the game's functions with
 //! [`System::call_nested`].
+//!
+//! Exit Course in every course ([`MenuSettings::exit_course`], after
+//! WitherBlitz's NSMB-Wii-Recompilation, `runtime/src/hle/pause_exit.cpp`):
+//! the pause window asks `dGameCom::isNowCourseClear` whether Exit may be
+//! picked (`Pausewindow_c::create` greys it out, the cursor's move and the
+//! confirm refuse it). In a course it says yes, and the player leaves
+//! through the game's own quit path (exit mode 2: nothing saved, the
+//! power-ups the course began with). The world map enemies' ambushes
+//! (levels 0x20-0x22) keep the game's answer, as their window's cursor
+//! never moves in the game either.
 
 use guest_cpu::{MSR_EE, MSR_FP};
 
@@ -66,7 +76,7 @@ const FILE_CHANGE: u32 = 0x8078_3A00;
 const FILE_CHANGE_END: u32 = 0x8078_3BB0;
 
 /// The hooked functions, for [`crate::SPECIAL`].
-pub const HOOKS: [u32; 17] = [
+pub const HOOKS: [u32; 18] = [
     GROUP_REGISTER,
     PAUSE_CURSOR_SETUP,
     PAUSE_OPEN,
@@ -84,6 +94,7 @@ pub const HOOKS: [u32; 17] = [
     FILE_SELECT_WAIT,
     FILE_CHANGE,
     FILE_CHANGE_END,
+    IS_NOW_COURSE_CLEAR,
 ];
 
 /// The map menu's and the save-select screen's functions are in a module:
@@ -107,7 +118,10 @@ const GAME_STOP: u32 = 0x8042_9F48; // dGameCom::l_gameStop
 const SND_AUDIO_MGR: u32 = 0x8042_A488; // SndAudioMgr::sInstance
 const START_GAME_INFO: u32 = 0x8031_5B90; // dInfo_c::m_startGameInfo, +0xD the level
 const START_SYSTEM_SE: u32 = 0x8019_5380;
+/// `dGameCom::isNowCourseClear`: whether the pause window's Exit may be picked.
 const IS_NOW_COURSE_CLEAR: u32 = 0x800B_4DE0;
+const NOW_SCENE: u32 = 0x8042_8732; // dScene_c::m_nowScene
+const SCENE_STAGE: u16 = 5;
 const SELECT_CURSOR_SETUP: u32 = 0x800B_44D0; // dGameCom::SelectCursorSetup(pane, slot, bool)
 const ANIME_START: u32 = 0x800C_92F0;
 const REVERSE_ANIME_START: u32 = 0x800C_93D0;
@@ -207,6 +221,9 @@ pub struct MenuSettings {
     /// The save files' cards were given their "Cheated" text
     /// ([`crate::menu_layout::add_cheated_label`]).
     pub cheated_label: bool,
+    /// Exit Course in every course, not only the cleared ones (the Settings
+    /// window's Gameplay option; in a net game only if every player has it).
+    pub exit_course: bool,
     /// The pause window's button was picked: the Settings window opens once
     /// the window has closed.
     open_requested: bool,
@@ -357,6 +374,7 @@ impl System {
             FILE_SELECT_WAIT => self.file_select_wait(),
             FILE_CHANGE => self.file_change(),
             FILE_CHANGE_END => self.file_change_end(),
+            IS_NOW_COURSE_CLEAR => self.exit_any_course(),
             _ => false,
         };
         if ran {
@@ -589,8 +607,10 @@ impl System {
         let target = BUTTON_AT[place as usize];
         if target == 1 {
             // Exit only where the game allows it (a cleared course or the
-            // cannon course), and never in the map enemies' ambushes (levels
-            // 0x20-0x22), whose window doesn't move in the game either.
+            // cannon course; any course with Exit Course on, which
+            // isNowCourseClear's hook answers), and never in the map enemies'
+            // ambushes (levels 0x20-0x22), whose window doesn't move in the
+            // game either.
             let level = self.r8(START_GAME_INFO + 0xD);
             let cleared = self.call(IS_NOW_COURSE_CLEAR, &[]) != 0;
             if !((cleared || level == 0x23) && !(0x20..=0x22).contains(&level)) {
@@ -752,6 +772,17 @@ impl System {
         if pane != 0 {
             self.call(SELECT_CURSOR_SETUP, &[pane, 1, 0]); // the screen's cursor slot
         }
+        true
+    }
+
+    /// `isNowCourseClear` with Exit Course on: yes in a course, but in the
+    /// map enemies' ambushes. The game's function only reads, so its answer
+    /// is not needed when it would be replaced anyway.
+    fn exit_any_course(&mut self) -> bool {
+        if !self.menu.exit_course || self.mem.read_u16(NOW_SCENE) != Ok(SCENE_STAGE) || (0x20..=0x22).contains(&self.r8(START_GAME_INFO + 0xD)) {
+            return false;
+        }
+        self.cpu.gpr[3] = 1;
         true
     }
 

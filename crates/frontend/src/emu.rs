@@ -69,7 +69,8 @@ pub enum ToEmu {
     /// The Settings window that a game menu's Settings button opened has
     /// closed: that menu opens again (`hle_os::menu_settings`).
     SettingsClosed,
-    /// The Settings window's Gameplay options (not in a net game).
+    /// The Settings window's Gameplay options (not in a net game, which
+    /// keeps what its players agreed on at the start).
     Gameplay(crate::gameplay::Options),
     /// Give player 1 this power-up (`gameplay::POWER_UPS`) in a course or on
     /// the world map, as soon as the game is in one.
@@ -272,6 +273,10 @@ pub struct EmuOptions {
     pub auto_close_settings: bool,
     /// The save files' "Cheated" marks, shared with the window's thread.
     pub cheats: Arc<crate::gameplay::Cheats>,
+    /// The Gameplay options to start with (a window's from settings.toml;
+    /// a headless run's all off, the game's own rules, unless
+    /// `--gameplay-options`). A net host offers its Exit Course to joiners.
+    pub gameplay: crate::gameplay::Options,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -332,7 +337,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, gameplay: mut gameplay_options } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -355,14 +360,14 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut joined: Option<(u64, Vec<u8>)> = None;
     match &net {
         crate::net::Mode::Off => {}
-        crate::net::Mode::Host { port, wait_join } => match crate::net::Session::host(*port, *wait_join, &game, light_textures, nand.clone()) {
+        crate::net::Mode::Host { port, wait_join } => match crate::net::Session::host(*port, *wait_join, &game, light_textures, nand.clone(), gameplay_options.exit_course) {
             Ok(s) => session = Some(s),
             Err(e) => {
                 let _ = frames.send(Err(e));
                 return totals;
             }
         },
-        crate::net::Mode::Join { addr } => match crate::net::Session::join(addr, &game, light_textures) {
+        crate::net::Mode::Join { addr } => match crate::net::Session::join(addr, &game, light_textures, gameplay_options.exit_course) {
             Ok((s, field, state)) => {
                 nand = crate::net::joiner_nand();
                 session = Some(s);
@@ -390,6 +395,8 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             return totals;
         }
     };
+    // Exit Course: a net game's as its players agreed.
+    sys.menu.exit_course = session.as_ref().map_or(gameplay_options.exit_course, |s| s.exit_course);
     if settings_label.is_some() {
         let (pause, map, files) = sys.menu.buttons;
         let yes = |b| if b { "yes" } else { "no" };
@@ -451,7 +458,6 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     live[0].connected = true;
     let mut paused = false;
     let mut gameplay = crate::gameplay::Gameplay::default();
-    let mut gameplay_options = crate::gameplay::Options::default();
     // With `auto_close_settings`: the field the Settings window "closes" at.
     let mut close_settings_at = None;
     while !stop.load(Ordering::Relaxed) && last_field.is_none_or(|l| index <= l) {
@@ -460,7 +466,12 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                 match msg {
                     ToEmu::Pause(p) => paused = p && session.is_none(),
                     ToEmu::SettingsClosed => sys.menu.reopen(),
-                    ToEmu::Gameplay(o) => gameplay_options = o,
+                    ToEmu::Gameplay(o) => {
+                        gameplay_options = o;
+                        if session.is_none() {
+                            sys.menu.exit_course = o.exit_course;
+                        }
+                    }
                     ToEmu::PowerUp(p) => gameplay.pending = Some(p),
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
                     msg => apply(&mut sys, &mut live, msg),
@@ -526,7 +537,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         // Net games keep the game's own rules.
         if session.is_none() {
-            if let Some(line) = gameplay.after_field(&mut sys, gameplay_options, &cheats) {
+            for line in gameplay.after_field(&mut sys, gameplay_options, &cheats) {
                 say!("{line}");
             }
             // A game menu's Settings button: the Settings window once the

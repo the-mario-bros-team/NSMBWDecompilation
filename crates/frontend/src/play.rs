@@ -209,8 +209,8 @@ fn wait_until(deadline: Instant) {
     }
 }
 
-fn gameplay_options(s: &Settings) -> crate::gameplay::Options {
-    crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives }
+pub fn gameplay_options(s: &Settings) -> crate::gameplay::Options {
+    crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives, autosave: s.autosave, exit_course: s.exit_course }
 }
 
 /// The game menus' Settings button, in the game's language.
@@ -292,8 +292,7 @@ impl App {
         self.inputs.set_keymap(self.settings.keymap.clone());
         self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
         let settings_label = Some(settings_label(&self.settings.language).to_string());
-        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), ..self.opts.emu.clone() });
-        let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
+        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), gameplay: gameplay_options(&self.settings), ..self.opts.emu.clone() });
         self.emu = Some(emu);
         self.renderer = Some(renderer);
         self.window = Some(window);

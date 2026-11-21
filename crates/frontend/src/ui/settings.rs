@@ -131,7 +131,7 @@ impl Tab {
             Tab::Graphics => "How the game is drawn, and how smoothly it moves.",
             Tab::Audio => "How loud the game's music and sounds are.",
             Tab::Keybinds => "Which keys play the Wii Remote's buttons.",
-            Tab::Gameplay => "Optional helpers; net games always keep the game's own rules.",
+            Tab::Gameplay => "Optional helpers. Online, only Exit Course applies, if every player has it on.",
             Tab::Language => "The language of the game's text and these menus.",
         }
     }
@@ -153,7 +153,9 @@ const GRAPHICS_LAST: i32 = 3;
 const ROW_TIME: i32 = 1;
 const ROW_LIVES: i32 = 2;
 const ROW_POWER_UP: i32 = 3;
-const GAMEPLAY_LAST: i32 = 3;
+const ROW_AUTOSAVE: i32 = 4;
+const ROW_EXIT_COURSE: i32 = 5;
+const GAMEPLAY_LAST: i32 = 5;
 // Audio rows: 1-4 the sliders.
 const VOLUMES: [(&str, &str); 4] = [
     ("Master", "The volume of everything."),
@@ -843,12 +845,16 @@ impl SettingsWindow {
         self.add_hit(COL_X0 + ARROW_W / 2.0, y, ARROW_W + 8.0, step - 2.0, ROW_POWER_UP, EV_LEFT);
         self.add_hit(COL_X1 - ARROW_W / 2.0, y, ARROW_W + 8.0, step - 2.0, ROW_POWER_UP, EV_RIGHT);
         self.add_hit(COL_X, y, COL_W - 2.0 * ARROW_W - 8.0, step - 2.0, ROW_POWER_UP, EV_CONFIRM);
+        self.row_toggle(ctx, a, c, rows, 3, "Autosave", s.autosave, ROW_AUTOSAVE);
+        self.row_toggle(ctx, a, c, rows, 4, "Exit Course", s.exit_course, ROW_EXIT_COURSE);
         let given = self.power_up_at.is_some_and(|t| self.now - t < 3.0);
         let note = match self.cursor {
             ROW_TIME => "The course timer stands still: take your time.",
             ROW_LIVES => "A miss costs no life.",
             ROW_POWER_UP if given => "Player 1 gets it in the next course or on the world map.",
             ROW_POWER_UP => "Left and right pick one; press it to give it to player 1.",
+            ROW_AUTOSAVE => "The game is saved after every course you clear, as the map's Save does.",
+            ROW_EXIT_COURSE => "The pause menu's Exit Course in every course, cleared or not.",
             _ => Tab::Gameplay.help(),
         };
         self.help_line(a, c, note, u32::MAX);
@@ -1248,6 +1254,14 @@ impl SettingsWindow {
                 changes.push(Change::Gameplay);
             }
             (Tab::Gameplay, ROW_POWER_UP) if confirm => self.ask_cheat(Cheat::PowerUp, s, changes),
+            (Tab::Gameplay, ROW_AUTOSAVE) if toggle => {
+                s.autosave = !s.autosave;
+                changes.push(Change::Gameplay);
+            }
+            (Tab::Gameplay, ROW_EXIT_COURSE) if toggle => {
+                s.exit_course = !s.exit_course;
+                changes.push(Change::Gameplay);
+            }
             (Tab::Language, n) if confirm && (1..=3).contains(&n) => {
                 s.language = LANGUAGES[n as usize - 1].0.into();
                 changes.push(Change::Language);

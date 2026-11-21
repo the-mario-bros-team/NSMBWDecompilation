@@ -63,12 +63,23 @@ const STRCMP: u32 = 0x802E_1AB4;
 /// Its `errno` (r13 - 0x4698) and the NaN it returns for negative inputs.
 const ERRNO_OFFSET: u32 = 0x4698;
 const EDOM: u32 = 0x21;
+/// [`System::call_guest`]'s data and stack, which the game leaves unused.
+const CALL_SCRATCH: u32 = 0x8000_1800;
+const CALL_STACK_TOP: u32 = 0x8000_2FF0;
+/// [`System::call_guest_as_thread`]'s stack, in MEM2 above the game's.
+const THREAD_STACK_TOP: u32 = 0x9341_0000 - 0x10;
+/// The OS's current thread (`OSGetCurrentThread`), and `OSThread`'s size.
+const CURRENT_THREAD: u32 = 0x8000_00E4;
+const OS_THREAD_SIZE: usize = 0x318;
+/// The scheduler's hold count (r13 - 0x4F80; `OSDisableScheduler` adds
+/// one): `SelectThread` switches no thread while it is above 0.
+const RESCHEDULE: u32 = 0x8042_A700;
 
 /// Every address [`System::before`] acts on (`OSLink` returns aside).
 /// Recompiled code never runs through one of these (`ppc-recomp` bakes this
 /// list in, and [`guest_cpu::recomp::Rt::new`] checks it).
-pub const SPECIAL: [u32; 36] = {
-    let mut s = [0u32; 36];
+pub const SPECIAL: [u32; 37] = {
+    let mut s = [0u32; 37];
     let mut i = 0;
     while i < RETURN_AT_ONCE.len() {
         s[i] = RETURN_AT_ONCE[i];
@@ -611,14 +622,42 @@ impl System {
     /// leaves unused (debuggers and cheat handlers live there on a real
     /// Wii). `data` is copied to 0x80001800 first, for pointer arguments.
     pub fn call_guest(&mut self, addr: u32, args: &[u32], data: &[u8]) -> Result<u32, String> {
-        const SCRATCH: u32 = 0x8000_1800;
-        const STACK_TOP: u32 = 0x8000_2FF0;
-        const RETURN: u32 = SCRATCH; // never executed: the call stops there
+        self.call_guest_on(addr, args, data, CALL_STACK_TOP)
+    }
+
+    /// [`System::call_guest`] for a function that touches the OS's threads
+    /// (locks and unlocks a mutex, signals a condition) and needs a big
+    /// stack, such as the game's `SaveGame`, whose NAND copy takes 16 KiB.
+    /// It runs as a thread of its own that is never switched out: the OS's
+    /// current thread is a blank one at 0x80001800 and the scheduler is held
+    /// as `OSDisableScheduler` holds it (a thread it wakes runs at the next
+    /// reschedule), on a 64 KiB stack in MEM2 above the game's (from
+    /// 0x93400000: IOS's own memory on a real Wii, which nothing uses here).
+    /// `None`, and nothing run, where the guest stopped with interrupts off:
+    /// in a critical section, whose OS state may be half updated.
+    pub fn call_guest_as_thread(&mut self, addr: u32, args: &[u32]) -> Option<Result<u32, String>> {
+        // Interrupts on, or one just taken (only ever with them on) and its
+        // handler not started.
+        let just_taken = matches!(self.cpu.pc, 0x500 | 0x900) && self.cpu.spr[guest_cpu::SPR_SRR1] & MSR_EE != 0;
+        if self.cpu.msr & MSR_EE == 0 && !just_taken {
+            return None;
+        }
+        let (thread, held) = (self.mem.read_u32(CURRENT_THREAD).ok()?, self.mem.read_u32(RESCHEDULE).ok()?);
+        let _ = self.mem.write_u32(CURRENT_THREAD, CALL_SCRATCH);
+        let _ = self.mem.write_u32(RESCHEDULE, held.wrapping_add(1));
+        let r = self.call_guest_on(addr, args, &[0; OS_THREAD_SIZE], THREAD_STACK_TOP);
+        let _ = self.mem.write_u32(CURRENT_THREAD, thread);
+        let _ = self.mem.write_u32(RESCHEDULE, held);
+        Some(r)
+    }
+
+    fn call_guest_on(&mut self, addr: u32, args: &[u32], data: &[u8], stack_top: u32) -> Result<u32, String> {
+        const RETURN: u32 = CALL_SCRATCH; // never executed: the call stops there
         assert!(args.len() <= 8 && data.len() <= 0x400);
         let saved = self.cpu.clone();
-        self.mem.ram_mut(SCRATCH, data.len()).ok_or("scratch memory")?.copy_from_slice(data);
-        let _ = self.mem.write_u32(STACK_TOP, 0); // end of the back chain
-        self.cpu.gpr[1] = STACK_TOP;
+        self.mem.ram_mut(CALL_SCRATCH, data.len()).ok_or("scratch memory")?.copy_from_slice(data);
+        let _ = self.mem.write_u32(stack_top, 0); // end of the back chain
+        self.cpu.gpr[1] = stack_top;
         for (i, &a) in args.iter().enumerate() {
             self.cpu.gpr[3 + i] = a;
         }
