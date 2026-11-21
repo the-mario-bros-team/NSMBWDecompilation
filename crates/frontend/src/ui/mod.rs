@@ -63,6 +63,9 @@ pub enum Change {
     UpdateCancel,
     /// The failed update's message was read.
     UpdateDismiss,
+    /// Play the game's system sound `id` (the window's cursor, decide and
+    /// back sounds).
+    Sound(u32),
 }
 
 /// An update being installed, as the Settings window shows it.

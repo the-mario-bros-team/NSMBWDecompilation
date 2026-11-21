@@ -1256,6 +1256,41 @@ impl SettingsWindow {
         }
     }
 
+    /// What the window's sounds follow: the tab, the cursor, the dropdown's
+    /// highlight, the question's cursor, and what is up.
+    fn sound_state(&self) -> [i32; 8] {
+        [
+            self.tab as i32,
+            self.cursor,
+            self.dropdown.as_ref().map_or(-1, |d| d.highlight as i32),
+            self.ask_cursor,
+            self.ask.is_some() as i32,
+            self.dropdown.is_some() as i32,
+            self.closing as i32,
+            self.capturing.is_some() as i32,
+        ]
+    }
+
+    /// The game's own sound for what this frame's moves did, as its menus
+    /// play them (the ids of `startSystemSe`): 122 back or close, 125 a
+    /// tab, 121 a choice, 120 a move or a value. Nothing when nothing moved.
+    fn menu_sound(&self, before: [i32; 8], nav: Nav, changes: &mut Vec<Change>, first: usize) {
+        let after = self.sound_state();
+        let changed = changes.len() > first || after != before;
+        let id = if after[6] > before[6] || (nav.back && changed) {
+            122
+        } else if after[0] != before[0] {
+            125
+        } else if nav.confirm && changed {
+            121
+        } else if changed {
+            120
+        } else {
+            return;
+        };
+        changes.push(Change::Sound(id));
+    }
+
     /// Mouse and touch: a press on one of this frame's buttons picks it.
     fn pointer_events(&mut self) -> Nav {
         let mut nav = Nav::default();
@@ -1335,7 +1370,9 @@ impl SettingsWindow {
             self.ask_cursor = 0;
         }
         if !self.closing && self.capturing.is_none() {
+            let (before, first) = (self.sound_state(), changes.len());
             self.handle(moves, s, changes);
+            self.menu_sound(before, moves, changes, first);
         }
         self.hits.clear();
         if let Some(pause) = &a.pause {

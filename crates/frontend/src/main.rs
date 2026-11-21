@@ -7,6 +7,7 @@
 
 mod audio;
 mod boot;
+mod click;
 mod emu;
 mod gameplay;
 mod gamefiles;
@@ -44,6 +45,8 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
                      minus home shake, joined with +; the remote's own D-pad) for n game frames (default 6)
                      from frame f; remotes 2-4 switch on at their first press (p2:<f>: with no buttons)
   --press-file <file>  presses from a file: <f>:<b>[:<n>] separated by spaces or lines, # comments
+  --click <f>:<x>:<y>  click the game's picture after frame f, at (x, y) in layout units (456 high,
+                     origin at the centre, y up), as a mouse click would (repeatable)
   --shot <f>:<png>   save game frame f's XFB (repeatable)
   --trace-ios        print every IOS request and the Bluetooth conversation
   --profile-guest    sample the guest PC and print the hottest functions at exit
@@ -86,6 +89,7 @@ struct Args {
     compare: Option<PathBuf>,
     min_psnr: f64,
     script: Vec<emu::Press>,
+    clicks: Vec<(u64, click::Click)>,
     shots: Vec<(u64, PathBuf)>,
     trace_ios: bool,
     profile: bool,
@@ -134,7 +138,7 @@ fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &st
 
 fn parse_args() -> Result<Args, String> {
     let settings = settings::Settings::load(Path::new(settings::FILE));
-    let mut args = Args { settings_buttons: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
+    let mut args = Args { settings_buttons: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), clicks: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -170,6 +174,14 @@ fn parse_args() -> Result<Args, String> {
             "--settings-buttons" => args.settings_buttons = true,
             "--headless" => args.headless = true,
             "--code-profile" => args.code_profile = Some(it.next().ok_or("--code-profile needs a file")?.into()),
+            "--click" => {
+                let v = it.next().ok_or("--click needs <frame>:<x>:<y>")?;
+                let n: Vec<&str> = v.split(':').collect();
+                let bad = || format!("--click {v}: expected <frame>:<x>:<y>");
+                let [f, x, y] = n[..] else { return Err(bad()) };
+                let c = click::Click { x: x.parse().map_err(|_| bad())?, y: y.parse().map_err(|_| bad())?, half_width: 228.0 * 16.0 / 9.0 };
+                args.clicks.push((f.parse().map_err(|_| bad())?, c));
+            }
             "--press" => args.script.push(parse_press(&it.next().ok_or("--press needs <frame>:<buttons>")?)?),
             "--press-file" => {
                 let path = it.next().ok_or("--press-file needs a file")?;
@@ -289,7 +301,7 @@ fn main() -> ExitCode {
         return if ok { ExitCode::SUCCESS } else { ExitCode::FAILURE };
     }
 
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default() } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), clicks: args.clicks } };
     if args.headless {
         // As a window would, before the game boots: the game reads its
         // aspect ratio from SYSCONF once.

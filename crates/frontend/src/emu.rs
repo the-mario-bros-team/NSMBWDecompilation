@@ -74,6 +74,29 @@ pub enum ToEmu {
     /// Give player 1 this power-up (`gameplay::POWER_UPS`) in a course or on
     /// the world map, as soon as the game is in one.
     PowerUp(u8),
+    /// A sound of the Settings window's: the game's system sound `id`,
+    /// played through the game after the next field (not while paused, and
+    /// not in a net game).
+    Sound(u32),
+    /// A click on the game's picture (`crate::click`; not in a net game).
+    Click(crate::click::Click),
+    /// The Music, Sound Effects and Menu Sounds volumes (percent), applied
+    /// per voice by the mixer (`hw::ax`). Not in a net game, whose players
+    /// must mix the same: there only the master volume (host side) counts.
+    Volumes([u32; 3]),
+}
+
+/// The Settings window's sounds, played as the game plays its menus' own:
+/// `SndAudioMgr::startSystemSe(SndAudioMgr::sInstance, id, 1)`.
+fn play_menu_sounds(sys: &mut System, sounds: &mut Vec<u32>) {
+    const SND_AUDIO_MGR: u32 = 0x8042_A488;
+    const START_SYSTEM_SE: u32 = 0x8019_5380;
+    let Ok(manager) = sys.mem.read_u32(SND_AUDIO_MGR) else { return sounds.clear() };
+    for id in sounds.drain(..) {
+        if manager != 0 {
+            let _ = sys.call_guest(START_SYSTEM_SE, &[manager, id, 1], &[]);
+        }
+    }
 }
 
 /// Totals for the exit report.
@@ -193,7 +216,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Input(i) => *live = i,
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) => {}
     }
 }
 
@@ -272,6 +295,9 @@ pub struct EmuOptions {
     pub auto_close_settings: bool,
     /// The save files' "Cheated" marks, shared with the window's thread.
     pub cheats: Arc<crate::gameplay::Cheats>,
+    /// Scripted clicks on the game's menus (`--click`): the field and where,
+    /// in layout units.
+    pub clicks: Vec<(u64, crate::click::Click)>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -332,7 +358,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -450,6 +476,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut live = [Input::default(); REMOTES];
     live[0].connected = true;
     let mut paused = false;
+    // The Settings window's sounds still to play.
+    let mut sounds = Vec::new();
+    // Clicks on the game's menus: the last one not taken yet, and the
+    // buttons they press during the next field.
+    let mut clicker = crate::click::Clicker::default();
+    let mut click = None;
+    let mut click_buttons = 0u16;
     let mut gameplay = crate::gameplay::Gameplay::default();
     let mut gameplay_options = crate::gameplay::Options::default();
     // With `auto_close_settings`: the field the Settings window "closes" at.
@@ -462,6 +495,17 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                     ToEmu::SettingsClosed => sys.menu.reopen(),
                     ToEmu::Gameplay(o) => gameplay_options = o,
                     ToEmu::PowerUp(p) => gameplay.pending = Some(p),
+                    // A sound waiting out a pause would play late.
+                    ToEmu::Sound(id) => {
+                        if !paused && session.is_none() {
+                            sounds.push(id);
+                        }
+                    }
+                    ToEmu::Click(c) => click = Some(c),
+                    ToEmu::Volumes(v) => {
+                        let gains = if session.is_none() { v.map(|p| (p.min(100) * 0x8000 / 100) as u16) } else { [0x8000; 3] };
+                        sys.hw.borrow_mut().dsp.ax.gains = gains;
+                    }
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
                     msg => apply(&mut sys, &mut live, msg),
                 }
@@ -496,6 +540,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
         }
         let mut inputs = controls(&live, &script, index);
+        inputs[0].buttons |= click_buttons;
         if let Some(session) = &mut session {
             // Online, this machine's player 1 controls (and `p1` presses)
             // are its own remote; the others come from the network.
@@ -529,6 +574,11 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             if let Some(line) = gameplay.after_field(&mut sys, gameplay_options, &cheats) {
                 say!("{line}");
             }
+            play_menu_sounds(&mut sys, &mut sounds);
+            if let Some(&(_, c)) = clicks.iter().find(|c| c.0 == index) {
+                click = Some(c);
+            }
+            click_buttons = clicker.field(&mut sys, click.take());
             // A game menu's Settings button: the Settings window once the
             // pause window has closed (the map menu's is gone already).
             let closed = !sys.menu.waiting_for_pause() || sys.pause_window_closed();

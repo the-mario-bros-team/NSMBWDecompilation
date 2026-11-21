@@ -247,11 +247,134 @@ pub struct Ax {
     /// One-shot voices that played to their end.
     pub voices_ended: u64,
     pub frames: u64,
+    /// The player's volumes for music, sound effects and menu sounds
+    /// ([`Kind`]), Q15: 0x8000 leaves a voice as the game mixes it. While
+    /// all three are 0x8000 no voice is looked at and the mix is the game's
+    /// own, bit for bit.
+    pub gains: [u16; 3],
 }
 
 impl Default for Ax {
     fn default() -> Self {
-        Self { buses: [[[0; FRAME]; 3]; 4], last_main_volume: 0x8000, last_aux_volume: [0x8000; 3], aux_return: false, voices_ended: 0, frames: 0 }
+        Self { buses: [[[0; FRAME]; 3]; 4], last_main_volume: 0x8000, last_aux_volume: [0x8000; 3], aux_return: false, voices_ended: 0, frames: 0, gains: [0x8000; 3] }
+    }
+}
+
+/// What a voice plays, for the volume sliders.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum Kind {
+    Music = 0,
+    Effects = 1,
+    Menu = 2,
+}
+
+/// The way from an AX voice to the sound it plays, through `nw4r::snd`
+/// (USA rev 1 addresses, after WitherBlitz's NSMB-Wii-Recompilation's
+/// `ax_voice_tags`): each level's callback is checked before its data is
+/// trusted, and a voice whose chain doesn't hold is told apart by the
+/// mixer's own rule (a stream is music, the rest effects).
+struct VoiceTags {
+    /// `__AXPB` (the DSP's parameter blocks), `__AXVPB` (the CPU's voices)
+    /// and the voice count.
+    pbs: u32,
+    vpbs: u32,
+    count: u32,
+    /// The sound archive player's sound players and their count.
+    players: u32,
+    player_count: u32,
+}
+
+impl VoiceTags {
+    const AX_PB: u32 = 0x8042_A608;
+    const AX_VPB: u32 = 0x8042_A610;
+    const AX_MAX_VOICES: u32 = 0x8042_A614;
+    const PB_SIZE: u32 = 0x140;
+    const VPB_SIZE: u32 = 0x168;
+    /// `AxVoice::VoiceCallback` (VPB +0x10; +0x14 the AxVoice).
+    const AX_VOICE_CALLBACK: u32 = 0x8026_26F0;
+    /// `Voice::AxVoiceCallbackFunc` (AxVoice +0x38; +0x3C the Voice).
+    const VOICE_AX_CALLBACK: u32 = 0x8028_1EF0;
+    /// The Voice's player callback (+0x94; +0x98 its data).
+    const STRM_VOICE_CALLBACK: u32 = 0x8027_EEF0;
+    const CHANNEL_VOICE_CALLBACK: u32 = 0x8026_8910;
+    /// The Channel's callback (+0xC0; +0xC4 its data).
+    const WSD_CHANNEL_CALLBACK: u32 = 0x8028_5500;
+    const SEQ_CHANNEL_CALLBACK: u32 = 0x8027_3B50;
+    /// `SndAudioMgr::sInstance`; +0x5BC its SoundArchivePlayer, whose +0x3C
+    /// is the sound-player count and +0x40 the array (0x64 bytes each).
+    const SND_AUDIO_MGR: u32 = 0x8042_A488;
+    /// Players 16-21 play music (`PLAYER_BGM_*`).
+    const MUSIC_PLAYERS: std::ops::RangeInclusive<u32> = 16..=21;
+
+    fn read(mem: &Mem) -> Option<Self> {
+        let manager = r32(mem, Self::SND_AUDIO_MGR);
+        let archive = if manager == 0 { 0 } else { r32(mem, manager + 0x5BC) };
+        if archive == 0 {
+            return None;
+        }
+        let tags = Self { pbs: r32(mem, Self::AX_PB), vpbs: r32(mem, Self::AX_VPB), count: r32(mem, Self::AX_MAX_VOICES).min(MAX_VOICES as u32), players: r32(mem, archive + 0x40), player_count: r32(mem, archive + 0x3C) };
+        (archive != 0 && tags.vpbs != 0 && tags.players != 0).then_some(tags)
+    }
+
+    /// What the voice whose parameter block is at `pb_addr` plays.
+    fn kind(&self, mem: &Mem, pb_addr: u32, stream: bool) -> Kind {
+        let own_rule = if stream { Kind::Music } else { Kind::Effects };
+        let (pb, base) = (pb_addr & 0x1FFF_FFFF, self.pbs & 0x1FFF_FFFF);
+        if pb < base || (pb - base) % Self::PB_SIZE != 0 || (pb - base) / Self::PB_SIZE >= self.count {
+            return own_rule;
+        }
+        let index = (pb - base) / Self::PB_SIZE;
+        let vpb = self.vpbs + index * Self::VPB_SIZE;
+        if r32(mem, vpb + 0x18) != index {
+            return own_rule;
+        }
+        match self.owner(mem, vpb) {
+            Some((id, player)) if player == 0 || player == 11 || (player == 1 && matches!(id, 160..=163 | 1498..=1500 | 1615..=1617 | 1672..=1675 | 1678..=1680)) => Kind::Menu,
+            Some((_, player)) if Self::MUSIC_PLAYERS.contains(&player) => Kind::Music,
+            Some(_) => Kind::Effects,
+            None => own_rule,
+        }
+    }
+
+    /// The sound playing on the voice at `vpb`: its id and sound player.
+    fn owner(&self, mem: &Mem, vpb: u32) -> Option<(u32, u32)> {
+        let nonzero = |v: u32| (v != 0).then_some(v);
+        if r32(mem, vpb + 0x10) != Self::AX_VOICE_CALLBACK {
+            return None;
+        }
+        let ax_voice = nonzero(r32(mem, vpb + 0x14))?;
+        if r32(mem, ax_voice + 0x38) != Self::VOICE_AX_CALLBACK {
+            return None;
+        }
+        let voice = nonzero(r32(mem, ax_voice + 0x3C))?;
+        let (callback, data) = (r32(mem, voice + 0x94), nonzero(r32(mem, voice + 0x98))?);
+        let player_object = match callback {
+            // The data is one of the StrmPlayer's channels (+0xB58, 0x38
+            // each, +4 the Voice): the one whose player then checks out.
+            Self::STRM_VOICE_CALLBACK => {
+                return (0..8u32).find_map(|channel| {
+                    let player = data.checked_sub(0xB58 + channel * 0x38)?;
+                    let channels = r32(mem, player + 0x80C);
+                    (channel < channels && channels <= 8 && r32(mem, data + 4) == voice).then(|| self.sound_of(mem, player)).flatten()
+                });
+            }
+            Self::CHANNEL_VOICE_CALLBACK => match r32(mem, data + 0xC0) {
+                Self::WSD_CHANNEL_CALLBACK => r32(mem, data + 0xC4),
+                Self::SEQ_CHANNEL_CALLBACK => r32(mem, r32(mem, data + 0xC4) + 0xC4),
+                _ => return None,
+            },
+            _ => return None,
+        };
+        self.sound_of(mem, player_object)
+    }
+
+    /// The sound whose StrmPlayer, WsdPlayer or SeqPlayer is at `object`
+    /// (+0x110 of the sound): its id (+0x9C) and which of the archive's
+    /// sound players (+0x10) it plays on.
+    fn sound_of(&self, mem: &Mem, object: u32) -> Option<(u32, u32)> {
+        let sound = object.checked_sub(0x110)?;
+        let player = r32(mem, sound + 0x10).checked_sub(self.players)?;
+        (player % 0x64 == 0 && player / 0x64 < self.player_count).then(|| (r32(mem, sound + 0x9C), player / 0x64))
     }
 }
 
@@ -323,6 +446,7 @@ impl Ax {
     }
 
     fn process(&mut self, mem: &mut Mem, head: u32) {
+        let tags = if self.gains == [0x8000; 3] { None } else { VoiceTags::read(mem) };
         let mut addr = head;
         for _ in 0..MAX_VOICES {
             if addr == 0 {
@@ -330,7 +454,13 @@ impl Ax {
             }
             let Some(mut p) = read_pb(mem, addr) else { break };
             if p.get(pb::RUNNING) == 1 {
-                if self.voice(mem, &mut p) {
+                let gain = match &tags {
+                    Some(t) => self.gains[t.kind(mem, addr, p.get(pb::IS_STREAM) != 0) as usize],
+                    None if self.gains == [0x8000; 3] => 0x8000,
+                    // The sound library isn't up yet: the mixer's own rule.
+                    None => self.gains[if p.get(pb::IS_STREAM) != 0 { Kind::Music } else { Kind::Effects } as usize],
+                };
+                if self.voice(mem, &mut p, gain) {
                     self.voices_ended += 1;
                 }
                 write_pb(mem, addr, &p);
@@ -339,8 +469,9 @@ impl Ax {
         }
     }
 
-    /// One frame of one running voice; true if a one-shot voice ended.
-    fn voice(&mut self, mem: &Mem, p: &mut Pb) -> bool {
+    /// One frame of one running voice, at the player's `gain` (Q15) for
+    /// what it plays; true if a one-shot voice ended.
+    fn voice(&mut self, mem: &Mem, p: &mut Pb, gain: u16) -> bool {
         let mut acc = Accel::load(p);
         let ratio = p.get32(pb::RATIO);
         let src = p.get(pb::SRC_TYPE);
@@ -374,6 +505,11 @@ impl Ax {
             vol = vol.wrapping_add(delta);
         }
         p.set(pb::VOL_ENV, vol);
+        if gain != 0x8000 {
+            for v in s.iter_mut() {
+                *v = (*v * i32::from(gain)) >> 15;
+            }
+        }
 
         // One-pole low-pass: y = (a0 x + b0 y[-1]) >> 15.
         if p.get(pb::LPF) != 0 {
@@ -536,6 +672,20 @@ mod tests {
         assert_eq!(mem.read_u16(pbs + pb::RUNNING).unwrap(), 0);
         assert_eq!(mem.read_u32(pbs + pb::CUR_ADDR).unwrap(), 0);
         assert_eq!(ax.voices_ended, 1);
+
+        // The Sound Effects volume at half: with no sound library to ask,
+        // a voice that isn't a stream is an effect, and plays at half.
+        w16(&mut mem, pbs + pb::RUNNING, 1);
+        w16(&mut mem, pbs + pb::VOL_ENV, 0x8000);
+        w32(&mut mem, pbs + pb::CUR_ADDR, (samples & 0x1FFF_FFFF) / 2);
+        for i in 0..4 {
+            w16(&mut mem, pbs + pb::LAST_SAMPLES + 2 * i, 0);
+        }
+        let mut ax = Ax { gains: [0x8000, 0x4000, 0x8000], ..Ax::default() };
+        ax.frame(list, &mut mem);
+        let at = |i: u32| (r16(&mem, out + 4 * i) as i16, r16(&mem, out + 4 * i + 2) as i16);
+        assert_eq!(at(10), (0, 400));
+        assert_eq!(at(95), (0, 4650));
     }
 
     /// ADPCM: a frame whose nibbles are all +1 at scale 1 with no

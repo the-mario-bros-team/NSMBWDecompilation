@@ -153,6 +153,8 @@ struct App {
     cheats: Arc<crate::gameplay::Cheats>,
     /// What the game thread was last told: paused (a menu is up) or not.
     sent_pause: bool,
+    /// A menu was up at the last frame.
+    was_open: bool,
     /// The Settings window changed something not saved yet (saved when it
     /// closes: a slider drag changes it every frame).
     unsaved: bool,
@@ -165,6 +167,8 @@ struct App {
     updater: Option<(Arc<std::sync::Mutex<ui::UpdateState>>, Arc<std::sync::atomic::AtomicBool>)>,
     /// Installed: this program to start again once the window has closed.
     restart: Option<PathBuf>,
+    /// Where the mouse is in the window (pixels).
+    pointer: Option<(f64, f64)>,
 }
 
 /// How long a newer release found is said on screen.
@@ -207,6 +211,11 @@ fn wait_until(deadline: Instant) {
     while Instant::now() < deadline {
         std::thread::yield_now();
     }
+}
+
+/// The Music, Sound Effects and Menu Sounds volumes, for the mixer.
+fn volumes(s: &Settings) -> [u32; 3] {
+    [s.volume[1], s.volume[2], s.volume[3]]
 }
 
 fn gameplay_options(s: &Settings) -> crate::gameplay::Options {
@@ -294,6 +303,7 @@ impl App {
         let settings_label = Some(settings_label(&self.settings.language).to_string());
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
+        let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));
         self.emu = Some(emu);
         self.renderer = Some(renderer);
         self.window = Some(window);
@@ -365,9 +375,16 @@ impl App {
         if open {
             controls[0].shake = false;
         }
-        if self.sent_pause != open {
-            let _ = emu.to_emu.send(ToEmu::Pause(open));
-            self.sent_pause = open;
+        // Opened from a game menu, the game keeps running under the window
+        // (its menu waits for the window, and the window's sounds play
+        // through it); opened with F10, the game stops.
+        let pause = open && !self.settings_from_game;
+        if self.sent_pause != pause {
+            let _ = emu.to_emu.send(ToEmu::Pause(pause));
+            self.sent_pause = pause;
+        }
+        if self.was_open != open {
+            self.was_open = open;
             // Back to the game menu the window came from, on Settings.
             if !open && std::mem::take(&mut self.settings_from_game) {
                 let _ = emu.to_emu.send(ToEmu::SettingsClosed);
@@ -623,6 +640,12 @@ impl App {
     /// What the Settings window changed, put into effect (saved when it closes).
     fn apply_changes(&mut self, changes: Vec<ui::Change>) {
         for change in changes {
+            if let ui::Change::Sound(id) = change {
+                if let Some(emu) = &self.emu {
+                    let _ = emu.to_emu.send(ToEmu::Sound(id));
+                }
+                continue;
+            }
             self.unsaved = true;
             match change {
                 ui::Change::Fps => {
@@ -649,7 +672,12 @@ impl App {
                         say_err!("SYSCONF: {e}");
                     }
                 }
-                ui::Change::Volume => crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed),
+                ui::Change::Volume => {
+                    crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed);
+                    if let Some(emu) = &self.emu {
+                        let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));
+                    }
+                }
                 ui::Change::Language => {
                     if let Err(e) = hle_ios::nand::set_language(Path::new("saves/nand"), language_code(&self.settings.language)) {
                         say_err!("SYSCONF: {e}");
@@ -708,7 +736,7 @@ impl App {
                     }
                 }
                 // From the next start, or read every frame.
-                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver => {}
+                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) => {}
             }
         }
     }
@@ -807,6 +835,20 @@ impl App {
             overlay::panel(&mut out, margin, (height as i32 - h - margin).max(0), px, &lines);
         }
         out
+    }
+
+    /// A click (or tap) at window pixel (x, y), in layout units for the
+    /// game thread: the picture, letterboxed to its aspect, is 456 units
+    /// high with the origin at its centre and y up.
+    fn click_at(&mut self, x: f64, y: f64) {
+        let (Some(window), Some(emu)) = (&self.window, &self.emu) else { return };
+        let size = window.inner_size();
+        let (w, h) = (f64::from(size.width.max(1)), f64::from(size.height.max(1)));
+        let aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
+        let picture_h = if w / h > aspect { h } else { w / aspect };
+        let scale = picture_h / 456.0;
+        let c = crate::click::Click { x: ((x - w / 2.0) / scale) as f32, y: ((h / 2.0 - y) / scale) as f32, half_width: (w / 2.0 / scale) as f32 };
+        let _ = emu.to_emu.send(ToEmu::Click(c));
     }
 
     fn key(&mut self, code: KeyCode) {
@@ -911,6 +953,14 @@ impl ApplicationHandler for App {
                 }
             }
             WindowEvent::Focused(false) => self.inputs.release_keys(),
+            // Clicks and taps on the game's menus (`crate::click`).
+            WindowEvent::CursorMoved { position, .. } => self.pointer = Some((position.x, position.y)),
+            WindowEvent::MouseInput { state: ElementState::Pressed, button: winit::event::MouseButton::Left, .. } => {
+                if let Some((x, y)) = self.pointer {
+                    self.click_at(x, y);
+                }
+            }
+            WindowEvent::Touch(t) if t.phase == winit::event::TouchPhase::Started => self.click_at(t.location.x, t.location.y),
             _ => {}
         }
     }
@@ -1019,6 +1069,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         menus: None,
         menu_mask: 0,
         sent_pause: false,
+        was_open: false,
         settings_from_game: false,
         cheats,
         unsaved: false,
@@ -1026,6 +1077,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         update: None,
         updater: None,
         restart: None,
+        pointer: None,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     // An update was installed: the new program, now the window and the
