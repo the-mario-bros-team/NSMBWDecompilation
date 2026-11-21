@@ -17,6 +17,10 @@
 //!   of the title bar, under the title's own pane, so it comes in with the
 //!   title when the screen opens. Its group is `B00_yesButton` too.
 //!
+//! - A save file's card (`/Layout/dateFile/dateFile.arc`, `dateFile_09`): a
+//!   text pane, `T_cheated_00`, hidden, at the top of the card; the port
+//!   shows it on the files marked as cheated (the Gameplay options).
+//!
 //! [`crate::menu_settings`] teaches the game's code the buttons. An archive
 //! whose panes aren't the expected ones is left as it is. Nothing is written
 //! to disk: the game is handed the changed archives from memory.
@@ -30,6 +34,9 @@ pub const MAP_ARC: &str = "/Layout/corseSelectMenu/corseSelectMenu.arc";
 pub const FILE_ARC: &str = "/Layout/fileSelectBase/fileSelectBase.arc";
 /// The save-select screen's Settings button (its picture pane).
 pub const FILE_PANE: &str = "P_SBBase_02";
+pub const CARD_ARC: &str = "/Layout/dateFile/dateFile.arc";
+/// A save file's card's "Cheated" text.
+pub const CHEATED_PANE: &str = "T_cheated_00";
 /// The copies' group names: m2d keeps the pointer it is given, so each is a
 /// string in main.dol's constant data that no group of these menus uses.
 pub const PAUSE_GROUP: &str = "B00_yesButton";
@@ -45,6 +52,14 @@ pub fn add_buttons(disc: &mut Disc, label: &str) -> (bool, bool, bool) {
         f(&mut arc, &label).is_some() && disc.replace(path, arc)
     };
     (one(PAUSE_ARC, patch_pause_archive), one(MAP_ARC, patch_map_archive), one(FILE_ARC, patch_file_archive))
+}
+
+/// Builds the hidden "Cheated" text, reading `label`, into the save files'
+/// card as `disc` serves it. False if the card is not the expected one.
+pub fn add_cheated_label(disc: &mut Disc, label: &str) -> bool {
+    let label: Vec<u16> = label.encode_utf16().collect();
+    let Some(mut arc) = disc.file(CARD_ARC) else { return false };
+    patch_card_archive(&mut arc, &label).is_some() && disc.replace(CARD_ARC, arc)
 }
 
 fn be16(b: &[u8], at: usize) -> u16 {
@@ -641,6 +656,50 @@ fn patch_file_layout(file: &mut Vec<u8>, renames: &mut BTreeMap<String, String>,
     Some(())
 }
 
+/// `dateFile_09.brlyt` with the "Cheated" text: a copy of the "World" text,
+/// smaller and orange, centred at the card's top, last among the card's
+/// panes (drawn over them) and hidden.
+fn patch_card_layout(file: &mut Vec<u8>, label: &[u16]) -> Option<()> {
+    let (header, mut sections) = read_sections(file, b"RLYT")?;
+    let world = find_pane(&sections, "T_worldNumber_00")?;
+    let card = find_pane(&sections, "N_dateFile_00")?;
+    if find_pane(&sections, CHEATED_PANE).is_some() || &sections[world].kind != b"txt1" || sections[world].bytes.len() < 0x74 {
+        return None;
+    }
+    let mut text = sections[world].clone();
+    let b = &mut text.bytes;
+    set_name(b, 0x0C, 16, CHEATED_PANE);
+    b[8] &= !1; // hidden
+    b[9] = 4; // centred on its place
+    b[0x54] = 4; // and its text in it
+    putf(b, 0x24, 0.0);
+    putf(b, 0x28, 70.0);
+    putf(b, 0x44, 160.0);
+    putf(b, 0x48, 24.0);
+    for at in [0x64, 0x68] {
+        putf(b, at, 22.0);
+    }
+    for at in [0x5C, 0x60] {
+        b[at..at + 4].copy_from_slice(&[255, 144, 64, 255]);
+    }
+    set_pane_text(&mut text, label);
+    let end = subtree_end(&sections, card);
+    if end == card || &sections[end].kind != b"pae1" {
+        return None;
+    }
+    sections.insert(end, text);
+    *file = write_sections(header, &sections);
+    Some(())
+}
+
+fn patch_card_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
+    let mut nodes = read_u8(arc)?;
+    let layout = nodes.iter_mut().find(|n| n.kind == 0 && n.path.ends_with(".brlyt") && n.path.contains("dateFile_09"))?;
+    patch_card_layout(&mut layout.data, label)?;
+    *arc = write_u8(&nodes);
+    Some(())
+}
+
 fn patch_file_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
     // Only the button animations (in, on, idle, hit, off, out): the others
     // hold the OK button's tracks too, hiding it while the screen opens.
@@ -661,6 +720,15 @@ mod tests {
         let (pause_before, map_before) = (disc.file(PAUSE_ARC).unwrap(), disc.file(MAP_ARC).unwrap());
         let file_before = disc.file(FILE_ARC).unwrap();
         assert_eq!(add_buttons(&mut disc, "Settings"), (true, true, true));
+        let card_before = disc.file(CARD_ARC).unwrap();
+        assert!(add_cheated_label(&mut disc, "Cheated"));
+        let card = disc.file(CARD_ARC).unwrap();
+        assert!(card.len() >= card_before.len());
+        let nodes = read_u8(&card).unwrap();
+        let lyt = nodes.iter().find(|n| n.path.contains("dateFile_09") && n.path.ends_with(".brlyt")).unwrap();
+        let (_, sections) = read_sections(&lyt.data, b"RLYT").unwrap();
+        let label = &sections[find_pane(&sections, CHEATED_PANE).unwrap()];
+        assert_eq!(label.bytes[8] & 1, 0, "hidden until a file is marked");
         for (path, before, layout, pane, group) in [(PAUSE_ARC, pause_before, "pauseMenu_16", "P_SBBase_03", PAUSE_GROUP), (MAP_ARC, map_before, "corseSelectMenu_11", "P_SBBase_06", MAP_GROUP), (FILE_ARC, file_before, "fileSelectBase_18", FILE_PANE, PAUSE_GROUP)] {
             let after = disc.file(path).unwrap();
             assert!(after.len() > before.len(), "{path} grew");

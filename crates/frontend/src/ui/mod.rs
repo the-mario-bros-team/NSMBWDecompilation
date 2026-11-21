@@ -50,6 +50,9 @@ pub enum Change {
     PowerUp(u8),
     /// A key was rebound.
     Keymap,
+    /// Mark this save file (0-2) "Cheated": Infinite Lives was turned on
+    /// while it is the one being played.
+    Cheated(u8),
 }
 
 pub struct Menus {
@@ -75,7 +78,14 @@ impl Menus {
         layout::set_disc(game, folder);
         let ctx = egui::Context::default();
         let winit = egui_winit::State::new(ctx.clone(), ctx.viewport_id(), window, Some(window.scale_factor() as f32), None, None);
-        Self { ctx, winit, window: settings::SettingsWindow::default(), started: Instant::now(), held: 0, repeat: None, shown: false }
+        let mut settings_window = settings::SettingsWindow::default();
+        settings_window.active_file = -1;
+        Self { ctx, winit, window: settings_window, started: Instant::now(), held: 0, repeat: None, shown: false }
+    }
+
+    /// The save file being played (0-2), or -1 before the save select.
+    pub fn set_active_file(&mut self, file: i8) {
+        self.window.active_file = file;
     }
 
     pub fn is_open(&self) -> bool {

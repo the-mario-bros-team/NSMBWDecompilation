@@ -149,6 +149,8 @@ struct App {
     menu_mask: u16,
     /// The Settings window was opened by a game menu's Settings button.
     settings_from_game: bool,
+    /// The save files' "Cheated" marks, shared with the game thread.
+    cheats: Arc<crate::gameplay::Cheats>,
     /// What the game thread was last told: paused (a menu is up) or not.
     sent_pause: bool,
     /// The Settings window changed something not saved yet (saved when it
@@ -254,7 +256,7 @@ impl App {
         self.inputs.set_keymap(self.settings.keymap.clone());
         self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
         let settings_label = Some(settings_label(&self.settings.language).to_string());
-        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, ..self.opts.emu.clone() });
+        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Gameplay(gameplay_options(&self.settings)));
         self.emu = Some(emu);
         self.renderer = Some(renderer);
@@ -272,6 +274,16 @@ impl App {
             self.sent_interpolate = Some(interpolate);
         }
         let mut controls = self.inputs.poll();
+        // A save file newly marked "Cheated" (or an erased one, unmarked) is
+        // written down at once: it may happen long after the window closed.
+        let marked = self.cheats.marked();
+        if marked != self.settings.cheated {
+            self.settings.cheated = marked;
+            self.settings.save(Path::new(settings::FILE));
+        }
+        if let Some(m) = &mut self.menus {
+            m.set_active_file(self.cheats.active.load(std::sync::atomic::Ordering::Relaxed));
+        }
         // A game menu's Settings button was picked and its menu has gone.
         if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
             if let Some(m) = &mut self.menus {
@@ -589,6 +601,9 @@ impl App {
                     }
                 }
                 ui::Change::Keymap => self.inputs.set_keymap(self.settings.keymap.clone()),
+                ui::Change::Cheated(file) => {
+                    self.cheats.marks.fetch_or(1 << file.min(2), std::sync::atomic::Ordering::Relaxed);
+                }
                 // From the next start, or read every frame.
                 ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver => {}
             }
@@ -860,6 +875,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
     let event_loop = EventLoop::new().map_err(|e| e.to_string())?;
     let now = Instant::now();
     let settings = opts.settings.clone();
+    let cheats = Arc::new(crate::gameplay::Cheats::new(settings.cheated));
     let mut app = App {
         opts,
         settings,
@@ -894,6 +910,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         menu_mask: 0,
         sent_pause: false,
         settings_from_game: false,
+        cheats,
         unsaved: false,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;

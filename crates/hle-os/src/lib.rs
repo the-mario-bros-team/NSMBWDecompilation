@@ -389,18 +389,21 @@ impl System {
         Self::boot_with(game, nand, None)
     }
 
-    /// [`System::boot`], with the pause window, the world map's menu and
-    /// the save-select screen given their Settings button reading `settings_label`
-    /// ([`menu_layout`]) if it is `Some`; [`System::menu`] says which got it.
-    pub fn boot_with(game: &Path, nand: PathBuf, settings_label: Option<&str>) -> Result<Self, String> {
+    /// [`System::boot`], with the menus' additions ([`menu_layout`]) if
+    /// `labels` is `Some`: the pause window, the world map's menu and the
+    /// save-select screen get their Settings button reading its first
+    /// word, and the save files' cards their hidden text reading its second
+    /// ("Cheated"). [`System::menu`] says which got theirs.
+    pub fn boot_with(game: &Path, nand: PathBuf, labels: Option<(&str, &str)>) -> Result<Self, String> {
         let read = |p: &str| fs::read(game.join(p)).map_err(|e| format!("{p}: {e}"));
         let (dol, boot_bin, tmd) = (read("sys/main.dol")?, read("sys/boot.bin")?, read("tmd.bin")?);
         let ios_version = tmd.get(0x18B).copied().ok_or("tmd.bin too short")? as u32;
 
         let mut ios = Ios::new(game, nand, TITLE_ID)?;
         let mut menu = menu_settings::MenuSettings::default();
-        if let Some(label) = settings_label {
-            menu.buttons = menu_layout::add_buttons(&mut ios.disc, label);
+        if let Some((settings, cheated)) = labels {
+            menu.buttons = menu_layout::add_buttons(&mut ios.disc, settings);
+            menu.cheated_label = menu_layout::add_cheated_label(&mut ios.disc, cheated);
         }
         let fst = ios.disc.fst().to_vec();
         let hw = Rc::new(RefCell::new(Hw::new(ios)));

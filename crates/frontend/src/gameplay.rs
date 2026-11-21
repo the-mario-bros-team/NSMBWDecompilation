@@ -14,7 +14,16 @@
 //!   item does), on the world map through `daPyMng_c::mPlayerMode` and the
 //!   map figure's own change function, as the map's Items screen does.
 //!
+//! - "Cheated": Infinite Lives giving a life back, or the Power-Up being
+//!   given, marks the save file being played ([`Cheats`]; the Settings
+//!   window asks first and marks it at once for Infinite Lives). The save
+//!   select then shows "Cheated" on that file's card: a text the port built
+//!   into the card's layout (`hle_os::menu_layout`), shown here. An erased
+//!   file loses its mark.
+//!
 //! Net games keep the game's own rules: every machine has to run the same.
+
+use std::sync::atomic::{AtomicI8, AtomicU8, Ordering::Relaxed};
 
 use hle_os::System;
 
@@ -41,6 +50,15 @@ const TREE_ROOT: u32 = 0x8037_7A10; // fManager_c's tree of the game's objects
 const PROFILE_OPENING_TITLE: u16 = 0x2BB; // only on the title screen (its course is a stage too)
 const SCENE_WORLD_MAP: u16 = 3;
 const SCENE_STAGE: u16 = 5;
+const SCENE_GAME_SETUP: u16 = 0xA; // the save select and Select Players
+const PROFILE_FILE_SELECT: u16 = 0x2D5; // dFileSelect_c
+const FILE_SELECT_STATE: u32 = 0x238; // its current state
+const FILE_SELECT_WAIT: u32 = 0x8099_2050; // dFileSelect_c::StateID_SelectWait
+const FILE_SELECT_CARDS: u32 = 0x24C; // its three files' cards
+const FILE_SELECT_CURSOR: u32 = 0x2A4; // 0-2: on a file
+const SAVE_MNG: u32 = 0x8042_A040; // dSaveMng_c::m_instance
+const SAVE_GAMES: u32 = 0x6C0; // its three games; a game's +2 bit 0: new
+const SAVE_GAME_SIZE: u32 = 0x980;
 const TIMER_STEP: i32 = 92;
 const TIMER_SLACK: i32 = 4 * TIMER_STEP;
 
@@ -54,6 +72,43 @@ pub struct Options {
     pub infinite_lives: bool,
 }
 
+/// The save files' "Cheated" marks, shared by the game thread (which marks
+/// a file when an option does something) and the window's thread (which
+/// asks first, and keeps the marks in `settings.toml`).
+pub struct Cheats {
+    /// Bit n: save file n (0-2) is marked.
+    pub marks: AtomicU8,
+    /// The save file being played: the one the save select last had its
+    /// cursor on; -1 before the save select.
+    pub active: AtomicI8,
+}
+
+impl Default for Cheats {
+    fn default() -> Self {
+        Self::new([false; 3])
+    }
+}
+
+impl Cheats {
+    pub fn new(marked: [bool; 3]) -> Self {
+        let marks = marked.iter().enumerate().fold(0, |m, (i, &on)| m | u8::from(on) << i);
+        Self { marks: AtomicU8::new(marks), active: AtomicI8::new(-1) }
+    }
+
+    /// The marks, a file each.
+    pub fn marked(&self) -> [bool; 3] {
+        let m = self.marks.load(Relaxed);
+        [m & 1 != 0, m & 2 != 0, m & 4 != 0]
+    }
+
+    /// Marks the save file being played, if one is.
+    pub fn mark_active(&self) {
+        if let Ok(file @ 0..=2) = u8::try_from(self.active.load(Relaxed)) {
+            self.marks.fetch_or(1 << file, Relaxed);
+        }
+    }
+}
+
 /// What the options remember between fields.
 #[derive(Default)]
 pub struct Gameplay {
@@ -63,6 +118,9 @@ pub struct Gameplay {
     rest: Option<[i32; 4]>,
     /// A power-up for player 1, given once the game is in a course or on the map.
     pub pending: Option<u8>,
+    /// The save select (the object and its unique number) and its three
+    /// cards' "Cheated" panes, once found.
+    cards: (u32, u32, [u32; 3]),
 }
 
 fn in_ram(a: u32) -> bool {
@@ -86,11 +144,14 @@ fn pointer(sys: &System, a: u32) -> Option<u32> {
 
 impl Gameplay {
     /// After a field. Returns a line to log when a power-up was given.
-    pub fn after_field(&mut self, sys: &mut System, opts: Options) -> Option<String> {
+    pub fn after_field(&mut self, sys: &mut System, opts: Options, cheats: &Cheats) -> Option<String> {
         let scene = read32(sys, SCENE).map_or(0, |w| w as u16);
         self.hold_timer(sys, scene, opts.no_time_limit);
         self.hide_timer(sys, scene, opts.no_time_limit);
-        self.hold_lives(sys, scene, opts.infinite_lives);
+        if self.hold_lives(sys, scene, opts.infinite_lives) {
+            cheats.mark_active();
+        }
+        self.save_select(sys, scene, cheats);
         let power_up = self.pending?;
         let given = match scene {
             SCENE_STAGE => give_in_course(sys, power_up),
@@ -99,8 +160,53 @@ impl Gameplay {
         };
         if given.is_some() {
             self.pending = None;
+            cheats.mark_active();
         }
         given
+    }
+
+    /// The save select: the file its cursor is on is the one being played;
+    /// an erased file loses its mark; each card's "Cheated" shows on a
+    /// marked file (if the cards have the text).
+    fn save_select(&mut self, sys: &mut System, scene: u16, cheats: &Cheats) {
+        let screen = if scene == SCENE_GAME_SETUP { find_profile(sys, PROFILE_FILE_SELECT) } else { None };
+        let Some(screen) = screen else {
+            self.cards = Default::default();
+            return;
+        };
+        // Only while it waits for a pick: its files are loaded by then.
+        let waiting = read32(sys, screen + FILE_SELECT_STATE) == Some(FILE_SELECT_WAIT);
+        if waiting {
+            if let Some(file) = read32(sys, screen + FILE_SELECT_CURSOR).filter(|&c| c < 3) {
+                cheats.active.store(file as i8, Relaxed);
+            }
+        }
+        let id = read32(sys, screen).unwrap_or(0);
+        if (self.cards.0, self.cards.1) != (screen, id) {
+            self.cards = (screen, id, [0; 3]);
+        }
+        let games = pointer(sys, SAVE_MNG);
+        for i in 0..3u32 {
+            let new = games.and_then(|g| sys.mem.ram(g + SAVE_GAMES + SAVE_GAME_SIZE * i + 2, 1)).is_some_and(|b| b[0] & 1 != 0);
+            if waiting && new {
+                cheats.marks.fetch_and(!(1 << i), Relaxed);
+            }
+            if !sys.menu.cheated_label {
+                continue;
+            }
+            let pane = &mut self.cards.2[i as usize];
+            if *pane == 0 {
+                // Not there until the card has built its layout.
+                if let Some(card) = pointer(sys, screen + FILE_SELECT_CARDS + 4 * i) {
+                    let root = sys.root_pane(card);
+                    *pane = sys.find_pane(root, hle_os::menu_layout::CHEATED_PANE, 0);
+                }
+            }
+            let (pane, marked) = (*pane, cheats.marks.load(Relaxed) >> i & 1 != 0);
+            if let Some(flags) = Some(pane).filter(|&p| p != 0).and_then(|p| sys.mem.ram_mut(p + PANE_FLAGS, 1)) {
+                flags[0] = if marked && !new { flags[0] | 1 } else { flags[0] & !1 };
+            }
+        }
     }
 
     fn hold_timer(&mut self, sys: &mut System, scene: u16, on: bool) {
@@ -136,42 +242,47 @@ impl Gameplay {
         }
     }
 
-    fn hold_lives(&mut self, sys: &mut System, scene: u16, on: bool) {
+    /// True if a life was given back.
+    fn hold_lives(&mut self, sys: &mut System, scene: u16, on: bool) -> bool {
         if scene != SCENE_STAGE || !on {
             self.rest = None;
-            return;
+            return false;
         }
         let mut now = [0i32; 4];
         for (i, n) in now.iter_mut().enumerate() {
             let Some(v) = read32(sys, REST + 4 * i as u32) else {
                 self.rest = None;
-                return;
+                return false;
             };
             *n = v as i32;
         }
+        let mut given = false;
         if let Some(last) = self.rest {
             for i in 0..4 {
                 if now[i] == last[i] - 1 {
                     write32(sys, REST + 4 * i as u32, last[i] as u32);
                     now[i] = last[i];
+                    given = true;
                 }
             }
         }
         self.rest = Some(now);
+        given
     }
 }
 
-/// Whether an object of `profile` is in the game's object tree (walked
-/// depth first: +4 child, +0xC next, +0 parent; +0x10 the object, whose
-/// profile is the high half of its +8).
-fn has_profile(sys: &System, profile: u16) -> bool {
+/// The first object of `profile` in the game's object tree (walked depth
+/// first: +4 child, +0xC next, +0 parent; +0x10 the object, whose profile is
+/// the high half of its +8 and whose unique number is its +0).
+fn find_profile(sys: &System, profile: u16) -> Option<u32> {
     let mut node = read32(sys, TREE_ROOT).unwrap_or(0);
     for _ in 0..4096 {
         if node == 0 {
             break;
         }
-        if read32(sys, node + 0x10).filter(|&o| o != 0).and_then(|o| read32(sys, o + 8)).is_some_and(|w| (w >> 16) as u16 == profile) {
-            return true;
+        let object = read32(sys, node + 0x10).filter(|&o| o != 0);
+        if object.and_then(|o| read32(sys, o + 8)).is_some_and(|w| (w >> 16) as u16 == profile) {
+            return object;
         }
         match read32(sys, node + 4) {
             Some(child) if child != 0 => node = child,
@@ -189,7 +300,11 @@ fn has_profile(sys: &System, profile: u16) -> bool {
             },
         }
     }
-    false
+    None
+}
+
+fn has_profile(sys: &System, profile: u16) -> bool {
+    find_profile(sys, profile).is_some()
 }
 
 /// In a course: once player 1 is in it (not the title screen's).

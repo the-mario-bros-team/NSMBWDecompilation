@@ -204,6 +204,9 @@ pub struct MenuSettings {
     /// The pause window, the world map's menu and the save-select screen
     /// were given their button ([`crate::menu_layout::add_buttons`]).
     pub buttons: (bool, bool, bool),
+    /// The save files' cards were given their "Cheated" text
+    /// ([`crate::menu_layout::add_cheated_label`]).
+    pub cheated_label: bool,
     /// The pause window's button was picked: the Settings window opens once
     /// the window has closed.
     open_requested: bool,
@@ -375,9 +378,10 @@ impl System {
         s
     }
 
-    /// nw4r::lyt::Pane `name` under `pane`: children at +0x10 (the list's
-    /// terminator at +0x14), each linked at +4.
-    fn find_pane(&mut self, pane: u32, name: &str, depth: u32) -> u32 {
+    /// nw4r::lyt::Pane `name` under `pane` (0 if none; `depth`: 0 from
+    /// outside): children at +0x10 (the list's terminator at +0x14), each
+    /// linked at +4.
+    pub fn find_pane(&mut self, pane: u32, name: &str, depth: u32) -> u32 {
         if depth > 12 || !guest_ram(pane) {
             return 0;
         }
@@ -399,8 +403,8 @@ impl System {
         0
     }
 
-    /// The root pane a layout object at `object` points to.
-    fn root_pane(&mut self, object: u32) -> u32 {
+    /// The root pane a layout object at `object` points to (0 if none).
+    pub fn root_pane(&mut self, object: u32) -> u32 {
         for off in (0..0x200).step_by(4) {
             let p = self.r32(object + off);
             if guest_ram(p) && self.pane_name(p) == "RootPane" {

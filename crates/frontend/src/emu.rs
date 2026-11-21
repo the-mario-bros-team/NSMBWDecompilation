@@ -270,6 +270,8 @@ pub struct EmuOptions {
     /// No window (`--headless`): a Settings window a game menu asks for
     /// counts as closed 30 fields later, so a scripted run carries on.
     pub auto_close_settings: bool,
+    /// The save files' "Cheated" marks, shared with the window's thread.
+    pub cheats: Arc<crate::gameplay::Cheats>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -330,7 +332,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -380,7 +382,8 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         view_player = Some(s.slot);
     }
     let settings_label = settings_label.filter(|_| session.is_none() && (script.is_empty() || force_settings_buttons));
-    let mut sys = match System::boot_with(&game, nand, settings_label.as_deref()) {
+    // The save cards' text is "Cheated" in every language for now.
+    let mut sys = match System::boot_with(&game, nand, settings_label.as_deref().map(|s| (s, "Cheated"))) {
         Ok(s) => s,
         Err(e) => {
             let _ = frames.send(Err(e));
@@ -390,7 +393,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     if settings_label.is_some() {
         let (pause, map, files) = sys.menu.buttons;
         let yes = |b| if b { "yes" } else { "no" };
-        println!("Settings buttons: pause window {}, world map menu {}, save select {}", yes(pause), yes(map), yes(files));
+        println!("Settings buttons: pause window {}, world map menu {}, save select {}; save cards' \"Cheated\" text {}", yes(pause), yes(map), yes(files), yes(sys.menu.cheated_label));
     }
     // Reverb, delay and chorus: the game's own effect callbacks, mixed back
     // by the DSP (NSMBW_AUXFX=off skips both).
@@ -523,7 +526,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         // Net games keep the game's own rules.
         if session.is_none() {
-            if let Some(line) = gameplay.after_field(&mut sys, gameplay_options) {
+            if let Some(line) = gameplay.after_field(&mut sys, gameplay_options, &cheats) {
                 say!("{line}");
             }
             // A game menu's Settings button: the Settings window once the
