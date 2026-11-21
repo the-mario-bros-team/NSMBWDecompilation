@@ -101,11 +101,19 @@ pub struct Settings {
     /// `[controller] wii_remotes`: Wii Remotes paired with Windows play in
     /// place of players' emulated remotes (Windows only).
     pub wii_remotes: bool,
+    /// Mods tab (`crate::mods`): HD textures from a texture pack.
+    pub hd_textures: bool,
+    /// The pack's folder under `texture_packs/` ("": the first there).
+    pub texture_pack: String,
+    /// Write the textures no pack replaces to `texture_dumps/`.
+    pub texture_dumps: bool,
+    /// The file mods under `mods/` turned on (from the next start).
+    pub mods: Vec<String>,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
     }
 }
 
@@ -217,6 +225,14 @@ impl Settings {
                 *c = n.clamp(0, 3) as u32;
             }
         }
+        s.hd_textures = flag("hd_textures", s.hd_textures);
+        if let Some(p) = t.get("texture_pack").and_then(toml::Value::as_str) {
+            s.texture_pack = p.into();
+        }
+        s.texture_dumps = flag("texture_dumps", s.texture_dumps);
+        if let Some(mods) = t.get("mods").and_then(toml::Value::as_array) {
+            s.mods = mods.iter().filter_map(toml::Value::as_str).map(str::to_string).collect();
+        }
         if let Some(keyboard) = t.get("keyboard").and_then(toml::Value::as_table) {
             for (i, (key, _)) in ACTIONS.iter().enumerate() {
                 if let Some(label) = keyboard.get(*key).and_then(toml::Value::as_str) {
@@ -300,8 +316,18 @@ impl Settings {
             self.file_characters[1],
             self.file_characters[2]
         );
-        // Last: a table ends the file's top-level keys.
         let mut text = text;
+        let mods: Vec<String> = self.mods.iter().map(|m| toml::Value::String(m.clone()).to_string()).collect();
+        text.push_str(&format!(
+            "# Mods tab. HD textures from a Dolphin texture pack in texture_packs/<folder> (texture_pack: its folder, \"\" the first);\n\
+             # texture_dumps writes the textures no pack replaces to texture_dumps/; mods: the folders in mods/ turned on (next start).\n\
+             hd_textures = {}\ntexture_pack = {}\ntexture_dumps = {}\nmods = [{}]\n",
+            self.hd_textures,
+            toml::Value::String(self.texture_pack.clone()),
+            self.texture_dumps,
+            mods.join(", ")
+        ));
+        // Last: a table ends the file's top-level keys.
         text.push_str("\n# Keys for the Wii Remote's buttons, by name, separated by commas (\"\" for none).\n# <action>_combos: keys held together, 2 or 3 a combination: jump_combos = [[\"Left Ctrl\", \"X\"]].\n[keyboard]\n");
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.keymap.label(i))));
@@ -367,7 +393,7 @@ mod tests {
             p.buttons[input::keymap::TILT_LEFT].clear();
             p.take(input::keymap::PLUS, vec![input::padmap::by_name("LB").unwrap(), input::padmap::by_name("RB").unwrap()]);
             p
-        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true };
+        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true, hd_textures: true, texture_pack: "My \"Pack\"".into(), texture_dumps: true, mods: vec!["One".into(), "Two \\ Three".into()] };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3.0, ..Settings::default() };

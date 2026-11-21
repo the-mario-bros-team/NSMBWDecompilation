@@ -339,8 +339,11 @@ pub struct NewTexture {
     pub id: u32,
     pub width: u32,
     pub height: u32,
-    /// RGBA8 levels, largest first.
+    /// RGBA8 levels, largest first (none when replaced).
     pub levels: Vec<Vec<u8>>,
+    /// A texture pack's image to upload instead, at its own size
+    /// ([`crate::replace`]).
+    pub replacement: Option<std::sync::Arc<crate::replace::Image>>,
 }
 
 /// An EFB copy kept on the GPU as texture `id`, standing in for the bytes at
@@ -370,6 +373,13 @@ pub struct Cache {
     pub new: Vec<NewTexture>,
     pub evicted: Vec<u32>,
     pub decoded_bytes: u64,
+    /// The texture pack in use: new contents are looked up in it.
+    pack: Option<Box<crate::replace::Pack>>,
+    /// Ids uploaded from the pack instead of the game's bytes.
+    replaced: std::collections::HashSet<u32, BuildHasherDefault<FxHasher>>,
+    /// Ids drawn from the game's texture while their pack file is read:
+    /// the pack's key, and the texture's size.
+    waiting: FastMap<u32, (crate::replace::Key, u16, u16)>,
 }
 
 /// Generations a texture may go unused before the renderer drops it.
@@ -381,24 +391,58 @@ impl Cache {
         self.next_id
     }
 
-    /// Starts a new frame: contents are hashed again on next use, and
-    /// textures unused for a while are dropped.
+    /// Starts a new frame: contents are hashed again on next use, textures
+    /// unused for a while are dropped, and the pack's files read since are
+    /// uploaded under the ids waiting for them.
     pub fn next_generation(&mut self) {
         self.generation += 1;
         self.epoch += 1;
         self.checked.clear();
+        if let Some(pack) = &mut self.pack {
+            let loaded = pack.take_loaded();
+            if !loaded.is_empty() {
+                let (new, replaced) = (&mut self.new, &mut self.replaced);
+                self.waiting.retain(|&id, (at, width, height)| match loaded.iter().find(|(k, _)| k == at) {
+                    Some((_, Some(image))) => {
+                        new.push(NewTexture { id, width: u32::from(*width), height: u32::from(*height), levels: Vec::new(), replacement: Some(image.clone()) });
+                        replaced.insert(id);
+                        false
+                    }
+                    Some((_, None)) => false,
+                    None => true,
+                });
+            }
+        }
         if self.generation.is_multiple_of(60) {
             let g = self.generation;
-            let evicted = &mut self.evicted;
+            let (evicted, replaced, waiting) = (&mut self.evicted, &mut self.replaced, &mut self.waiting);
             self.by_content.retain(|_, (id, last)| {
                 let keep = g - *last < KEEP_GENERATIONS;
                 if !keep {
                     evicted.push(*id);
+                    replaced.remove(id);
+                    waiting.remove(id);
                 }
                 keep
             });
             self.live.retain(|_, (_, last)| g - *last < 60);
         }
+    }
+
+    /// Uses `pack` for textures from now on (`None`: the game's own). Every
+    /// texture is decoded again on its next use.
+    pub fn set_pack(&mut self, pack: Option<crate::replace::Pack>) {
+        self.pack = pack.map(Box::new);
+        self.evicted.extend(self.by_content.drain().map(|(_, (id, _))| id));
+        self.checked.clear();
+        self.replaced.clear();
+        self.waiting.clear();
+        self.epoch += 1;
+    }
+
+    /// Whether texture `id` came from the pack.
+    pub fn is_replaced(&self, id: u32) -> bool {
+        self.replaced.contains(&id)
     }
 
     /// Records an EFB copy to `addr` that the renderer keeps as texture `id`.
@@ -450,9 +494,27 @@ impl Cache {
             }
             None => {
                 let id = self.alloc_id();
+                // A pack's image instead (its key hashed once, here); while
+                // its file is read, the game's own.
+                let mut pack_key = None;
+                let mut replacement = None;
+                if let Some(pack) = &mut self.pack {
+                    let k = crate::replace::key(key.format, key.width.into(), key.height.into(), data, tlut);
+                    match pack.find(&k) {
+                        crate::replace::Found::Ready(image) => replacement = Some(image),
+                        crate::replace::Found::Loading(at) => {
+                            self.waiting.insert(id, (at, key.width, key.height));
+                        }
+                        crate::replace::Found::None => pack_key = Some(k).filter(|_| pack.dumping()),
+                    }
+                }
+                if replacement.is_some() {
+                    self.replaced.insert(id);
+                }
                 let mut levels = Vec::new();
                 let (mut w, mut hgt, mut at) = (usize::from(key.width), usize::from(key.height), 0);
-                for _ in 0..key.levels {
+                let decode_levels = if replacement.is_some() { 0 } else { key.levels };
+                for _ in 0..decode_levels {
                     let size = level_size(key.format, w, hgt);
                     let src = data.get(at..(at + size).min(data.len())).unwrap_or(&[]);
                     levels.push(decode(key.format, w, hgt, src, tlut, key.tlut_format));
@@ -464,7 +526,10 @@ impl Cache {
                     w = (w / 2).max(1);
                     hgt = (hgt / 2).max(1);
                 }
-                self.new.push(NewTexture { id, width: key.width.into(), height: key.height.into(), levels });
+                if let (Some(k), Some(pack), Some(rgba)) = (pack_key, &mut self.pack, levels.first()) {
+                    pack.dump(&k, key.levels > 1, rgba);
+                }
+                self.new.push(NewTexture { id, width: key.width.into(), height: key.height.into(), levels, replacement });
                 self.by_content.insert((key, h), (id, generation));
                 id
             }
@@ -587,5 +652,60 @@ mod tests {
         c.next_generation();
         assert_ne!(c.lookup(key, &data, &[]), a);
         assert_eq!(c.new.len(), 2);
+    }
+
+    #[test]
+    fn pack_replaces_by_contents() {
+        use crate::replace::{Image, Pack};
+        let mut c = Cache::default();
+        let key = TexKey { addr: 0x100, width: 8, height: 4, format: I8, levels: 1, tlut: 0, tlut_format: 0 };
+        let (data, other) = (vec![7u8; 32], vec![8u8; 32]);
+        let old = c.lookup(key, &data, &[]);
+        let mut pack = Pack::new(None);
+        pack.add(crate::replace::key(I8, 8, 4, &data, &[]), std::sync::Arc::new(Image::with_mips(16, 8, vec![1; 16 * 8 * 4])));
+        c.set_pack(Some(pack));
+        assert_eq!(c.evicted, vec![old]);
+        let id = c.lookup(key, &data, &[]);
+        assert!(c.is_replaced(id) && id != old);
+        let t = c.new.last().unwrap();
+        assert!(t.levels.is_empty());
+        assert_eq!(t.replacement.as_ref().map(|r| (r.width, r.levels.len())), Some((16, 5)));
+        // Other contents at the same address: the game's own.
+        c.next_generation();
+        let id = c.lookup(key, &other, &[]);
+        assert!(!c.is_replaced(id) && c.new.last().unwrap().replacement.is_none());
+    }
+
+    #[test]
+    fn pack_files_arrive_later_under_the_same_id() {
+        use crate::replace::Pack;
+        let dir = std::env::temp_dir().join(format!("nsmbw-cache-pack-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let data = vec![5u8; 32];
+        let name = crate::replace::name(&crate::replace::key(I8, 8, 4, &data, &[]), false);
+        let mut enc = png::Encoder::new(std::fs::File::create(dir.join(format!("{name}.png"))).unwrap(), 32, 16);
+        enc.set_color(png::ColorType::Rgba);
+        enc.write_header().unwrap().write_image_data(&[9; 32 * 16 * 4]).unwrap();
+        let mut c = Cache::default();
+        let mut pack = Pack::new(None);
+        assert_eq!(pack.add_folder(&dir), 1);
+        c.set_pack(Some(pack));
+        let key = TexKey { addr: 0x100, width: 8, height: 4, format: I8, levels: 1, tlut: 0, tlut_format: 0 };
+        // First the game's texture, decoded as always.
+        let id = c.lookup(key, &data, &[]);
+        assert!(!c.is_replaced(id) && c.new[0].levels.len() == 1 && c.new[0].replacement.is_none());
+        c.new.clear();
+        // Then, once read, the pack's image under the same id.
+        for _ in 0..500 {
+            c.next_generation();
+            if !c.new.is_empty() {
+                break;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(10));
+        }
+        assert_eq!(c.new.len(), 1);
+        assert_eq!((c.new[0].id, c.new[0].replacement.as_ref().map(|r| r.width)), (id, Some(32)));
+        assert!(c.is_replaced(id) && c.lookup(key, &data, &[]) == id);
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 }

@@ -167,6 +167,8 @@ struct App {
     /// The update being installed on a thread of its own: how far it has
     /// got, and the flag that cancels its download.
     updater: Option<(Arc<std::sync::Mutex<ui::UpdateState>>, Arc<std::sync::atomic::AtomicBool>)>,
+    /// The Mods tab's HD texture pack download, while one runs or failed.
+    pack_download: Option<Arc<std::sync::Mutex<crate::mods::PackDownload>>>,
     /// Installed: this program to start again once the window has closed.
     restart: Option<PathBuf>,
     /// Where the mouse is in the window (pixels).
@@ -480,6 +482,25 @@ impl App {
             self.settings.save(Path::new(settings::FILE));
             self.restart = std::env::current_exe().ok();
             event_loop.exit();
+        }
+        // The HD texture pack's download: shown in the Mods tab; once
+        // installed, it is turned on.
+        if let Some(d) = &self.pack_download {
+            let state = d.lock().unwrap_or_else(|e| e.into_inner()).clone();
+            let done = matches!(state, crate::mods::PackDownload::Done(_));
+            if done {
+                self.settings.hd_textures = true;
+                self.settings.texture_pack = crate::mods::HD_PACK.into();
+                self.settings.save(Path::new(settings::FILE));
+                let _ = emu.to_emu.send(ToEmu::TexturePack(crate::mods::PackSpec::from_settings(&self.settings)));
+                self.pack_download = None;
+            }
+            if let Some(m) = &mut self.menus {
+                m.set_pack_download((!done).then_some(state));
+                if done {
+                    m.refresh_mods();
+                }
+            }
         }
         // A game menu's Settings button was picked and its menu has gone.
         if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
@@ -819,6 +840,12 @@ impl App {
                     }
                 }
                 ui::Change::Keymap => self.apply_controls(),
+                ui::Change::PackDownload => self.pack_download = Some(crate::mods::download_hd_pack()),
+                ui::Change::TexturePack => {
+                    if let Some(emu) = &self.emu {
+                        let _ = emu.to_emu.send(ToEmu::TexturePack(crate::mods::PackSpec::from_settings(&self.settings)));
+                    }
+                }
                 ui::Change::Cheated(file) => {
                     self.cheats.marks.fetch_or(1 << file.min(2), std::sync::atomic::Ordering::Relaxed);
                 }
@@ -864,7 +891,7 @@ impl App {
                     }
                 }
                 // From the next start, or read every frame.
-                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics => {}
+                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics | ui::Change::Mods => {}
             }
         }
     }
@@ -1218,6 +1245,10 @@ pub fn report(t: &crate::emu::Totals) {
     if t.light_texture_calls > 0 {
         println!("light textures: {} of {} redraws skipped (nothing they read changed)", t.light_texture_skips, t.light_texture_calls);
     }
+    if let Some(s) = &t.texture_pack {
+        let n = |c: &std::sync::atomic::AtomicU64| c.load(std::sync::atomic::Ordering::Relaxed);
+        println!("texture pack: {} distinct textures with a replacement, {} without; {} files unreadable; {} dumped", n(&s.matched), n(&s.missed), n(&s.failed), n(&s.dumped));
+    }
 }
 
 /// Runs until the window closes (or `max_frames` game frames); returns
@@ -1274,6 +1305,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         update_check,
         update: None,
         updater: None,
+        pack_download: None,
         restart: None,
         pointer: None,
         finder: None,
