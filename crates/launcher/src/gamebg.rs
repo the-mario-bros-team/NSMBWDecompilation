@@ -76,7 +76,8 @@ pub struct Model {
 struct Layer {
     /// TEX0 name.
     name: String,
-    repeat: bool,
+    /// Whether it repeats past its edges, sideways and upwards.
+    repeat: [bool; 2],
 }
 
 struct Material {
@@ -136,7 +137,7 @@ fn material(p: &[u8], m: usize) -> Material {
     let shader = rel(p, m, m + 0x28);
     run_bp(p, shader + 0x20, shader + be32(p, shader), &mut bp, |_, _| {});
     let layers_at = m + be32(p, m + 0x30);
-    let layers = (0..be32(p, m + 0x2C).min(8)).map(|i| layers_at + i * 0x34).map(|l| Layer { name: cstr(p, l + be32(p, l)), repeat: be32(p, l + 0x18) != 0 || be32(p, l + 0x1C) != 0 }).collect();
+    let layers = (0..be32(p, m + 0x2C).min(8)).map(|i| layers_at + i * 0x34).map(|l| Layer { name: cstr(p, l + be32(p, l)), repeat: [be32(p, l + 0x18) != 0, be32(p, l + 0x1C) != 0] }).collect();
     Material { xlu: be32(p, m + 0x10) >> 31 != 0, stages: usize::from(p.get(m + 0x16).copied().unwrap_or(0)).min(16), cull: be32(p, m + 0x18), layers, registers, konst, bp }
 }
 
@@ -331,6 +332,63 @@ fn colors(p: &[u8], a: usize) -> Vec<[u8; 4]> {
         .collect()
 }
 
+#[derive(Clone, Copy)]
+struct Corner {
+    pos: [f32; 2],
+    uv: [f32; 2],
+    color: [f32; 4],
+}
+
+/// The part of the polygon whose texture coordinate `axis` is at least
+/// `edge` (`above`) or at most it.
+fn cut(polygon: &[Corner], axis: usize, edge: f32, above: bool) -> Vec<Corner> {
+    let inside = |c: &Corner| if above { c.uv[axis] >= edge } else { c.uv[axis] <= edge };
+    let mut out = Vec::with_capacity(polygon.len() + 1);
+    for (i, a) in polygon.iter().enumerate() {
+        let b = &polygon[(i + 1) % polygon.len()];
+        if inside(a) {
+            out.push(*a);
+        }
+        if inside(a) != inside(b) {
+            let t = (edge - a.uv[axis]) / (b.uv[axis] - a.uv[axis]);
+            let mix = |x: f32, y: f32| x + (y - x) * t;
+            out.push(Corner { pos: [mix(a.pos[0], b.pos[0]), mix(a.pos[1], b.pos[1])], uv: [mix(a.uv[0], b.uv[0]), mix(a.uv[1], b.uv[1])], color: std::array::from_fn(|k| mix(a.color[k], b.color[k])) });
+        }
+    }
+    out
+}
+
+/// Cuts the piece's triangles where texture coordinate `axis` leaves 0..1
+/// and holds it at the edge beyond, as a texture that does not repeat that
+/// way is drawn.
+fn hold_at_edges(piece: &mut Piece, axis: usize) {
+    let size = if axis == 0 { piece.texture.width } else { piece.texture.height };
+    let inset = 0.5 / size.max(1) as f32;
+    let (mut positions, mut uvs, mut colors, mut indices) = (Vec::new(), Vec::new(), Vec::new(), Vec::new());
+    for triangle in piece.indices.chunks_exact(3) {
+        let corners: Vec<Corner> = triangle.iter().map(|&i| Corner { pos: piece.positions[i as usize], uv: piece.uvs[i as usize], color: piece.colors[i as usize].map(f32::from) }).collect();
+        let parts = [(cut(&cut(&corners, axis, 0.0, true), axis, 1.0, false), None), (cut(&corners, axis, 0.0, false), Some(inset)), (cut(&corners, axis, 1.0, true), Some(1.0 - inset))];
+        for (polygon, held) in parts {
+            if polygon.len() < 3 {
+                continue;
+            }
+            let first = positions.len() as u32;
+            for mut c in polygon.iter().copied() {
+                if let Some(value) = held {
+                    c.uv[axis] = value;
+                }
+                positions.push(c.pos);
+                uvs.push(c.uv);
+                colors.push(c.color.map(|v| v.round().clamp(0.0, 255.0) as u8));
+            }
+            for k in 1..polygon.len() as u32 - 1 {
+                indices.extend([first, first + k, first + k + 1]);
+            }
+        }
+    }
+    (piece.positions, piece.uvs, piece.colors, piece.indices) = (positions, uvs, colors, indices);
+}
+
 /// Reads the background model in `archive` (a U8 archive holding a BRRES)
 /// of the game folder `game`.
 pub fn load(game: &Path, archive: &str) -> Option<Model> {
@@ -444,7 +502,8 @@ pub fn load(game: &Path, archive: &str) -> Option<Model> {
 
         // The display list: triangles, strips, fans and quads.
         let (list, list_size) = (o + 0x24 + be32(p, o + 0x2C), be32(p, o + 0x24));
-        let mut piece = Piece { texture: Picture { width: picture.width, height: picture.height, rgba: Vec::new() }, repeat: mat.layers.get(main_layer).is_some_and(|l| l.repeat), positions: Vec::new(), uvs: Vec::new(), colors: Vec::new(), indices: Vec::new(), depth: 0.0, group: scroll };
+        let wrap = mat.layers.get(main_layer).map_or([false; 2], |l| l.repeat);
+        let mut piece = Piece { texture: Picture { width: picture.width, height: picture.height, rgba: Vec::new() }, repeat: wrap[0] || wrap[1], positions: Vec::new(), uvs: Vec::new(), colors: Vec::new(), indices: Vec::new(), depth: 0.0, group: scroll };
         let mut depth_sum = 0.0;
         let mut i = list;
         while i + 3 <= (list + list_size).min(p.len()) {
@@ -507,6 +566,12 @@ pub fn load(game: &Path, archive: &str) -> Option<Model> {
             continue;
         }
         piece.depth = depth_sum / piece.positions.len() as f32;
+        // A texture that repeats one way only: the drawing here repeats
+        // both ways or neither, so the other way is held at the edge by
+        // cutting the triangles there.
+        if wrap[0] != wrap[1] {
+            hold_at_edges(&mut piece, if wrap[0] { 1 } else { 0 });
+        }
         piece.texture.rgba = picture.rgba;
         pieces.push(piece);
     }
@@ -567,6 +632,22 @@ mod tests {
         let source = Picture { width: 2, height: 1, rgba: vec![9, 9, 9, 200, 9, 9, 9, 100] };
         let (out, _) = bake(&mat, &[Some(source)]).unwrap();
         assert_eq!(out.rgba, vec![9, 9, 9, 255, 9, 9, 9, 0]);
+    }
+
+    #[test]
+    fn a_texture_that_does_not_repeat_upwards_is_held_at_its_edge() {
+        // One triangle whose v runs from -1 to 2: cut at v = 0 and v = 1.
+        let mut piece = Piece { texture: Picture { width: 4, height: 4, rgba: Vec::new() }, repeat: true, positions: vec![[0.0, 0.0], [3.0, 0.0], [0.0, 3.0]], uvs: vec![[0.0, -1.0], [5.0, -1.0], [0.0, 2.0]], colors: vec![[255; 4]; 3], indices: vec![0, 1, 2], depth: 0.0, group: 0 };
+        hold_at_edges(&mut piece, 1);
+        assert!(piece.uvs.iter().all(|uv| (0.0..=1.0).contains(&uv[1])), "{:?}", piece.uvs);
+        // u is left to repeat.
+        assert!(piece.uvs.iter().any(|uv| uv[0] > 1.0));
+        // The pieces still cover the triangle: same area.
+        let area: f32 = piece.indices.chunks_exact(3).map(|t| {
+            let (a, b, c) = (piece.positions[t[0] as usize], piece.positions[t[1] as usize], piece.positions[t[2] as usize]);
+            ((b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])).abs() / 2.0
+        }).sum();
+        assert!((area - 4.5).abs() < 1e-3, "{area}");
     }
 
     #[test]

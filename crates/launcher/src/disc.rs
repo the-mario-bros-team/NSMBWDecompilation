@@ -41,15 +41,20 @@ fn is_extracted(p: &Path) -> bool {
     p.join("files").is_dir() && p.join("sys").join("boot.bin").is_file()
 }
 
-/// The extracted disc at `picked`: the folder itself, or one inside it
-/// (Dolphin's "Extract Entire Disc" puts the game in `DATA`).
+/// The extracted disc at `picked`: the folder itself, or the one inside it
+/// (Dolphin's "Extract Entire Disc" puts the game in `DATA`). A folder
+/// that holds several games is not one itself.
 pub fn find_root(picked: &Path) -> Option<PathBuf> {
     if is_extracted(picked) {
         return Some(picked.to_path_buf());
     }
-    let mut inside: Vec<PathBuf> = std::fs::read_dir(picked).ok()?.flatten().map(|e| e.path()).filter(|p| is_extracted(p)).collect();
-    inside.sort();
-    inside.into_iter().next()
+    let data = picked.join("DATA");
+    if is_extracted(&data) {
+        return Some(data);
+    }
+    let mut inside = std::fs::read_dir(picked).ok()?.flatten().map(|e| e.path()).filter(|p| is_extracted(p));
+    let only = inside.next()?;
+    inside.next().is_none().then_some(only)
 }
 
 /// Reads the game ID and revision of the extracted disc at `picked`.
@@ -211,6 +216,9 @@ mod tests {
         // The original's ID with Newer's files in it.
         std::fs::create_dir_all(dir.join("usa").join("DATA").join("files").join("NewerRes")).unwrap();
         assert!(judge(&usa, original, &all).unwrap_err().contains("modified copy"));
+
+        // A folder holding several games is not a game itself.
+        assert!(identify(&dir).unwrap_err().contains("no extracted game"));
 
         // Not a disc header.
         std::fs::write(dir.join("kart").join("sys").join("boot.bin"), [0u8; 0x440]).unwrap();

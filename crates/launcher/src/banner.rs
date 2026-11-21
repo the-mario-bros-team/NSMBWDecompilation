@@ -332,7 +332,7 @@ pub fn load(game: &Path, file: &str, hide: &[String]) -> Option<Banner> {
                     });
                 }
             }
-            b"pan1" | b"pic1" | b"txt1" | b"wnd1" | b"bnd1" => {
+            b"pan1" | b"pic1" | b"txt1" | b"wnd1" | b"bnd1" if sec.len() >= 76 => {
                 let name = cstr(sec, 12, 16);
                 if hidden.is_none() && hide.iter().any(|h| *h == name) {
                     hidden = Some(depth);

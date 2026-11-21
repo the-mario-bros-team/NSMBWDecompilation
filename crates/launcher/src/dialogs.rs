@@ -20,23 +20,24 @@ pub struct Dialog {
 
 impl Dialog {
     pub fn message(title: &str, body: &str) -> Self {
-        Self { what: What::Message { title: title.into(), body: body.into() }, focus: Focus::default() }
+        Self { what: What::Message { title: title.into(), body: body.into() }, focus: Focus::starting_at("ok") }
     }
 
     /// Asked before Skip Launcher is switched on, for the game it will start.
     pub fn skip(game: &str) -> Self {
-        Self { what: What::Skip { game: game.into() }, focus: Focus::default() }
+        Self { what: What::Skip { game: game.into() }, focus: Focus::starting_at("skip-on") }
     }
 
     /// The newest release (`Shared::update`).
     pub fn update() -> Self {
-        Self { what: What::Update, focus: Focus::default() }
+        Self { what: What::Update, focus: Focus::starting_at("page") }
     }
 }
 
 /// The release notes, cut to what a small window holds.
 fn excerpt(notes: &str) -> String {
-    let lines: Vec<&str> = notes.lines().map(str::trim_end).filter(|l| !l.trim().is_empty()).take(9).collect();
+    // Plain lines: a heading's marks are dropped.
+    let lines: Vec<&str> = notes.lines().map(|l| l.trim_end().trim_start_matches('#').trim_start()).filter(|l| !l.is_empty()).take(9).collect();
     let mut text = lines.join("\n");
     if text.chars().count() > 620 {
         text = text.chars().take(620).collect::<String>() + "...";
@@ -122,10 +123,6 @@ pub fn draw(sh: &Shared, cx: &mut Cx, dialog: &mut Dialog, t: f32) -> Vec<Action
                 _ => actions.push(Action::Close),
             }
         }
-    }
-    // Focus starts on the first button, whichever was drawn first.
-    if dialog.focus.current.is_none() || t < 0.05 {
-        dialog.focus.set(buttons[0].0);
     }
     dialog.focus.end(&cx.nav);
     if cx.pressed(Nav::Back) {

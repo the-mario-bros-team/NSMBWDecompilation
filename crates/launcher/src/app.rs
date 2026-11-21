@@ -14,7 +14,7 @@ use crate::dialogs::{self, Dialog};
 use crate::disc::{self, Found, Report};
 use crate::draw::*;
 use crate::gameart::{self, Pictures};
-use crate::nav::{Input, Nav};
+use crate::nav::Input;
 use crate::store::Store;
 use crate::versions::Version;
 use crate::{launch, scene, screen_main, screen_settings, screen_setup, screen_switch};
@@ -182,7 +182,7 @@ struct Launch {
 
 pub struct Options {
     pub root: PathBuf,
-    pub script: Vec<(u64, Nav)>,
+    pub script: Vec<(u64, crate::nav::Scripted)>,
     pub shots: Vec<(u64, PathBuf)>,
     pub frames: Option<u64>,
     /// Something to tell the player at start (why skipping did not work).
@@ -370,6 +370,14 @@ impl App {
             }
             self.shared.check = Check::Done { found: Some(found), verdict, report: Some(report), saved };
             self.refresh(i);
+            // The folder is set: Done is what is left to press.
+            if saved {
+                for layer in &mut self.layers {
+                    if let Kind::Setup(focus) = &mut layer.kind {
+                        focus.set("done");
+                    }
+                }
+            }
         }
         if let Some(result) = self.update_rx.as_ref().and_then(|rx| rx.try_recv().ok()) {
             self.update_rx = None;
@@ -638,6 +646,14 @@ impl eframe::App for App {
             let dropped = i.raw.dropped_files.iter().map(|f| f.path().to_path_buf()).next();
             (i.pointer.hover_pos(), i.pointer.delta() != egui::Vec2::ZERO, i.pointer.primary_clicked(), i.smooth_scroll_delta.y, i.key_pressed(egui::Key::F11), dropped)
         });
+        // A scripted run is driven by its script alone, its mouse too:
+        // wherever the real one happens to be must not move the focus.
+        let (pointer, moved, clicked, wheel) = if self.scripted {
+            let mouse = self.input.scripted_mouse(self.frame);
+            (mouse.at.map(|p| pos2(screen.left() + p[0], screen.top() + p[1])), mouse.moved, mouse.clicked, 0.0)
+        } else {
+            (pointer, moved, clicked, wheel)
+        };
         if fullscreen_key {
             let now = ctx.input(|i| i.viewport().fullscreen.unwrap_or(false));
             ctx.send_viewport_cmd(egui::ViewportCommand::Fullscreen(!now));

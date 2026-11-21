@@ -211,8 +211,19 @@ impl Focus {
         let mut best: Option<(f32, Id)> = None;
         for &(id, rect) in &self.items {
             let delta = rect.center() - from.center();
-            let along = delta.dot(dir);
-            if Some(id) == self.current || along < 1.0 {
+            // How far past this control's edge the other one starts, that
+            // way: only controls that lie beyond it count (a few points of
+            // overlap allowed).
+            let along = if dir.x > 0.0 {
+                rect.left() - from.right()
+            } else if dir.x < 0.0 {
+                from.left() - rect.right()
+            } else if dir.y > 0.0 {
+                rect.top() - from.bottom()
+            } else {
+                from.top() - rect.bottom()
+            };
+            if Some(id) == self.current || along < -8.0 {
                 continue;
             }
             // The gap across the direction: none when the two overlap there.
@@ -562,3 +573,39 @@ pub const GOOD: Color32 = Color32::from_rgb(0x6b, 0xe5, 0x8a);
 pub const WARN: Color32 = Color32::from_rgb(0xff, 0xc8, 0x57);
 pub const BAD: Color32 = Color32::from_rgb(0xff, 0x6b, 0x6b);
 pub const IDLE: Color32 = Color32::from_rgb(0xb9, 0xb4, 0xd8);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_direction_moves_the_focus_to_the_nearest_control_that_way() {
+        // The main menu's shape: three big buttons in a row, two small below.
+        let rect = |x: f32, y: f32, w: f32, h: f32| Rect::from_min_size(pos2(x, y), vec2(w, h));
+        let mut focus = Focus::starting_at("play");
+        let lay_out = |focus: &mut Focus| {
+            focus.begin();
+            for (name, r) in [("play", rect(72.0, 418.0, 224.0, 88.0)), ("skip", rect(312.0, 418.0, 204.0, 88.0)), ("switch", rect(532.0, 418.0, 214.0, 88.0)), ("folder", rect(72.0, 522.0, 184.0, 52.0)), ("settings", rect(270.0, 522.0, 152.0, 52.0)), ("update", rect(900.0, 31.0, 240.0, 38.0))] {
+                focus.add(Id::new(name), r);
+            }
+        };
+        let mut walk = |moves: &[Nav], lands_on: &str| {
+            lay_out(&mut focus);
+            focus.end(moves);
+            assert_eq!(focus.current, Some(Id::new(lands_on)), "after {moves:?}");
+        };
+        walk(&[Nav::Right], "skip");
+        walk(&[Nav::Right], "switch");
+        walk(&[Nav::Down], "settings");
+        walk(&[Nav::Left], "folder");
+        walk(&[Nav::Left], "folder");
+        walk(&[Nav::Down], "folder");
+        walk(&[Nav::Up], "play");
+        walk(&[Nav::Down, Nav::Right], "settings");
+        walk(&[Nav::Up], "skip");
+        walk(&[Nav::Left], "play");
+        walk(&[Nav::Up], "update");
+        walk(&[Nav::Down], "switch");
+        walk(&[Nav::Confirm], "switch");
+    }
+}

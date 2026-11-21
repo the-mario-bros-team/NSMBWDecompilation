@@ -104,8 +104,8 @@ fn curtain(band: usize, x: f32, time: f32) -> (f32, f32, f32) {
     let b = band as f32;
     let top = 0.06 + 0.055 * b + 0.045 * (x * 1.7 + time * 0.21 + b * 1.9).sin() + 0.025 * (x * 4.3 - time * 0.33 + b).sin();
     let height = 0.26 + 0.07 * (x * 2.3 + time * 0.27 + b * 2.4).sin();
-    let strength = 0.30 + 0.22 * (x * 3.1 + time * 0.43 + b * 1.3).sin() + 0.10 * (x * 7.7 - time * 0.6).sin();
-    (top, height, strength.clamp(0.04, 0.7))
+    let strength = 0.20 + 0.16 * (x * 3.1 + time * 0.43 + b * 1.3).sin() + 0.08 * (x * 7.7 - time * 0.6).sin();
+    (top, height, strength.clamp(0.03, 0.5))
 }
 
 /// How bright the sun or moon's wide and near halos are.

@@ -109,16 +109,40 @@ pub enum Device {
     Pad,
 }
 
-/// A scripted move at a frame (`--script 30:down,45:a`).
-pub fn parse_script(text: &str) -> Result<Vec<(u64, Nav)>, String> {
+/// What a script does at a frame: a controller move, or the mouse moved to
+/// or clicked at a point of the window (in the launcher's own units: the
+/// window is 720 tall, or 1280 wide when narrower than 16:9).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum Scripted {
+    Nav(Nav),
+    Point([f32; 2]),
+    Click([f32; 2]),
+}
+
+/// A script: `--script 30:down 45:a 60:point@640x360 70:click@640x360`
+/// (steps separated by spaces or commas).
+pub fn parse_script(text: &str) -> Result<Vec<(u64, Scripted)>, String> {
     let mut script = Vec::new();
     for word in text.split([',', ' ']).filter(|w| !w.is_empty()) {
         let (frame, name) = word.split_once(':').ok_or(format!("--script {word}: expected <frame>:<move>"))?;
         let frame = frame.parse().map_err(|_| format!("--script {word}: bad frame"))?;
-        let nav = Nav::parse(name).ok_or(format!("--script {word}: moves are up down left right a b x y start lb rb"))?;
-        script.push((frame, nav));
+        let at = |p: &str| p.split_once('x').and_then(|(x, y)| Some([x.parse().ok()?, y.parse().ok()?]));
+        let step = match name.split_once('@') {
+            Some(("point", p)) => at(p).map(Scripted::Point),
+            Some(("click", p)) => at(p).map(Scripted::Click),
+            Some(_) => None,
+            None => Nav::parse(name).map(Scripted::Nav),
+        };
+        script.push((frame, step.ok_or(format!("--script {word}: moves are up down left right a b x y start lb rb, point@<x>x<y> and click@<x>x<y>"))?));
     }
     Ok(script)
+}
+
+/// The mouse as a script drives it this frame.
+pub struct ScriptedMouse {
+    pub at: Option<[f32; 2]>,
+    pub moved: bool,
+    pub clicked: bool,
 }
 
 /// Seconds a direction is held before it repeats, and between repeats.
@@ -130,14 +154,16 @@ pub struct Input {
     /// The controller direction held (D-pad or stick) and the time until it
     /// repeats.
     held: Option<(Nav, f32)>,
-    script: Vec<(u64, Nav)>,
+    script: Vec<(u64, Scripted)>,
+    /// Where a script last put the mouse.
+    scripted_pointer: Option<[f32; 2]>,
     pub device: Device,
     /// The name of the controller last used or connected.
     pub pad: Option<String>,
 }
 
 impl Input {
-    pub fn new(script: Vec<(u64, Nav)>) -> Self {
+    pub fn new(script: Vec<(u64, Scripted)>) -> Self {
         let gilrs = match Gilrs::new() {
             Ok(g) => Some(g),
             Err(gilrs::Error::NotImplemented(g)) => Some(g),
@@ -149,7 +175,25 @@ impl Input {
         let pad = gilrs.as_ref().and_then(|g| g.gamepads().find(|(_, p)| p.is_connected()).map(|(_, p)| p.name().to_string()));
         // A scripted run stands in for a controller.
         let device = if pad.is_some() || !script.is_empty() { Device::Pad } else { Device::Keyboard };
-        Self { gilrs, held: None, script, device, pad }
+        Self { gilrs, held: None, script, scripted_pointer: None, device, pad }
+    }
+
+    /// The mouse for a scripted run at `frame`: where the script last put
+    /// it, and whether it moved or clicked now.
+    pub fn scripted_mouse(&mut self, frame: u64) -> ScriptedMouse {
+        let mut mouse = ScriptedMouse { at: self.scripted_pointer, moved: false, clicked: false };
+        for (_, step) in self.script.iter().filter(|s| s.0 == frame) {
+            match *step {
+                Scripted::Point(p) => (mouse.at, mouse.moved) = (Some(p), true),
+                Scripted::Click(p) => (mouse.at, mouse.moved, mouse.clicked) = (Some(p), true, true),
+                Scripted::Nav(_) => {}
+            }
+        }
+        self.scripted_pointer = mouse.at;
+        if mouse.moved {
+            self.device = Device::Keyboard;
+        }
+        mouse
     }
 
     /// The moves made since the last frame. With the window not in front
@@ -158,9 +202,11 @@ impl Input {
     pub fn poll(&mut self, ctx: &egui::Context, frame: u64, dt: f32, focused: bool) -> Vec<Nav> {
         let mut out = Vec::new();
 
-        for &(_, nav) in self.script.iter().filter(|s| s.0 == frame) {
-            self.device = Device::Pad;
-            out.push(nav);
+        for (_, step) in self.script.iter().filter(|s| s.0 == frame) {
+            if let Scripted::Nav(nav) = *step {
+                self.device = Device::Pad;
+                out.push(nav);
+            }
         }
 
         ctx.input(|i| {
@@ -265,8 +311,10 @@ mod tests {
         assert_eq!(key_nav(egui::Key::Enter), Some(Nav::Confirm));
         assert_eq!(key_nav(egui::Key::Escape), Some(Nav::Back));
         assert_eq!(key_nav(egui::Key::F5), None);
-        assert_eq!(parse_script("10:down, 20:a 30:lb").unwrap(), vec![(10, Nav::Down), (20, Nav::Confirm), (30, Nav::Prev)]);
+        assert_eq!(parse_script("10:down, 20:a 30:lb").unwrap(), vec![(10, Scripted::Nav(Nav::Down)), (20, Scripted::Nav(Nav::Confirm)), (30, Scripted::Nav(Nav::Prev))]);
+        assert_eq!(parse_script("5:point@640x360,9:click@12.5x700").unwrap(), vec![(5, Scripted::Point([640.0, 360.0])), (9, Scripted::Click([12.5, 700.0]))]);
         assert!(parse_script("10:jump").is_err());
+        assert!(parse_script("10:click@here").is_err());
         assert!(parse_script("down").is_err());
     }
 }

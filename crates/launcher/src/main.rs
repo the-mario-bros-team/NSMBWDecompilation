@@ -37,7 +37,8 @@ const USAGE: &str = "usage: nsmbw-launcher [--launcher] [--root <folder>]
   --root <folder>    where the launcher keeps everything and looks for nsmbw-port.exe
                      (default: the folder nsmbw-launcher.exe is in)
   for tests, as nsmbw-port's --press and --shot:
-  --script <moves>   controller moves at given frames: up down left right a b x y start lb rb
+  --script <moves>   controller moves at given frames: up down left right a b x y start lb rb,
+                     and the mouse: point@<x>x<y>, click@<x>x<y> (the window is 720 units tall)
   --shot <f>:<png>   save the window's picture at frame f (repeatable)
   --frames <n>       close after n frames
   --size <w>x<h>     the window's size";
@@ -45,7 +46,7 @@ const USAGE: &str = "usage: nsmbw-launcher [--launcher] [--root <folder>]
 struct Args {
     launcher: bool,
     root: PathBuf,
-    script: Vec<(u64, nav::Nav)>,
+    script: Vec<(u64, nav::Scripted)>,
     shots: Vec<(u64, PathBuf)>,
     frames: Option<u64>,
     size: [f32; 2],
@@ -115,6 +116,13 @@ fn skip_to_game(root: &std::path::Path) -> Result<(), (String, String)> {
     }
 }
 
+/// Says what went wrong where a player sees it: the launcher has no console.
+fn fail(text: &str) -> ExitCode {
+    eprintln!("{text}");
+    rfd::MessageDialog::new().set_title("NSMBW Port Launcher").set_description(text).set_level(rfd::MessageLevel::Error).show();
+    ExitCode::FAILURE
+}
+
 fn main() -> ExitCode {
     if std::env::args().any(|a| a == "-h" || a == "--help") {
         println!("{USAGE}");
@@ -128,15 +136,14 @@ fn main() -> ExitCode {
         }
     };
     if let Err(e) = std::fs::create_dir_all(&args.root) {
-        eprintln!("{}: {e}", args.root.display());
-        return ExitCode::FAILURE;
+        return fail(&format!("The launcher's folder cannot be used.
+{}: {e}", args.root.display()));
     }
 
     let mut notice = None;
     let state = store::Store::load(args.root.clone()).state;
-    let scripted = !args.script.is_empty() || !args.shots.is_empty() || args.frames.is_some();
     // A release found during the last skipped start is shown first.
-    if state.skip_launcher && state.update_pending.is_empty() && !args.launcher && !scripted && !launch::shift_held() && !launch::pad_back_held() {
+    if state.skip_launcher && state.update_pending.is_empty() && !args.launcher && !launch::shift_held() && !launch::pad_back_held() {
         match skip_to_game(&args.root) {
             Ok(()) => return ExitCode::SUCCESS,
             Err(why) => notice = Some(why),
@@ -154,9 +161,8 @@ fn main() -> ExitCode {
     let options = app::Options { root: args.root, script: args.script, shots: args.shots, frames: args.frames, notice };
     match eframe::run_native("nsmbw-launcher", native, Box::new(move |cc| Ok(Box::new(app::App::new(cc, options))))) {
         Ok(()) => ExitCode::SUCCESS,
-        Err(e) => {
-            eprintln!("the launcher's window could not be opened: {e}");
-            ExitCode::FAILURE
-        }
+        Err(e) => fail(&format!("The launcher's window could not be opened: {e}
+
+The game can still be started without it: nsmbw-port.exe --game <your game folder>.")),
     }
 }

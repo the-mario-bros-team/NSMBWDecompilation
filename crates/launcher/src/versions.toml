@@ -102,7 +102,7 @@ title = "Newer Super Mario Bros. Wii"
 short = "Newer"
 tagline = "A fan-made adventure by the Newer Team"
 playable = false
-status = "Not playable yet. The port's engine runs only the original USA disc's own code for now, and Newer adds program code of its own on top of it."
+status = "The port's engine runs only the original USA disc's own code for now. Newer adds program code of its own on top of it, which the port cannot load yet."
 discs = [{ id = "SMNE03", name = "Newer Super Mario Bros. Wii, USA" }]
 with = ["files/NewerRes"]
 
@@ -117,36 +117,36 @@ ink = "#ffffff"
 
 [version.theme.scene]
 sky = ["#0d0630", "#3a1470", "#ff7a59"]
-glow = { color = "#ffd9a8", x = 0.24, y = 0.24, size = 0.45, disc = 0.038 }
+glow = { color = "#ffd9a8", x = 0.60, y = 0.17, size = 0.30, disc = 0.034 }
 stars = 1.0
 aurora = ["#52ffc8", "#7a8cff", "#ff6ad5"]
 particles = { color = "#ffd0f0", amount = 0.5, fall = true }
 
 [[version.theme.scene.ridge]]
-top = "#8a3d8f"
+top = "#9a4a9a"
 bottom = "#6a2a7c"
 height = 0.50
 amp = 0.15
 rough = 1.0
-width = 1.6
+width = 0.42
 speed = 0.004
 
 [[version.theme.scene.ridge]]
-top = "#5a2478"
+top = "#6a2a86"
 bottom = "#3d1560"
 height = 0.38
-amp = 0.12
-rough = 0.9
-width = 1.2
+amp = 0.11
+rough = 0.95
+width = 0.36
 speed = 0.009
 
 [[version.theme.scene.ridge]]
-top = "#35105a"
+top = "#3c1263"
 bottom = "#220a44"
 height = 0.26
-amp = 0.070
-rough = 0.5
-width = 0.9
+amp = 0.075
+rough = 0.7
+width = 0.40
 speed = 0.016
 
 [[version.theme.scene.ridge]]
@@ -154,6 +154,6 @@ top = "#1e0838"
 bottom = "#0e0420"
 height = 0.14
 amp = 0.045
-rough = 0.15
-width = 0.7
+rough = 0.2
+width = 0.45
 speed = 0.028

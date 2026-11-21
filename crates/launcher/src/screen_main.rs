@@ -20,7 +20,8 @@ pub fn status(v: &Version, slot: &Slot) -> (Color32, String) {
         return (WARN, "Add your copy of the game to play".into());
     }
     match (&slot.problem, &slot.found) {
-        (Some(p), _) => (BAD, p.clone()),
+        // The short of it; Play says the rest.
+        (Some(p), _) => (BAD, p.split(':').next().unwrap_or(p).to_string()),
         (None, Some(found)) => (GOOD, format!("Ready to play  ·  {}", found.describe())),
         (None, None) => (GOOD, "Ready to play".into()),
     }
@@ -117,10 +118,13 @@ pub fn draw(sh: &Shared, cx: &mut Cx, focus: &mut Focus, appear: f32) -> (Vec<Ac
     }
     if skipping {
         let note = "Skip Launcher is on: the next start goes straight into the game. Hold Shift while starting (or Back on an Xbox controller) to come back here.";
-        wrapped(&cx.p, pos2(left, row2 + 68.0), 640.0, note, 14.0, SEMI, white(0.80));
+        let galley = cx.p.layout(note.to_string(), font(14.0, SEMI), white(0.92), 620.0);
+        let plate = Rect::from_min_size(pos2(left, row2 + 66.0), galley.size() + vec2(28.0, 18.0));
+        cx.p.rect_filled(plate, 12.0, Color32::from_rgba_unmultiplied(12, 16, 34, 150));
+        cx.p.galley(plate.min + vec2(14.0, 9.0), galley, white(0.92));
     }
 
-    hero(sh, cx, pos2(right - 196.0, cy - 64.0), appear);
+    hero(sh, cx, pos2(right - 196.0, cy - if slot.banner.is_some() { 84.0 } else { 64.0 }), appear);
 
     // The bumpers step through the versions.
     if cx.pressed(Nav::Prev) || cx.pressed(Nav::Next) {
@@ -184,8 +188,10 @@ fn hero(sh: &Shared, cx: &mut Cx, center: Pos2, appear: f32) {
         }
         p.rect_stroke(card, radius - 6.0, Stroke::new(frame, Color32::WHITE), StrokeKind::Inside);
         p.rect_stroke(card, radius - 6.0, Stroke::new(1.0, black(0.18)), StrokeKind::Outside);
-        gallery(slot, &p, center, t);
-        text(&p, center + vec2(0.0, if slot.gallery.is_empty() { card.height() / 2.0 + 24.0 } else { 258.0 }), Align2::CENTER_CENTER, "Art from your own game files", 12.5, SEMI, white(0.62));
+        // The previews sit lower here: the banner's cast stands along its
+        // bottom edge.
+        gallery(slot, &p, center + vec2(0.0, 44.0), t);
+        text(&p, center + vec2(0.0, if slot.gallery.is_empty() { card.height() / 2.0 + 24.0 } else { 300.0 }), Align2::CENTER_CENTER, "Art from your own game files", 12.5, SEMI, white(0.70));
         return;
     }
     // The still picture, drifting slowly inside the card.
