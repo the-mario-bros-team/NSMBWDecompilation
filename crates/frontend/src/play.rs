@@ -176,6 +176,9 @@ struct App {
     relaunch: Option<Vec<String>>,
 }
 
+/// Set for a game the LAN tab started to join a room.
+const LAN_JOIN_ENV: &str = "NSMBW_LAN_JOIN";
+
 /// This run's options without its network ones, then `net`: the options
 /// a game starting again into (or out of) a LAN room gets.
 fn relaunch_args(net: &[String]) -> Vec<std::ffi::OsString> {
@@ -1133,12 +1136,31 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         relaunch: None,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
-    // An update was installed: the new program, now the window and the
-    // game have closed.
+    // A room the LAN tab joined could not be joined (gone, or out of
+    // reach): the game starts again on its own rather than closing.
+    if let (Some(e), crate::net::Mode::Join { .. }) = (&app.error, &app.opts.emu.net) {
+        if std::env::var_os(LAN_JOIN_ENV).is_some() {
+            eprintln!("LAN: {e}; the game starts again on its own");
+            app.relaunch = Some(Vec::new());
+            app.restart = std::env::current_exe().ok();
+        }
+    }
+    // An update was installed, or a LAN room joined, hosted or left: the
+    // game again, now the window and the game have closed.
     if let Some(program) = app.restart.take() {
         crate::say::flush();
         let started = match app.relaunch.take() {
-            Some(net) => std::process::Command::new(&program).args(relaunch_args(&net)).spawn().map(|_| ()).map_err(|e| e.to_string()),
+            Some(net) => {
+                let mut game = std::process::Command::new(&program);
+                game.args(relaunch_args(&net));
+                // Only a join from the LAN tab falls back to playing alone.
+                if net.first().map(String::as_str) == Some("--join") {
+                    game.env(LAN_JOIN_ENV, "1");
+                } else {
+                    game.env_remove(LAN_JOIN_ENV);
+                }
+                game.spawn().map(|_| ()).map_err(|e| e.to_string())
+            }
             None => port_update::install::restart(&program),
         };
         if let Err(e) = started {
