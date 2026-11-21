@@ -12,8 +12,13 @@
 #           (byte 7; left out = any), and a name for messages
 # with      files or folders the game folder must hold; without: must not hold
 # art       pictures read from the player's own game folder at run time: logo
-#           (one texture of a U8 archive) and gallery (the archive's textures
-#           whose names start with prefix). Nothing of the game is stored here.
+#           (one texture of a U8 archive), gallery (the archive's textures
+#           whose names start with prefix), background (the game's own
+#           course background: its models far to near, how many of their
+#           units the picture is tall, and the height at its middle) and
+#           banner (the game's Wii Menu banner, played as cover art; hide
+#           names panes of its layout to leave out, here the publisher's
+#           logo). Nothing of the game is stored here.
 # theme     the launcher's look while this version is selected (colours as
 #           #rrggbb): accent (two colours, the Play button), ink (text on the
 #           accent), and scene, the picture drawn behind everything:
@@ -42,6 +47,8 @@ without = ["files/NewerRes"]
 [version.art]
 logo = { archive = "files/US/Layout/openingTitle/openingTitle.arc", name = "wiiMario_Title_logo_local_00.tpl" }
 gallery = { archive = "files/Layout/textures/MultiCorseSelectTexture.arc", prefix = "im_W" }
+background = { models = ["files/Object/bgB_0102.arc", "files/Object/bgA_0102.arc"], height = 300.0, center = 30.0 }
+banner = { file = "files/opening.bnr", hide = ["N_Left"] }
 
 [version.theme]
 accent = ["#ffd84a", "#ff9a1f"]
@@ -102,6 +109,7 @@ with = ["files/NewerRes"]
 [version.art]
 logo = { archive = "files/US/Layout/openingTitle/openingTitle.arc", name = "" }
 gallery = { archive = "files/Layout/textures/MultiCorseSelectTexture.arc", prefix = "im_W" }
+banner = { file = "files/opening.bnr", hide = ["N_Left"] }
 
 [version.theme]
 accent = ["#ff7ac8", "#8a5bff"]

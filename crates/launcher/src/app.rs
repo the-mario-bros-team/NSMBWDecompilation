@@ -30,6 +30,70 @@ pub struct Slot {
     /// From the player's game folder.
     pub logo: Option<TextureHandle>,
     pub gallery: Vec<TextureHandle>,
+    /// The game's own course background, when the game folder has it.
+    pub background: Option<Background>,
+    /// The game's own banner, its textures, and when it started playing.
+    pub banner: Option<(crate::banner::Banner, Vec<TextureHandle>, f32)>,
+}
+
+/// One sheet of a game background, ready to draw: its triangles in model
+/// units (y down), and how fast it drifts.
+struct Sheet {
+    mesh: egui::Mesh,
+    speed: f32,
+    period: f32,
+    _texture: TextureHandle,
+}
+
+/// The game's own course background (`gamebg.rs`), far sheets first.
+pub struct Background {
+    sheets: Vec<Sheet>,
+    /// How many model units the picture is tall, and the model's height at
+    /// its middle.
+    height: f32,
+    center: f32,
+}
+
+impl Background {
+    /// Uploads the models' textures and lays their triangles out.
+    fn new(ctx: &egui::Context, name: &str, models: &[crate::gamebg::Model], view: &crate::versions::BackgroundRef) -> Self {
+        let mut sheets = Vec::new();
+        for (m, model) in models.iter().enumerate() {
+            // Nearer models, and nearer groups within a model, drift faster.
+            let model_speed = 0.42f32.powi((models.len() - 1 - m) as i32);
+            for (k, piece) in model.pieces.iter().enumerate() {
+                let options = if piece.repeat { TextureOptions::LINEAR_REPEAT } else { TextureOptions::LINEAR };
+                let t = &piece.texture;
+                let texture = ctx.load_texture(format!("bg-{name}-{m}-{k}"), ColorImage::from_rgba_unmultiplied([t.width, t.height], &t.rgba[..t.width * t.height * 4]), options);
+                let mut mesh = egui::Mesh::with_texture(texture.id());
+                for i in 0..piece.positions.len() {
+                    let (p, uv, c) = (piece.positions[i], piece.uvs[i], piece.colors[i]);
+                    mesh.vertices.push(egui::epaint::Vertex { pos: pos2(p[0], -p[1]), uv: pos2(uv[0], uv[1]), color: Color32::from_rgba_unmultiplied(c[0], c[1], c[2], c[3]) });
+                }
+                mesh.indices = piece.indices.clone();
+                sheets.push(Sheet { mesh, speed: model_speed * 0.72f32.powi(i32::from(piece.group)), period: model.period, _texture: texture });
+            }
+        }
+        Self { sheets, height: view.height.max(1.0), center: view.center }
+    }
+
+    /// Draws the background into `rect`, drifting with `time`; `shift`
+    /// slides it sideways (near sheets further).
+    fn paint(&self, p: &egui::Painter, rect: Rect, time: f32, shift: f32) {
+        let scale = rect.height() / self.height;
+        let half = rect.width() / 2.0 / scale;
+        for sheet in &self.sheets {
+            let along = ((time * 5.0 + shift * 36.0) * sheet.speed).rem_euclid(sheet.period);
+            // The model covers half a period either side of its middle.
+            let first = ((along - half) / sheet.period - 0.5).floor() as i32;
+            let last = ((along + half) / sheet.period + 0.5).ceil() as i32;
+            for k in first..=last {
+                let mut mesh = sheet.mesh.clone();
+                mesh.transform(egui::emath::TSTransform::new(vec2(rect.center().x + (k as f32 * sheet.period - along) * scale, rect.center().y + self.center * scale), scale));
+                p.add(egui::Shape::mesh(mesh));
+            }
+        }
+    }
 }
 
 pub enum UpdateStatus {
@@ -135,6 +199,11 @@ pub struct App {
     frame: u64,
     /// Driven by a script: time advances by the frame, not the clock.
     scripted: bool,
+    /// Until when (in `time`) frames are drawn at the full rate.
+    busy_until: f32,
+    /// Whether the window was in front at the last frame.
+    was_focused: bool,
+    last_frame: Instant,
     soft: TextureHandle,
     ramp: TextureHandle,
     /// The version selected before the last switch, and the switch's
@@ -172,7 +241,7 @@ impl App {
         let mut store = Store::load(options.root.clone());
         let (versions, trouble) = crate::versions::load(&options.root);
         let selected = versions.iter().position(|v| v.id == store.state.selected).unwrap_or(0);
-        let slots = versions.iter().map(|v| Slot { game: None, found: None, problem: None, cover: ctx.load_texture(format!("cover-{}", v.id), scene::render(&v.theme.scene, COVER[0], COVER[1]), TextureOptions::LINEAR), logo: None, gallery: Vec::new() }).collect();
+        let slots = versions.iter().map(|v| Slot { game: None, found: None, problem: None, cover: ctx.load_texture(format!("cover-{}", v.id), scene::render(&v.theme.scene, COVER[0], COVER[1]), TextureOptions::LINEAR), logo: None, gallery: Vec::new(), background: None, banner: None }).collect();
         let update_pending = !store.state.update_pending.is_empty();
         if update_pending {
             store.state.update_pending.clear();
@@ -191,6 +260,9 @@ impl App {
             time: 0.0,
             frame: 0,
             scripted,
+            busy_until: 2.0,
+            was_focused: false,
+            last_frame: Instant::now(),
             soft,
             ramp,
             previous: selected,
@@ -230,6 +302,8 @@ impl App {
         if slot.game != game {
             slot.logo = None;
             slot.gallery.clear();
+            slot.background = None;
+            slot.banner = None;
             if let Some(game) = game.clone() {
                 let (tx, art) = (self.art_tx.clone(), v.art.clone());
                 std::thread::spawn(move || {
@@ -268,6 +342,15 @@ impl App {
             let upload = |name: String, p: &gameart::Picture| ctx.load_texture(name, ColorImage::from_rgba_unmultiplied([p.width, p.height], &p.rgba[..p.width * p.height * 4]), TextureOptions::LINEAR);
             slot.logo = pictures.logo.as_ref().map(|p| upload(format!("logo-{i}"), p));
             slot.gallery = pictures.gallery.iter().enumerate().map(|(k, p)| upload(format!("gallery-{i}-{k}"), p)).collect();
+            let v = &self.shared.versions[i];
+            slot.background = v.art.background.as_ref().filter(|_| !pictures.background.is_empty()).map(|view| Background::new(ctx, &v.id, &pictures.background, view));
+            self.anim.set(("game-background", i), 0.0);
+            slot.banner = pictures.banner.map(|mut banner| {
+                let textures = banner.pictures.iter().enumerate().map(|(k, p)| upload(format!("banner-{i}-{k}"), p)).collect();
+                // The graphics card has them now.
+                banner.pictures = Vec::new();
+                (banner, textures, self.time)
+            });
         }
         while let Ok((i, report)) = self.check_rx.try_recv() {
             let Check::Running { found } = &self.shared.check else { continue };
@@ -514,6 +597,13 @@ impl eframe::App for App {
         [0.03, 0.04, 0.09, 1.0]
     }
 
+    fn raw_input_hook(&mut self, _ctx: &egui::Context, raw_input: &mut egui::RawInput) {
+        // egui lays its letters out on one picture as wide as the graphics
+        // card allows (16384 points on most): far more memory than the
+        // launcher's few sizes of type need.
+        raw_input.max_texture_side = Some(raw_input.max_texture_side.unwrap_or(2048).min(2048));
+    }
+
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
         self.frame += 1;
@@ -529,11 +619,20 @@ impl eframe::App for App {
         }
         let screen = ctx.content_rect();
 
-        let dt = if self.scripted { 1.0 / 60.0 } else { ctx.input(|i| i.stable_dt).min(0.1) };
+        let dt = if self.scripted { 1.0 / 60.0 } else { self.last_frame.elapsed().as_secs_f32().min(0.1) };
+        self.last_frame = Instant::now();
         self.time += dt;
         self.poll_jobs(&ctx);
 
-        let nav = self.input.poll(&ctx, self.frame, dt);
+        let focused = self.scripted || ctx.input(|i| i.focused);
+        // Memory used only while starting (reading fonts and the game's art,
+        // the graphics driver setting up) is handed back once that is done,
+        // and everything is whenever another window comes to the front.
+        if (self.was_focused && !focused) || (!self.scripted && self.frame == 240) {
+            launch::trim_memory();
+        }
+        self.was_focused = focused;
+        let nav = self.input.poll(&ctx, self.frame, dt, focused);
         self.shared.pad = self.input.pad.clone();
         let (pointer, moved, clicked, wheel, fullscreen_key, dropped) = ctx.input(|i| {
             let dropped = i.raw.dropped_files.iter().map(|f| f.path().to_path_buf()).next();
@@ -557,10 +656,25 @@ impl eframe::App for App {
         let painter = ui.painter().clone();
         let lean = pointer.map_or(0.0, |p| ((p.x - screen.center().x) / screen.width()).clamp(-0.5, 0.5));
         let shift = self.anim.to("lean", lean, 3.0, dt);
+        // A version's picture: the game's own background once its game folder
+        // gave one (fading in over the launcher's picture), else the
+        // launcher's.
+        let mut backdrop = |i: usize, opacity: f32| {
+            let (v, slot) = (&self.shared.versions[i], &self.shared.slots[i]);
+            let own = self.anim.to(("game-background", i), if slot.background.is_some() { 1.0 } else { 0.0 }, 2.5, dt);
+            if own < 1.0 {
+                scene::paint(&v.theme.scene, &painter, screen, self.time, opacity, shift, self.soft.id());
+            }
+            if let Some(background) = slot.background.as_ref().filter(|_| own > 0.0) {
+                let mut p = painter.clone();
+                p.multiply_opacity(opacity * smooth(own));
+                background.paint(&p, screen, self.time, shift);
+            }
+        };
         if cross < 1.0 {
-            scene::paint(&before.scene, &painter, screen, self.time, 1.0, shift, self.soft.id());
+            backdrop(self.previous, 1.0);
         }
-        scene::paint(&now.scene, &painter, screen, self.time, cross, shift, self.soft.id());
+        backdrop(self.shared.selected, cross);
         // A little shade behind the words on the left and along the bottom.
         let mut shade = egui::Mesh::default();
         for (x, a) in [(screen.left(), 0.34), (screen.left() + screen.width() * 0.62, 0.0)] {
@@ -626,12 +740,30 @@ impl eframe::App for App {
             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
         }
 
-        // The picture is always moving, and controllers are polled each
-        // frame; out of focus a few frames a second are enough.
-        if self.scripted || ctx.input(|i| i.focused) {
+        // How soon the next frame is drawn. The launcher is kept light: 60
+        // frames a second while something is happening (a move, the mouse,
+        // a screen sliding in), 30 while it only shows its drifting picture,
+        // 2 while another window is in front, and none while minimised.
+        // The waits are a little under the frame times so that the next
+        // frame is ready for the display's refresh; egui takes its own
+        // guess of a frame's length off a wait, so that is added back.
+        let moving = self.switched < 1.0 || self.launch.is_some() || self.layers.iter().any(|l| l.closing || l.t < 1.0);
+        if moving || !nav.is_empty() || moved || clicked || wheel != 0.0 {
+            self.busy_until = self.time + 1.2;
+        }
+        let wait = if self.scripted {
+            0.0
+        } else if !focused {
+            0.5
+        } else if self.time < self.busy_until {
+            0.014
+        } else {
+            0.030
+        };
+        if wait == 0.0 {
             ctx.request_repaint();
         } else {
-            ctx.request_repaint_after(std::time::Duration::from_millis(120));
+            ctx.request_repaint_after(std::time::Duration::from_secs_f32(wait + ctx.input(|i| i.predicted_dt)));
         }
     }
 }

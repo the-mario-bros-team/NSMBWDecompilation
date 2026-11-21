@@ -53,10 +53,38 @@ pub struct ArtRef {
     pub prefix: String,
 }
 
+/// The game's own course background: its models (U8 archives holding a
+/// BRRES), far to near, and how they are framed.
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct BackgroundRef {
+    pub models: Vec<String>,
+    /// How many of the model's units the picture is tall.
+    #[serde(default = "default_height")]
+    pub height: f32,
+    /// The model's height (y) at the middle of the picture.
+    #[serde(default)]
+    pub center: f32,
+}
+
+fn default_height() -> f32 {
+    300.0
+}
+
+/// The game's banner (`opening.bnr`), shown as cover art.
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub struct BannerRef {
+    pub file: String,
+    /// Panes of its layout that are left out.
+    #[serde(default)]
+    pub hide: Vec<String>,
+}
+
 #[derive(Clone, Debug, Default, Deserialize)]
 pub struct Art {
     pub logo: Option<ArtRef>,
     pub gallery: Option<ArtRef>,
+    pub background: Option<BackgroundRef>,
+    pub banner: Option<BannerRef>,
 }
 
 #[derive(Clone, Debug, Deserialize)]

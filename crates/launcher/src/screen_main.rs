@@ -154,12 +154,40 @@ fn hero(sh: &Shared, cx: &mut Cx, center: Pos2, appear: f32) {
     let t = cx.time;
     let rise = 30.0 * (1.0 - ease_out(appear));
     let center = center + vec2(0.0, 5.0 * (t * 0.7).sin() + rise);
-    let angle = -0.045 + 0.006 * (t * 0.5).sin();
+    let angle = if slot.banner.is_some() { 0.0 } else { -0.045 + 0.006 * (t * 0.5).sin() };
     let card = Rect::from_center_size(center, vec2(392.0, 274.0));
     let radius = 26.0;
 
     p.add(RectShape::filled(card.translate(vec2(0.0, 26.0)), radius, black(0.42)).with_blur_width(64.0).with_angle_and_pivot(angle, center));
     p.add(RectShape::filled(card.translate(vec2(0.0, 10.0)), radius, with_alpha(cx.pal.accent[1], 0.35)).with_blur_width(50.0).with_angle_and_pivot(angle, center));
+    if let Some((banner, textures, since)) = &slot.banner {
+        // The game's own banner, playing inside a frame. The frame's
+        // rounded inside edge hides the square corners of the picture.
+        let card = Rect::from_center_size(center, vec2(392.0, 392.0 * banner.size[1] / banner.size[0].max(1.0)).min(vec2(392.0, 320.0)));
+        let frame = 8.0;
+        let inside = card.shrink(frame - 1.0);
+        let inner = p.with_clip_rect(inside.intersect(p.clip_rect()));
+        let scale = (inside.width() / banner.size[0]).max(inside.height() / banner.size[1]);
+        let place = |c: [f32; 2]| pos2(inside.center().x + c[0] * scale, inside.center().y - c[1] * scale);
+        for quad in banner.quads(t - since) {
+            let mut mesh = match quad.picture.and_then(|i| textures.get(i)) {
+                Some(texture) => egui::Mesh::with_texture(texture.id()),
+                None => egui::Mesh::default(),
+            };
+            for i in 0..4 {
+                let c = quad.colors[i];
+                let uv = if quad.picture.is_some() { pos2(quad.uv[i][0], quad.uv[i][1]) } else { egui::epaint::WHITE_UV };
+                mesh.vertices.push(egui::epaint::Vertex { pos: place(quad.corners[i]), uv, color: Color32::from_rgba_unmultiplied(c[0], c[1], c[2], c[3]) });
+            }
+            mesh.indices = vec![0, 1, 2, 0, 2, 3];
+            inner.add(egui::Shape::mesh(mesh));
+        }
+        p.rect_stroke(card, radius - 6.0, Stroke::new(frame, Color32::WHITE), StrokeKind::Inside);
+        p.rect_stroke(card, radius - 6.0, Stroke::new(1.0, black(0.18)), StrokeKind::Outside);
+        gallery(slot, &p, center, t);
+        text(&p, center + vec2(0.0, if slot.gallery.is_empty() { card.height() / 2.0 + 24.0 } else { 258.0 }), Align2::CENTER_CENTER, "Art from your own game files", 12.5, SEMI, white(0.62));
+        return;
+    }
     // The still picture, drifting slowly inside the card.
     let uv = Rect::from_min_size(pos2(0.06 + 0.05 * (t * 0.11).sin(), 0.05 + 0.04 * (t * 0.09).cos()), vec2(0.84, 0.84));
     p.add(RectShape::filled(card, radius, Color32::WHITE).with_texture(slot.cover.id(), uv).with_angle(angle));
@@ -192,7 +220,16 @@ fn hero(sh: &Shared, cx: &mut Cx, center: Pos2, appear: f32) {
         }
     }
 
-    // Course previews from the player's game, a few at a time.
+    gallery(slot, &p, center, t);
+    if slot.logo.is_some() || !slot.gallery.is_empty() {
+        let below = if slot.gallery.is_empty() { 172.0 } else { 258.0 };
+        text(&p, center + vec2(0.0, below), Align2::CENTER_CENTER, "Art from your own game files", 12.5, SEMI, white(0.55));
+    }
+}
+
+/// Course previews from the player's game, a few at a time, fanned out in
+/// front of the art card.
+fn gallery(slot: &Slot, p: &egui::Painter, center: Pos2, t: f32) {
     let n = slot.gallery.len();
     if n > 0 {
         const SPOTS: [(f32, f32, f32); 4] = [(-176.0, 150.0, -0.14), (-60.0, 176.0, 0.05), (60.0, 174.0, -0.06), (176.0, 146.0, 0.12)];
@@ -214,9 +251,5 @@ fn hero(sh: &Shared, cx: &mut Cx, center: Pos2, appear: f32) {
             }
             p.add(RectShape::filled(rect, 8.0, white(fade)).with_texture(now.id(), FULL_UV).with_angle(tilt));
         }
-    }
-    if slot.logo.is_some() || n > 0 {
-        let below = if n > 0 { 258.0 } else { 172.0 };
-        text(&p, center + vec2(0.0, below), Align2::CENTER_CENTER, "Art from your own game files", 12.5, SEMI, white(0.55));
     }
 }

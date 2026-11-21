@@ -122,6 +122,20 @@ pub fn open_url(url: &str) -> bool {
     false
 }
 
+/// Hands the launcher's memory back to Windows until it is touched again:
+/// called when another window comes to the front, so that a launcher left
+/// open behind other things costs them next to nothing.
+pub fn trim_memory() {
+    #[cfg(windows)]
+    {
+        use windows_sys::Win32::System::ProcessStatus::K32EmptyWorkingSet;
+        use windows_sys::Win32::System::Threading::GetCurrentProcess;
+        // SAFETY: asks Windows to page this process's memory out; nothing
+        // is freed, and it comes back as it is used.
+        unsafe { K32EmptyWorkingSet(GetCurrentProcess()) };
+    }
+}
+
 /// Opens a folder in Explorer.
 pub fn open_folder(dir: &Path) {
     let _ = Command::new("explorer").arg(dir).spawn();

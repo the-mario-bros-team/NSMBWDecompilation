@@ -152,8 +152,10 @@ impl Input {
         Self { gilrs, held: None, script, device, pad }
     }
 
-    /// The moves made since the last frame.
-    pub fn poll(&mut self, ctx: &egui::Context, frame: u64, dt: f32) -> Vec<Nav> {
+    /// The moves made since the last frame. With the window not in front
+    /// (`focused` false) a controller's are dropped: it is being used for
+    /// something else.
+    pub fn poll(&mut self, ctx: &egui::Context, frame: u64, dt: f32, focused: bool) -> Vec<Nav> {
         let mut out = Vec::new();
 
         for &(_, nav) in self.script.iter().filter(|s| s.0 == frame) {
@@ -199,6 +201,11 @@ impl Input {
             }
             if let Some(id) = active {
                 self.pad = Some(g.gamepad(id).name().to_string());
+            }
+            if !focused {
+                self.held = None;
+                out.clear();
+                return out;
             }
             // What is held now, on any controller: the D-pad, else the stick.
             let mut now = None;

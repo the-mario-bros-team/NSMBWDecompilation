@@ -20,6 +20,10 @@ pub struct Picture {
 pub struct Pictures {
     pub logo: Option<Picture>,
     pub gallery: Vec<Picture>,
+    /// The course background's models, far to near.
+    pub background: Vec<crate::gamebg::Model>,
+    /// The game's banner.
+    pub banner: Option<crate::banner::Banner>,
 }
 
 /// The most course previews shown.
@@ -34,7 +38,7 @@ fn be32(p: &[u8], at: usize) -> usize {
 }
 
 /// A U8 archive's files: name (without folders), offset, size.
-fn list_u8(data: &[u8]) -> Vec<(String, usize, usize)> {
+pub(crate) fn list_u8(data: &[u8]) -> Vec<(String, usize, usize)> {
     let mut files = Vec::new();
     if data.len() < 0x20 || be32(data, 0) != 0x55AA_382D {
         return files;
@@ -60,7 +64,7 @@ fn list_u8(data: &[u8]) -> Vec<(String, usize, usize)> {
 }
 
 /// A TPL file's first texture.
-fn parse_tpl(data: &[u8]) -> Option<Picture> {
+pub(crate) fn parse_tpl(data: &[u8]) -> Option<Picture> {
     if data.len() < 12 || be32(data, 0) != 0x0020_AF30 || be32(data, 4) == 0 {
         return None;
     }
@@ -104,7 +108,8 @@ fn read(game: &Path, art: &ArtRef, limit: usize) -> Vec<Picture> {
 /// Reads the version's pictures from its game folder. Whatever is missing or
 /// unreadable is left out: the launcher has its own art for that case.
 pub fn load(game: &Path, art: &Art) -> Pictures {
-    Pictures { logo: art.logo.as_ref().and_then(|a| read(game, a, 1).into_iter().next()), gallery: art.gallery.as_ref().map(|a| read(game, a, GALLERY_MAX)).unwrap_or_default() }
+    let background = art.background.as_ref().map(|b| b.models.iter().filter_map(|m| crate::gamebg::load(game, m)).collect()).unwrap_or_default();
+    Pictures { logo: art.logo.as_ref().and_then(|a| read(game, a, 1).into_iter().next()), gallery: art.gallery.as_ref().map(|a| read(game, a, GALLERY_MAX)).unwrap_or_default(), background, banner: art.banner.as_ref().and_then(|b| crate::banner::load(game, &b.file, &b.hide)) }
 }
 
 #[cfg(test)]
@@ -165,7 +170,7 @@ mod tests {
         std::fs::write(game.join("files").join("art.arc"), archive).unwrap();
         let art = |name: &str, prefix: &str| ArtRef { archive: "files/art.arc".into(), name: name.into(), prefix: prefix.into() };
 
-        let p = load(&game, &Art { logo: Some(art("logo.tpl", "")), gallery: Some(art("", "im_W")) });
+        let p = load(&game, &Art { logo: Some(art("logo.tpl", "")), gallery: Some(art("", "im_W")), background: None, banner: None });
         let logo = p.logo.unwrap();
         assert_eq!((logo.width, logo.height), (16, 8));
         assert_eq!(&logo.rgba[..4], &[255, 255, 255, 255]);
@@ -174,9 +179,9 @@ mod tests {
         assert_eq!(&p.gallery[1].rgba[..4], &[0, 255, 0, 255]);
 
         // No name: the largest texture. A missing archive: nothing.
-        let largest = load(&game, &Art { logo: Some(art("", "")), gallery: None });
+        let largest = load(&game, &Art { logo: Some(art("", "")), gallery: None, background: None, banner: None });
         assert_eq!(largest.logo.unwrap().width, 16);
-        let none = load(&game, &Art { logo: Some(ArtRef { archive: "files/none.arc".into(), name: String::new(), prefix: String::new() }), gallery: None });
+        let none = load(&game, &Art { logo: Some(ArtRef { archive: "files/none.arc".into(), name: String::new(), prefix: String::new() }), gallery: None, background: None, banner: None });
         assert!(none.logo.is_none() && none.gallery.is_empty());
         std::fs::remove_dir_all(&game).unwrap();
     }
