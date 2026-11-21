@@ -66,6 +66,21 @@ impl Default for Settings {
     }
 }
 
+/// A table's `<action>_combos`: lists of names.
+fn combo_names(table: &toml::Table, action: &str) -> Vec<Vec<String>> {
+    let Some(list) = table.get(&format!("{action}_combos")).and_then(toml::Value::as_array) else { return Vec::new() };
+    list.iter().filter_map(toml::Value::as_array).map(|c| c.iter().filter_map(toml::Value::as_str).map(String::from).collect()).collect()
+}
+
+/// `<action>_combos = [["Left Ctrl", "X"]]`, or nothing for none.
+fn combo_line(action: &str, combos: Vec<Vec<&str>>) -> String {
+    if combos.is_empty() {
+        return String::new();
+    }
+    let list = toml::Value::Array(combos.into_iter().map(|c| toml::Value::Array(c.into_iter().map(|n| toml::Value::String(n.into())).collect())).collect());
+    format!("{action}_combos = {list}\n")
+}
+
 pub fn fps_label(fps: u32) -> String {
     match fps {
         0 => "UNLOCKED".into(),
@@ -133,6 +148,7 @@ impl Settings {
                 if let Some(label) = keyboard.get(*key).and_then(toml::Value::as_str) {
                     s.keymap.set_label(i, label);
                 }
+                s.keymap.set_combo_names(i, &combo_names(keyboard, key));
             }
         }
         if let Some(controller) = t.get("controller").and_then(toml::Value::as_table) {
@@ -142,6 +158,7 @@ impl Settings {
                 if let Some(label) = controller.get(*key).and_then(toml::Value::as_str) {
                     s.padmap.set_label(i, label);
                 }
+                s.padmap.set_combo_names(i, &combo_names(controller, key));
             }
         }
         s
@@ -191,14 +208,16 @@ impl Settings {
         );
         // Last: a table ends the file's top-level keys.
         let mut text = text;
-        text.push_str("\n# Keys for the Wii Remote's buttons, by name, separated by commas (\"\" for none).\n[keyboard]\n");
+        text.push_str("\n# Keys for the Wii Remote's buttons, by name, separated by commas (\"\" for none).\n# <action>_combos: keys held together, 2 or 3 a combination: jump_combos = [[\"Left Ctrl\", \"X\"]].\n[keyboard]\n");
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.keymap.label(i))));
+            text.push_str(&combo_line(key, self.keymap.combo_names(i)));
         }
         text.push_str("\n# Controller buttons for the Wii Remote's, by their Xbox names (A, B, X, Y, LB, RB, LT, RT,\n# View, Menu, LS, RS, D-Pad Up, Left Stick Up, Right Stick Left...), separated by commas.\n# rumble: controllers rumble when the game rumbles the Wii Remote.\n[controller]\n");
         text.push_str(&format!("rumble = {}\n", self.rumble));
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.padmap.label(i))));
+            text.push_str(&combo_line(key, self.padmap.combo_names(i)));
         }
         if let Err(e) = std::fs::write(path, text) {
             eprintln!("{}: {e}", path.display());
@@ -226,12 +245,15 @@ mod tests {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.bind(input::keymap::RUN, input::keymap::Key::Mouse(5));
+            k.take(input::keymap::A, vec![winit::keyboard::KeyCode::ControlLeft.into(), winit::keyboard::KeyCode::KeyX.into()]);
+            k.take(input::keymap::A, vec![winit::keyboard::KeyCode::ShiftLeft.into(), input::keymap::Key::Mouse(1), winit::keyboard::KeyCode::KeyQ.into()]);
             k.keys[input::keymap::SHAKE].clear();
             k
         }, padmap: {
             let mut p = Padmap::default();
             p.bind(input::keymap::A, input::padmap::by_name("RS").unwrap());
             p.buttons[input::keymap::TILT_LEFT].clear();
+            p.take(input::keymap::PLUS, vec![input::padmap::by_name("LB").unwrap(), input::padmap::by_name("RB").unwrap()]);
             p
         }, rumble: false };
         s.save(&path);

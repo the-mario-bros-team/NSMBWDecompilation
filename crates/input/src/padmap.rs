@@ -5,6 +5,9 @@
 
 use gilrs::{Axis, Button};
 
+use crate::combo;
+use crate::keymap::{DOWN, LEFT, RIGHT, TILT_LEFT, TILT_RIGHT, UP};
+
 /// One thing on a controller a binding can be.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum PadInput {
@@ -61,6 +64,8 @@ pub fn by_name(name: &str) -> Option<PadInput> {
 pub struct Padmap {
     /// Each action's buttons ([`crate::keymap::ACTIONS`] order).
     pub buttons: [Vec<PadInput>; 12],
+    /// Each action's combinations: 2 or 3 held together (`combo`).
+    pub combos: [Vec<Vec<PadInput>>; 12],
 }
 
 impl Default for Padmap {
@@ -83,6 +88,7 @@ impl Default for Padmap {
                 vec![B(Button::Start)],
                 vec![B(Button::Select)],
             ],
+            combos: Default::default(),
         }
     }
 }
@@ -101,6 +107,66 @@ impl Padmap {
     /// `p` alone plays `action` from now on (other actions keep theirs).
     pub fn bind(&mut self, action: usize, p: PadInput) {
         self.buttons[action] = vec![p];
+    }
+
+    /// An action's combinations by name (as saved).
+    pub fn combo_names(&self, action: usize) -> Vec<Vec<&'static str>> {
+        self.combos[action].iter().map(|c| c.iter().filter_map(|&m| name(m)).collect()).collect()
+    }
+
+    /// Sets an action's combinations from saved names; unknown or
+    /// malformed ones are skipped, four at most.
+    pub fn set_combo_names(&mut self, action: usize, combos: &[Vec<String>]) {
+        self.combos[action] = combos.iter().filter_map(|names| combo::parse(names, by_name)).take(combo::MAX_PER_ACTION).collect();
+    }
+
+    /// What a Keybinds-tab capture picked for `action`: one alone is its
+    /// only binding from now on; 2 or 3 together are a combination added to
+    /// its others (taken from any action that had it).
+    pub fn take(&mut self, action: usize, picked: Vec<PadInput>) {
+        match picked.len() {
+            0 => {}
+            1 => self.buttons[action] = picked,
+            _ => combo::add(&mut self.combos, action, picked),
+        }
+    }
+
+    /// No bindings or combinations left for `action`.
+    pub fn clear(&mut self, action: usize) {
+        self.buttons[action].clear();
+        self.combos[action].clear();
+    }
+
+    /// Part of any combination.
+    pub fn in_combo(&self, c: PadInput) -> bool {
+        self.combos.iter().flatten().any(|m| m.contains(&c))
+    }
+
+    /// An action's bindings as shown: each one, a combination's members
+    /// joined by +, separated by /.
+    pub fn display(&self, action: usize) -> Vec<Vec<PadInput>> {
+        let singles = self.buttons[action].iter().map(|&c| vec![c]);
+        singles.chain(self.combos[action].iter().cloned()).collect()
+    }
+
+    /// The rules' view of these bindings (`combo`): the combinations, every
+    /// binding of its own, and the directions' and tilt's, which only gate.
+    pub fn combo_setup(&self) -> combo::Setup<PadInput> {
+        let mut setup = combo::Setup::default();
+        for (action, list) in self.combos.iter().enumerate() {
+            for members in list {
+                setup.combos.push(combo::Combo { action, members: members.clone() });
+            }
+        }
+        for (action, bound) in self.buttons.iter().enumerate() {
+            for &c in bound {
+                setup.singles.push(c);
+                if matches!(action, UP | DOWN | LEFT | RIGHT | TILT_LEFT | TILT_RIGHT) {
+                    setup.conditions.push(c);
+                }
+            }
+        }
+        setup
     }
 }
 
@@ -123,5 +189,7 @@ mod tests {
         assert_eq!(back, p);
         assert_eq!(by_name(" left stick up "), Some(S(Axis::LeftStickY, true)));
         assert!(all().all(|i| by_name(name(i).unwrap()) == Some(i)));
+        p.take(SHAKE, vec![B(Button::LeftTrigger), B(Button::South)]);
+        assert_eq!(p.combo_names(SHAKE), vec![vec!["LB", "A"]]);
     }
 }

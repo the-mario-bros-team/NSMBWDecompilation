@@ -906,11 +906,15 @@ impl ApplicationHandler for App {
         if let WindowEvent::MouseInput { state, button, .. } = &event {
             let n = mouse_button(*button);
             let down = *state == ElementState::Pressed;
-            // The Keybinds tab waiting for a key takes a mouse button too.
-            if down && self.menus.as_ref().is_some_and(ui::Menus::capturing_keys) {
-                let changes = self.menus.as_mut().map(|m| m.capture_mouse(&mut self.settings, n)).unwrap_or_default();
+            // The Keybinds tab waiting for keys takes the mouse's buttons too
+            // (a release still reaches the window, which saw the press that
+            // began the wait).
+            if self.menus.as_ref().is_some_and(ui::Menus::capturing_keys) {
+                let changes = self.menus.as_mut().map(|m| m.capture_mouse(&mut self.settings, n, down)).unwrap_or_default();
                 self.apply_changes(changes);
-                return;
+                if down {
+                    return;
+                }
             }
             // Let go always counts (it may have been pressed before a menu
             // opened); pressed only while no menu has the mouse.
@@ -933,13 +937,16 @@ impl ApplicationHandler for App {
             WindowEvent::KeyboardInput { event, .. } => {
                 if let PhysicalKey::Code(code) = event.physical_key {
                     let down = event.state == ElementState::Pressed;
-                    // The Keybinds tab waiting for a key takes the next one.
-                    if down && self.menus.as_ref().is_some_and(ui::Menus::capturing) {
+                    // The Keybinds tab waiting for keys takes them, held and let
+                    // go (a release still reaches the game's keys).
+                    if self.menus.as_ref().is_some_and(ui::Menus::capturing) {
                         if !event.repeat {
-                            let changes = self.menus.as_mut().map(|m| m.capture_key(&mut self.settings, code)).unwrap_or_default();
+                            let changes = self.menus.as_mut().map(|m| m.capture_key(&mut self.settings, code, down)).unwrap_or_default();
                             self.apply_changes(changes);
                         }
-                        return;
+                        if down {
+                            return;
+                        }
                     }
                     if !event.repeat && !self.inputs.key(code, down) && down {
                         self.key(code);

@@ -133,8 +133,8 @@ impl Menus {
         self.window.is_open() && self.window.capturing()
     }
 
-    pub fn capture_key(&mut self, settings: &mut Settings, code: winit::keyboard::KeyCode) -> Vec<Change> {
-        self.window.capture_key(settings, code)
+    pub fn capture_key(&mut self, settings: &mut Settings, code: winit::keyboard::KeyCode, down: bool) -> Vec<Change> {
+        self.window.capture_key(settings, code, down)
     }
 
     /// The Keybinds tab waits for a key or mouse button: mouse presses go
@@ -143,8 +143,8 @@ impl Menus {
         self.window.is_open() && self.window.capturing_keys()
     }
 
-    pub fn capture_mouse(&mut self, settings: &mut Settings, button: u8) -> Vec<Change> {
-        self.window.capture_mouse(settings, button)
+    pub fn capture_mouse(&mut self, settings: &mut Settings, button: u8, down: bool) -> Vec<Change> {
+        self.window.capture_mouse(settings, button, down)
     }
 
     /// A controller is connected or not (the Keybinds tab opens on its

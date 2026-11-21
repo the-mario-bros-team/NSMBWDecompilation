@@ -14,10 +14,12 @@
 //! controller's buttons but its guide button, HOME ([`padmap`]).
 
 pub mod capture;
+pub mod combo;
 pub mod keymap;
 pub mod padmap;
 
 use std::collections::HashSet;
+use std::time::{Duration, Instant};
 
 use gilrs::{Button, GamepadId, Gilrs};
 use hle_ios::wiimote::{button, Input};
@@ -106,6 +108,19 @@ fn apply(input: &mut Input, a: Action) {
     }
 }
 
+/// The actions held through combinations (`1 << action` bits).
+fn apply_bits(input: &mut Input, bits: u32) {
+    for action in 0..keymap::ACTIONS.len() {
+        if bits & (1 << action) != 0 {
+            apply(input, keymap_action(action));
+        }
+    }
+}
+
+/// A single let go while it waited for a combination (a tap) still plays
+/// its action this long, so a field reads it.
+const TAP: Duration = Duration::from_millis(40);
+
 /// The game's rumble on a controller, as in WitherBlitz's
 /// NSMB-Wii-Recompilation (`hle/input/wpad.cpp`): a controller's motors are
 /// bigger than the remote's, so both run well under full strength (the
@@ -122,6 +137,13 @@ pub struct Inputs {
     mouse: u8,
     keymap: keymap::Keymap,
     padmap: padmap::Padmap,
+    /// The combinations' rules: the keyboard's, and each controller's.
+    key_combos: combo::Engine<keymap::Key>,
+    pad_combos: [combo::Engine<PadInput>; PLAYERS],
+    /// Actions played for a moment (taps): player, action, until when.
+    pulses: Vec<(usize, usize, Duration)>,
+    /// Times are from here.
+    epoch: Instant,
     gilrs: Option<Gilrs>,
     /// Gamepads in the order they connected; index = player.
     pads: Vec<GamepadId>,
@@ -163,7 +185,7 @@ impl Inputs {
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -229,11 +251,13 @@ impl Inputs {
 
     /// The keys from now on.
     pub fn set_keymap(&mut self, keymap: keymap::Keymap) {
+        self.key_combos = combo::Engine::new(keymap.combo_setup());
         self.keymap = keymap;
     }
 
     /// The controllers' buttons from now on.
     pub fn set_padmap(&mut self, padmap: padmap::Padmap) {
+        self.pad_combos = std::array::from_fn(|_| combo::Engine::new(padmap.combo_setup()));
         self.padmap = padmap;
     }
 
@@ -257,17 +281,15 @@ impl Inputs {
         held
     }
 
-    /// What a key does: its keymap action, or Home's HOME.
-    fn key_action(&self, k: KeyCode) -> Option<Action> {
-        match self.keymap.action(k) {
-            Some(a) => Some(keymap_action(a)),
-            None => (k == KeyCode::Home).then_some(Action::Buttons(button::HOME)),
-        }
+    /// A key or mouse button plays something: an action, a part in a
+    /// combination, or (Home) the HOME button.
+    fn is_control(&self, k: keymap::Key) -> bool {
+        self.keymap.action(k).is_some() || self.keymap.in_combo(k) || k == keymap::Key::Code(KeyCode::Home)
     }
 
     /// A key went down or up. Returns whether the key is a game control.
     pub fn key(&mut self, code: KeyCode, down: bool) -> bool {
-        if self.key_action(code).is_none() && !self.keys.contains(&code) {
+        if !self.is_control(code.into()) && !self.keys.contains(&code) {
             return false;
         }
         if down {
@@ -290,7 +312,7 @@ impl Inputs {
             self.mouse &= !bit;
             return held;
         }
-        if self.keymap.action(keymap::Key::Mouse(n)).is_none() {
+        if !self.is_control(keymap::Key::Mouse(n)) {
             return false;
         }
         self.mouse |= bit;
@@ -301,10 +323,16 @@ impl Inputs {
     pub fn release_keys(&mut self) {
         self.keys.clear();
         self.mouse = 0;
+        self.key_combos.reset();
     }
 
     /// Current state of the four remotes.
     pub fn poll(&mut self) -> [Input; PLAYERS] {
+        self.poll_at(self.epoch.elapsed())
+    }
+
+    /// The remotes at time `now` (from `epoch`).
+    fn poll_at(&mut self, now: Duration) -> [Input; PLAYERS] {
         let mut connected = Vec::new();
         if let Some(g) = &mut self.gilrs {
             while let Some(ev) = g.next_event() {
@@ -317,8 +345,16 @@ impl Inputs {
             self.add_pad(id);
         }
         let mut out = [Input::default(); PLAYERS];
+        self.pulses.retain(|p| p.2 > now);
+        // The keyboard and mouse: combinations first, then the keys they
+        // leave alone.
         let mouse = (1..=5u8).filter(|n| self.mouse & (1 << (n - 1)) != 0).map(keymap::Key::Mouse);
-        for k in self.keys.iter().map(|&k| keymap::Key::Code(k)).chain(mouse) {
+        let held: Vec<keymap::Key> = self.keys.iter().map(|&k| keymap::Key::Code(k)).chain(mouse).collect();
+        let combos = if self.key_combos.is_empty() { 0 } else { self.key_combos.step(&held, now) };
+        for &k in &held {
+            if self.key_combos.silenced(k) {
+                continue;
+            }
             // Every action the key plays (a key may be bound to several).
             for (i, keys) in self.keymap.keys.iter().enumerate() {
                 if keys.contains(&k) {
@@ -329,6 +365,14 @@ impl Inputs {
                 apply(&mut out[0], Action::Buttons(button::HOME));
             }
         }
+        for &k in self.key_combos.tapped() {
+            for (i, keys) in self.keymap.keys.iter().enumerate() {
+                if keys.contains(&k) {
+                    self.pulses.push((0, i, now + TAP));
+                }
+            }
+        }
+        apply_bits(&mut out[0], combos);
         if let Some(g) = &self.gilrs {
             for (player, &id) in self.pads.iter().enumerate() {
                 let pad = g.gamepad(id);
@@ -336,18 +380,25 @@ impl Inputs {
                     continue;
                 }
                 let input = &mut out[player];
+                let engine = &mut self.pad_combos[player];
+                let held: Vec<PadInput> = padmap::all().filter(|&p| pad_value(&pad, p) >= STICK_PRESS).collect();
+                let combos = if engine.is_empty() { 0 } else { engine.step(&held, now) };
                 // Tilt follows how far its buttons are pushed; the rest are
-                // pressed or not.
+                // pressed or not (and not taken by a combination).
                 let mut tilt = [0.0f32; 2];
                 for (i, bound) in self.padmap.buttons.iter().enumerate() {
-                    let v = bound.iter().map(|&p| pad_value(&pad, p)).fold(0.0, f32::max);
                     match i {
-                        keymap::TILT_LEFT => tilt[0] = v,
-                        keymap::TILT_RIGHT => tilt[1] = v,
-                        _ if v >= STICK_PRESS => apply(input, keymap_action(i)),
+                        keymap::TILT_LEFT | keymap::TILT_RIGHT => {
+                            tilt[usize::from(i == keymap::TILT_RIGHT)] = bound.iter().map(|&p| pad_value(&pad, p)).fold(0.0, f32::max);
+                        }
+                        _ if bound.iter().any(|&p| !engine.silenced(p) && pad_value(&pad, p) >= STICK_PRESS) => apply(input, keymap_action(i)),
                         _ => {}
                     }
+                    if bound.iter().any(|p| engine.tapped().contains(p)) {
+                        self.pulses.push((player, i, now + TAP));
+                    }
                 }
+                apply_bits(input, combos);
                 let analog = tilt[1] - tilt[0];
                 if analog.abs() > TILT_DEAD_ZONE {
                     input.tilt += analog;
@@ -356,6 +407,9 @@ impl Inputs {
                     input.buttons |= button::HOME;
                 }
             }
+        }
+        for &(player, action, _) in &self.pulses {
+            apply(&mut out[player], keymap_action(action));
         }
         for (i, input) in out.iter_mut().enumerate() {
             input.connected = self.on[i];
@@ -411,6 +465,35 @@ mod tests {
         assert!(!s[1].connected);
         i.release_keys();
         assert_eq!(i.poll()[0].buttons, 0);
+    }
+
+    #[test]
+    fn a_combination_plays_its_action_alone() {
+        let mut i = Inputs::without_pads();
+        let mut k = keymap::Keymap::default();
+        // Left Ctrl shakes; Left Ctrl + X is A.
+        k.take(keymap::A, vec![KeyCode::ControlLeft.into(), KeyCode::KeyX.into()]);
+        i.set_keymap(k);
+        let ms = Duration::from_millis;
+        assert!(i.key(KeyCode::ControlLeft, true));
+        assert_eq!(i.poll_at(ms(0))[0].shake, false, "Ctrl waits for the rest");
+        assert!(i.key(KeyCode::KeyX, true));
+        let s = i.poll_at(ms(20))[0];
+        assert_eq!((s.buttons, s.shake), (button::A, false), "neither Ctrl's shake nor X's 2");
+        i.key(KeyCode::ControlLeft, false);
+        assert_eq!(i.poll_at(ms(40))[0].buttons, 0, "X stays taken until let go");
+        i.key(KeyCode::KeyX, false);
+        assert_eq!(i.poll_at(ms(60))[0].buttons, 0, "taken: no tap");
+        // X tapped alone: its 2 still comes, for a moment.
+        i.key(KeyCode::KeyX, true);
+        assert_eq!(i.poll_at(ms(100))[0].buttons, 0);
+        i.key(KeyCode::KeyX, false);
+        assert_eq!(i.poll_at(ms(110))[0].buttons, button::TWO);
+        assert_eq!(i.poll_at(ms(140))[0].buttons, button::TWO);
+        assert_eq!(i.poll_at(ms(160))[0].buttons, 0);
+        // Space (also 2) is not in a combination: at once.
+        i.key(KeyCode::Space, true);
+        assert_eq!(i.poll_at(ms(200))[0].buttons, button::TWO);
     }
 
     #[test]

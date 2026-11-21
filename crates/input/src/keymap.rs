@@ -5,6 +5,8 @@
 
 use winit::keyboard::KeyCode;
 
+use crate::combo;
+
 /// The actions, in the Keybinds tab's order: their `[keyboard]` key, the
 /// name shown, and their default keys.
 pub const ACTIONS: [(&str, &str); 12] = [
@@ -169,6 +171,8 @@ pub fn key_by_name(name: &str) -> Option<Key> {
 pub struct Keymap {
     /// Each action's keys ([`ACTIONS`] order).
     pub keys: [Vec<Key>; 12],
+    /// Each action's combinations: 2 or 3 keys held together (`combo`).
+    pub combos: [Vec<Vec<Key>>; 12],
 }
 
 impl Default for Keymap {
@@ -191,6 +195,7 @@ impl Default for Keymap {
                 k(&[Enter, Escape]),
                 k(&[Minus, Tab]),
             ],
+            combos: Default::default(),
         }
     }
 }
@@ -215,6 +220,66 @@ impl Keymap {
     /// `k` alone plays `action` from now on (other actions keep theirs).
     pub fn bind(&mut self, action: usize, k: impl Into<Key>) {
         self.keys[action] = vec![k.into()];
+    }
+
+    /// An action's combinations by name (as saved).
+    pub fn combo_names(&self, action: usize) -> Vec<Vec<&'static str>> {
+        self.combos[action].iter().map(|c| c.iter().filter_map(|&m| key_name(m)).collect()).collect()
+    }
+
+    /// Sets an action's combinations from saved names; unknown or
+    /// malformed ones are skipped, four at most.
+    pub fn set_combo_names(&mut self, action: usize, combos: &[Vec<String>]) {
+        self.combos[action] = combos.iter().filter_map(|names| combo::parse(names, key_by_name)).take(combo::MAX_PER_ACTION).collect();
+    }
+
+    /// What a Keybinds-tab capture picked for `action`: one alone is its
+    /// only binding from now on; 2 or 3 together are a combination added to
+    /// its others (taken from any action that had it).
+    pub fn take(&mut self, action: usize, picked: Vec<Key>) {
+        match picked.len() {
+            0 => {}
+            1 => self.keys[action] = picked,
+            _ => combo::add(&mut self.combos, action, picked),
+        }
+    }
+
+    /// No bindings or combinations left for `action`.
+    pub fn clear(&mut self, action: usize) {
+        self.keys[action].clear();
+        self.combos[action].clear();
+    }
+
+    /// Part of any combination.
+    pub fn in_combo(&self, c: Key) -> bool {
+        self.combos.iter().flatten().any(|m| m.contains(&c))
+    }
+
+    /// An action's bindings as shown: each one, a combination's members
+    /// joined by +, separated by /.
+    pub fn display(&self, action: usize) -> Vec<Vec<Key>> {
+        let singles = self.keys[action].iter().map(|&c| vec![c]);
+        singles.chain(self.combos[action].iter().cloned()).collect()
+    }
+
+    /// The rules' view of these bindings (`combo`): the combinations, every
+    /// binding of its own, and the directions' and tilt's, which only gate.
+    pub fn combo_setup(&self) -> combo::Setup<Key> {
+        let mut setup = combo::Setup::default();
+        for (action, list) in self.combos.iter().enumerate() {
+            for members in list {
+                setup.combos.push(combo::Combo { action, members: members.clone() });
+            }
+        }
+        for (action, bound) in self.keys.iter().enumerate() {
+            for &c in bound {
+                setup.singles.push(c);
+                if matches!(action, UP | DOWN | LEFT | RIGHT | TILT_LEFT | TILT_RIGHT) {
+                    setup.conditions.push(c);
+                }
+            }
+        }
+        setup
     }
 }
 
@@ -242,5 +307,24 @@ mod tests {
         assert_eq!(k.action(Key::Mouse(4)), Some(A));
         assert_eq!(key_by_name("mouse 5"), Some(Key::Mouse(5)));
         assert_eq!(key_name(Key::Mouse(0)), None);
+    }
+
+    #[test]
+    fn combinations_by_name() {
+        let mut k = Keymap::default();
+        k.take(A, vec![Key::Code(KeyCode::ControlLeft), Key::Code(KeyCode::KeyX)]);
+        assert_eq!(k.combo_names(A), vec![vec!["Left Ctrl", "X"]]);
+        assert_eq!(k.keys[A], vec![Key::Code(KeyCode::KeyB)], "its own key kept");
+        assert!(k.in_combo(Key::Code(KeyCode::ControlLeft)));
+        let mut back = Keymap::default();
+        back.set_combo_names(A, &[vec!["left ctrl".into(), "X".into()], vec!["Nope".into(), "X".into()]]);
+        assert_eq!(back, k);
+        let setup = k.combo_setup();
+        assert_eq!(setup.combos.len(), 1);
+        assert!(setup.conditions.contains(&Key::Code(KeyCode::ArrowDown)) && !setup.conditions.contains(&Key::Code(KeyCode::KeyX)));
+        k.take(A, vec![Key::Mouse(1)]);
+        assert_eq!(k.display(A), vec![vec![Key::Mouse(1)], vec![Key::Code(KeyCode::ControlLeft), Key::Code(KeyCode::KeyX)]]);
+        k.clear(A);
+        assert!(k.display(A).is_empty());
     }
 }

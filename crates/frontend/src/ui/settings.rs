@@ -358,8 +358,12 @@ pub struct SettingsWindow {
     pad_view: bool,
     /// A controller is connected (the Keybinds tab opens on its buttons).
     pub pad_connected: bool,
-    /// Picking a controller button: what was held when it began, and since.
+    /// Picking a controller's buttons: what was held when it began, and
+    /// what has been pressed since.
     pad_capture: Option<input::capture::Capture<input::padmap::PadInput>>,
+    /// Picking keys: what has been pressed, and what is held now.
+    key_capture: Option<input::capture::Capture<input::keymap::Key>>,
+    keys_held: Vec<input::keymap::Key>,
     /// The save file being played (0-2), or -1 before the save select.
     pub active_file: i8,
     /// A question is up: what it asks, and the tab's row to go back to.
@@ -409,15 +413,48 @@ impl SettingsWindow {
         self.capturing.is_some() && !self.pad_view
     }
 
-    /// A mouse button (1-5) pressed while a Keybinds row waits for its key.
-    pub fn capture_mouse(&mut self, s: &mut Settings, n: u8) -> Vec<Change> {
-        let Some((action, _)) = self.capturing.filter(|_| !self.pad_view) else { return Vec::new() };
-        if input::keymap::key_name(input::keymap::Key::Mouse(n)).is_none() {
+    /// A mouse button (1-5) pressed or let go while a Keybinds row waits
+    /// for its keys.
+    pub fn capture_mouse(&mut self, s: &mut Settings, n: u8, down: bool) -> Vec<Change> {
+        if self.pad_view {
             return Vec::new();
         }
-        s.keymap.bind(action, input::keymap::Key::Mouse(n));
-        self.capturing = None;
+        self.capture_held(s, input::keymap::Key::Mouse(n), down)
+    }
+
+    /// Keys and mouse buttons while a Keybinds row waits: one, or 2 or 3
+    /// held together, taken once all are let go (`Keymap::take`).
+    fn capture_held(&mut self, s: &mut Settings, k: input::keymap::Key, down: bool) -> Vec<Change> {
+        let Some((action, _)) = self.capturing else { return Vec::new() };
+        if input::keymap::key_name(k).is_none() {
+            return Vec::new();
+        }
+        self.keys_held.retain(|&h| h != k);
+        if down {
+            self.keys_held.push(k);
+        }
+        let capture = self.key_capture.get_or_insert_with(|| input::capture::Capture::new(&[], input::combo::MAX_MEMBERS));
+        let Some(picked) = capture.step(&self.keys_held) else { return Vec::new() };
+        s.keymap.take(action, picked);
+        self.end_capture();
         vec![Change::Keymap]
+    }
+
+    fn end_capture(&mut self) {
+        self.capturing = None;
+        self.pad_capture = None;
+        self.key_capture = None;
+        self.keys_held.clear();
+    }
+
+    /// What a capture has picked so far, as shown.
+    fn captured(&self) -> String {
+        let names: Vec<&str> = if self.pad_view {
+            self.pad_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().filter_map(|&p| input::padmap::name(p)).collect())
+        } else {
+            self.key_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().filter_map(|&k| input::keymap::key_name(k)).collect())
+        };
+        names.join(" + ")
     }
 
     /// The Keybinds tab waits for a controller button.
@@ -425,41 +462,43 @@ impl SettingsWindow {
         self.capturing.is_some() && self.pad_view
     }
 
-    /// What is held on the controllers while a Keybinds row waits for a
-    /// button: once one was pressed and let go, it is that action's button.
+    /// What is held on the controllers while a Keybinds row waits for its
+    /// buttons: one, or 2 or 3 held together, taken once all are let go
+    /// (what was held when it began counts only once let go).
     pub fn capture_pad(&mut self, s: &mut Settings, held: &[input::padmap::PadInput]) -> Vec<Change> {
         let Some((action, _)) = self.capturing.filter(|_| self.pad_view) else { return Vec::new() };
-        let capture = self.pad_capture.get_or_insert_with(|| input::capture::Capture::new(held, 1));
+        let capture = self.pad_capture.get_or_insert_with(|| input::capture::Capture::new(held, input::combo::MAX_MEMBERS));
         let Some(picked) = capture.step(held) else { return Vec::new() };
-        if let Some(&p) = picked.first() {
-            s.padmap.bind(action, p);
-        }
-        self.capturing = None;
-        self.pad_capture = None;
+        s.padmap.take(action, picked);
+        self.end_capture();
         vec![Change::Keymap]
     }
 
-    /// A key pressed while a Keybinds row waits for one: it becomes that
-    /// action's key. Esc cancels; Delete or Backspace leaves it no key; F10
-    /// and F11 keep their own jobs; keys without a name are not taken.
-    pub fn capture_key(&mut self, s: &mut Settings, code: winit::keyboard::KeyCode) -> Vec<Change> {
+    /// A key pressed or let go while a Keybinds row waits for its keys.
+    /// Before any is held, Esc cancels and Delete or Backspace leaves it
+    /// nothing (keys and combinations); those, F10 and F11 are never taken,
+    /// nor keys without a name.
+    pub fn capture_key(&mut self, s: &mut Settings, code: winit::keyboard::KeyCode, down: bool) -> Vec<Change> {
         use winit::keyboard::KeyCode;
         let Some((action, _)) = self.capturing else { return Vec::new() };
+        let nothing_yet = self.captured().is_empty();
         match code {
-            KeyCode::Escape => {}
-            KeyCode::Delete | KeyCode::Backspace if self.pad_view => s.padmap.buttons[action].clear(),
-            KeyCode::Delete | KeyCode::Backspace => s.keymap.keys[action].clear(),
-            _ if self.pad_view => return Vec::new(),
-            KeyCode::F10 | KeyCode::F11 => return Vec::new(),
-            k if input::keymap::key_name(k).is_some() => s.keymap.bind(action, k),
-            _ => return Vec::new(),
-        }
-        self.capturing = None;
-        self.pad_capture = None;
-        if code == KeyCode::Escape {
-            Vec::new()
-        } else {
-            vec![Change::Keymap]
+            KeyCode::Escape if down && nothing_yet => {
+                self.end_capture();
+                Vec::new()
+            }
+            KeyCode::Delete | KeyCode::Backspace if down && nothing_yet => {
+                if self.pad_view {
+                    s.padmap.clear(action);
+                } else {
+                    s.keymap.clear(action);
+                }
+                self.end_capture();
+                vec![Change::Keymap]
+            }
+            KeyCode::Escape | KeyCode::Delete | KeyCode::Backspace | KeyCode::F10 | KeyCode::F11 => Vec::new(),
+            _ if self.pad_view => Vec::new(),
+            k => self.capture_held(s, k.into(), down),
         }
     }
 
@@ -996,9 +1035,13 @@ impl SettingsWindow {
     }
 
     fn draw_keybinds(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
+        // Nothing pressed for a while: given up (a press keeps it going).
         if self.capturing.is_some_and(|(_, at)| self.now - at > CAPTURE_TIMEOUT) {
-            self.capturing = None;
-            self.pad_capture = None;
+            if self.captured().is_empty() && self.keys_held.is_empty() {
+                self.end_capture();
+            } else if let Some((_, at)) = &mut self.capturing {
+                *at = self.now;
+            }
         }
         for (i, (_, name)) in input::keymap::ACTIONS.iter().enumerate() {
             let (column, row) = (i / 6, i % 6);
@@ -1007,7 +1050,11 @@ impl SettingsWindow {
             let color = if self.cursor == 1 + i as i32 { u32::MAX } else { LABEL_DIM };
             self.text(a, c, name, x0 - 168.0, y, 21.0, 0, color);
             let bound = if self.pad_view { s.padmap.label(i) } else { s.keymap.label(i) };
+            let combos: Vec<String> = if self.pad_view { s.padmap.combo_names(i) } else { s.keymap.combo_names(i) }.into_iter().map(|c| c.join(" + ")).collect();
+            let bound = [bound].into_iter().chain(combos).filter(|l| !l.is_empty()).collect::<Vec<_>>().join(" / ");
+            let picked = self.captured();
             let keys = match bound {
+                _ if self.capturing.is_some_and(|(r, _)| r == i) && !picked.is_empty() => picked,
                 _ if self.capturing.is_some_and(|(r, _)| r == i) => if self.pad_view { "Press a button..." } else { "Press a key..." }.to_string(),
                 l if l.is_empty() => "None".to_string(),
                 l => l,
@@ -1027,8 +1074,8 @@ impl SettingsWindow {
         }
         let switch = usize::try_from(self.cursor - SWITCH_CURSOR).ok().and_then(|i| KEY_SWITCHES.get(i));
         let note = match (self.capturing, self.cursor) {
-            (Some(_), _) if self.pad_view => "Press the new button. Esc cancels; Delete or Backspace leaves it no button.",
-            (Some(_), _) => "Press the new key or mouse button. Esc cancels; Delete or Backspace leaves it no key.",
+            (Some(_), _) if self.pad_view => "Hold a button, or 2 or 3 together, then let go. Esc cancels, Delete clears.",
+            (Some(_), _) => "Hold a key or mouse button, or 2 or 3 together, then let go. Esc cancels, Delete clears.",
             (None, 0) => Tab::Keybinds.help(),
             (None, n) if (1..=12).contains(&n) => KEY_HELP[n as usize - 1],
             _ => switch.map_or("", |sw| sw.help()),
