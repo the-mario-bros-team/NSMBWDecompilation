@@ -139,6 +139,11 @@ fn parse_tpl(data: &[u8]) -> Option<Image> {
     Some(Image { width, height, wrap_s, wrap_t, rgba })
 }
 
+/// An RGBA image (rows top down) on the GPU.
+pub fn upload_rgba(ctx: &egui::Context, name: &str, width: u32, height: u32, rgba: &[u8]) -> TextureHandle {
+    upload(ctx, name, &Image { width, height, wrap_s: 0, wrap_t: 0, rgba: rgba.to_vec() })
+}
+
 fn upload(ctx: &egui::Context, name: &str, image: &Image) -> TextureHandle {
     let pixels = egui::ColorImage::from_rgba_unmultiplied([image.width as usize, image.height as usize], &image.rgba[..(image.width * image.height * 4) as usize]);
     ctx.load_texture(name, pixels, egui::TextureOptions::LINEAR)
@@ -219,11 +224,31 @@ pub struct Font {
     fallbacks: Vec<Arc<Font>>,
     /// Letters for characters this font draws as icons.
     plain: Option<Arc<Font>>,
+    /// A colour font's sheets as RGBA (the picture font's icons, for the
+    /// Keybinds tab's key caps).
+    pixels: Vec<Image>,
 }
 
 impl Font {
     pub fn ready(&self) -> bool {
         self.ok
+    }
+
+    /// The cell of `code` in a colour font as RGBA: (width, height, pixels).
+    pub fn cell_rgba(&self, code: u16) -> Option<(u32, u32, Vec<u8>)> {
+        let g = self.glyphs.get(*self.map.get(&code)? as usize)?;
+        let sheet = self.pixels.get(g.sheet as usize)?;
+        let (w, h) = (u32::from(self.cell_width), u32::from(self.cell_height));
+        let (x0, y0) = ((g.u0 * sheet.width as f32).round() as u32, (g.v0 * sheet.height as f32).round() as u32);
+        if x0 + w > sheet.width || y0 + h > sheet.height {
+            return None;
+        }
+        let mut rgba = Vec::with_capacity((w * h * 4) as usize);
+        for y in y0..y0 + h {
+            let row = ((y * sheet.width + x0) * 4) as usize;
+            rgba.extend_from_slice(&sheet.rgba[row..row + (w * 4) as usize]);
+        }
+        Some((w, h, rgba))
     }
 
     /// The glyph for `code` and the font whose sheets hold it.
@@ -405,6 +430,9 @@ impl Font {
                 }
             }
         }
+        if font.glyphs.iter().any(|g| g.picture) {
+            font.pixels = all_sheets;
+        }
         font
     }
 }
@@ -516,6 +544,17 @@ impl DrawList {
         let p = [view.to_screen(&m, x0, y0), view.to_screen(&m, x1, y0), view.to_screen(&m, x1, y1), view.to_screen(&m, x0, y1)];
         let c = color.color32();
         self.quad(white(ctx), p, [Pos2::ZERO; 4], [c; 4]);
+    }
+
+    /// `texture`'s `uv` rectangle (u0, v0, u1, v1) on the rectangle from
+    /// (x0, y0) to (x1, y1) in layout units (y up), tinted.
+    #[allow(clippy::too_many_arguments)]
+    pub fn image(&mut self, view: &View, texture: TextureId, x0: f32, y0: f32, x1: f32, y1: f32, uv: [f32; 4], tint: Rgba) {
+        let m = Mtx::IDENTITY;
+        let p = [view.to_screen(&m, x0, y0), view.to_screen(&m, x1, y0), view.to_screen(&m, x1, y1), view.to_screen(&m, x0, y1)];
+        let [u0, v0, u1, v1] = uv;
+        let c = tint.color32();
+        self.quad(texture, p, [Pos2::new(u0, v0), Pos2::new(u1, v0), Pos2::new(u1, v1), Pos2::new(u0, v1)], [c; 4]);
     }
 
     /// A filled triangle, its corners in layout units.

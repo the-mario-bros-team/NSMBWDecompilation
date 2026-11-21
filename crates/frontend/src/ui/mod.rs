@@ -5,6 +5,7 @@
 //! and the mouse; the remote's buttons (keyboard or controller, as mapped
 //! for the game) move the cursor.
 
+mod key_caps;
 pub mod layout;
 mod settings;
 

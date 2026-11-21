@@ -3,7 +3,7 @@
 //! `[controller]` table by name with Xbox labels ("B, X"). The actions are
 //! [`crate::keymap::ACTIONS`]; the guide button is always HOME.
 
-use gilrs::{Axis, Button};
+pub use gilrs::{Axis, Button};
 
 use crate::combo;
 use crate::keymap::{DOWN, LEFT, RIGHT, TILT_LEFT, TILT_RIGHT, UP};

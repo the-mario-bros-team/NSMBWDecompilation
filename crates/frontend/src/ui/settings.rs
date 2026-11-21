@@ -7,6 +7,7 @@
 
 use std::sync::Arc;
 
+use super::key_caps::{self, Caps, Glyph};
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
 use super::{Change, Nav, UpdateState};
 use crate::gameplay::POWER_UPS;
@@ -29,6 +30,8 @@ struct Assets {
     hit_button: Option<Animation>,
     /// The pause window's buttons are three slices (Newer's).
     pause_slices: bool,
+    /// Key caps from the picture font, for the Keybinds tab.
+    caps: Option<Caps>,
 }
 
 impl Assets {
@@ -37,13 +40,15 @@ impl Assets {
         const CURSOR: &str = "/Layout/select_cursor/select_cursor.arc";
         let pause = Layout::load(ctx, PAUSE, "pauseMenu_16.brlyt").filter(|l| l.pane_rect("P_SBBase_00").is_some() && l.pane_rect("W_N_pauseMenu_00").is_some());
         let anim = |name: &str| pause.as_ref().and_then(|_| Animation::load(PAUSE, name));
+        let picture = layout::load_font(ctx, "mj2d00_PictureFont_32_RGBA8.brfnt");
         Self {
+            caps: Caps::load(ctx, &picture),
             yes_no: Layout::load(ctx, "/Layout/yesnoWindow/yesnoWindow.arc", ""),
             cursor: Layout::load(ctx, CURSOR, ""),
             cursor_loop: Animation::load(CURSOR, "loopCursor.brlan"),
             message: layout::load_font(ctx, "mj2d00_MessageFont_32_I4.brfnt"),
             mario: layout::load_font(ctx, "mj2d01_marioFont_64_IA4.brfnt"),
-            picture: layout::load_font(ctx, "mj2d00_PictureFont_32_RGBA8.brfnt"),
+            picture,
             in_window: anim("_inWindow.brlan"),
             out_window: anim("_outWindow.brlan"),
             on_button: anim("_onButton.brlan"),
@@ -1064,19 +1069,24 @@ impl SettingsWindow {
             let y = KEY_TOP - KEY_STEP * row as f32;
             let color = if self.cursor == 1 + i as i32 { u32::MAX } else { LABEL_DIM };
             self.text(a, c, name, x0 - 168.0, y, 21.0, 0, color);
-            let bound = if self.pad_view { s.padmap.label(i) } else { s.keymap.label(i) };
+            let waiting = self.capturing.is_some_and(|(r, _)| r == i);
+            // The bindings as key caps (or the picked so far, while waiting).
+            let groups = if waiting { self.captured_glyphs() } else { Self::binding_glyphs(s, i, self.pad_view) };
+            let words = if self.pad_view { s.padmap.label(i) } else { s.keymap.label(i) };
             let combos: Vec<String> = if self.pad_view { s.padmap.combo_names(i) } else { s.keymap.combo_names(i) }.into_iter().map(|c| c.join(" + ")).collect();
-            let bound = [bound].into_iter().chain(combos).filter(|l| !l.is_empty()).collect::<Vec<_>>().join(" / ");
-            let picked = self.captured();
-            let keys = match bound {
-                _ if self.capturing.is_some_and(|(r, _)| r == i) && !picked.is_empty() => picked,
-                _ if self.capturing.is_some_and(|(r, _)| r == i) => if self.pad_view { "Press a button..." } else { "Press a key..." }.to_string(),
+            let words = [words].into_iter().chain(combos).filter(|l| !l.is_empty()).collect::<Vec<_>>().join(" / ");
+            let keys = match words {
+                _ if waiting && !groups.is_empty() => self.captured(),
+                _ if waiting => if self.pad_view { "Press a button..." } else { "Press a key..." }.to_string(),
                 l if l.is_empty() => "None".to_string(),
                 l => l,
             };
+            let caps = a.caps.is_some() && a.message.ready() && !groups.is_empty();
             let size = if keys.len() > 16 { 17.0 } else if keys.len() > 11 { 19.0 } else { 21.0 };
-            let waiting = self.capturing.is_some_and(|(r, _)| r == i);
-            self.pause_button(ctx, a, c, 1 + i as i32, &keys, x0 + 78.0, y, 180.0, KEY_H, self.cursor == 1 + i as i32, true, size, waiting, 0.0, true);
+            self.pause_button(ctx, a, c, 1 + i as i32, if caps { "" } else { &keys }, x0 + 78.0, y, 180.0, KEY_H, self.cursor == 1 + i as i32, true, size, waiting, 0.0, true);
+            if caps {
+                self.cap_row(ctx, a, c, &groups, x0 + 78.0, y, 168.0, KEY_H - 3.0);
+            }
             self.add_hit(x0 + 78.0, y, 186.0, KEY_STEP, 1 + i as i32, EV_CONFIRM);
         }
         for (i, sw) in KEY_SWITCHES.into_iter().enumerate() {
@@ -1096,6 +1106,81 @@ impl SettingsWindow {
             _ => switch.map_or("", |sw| sw.help()),
         };
         self.help_line(a, c, note, u32::MAX);
+    }
+
+    /// An action's bindings as caps: each binding, its members (a
+    /// combination has 2 or 3), each member's caps (a stick's way is two).
+    fn binding_glyphs(s: &Settings, action: usize, pad: bool) -> Vec<Vec<Vec<Glyph>>> {
+        if pad {
+            s.padmap.display(action).into_iter().map(|b| b.into_iter().map(key_caps::pad_glyphs).collect()).collect()
+        } else {
+            s.keymap.display(action).into_iter().map(|b| b.into_iter().map(|k| vec![key_caps::key_glyph(k)]).collect()).collect()
+        }
+    }
+
+    /// What a capture has picked so far, as caps.
+    fn captured_glyphs(&self) -> Vec<Vec<Vec<Glyph>>> {
+        let members: Vec<Vec<Glyph>> = if self.pad_view {
+            self.pad_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().map(|&p| key_caps::pad_glyphs(p)).collect())
+        } else {
+            self.key_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().map(|&k| vec![key_caps::key_glyph(k)]).collect())
+        };
+        if members.is_empty() {
+            Vec::new()
+        } else {
+            vec![members]
+        }
+    }
+
+    /// Key caps in a row centred on (x, y), `room` across at most: bindings
+    /// separated by /, a combination's members joined by +. Smaller (down
+    /// to 70%) when they would not fit, then cut short with "...".
+    #[allow(clippy::too_many_arguments)]
+    fn cap_row(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, groups: &[Vec<Vec<Glyph>>], x: f32, y: f32, room: f32, h: f32) {
+        let Some(caps) = a.caps.as_ref() else { return };
+        let message = &a.message;
+        let sep = |h: f32, s: &str| layout::measure_text(message, s, h * 0.9) + h * 0.24;
+        let measure = |h: f32, n: usize| -> f32 {
+            let mut w = 0.0;
+            for (i, g) in groups[..n].iter().enumerate() {
+                if i > 0 {
+                    w += sep(h, "/");
+                }
+                w += g.iter().flatten().map(|m| caps.width(message, m, h)).sum::<f32>() + sep(h, "+") * g.len().saturating_sub(1) as f32;
+            }
+            w + if n < groups.len() { sep(h, "...") } else { 0.0 }
+        };
+        let mut h = h;
+        let full = measure(h, groups.len());
+        if full > room {
+            h *= (room / full).max(0.7);
+        }
+        let mut n = groups.len();
+        while n > 1 && measure(h, n) > room {
+            n -= 1;
+        }
+        let mut px = x - measure(h, n) / 2.0;
+        let word = |this: &mut Self, px: &mut f32, s: &str| {
+            let w = sep(h, s);
+            this.text(a, c, s, *px + w / 2.0, y, h * 0.9, 1, u32::MAX);
+            *px += w;
+        };
+        for (i, g) in groups[..n].iter().enumerate() {
+            if i > 0 {
+                word(self, &mut px, "/");
+            }
+            for (j, member) in g.iter().enumerate() {
+                if j > 0 {
+                    word(self, &mut px, "+");
+                }
+                for m in member {
+                    px += caps.draw(ctx, &mut self.list, &c.view, message, m, px, y, h, c.alpha);
+                }
+            }
+        }
+        if n < groups.len() {
+            word(self, &mut px, "...");
+        }
     }
 
     /// Where switch `i` is: three a row, centred.
