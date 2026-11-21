@@ -277,6 +277,12 @@ pub struct EmuOptions {
     /// a headless run's all off, the game's own rules, unless
     /// `--gameplay-options`). A net host offers its Exit Course to joiners.
     pub gameplay: crate::gameplay::Options,
+    /// `--gameplay-options`: player 1's character pick in a scripted or
+    /// headless run too (otherwise, like the Settings buttons, only a
+    /// player's).
+    pub force_gameplay_options: bool,
+    /// Player 1's character on each save file, shared with the window's thread.
+    pub characters: Arc<crate::gameplay::Characters>,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -337,7 +343,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, gameplay: mut gameplay_options } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, gameplay: mut gameplay_options, force_gameplay_options, characters } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -449,6 +455,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         println!("loaded {} at field {index}", path.display());
     }
+    // Player 1's character pick: a player's game (not a scripted one unless
+    // asked, nor a net game), from the start: after a loaded state, whose
+    // modules are placed already.
+    if gameplay_options.p1_character && session.is_none() && (script.is_empty() || force_gameplay_options) {
+        let on = sys.enable_p1_character();
+        println!("player 1's character pick: {}", if on { "on" } else { "not applied (main.dol is not the one it is for)" });
+    }
     let last_field = stop_after.map(|n| index + n);
     let mut gx_digest = 0u64;
     let mut due = Instant::now() + FIELD;
@@ -537,7 +550,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         // Net games keep the game's own rules.
         if session.is_none() {
-            for line in gameplay.after_field(&mut sys, gameplay_options, &cheats) {
+            for line in gameplay.after_field(&mut sys, gameplay_options, &cheats, &characters) {
                 say!("{line}");
             }
             // A game menu's Settings button: the Settings window once the

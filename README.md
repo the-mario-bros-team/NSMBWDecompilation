@@ -100,6 +100,14 @@ requires Visual Studio Build Tools. The port plan is separate
 
 Use your own dump. No game assets or extracted content are redistributed here.
 
+## Credits
+
+- Player 1's character pick (the Settings window's Gameplay tab) is mkwcat's
+  Gecko code "Player 1 Can Change Character"
+  ([mkwcat/gecko-codes](https://github.com/mkwcat/gecko-codes), `nsmbw/`),
+  Copyright (c) 2024 mkwcat, used under the MIT License; the notice is in
+  `crates/hle-os/src/p1_character.rs`.
+
 ## License
 
 See [LICENSE](LICENSE). In short: the NSMBW Decomp project may not use any of this repository under any circumstances. Anyone else may fork it and do what they want with the fork; mods may use all of the code; a new repository that uses this code must credit NSMBWDecompilation explicitly. No game files are included: bring your own copy of New Super Mario Bros. Wii (USA, SMNE01 rev 1).

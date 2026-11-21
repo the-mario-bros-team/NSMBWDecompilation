@@ -68,7 +68,8 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
                      fields as a windowed run, without input from the host or anything the renderer sends back
   --code-profile <file>  at exit, write every guest address a decoded block started at (input for ppc-recomp)
   --settings-buttons the game menus' Settings buttons in a scripted (--press) or headless run too
-  --gameplay-options with --headless: settings.toml's Gameplay options, as a window has them (else all off)
+  --gameplay-options with --headless: settings.toml's Gameplay options, as a window has them (else all off);
+                     with --press or --headless: player 1's character pick too (otherwise a player's game only)
   flags override settings.toml for this run only";
 
 struct Args {
@@ -295,7 +296,7 @@ fn main() -> ExitCode {
 
     // A window always applies settings.toml's Gameplay options (play.rs).
     let gameplay = if args.gameplay_options { play::gameplay_options(&args.settings) } else { Default::default() };
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), gameplay } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), gameplay, force_gameplay_options: args.gameplay_options, characters: Default::default() } };
     if args.headless {
         // As a window would, before the game boots: the game reads its
         // aspect ratio from SYSCONF once.

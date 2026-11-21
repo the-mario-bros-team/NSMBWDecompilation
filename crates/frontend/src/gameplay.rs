@@ -30,6 +30,11 @@
 //!   too), once the map's menu is closed and the NAND thread idle; it gives
 //!   up after 15 s. Not the title screen's demo, Free Mode or Coin Battle.
 //! - Exit Course is the hook in `hle_os::menu_settings`; this only sets it.
+//! - Player 1's character pick (`hle_os::p1_character`, applied at boot):
+//!   each save file remembers the character player 1 last played on its
+//!   world map ([`Characters`]), and the character screen's cards start on
+//!   it (the game's table of each slot's first card, the saved character's
+//!   swapped into player 1's); the screen's own tidying is hle-os's.
 //!
 //! Net games keep the game's own rules: every machine has to run the same
 //! (Exit Course only if every player has it: `net`).
@@ -87,6 +92,13 @@ const MAP_MENU_CLOSED: u32 = 0x8099_15F0; // dCourseSelectMenu_c::StateID_InitWa
 /// saved anyway, and before the autosave gives up.
 const AUTOSAVE_REPLAY: u32 = 5 * 60;
 const AUTOSAVE_WATCH: u32 = 15 * 60;
+const PROFILE_CHARACTER_SCREEN: u16 = 0x2B6;
+/// The setup screens' first card for each player slot (d_basesNP data), in
+/// the cards' order (0 Mario, 1 Blue Toad, 2 Yellow Toad, 3 Luigi): the
+/// game's table, and each character's card.
+const CARD_STARTS: u32 = 0x8093_3D20;
+const GAME_CARD_STARTS: [u32; 4] = [0, 3, 2, 1];
+const CARD_OF_CHARACTER: [u32; 4] = [0, 3, 1, 2];
 const TIMER_STEP: i32 = 92;
 const TIMER_SLACK: i32 = 4 * TIMER_STEP;
 
@@ -101,6 +113,24 @@ pub struct Options {
     pub infinite_lives: bool,
     pub autosave: bool,
     pub exit_course: bool,
+    /// Applied at boot only, and not in scripted, headless or net runs.
+    pub p1_character: bool,
+}
+
+/// Player 1's last character on each save file (0-3, as
+/// `daPyMng_c::mPlayerType`), shared with the window's thread, which keeps
+/// them in `settings.toml`.
+#[derive(Default)]
+pub struct Characters(pub [AtomicU8; 3]);
+
+impl Characters {
+    pub fn new(saved: [u32; 3]) -> Self {
+        Self(saved.map(|c| AtomicU8::new(c.min(3) as u8)))
+    }
+
+    pub fn get(&self) -> [u32; 3] {
+        std::array::from_fn(|i| u32::from(self.0[i].load(Relaxed)))
+    }
 }
 
 /// The save files' "Cheated" marks, shared by the game thread (which marks
@@ -187,7 +217,7 @@ fn pointer(sys: &System, a: u32) -> Option<u32> {
 
 impl Gameplay {
     /// After a field. Returns lines to log: a power-up given, the autosave.
-    pub fn after_field(&mut self, sys: &mut System, opts: Options, cheats: &Cheats) -> Vec<String> {
+    pub fn after_field(&mut self, sys: &mut System, opts: Options, cheats: &Cheats, characters: &Characters) -> Vec<String> {
         let scene = read32(sys, SCENE).map_or(0, |w| w as u16);
         self.hold_timer(sys, scene, opts.no_time_limit);
         self.hide_timer(sys, scene, opts.no_time_limit);
@@ -195,6 +225,9 @@ impl Gameplay {
             cheats.mark_active();
         }
         self.save_select(sys, scene, cheats);
+        if sys.p1.on {
+            character_pick(sys, scene, cheats, characters);
+        }
         let mut lines: Vec<String> = self.autosave(sys, scene, opts.autosave).into_iter().collect();
         let Some(power_up) = self.pending else { return lines };
         let given = match scene {
@@ -393,6 +426,51 @@ fn find_profile(sys: &System, profile: u16) -> Option<u32> {
 
 fn has_profile(sys: &System, profile: u16) -> bool {
     find_profile(sys, profile).is_some()
+}
+
+/// Player 1's character pick, after a field: on the setup screens the cards
+/// start on the save file's character and the character screen is tidied;
+/// on the world map, the character player 1 plays is the file's.
+fn character_pick(sys: &mut System, scene: u16, cheats: &Cheats, characters: &Characters) {
+    let file = usize::try_from(cheats.active.load(Relaxed)).ok().filter(|&f| f < 3);
+    match scene {
+        SCENE_GAME_SETUP => {
+            if let Some(f) = file {
+                start_cards(sys, characters.get()[f]);
+            }
+            if let Some(screen) = find_profile(sys, PROFILE_CHARACTER_SCREEN) {
+                sys.character_screen(screen);
+            }
+        }
+        SCENE_WORLD_MAP => {
+            if let (Some(f), Some(c)) = (file, read32(sys, PLAYER_TYPE).filter(|&t| t <= 3)) {
+                characters.0[f].store(c as u8, Relaxed);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// The game's table of each slot's first card, with `character`'s card
+/// swapped into player 1's (so no two slots start on the same card). Left
+/// alone unless it is a permutation (a mod's table, or no module yet).
+fn start_cards(sys: &mut System, character: u32) {
+    let Some(now) = sys.mem.ram(CARD_STARTS, 16).map(|b| std::array::from_fn::<u32, 4, _>(|i| u32::from_be_bytes([b[4 * i], b[4 * i + 1], b[4 * i + 2], b[4 * i + 3]]))) else { return };
+    let mut sorted = now;
+    sorted.sort_unstable();
+    if sorted != [0, 1, 2, 3] {
+        return;
+    }
+    let mut wanted = GAME_CARD_STARTS;
+    let card = CARD_OF_CHARACTER[character.min(3) as usize];
+    if let Some(i) = (1..4).find(|&i| wanted[i] == card) {
+        wanted.swap(0, i);
+    }
+    if wanted != now {
+        for (i, &w) in wanted.iter().enumerate() {
+            write32(sys, CARD_STARTS + 4 * i as u32, w);
+        }
+    }
 }
 
 /// FNV-1a over the open save file's course flags; 0 without a save manager

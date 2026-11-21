@@ -208,7 +208,7 @@ const NESTED_RETURN: u32 = 0x8000_1800;
 /// A nested call that runs longer than this is cut off.
 const NESTED_LIMIT: u64 = 20_000_000;
 
-fn guest_ram(a: u32) -> bool {
+pub(crate) fn guest_ram(a: u32) -> bool {
     (0x8000_0000..0x8180_0000).contains(&a) || (0x9000_0000..0x9400_0000).contains(&a)
 }
 
@@ -331,16 +331,16 @@ impl System {
         r
     }
 
-    fn r8(&mut self, a: u32) -> u8 {
+    pub(crate) fn r8(&mut self, a: u32) -> u8 {
         self.mem.read_u8(a).unwrap_or(0)
     }
-    fn r32(&mut self, a: u32) -> u32 {
+    pub(crate) fn r32(&mut self, a: u32) -> u32 {
         self.mem.read_u32(a).unwrap_or(0)
     }
-    fn w8(&mut self, a: u32, v: u8) {
+    pub(crate) fn w8(&mut self, a: u32, v: u8) {
         let _ = self.mem.write_u8(a, v);
     }
-    fn w32(&mut self, a: u32, v: u32) {
+    pub(crate) fn w32(&mut self, a: u32, v: u32) {
         let _ = self.mem.write_u32(a, v);
     }
 
@@ -385,7 +385,7 @@ impl System {
 
     // ------------------------------------------------------------ layouts
 
-    fn pane_name(&mut self, pane: u32) -> String {
+    pub(crate) fn pane_name(&mut self, pane: u32) -> String {
         let mut s = String::new();
         for i in 0..16 {
             match self.r8(pane + 0xBC + i) {

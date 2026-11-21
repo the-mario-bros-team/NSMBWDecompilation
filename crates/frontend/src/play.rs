@@ -151,6 +151,8 @@ struct App {
     settings_from_game: bool,
     /// The save files' "Cheated" marks, shared with the game thread.
     cheats: Arc<crate::gameplay::Cheats>,
+    /// Player 1's character on each save file, shared with the game thread.
+    characters: Arc<crate::gameplay::Characters>,
     /// What the game thread was last told: paused (a menu is up) or not.
     sent_pause: bool,
     /// The Settings window changed something not saved yet (saved when it
@@ -210,7 +212,7 @@ fn wait_until(deadline: Instant) {
 }
 
 pub fn gameplay_options(s: &Settings) -> crate::gameplay::Options {
-    crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives, autosave: s.autosave, exit_course: s.exit_course }
+    crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives, autosave: s.autosave, exit_course: s.exit_course, p1_character: s.p1_character }
 }
 
 /// The game menus' Settings button, in the game's language.
@@ -292,7 +294,7 @@ impl App {
         self.inputs.set_keymap(self.settings.keymap.clone());
         self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
         let settings_label = Some(settings_label(&self.settings.language).to_string());
-        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), gameplay: gameplay_options(&self.settings), ..self.opts.emu.clone() });
+        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), ..self.opts.emu.clone() });
         self.emu = Some(emu);
         self.renderer = Some(renderer);
         self.window = Some(window);
@@ -312,8 +314,10 @@ impl App {
         // A save file newly marked "Cheated" (or an erased one, unmarked) is
         // written down at once: it may happen long after the window closed.
         let marked = self.cheats.marked();
-        if marked != self.settings.cheated {
+        let characters = self.characters.get();
+        if marked != self.settings.cheated || characters != self.settings.file_characters {
             self.settings.cheated = marked;
+            self.settings.file_characters = characters;
             self.settings.save(Path::new(settings::FILE));
         }
         if let Some(m) = &mut self.menus {
@@ -983,6 +987,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
     let now = Instant::now();
     let settings = opts.settings.clone();
     let cheats = Arc::new(crate::gameplay::Cheats::new(settings.cheated));
+    let characters = Arc::new(crate::gameplay::Characters::new(settings.file_characters));
     // Not in test runs (a frame count, scripted presses, screenshots).
     let update_check = if opts.max_frames.is_none() && opts.emu.script.is_empty() && opts.shots.is_empty() && !opts.unpaced { check_for_update() } else { None };
     let mut app = App {
@@ -1020,6 +1025,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         sent_pause: false,
         settings_from_game: false,
         cheats,
+        characters,
         unsaved: false,
         update_check,
         update: None,

@@ -155,7 +155,8 @@ const ROW_LIVES: i32 = 2;
 const ROW_POWER_UP: i32 = 3;
 const ROW_AUTOSAVE: i32 = 4;
 const ROW_EXIT_COURSE: i32 = 5;
-const GAMEPLAY_LAST: i32 = 5;
+const ROW_P1_CHARACTER: i32 = 6;
+const GAMEPLAY_LAST: i32 = 6;
 // Audio rows: 1-4 the sliders.
 const VOLUMES: [(&str, &str); 4] = [
     ("Master", "The volume of everything."),
@@ -832,7 +833,7 @@ impl SettingsWindow {
     }
 
     fn draw_gameplay(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
-        let rows = 5;
+        let rows = GAMEPLAY_LAST;
         self.row_toggle(ctx, a, c, rows, 0, "No Time Limit", s.no_time_limit, ROW_TIME);
         self.row_toggle(ctx, a, c, rows, 1, "Infinite Lives", s.infinite_lives, ROW_LIVES);
         // Power-Up: picked with the arrows, given with a press.
@@ -847,6 +848,7 @@ impl SettingsWindow {
         self.add_hit(COL_X, y, COL_W - 2.0 * ARROW_W - 8.0, step - 2.0, ROW_POWER_UP, EV_CONFIRM);
         self.row_toggle(ctx, a, c, rows, 3, "Autosave", s.autosave, ROW_AUTOSAVE);
         self.row_toggle(ctx, a, c, rows, 4, "Exit Course", s.exit_course, ROW_EXIT_COURSE);
+        self.row_toggle(ctx, a, c, rows, 5, "P1 Character", s.p1_character, ROW_P1_CHARACTER);
         let given = self.power_up_at.is_some_and(|t| self.now - t < 3.0);
         let note = match self.cursor {
             ROW_TIME => "The course timer stands still: take your time.",
@@ -855,6 +857,7 @@ impl SettingsWindow {
             ROW_POWER_UP => "Left and right pick one; press it to give it to player 1.",
             ROW_AUTOSAVE => "The game is saved after every course you clear, as the map's Save does.",
             ROW_EXIT_COURSE => "The pause menu's Exit Course in every course, cleared or not.",
+            ROW_P1_CHARACTER => "Player 1 picks a character too, on the game's own screen (from the next start).",
             _ => Tab::Gameplay.help(),
         };
         self.help_line(a, c, note, u32::MAX);
@@ -1260,6 +1263,10 @@ impl SettingsWindow {
             }
             (Tab::Gameplay, ROW_EXIT_COURSE) if toggle => {
                 s.exit_course = !s.exit_course;
+                changes.push(Change::Gameplay);
+            }
+            (Tab::Gameplay, ROW_P1_CHARACTER) if toggle => {
+                s.p1_character = !s.p1_character;
                 changes.push(Change::Gameplay);
             }
             (Tab::Language, n) if confirm && (1..=3).contains(&n) => {
