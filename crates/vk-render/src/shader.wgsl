@@ -33,6 +33,7 @@ const FLAGS: u32 = 146u;
 const CLEAR_COLOR: u32 = 147u;
 const ZPLANE: u32 = 148u;
 const SCALE: u32 = 151u;
+const SCALE_Y: u32 = 152u;
 const FLAG_CLEAR: u32 = 1u;
 const FLAG_ZFREEZE: u32 = 2u;
 const NONE: u32 = 0xFFFFFFFFu;
@@ -476,7 +477,7 @@ fn shade(i: VOut) -> FOut {
     let dy = Coords(dpdy(uv.c0), dpdy(uv.c1), dpdy(uv.c2), dpdy(uv.c3), dpdy(uv.c4), dpdy(uv.c5), dpdy(uv.c6), dpdy(uv.c7));
 
     let genmode = word(GENMODE);
-    let scale = bitcast<f32>(word(SCALE));
+    let scale = vec2<f32>(bitcast<f32>(word(SCALE)), bitcast<f32>(word(SCALE_Y)));
 
     // Indirect lookups: each indirect stage samples its map at its scaled
     // texcoord; the result is (s, t, u) = texel (alpha, blue, green).

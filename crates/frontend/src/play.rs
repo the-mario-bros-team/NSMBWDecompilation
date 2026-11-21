@@ -259,13 +259,12 @@ impl App {
         let display = window.display_handle().map_err(|e| e.to_string())?.as_raw();
         let handle = window.window_handle().map_err(|e| e.to_string())?.as_raw();
         // "Native" resolution: enough 480-line multiples to cover the window.
-        let scale = match self.settings.scale {
-            0 => {
-                let monitor = window.current_monitor().map(|m| m.size().height);
-                let h = if self.settings.fullscreen { monitor.unwrap_or(window.inner_size().height) } else { window.inner_size().height };
-                h.div_ceil(480).clamp(1, 8)
-            }
-            s => s,
+        let scale = if self.settings.scale == 0.0 {
+            let monitor = window.current_monitor().map(|m| m.size().height);
+            let h = if self.settings.fullscreen { monitor.unwrap_or(window.inner_size().height) } else { window.inner_size().height };
+            h.div_ceil(480).clamp(1, 8) as f32
+        } else {
+            self.settings.scale
         };
         let _ = std::fs::create_dir_all("cache");
         let ropts = vk_render::Options { scale, vsync: self.settings.vsync, pipeline_cache: Some(PathBuf::from("cache/pipelines.bin")), efb_copies_to_ram: self.settings.efb_copies_to_ram };

@@ -96,8 +96,10 @@ pub mod sh {
     pub const CLEAR_COLOR: usize = 147;
     /// Z-freeze plane (f32): z24 = a * x + b * y + c in EFB pixels.
     pub const ZPLANE: usize = 148;
-    /// EFB scale (f32), filled in by the renderer.
+    /// EFB scale across (f32), filled in by the renderer.
     pub const SCALE: usize = 151;
+    /// EFB scale down (f32), filled in by the renderer.
+    pub const SCALE_Y: usize = 152;
 }
 
 /// The draw is a masked EFB clear: output `CLEAR_COLOR` as is.

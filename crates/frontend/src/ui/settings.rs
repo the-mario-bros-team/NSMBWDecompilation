@@ -186,16 +186,16 @@ const LANGUAGES: [(&str, &str, &str); 3] = [
     ("fr", "Français", "Redémarrez le jeu pour jouer dans cette langue."),
 ];
 
-/// Resolution choices: EFB multiples, then Native (0).
-const SCALES: [u32; 7] = [1, 2, 3, 4, 6, 8, 0];
+// Resolution choices: EFB multiples, then Native (0).
+use crate::settings::SCALES;
 /// Frame rates: 60 is the game's own; the others interpolate.
 const FRAME_RATES: [u32; 11] = [60, 90, 120, 144, 165, 180, 240, 300, 360, 400, 0];
 
-fn scale_label(scale: u32) -> String {
-    if scale == 0 {
+fn scale_label(scale: f32) -> String {
+    if scale == 0.0 {
         "Native".into()
     } else {
-        format!("{scale}x ({}p)", 480 * scale)
+        format!("{scale}x ({}p)", (480.0 * scale).round() as u32)
     }
 }
 
@@ -803,7 +803,7 @@ impl SettingsWindow {
         }
         let note = match self.cursor {
             0 => Tab::Display.help(),
-            ROW_RESOLUTION if s.scale == 0 => "The window's own resolution (from the next start).",
+            ROW_RESOLUTION if s.scale == 0.0 => "The window's own resolution (from the next start).",
             ROW_RESOLUTION => "Rendered at this many lines, then scaled to the screen (from the next start).",
             ROW_ASPECT => "Switching between 4:3 and widescreen takes effect after a restart.",
             ROW_FULLSCREEN if s.fullscreen => "Borderless: a window covering the whole screen (F11).",

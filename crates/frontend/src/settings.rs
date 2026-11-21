@@ -20,9 +20,9 @@ pub struct Settings {
     pub fps: u32,
     pub vsync: bool,
     pub fullscreen: bool,
-    /// EFB resolution multiplier (480 lines each); 0 = the window's own
-    /// height. Applies at the next start.
-    pub scale: u32,
+    /// EFB resolution multiplier (480 lines each; [`SCALES`]), 0 = the
+    /// window's own height. Applies at the next start.
+    pub scale: f32,
     /// 16:9, else 4:3. The game reads it at boot, so a change applies at the
     /// next start; the picture's shape changes at once.
     pub widescreen: bool,
@@ -55,7 +55,19 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default() }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default() }
+    }
+}
+
+/// Resolution choices (times 480 lines), then 0 for the window's own.
+pub const SCALES: [f32; 10] = [0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, 8.0, 0.0];
+
+/// A resolution multiplier from a file or the command line: 0.5 to 8.
+pub fn clamp_scale(s: f32) -> f32 {
+    if s.is_finite() {
+        s.clamp(0.5, 8.0)
+    } else {
+        2.0
     }
 }
 
@@ -95,8 +107,9 @@ impl Settings {
         s.battery_saver = flag("battery_saver", s.battery_saver);
         s.efb_copies_to_ram = flag("efb_copies_to_ram", s.efb_copies_to_ram);
         match t.get("scale") {
-            Some(toml::Value::String(v)) if v == "native" => s.scale = 0,
-            Some(toml::Value::Integer(n)) => s.scale = (*n).clamp(1, 8) as u32,
+            Some(toml::Value::String(v)) if v == "native" => s.scale = 0.0,
+            Some(toml::Value::Integer(n)) => s.scale = clamp_scale(*n as f32),
+            Some(toml::Value::Float(f)) => s.scale = clamp_scale(*f as f32),
             _ => {}
         }
         let number = |k: &str| t.get(k).and_then(toml::Value::as_integer);
@@ -133,12 +146,12 @@ impl Settings {
 
     pub fn save(&self, path: &Path) {
         let fps = if self.fps == 0 { "\"unlocked\"".to_string() } else { self.fps.to_string() };
-        let scale = if self.scale == 0 { "\"native\"".to_string() } else { self.scale.to_string() };
+        let scale = if self.scale == 0.0 { "\"native\"".to_string() } else { self.scale.to_string() };
         let text = format!(
             "# NSMBW port display settings (hotkeys change them while playing; see F1).\n\
              # fps: 30, 60, 90, 120, 144, 165, 180, 240, 300, 360 or \"unlocked\"; 30 shows every other field; above 60 draws interpolated frames.\n\
              fps = {fps}\nvsync = {}\nfullscreen = {}\n\
-             # EFB resolution: 1..8 times 480 lines, or \"native\" for the window's height (next start).\n\
+             # EFB resolution: 0.5..8 times 480 lines (0.5, 0.75, 1, 1.5, 2, 3, 4, 6 or 8), or \"native\" for the window's height (next start).\n\
              scale = {scale}\n\
              # \"16:9\" or \"4:3\" (the game reads it at boot).\n\
              aspect = \"{}\"\nperf_monitor = {}\nbattery_saver = {}\n\
@@ -201,7 +214,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("nsmbw-settings-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(FILE);
-        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], keymap: {
+        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0.0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], keymap: {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.keys[input::keymap::SHAKE].clear();
@@ -209,7 +222,10 @@ mod tests {
         } };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
-        let s = Settings { fps: 144, scale: 3, ..Settings::default() };
+        let s = Settings { fps: 144, scale: 3.0, ..Settings::default() };
+        s.save(&path);
+        assert_eq!(Settings::load(&path), s);
+        let s = Settings { scale: 0.75, ..Settings::default() };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         std::fs::remove_dir_all(&dir).unwrap();

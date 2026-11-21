@@ -87,8 +87,8 @@ unsafe extern "system" fn on_validation_message(
 /// How the renderer is set up.
 #[derive(Clone, Debug)]
 pub struct Options {
-    /// EFB resolution multiplier.
-    pub scale: u32,
+    /// EFB resolution multiplier (fractions too: 0.5 renders 320x264).
+    pub scale: f32,
     /// Present on vertical blank (FIFO); otherwise mailbox or immediate.
     pub vsync: bool,
     /// Where the Vulkan pipeline cache is loaded from and saved to.
@@ -101,7 +101,7 @@ pub struct Options {
 
 impl Default for Options {
     fn default() -> Self {
-        Self { scale: 2, vsync: true, pipeline_cache: None, efb_copies_to_ram: true }
+        Self { scale: 2.0, vsync: true, pipeline_cache: None, efb_copies_to_ram: true }
     }
 }
 
@@ -247,7 +247,7 @@ pub struct Renderer {
     pub device_name: String,
     pub validation: bool,
     /// Internal resolution multiplier for the EFB.
-    scale: u32,
+    scale: f32,
     vsync: bool,
     copies_to_ram: bool,
     _entry: Entry,
@@ -353,6 +353,11 @@ fn offsets(x: u32, y: u32, w: u32, h: u32) -> [vk::Offset3D; 2] {
     [vk::Offset3D { x: x as i32, y: y as i32, z: 0 }, vk::Offset3D { x: (x + w) as i32, y: (y + h) as i32, z: 1 }]
 }
 
+/// `n` EFB pixels at scale `s`: rounded, and at least one.
+fn at_scale(n: u32, s: f32) -> u32 {
+    ((n as f32 * s).round() as u32).max(1)
+}
+
 fn rect2d(x: u32, y: u32, w: u32, h: u32) -> vk::Rect2D {
     vk::Rect2D { offset: vk::Offset2D { x: x as i32, y: y as i32 }, extent: vk::Extent2D { width: w, height: h } }
 }
@@ -407,7 +412,7 @@ impl Renderer {
     }
 
     fn create(window: Option<(RawDisplayHandle, RawWindowHandle)>, opts: Options) -> Res<Self> {
-        let scale = opts.scale.max(1);
+        let scale = opts.scale.max(0.25);
         unsafe {
             let entry = Entry::load()?;
             let layers_present = entry.enumerate_instance_layer_properties()?;
@@ -567,7 +572,7 @@ impl Renderer {
                 });
             }
 
-            let (ew, eh) = (EFB_W * scale, EFB_H * scale);
+            let (ew, eh) = (at_scale(EFB_W, scale), at_scale(EFB_H, scale));
             let usage = vk::ImageUsageFlags::COLOR_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_SRC | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
             let efb_color = Self::create_image(&device, &mut alloc, ew, eh, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
             let usage = vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
@@ -656,7 +661,15 @@ impl Renderer {
         }
     }
 
-    pub fn scale(&self) -> u32 {
+    pub fn scale(&self) -> f32 {
+        self.scale
+    }
+
+    /// EFB pixels to EFB-image pixels, across and down.
+    fn sx(&self) -> f32 {
+        self.scale
+    }
+    fn sy(&self) -> f32 {
         self.scale
     }
 
@@ -1109,7 +1122,7 @@ impl Renderer {
             // Images that EFB copies will fill.
             for c in &out.cmds {
                 if let Cmd::CopyTex(c) = c {
-                    let (w, h) = (c.w * self.scale, c.h * self.scale);
+                    let (w, h) = (at_scale(c.w, self.sx()), at_scale(c.h, self.sy()));
                     if self.textures.get(&c.id).is_some_and(|i| i.w == w && i.h == h) {
                         continue;
                     }
@@ -1382,10 +1395,11 @@ impl Renderer {
         let mut sampler_slots: HashMap<u32, u32> = HashMap::new();
         let mut samplers = Vec::new();
         let mut words: Vec<u32> = Vec::with_capacity(out.shadings.len().max(1) * SHADING_WORDS);
-        let scale = (self.scale as f32).to_bits();
+        let (scale_x, scale_y) = (self.sx().to_bits(), self.sy().to_bits());
         for s in &out.shadings {
             let mut w = s.0;
-            w[sh::SCALE] = scale;
+            w[sh::SCALE] = scale_x;
+            w[sh::SCALE_Y] = scale_y;
             for m in 0..8 {
                 let id = w[sh::TEX + m];
                 if id == NO_TEXTURE {
@@ -1442,14 +1456,20 @@ impl Renderer {
         Ok(())
     }
 
+    /// An EFB rectangle in EFB-image pixels: each edge rounded (so
+    /// neighbouring rectangles still meet), at least one pixel, inside the
+    /// image.
     fn scaled(&self, r: Rect) -> vk::Rect2D {
-        let s = self.scale;
-        rect2d(r.x * s, r.y * s, r.w * s, r.h * s)
+        let edge = |v: u32, s: f32, size: u32| ((v as f32 * s).round() as u32).min(size);
+        let (iw, ih) = (self.efb_color.w, self.efb_color.h);
+        let (x0, y0) = (edge(r.x, self.sx(), iw - 1), edge(r.y, self.sy(), ih - 1));
+        let (x1, y1) = (edge(r.x + r.w, self.sx(), iw).max(x0 + 1), edge(r.y + r.h, self.sy(), ih).max(y0 + 1));
+        rect2d(x0, y0, x1 - x0, y1 - y0)
     }
 
     fn scaled_f(&self, r: Rect) -> [f32; 4] {
-        let s = self.scale as f32;
-        [r.x as f32 * s, r.y as f32 * s, r.w as f32 * s, r.h as f32 * s]
+        let (sx, sy) = (self.sx(), self.sy());
+        [r.x as f32 * sx, r.y as f32 * sy, r.w as f32 * sx, r.h as f32 * sy]
     }
 
     fn begin_efb(&mut self, cmd: vk::CommandBuffer, vb: vk::Buffer, set: vk::DescriptorSet) {
@@ -1608,7 +1628,7 @@ impl Renderer {
                         unsafe { dev.cmd_end_rendering(cmd) };
                         rendering = false;
                     }
-                    let (w, h) = (src.w * self.scale, height * self.scale);
+                    let (w, h) = (at_scale(src.w, self.sx()), at_scale(height, self.sy()));
                     let stale = self.xfbs.get(&addr).is_some_and(|(img, _)| img.w != w || img.h != h);
                     if stale {
                         let (img, _) = self.xfbs.remove(&addr).unwrap();

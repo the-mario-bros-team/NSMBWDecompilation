@@ -14,7 +14,7 @@ pub struct Options {
     pub log: PathBuf,
     /// 0-based frame to capture; default the last.
     pub frame: Option<usize>,
-    pub scale: u32,
+    pub scale: f32,
     pub screenshot: Option<PathBuf>,
     /// Reference image (same size as the capture).
     pub compare: Option<PathBuf>,
@@ -181,7 +181,7 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         let (path, shot) = (dir.join("quad.dff"), dir.join("quad.png"));
         save(&path, &log());
-        let opts = Options { log: path.clone(), frame: None, scale: 1, screenshot: Some(shot.clone()), compare: None, min_psnr: 30.0 };
+        let opts = Options { log: path.clone(), frame: None, scale: 1.0, screenshot: Some(shot.clone()), compare: None, min_psnr: 30.0 };
         assert!(run(&opts).unwrap());
         let (w, h, px) = vk_render::load_png(&shot).unwrap();
         assert_eq!((w, h), (640, 528));

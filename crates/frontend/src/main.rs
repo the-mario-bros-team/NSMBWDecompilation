@@ -38,7 +38,7 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
                      (the game always runs at 59.94)
   --vsync, --no-vsync  wait for the display's refresh, or not
   --fullscreen       borderless fullscreen (F11 toggles)
-  --scale <n|native> EFB resolution: 1..8 times 480 lines, or the window's height
+  --scale <n|native> EFB resolution: 0.5..8 times 480 lines, or the window's height
   --unpaced          run the game as fast as possible instead of 59.94 frames per second
   --press [p<k>:]<f>:<b>[:<n>]  hold Wii Remote k's (default 1) buttons b (a b 1 2 up down left right plus
                      minus home shake, joined with +; the remote's own D-pad) for n game frames (default 6)
@@ -144,7 +144,7 @@ fn parse_args() -> Result<Args, String> {
             "--frames" => args.frames = Some(number(&mut it, "--frames")?),
             "--scale" => {
                 let v = it.next().ok_or("--scale needs a number or native")?;
-                args.settings.scale = if v == "native" { 0 } else { v.parse::<u32>().map_err(|_| format!("--scale: not a number: {v}"))?.clamp(1, 8) };
+                args.settings.scale = if v == "native" { 0.0 } else { settings::clamp_scale(v.parse::<f32>().map_err(|_| format!("--scale: not a number: {v}"))?) };
             }
             "--fps" => {
                 let v = it.next().ok_or("--fps needs a rate")?;
@@ -265,7 +265,7 @@ fn main() -> ExitCode {
         }
     };
     if let Some(log) = args.replay {
-        let scale = if args.settings.scale == 0 { 1 } else { args.settings.scale };
+        let scale = if args.settings.scale == 0.0 { 1.0 } else { args.settings.scale };
         let opts = replay::Options { log, frame: args.frame, scale, screenshot: args.screenshot, compare: args.compare, min_psnr: args.min_psnr };
         return match replay::run(&opts) {
             Ok(true) if vk_render::validation_errors() == 0 => ExitCode::SUCCESS,
