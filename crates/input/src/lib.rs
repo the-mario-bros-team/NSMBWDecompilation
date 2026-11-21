@@ -10,18 +10,28 @@
 //! Keyboard defaults follow WitherBlitz's NSMB-Wii-Recompilation: arrows
 //! D-pad, X or Space 2 (jump), Z or Left Shift 1 (run), C or Ctrl shake,
 //! Q/E tilt, B the A button, Enter or Esc +, Minus or Tab -, plus Home for
-//! the HOME button. All but Home can be rebound ([`keymap`]).
+//! the HOME button. All but Home can be rebound ([`keymap`]), and so can a
+//! controller's buttons but its guide button, HOME ([`padmap`]).
 
+pub mod capture;
+pub mod combo;
+pub mod gyro;
 pub mod keymap;
+pub mod padmap;
+pub mod smart_spin;
+#[cfg(windows)]
+pub mod wii_hid;
 
 use std::collections::HashSet;
+use std::time::{Duration, Instant};
 
-use gilrs::{Axis, Button, GamepadId, Gilrs};
+use gilrs::{Button, GamepadId, Gilrs};
 use hle_ios::wiimote::{button, Input};
+use padmap::PadInput;
 use winit::keyboard::KeyCode;
 
 pub const PLAYERS: usize = 4;
-/// Stick deflection that counts as a D-pad press.
+/// A stick or trigger pushed this far counts as pressed.
 const STICK_PRESS: f32 = 0.5;
 /// Analog tilt below this is ignored (stick drift).
 const TILT_DEAD_ZONE: f32 = 0.15;
@@ -72,43 +82,27 @@ fn keymap_action(action: usize) -> Action {
     }
 }
 
-/// Xbox layout: A jumps (2), B and X run (1), Y and the bumpers shake,
-/// Start is +, Back is -, the guide button is HOME; the triggers and the
-/// right stick tilt.
-fn pad_action(b: Button) -> Option<Action> {
-    use Action::*;
-    Some(match b {
-        Button::DPadUp => Buttons(sideways(Dir::Up)),
-        Button::DPadDown => Buttons(sideways(Dir::Down)),
-        Button::DPadLeft => Buttons(sideways(Dir::Left)),
-        Button::DPadRight => Buttons(sideways(Dir::Right)),
-        Button::South => Buttons(button::TWO),
-        Button::East | Button::West => Buttons(button::ONE),
-        Button::North | Button::LeftTrigger | Button::RightTrigger => Shake,
-        Button::Start => Buttons(button::PLUS),
-        Button::Select => Buttons(button::MINUS),
-        Button::Mode => Buttons(button::HOME),
-        _ => return None,
-    })
+/// How far `p` is pushed on `pad`, 0 to 1.
+fn pad_value(pad: &gilrs::Gamepad, p: PadInput) -> f32 {
+    match p {
+        PadInput::Button(b) => {
+            let v = pad.button_data(b).map_or(0.0, |d| d.value());
+            if pad.is_pressed(b) {
+                v.max(STICK_PRESS)
+            } else {
+                v
+            }
+        }
+        PadInput::Stick(axis, positive) => {
+            let v = pad.value(axis);
+            if positive {
+                v.max(0.0)
+            } else {
+                (-v).max(0.0)
+            }
+        }
+    }
 }
-
-const PAD_BUTTONS: [Button; 15] = [
-    Button::DPadUp,
-    Button::DPadDown,
-    Button::DPadLeft,
-    Button::DPadRight,
-    Button::South,
-    Button::East,
-    Button::West,
-    Button::North,
-    Button::LeftTrigger,
-    Button::RightTrigger,
-    Button::Start,
-    Button::Select,
-    Button::Mode,
-    Button::LeftThumb,
-    Button::RightThumb,
-];
 
 fn apply(input: &mut Input, a: Action) {
     match a {
@@ -118,14 +112,68 @@ fn apply(input: &mut Input, a: Action) {
     }
 }
 
+/// The actions held through combinations (`1 << action` bits).
+fn apply_bits(input: &mut Input, bits: u32) {
+    for action in 0..keymap::ACTIONS.len() {
+        if bits & (1 << action) != 0 {
+            apply(input, keymap_action(action));
+        }
+    }
+}
+
+/// A single let go while it waited for a combination (a tap) still plays
+/// its action this long, so a field reads it.
+const TAP: Duration = Duration::from_millis(40);
+/// A shake asked for by a press (a smart spin) lasts this long: ten fields,
+/// enough for the game to see one shake.
+const SHAKE_PULSE: Duration = Duration::from_millis(170);
+
+/// The game's rumble on a controller, as in WitherBlitz's
+/// NSMB-Wii-Recompilation (`hle/input/wpad.cpp`): a controller's motors are
+/// bigger than the remote's, so both run well under full strength (the
+/// strong, low-frequency one at 0x3000, the weak one at 0x7000); and a
+/// rumble lasts 2 s at most, so a missed stop can't run on.
+const RUMBLE_LOW: u16 = 0x3000;
+const RUMBLE_HIGH: u16 = 0x7000;
+const RUMBLE_MAX_MS: u32 = 2000;
+
 pub struct Inputs {
     keys: HashSet<KeyCode>,
+    /// The mouse's buttons held (bit n - 1 for button n), counted only
+    /// while no menu has the mouse.
+    mouse: u8,
     keymap: keymap::Keymap,
+    padmap: padmap::Padmap,
+    /// The combinations' rules: the keyboard's, and each controller's.
+    key_combos: combo::Engine<keymap::Key>,
+    pad_combos: [combo::Engine<PadInput>; PLAYERS],
+    /// Actions played for a moment (taps): player, action, until when.
+    pulses: Vec<(usize, usize, Duration)>,
+    /// Times are from here.
+    epoch: Instant,
+    /// Space Smart Spin: on, Space's state, player 1 as the game left them.
+    smart_spin: bool,
+    space: smart_spin::SmartSpin,
+    player: Option<smart_spin::Player>,
+    /// Shaking until then (a smart spin, a mouse swing), per player.
+    shake_until: [Duration; PLAYERS],
+    /// Mouse as Gyro: on, and the pointer's x and the window's width.
+    mouse_gyro: bool,
+    gyro: gyro::Gyro,
+    pointer: Option<(f32, f32)>,
+    /// Every remote's tilt mirrored (the Reverse Tilt switch).
+    reverse_tilt: bool,
     gilrs: Option<Gilrs>,
     /// Gamepads in the order they connected; index = player.
     pads: Vec<GamepadId>,
     /// Players whose remote has been switched on.
     on: [bool; PLAYERS],
+    /// The Keybinds tab's Rumble switch.
+    rumble_enabled: bool,
+    /// Players whose controller is rumbling.
+    rumbling: [bool; PLAYERS],
+    /// Each controller's rumble, made the first time it rumbles.
+    effects: Vec<(GamepadId, gilrs::ff::Effect)>,
 }
 
 impl Default for Inputs {
@@ -144,7 +192,7 @@ impl Inputs {
                 None
             }
         };
-        let mut s = Self { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs, pads: Vec::new(), on: [true, false, false, false] };
+        let mut s = Self { gilrs, ..Self::without_pads() };
         if let Some(g) = &s.gilrs {
             let ids: Vec<GamepadId> = g.gamepads().filter(|(_, p)| p.is_connected()).map(|(id, _)| id).collect();
             for id in ids {
@@ -152,6 +200,61 @@ impl Inputs {
             }
         }
         s
+    }
+
+    /// The keyboard alone (no gamepad library).
+    fn without_pads() -> Self {
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+    }
+
+    /// The Rumble switch: off stops any rumble at once.
+    pub fn set_rumble_enabled(&mut self, on: bool) {
+        self.rumble_enabled = on;
+        if !on {
+            for player in 0..PLAYERS {
+                self.rumble(player, false);
+            }
+        }
+    }
+
+    /// Player `player`'s remote rumbles (its rumble bit, as the game last
+    /// set it) or not: their controller follows.
+    pub fn rumble(&mut self, player: usize, on: bool) {
+        let on = on && self.rumble_enabled;
+        if player >= PLAYERS || self.rumbling[player] == on {
+            return;
+        }
+        self.rumbling[player] = on;
+        let (Some(&id), Some(g)) = (self.pads.get(player), self.gilrs.as_mut()) else { return };
+        if !g.connected_gamepad(id).is_some_and(|p| p.is_ff_supported()) {
+            return;
+        }
+        let i = match self.effects.iter().position(|(p, _)| *p == id) {
+            Some(i) => i,
+            None => {
+                use gilrs::ff::{BaseEffect, BaseEffectType, EffectBuilder, Repeat, Replay, Ticks};
+                let replay = Replay { play_for: Ticks::from_ms(RUMBLE_MAX_MS), ..Replay::default() };
+                let motor = |kind| BaseEffect { kind, scheduling: replay, ..BaseEffect::default() };
+                let built = EffectBuilder::new()
+                    .add_effect(motor(BaseEffectType::Strong { magnitude: RUMBLE_LOW }))
+                    .add_effect(motor(BaseEffectType::Weak { magnitude: RUMBLE_HIGH }))
+                    .repeat(Repeat::For(Ticks::from_ms(RUMBLE_MAX_MS)))
+                    .gamepads(&[id])
+                    .finish(g);
+                match built {
+                    Ok(e) => {
+                        self.effects.push((id, e));
+                        self.effects.len() - 1
+                    }
+                    Err(e) => {
+                        eprintln!("rumble on gamepad {}: {e}", player + 1);
+                        return;
+                    }
+                }
+            }
+        };
+        let effect = &self.effects[i].1;
+        let _ = if on { effect.play() } else { effect.stop() };
     }
 
     fn add_pad(&mut self, id: GamepadId) {
@@ -167,20 +270,73 @@ impl Inputs {
 
     /// The keys from now on.
     pub fn set_keymap(&mut self, keymap: keymap::Keymap) {
+        self.key_combos = combo::Engine::new(keymap.combo_setup());
         self.keymap = keymap;
     }
 
-    /// What a key does: its keymap action, or Home's HOME.
-    fn key_action(&self, k: KeyCode) -> Option<Action> {
-        match self.keymap.action(k) {
-            Some(a) => Some(keymap_action(a)),
-            None => (k == KeyCode::Home).then_some(Action::Buttons(button::HOME)),
+    /// The controllers' buttons from now on.
+    pub fn set_padmap(&mut self, padmap: padmap::Padmap) {
+        self.pad_combos = std::array::from_fn(|_| combo::Engine::new(padmap.combo_setup()));
+        self.padmap = padmap;
+    }
+
+    /// Space Smart Spin on or off.
+    pub fn set_smart_spin(&mut self, on: bool) {
+        self.smart_spin = on;
+    }
+
+    /// Mouse as Gyro on or off (`gyro`): the mouse tilts and shakes player
+    /// 1's remote while no controller is connected.
+    pub fn set_mouse_gyro(&mut self, on: bool) {
+        self.mouse_gyro = on;
+        self.gyro.reset();
+    }
+
+    /// Reverse Tilt: every remote's tilt mirrored, whatever it comes from.
+    pub fn set_reverse_tilt(&mut self, on: bool) {
+        self.reverse_tilt = on;
+    }
+
+    /// The pointer moved to `x` in a window `width` across (pixels).
+    pub fn pointer(&mut self, x: f32, width: f32) {
+        self.pointer = Some((x, width));
+    }
+
+    /// Player 1 as the game left them after its last field (`None` outside
+    /// a course): their state and vertical move.
+    pub fn set_player(&mut self, player: Option<(u32, f32)>) {
+        self.player = player.map(|(state, vertical)| smart_spin::Player { state, vertical });
+    }
+
+    /// A controller is connected.
+    pub fn pad_connected(&self) -> bool {
+        self.gilrs.as_ref().is_some_and(|g| self.pads.iter().any(|&id| g.connected_gamepad(id).is_some()))
+    }
+
+    /// What is pressed on the connected controllers now (for picking a
+    /// button in the Keybinds tab).
+    pub fn pad_held(&self) -> Vec<PadInput> {
+        let Some(g) = &self.gilrs else { return Vec::new() };
+        let mut held = Vec::new();
+        for pad in self.pads.iter().filter_map(|&id| g.connected_gamepad(id)) {
+            for p in padmap::all() {
+                if pad_value(&pad, p) >= STICK_PRESS && !held.contains(&p) {
+                    held.push(p);
+                }
+            }
         }
+        held
+    }
+
+    /// A key or mouse button plays something: an action, a part in a
+    /// combination, or (Home) the HOME button.
+    fn is_control(&self, k: keymap::Key) -> bool {
+        self.keymap.action(k).is_some() || self.keymap.in_combo(k) || k == keymap::Key::Code(KeyCode::Home)
     }
 
     /// A key went down or up. Returns whether the key is a game control.
     pub fn key(&mut self, code: KeyCode, down: bool) -> bool {
-        if self.key_action(code).is_none() && !self.keys.contains(&code) {
+        if !self.is_control(code.into()) && !self.keys.contains(&code) {
             return false;
         }
         if down {
@@ -191,13 +347,39 @@ impl Inputs {
         true
     }
 
-    /// Releases every key (the window lost focus).
+    /// A mouse button (1 left, 2 middle, 3 right, 4, 5) went down or up.
+    /// Returns whether it is a game control.
+    pub fn mouse_button(&mut self, n: u8, down: bool) -> bool {
+        if !(1..=5).contains(&n) {
+            return false;
+        }
+        let bit = 1 << (n - 1);
+        if !down {
+            let held = self.mouse & bit != 0;
+            self.mouse &= !bit;
+            return held;
+        }
+        if !self.is_control(keymap::Key::Mouse(n)) {
+            return false;
+        }
+        self.mouse |= bit;
+        true
+    }
+
+    /// Releases every key and mouse button (the window lost focus).
     pub fn release_keys(&mut self) {
         self.keys.clear();
+        self.mouse = 0;
+        self.key_combos.reset();
     }
 
     /// Current state of the four remotes.
     pub fn poll(&mut self) -> [Input; PLAYERS] {
+        self.poll_at(self.epoch.elapsed())
+    }
+
+    /// The remotes at time `now` (from `epoch`).
+    fn poll_at(&mut self, now: Duration) -> [Input; PLAYERS] {
         let mut connected = Vec::new();
         if let Some(g) = &mut self.gilrs {
             while let Some(ev) = g.next_event() {
@@ -210,16 +392,57 @@ impl Inputs {
             self.add_pad(id);
         }
         let mut out = [Input::default(); PLAYERS];
-        for k in &self.keys {
+        self.pulses.retain(|p| p.2 > now);
+        // The keyboard and mouse: combinations first, then the keys they
+        // leave alone.
+        let mouse = (1..=5u8).filter(|n| self.mouse & (1 << (n - 1)) != 0).map(keymap::Key::Mouse);
+        let held: Vec<keymap::Key> = self.keys.iter().map(|&k| keymap::Key::Code(k)).chain(mouse).collect();
+        let combos = if self.key_combos.is_empty() { 0 } else { self.key_combos.step(&held, now) };
+        // Space as Jump in the air: a spin (`smart_spin`).
+        let space = keymap::Key::Code(KeyCode::Space);
+        let smart = self.smart_spin && self.keymap.keys[keymap::JUMP].contains(&space);
+        let space_down = (held.contains(&space) && !self.key_combos.silenced(space)) || self.key_combos.tapped().contains(&space);
+        let spin = self.space.update(space_down, smart, self.player, now);
+        if spin.spin {
+            self.shake_until[0] = now + SHAKE_PULSE;
+        }
+        if smart && spin.two {
+            apply(&mut out[0], keymap_action(keymap::JUMP));
+        }
+        for &k in &held {
+            if self.key_combos.silenced(k) {
+                continue;
+            }
             // Every action the key plays (a key may be bound to several).
             for (i, keys) in self.keymap.keys.iter().enumerate() {
-                if keys.contains(k) {
+                if keys.contains(&k) && !(smart && k == space && i == keymap::JUMP) {
                     apply(&mut out[0], keymap_action(i));
                 }
             }
-            if *k == KeyCode::Home {
+            if k == keymap::Key::Code(KeyCode::Home) {
                 apply(&mut out[0], Action::Buttons(button::HOME));
             }
+        }
+        for &k in self.key_combos.tapped() {
+            for (i, keys) in self.keymap.keys.iter().enumerate() {
+                if keys.contains(&k) && !(smart && k == space && i == keymap::JUMP) {
+                    self.pulses.push((0, i, now + TAP));
+                }
+            }
+        }
+        apply_bits(&mut out[0], combos);
+        // The mouse as the remote's motion (keys' tilt comes first).
+        match self.pointer.filter(|_| self.mouse_gyro && !self.pad_connected()) {
+            Some((x, width)) => {
+                let motion = self.gyro.update(x, width, now);
+                if motion.shake {
+                    self.shake_until[0] = now + SHAKE_PULSE;
+                }
+                if out[0].tilt == 0.0 {
+                    out[0].tilt = motion.tilt;
+                }
+            }
+            None => self.gyro.reset(),
         }
         if let Some(g) = &self.gilrs {
             for (player, &id) in self.pads.iter().enumerate() {
@@ -228,29 +451,44 @@ impl Inputs {
                     continue;
                 }
                 let input = &mut out[player];
-                for b in PAD_BUTTONS {
-                    if pad.is_pressed(b) {
-                        if let Some(a) = pad_action(b) {
-                            apply(input, a);
+                let engine = &mut self.pad_combos[player];
+                let held: Vec<PadInput> = padmap::all().filter(|&p| pad_value(&pad, p) >= STICK_PRESS).collect();
+                let combos = if engine.is_empty() { 0 } else { engine.step(&held, now) };
+                // Tilt follows how far its buttons are pushed; the rest are
+                // pressed or not (and not taken by a combination).
+                let mut tilt = [0.0f32; 2];
+                for (i, bound) in self.padmap.buttons.iter().enumerate() {
+                    match i {
+                        keymap::TILT_LEFT | keymap::TILT_RIGHT => {
+                            tilt[usize::from(i == keymap::TILT_RIGHT)] = bound.iter().map(|&p| pad_value(&pad, p)).fold(0.0, f32::max);
                         }
+                        _ if bound.iter().any(|&p| !engine.silenced(p) && pad_value(&pad, p) >= STICK_PRESS) => apply(input, keymap_action(i)),
+                        _ => {}
+                    }
+                    if bound.iter().any(|p| engine.tapped().contains(p)) {
+                        self.pulses.push((player, i, now + TAP));
                     }
                 }
-                let (x, y) = (pad.value(Axis::LeftStickX), pad.value(Axis::LeftStickY));
-                for (on, d) in [(y > STICK_PRESS, Dir::Up), (y < -STICK_PRESS, Dir::Down), (x < -STICK_PRESS, Dir::Left), (x > STICK_PRESS, Dir::Right)] {
-                    if on {
-                        input.buttons |= sideways(d);
-                    }
-                }
-                let trigger = |b: Button| pad.button_data(b).map_or(0.0, |d| d.value());
-                let analog = pad.value(Axis::RightStickX) + trigger(Button::RightTrigger2) - trigger(Button::LeftTrigger2);
+                apply_bits(input, combos);
+                let analog = tilt[1] - tilt[0];
                 if analog.abs() > TILT_DEAD_ZONE {
                     input.tilt += analog;
                 }
+                if pad.is_pressed(Button::Mode) {
+                    input.buttons |= button::HOME;
+                }
             }
+        }
+        for &(player, action, _) in &self.pulses {
+            apply(&mut out[player], keymap_action(action));
         }
         for (i, input) in out.iter_mut().enumerate() {
             input.connected = self.on[i];
+            input.shake |= now < self.shake_until[i];
             input.tilt = input.tilt.clamp(-1.0, 1.0);
+            if self.reverse_tilt {
+                input.tilt = -input.tilt;
+            }
         }
         out
     }
@@ -289,7 +527,7 @@ mod tests {
 
     #[test]
     fn keyboard_plays_a_sideways_remote() {
-        let mut i = Inputs { keys: HashSet::new(), keymap: keymap::Keymap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false] };
+        let mut i = Inputs::without_pads();
         assert!(i.key(KeyCode::ArrowRight, true));
         assert!(i.key(KeyCode::Space, true));
         assert!(i.key(KeyCode::KeyC, true));
@@ -302,6 +540,91 @@ mod tests {
         assert!(!s[1].connected);
         i.release_keys();
         assert_eq!(i.poll()[0].buttons, 0);
+    }
+
+    #[test]
+    fn a_combination_plays_its_action_alone() {
+        let mut i = Inputs::without_pads();
+        let mut k = keymap::Keymap::default();
+        // Left Ctrl shakes; Left Ctrl + X is A.
+        k.take(keymap::A, vec![KeyCode::ControlLeft.into(), KeyCode::KeyX.into()]);
+        i.set_keymap(k);
+        let ms = Duration::from_millis;
+        assert!(i.key(KeyCode::ControlLeft, true));
+        assert_eq!(i.poll_at(ms(0))[0].shake, false, "Ctrl waits for the rest");
+        assert!(i.key(KeyCode::KeyX, true));
+        let s = i.poll_at(ms(20))[0];
+        assert_eq!((s.buttons, s.shake), (button::A, false), "neither Ctrl's shake nor X's 2");
+        i.key(KeyCode::ControlLeft, false);
+        assert_eq!(i.poll_at(ms(40))[0].buttons, 0, "X stays taken until let go");
+        i.key(KeyCode::KeyX, false);
+        assert_eq!(i.poll_at(ms(60))[0].buttons, 0, "taken: no tap");
+        // X tapped alone: its 2 still comes, for a moment.
+        i.key(KeyCode::KeyX, true);
+        assert_eq!(i.poll_at(ms(100))[0].buttons, 0);
+        i.key(KeyCode::KeyX, false);
+        assert_eq!(i.poll_at(ms(110))[0].buttons, button::TWO);
+        assert_eq!(i.poll_at(ms(140))[0].buttons, button::TWO);
+        assert_eq!(i.poll_at(ms(160))[0].buttons, 0);
+        // Space (also 2) is not in a combination: at once.
+        i.key(KeyCode::Space, true);
+        assert_eq!(i.poll_at(ms(200))[0].buttons, button::TWO);
+    }
+
+    #[test]
+    fn space_in_the_air_spins() {
+        let mut i = Inputs::without_pads();
+        let ms = Duration::from_millis;
+        // Rising: Space shakes, and plays no 2.
+        i.set_player(Some((0x8037_5C6C, 3.0)));
+        i.key(KeyCode::Space, true);
+        let s = i.poll_at(ms(0))[0];
+        assert_eq!((s.buttons, s.shake), (0, true));
+        assert!(i.poll_at(ms(100))[0].shake, "for a while");
+        assert!(!i.poll_at(ms(200))[0].shake);
+        i.key(KeyCode::Space, false);
+        i.poll_at(ms(210));
+        // X (also Jump) is not Space: 2 in the air.
+        i.key(KeyCode::KeyX, true);
+        assert_eq!(i.poll_at(ms(220))[0].buttons, button::TWO);
+        i.key(KeyCode::KeyX, false);
+        // On the ground Space jumps; switched off, it always does.
+        i.set_player(Some((0x8037_0000, 0.0)));
+        i.key(KeyCode::Space, true);
+        assert_eq!(i.poll_at(ms(300))[0].buttons, button::TWO);
+        i.key(KeyCode::Space, false);
+        i.poll_at(ms(310));
+        i.set_smart_spin(false);
+        i.set_player(Some((0x8037_5C6C, 3.0)));
+        i.key(KeyCode::Space, true);
+        let s = i.poll_at(ms(400))[0];
+        assert_eq!((s.buttons, s.shake), (button::TWO, false));
+    }
+
+    #[test]
+    fn the_mouse_tilts_and_shakes() {
+        let mut i = Inputs::without_pads();
+        let ms = Duration::from_millis;
+        i.pointer(600.0, 1280.0);
+        i.poll_at(ms(0));
+        i.pointer(640.0, 1280.0);
+        assert_eq!(i.poll_at(ms(20))[0].tilt, 0.0, "off by default");
+        i.set_mouse_gyro(true);
+        i.poll_at(ms(40));
+        i.pointer(680.0, 1280.0);
+        assert_eq!(i.poll_at(ms(60))[0].tilt, 1.0);
+        // Keys first.
+        i.key(KeyCode::KeyQ, true);
+        assert_eq!(i.poll_at(ms(80))[0].tilt, -1.0);
+        i.key(KeyCode::KeyQ, false);
+        // Back the other way soon: a shake, and the tilt ends.
+        i.pointer(640.0, 1280.0);
+        let s = i.poll_at(ms(100))[0];
+        assert_eq!((s.tilt, s.shake), (0.0, true));
+        // Reverse Tilt mirrors it all.
+        i.set_reverse_tilt(true);
+        i.key(KeyCode::KeyE, true);
+        assert_eq!(i.poll_at(ms(400))[0].tilt, -1.0);
     }
 
     #[test]

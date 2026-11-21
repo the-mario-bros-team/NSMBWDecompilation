@@ -7,6 +7,7 @@
 
 use std::sync::Arc;
 
+use super::key_caps::{self, Caps, Glyph};
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
 use super::{Change, LanView, Nav, UpdateState};
 use crate::gameplay::POWER_UPS;
@@ -29,6 +30,8 @@ struct Assets {
     hit_button: Option<Animation>,
     /// The pause window's buttons are three slices (Newer's).
     pause_slices: bool,
+    /// Key caps from the picture font, for the Keybinds tab.
+    caps: Option<Caps>,
 }
 
 impl Assets {
@@ -37,13 +40,15 @@ impl Assets {
         const CURSOR: &str = "/Layout/select_cursor/select_cursor.arc";
         let pause = Layout::load(ctx, PAUSE, "pauseMenu_16.brlyt").filter(|l| l.pane_rect("P_SBBase_00").is_some() && l.pane_rect("W_N_pauseMenu_00").is_some());
         let anim = |name: &str| pause.as_ref().and_then(|_| Animation::load(PAUSE, name));
+        let picture = layout::load_font(ctx, "mj2d00_PictureFont_32_RGBA8.brfnt");
         Self {
+            caps: Caps::load(ctx, &picture),
             yes_no: Layout::load(ctx, "/Layout/yesnoWindow/yesnoWindow.arc", ""),
             cursor: Layout::load(ctx, CURSOR, ""),
             cursor_loop: Animation::load(CURSOR, "loopCursor.brlan"),
             message: layout::load_font(ctx, "mj2d00_MessageFont_32_I4.brfnt"),
             mario: layout::load_font(ctx, "mj2d01_marioFont_64_IA4.brfnt"),
-            picture: layout::load_font(ctx, "mj2d00_PictureFont_32_RGBA8.brfnt"),
+            picture,
             in_window: anim("_inWindow.brlan"),
             out_window: anim("_outWindow.brlan"),
             on_button: anim("_onButton.brlan"),
@@ -132,7 +137,7 @@ impl Tab {
             Tab::Display => "How the game is shown on your screen.",
             Tab::Graphics => "How the game is drawn, and how smoothly it moves.",
             Tab::Audio => "How loud the game's music and sounds are.",
-            Tab::Keybinds => "Which keys play the Wii Remote's buttons.",
+            Tab::Keybinds => "Which keys and controller buttons play the Wii Remote's buttons.",
             Tab::Gameplay => "Optional helpers; net games always keep the game's own rules.",
             Tab::Language => "The language of the game's text and these menus.",
             Tab::Lan => "Play with other PCs on your network; each one needs the game.",
@@ -188,6 +193,77 @@ const KEY_HELP: [&str; 12] = [
 ];
 /// A key capture with nothing pressed for this long is cancelled.
 const CAPTURE_TIMEOUT: f64 = 10.0;
+/// The controls' rows: the first's centre, the step down, a button's height.
+const KEY_TOP: f32 = 88.0;
+const KEY_STEP: f32 = 27.0;
+const KEY_H: f32 = 21.0;
+/// The Keybinds tab's switches under the controls, up to three a row; their
+/// cursors follow the controls' (13 on).
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum KeySwitch {
+    /// Which bindings the controls show: the keyboard's or the controllers'.
+    Device,
+    Rumble,
+    WiiRemotes,
+    SmartSpin,
+    ReverseTilt,
+    MouseGyro,
+}
+const KEY_SWITCHES: [KeySwitch; 6] = [KeySwitch::Device, KeySwitch::Rumble, KeySwitch::WiiRemotes, KeySwitch::SmartSpin, KeySwitch::ReverseTilt, KeySwitch::MouseGyro];
+const SWITCH_CURSOR: i32 = 13;
+const SWITCH_TOP: f32 = -76.0;
+const SWITCH_STEP: f32 = 28.0;
+const SWITCH_W: f32 = 236.0;
+const SWITCH_GAP: f32 = 250.0;
+const SWITCH_H: f32 = 24.0;
+
+impl KeySwitch {
+    fn name(self) -> &'static str {
+        match self {
+            KeySwitch::Device => "Bindings",
+            KeySwitch::Rumble => "Rumble",
+            KeySwitch::WiiRemotes => "Wii Remotes",
+            KeySwitch::SmartSpin => "Space Smart Spin",
+            KeySwitch::ReverseTilt => "Reverse Tilt",
+            KeySwitch::MouseGyro => "Mouse as Gyro",
+        }
+    }
+
+    /// On, and its value's word.
+    fn state(self, s: &Settings, pad_view: bool) -> (bool, &'static str) {
+        let on = match self {
+            KeySwitch::Device => return (false, if pad_view { "Controller" } else { "Keyboard" }),
+            KeySwitch::Rumble => s.rumble,
+            KeySwitch::WiiRemotes => s.wii_remotes,
+            KeySwitch::SmartSpin => s.smart_spin,
+            KeySwitch::ReverseTilt => s.reverse_tilt,
+            KeySwitch::MouseGyro => s.mouse_gyro,
+        };
+        (on, if on { "On" } else { "Off" })
+    }
+
+    fn flip(self, s: &mut Settings) {
+        match self {
+            KeySwitch::Device => {}
+            KeySwitch::Rumble => s.rumble = !s.rumble,
+            KeySwitch::WiiRemotes => s.wii_remotes = !s.wii_remotes,
+            KeySwitch::SmartSpin => s.smart_spin = !s.smart_spin,
+            KeySwitch::ReverseTilt => s.reverse_tilt = !s.reverse_tilt,
+            KeySwitch::MouseGyro => s.mouse_gyro = !s.mouse_gyro,
+        }
+    }
+
+    fn help(self) -> &'static str {
+        match self {
+            KeySwitch::Device => "Shows the keyboard's keys or the controllers' buttons above.",
+            KeySwitch::Rumble => "Controllers rumble when the game rumbles the Wii Remote.",
+            KeySwitch::WiiRemotes => "Wii Remotes paired with Windows play as players 1 to 4 (not in net games).",
+            KeySwitch::SmartSpin => "With Space as a Jump key, Space in the air does a spin.",
+            KeySwitch::ReverseTilt => "Platforms you tilt lean the way the keys or the stick go.",
+            KeySwitch::MouseGyro => "Moving the mouse tilts the remote; moving it back quickly shakes it.",
+        }
+    }
+}
 // Language rows: 1-3.
 const LANGUAGES: [(&str, &str, &str); 3] = [
     ("en", "English", "Restart the game to play in this language."),
@@ -312,6 +388,16 @@ pub struct SettingsWindow {
     power_up_at: Option<f64>,
     /// The Keybinds row waiting for its new key, and since when.
     capturing: Option<(usize, f64)>,
+    /// The Keybinds tab shows the controllers' buttons, not the keys.
+    pad_view: bool,
+    /// A controller is connected (the Keybinds tab opens on its buttons).
+    pub pad_connected: bool,
+    /// Picking a controller's buttons: what was held when it began, and
+    /// what has been pressed since.
+    pad_capture: Option<input::capture::Capture<input::padmap::PadInput>>,
+    /// Picking keys: what has been pressed, and what is held now.
+    key_capture: Option<input::capture::Capture<input::keymap::Key>>,
+    keys_held: Vec<input::keymap::Key>,
     /// The save file being played (0-2), or -1 before the save select.
     pub active_file: i8,
     /// A question is up: what it asks, and the tab's row to go back to.
@@ -380,10 +466,78 @@ impl SettingsWindow {
         self.capturing.is_some() || self.typing.is_some()
     }
 
-    /// A key pressed while a Keybinds row waits for one: it becomes that
-    /// action's key. Esc cancels; Delete or Backspace leaves it no key; F10
-    /// and F11 keep their own jobs; keys without a name are not taken.
-    pub fn capture_key(&mut self, s: &mut Settings, code: winit::keyboard::KeyCode) -> Vec<Change> {
+    /// The Keybinds tab waits for a key or a mouse button (not a
+    /// controller's): mouse presses go to [`SettingsWindow::capture_mouse`].
+    pub fn capturing_keys(&self) -> bool {
+        self.capturing.is_some() && !self.pad_view
+    }
+
+    /// A mouse button (1-5) pressed or let go while a Keybinds row waits
+    /// for its keys.
+    pub fn capture_mouse(&mut self, s: &mut Settings, n: u8, down: bool) -> Vec<Change> {
+        if self.pad_view {
+            return Vec::new();
+        }
+        self.capture_held(s, input::keymap::Key::Mouse(n), down)
+    }
+
+    /// Keys and mouse buttons while a Keybinds row waits: one, or 2 or 3
+    /// held together, taken once all are let go (`Keymap::take`).
+    fn capture_held(&mut self, s: &mut Settings, k: input::keymap::Key, down: bool) -> Vec<Change> {
+        let Some((action, _)) = self.capturing else { return Vec::new() };
+        if input::keymap::key_name(k).is_none() {
+            return Vec::new();
+        }
+        self.keys_held.retain(|&h| h != k);
+        if down {
+            self.keys_held.push(k);
+        }
+        let capture = self.key_capture.get_or_insert_with(|| input::capture::Capture::new(&[], input::combo::MAX_MEMBERS));
+        let Some(picked) = capture.step(&self.keys_held) else { return Vec::new() };
+        s.keymap.take(action, picked);
+        self.end_capture();
+        vec![Change::Keymap]
+    }
+
+    fn end_capture(&mut self) {
+        self.capturing = None;
+        self.pad_capture = None;
+        self.key_capture = None;
+        self.keys_held.clear();
+    }
+
+    /// What a capture has picked so far, as shown.
+    fn captured(&self) -> String {
+        let names: Vec<&str> = if self.pad_view {
+            self.pad_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().filter_map(|&p| input::padmap::name(p)).collect())
+        } else {
+            self.key_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().filter_map(|&k| input::keymap::key_name(k)).collect())
+        };
+        names.join(" + ")
+    }
+
+    /// The Keybinds tab waits for a controller button.
+    pub fn capturing_pad(&self) -> bool {
+        self.capturing.is_some() && self.pad_view
+    }
+
+    /// What is held on the controllers while a Keybinds row waits for its
+    /// buttons: one, or 2 or 3 held together, taken once all are let go
+    /// (what was held when it began counts only once let go).
+    pub fn capture_pad(&mut self, s: &mut Settings, held: &[input::padmap::PadInput]) -> Vec<Change> {
+        let Some((action, _)) = self.capturing.filter(|_| self.pad_view) else { return Vec::new() };
+        let capture = self.pad_capture.get_or_insert_with(|| input::capture::Capture::new(held, input::combo::MAX_MEMBERS));
+        let Some(picked) = capture.step(held) else { return Vec::new() };
+        s.padmap.take(action, picked);
+        self.end_capture();
+        vec![Change::Keymap]
+    }
+
+    /// A key pressed or let go while a Keybinds row waits for its keys.
+    /// Before any is held, Esc cancels and Delete or Backspace leaves it
+    /// nothing (keys and combinations); those, F10 and F11 are never taken,
+    /// nor keys without a name.
+    pub fn capture_key(&mut self, s: &mut Settings, code: winit::keyboard::KeyCode, down: bool) -> Vec<Change> {
         use winit::keyboard::KeyCode;
         if let Some(text) = &mut self.typing {
             return match code {
@@ -414,18 +568,24 @@ impl SettingsWindow {
             };
         }
         let Some((action, _)) = self.capturing else { return Vec::new() };
+        let nothing_yet = self.captured().is_empty();
         match code {
-            KeyCode::Escape => {}
-            KeyCode::Delete | KeyCode::Backspace => s.keymap.keys[action].clear(),
-            KeyCode::F10 | KeyCode::F11 => return Vec::new(),
-            k if input::keymap::key_name(k).is_some() => s.keymap.bind(action, k),
-            _ => return Vec::new(),
-        }
-        self.capturing = None;
-        if code == KeyCode::Escape {
-            Vec::new()
-        } else {
-            vec![Change::Keymap]
+            KeyCode::Escape if down && nothing_yet => {
+                self.end_capture();
+                Vec::new()
+            }
+            KeyCode::Delete | KeyCode::Backspace if down && nothing_yet => {
+                if self.pad_view {
+                    s.padmap.clear(action);
+                } else {
+                    s.keymap.clear(action);
+                }
+                self.end_capture();
+                vec![Change::Keymap]
+            }
+            KeyCode::Escape | KeyCode::Delete | KeyCode::Backspace | KeyCode::F10 | KeyCode::F11 => Vec::new(),
+            _ if self.pad_view => Vec::new(),
+            k => self.capture_held(s, k.into(), down),
         }
     }
 
@@ -436,6 +596,7 @@ impl SettingsWindow {
         self.cursor = 0;
         self.dropdown = None;
         self.ask = None;
+        self.pad_view = self.pad_connected;
     }
 
     pub fn close(&mut self, now: f64) {
@@ -1003,33 +1164,187 @@ impl SettingsWindow {
     }
 
     fn draw_keybinds(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
+        // Nothing pressed for a while: given up (a press keeps it going).
         if self.capturing.is_some_and(|(_, at)| self.now - at > CAPTURE_TIMEOUT) {
-            self.capturing = None;
+            if self.captured().is_empty() && self.keys_held.is_empty() {
+                self.end_capture();
+            } else if let Some((_, at)) = &mut self.capturing {
+                *at = self.now;
+            }
         }
         for (i, (_, name)) in input::keymap::ACTIONS.iter().enumerate() {
             let (column, row) = (i / 6, i % 6);
             let x0 = if column == 0 { -190.0 } else { 190.0 };
-            let y = 86.0 - 31.0 * row as f32;
+            let y = KEY_TOP - KEY_STEP * row as f32;
             let color = if self.cursor == 1 + i as i32 { u32::MAX } else { LABEL_DIM };
             self.text(a, c, name, x0 - 168.0, y, 21.0, 0, color);
-            let keys = match s.keymap.label(i) {
-                _ if self.capturing.is_some_and(|(r, _)| r == i) => "Press a key...".to_string(),
+            let waiting = self.capturing.is_some_and(|(r, _)| r == i);
+            // The bindings as key caps (or the picked so far, while waiting).
+            let groups = if waiting { self.captured_glyphs() } else { Self::binding_glyphs(s, i, self.pad_view) };
+            let words = if self.pad_view { s.padmap.label(i) } else { s.keymap.label(i) };
+            let combos: Vec<String> = if self.pad_view { s.padmap.combo_names(i) } else { s.keymap.combo_names(i) }.into_iter().map(|c| c.join(" + ")).collect();
+            let words = [words].into_iter().chain(combos).filter(|l| !l.is_empty()).collect::<Vec<_>>().join(" / ");
+            let keys = match words {
+                _ if waiting && !groups.is_empty() => self.captured(),
+                _ if waiting => if self.pad_view { "Press a button..." } else { "Press a key..." }.to_string(),
                 l if l.is_empty() => "None".to_string(),
                 l => l,
             };
-            let size = if keys.len() > 16 { 17.0 } else if keys.len() > 11 { 19.0 } else { 22.0 };
-            let waiting = self.capturing.is_some_and(|(r, _)| r == i);
-            self.pause_button(ctx, a, c, 1 + i as i32, &keys, x0 + 78.0, y, 180.0, 23.0, self.cursor == 1 + i as i32, true, size, waiting, 0.0, true);
-            self.add_hit(x0 + 78.0, y, 186.0, 31.0, 1 + i as i32, EV_CONFIRM);
+            let caps = a.caps.is_some() && a.message.ready() && !groups.is_empty();
+            let size = if keys.len() > 16 { 17.0 } else if keys.len() > 11 { 19.0 } else { 21.0 };
+            self.pause_button(ctx, a, c, 1 + i as i32, if caps { "" } else { &keys }, x0 + 78.0, y, 180.0, KEY_H, self.cursor == 1 + i as i32, true, size, waiting, 0.0, true);
+            if caps {
+                self.cap_row(ctx, a, c, &groups, x0 + 78.0, y, 168.0, KEY_H - 3.0);
+            }
+            self.add_hit(x0 + 78.0, y, 186.0, KEY_STEP, 1 + i as i32, EV_CONFIRM);
         }
+        for (i, sw) in KEY_SWITCHES.into_iter().enumerate() {
+            let (x, y) = Self::switch_at(i);
+            let (on, value) = sw.state(s, self.pad_view);
+            let key = SWITCH_CURSOR + i as i32;
+            let label = format!("{}: {value}", sw.name());
+            self.pause_button(ctx, a, c, key, &label, x, y, SWITCH_W, SWITCH_H, self.cursor == key, true, 21.0, on, 0.0, true);
+            self.add_hit(x, y, SWITCH_W + 6.0, SWITCH_STEP, key, EV_CONFIRM);
+        }
+        let switch = usize::try_from(self.cursor - SWITCH_CURSOR).ok().and_then(|i| KEY_SWITCHES.get(i));
         let note = match (self.capturing, self.cursor) {
-            (Some(_), _) => "Press the new key. Esc cancels; Delete or Backspace leaves it no key.",
+            (Some(_), _) if self.pad_view => "Hold a button, or 2 or 3 together, then let go. Esc cancels, Delete clears.",
+            (Some(_), _) => "Hold a key or mouse button, or 2 or 3 together, then let go. Esc cancels, Delete clears.",
             (None, 0) => Tab::Keybinds.help(),
             (None, n) if (1..=12).contains(&n) => KEY_HELP[n as usize - 1],
-            _ => "",
+            _ => switch.map_or("", |sw| sw.help()),
         };
         self.help_line(a, c, note, u32::MAX);
-        self.text(a, c, "Controllers: A jumps, B and X run, Y shakes, Start is +, Back is -.", 0.0, -102.0, 20.0, 1, 0xFFF0_B0FF);
+    }
+
+    /// An action's bindings as caps: each binding, its members (a
+    /// combination has 2 or 3), each member's caps (a stick's way is two).
+    fn binding_glyphs(s: &Settings, action: usize, pad: bool) -> Vec<Vec<Vec<Glyph>>> {
+        if pad {
+            s.padmap.display(action).into_iter().map(|b| b.into_iter().map(key_caps::pad_glyphs).collect()).collect()
+        } else {
+            s.keymap.display(action).into_iter().map(|b| b.into_iter().map(|k| vec![key_caps::key_glyph(k)]).collect()).collect()
+        }
+    }
+
+    /// What a capture has picked so far, as caps.
+    fn captured_glyphs(&self) -> Vec<Vec<Vec<Glyph>>> {
+        let members: Vec<Vec<Glyph>> = if self.pad_view {
+            self.pad_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().map(|&p| key_caps::pad_glyphs(p)).collect())
+        } else {
+            self.key_capture.as_ref().map_or(Vec::new(), |c| c.picked().iter().map(|&k| vec![key_caps::key_glyph(k)]).collect())
+        };
+        if members.is_empty() {
+            Vec::new()
+        } else {
+            vec![members]
+        }
+    }
+
+    /// Key caps in a row centred on (x, y), `room` across at most: bindings
+    /// separated by /, a combination's members joined by +. Smaller (down
+    /// to 70%) when they would not fit, then cut short with "...".
+    #[allow(clippy::too_many_arguments)]
+    fn cap_row(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, groups: &[Vec<Vec<Glyph>>], x: f32, y: f32, room: f32, h: f32) {
+        let Some(caps) = a.caps.as_ref() else { return };
+        let message = &a.message;
+        let sep = |h: f32, s: &str| layout::measure_text(message, s, h * 0.9) + h * 0.24;
+        let measure = |h: f32, n: usize| -> f32 {
+            let mut w = 0.0;
+            for (i, g) in groups[..n].iter().enumerate() {
+                if i > 0 {
+                    w += sep(h, "/");
+                }
+                w += g.iter().flatten().map(|m| caps.width(message, m, h)).sum::<f32>() + sep(h, "+") * g.len().saturating_sub(1) as f32;
+            }
+            w + if n < groups.len() { sep(h, "...") } else { 0.0 }
+        };
+        let mut h = h;
+        let full = measure(h, groups.len());
+        if full > room {
+            h *= (room / full).max(0.7);
+        }
+        let mut n = groups.len();
+        while n > 1 && measure(h, n) > room {
+            n -= 1;
+        }
+        let mut px = x - measure(h, n) / 2.0;
+        let word = |this: &mut Self, px: &mut f32, s: &str| {
+            let w = sep(h, s);
+            this.text(a, c, s, *px + w / 2.0, y, h * 0.9, 1, u32::MAX);
+            *px += w;
+        };
+        for (i, g) in groups[..n].iter().enumerate() {
+            if i > 0 {
+                word(self, &mut px, "/");
+            }
+            for (j, member) in g.iter().enumerate() {
+                if j > 0 {
+                    word(self, &mut px, "+");
+                }
+                for m in member {
+                    px += caps.draw(ctx, &mut self.list, &c.view, message, m, px, y, h, c.alpha);
+                }
+            }
+        }
+        if n < groups.len() {
+            word(self, &mut px, "...");
+        }
+    }
+
+    /// Where switch `i` is: three a row, centred.
+    fn switch_at(i: usize) -> (f32, f32) {
+        let (row, column) = (i / 3, i % 3);
+        let in_row = (KEY_SWITCHES.len() - row * 3).min(3);
+        ((column as f32 - (in_row - 1) as f32 / 2.0) * SWITCH_GAP, SWITCH_TOP - row as f32 * SWITCH_STEP)
+    }
+
+    /// The Keybinds tab's moves: the controls in two columns of six, the
+    /// switches under them in rows of three; a press picks a control's new
+    /// key or flips a switch.
+    fn keybinds_handle(&mut self, nav: Nav, s: &mut Settings, changes: &mut Vec<Change>) {
+        let Nav { left, right, up, down, confirm, .. } = nav;
+        let switches = KEY_SWITCHES.len() as i32;
+        let c = self.cursor;
+        if (1..=12).contains(&c) {
+            let (column, row) = ((c - 1) / 6, (c - 1) % 6);
+            if left || right {
+                self.cursor = 1 + (1 - column) * 6 + row;
+            } else if up {
+                self.cursor = if row == 0 { 0 } else { c - 1 };
+            } else if down && row < 5 {
+                self.cursor = c + 1;
+            } else if down && switches > 0 {
+                // The switch under the column.
+                let first_row = switches.min(3);
+                self.cursor = SWITCH_CURSOR + if column == 0 { 0 } else { first_row - 1 };
+            } else if confirm {
+                self.capturing = Some((c as usize - 1, self.now));
+            }
+        } else if c >= SWITCH_CURSOR && c < SWITCH_CURSOR + switches {
+            let i = c - SWITCH_CURSOR;
+            let (row, column) = (i / 3, i % 3);
+            if left && column > 0 {
+                self.cursor = c - 1;
+            } else if right && column < 2 && i + 1 < switches {
+                self.cursor = c + 1;
+            } else if up && row == 0 {
+                // The control above: the bottom of the nearer column.
+                let x = Self::switch_at(i as usize).0;
+                self.cursor = if x <= 0.0 { 6 } else { 12 };
+            } else if up {
+                self.cursor = c - 3;
+            } else if down && i + 3 < switches {
+                self.cursor = c + 3;
+            } else if confirm && KEY_SWITCHES[i as usize] == KeySwitch::Device {
+                self.pad_view = !self.pad_view;
+            } else if confirm {
+                KEY_SWITCHES[i as usize].flip(s);
+                changes.push(Change::Keymap);
+            }
+        } else {
+            self.cursor = 1;
+        }
     }
 
     fn draw_language(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings, at_boot: &str) {
@@ -1292,6 +1607,10 @@ impl SettingsWindow {
             self.close(self.now);
             return;
         }
+        if self.tab() == Tab::Keybinds {
+            self.keybinds_handle(nav, s, changes);
+            return;
+        }
         let last = match self.tab() {
             Tab::Display => DISPLAY_LAST,
             Tab::Graphics => GRAPHICS_LAST,
@@ -1338,7 +1657,6 @@ impl SettingsWindow {
                 *v = if left { v.saturating_sub(1) / 5 * 5 } else { ((*v + 5) / 5 * 5).min(100) };
                 changes.push(Change::Volume);
             }
-            (Tab::Keybinds, n) if confirm && (1..=12).contains(&n) => self.capturing = Some((n as usize - 1, self.now)),
             (Tab::Gameplay, ROW_TIME) if toggle => {
                 s.no_time_limit = !s.no_time_limit;
                 changes.push(Change::Gameplay);

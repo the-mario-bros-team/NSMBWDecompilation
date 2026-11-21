@@ -6,6 +6,7 @@
 use std::path::Path;
 
 use input::keymap::{Keymap, ACTIONS};
+use input::padmap::Padmap;
 
 /// Frame-rate choices: 60 is the game's own rate; 30 shows every other
 /// field (as the battery saver), the game still running at 60; the others
@@ -51,12 +52,44 @@ pub struct Settings {
     pub cheated: [bool; 3],
     /// The keys for the remote's buttons (`[keyboard]`).
     pub keymap: Keymap,
+    // The controls (the Keybinds tab), after WitherBlitz's
+    // NSMB-Wii-Recompilation; in `[keyboard]` and `[controller]`.
+    /// The controllers' buttons for the remote's (`[controller]`).
+    pub padmap: Padmap,
+    /// `[controller] rumble`: controllers rumble when the game rumbles the remote.
+    pub rumble: bool,
+    /// `[keyboard] smart_spin`: with Space as a Jump key, Space in the air spins.
+    pub smart_spin: bool,
+    /// `[keyboard] mouse_gyro`: the mouse tilts and shakes the remote while
+    /// no controller is connected.
+    pub mouse_gyro: bool,
+    /// `[keyboard] reverse_tilt`: every remote's tilt mirrored, so platforms
+    /// lean the way the keys or stick go.
+    pub reverse_tilt: bool,
+    /// `[controller] wii_remotes`: Wii Remotes paired with Windows play in
+    /// place of players' emulated remotes (Windows only).
+    pub wii_remotes: bool,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default() }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false }
     }
+}
+
+/// A table's `<action>_combos`: lists of names.
+fn combo_names(table: &toml::Table, action: &str) -> Vec<Vec<String>> {
+    let Some(list) = table.get(&format!("{action}_combos")).and_then(toml::Value::as_array) else { return Vec::new() };
+    list.iter().filter_map(toml::Value::as_array).map(|c| c.iter().filter_map(toml::Value::as_str).map(String::from).collect()).collect()
+}
+
+/// `<action>_combos = [["Left Ctrl", "X"]]`, or nothing for none.
+fn combo_line(action: &str, combos: Vec<Vec<&str>>) -> String {
+    if combos.is_empty() {
+        return String::new();
+    }
+    let list = toml::Value::Array(combos.into_iter().map(|c| toml::Value::Array(c.into_iter().map(|n| toml::Value::String(n.into())).collect())).collect());
+    format!("{action}_combos = {list}\n")
 }
 
 pub fn fps_label(fps: u32) -> String {
@@ -126,6 +159,22 @@ impl Settings {
                 if let Some(label) = keyboard.get(*key).and_then(toml::Value::as_str) {
                     s.keymap.set_label(i, label);
                 }
+                s.keymap.set_combo_names(i, &combo_names(keyboard, key));
+            }
+            let flag = |k: &str, d: bool| keyboard.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
+            s.smart_spin = flag("smart_spin", s.smart_spin);
+            s.mouse_gyro = flag("mouse_gyro", s.mouse_gyro);
+            s.reverse_tilt = flag("reverse_tilt", s.reverse_tilt);
+        }
+        if let Some(controller) = t.get("controller").and_then(toml::Value::as_table) {
+            let flag = |k: &str, d: bool| controller.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
+            s.rumble = flag("rumble", s.rumble);
+            s.wii_remotes = flag("wii_remotes", s.wii_remotes);
+            for (i, (key, _)) in ACTIONS.iter().enumerate() {
+                if let Some(label) = controller.get(*key).and_then(toml::Value::as_str) {
+                    s.padmap.set_label(i, label);
+                }
+                s.padmap.set_combo_names(i, &combo_names(controller, key));
             }
         }
         s
@@ -175,9 +224,24 @@ impl Settings {
         );
         // Last: a table ends the file's top-level keys.
         let mut text = text;
-        text.push_str("\n# Keys for the Wii Remote's buttons, by name, separated by commas (\"\" for none).\n[keyboard]\n");
+        text.push_str("\n# Keys for the Wii Remote's buttons, by name, separated by commas (\"\" for none).\n# <action>_combos: keys held together, 2 or 3 a combination: jump_combos = [[\"Left Ctrl\", \"X\"]].\n[keyboard]\n");
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.keymap.label(i))));
+            text.push_str(&combo_line(key, self.keymap.combo_names(i)));
+        }
+        text.push_str("# Space Smart Spin: with Space as a Jump key, Space in the air spins.\n");
+        text.push_str(&format!("smart_spin = {}\n", self.smart_spin));
+        text.push_str("# Mouse as Gyro: the mouse tilts the remote (a quick swing back shakes it) while no controller is connected.\n");
+        text.push_str(&format!("mouse_gyro = {}\n", self.mouse_gyro));
+        text.push_str("# Reverse Tilt: platforms lean the way the keys or stick go.\n");
+        text.push_str(&format!("reverse_tilt = {}\n", self.reverse_tilt));
+        text.push_str("\n# Controller buttons for the Wii Remote's, by their Xbox names (A, B, X, Y, LB, RB, LT, RT,\n# View, Menu, LS, RS, D-Pad Up, Left Stick Up, Right Stick Left...), separated by commas.\n# rumble: controllers rumble when the game rumbles the Wii Remote.\n[controller]\n");
+        text.push_str(&format!("rumble = {}\n", self.rumble));
+        text.push_str("# Wii Remotes paired with Windows (Settings > Bluetooth) play as players 1-4 in turn.\n");
+        text.push_str(&format!("wii_remotes = {}\n", self.wii_remotes));
+        for (i, (key, _)) in ACTIONS.iter().enumerate() {
+            text.push_str(&format!("{key} = {}\n", toml::Value::String(self.padmap.label(i))));
+            text.push_str(&combo_line(key, self.padmap.combo_names(i)));
         }
         if let Err(e) = std::fs::write(path, text) {
             eprintln!("{}: {e}", path.display());
@@ -204,9 +268,18 @@ mod tests {
         let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], keymap: {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
+            k.bind(input::keymap::RUN, input::keymap::Key::Mouse(5));
+            k.take(input::keymap::A, vec![winit::keyboard::KeyCode::ControlLeft.into(), winit::keyboard::KeyCode::KeyX.into()]);
+            k.take(input::keymap::A, vec![winit::keyboard::KeyCode::ShiftLeft.into(), input::keymap::Key::Mouse(1), winit::keyboard::KeyCode::KeyQ.into()]);
             k.keys[input::keymap::SHAKE].clear();
             k
-        } };
+        }, padmap: {
+            let mut p = Padmap::default();
+            p.bind(input::keymap::A, input::padmap::by_name("RS").unwrap());
+            p.buttons[input::keymap::TILT_LEFT].clear();
+            p.take(input::keymap::PLUS, vec![input::padmap::by_name("LB").unwrap(), input::padmap::by_name("RB").unwrap()]);
+            p
+        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3, ..Settings::default() };

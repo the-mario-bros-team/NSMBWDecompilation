@@ -5,6 +5,7 @@
 //! and the mouse; the remote's buttons (keyboard or controller, as mapped
 //! for the game) move the cursor.
 
+mod key_caps;
 pub mod layout;
 mod settings;
 pub mod text;
@@ -49,7 +50,7 @@ pub enum Change {
     Gameplay,
     /// Give player 1 this power-up (`gameplay::POWER_UPS`).
     PowerUp(u8),
-    /// A key was rebound.
+    /// A key or button was rebound, or a Keybinds-tab switch flipped.
     Keymap,
     /// Mark this save file (0-2) "Cheated": Infinite Lives was turned on
     /// while it is the one being played.
@@ -164,8 +165,34 @@ impl Menus {
         self.window.is_open() && self.window.capturing()
     }
 
-    pub fn capture_key(&mut self, settings: &mut Settings, code: winit::keyboard::KeyCode) -> Vec<Change> {
-        self.window.capture_key(settings, code)
+    pub fn capture_key(&mut self, settings: &mut Settings, code: winit::keyboard::KeyCode, down: bool) -> Vec<Change> {
+        self.window.capture_key(settings, code, down)
+    }
+
+    /// The Keybinds tab waits for a key or mouse button: mouse presses go
+    /// to [`Menus::capture_mouse`], not to the window.
+    pub fn capturing_keys(&self) -> bool {
+        self.window.is_open() && self.window.capturing_keys()
+    }
+
+    pub fn capture_mouse(&mut self, settings: &mut Settings, button: u8, down: bool) -> Vec<Change> {
+        self.window.capture_mouse(settings, button, down)
+    }
+
+    /// A controller is connected or not (the Keybinds tab opens on its
+    /// buttons if one is).
+    pub fn set_pad_connected(&mut self, connected: bool) {
+        self.window.pad_connected = connected;
+    }
+
+    /// The Keybinds tab waits for a controller button: hand it what is held
+    /// ([`Menus::capture_pad`]) every frame.
+    pub fn capturing_pad(&self) -> bool {
+        self.window.is_open() && self.window.capturing_pad()
+    }
+
+    pub fn capture_pad(&mut self, settings: &mut Settings, held: &[input::padmap::PadInput]) -> Vec<Change> {
+        self.window.capture_pad(settings, held)
     }
 
     /// Opens the Settings window (a game menu's Settings button).

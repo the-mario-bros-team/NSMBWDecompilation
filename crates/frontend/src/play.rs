@@ -174,6 +174,9 @@ struct App {
     /// Join, host or leave a LAN room: the game starts again with these
     /// network options (none: on its own) once the window has closed.
     relaunch: Option<Vec<String>>,
+    /// Looks for Wii Remotes paired with Windows (the Wii Remotes switch).
+    #[cfg(windows)]
+    wii_remotes: Option<input::wii_hid::Scanner>,
 }
 
 /// Set for a game the LAN tab started to join a room.
@@ -322,7 +325,7 @@ impl App {
             eprintln!("SYSCONF: {e}");
         }
         crate::audio::VOLUME.store(self.settings.volume[0].min(100) as u8, std::sync::atomic::Ordering::Relaxed);
-        self.inputs.set_keymap(self.settings.keymap.clone());
+        self.apply_controls();
         self.menus = Some(ui::Menus::new(&window, &self.opts.game, &self.settings.language));
         let settings_label = Some(settings_label(&self.settings.language).to_string());
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), ..self.opts.emu.clone() });
@@ -340,11 +343,26 @@ impl App {
     }
 
     fn frame(&mut self, event_loop: &ActiveEventLoop) -> Result<(), String> {
+        // The Keybinds tab: a controller connected, and a button being picked.
+        let mut picked = Vec::new();
+        if let Some(m) = &mut self.menus {
+            m.set_pad_connected(self.inputs.pad_connected());
+            if m.capturing_pad() {
+                picked = m.capture_pad(&mut self.settings, &self.inputs.pad_held());
+            }
+        }
+        self.apply_changes(picked);
         let Some(emu) = &self.emu else { return Ok(()) };
         let interpolate = !self.native();
         if self.sent_interpolate != Some(interpolate) {
             let _ = emu.to_emu.send(ToEmu::Interpolate(interpolate));
             self.sent_interpolate = Some(interpolate);
+        }
+        self.inputs.set_player(emu.player());
+        #[cfg(windows)]
+        while let Some((player, remote, name)) = self.wii_remotes.as_ref().and_then(input::wii_hid::Scanner::take) {
+            say!("Wii Remote {name:?} (paired with Windows) is player {}", player + 1);
+            let _ = emu.to_emu.send(ToEmu::RealRemote(player, Some(Box::new(remote))));
         }
         let mut controls = self.inputs.poll();
         // A save file newly marked "Cheated" (or an erased one, unmarked) is
@@ -425,6 +443,11 @@ impl App {
         controls[0].buttons &= !self.menu_mask;
         if open {
             controls[0].shake = false;
+        }
+        // The remotes' rumble on the players' controllers (not under a menu,
+        // where the game stands still).
+        for (i, r) in self.remotes.iter().enumerate() {
+            self.inputs.rumble(i, r.rumble && !open);
         }
         // Opened from a game menu, the game keeps running under the window
         // (its menu waits for the window, and the window's sounds play
@@ -744,7 +767,7 @@ impl App {
                         let _ = emu.to_emu.send(ToEmu::PowerUp(p));
                     }
                 }
-                ui::Change::Keymap => self.inputs.set_keymap(self.settings.keymap.clone()),
+                ui::Change::Keymap => self.apply_controls(),
                 ui::Change::Cheated(file) => {
                     self.cheats.marks.fetch_or(1 << file.min(2), std::sync::atomic::Ordering::Relaxed);
                 }
@@ -791,6 +814,33 @@ impl App {
                 }
                 // From the next start, or read every frame.
                 ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) => {}
+            }
+        }
+    }
+
+    /// The Keybinds tab's settings to the controls.
+    fn apply_controls(&mut self) {
+        self.inputs.set_keymap(self.settings.keymap.clone());
+        self.inputs.set_padmap(self.settings.padmap.clone());
+        self.inputs.set_rumble_enabled(self.settings.rumble);
+        self.inputs.set_smart_spin(self.settings.smart_spin);
+        self.inputs.set_mouse_gyro(self.settings.mouse_gyro);
+        self.inputs.set_reverse_tilt(self.settings.reverse_tilt);
+        // Real Wii Remotes: not in net games (their reports would bypass the
+        // shared input) or scripted runs.
+        #[cfg(windows)]
+        {
+            let allowed = matches!(self.opts.emu.net, crate::net::Mode::Off) && self.opts.emu.script.is_empty();
+            let want = self.settings.wii_remotes && allowed;
+            if want && self.wii_remotes.is_none() {
+                say!("Wii Remotes: looking for remotes paired with Windows");
+                self.wii_remotes = Some(input::wii_hid::Scanner::start());
+            } else if !want && self.wii_remotes.take().is_some() {
+                if let Some(emu) = &self.emu {
+                    for i in 0..REMOTES {
+                        let _ = emu.to_emu.send(ToEmu::RealRemote(i, None));
+                    }
+                }
             }
         }
     }
@@ -978,6 +1028,31 @@ impl ApplicationHandler for App {
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+        // Mouse as Gyro follows the pointer while no menu has it.
+        if let (WindowEvent::CursorMoved { position, .. }, Some(window)) = (&event, &self.window) {
+            if !self.menus.as_ref().is_some_and(ui::Menus::is_open) {
+                self.inputs.pointer(position.x as f32, window.inner_size().width as f32);
+            }
+        }
+        if let WindowEvent::MouseInput { state, button, .. } = &event {
+            let n = mouse_button(*button);
+            let down = *state == ElementState::Pressed;
+            // The Keybinds tab waiting for keys takes the mouse's buttons too
+            // (a release still reaches the window, which saw the press that
+            // began the wait).
+            if self.menus.as_ref().is_some_and(ui::Menus::capturing_keys) {
+                let changes = self.menus.as_mut().map(|m| m.capture_mouse(&mut self.settings, n, down)).unwrap_or_default();
+                self.apply_changes(changes);
+                if down {
+                    return;
+                }
+            }
+            // Let go always counts (it may have been pressed before a menu
+            // opened); pressed only while no menu has the mouse.
+            if !down || !self.menus.as_ref().is_some_and(ui::Menus::is_open) {
+                self.inputs.mouse_button(n, down);
+            }
+        }
         if let (Some(menus), Some(window)) = (&mut self.menus, &self.window) {
             if menus.on_event(window, &event) {
                 return;
@@ -993,13 +1068,16 @@ impl ApplicationHandler for App {
             WindowEvent::KeyboardInput { event, .. } => {
                 if let PhysicalKey::Code(code) = event.physical_key {
                     let down = event.state == ElementState::Pressed;
-                    // The Keybinds tab waiting for a key takes the next one.
-                    if down && self.menus.as_ref().is_some_and(ui::Menus::capturing) {
+                    // The Keybinds tab waiting for keys takes them, held and let
+                    // go (a release still reaches the game's keys).
+                    if self.menus.as_ref().is_some_and(ui::Menus::capturing) {
                         if !event.repeat {
-                            let changes = self.menus.as_mut().map(|m| m.capture_key(&mut self.settings, code)).unwrap_or_default();
+                            let changes = self.menus.as_mut().map(|m| m.capture_key(&mut self.settings, code, down)).unwrap_or_default();
                             self.apply_changes(changes);
                         }
-                        return;
+                        if down {
+                            return;
+                        }
                     }
                     if !event.repeat && !self.inputs.key(code, down) && down {
                         self.key(code);
@@ -1041,6 +1119,20 @@ impl ApplicationHandler for App {
             report(&emu.stop());
         }
         self.renderer = None;
+    }
+}
+
+/// A mouse button as a binding's number: 1 left, 2 middle, 3 right, 4 back,
+/// 5 forward; 0 for others.
+fn mouse_button(b: winit::event::MouseButton) -> u8 {
+    use winit::event::MouseButton;
+    match b {
+        MouseButton::Left => 1,
+        MouseButton::Middle => 2,
+        MouseButton::Right => 3,
+        MouseButton::Back => 4,
+        MouseButton::Forward => 5,
+        MouseButton::Other(_) => 0,
     }
 }
 
@@ -1134,6 +1226,8 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         pointer: None,
         finder: None,
         relaunch: None,
+        #[cfg(windows)]
+        wii_remotes: None,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     // A room the LAN tab joined could not be joined (gone, or out of
