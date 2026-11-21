@@ -2055,10 +2055,33 @@ the kernel's GPU fault line (needs a bug report or root).
 - On the Galaxy: `guest-mem`'s tests pass with the flat mapping asserted
   (`cargo test -p guest-mem --target aarch64-linux-android --no-run`, the
   test binary pushed to `/data/local/tmp` and run from `adb shell`).
-  **Not yet run in the app:** the APK with recompiled code is built but
-  was not installed (the phone was in use for the device-lost work
-  above), so the "recompiled code: N functions" line and the game's speed
-  with it are still to be read from logcat.
+- **In the app on the Galaxy** (this branch with `62d66a6` merged, debug
+  APK without the validation layer, release `libnsmbw.so`, EFB 1x, V-Sync
+  on, silent, from Play with no input: strap, title, attract demo):
+  logcat shows "recompiled code: 12804 functions", and the game process's
+  `/proc/<pid>/maps` shows the `memfd:guest-ram` views at their guest
+  addresses. The game held 100% from field 1,193 to field 25,791 (seven
+  minutes, 99% in the first ten seconds), with no fault. Emulation (the
+  game thread's time for a field) was 3.1-4.4 ms on the strap and title
+  screens and 10.0-13.7 ms in the demo's courses, with the game thread on
+  the six 3.63 GHz cores at 1.4-3.0 GHz (20 samples, mostly 2.5) and
+  never on the two 4.74 GHz cores. The battery went from 30.6 to 32.0 °C.
+- The interpreter, for comparison (`62d66a6`'s own APK, the same way, 20
+  minutes earlier, five minutes): 9.5-9.8 ms on the strap and title
+  screens; 11.6-15.0 ms at 96-100% in the courses up to field 7,700, then
+  19-31 ms at 54-86% over fields 8,200-10,400 and 11,500-14,100, 14-17 ms
+  between and after. The phone was warm then (battery 37.1 to 39.4 °C,
+  after an hour of runs), so those stretches are probably throttling: the
+  recompiled run shows nothing at the same fields. Its clock speed was
+  not sampled, and the phone slows its cores under light load, so the
+  course times do not give the ratio of work between the two; the title
+  screens (3 against 10 ms) and the cores the recompiled build leaves
+  unused are the measure of the room it gives.
+- Seen in the recompiled run, not looked into: on the strap and title
+  screens "render" read 16.4-16.7 ms a field (0.5-1.2 ms with the
+  interpreter build), then 2 ms in the courses; the speed stayed 100%. It
+  looks like the present waiting a whole display period while fields
+  arrive exactly on schedule.
 
 **Not yet:** frame interpolation above 60 fps, Fill Screen
 (the recomp's Hor+ widening; Fill shows 16:9 here), tapping the game's
