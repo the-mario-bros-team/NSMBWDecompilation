@@ -74,6 +74,9 @@ pub enum ToEmu {
     /// Give player 1 this power-up (`gameplay::POWER_UPS`) in a course or on
     /// the world map, as soon as the game is in one.
     PowerUp(u8),
+    /// A real Wii Remote for this player (0-3) in place of the emulated one,
+    /// or (`None`) the emulated one again.
+    RealRemote(usize, Option<Box<dyn hle_ios::bt::HidRemote>>),
 }
 
 /// Totals for the exit report.
@@ -216,6 +219,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Input(i) => *live = i,
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
+        ToEmu::RealRemote(i, remote) => sys.hw.borrow_mut().ios.bt.set_real(i, remote),
         ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) => {}
     }
 }
@@ -534,7 +538,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         {
             let view = view_player.and_then(|p| player_view(&sys.mem, p, view_zoom));
             let mut hw = sys.hw.borrow_mut();
-            for (i, input) in inputs.into_iter().enumerate() {
+            for (i, mut input) in inputs.into_iter().enumerate() {
+                // A real remote is on while Windows has it connected.
+                input.connected |= hw.ios.bt.has_real(i);
                 hw.ios.bt.set_input(i, input);
             }
             if view_player.is_some() {

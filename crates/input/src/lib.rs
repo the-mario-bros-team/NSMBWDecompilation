@@ -19,6 +19,8 @@ pub mod gyro;
 pub mod keymap;
 pub mod padmap;
 pub mod smart_spin;
+#[cfg(windows)]
+pub mod wii_hid;
 
 use std::collections::HashSet;
 use std::time::{Duration, Instant};

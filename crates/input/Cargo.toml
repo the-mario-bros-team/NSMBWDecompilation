@@ -7,3 +7,8 @@ edition = "2021"
 hle-ios = { path = "../hle-ios" }
 winit = "0.30"
 gilrs = "0.11"
+
+# Real Wii Remotes paired with Windows (`wii_hid`): Windows' own HID calls,
+# no C library.
+[target.'cfg(windows)'.dependencies]
+hidapi = { version = "2.6", default-features = false, features = ["windows-native"] }

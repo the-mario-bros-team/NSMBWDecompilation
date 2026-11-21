@@ -195,11 +195,12 @@ enum KeySwitch {
     /// Which bindings the controls show: the keyboard's or the controllers'.
     Device,
     Rumble,
+    WiiRemotes,
     SmartSpin,
     ReverseTilt,
     MouseGyro,
 }
-const KEY_SWITCHES: [KeySwitch; 5] = [KeySwitch::Device, KeySwitch::Rumble, KeySwitch::SmartSpin, KeySwitch::ReverseTilt, KeySwitch::MouseGyro];
+const KEY_SWITCHES: [KeySwitch; 6] = [KeySwitch::Device, KeySwitch::Rumble, KeySwitch::WiiRemotes, KeySwitch::SmartSpin, KeySwitch::ReverseTilt, KeySwitch::MouseGyro];
 const SWITCH_CURSOR: i32 = 13;
 const SWITCH_TOP: f32 = -76.0;
 const SWITCH_STEP: f32 = 28.0;
@@ -212,6 +213,7 @@ impl KeySwitch {
         match self {
             KeySwitch::Device => "Bindings",
             KeySwitch::Rumble => "Rumble",
+            KeySwitch::WiiRemotes => "Wii Remotes",
             KeySwitch::SmartSpin => "Space Smart Spin",
             KeySwitch::ReverseTilt => "Reverse Tilt",
             KeySwitch::MouseGyro => "Mouse as Gyro",
@@ -223,6 +225,7 @@ impl KeySwitch {
         let on = match self {
             KeySwitch::Device => return (false, if pad_view { "Controller" } else { "Keyboard" }),
             KeySwitch::Rumble => s.rumble,
+            KeySwitch::WiiRemotes => s.wii_remotes,
             KeySwitch::SmartSpin => s.smart_spin,
             KeySwitch::ReverseTilt => s.reverse_tilt,
             KeySwitch::MouseGyro => s.mouse_gyro,
@@ -234,6 +237,7 @@ impl KeySwitch {
         match self {
             KeySwitch::Device => {}
             KeySwitch::Rumble => s.rumble = !s.rumble,
+            KeySwitch::WiiRemotes => s.wii_remotes = !s.wii_remotes,
             KeySwitch::SmartSpin => s.smart_spin = !s.smart_spin,
             KeySwitch::ReverseTilt => s.reverse_tilt = !s.reverse_tilt,
             KeySwitch::MouseGyro => s.mouse_gyro = !s.mouse_gyro,
@@ -244,6 +248,7 @@ impl KeySwitch {
         match self {
             KeySwitch::Device => "Shows the keyboard's keys or the controllers' buttons above.",
             KeySwitch::Rumble => "Controllers rumble when the game rumbles the Wii Remote.",
+            KeySwitch::WiiRemotes => "Wii Remotes paired with Windows play as players 1 to 4 (not in net games).",
             KeySwitch::SmartSpin => "With Space as a Jump key, Space in the air does a spin.",
             KeySwitch::ReverseTilt => "Platforms you tilt lean the way the keys or the stick go.",
             KeySwitch::MouseGyro => "Moving the mouse tilts the remote; moving it back quickly shakes it.",

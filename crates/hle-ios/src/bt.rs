@@ -131,6 +131,20 @@ impl Remote {
     }
 }
 
+/// A real Wii Remote's HID reports, in place of the emulated one
+/// ([`Wiimote`]) for a player: the game's output reports go to it, and its
+/// input reports come back on the interrupt channel. The link and its L2CAP
+/// channels stay emulated. Reports carry their report ID first, without the
+/// HID transaction byte (0xA2 out, 0xA1 in).
+pub trait HidRemote: Send {
+    /// An output report from the game.
+    fn send(&mut self, report: &[u8]);
+    /// The next input report from the remote, if one has come.
+    fn recv(&mut self) -> Option<Vec<u8>>;
+    /// The remote is still there.
+    fn alive(&self) -> bool;
+}
+
 pub struct Bt {
     events: VecDeque<Vec<u8>>,
     /// ACL packets for the Wii.
@@ -142,6 +156,9 @@ pub struct Bt {
     now: u64,
     ident: u8,
     remotes: Vec<Remote>,
+    /// Real Wii Remotes standing in for players' emulated ones (not part of
+    /// a saved state).
+    real: Vec<Option<Box<dyn HidRemote>>>,
     /// Print the HCI and L2CAP conversation.
     pub trace: bool,
 }
@@ -158,6 +175,7 @@ impl Default for Bt {
             now: 0,
             ident: 0,
             remotes: (0..REMOTES).map(|_| Remote::new()).collect(),
+            real: (0..REMOTES).map(|_| None).collect(),
             trace: false,
         }
     }
@@ -573,6 +591,12 @@ impl Bt {
         let secs = self.now as f64 / CPU_HZ as f64;
         let mut out = Vec::new();
         self.remotes[i].hid.output(report, secs, &mut out);
+        // A real remote answers for itself; the emulated one only keeps
+        // track (LEDs, rumble) for the frontend.
+        if let Some(real) = &mut self.real[i] {
+            real.send(report);
+            return;
+        }
         let to = self.remotes[i].interrupt.remote;
         for r in out {
             let mut p = vec![0xA1];
@@ -587,7 +611,8 @@ impl Bt {
         self.now = now;
         for i in 0..REMOTES {
             let r = &mut self.remotes[i];
-            if r.asleep && r.hid.input.buttons != 0 {
+            // A real remote stays on while Windows has it connected.
+            if r.asleep && (r.hid.input.buttons != 0 || self.real[i].is_some()) {
                 r.asleep = false;
             }
             match r.link {
@@ -610,6 +635,25 @@ impl Bt {
                             self.connect_channel(i, PSM_HID_INTERRUPT, CID_INTERRUPT);
                         }
                     }
+                    if let Some(real) = &mut self.real[i] {
+                        // The real remote's reports as they come; the oldest
+                        // go when the Wii falls behind.
+                        let ready = self.remotes[i].interrupt.ready();
+                        let to = self.remotes[i].interrupt.remote;
+                        let mut reports = Vec::new();
+                        while let Some(rep) = real.recv() {
+                            reports.push(rep);
+                        }
+                        if ready {
+                            let room = (2 * MAX_QUEUED_ACL).saturating_sub(self.acl.len());
+                            for rep in reports.iter().skip(reports.len().saturating_sub(room)) {
+                                let mut p = vec![0xA1];
+                                p.extend_from_slice(rep);
+                                self.send(i, to, &p);
+                            }
+                        }
+                        continue;
+                    }
                     let r = &mut self.remotes[i];
                     if r.interrupt.ready() && now >= r.next_report && self.acl.len() < MAX_QUEUED_ACL {
                         let period = CPU_HZ / REPORTS_PER_SECOND;
@@ -625,6 +669,24 @@ impl Bt {
                 _ => {}
             }
         }
+    }
+
+    /// Player `i`'s remote from now on: a real one, or (`None`) the emulated
+    /// one again.
+    pub fn set_real(&mut self, i: usize, remote: Option<Box<dyn HidRemote>>) {
+        if let Some(slot) = self.real.get_mut(i) {
+            *slot = remote;
+        }
+    }
+
+    /// Player `i` has a real remote that is still there; one that went away
+    /// is let go.
+    pub fn has_real(&mut self, i: usize) -> bool {
+        let Some(slot) = self.real.get_mut(i) else { return false };
+        if slot.as_ref().is_some_and(|r| !r.alive()) {
+            *slot = None;
+        }
+        slot.is_some()
     }
 
     pub fn set_input(&mut self, i: usize, input: Input) {
@@ -765,6 +827,87 @@ mod tests {
         bt.set_input(0, Input { connected: true, buttons: button::A, ..Input::default() });
         bt.update(t + 11);
         assert_eq!(events(&mut bt)[0][0], EV_CONNECTION_REQUEST);
+    }
+
+    /// Remote 1 linked, both channels configured (as in the test above);
+    /// returns the time.
+    fn link_up(bt: &mut Bt) -> u64 {
+        bt.set_input(0, Input { connected: true, ..Input::default() });
+        cmd(bt, 0x0C1A, &[3]);
+        bt.update(1);
+        let mut accept = remote_address(0).to_vec();
+        accept.push(0);
+        cmd(bt, 0x0409, &accept);
+        bt.update(2 + CHANNEL_DELAY);
+        let (_, id, _) = signal_of(&acls(bt)[0]);
+        wii_signal(bt, 0x03, id, &[0x50, 0, 0x40, 0, 0, 0, 0, 0]);
+        let (_, cid, _) = signal_of(&acls(bt)[0]);
+        wii_signal(bt, 0x05, cid, &[0x40, 0, 0, 0, 0, 0]);
+        wii_signal(bt, 0x04, 9, &[0x40, 0, 0, 0]);
+        let _ = acls(bt);
+        bt.update(3 + CHANNEL_DELAY);
+        let (_, id, _) = signal_of(&acls(bt)[0]);
+        wii_signal(bt, 0x03, id, &[0x51, 0, 0x41, 0, 0, 0, 0, 0]);
+        let _ = acls(bt);
+        wii_signal(bt, 0x05, 0, &[0x41, 0, 0, 0, 0, 0]);
+        wii_signal(bt, 0x04, 10, &[0x41, 0, 0, 0]);
+        let _ = acls(bt);
+        let _ = events(bt);
+        assert!(bt.remote_status(0).connected);
+        4 + CHANNEL_DELAY
+    }
+
+    /// A stand-in for a real remote: what it was sent, what it will answer.
+    struct FakeRemote {
+        sent: std::sync::Arc<std::sync::Mutex<Vec<Vec<u8>>>>,
+        answers: VecDeque<Vec<u8>>,
+        alive: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    }
+
+    impl HidRemote for FakeRemote {
+        fn send(&mut self, report: &[u8]) {
+            self.sent.lock().unwrap().push(report.to_vec());
+        }
+        fn recv(&mut self) -> Option<Vec<u8>> {
+            self.answers.pop_front()
+        }
+        fn alive(&self) -> bool {
+            self.alive.load(std::sync::atomic::Ordering::Relaxed)
+        }
+    }
+
+    #[test]
+    fn a_real_remote_answers_for_the_emulated_one() {
+        let mut bt = Bt::default();
+        let t = link_up(&mut bt);
+        let sent = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+        let alive = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(true));
+        // Its buttons + accelerometer report (2 held), and a read's reply.
+        let answers = VecDeque::from([vec![0x31, 0x00, 0x01, 0x80, 0x80, 0x9A], vec![0x21, 0x00, 0x00, 0xF0, 0x00, 0x16]]);
+        bt.set_real(0, Some(Box::new(FakeRemote { sent: sent.clone(), answers, alive: alive.clone() })));
+        assert!(bt.has_real(0));
+        // The game's output reports go to it, LEDs and all, and the emulated
+        // remote answers nothing (no acknowledgement, no data report).
+        wii_acl(&mut bt, CID_INTERRUPT, &[0xA2, 0x12, 0x04, 0x31]);
+        wii_acl(&mut bt, CID_INTERRUPT, &[0xA2, 0x11, 0x13]);
+        assert_eq!(*sent.lock().unwrap(), vec![vec![0x12, 0x04, 0x31], vec![0x11, 0x13]]);
+        assert!(acls(&mut bt).is_empty());
+        let status = bt.remote_status(0);
+        assert_eq!((status.leds, status.rumble), (1, true), "followed for the frontend");
+        // Its input reports go to the Wii on the interrupt channel, as they come.
+        bt.update(t);
+        let a = acls(&mut bt);
+        assert_eq!(a.len(), 2);
+        assert_eq!(le16(&a[0], 6), 0x51);
+        assert_eq!(&a[0][8..], &[0xA1, 0x31, 0x00, 0x01, 0x80, 0x80, 0x9A]);
+        assert_eq!(&a[1][8..11], &[0xA1, 0x21, 0x00]);
+        bt.update(t + CPU_HZ / REPORTS_PER_SECOND);
+        assert!(acls(&mut bt).is_empty(), "nothing of the emulated remote's own");
+        // Gone: the emulated remote again.
+        alive.store(false, std::sync::atomic::Ordering::Relaxed);
+        assert!(!bt.has_real(0));
+        bt.update(t + 2 * CPU_HZ / REPORTS_PER_SECOND);
+        assert_eq!(&acls(&mut bt)[0][8..10], &[0xA1, 0x31], "its own data report");
     }
 }
 

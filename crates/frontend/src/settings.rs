@@ -66,11 +66,14 @@ pub struct Settings {
     /// `[keyboard] reverse_tilt`: every remote's tilt mirrored, so platforms
     /// lean the way the keys or stick go.
     pub reverse_tilt: bool,
+    /// `[controller] wii_remotes`: Wii Remotes paired with Windows play in
+    /// place of players' emulated remotes (Windows only).
+    pub wii_remotes: bool,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2, widescreen: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false }
     }
 }
 
@@ -166,6 +169,7 @@ impl Settings {
         if let Some(controller) = t.get("controller").and_then(toml::Value::as_table) {
             let flag = |k: &str, d: bool| controller.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
             s.rumble = flag("rumble", s.rumble);
+            s.wii_remotes = flag("wii_remotes", s.wii_remotes);
             for (i, (key, _)) in ACTIONS.iter().enumerate() {
                 if let Some(label) = controller.get(*key).and_then(toml::Value::as_str) {
                     s.padmap.set_label(i, label);
@@ -233,6 +237,8 @@ impl Settings {
         text.push_str(&format!("reverse_tilt = {}\n", self.reverse_tilt));
         text.push_str("\n# Controller buttons for the Wii Remote's, by their Xbox names (A, B, X, Y, LB, RB, LT, RT,\n# View, Menu, LS, RS, D-Pad Up, Left Stick Up, Right Stick Left...), separated by commas.\n# rumble: controllers rumble when the game rumbles the Wii Remote.\n[controller]\n");
         text.push_str(&format!("rumble = {}\n", self.rumble));
+        text.push_str("# Wii Remotes paired with Windows (Settings > Bluetooth) play as players 1-4 in turn.\n");
+        text.push_str(&format!("wii_remotes = {}\n", self.wii_remotes));
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.padmap.label(i))));
             text.push_str(&combo_line(key, self.padmap.combo_names(i)));
@@ -273,7 +279,7 @@ mod tests {
             p.buttons[input::keymap::TILT_LEFT].clear();
             p.take(input::keymap::PLUS, vec![input::padmap::by_name("LB").unwrap(), input::padmap::by_name("RB").unwrap()]);
             p
-        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false };
+        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3, ..Settings::default() };

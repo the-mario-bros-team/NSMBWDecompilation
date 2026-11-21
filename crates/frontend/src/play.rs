@@ -165,6 +165,9 @@ struct App {
     updater: Option<(Arc<std::sync::Mutex<ui::UpdateState>>, Arc<std::sync::atomic::AtomicBool>)>,
     /// Installed: this program to start again once the window has closed.
     restart: Option<PathBuf>,
+    /// Looks for Wii Remotes paired with Windows (the Wii Remotes switch).
+    #[cfg(windows)]
+    wii_remotes: Option<input::wii_hid::Scanner>,
 }
 
 /// How long a newer release found is said on screen.
@@ -319,6 +322,11 @@ impl App {
             self.sent_interpolate = Some(interpolate);
         }
         self.inputs.set_player(emu.player());
+        #[cfg(windows)]
+        while let Some((player, remote, name)) = self.wii_remotes.as_ref().and_then(input::wii_hid::Scanner::take) {
+            say!("Wii Remote {name:?} (paired with Windows) is player {}", player + 1);
+            let _ = emu.to_emu.send(ToEmu::RealRemote(player, Some(Box::new(remote))));
+        }
         let mut controls = self.inputs.poll();
         // A save file newly marked "Cheated" (or an erased one, unmarked) is
         // written down at once: it may happen long after the window closed.
@@ -736,6 +744,23 @@ impl App {
         self.inputs.set_smart_spin(self.settings.smart_spin);
         self.inputs.set_mouse_gyro(self.settings.mouse_gyro);
         self.inputs.set_reverse_tilt(self.settings.reverse_tilt);
+        // Real Wii Remotes: not in net games (their reports would bypass the
+        // shared input) or scripted runs.
+        #[cfg(windows)]
+        {
+            let allowed = matches!(self.opts.emu.net, crate::net::Mode::Off) && self.opts.emu.script.is_empty();
+            let want = self.settings.wii_remotes && allowed;
+            if want && self.wii_remotes.is_none() {
+                say!("Wii Remotes: looking for remotes paired with Windows");
+                self.wii_remotes = Some(input::wii_hid::Scanner::start());
+            } else if !want && self.wii_remotes.take().is_some() {
+                if let Some(emu) = &self.emu {
+                    for i in 0..REMOTES {
+                        let _ = emu.to_emu.send(ToEmu::RealRemote(i, None));
+                    }
+                }
+            }
+        }
     }
 
     fn presented_now(&mut self) {
@@ -1093,6 +1118,8 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         update: None,
         updater: None,
         restart: None,
+        #[cfg(windows)]
+        wii_remotes: None,
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     // An update was installed: the new program, now the window and the
