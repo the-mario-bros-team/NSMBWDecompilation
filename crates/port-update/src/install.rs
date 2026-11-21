@@ -74,6 +74,8 @@ pub fn update(release: &Release, folder: &Path, program: &str, progress: &dyn Fn
     })();
     let _ = std::fs::remove_file(&zip);
     let _ = std::fs::remove_dir_all(work.join("files"));
+    // Gone unless it still lists old files to delete.
+    let _ = std::fs::remove_dir(&work);
     result
 }
 

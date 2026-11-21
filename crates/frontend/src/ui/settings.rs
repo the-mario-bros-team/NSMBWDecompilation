@@ -1086,7 +1086,11 @@ impl SettingsWindow {
             }
             UpdateState::Installing => ("Updating", format!("Installing version {version}..."), None),
             UpdateState::Restarting => ("Updating", "Done. The game is restarting.".to_string(), None),
-            UpdateState::Failed(e) => ("The update failed", e.clone(), Some("OK")),
+            UpdateState::Failed(e) => {
+                let mut chars = e.chars();
+                let reason: String = chars.next().map(|c| c.to_uppercase().chain(chars).collect()).unwrap_or_default();
+                ("The update failed", format!("{reason}."), Some("OK"))
+            }
         };
         self.text(a, c, title, 0.0, 62.0, 32.0, 1, u32::MAX);
         let mut size = 24.0;
