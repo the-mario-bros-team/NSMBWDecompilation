@@ -15,6 +15,7 @@
 
 pub mod capture;
 pub mod combo;
+pub mod gyro;
 pub mod keymap;
 pub mod padmap;
 pub mod smart_spin;
@@ -152,8 +153,14 @@ pub struct Inputs {
     smart_spin: bool,
     space: smart_spin::SmartSpin,
     player: Option<smart_spin::Player>,
-    /// Shaking until then (a smart spin), per player.
+    /// Shaking until then (a smart spin, a mouse swing), per player.
     shake_until: [Duration; PLAYERS],
+    /// Mouse as Gyro: on, and the pointer's x and the window's width.
+    mouse_gyro: bool,
+    gyro: gyro::Gyro,
+    pointer: Option<(f32, f32)>,
+    /// Every remote's tilt mirrored (the Reverse Tilt switch).
+    reverse_tilt: bool,
     gilrs: Option<Gilrs>,
     /// Gamepads in the order they connected; index = player.
     pads: Vec<GamepadId>,
@@ -195,7 +202,7 @@ impl Inputs {
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -274,6 +281,23 @@ impl Inputs {
     /// Space Smart Spin on or off.
     pub fn set_smart_spin(&mut self, on: bool) {
         self.smart_spin = on;
+    }
+
+    /// Mouse as Gyro on or off (`gyro`): the mouse tilts and shakes player
+    /// 1's remote while no controller is connected.
+    pub fn set_mouse_gyro(&mut self, on: bool) {
+        self.mouse_gyro = on;
+        self.gyro.reset();
+    }
+
+    /// Reverse Tilt: every remote's tilt mirrored, whatever it comes from.
+    pub fn set_reverse_tilt(&mut self, on: bool) {
+        self.reverse_tilt = on;
+    }
+
+    /// The pointer moved to `x` in a window `width` across (pixels).
+    pub fn pointer(&mut self, x: f32, width: f32) {
+        self.pointer = Some((x, width));
     }
 
     /// Player 1 as the game left them after its last field (`None` outside
@@ -405,6 +429,19 @@ impl Inputs {
             }
         }
         apply_bits(&mut out[0], combos);
+        // The mouse as the remote's motion (keys' tilt comes first).
+        match self.pointer.filter(|_| self.mouse_gyro && !self.pad_connected()) {
+            Some((x, width)) => {
+                let motion = self.gyro.update(x, width, now);
+                if motion.shake {
+                    self.shake_until[0] = now + SHAKE_PULSE;
+                }
+                if out[0].tilt == 0.0 {
+                    out[0].tilt = motion.tilt;
+                }
+            }
+            None => self.gyro.reset(),
+        }
         if let Some(g) = &self.gilrs {
             for (player, &id) in self.pads.iter().enumerate() {
                 let pad = g.gamepad(id);
@@ -447,6 +484,9 @@ impl Inputs {
             input.connected = self.on[i];
             input.shake |= now < self.shake_until[i];
             input.tilt = input.tilt.clamp(-1.0, 1.0);
+            if self.reverse_tilt {
+                input.tilt = -input.tilt;
+            }
         }
         out
     }
@@ -557,6 +597,32 @@ mod tests {
         i.key(KeyCode::Space, true);
         let s = i.poll_at(ms(400))[0];
         assert_eq!((s.buttons, s.shake), (button::TWO, false));
+    }
+
+    #[test]
+    fn the_mouse_tilts_and_shakes() {
+        let mut i = Inputs::without_pads();
+        let ms = Duration::from_millis;
+        i.pointer(600.0, 1280.0);
+        i.poll_at(ms(0));
+        i.pointer(640.0, 1280.0);
+        assert_eq!(i.poll_at(ms(20))[0].tilt, 0.0, "off by default");
+        i.set_mouse_gyro(true);
+        i.poll_at(ms(40));
+        i.pointer(680.0, 1280.0);
+        assert_eq!(i.poll_at(ms(60))[0].tilt, 1.0);
+        // Keys first.
+        i.key(KeyCode::KeyQ, true);
+        assert_eq!(i.poll_at(ms(80))[0].tilt, -1.0);
+        i.key(KeyCode::KeyQ, false);
+        // Back the other way soon: a shake, and the tilt ends.
+        i.pointer(640.0, 1280.0);
+        let s = i.poll_at(ms(100))[0];
+        assert_eq!((s.tilt, s.shake), (0.0, true));
+        // Reverse Tilt mirrors it all.
+        i.set_reverse_tilt(true);
+        i.key(KeyCode::KeyE, true);
+        assert_eq!(i.poll_at(ms(400))[0].tilt, -1.0);
     }
 
     #[test]

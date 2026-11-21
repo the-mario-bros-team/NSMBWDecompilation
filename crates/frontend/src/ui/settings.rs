@@ -191,8 +191,10 @@ enum KeySwitch {
     Device,
     Rumble,
     SmartSpin,
+    ReverseTilt,
+    MouseGyro,
 }
-const KEY_SWITCHES: [KeySwitch; 3] = [KeySwitch::Device, KeySwitch::Rumble, KeySwitch::SmartSpin];
+const KEY_SWITCHES: [KeySwitch; 5] = [KeySwitch::Device, KeySwitch::Rumble, KeySwitch::SmartSpin, KeySwitch::ReverseTilt, KeySwitch::MouseGyro];
 const SWITCH_CURSOR: i32 = 13;
 const SWITCH_TOP: f32 = -76.0;
 const SWITCH_STEP: f32 = 28.0;
@@ -206,6 +208,8 @@ impl KeySwitch {
             KeySwitch::Device => "Bindings",
             KeySwitch::Rumble => "Rumble",
             KeySwitch::SmartSpin => "Space Smart Spin",
+            KeySwitch::ReverseTilt => "Reverse Tilt",
+            KeySwitch::MouseGyro => "Mouse as Gyro",
         }
     }
 
@@ -215,6 +219,8 @@ impl KeySwitch {
             KeySwitch::Device => return (false, if pad_view { "Controller" } else { "Keyboard" }),
             KeySwitch::Rumble => s.rumble,
             KeySwitch::SmartSpin => s.smart_spin,
+            KeySwitch::ReverseTilt => s.reverse_tilt,
+            KeySwitch::MouseGyro => s.mouse_gyro,
         };
         (on, if on { "On" } else { "Off" })
     }
@@ -224,6 +230,8 @@ impl KeySwitch {
             KeySwitch::Device => {}
             KeySwitch::Rumble => s.rumble = !s.rumble,
             KeySwitch::SmartSpin => s.smart_spin = !s.smart_spin,
+            KeySwitch::ReverseTilt => s.reverse_tilt = !s.reverse_tilt,
+            KeySwitch::MouseGyro => s.mouse_gyro = !s.mouse_gyro,
         }
     }
 
@@ -232,6 +240,8 @@ impl KeySwitch {
             KeySwitch::Device => "Shows the keyboard's keys or the controllers' buttons above.",
             KeySwitch::Rumble => "Controllers rumble when the game rumbles the Wii Remote.",
             KeySwitch::SmartSpin => "With Space as a Jump key, Space in the air does a spin.",
+            KeySwitch::ReverseTilt => "Platforms you tilt lean the way the keys or the stick go.",
+            KeySwitch::MouseGyro => "Moving the mouse tilts the remote; moving it back quickly shakes it.",
         }
     }
 }

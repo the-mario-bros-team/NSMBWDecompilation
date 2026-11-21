@@ -734,6 +734,8 @@ impl App {
         self.inputs.set_padmap(self.settings.padmap.clone());
         self.inputs.set_rumble_enabled(self.settings.rumble);
         self.inputs.set_smart_spin(self.settings.smart_spin);
+        self.inputs.set_mouse_gyro(self.settings.mouse_gyro);
+        self.inputs.set_reverse_tilt(self.settings.reverse_tilt);
     }
 
     fn presented_now(&mut self) {
@@ -905,6 +907,12 @@ impl ApplicationHandler for App {
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+        // Mouse as Gyro follows the pointer while no menu has it.
+        if let (WindowEvent::CursorMoved { position, .. }, Some(window)) = (&event, &self.window) {
+            if !self.menus.as_ref().is_some_and(ui::Menus::is_open) {
+                self.inputs.pointer(position.x as f32, window.inner_size().width as f32);
+            }
+        }
         if let WindowEvent::MouseInput { state, button, .. } = &event {
             let n = mouse_button(*button);
             let down = *state == ElementState::Pressed;
