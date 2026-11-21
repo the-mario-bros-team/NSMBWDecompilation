@@ -1959,36 +1959,35 @@ is printed 20 times, then at powers of two):
   variables of buffer-layout struct types `Offset` decorations
   (VUID-StandaloneSpirv-None-10684); drivers accept it.
 
-**Worked around, cause unknown: the device was lost in the attract
-demo's snow course**, about 250 fields in (field ~7,130 of a run; once at
-~8,270), with Adreno GPU-fault snapshots in logcat and then
-`VK_ERROR_DEVICE_LOST`. The validation layer reports nothing there. What
-32 runs on the phone established (temporary switches in the app's files,
-since removed):
-- Skipping the draws that use indirect texturing (the lit 3D models,
-  which sample the 32x32 light-texture copies) removes it. Removing the
-  indirect lookups, the indirect commands, or the copies does not, or
-  only moves it.
-- It needs the fragment shader's screen derivatives (`dpdx`, `dpdy`) to
-  be in use. Clean: `textureSampleLevel` at level 0; `textureSampleGrad`
-  with zero or constant gradients taken from a uniform (four runs, each
-  past field 11,800). Faulting: the real derivatives passed on, clamped
-  (to 8, to 0.001), zeroed unless under 64 (by `if`), or only added to
-  the coordinate of a level-0 fetch; all 27 runs with the derivatives in
-  use faulted.
-- It is not a bad value or index: it stays with the coordinates and
-  gradients made finite by their bits, the shading index clamped to the
-  buffer, every texture and sampler slot forced valid without a branch,
-  samplers limited to level 0 or to their image's levels, robust buffer
-  and image access, and `naga` clamping local array indices.
+**Fixed: the device was lost in the attract demo's snow course**, about
+250 fields in (field ~7,130 of a run), with Adreno GPU-fault snapshots in
+logcat and then `VK_ERROR_DEVICE_LOST`. The validation layer reported
+nothing there.
 
-So on Android the ubershader samples at the base level
-(`shaders::ubershader_source`), which leaves the derivatives unused: no
-mipmaps there (this game's textures are mostly drawn near 1:1). Desktop
-is unchanged. With it the attract demo ran 6 minutes (19,082 fields,
-through the snow course and round the loop) without a fault. To find the cause: which of the eight coordinates'
-derivatives matters, the same scene on another Adreno and on a Mali, and
-the kernel's GPU fault line (needs a bug report or root).
+The cause: the ubershader took its texture coordinates' screen
+derivatives (`dpdx`, `dpdy`) after the clear path's early `return`, so in
+control flow that is not uniform, where derivatives are undefined. Desktop
+drivers gave the expected values; Adreno's compiled code faulted. They are
+now taken first, before anything can return; no pixels change on the
+desktop.
+
+How it was found (45 runs on the phone, with switches in the app's files
+and shader patches loaded at start, all since removed):
+- The faulting fields draw the course's 24 light-texture quads (the 32x32
+  cells at the bottom of the EFB, with indirect texturing) and then its
+  lit models. Skipping the quads removes the fault; no single quad does
+  (it takes several of them together), and the copies, the models and
+  the background effect are not needed for it.
+- Nothing in the data was wrong: no infinite or NaN vertex values, no bad
+  index, texture or sampler slot. Bounds-checked access, clamped indices,
+  coordinates and gradients made finite, mip levels limited, and no
+  `discard` all left it.
+- It needed the derivatives in use, with any values (clamped to 0.001
+  they faulted; constants taken from a buffer did not), and it went when
+  they were computed before the early return: two runs to field ~12,000
+  clean, while a control run without that change faulted at field 7,069
+  the same evening. (The first workaround, sampling at the base level on
+  Android, is gone: mipmaps are back.)
 
 **Not yet:** recompiled code (`ppc-recomp` writes the host's calling
 convention, `extern "sysv64"`, into `gen/`, which arm64 cannot compile; the

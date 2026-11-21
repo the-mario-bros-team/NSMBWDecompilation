@@ -25,37 +25,11 @@ fn compile(source: &str) -> Result<(Vec<u32>, Vec<u32>), String> {
 /// stage without a depth output.
 pub type UbershaderCode = (Vec<u32>, Vec<u32>, Vec<u32>);
 
-/// The ubershader's one texture fetch, with the coordinate's screen
-/// derivatives (for mip levels and minification), and the same at the base
-/// level without them.
-const SAMPLE_GRAD: &str = "return textureSampleGrad(textures[slot], samplers[word(SAMPLER + m)], uv, dx, dy);";
-const SAMPLE_BASE: &str = "return textureSampleLevel(textures[slot], samplers[word(SAMPLER + m)], uv, 0.0);";
-
-/// The ubershader's source for this platform.
-///
-/// On Android it samples at the base level, which leaves the derivatives
-/// (`dpdx`, `dpdy`) unused, for the GPU's compiler to drop: with them in
-/// use, an Adreno 840 loses the device about 250 fields into the title
-/// demo's snow course, in the draws of its lit 3D models
-/// (docs/PORT_PLAN.md, 16). Why is not known: the fault stays with every
-/// texture slot, sampler, coordinate and gradient forced valid, and goes
-/// when nothing uses the derivatives. Mipmaps are not used there until it
-/// is.
-fn ubershader_source(base_level_only: bool) -> std::borrow::Cow<'static, str> {
-    if base_level_only {
-        UBERSHADER.replace(SAMPLE_GRAD, SAMPLE_BASE).into()
-    } else {
-        UBERSHADER.into()
-    }
-}
-
 /// The GX ubershader: vertex, fragment, and fragment without a depth output.
 pub fn ubershader() -> Result<UbershaderCode, String> {
-    let source = ubershader_source(cfg!(target_os = "android"));
-    let source: &str = &source;
-    let (vs, fs) = compile(source)?;
-    let module = naga::front::wgsl::parse_str(source).map_err(|e| e.emit_to_string(source))?;
-    let info = Validator::new(ValidationFlags::all(), Capabilities::all()).validate(&module).map_err(|e| e.emit_to_string(source))?;
+    let (vs, fs) = compile(UBERSHADER)?;
+    let module = naga::front::wgsl::parse_str(UBERSHADER).map_err(|e| e.emit_to_string(UBERSHADER))?;
+    let info = Validator::new(ValidationFlags::all(), Capabilities::all()).validate(&module).map_err(|e| e.emit_to_string(UBERSHADER))?;
     Ok((vs, fs, entry(&module, &info, naga::ShaderStage::Fragment, "fs_early")?))
 }
 
@@ -66,16 +40,6 @@ pub fn copy() -> Result<(Vec<u32>, Vec<u32>), String> {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn base_level_variant_compiles() {
-        // The fetch the Android variant replaces is still in the source, and
-        // the variant compiles.
-        assert_eq!(super::UBERSHADER.matches(super::SAMPLE_GRAD).count(), 1);
-        let source = super::ubershader_source(true);
-        assert!(!source.contains("textureSampleGrad"));
-        super::compile(&source).unwrap_or_else(|e| panic!("{e}"));
-    }
-
     #[test]
     fn shaders_compile() {
         let (vs, fs, early) = super::ubershader().unwrap_or_else(|e| panic!("{e}"));
