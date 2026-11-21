@@ -137,6 +137,16 @@ impl Menus {
         self.window.capture_key(settings, code)
     }
 
+    /// The Keybinds tab waits for a key or mouse button: mouse presses go
+    /// to [`Menus::capture_mouse`], not to the window.
+    pub fn capturing_keys(&self) -> bool {
+        self.window.is_open() && self.window.capturing_keys()
+    }
+
+    pub fn capture_mouse(&mut self, settings: &mut Settings, button: u8) -> Vec<Change> {
+        self.window.capture_mouse(settings, button)
+    }
+
     /// A controller is connected or not (the Keybinds tab opens on its
     /// buttons if one is).
     pub fn set_pad_connected(&mut self, connected: bool) {

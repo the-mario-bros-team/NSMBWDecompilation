@@ -225,6 +225,7 @@ mod tests {
         let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0, widescreen: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], keymap: {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
+            k.bind(input::keymap::RUN, input::keymap::Key::Mouse(5));
             k.keys[input::keymap::SHAKE].clear();
             k
         }, padmap: {

@@ -117,6 +117,9 @@ const RUMBLE_MAX_MS: u32 = 2000;
 
 pub struct Inputs {
     keys: HashSet<KeyCode>,
+    /// The mouse's buttons held (bit n - 1 for button n), counted only
+    /// while no menu has the mouse.
+    mouse: u8,
     keymap: keymap::Keymap,
     padmap: padmap::Padmap,
     gilrs: Option<Gilrs>,
@@ -160,7 +163,7 @@ impl Inputs {
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new() }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -275,9 +278,29 @@ impl Inputs {
         true
     }
 
-    /// Releases every key (the window lost focus).
+    /// A mouse button (1 left, 2 middle, 3 right, 4, 5) went down or up.
+    /// Returns whether it is a game control.
+    pub fn mouse_button(&mut self, n: u8, down: bool) -> bool {
+        if !(1..=5).contains(&n) {
+            return false;
+        }
+        let bit = 1 << (n - 1);
+        if !down {
+            let held = self.mouse & bit != 0;
+            self.mouse &= !bit;
+            return held;
+        }
+        if self.keymap.action(keymap::Key::Mouse(n)).is_none() {
+            return false;
+        }
+        self.mouse |= bit;
+        true
+    }
+
+    /// Releases every key and mouse button (the window lost focus).
     pub fn release_keys(&mut self) {
         self.keys.clear();
+        self.mouse = 0;
     }
 
     /// Current state of the four remotes.
@@ -294,14 +317,15 @@ impl Inputs {
             self.add_pad(id);
         }
         let mut out = [Input::default(); PLAYERS];
-        for k in &self.keys {
+        let mouse = (1..=5u8).filter(|n| self.mouse & (1 << (n - 1)) != 0).map(keymap::Key::Mouse);
+        for k in self.keys.iter().map(|&k| keymap::Key::Code(k)).chain(mouse) {
             // Every action the key plays (a key may be bound to several).
             for (i, keys) in self.keymap.keys.iter().enumerate() {
-                if keys.contains(k) {
+                if keys.contains(&k) {
                     apply(&mut out[0], keymap_action(i));
                 }
             }
-            if *k == KeyCode::Home {
+            if k == keymap::Key::Code(KeyCode::Home) {
                 apply(&mut out[0], Action::Buttons(button::HOME));
             }
         }

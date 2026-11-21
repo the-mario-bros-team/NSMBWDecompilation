@@ -903,6 +903,21 @@ impl ApplicationHandler for App {
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+        if let WindowEvent::MouseInput { state, button, .. } = &event {
+            let n = mouse_button(*button);
+            let down = *state == ElementState::Pressed;
+            // The Keybinds tab waiting for a key takes a mouse button too.
+            if down && self.menus.as_ref().is_some_and(ui::Menus::capturing_keys) {
+                let changes = self.menus.as_mut().map(|m| m.capture_mouse(&mut self.settings, n)).unwrap_or_default();
+                self.apply_changes(changes);
+                return;
+            }
+            // Let go always counts (it may have been pressed before a menu
+            // opened); pressed only while no menu has the mouse.
+            if !down || !self.menus.as_ref().is_some_and(ui::Menus::is_open) {
+                self.inputs.mouse_button(n, down);
+            }
+        }
         if let (Some(menus), Some(window)) = (&mut self.menus, &self.window) {
             if menus.on_event(window, &event) {
                 return;
@@ -958,6 +973,20 @@ impl ApplicationHandler for App {
             report(&emu.stop());
         }
         self.renderer = None;
+    }
+}
+
+/// A mouse button as a binding's number: 1 left, 2 middle, 3 right, 4 back,
+/// 5 forward; 0 for others.
+fn mouse_button(b: winit::event::MouseButton) -> u8 {
+    use winit::event::MouseButton;
+    match b {
+        MouseButton::Left => 1,
+        MouseButton::Middle => 2,
+        MouseButton::Right => 3,
+        MouseButton::Back => 4,
+        MouseButton::Forward => 5,
+        MouseButton::Other(_) => 0,
     }
 }
 

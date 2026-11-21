@@ -403,6 +403,23 @@ impl SettingsWindow {
         self.capturing.is_some()
     }
 
+    /// The Keybinds tab waits for a key or a mouse button (not a
+    /// controller's): mouse presses go to [`SettingsWindow::capture_mouse`].
+    pub fn capturing_keys(&self) -> bool {
+        self.capturing.is_some() && !self.pad_view
+    }
+
+    /// A mouse button (1-5) pressed while a Keybinds row waits for its key.
+    pub fn capture_mouse(&mut self, s: &mut Settings, n: u8) -> Vec<Change> {
+        let Some((action, _)) = self.capturing.filter(|_| !self.pad_view) else { return Vec::new() };
+        if input::keymap::key_name(input::keymap::Key::Mouse(n)).is_none() {
+            return Vec::new();
+        }
+        s.keymap.bind(action, input::keymap::Key::Mouse(n));
+        self.capturing = None;
+        vec![Change::Keymap]
+    }
+
     /// The Keybinds tab waits for a controller button.
     pub fn capturing_pad(&self) -> bool {
         self.capturing.is_some() && self.pad_view
@@ -1011,7 +1028,7 @@ impl SettingsWindow {
         let switch = usize::try_from(self.cursor - SWITCH_CURSOR).ok().and_then(|i| KEY_SWITCHES.get(i));
         let note = match (self.capturing, self.cursor) {
             (Some(_), _) if self.pad_view => "Press the new button. Esc cancels; Delete or Backspace leaves it no button.",
-            (Some(_), _) => "Press the new key. Esc cancels; Delete or Backspace leaves it no key.",
+            (Some(_), _) => "Press the new key or mouse button. Esc cancels; Delete or Backspace leaves it no key.",
             (None, 0) => Tab::Keybinds.help(),
             (None, n) if (1..=12).contains(&n) => KEY_HELP[n as usize - 1],
             _ => switch.map_or("", |sw| sw.help()),

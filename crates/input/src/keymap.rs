@@ -1,7 +1,7 @@
 //! Which keys play which of the remote's buttons, as the Settings window's
 //! Keybinds tab sets them (after WitherBlitz's NSMB-Wii-Recompilation,
 //! `runtime/src/keybinds.cpp`), kept in `settings.toml`'s `[keyboard]`
-//! table by name ("X, Space").
+//! table by name ("X, Space"). The mouse's buttons are keys too ("Mouse R").
 
 use winit::keyboard::KeyCode;
 
@@ -133,37 +133,63 @@ const NAMES: &[(KeyCode, &str)] = &[
     (KeyCode::F12, "F12"),
 ];
 
-pub fn key_name(k: KeyCode) -> Option<&'static str> {
-    NAMES.iter().find(|(c, _)| *c == k).map(|(_, n)| *n)
+/// The mouse's buttons 1-5, as saved and shown.
+const MOUSE_NAMES: [&str; 5] = ["Mouse L", "Mouse M", "Mouse R", "Mouse 4", "Mouse 5"];
+
+/// A key, or one of the mouse's buttons (1 left, 2 middle, 3 right, 4 and
+/// 5 the side buttons).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum Key {
+    Code(KeyCode),
+    Mouse(u8),
 }
 
-pub fn key_by_name(name: &str) -> Option<KeyCode> {
-    NAMES.iter().find(|(_, n)| n.eq_ignore_ascii_case(name.trim())).map(|(c, _)| *c)
+impl From<KeyCode> for Key {
+    fn from(k: KeyCode) -> Self {
+        Key::Code(k)
+    }
+}
+
+pub fn key_name(k: impl Into<Key>) -> Option<&'static str> {
+    match k.into() {
+        Key::Code(k) => NAMES.iter().find(|(c, _)| *c == k).map(|(_, n)| *n),
+        Key::Mouse(n) => MOUSE_NAMES.get(usize::from(n).checked_sub(1)?).copied(),
+    }
+}
+
+pub fn key_by_name(name: &str) -> Option<Key> {
+    let name = name.trim();
+    if let Some(i) = MOUSE_NAMES.iter().position(|n| n.eq_ignore_ascii_case(name)) {
+        return Some(Key::Mouse(i as u8 + 1));
+    }
+    NAMES.iter().find(|(_, n)| n.eq_ignore_ascii_case(name)).map(|(c, _)| Key::Code(*c))
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Keymap {
     /// Each action's keys ([`ACTIONS`] order).
-    pub keys: [Vec<KeyCode>; 12],
+    pub keys: [Vec<Key>; 12],
 }
 
 impl Default for Keymap {
+    /// Right click crouches, as in WitherBlitz's port.
     fn default() -> Self {
         use KeyCode::*;
+        let k = |codes: &[KeyCode]| codes.iter().map(|&c| Key::Code(c)).collect::<Vec<_>>();
         Self {
             keys: [
-                vec![ArrowUp],
-                vec![ArrowDown],
-                vec![ArrowLeft],
-                vec![ArrowRight],
-                vec![KeyX, Space],
-                vec![KeyZ, ShiftLeft],
-                vec![KeyB],
-                vec![KeyC, ControlLeft],
-                vec![KeyQ],
-                vec![KeyE],
-                vec![Enter, Escape],
-                vec![Minus, Tab],
+                k(&[ArrowUp]),
+                vec![Key::Code(ArrowDown), Key::Mouse(3)],
+                k(&[ArrowLeft]),
+                k(&[ArrowRight]),
+                k(&[KeyX, Space]),
+                k(&[KeyZ, ShiftLeft]),
+                k(&[KeyB]),
+                k(&[KeyC, ControlLeft]),
+                k(&[KeyQ]),
+                k(&[KeyE]),
+                k(&[Enter, Escape]),
+                k(&[Minus, Tab]),
             ],
         }
     }
@@ -171,7 +197,8 @@ impl Default for Keymap {
 
 impl Keymap {
     /// The action `k` plays, if any.
-    pub fn action(&self, k: KeyCode) -> Option<usize> {
+    pub fn action(&self, k: impl Into<Key>) -> Option<usize> {
+        let k = k.into();
         self.keys.iter().position(|keys| keys.contains(&k))
     }
 
@@ -186,8 +213,8 @@ impl Keymap {
     }
 
     /// `k` alone plays `action` from now on (other actions keep theirs).
-    pub fn bind(&mut self, action: usize, k: KeyCode) {
-        self.keys[action] = vec![k];
+    pub fn bind(&mut self, action: usize, k: impl Into<Key>) {
+        self.keys[action] = vec![k.into()];
     }
 }
 
@@ -200,6 +227,8 @@ mod tests {
         let mut k = Keymap::default();
         assert_eq!(k.label(JUMP), "X, Space");
         assert_eq!(k.label(PLUS), "Enter, Esc");
+        assert_eq!(k.label(DOWN), "Down, Mouse R");
+        k.bind(A, Key::Mouse(4));
         k.bind(RUN, KeyCode::Backslash);
         k.keys[SHAKE].clear();
         let mut back = Keymap::default();
@@ -209,6 +238,9 @@ mod tests {
         assert_eq!(back, k);
         assert_eq!(k.action(KeyCode::Backslash), Some(RUN));
         assert_eq!(k.action(KeyCode::KeyZ), None);
-        assert_eq!(key_by_name(" left shift "), Some(KeyCode::ShiftLeft));
+        assert_eq!(key_by_name(" left shift "), Some(Key::Code(KeyCode::ShiftLeft)));
+        assert_eq!(k.action(Key::Mouse(4)), Some(A));
+        assert_eq!(key_by_name("mouse 5"), Some(Key::Mouse(5)));
+        assert_eq!(key_name(Key::Mouse(0)), None);
     }
 }
