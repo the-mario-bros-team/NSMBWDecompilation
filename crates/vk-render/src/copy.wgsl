@@ -61,6 +61,9 @@ fn fs(@builtin(position) p: vec4<f32>) -> @location(0) vec4<f32> {
         switch pc.format {
             case 3u: { return vec4<f32>(mid, mid, mid, hi); }
             case 6u: { return vec4<f32>(hi, mid, lo, 1.0); }
+            // RG8 from depth: the higher byte is the alpha, as in Z16
+            // (NSMBW's depth of field reads its RG8 copy's alpha as depth).
+            case 11u: { return vec4<f32>(mid, mid, mid, hi); }
             default: { c = vec4<f32>(hi, mid, lo, 1.0); }
         }
     } else {
