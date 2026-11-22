@@ -1,0 +1,9 @@
+# NSMBW Rust port: boot to the World 1 map and enter a course (the start of 1-1.press).
+# With --course, the course entered becomes the one asked for:
+#   nsmbw-port --unpaced --press-file scripts/to-map.press --course 3-24 --frames 7600
+# Needs an existing save in file 1 (otherwise the save-data prompt shifts every frame below).
+
+# Strap screen, title, file select, Select Players, opening cutscene.
+600:a 1550:2 2600:2 3000:2 3400:2
+# Walk out of the castle to the World 1 map, then enter the course under the cursor (1-1).
+5150:down:900 6100:2
