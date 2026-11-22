@@ -463,6 +463,13 @@ fn fs_early(i: VOut) -> FOutEarly {
 fn shade(i: VOut) -> FOut {
     sidx = i.draw;
     var o: FOut;
+    // Derivatives first, in uniform control flow: before anything can
+    // return. After the clear path's early return they were in non-uniform
+    // control flow, where they are undefined, and Adreno GPUs lost the
+    // device on it (in the title demo's snow course, docs/PORT_PLAN.md 16).
+    let uv = Coords(i.t0.xy / i.t0.z, i.t1.xy / i.t1.z, i.t2.xy / i.t2.z, i.t3.xy / i.t3.z, i.t4.xy / i.t4.z, i.t5.xy / i.t5.z, i.t6.xy / i.t6.z, i.t7.xy / i.t7.z);
+    let dx = Coords(dpdx(uv.c0), dpdx(uv.c1), dpdx(uv.c2), dpdx(uv.c3), dpdx(uv.c4), dpdx(uv.c5), dpdx(uv.c6), dpdx(uv.c7));
+    let dy = Coords(dpdy(uv.c0), dpdy(uv.c1), dpdy(uv.c2), dpdy(uv.c3), dpdy(uv.c4), dpdy(uv.c5), dpdy(uv.c6), dpdy(uv.c7));
     let flags = word(FLAGS);
     if ((flags & FLAG_CLEAR) != 0u) {
         let c = unpack4x8unorm(word(CLEAR_COLOR));
@@ -471,10 +478,6 @@ fn shade(i: VOut) -> FOut {
         o.depth = i.pos.z;
         return o;
     }
-    let uv = Coords(i.t0.xy / i.t0.z, i.t1.xy / i.t1.z, i.t2.xy / i.t2.z, i.t3.xy / i.t3.z, i.t4.xy / i.t4.z, i.t5.xy / i.t5.z, i.t6.xy / i.t6.z, i.t7.xy / i.t7.z);
-    // Derivatives in uniform control flow, before the stage loop.
-    let dx = Coords(dpdx(uv.c0), dpdx(uv.c1), dpdx(uv.c2), dpdx(uv.c3), dpdx(uv.c4), dpdx(uv.c5), dpdx(uv.c6), dpdx(uv.c7));
-    let dy = Coords(dpdy(uv.c0), dpdy(uv.c1), dpdy(uv.c2), dpdy(uv.c3), dpdy(uv.c4), dpdy(uv.c5), dpdy(uv.c6), dpdy(uv.c7));
 
     let genmode = word(GENMODE);
     let scale = vec2<f32>(bitcast<f32>(word(SCALE)), bitcast<f32>(word(SCALE_Y)));

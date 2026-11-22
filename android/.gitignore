@@ -1,0 +1,7 @@
+# Gradle and build output
+.gradle/
+build/
+app/build/
+local.properties
+# libnsmbw.so staged by build.ps1
+native/

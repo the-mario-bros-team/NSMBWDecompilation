@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.wither.nsmbwport'
+    compileSdk 36
+
+    defaultConfig {
+        // Its own app id: it installs beside NSMB-Wii-Recompilation's com.wither.nsmbw.
+        applicationId 'com.wither.nsmbwport'
+        // Android 9 and up (the renderer also needs a Vulkan 1.3 GPU).
+        minSdk 28
+        // As NSMB-Wii-Recompilation's app: its screens are built for 34's behaviour (Back as a key
+        // event, no forced edge-to-edge).
+        targetSdk 34
+        versionCode 1
+        versionName '0.1.0'
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // Personal builds: signed with the local debug key so the APK installs directly.
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    lint {
+        checkReleaseBuilds false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            // libnsmbw.so, staged by build.ps1 from crates/android; not checked in.
+            jniLibs.srcDirs = ['../native/jniLibs']
+        }
+    }
+
+    packagingOptions {
+        jniLibs {
+            // Uncompressed and page-aligned in the APK, so it is mapped in place.
+            useLegacyPackaging false
+        }
+    }
+}

@@ -16,7 +16,8 @@
 //!   EFB peeks.
 //! - `Renderer::headless` renders without a window (tests, FIFO-log replay).
 //!
-//! Debug builds enable `VK_LAYER_KHRONOS_validation` when it is installed.
+//! Debug builds enable `VK_LAYER_KHRONOS_validation` when it is installed;
+//! so does any build with `NSMBW_VALIDATION` set in the environment.
 
 mod shaders;
 
@@ -74,12 +75,25 @@ unsafe extern "system" fn on_validation_message(
     } else {
         CStr::from_ptr((*data).p_message).to_string_lossy()
     };
-    if severity.contains(vk::DebugUtilsMessageSeverityFlagsEXT::ERROR) {
+    let error = severity.contains(vk::DebugUtilsMessageSeverityFlagsEXT::ERROR);
+    if error {
         VALIDATION_ERRORS.fetch_add(1, Ordering::Relaxed);
-        eprintln!("[vulkan error] {msg}");
     } else {
         VALIDATION_WARNINGS.fetch_add(1, Ordering::Relaxed);
-        eprintln!("[vulkan warning] {msg}");
+    }
+    // A message repeated every draw would bury the others (and overrun a
+    // phone's log): each kind is printed 20 times, then at every power of two.
+    static SEEN: std::sync::Mutex<Option<HashMap<i32, u64>>> = std::sync::Mutex::new(None);
+    let id = if data.is_null() { 0 } else { (*data).message_id_number };
+    let n = {
+        let mut seen = SEEN.lock().unwrap_or_else(|e| e.into_inner());
+        let n = seen.get_or_insert_with(HashMap::new).entry(id).or_insert(0);
+        *n += 1;
+        *n
+    };
+    if n <= 20 || n.is_power_of_two() {
+        let times = if n > 20 { format!(" ({n} times so far)") } else { String::new() };
+        eprintln!("[vulkan {}] {msg}{times}", if error { "error" } else { "warning" });
     }
     vk::FALSE
 }
@@ -264,6 +278,8 @@ pub struct Renderer {
     debug: Option<(debug_utils::Instance, vk::DebugUtilsMessengerEXT)>,
     surface: Option<(surface::Instance, vk::SurfaceKHR)>,
     physical: vk::PhysicalDevice,
+    /// The queue family drawn and presented with.
+    family: u32,
     device: Device,
     queue: vk::Queue,
     alloc: ManuallyDrop<Allocator>,
@@ -279,6 +295,8 @@ pub struct Renderer {
     /// Per swapchain image: signalled when its frame is done, waited on by present.
     rendered: Vec<vk::Semaphore>,
     needs_rebuild: bool,
+    /// The swapchain is kept upright on a turned display (see `rebuild`).
+    upright: bool,
     pool: vk::CommandPool,
     frames: Vec<Frame>,
     frame: usize,
@@ -425,7 +443,7 @@ impl Renderer {
         unsafe {
             let entry = Entry::load()?;
             let layers_present = entry.enumerate_instance_layer_properties()?;
-            let validation = cfg!(debug_assertions) && layers_present.iter().any(|l| l.layer_name_as_c_str().is_ok_and(|n| n == VALIDATION_LAYER));
+            let validation = (cfg!(debug_assertions) || std::env::var_os("NSMBW_VALIDATION").is_some()) && layers_present.iter().any(|l| l.layer_name_as_c_str().is_ok_and(|n| n == VALIDATION_LAYER));
             let mut extensions: Vec<*const c_char> = match window {
                 Some((display, _)) => ash_window::enumerate_required_extensions(display)?.to_vec(),
                 None => Vec::new(),
@@ -606,6 +624,7 @@ impl Renderer {
                 debug,
                 surface,
                 physical,
+                family,
                 device,
                 queue,
                 alloc: ManuallyDrop::new(alloc),
@@ -619,6 +638,7 @@ impl Renderer {
                 swap_extent: vk::Extent2D::default(),
                 rendered: Vec::new(),
                 needs_rebuild: true,
+                upright: false,
                 pool,
                 frames,
                 frame: 0,
@@ -721,6 +741,13 @@ impl Renderer {
         Ok(())
     }
 
+    /// Textures held, and GPU memory allocated and reserved (bytes), for
+    /// diagnostics.
+    pub fn memory(&self) -> (usize, u64, u64) {
+        let r = self.alloc.generate_report();
+        (self.textures.len(), r.total_allocated_bytes, r.total_capacity_bytes)
+    }
+
     /// Switches V-Sync; the swapchain is rebuilt before the next present.
     pub fn set_vsync(&mut self, on: bool) {
         if self.vsync != on {
@@ -779,10 +806,17 @@ impl Renderer {
             let req = device.get_image_memory_requirements(image);
             let a = alloc.allocate(&AllocationCreateDesc { name: "image", requirements: req, location: MemoryLocation::GpuOnly, linear: false, allocation_scheme: AllocationScheme::GpuAllocatorManaged })?;
             device.bind_image_memory(image, a.memory(), a.offset())?;
-            let view = device.create_image_view(
-                &vk::ImageViewCreateInfo::default().image(image).view_type(vk::ImageViewType::TYPE_2D).format(format).subresource_range(range(aspect, levels)),
-                None,
-            )?;
+            // Images only ever copied or blitted (XFBs, the palette) get no
+            // view: one is not allowed without a usage it could serve.
+            let viewed = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::COLOR_ATTACHMENT | vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT;
+            let view = if usage.intersects(viewed) {
+                device.create_image_view(
+                    &vk::ImageViewCreateInfo::default().image(image).view_type(vk::ImageViewType::TYPE_2D).format(format).subresource_range(range(aspect, levels)),
+                    None,
+                )?
+            } else {
+                vk::ImageView::null()
+            };
             Ok(Image { image, view, alloc: Some(a), w, h, levels, aspect, layout: vk::ImageLayout::UNDEFINED })
         }
     }
@@ -1014,10 +1048,58 @@ impl Renderer {
         self.needs_rebuild = true;
     }
 
+    /// Whether frames can be presented: made with a window that is attached.
+    fn has_window(&self) -> bool {
+        self.surface.as_ref().is_some_and(|(_, s)| *s != vk::SurfaceKHR::null())
+    }
+
+    /// Lets go of the window (Android destroys an app's surface when it
+    /// leaves the screen): its swapchain and surface are destroyed, and
+    /// frames are rendered without being presented until
+    /// [`Renderer::attach_window`]. Textures and every other GPU resource stay.
+    pub fn detach_window(&mut self) {
+        let Some((surface_fn, surface)) = &mut self.surface else { return };
+        unsafe {
+            let _ = self.device.device_wait_idle();
+            if let Some(f) = &self.swapchain_fn {
+                if self.swapchain != vk::SwapchainKHR::null() {
+                    f.destroy_swapchain(self.swapchain, None);
+                }
+            }
+            self.swapchain = vk::SwapchainKHR::null();
+            self.swap_images.clear();
+            if *surface != vk::SurfaceKHR::null() {
+                surface_fn.destroy_surface(*surface, None);
+                *surface = vk::SurfaceKHR::null();
+            }
+        }
+    }
+
+    /// Presents to `window` from now on (after [`Renderer::detach_window`],
+    /// or in place of the window it was made with). Only for a renderer made
+    /// with a window: a headless one has no surface or swapchain support.
+    pub fn attach_window(&mut self, display: RawDisplayHandle, window: RawWindowHandle) -> Res<()> {
+        self.detach_window();
+        let Some((surface_fn, surface)) = &mut self.surface else { return Err("a headless renderer cannot present to a window".into()) };
+        unsafe {
+            let s = ash_window::create_surface(&self._entry, &self.instance, display, window, None)?;
+            if !surface_fn.get_physical_device_surface_support(self.physical, self.family, s)? {
+                surface_fn.destroy_surface(s, None);
+                return Err("the GPU's queue cannot present to this window".into());
+            }
+            *surface = s;
+        }
+        self.needs_rebuild = true;
+        Ok(())
+    }
+
     fn rebuild(&mut self, width: u32, height: u32) -> Res<()> {
         let (Some((surface_fn, surface)), Some(swapchain_fn)) = (&self.surface, &self.swapchain_fn) else {
             return Ok(());
         };
+        if *surface == vk::SurfaceKHR::null() {
+            return Ok(());
+        }
         unsafe {
             self.device.device_wait_idle()?;
             let caps = surface_fn.get_physical_device_surface_capabilities(self.physical, *surface)?;
@@ -1026,6 +1108,13 @@ impl Renderer {
             }
             // The menus are drawn into the images too, where the surface allows it.
             let usage = vk::ImageUsageFlags::TRANSFER_DST | (caps.supported_usage_flags & vk::ImageUsageFlags::COLOR_ATTACHMENT);
+            // A display turned from its natural orientation (Android: a
+            // landscape game on a phone whose panel is portrait) reports the
+            // turn as the current transform, with the extent already the
+            // window's own (landscape). The swapchain stays upright
+            // (identity) at that extent and the compositor turns it, instead
+            // of the frames being drawn turned.
+            let upright = caps.current_transform != vk::SurfaceTransformFlagsKHR::IDENTITY && caps.supported_transforms.contains(vk::SurfaceTransformFlagsKHR::IDENTITY);
             let extent = if caps.current_extent.width != u32::MAX {
                 caps.current_extent
             } else {
@@ -1067,7 +1156,7 @@ impl Renderer {
                     .image_array_layers(1)
                     .image_usage(usage)
                     .image_sharing_mode(vk::SharingMode::EXCLUSIVE)
-                    .pre_transform(caps.current_transform)
+                    .pre_transform(if upright { vk::SurfaceTransformFlagsKHR::IDENTITY } else { caps.current_transform })
                     .composite_alpha(alpha)
                     .present_mode(mode)
                     .clipped(true)
@@ -1089,6 +1178,7 @@ impl Renderer {
                     self.swap_views.push(self.device.create_image_view(&info, None)?);
                 }
             }
+            self.upright = upright;
             for s in self.rendered.drain(..) {
                 self.device.destroy_semaphore(s, None);
             }
@@ -1815,7 +1905,7 @@ impl Renderer {
         }
 
         let mut index = None;
-        if width > 0 && height > 0 && self.surface.is_some() {
+        if width > 0 && height > 0 && self.has_window() {
             if self.needs_rebuild {
                 self.rebuild(width, height)?;
             }
@@ -1914,6 +2004,11 @@ impl Renderer {
                 let signal = [self.rendered[i as usize]];
                 match swapchain_fn.queue_present(self.queue, &vk::PresentInfoKHR::default().wait_semaphores(&signal).swapchains(&swapchains).image_indices(&indices)) {
                     Ok(false) => {}
+                    // An upright swapchain on a turned display is reported
+                    // suboptimal at every present (Android): that is the
+                    // choice made in `rebuild`, not a reason to rebuild it,
+                    // which this did once a frame.
+                    Ok(true) if self.upright => {}
                     Ok(true) | Err(vk::Result::ERROR_OUT_OF_DATE_KHR) => self.needs_rebuild = true,
                     Err(e) => return Err(e.into()),
                 }
@@ -2044,7 +2139,9 @@ impl Drop for Renderer {
             }
             self.device.destroy_device(None);
             if let Some((f, s)) = &self.surface {
-                f.destroy_surface(*s, None);
+                if *s != vk::SurfaceKHR::null() {
+                    f.destroy_surface(*s, None);
+                }
             }
             if let Some((f, m)) = &self.debug {
                 f.destroy_debug_utils_messenger(*m, None);

@@ -1748,6 +1748,24 @@ name = "nsmbw"
 version = "0.1.0"
 
 [[package]]
+name = "nsmbw-android"
+version = "0.1.0"
+dependencies = [
+ "game-recomp",
+ "guest-cpu",
+ "guest-mem",
+ "gx",
+ "hle-ios",
+ "hle-os",
+ "jni 0.21.1",
+ "libc",
+ "miniz_oxide 0.8.9",
+ "ndk 0.9.0",
+ "raw-window-handle",
+ "vk-render",
+]
+
+[[package]]
 name = "num-derive"
 version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
