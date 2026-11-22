@@ -31,12 +31,12 @@ use crate::{Cpu, Stop};
 pub type R = Result<(), Stop>;
 
 /// A recompiled function. On x86-64 it uses the `sysv64` calling convention
-/// whatever the host ([`GUEST_FN_ABI`], which `ppc-recomp` writes into each
-/// definition): it has no callee-saved vector registers, so a call does not
-/// save and restore xmm6..xmm15 as the Windows convention makes every
-/// function that touches them do (most do: LLVM keeps constants there), it
-/// saves two general registers fewer, and the 16-byte result comes back in
-/// two registers instead of through memory.
+/// whatever the host: it has no callee-saved vector registers, so a call
+/// does not save and restore xmm6..xmm15 as the Windows convention makes
+/// every function that touches them do (most do: LLVM keeps constants
+/// there), it saves two general registers fewer, and the 16-byte result
+/// comes back in two registers instead of through memory. Other targets
+/// (arm64) use Rust's own convention.
 /// (Only Rust calls these, so the types need not be FFI-safe.)
 #[cfg(target_arch = "x86_64")]
 #[allow(improper_ctypes_definitions)]
@@ -44,11 +44,19 @@ pub type GuestFn = extern "sysv64" fn(&mut Cpu, &mut Mem, &mut Rt) -> R;
 #[cfg(not(target_arch = "x86_64"))]
 pub type GuestFn = fn(&mut Cpu, &mut Mem, &mut Rt) -> R;
 
-/// [`GuestFn`]'s calling convention as `ppc-recomp` writes it.
+/// Defines a recompiled function with [`GuestFn`]'s calling convention.
+/// `ppc-recomp` writes each definition inside it (`guest_fn! { pub fn ... }`),
+/// so the generated code names no convention and compiles for any target.
 #[cfg(target_arch = "x86_64")]
-pub const GUEST_FN_ABI: &str = "extern \"sysv64\" ";
+#[macro_export]
+macro_rules! guest_fn {
+    (pub fn $($rest:tt)*) => { pub extern "sysv64" fn $($rest)* };
+}
 #[cfg(not(target_arch = "x86_64"))]
-pub const GUEST_FN_ABI: &str = "";
+#[macro_export]
+macro_rules! guest_fn {
+    (pub fn $($rest:tt)*) => { pub fn $($rest)* };
+}
 
 /// One recompiled guest function.
 pub struct FnInfo {

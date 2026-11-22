@@ -470,7 +470,7 @@ mod tests {
     #[test]
     fn flat_views_alias_ram() {
         let mut m = Mem::new(Box::new(NullMmio));
-        #[cfg(windows)]
+        #[cfg(any(windows, target_os = "linux", target_os = "android"))]
         assert!(m.is_flat(), "the flat mapping should work on this system");
         m.write_u32(0x8000_1230, 0x1122_3344).unwrap();
         for a in [0x0000_1230, 0x8000_1230, 0xC000_1230] {

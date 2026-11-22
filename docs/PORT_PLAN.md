@@ -1444,7 +1444,9 @@ From Git Bash, set `MSYS_NO_PATHCONV=1` for `--dump-ram` with a drive
 path. `--interpreter` turns generated code off. The exit report prints the
 share of instructions run by generated code and the time spent waiting for
 the GX thread. The generated code comes from the user's disc, so it is not
-part of the source tree.
+part of the source tree. It names no calling convention (each function is
+written inside `guest_cpu::guest_fn!`, which adds the target's), so one
+`gen/` builds for Windows and for Android (16).
 
 **Still to do:**
 1. **Cheaper memory accesses:** a store is still about 20 host instructions
@@ -1532,9 +1534,10 @@ thread (35 s) is 74% `Xf::transform`.
 
 **Changes:**
 
-1. **Generated functions use the `sysv64` calling convention** (`GuestFn`,
-   `GUEST_FN_ABI`): no callee-saved vector registers, two fewer saved
-   general ones, and the 16-byte result in registers. A call entered at
+1. **Generated functions use the `sysv64` calling convention** (`GuestFn`;
+   written by the `guest_fn!` macro since 16): no callee-saved vector
+   registers, two fewer saved general ones, and the 16-byte result in
+   registers. A call entered at
    the function's start skips its `match`. Stack and small-data accesses
    cannot fail (`Mem::raw_read_u32` and co. return values; without the
    flat mapping the checked fallback is out of line and panics on no
@@ -2029,11 +2032,62 @@ and shader patches loaded at start, all since removed):
   fields, through the snow course and round the loop) without a fault,
   at 96-100% with 1-3 ms of rendering a field.
 
-**Not yet:** recompiled code (`ppc-recomp` writes the host's calling
-convention, `extern "sysv64"`, into `gen/`, which arm64 cannot compile; the
-Android build interprets everything), the flat guest-memory mapping
-(`guest-mem/flat.rs` has only the Windows one; Android would use
-`memfd_create` and `mmap`), frame interpolation above 60 fps, Fill Screen
+**Recompiled code and flat guest memory** (2026-11-20, branch
+`claude/compassionate-liskov-182e46`):
+- `ppc-recomp` used to write the host's calling convention
+  (`extern "sysv64"`) into every function, which arm64 cannot compile. Each
+  function is now written inside `guest_cpu::guest_fn!`, which expands to
+  `extern "sysv64"` on x86-64 and to a plain `fn` elsewhere (`GuestFn`
+  follows it). One `gen/` builds for both: regenerate once (14,
+  "Regenerating") and run `android\build.ps1`. With the 12,804 functions
+  of `profile-all.txt`, `libnsmbw.so` is 95 MB instead of 4 MB, and the
+  arm64 release build takes 25 minutes at 2 jobs.
+- `guest-mem/flat.rs` maps guest RAM at its guest addresses on Linux and
+  Android as on Windows: a memory file (`memfd_create`, called as a system
+  call because Android's C library has the function only from Android 11),
+  one 4 GiB `PROT_NONE` reservation, and `MAP_FIXED|MAP_SHARED` views of
+  the file at the same addresses. Every address, offset and size is a
+  multiple of 64 KiB, so phones with 16 KiB pages map it too. Where it
+  fails, RAM is a plain allocation as before.
+- Windows did not change: the regenerated `gen/` is byte for byte the
+  previous one with the wrapper undone, and the 1-1 hash script gives the
+  same 98 hashes and 13,194,609,027 instructions recompiled, with
+  `--interpreter`, and with the build made before the change. Game-thread
+  CPU over the script, this build against that one, alternating, other
+  sessions compiling throughout: 51.4-59.6 s against 50.0-55.8 s (five
+  runs each, medians 55.3 and 53.9 s): no difference outside that noise.
+- On the Galaxy: `guest-mem`'s tests pass with the flat mapping asserted
+  (`cargo test -p guest-mem --target aarch64-linux-android --no-run`, the
+  test binary pushed to `/data/local/tmp` and run from `adb shell`).
+- **In the app on the Galaxy** (this branch with `62d66a6` merged, debug
+  APK without the validation layer, release `libnsmbw.so`, EFB 1x, V-Sync
+  on, silent, from Play with no input: strap, title, attract demo):
+  logcat shows "recompiled code: 12804 functions", and the game process's
+  `/proc/<pid>/maps` shows the `memfd:guest-ram` views at their guest
+  addresses. The game held 100% from field 1,193 to field 25,791 (seven
+  minutes, 99% in the first ten seconds), with no fault. Emulation (the
+  game thread's time for a field) was 3.1-4.4 ms on the strap and title
+  screens and 10.0-13.7 ms in the demo's courses, with the game thread on
+  the six 3.63 GHz cores at 1.4-3.0 GHz (20 samples, mostly 2.5) and
+  never on the two 4.74 GHz cores. The battery went from 30.6 to 32.0 °C.
+- The interpreter, for comparison (`62d66a6`'s own APK, the same way, 20
+  minutes earlier, five minutes): 9.5-9.8 ms on the strap and title
+  screens; 11.6-15.0 ms at 96-100% in the courses up to field 7,700, then
+  19-31 ms at 54-86% over fields 8,200-10,400 and 11,500-14,100, 14-17 ms
+  between and after. The phone was warm then (battery 37.1 to 39.4 °C,
+  after an hour of runs), so those stretches are probably throttling: the
+  recompiled run shows nothing at the same fields. Its clock speed was
+  not sampled, and the phone slows its cores under light load, so the
+  course times do not give the ratio of work between the two; the title
+  screens (3 against 10 ms) and the cores the recompiled build leaves
+  unused are the measure of the room it gives.
+- Seen in the recompiled run, not looked into: on the strap and title
+  screens "render" read 16.4-16.7 ms a field (0.5-1.2 ms with the
+  interpreter build), then 2 ms in the courses; the speed stayed 100%. It
+  looks like the present waiting a whole display period while fields
+  arrive exactly on schedule.
+
+**Not yet:** frame interpolation above 60 fps, Fill Screen
 (the recomp's Hor+ widening; Fill shows 16:9 here), tapping the game's
 menus, the Power-Up button, the quick-save backup when leaving the app, and
 the in-game settings window (built on another branch; options will meet
