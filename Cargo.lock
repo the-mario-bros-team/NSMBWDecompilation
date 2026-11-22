@@ -1761,7 +1761,9 @@ dependencies = [
  "libc",
  "miniz_oxide 0.8.9",
  "ndk 0.9.0",
+ "port-update",
  "raw-window-handle",
+ "sevenz-rust2",
  "vk-render",
 ]
 

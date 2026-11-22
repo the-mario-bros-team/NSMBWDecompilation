@@ -22,6 +22,32 @@ mod net;
 #[allow(dead_code, unused_imports, unused_macros)]
 #[path = "../../frontend/src/say.rs"]
 mod say;
+// The game thread's clicks, Gameplay options, texture packs and the save
+// cards' translated "Cheated", as on the desktop.
+#[allow(dead_code)]
+#[path = "../../frontend/src/click.rs"]
+mod click;
+#[allow(dead_code)]
+#[path = "../../frontend/src/gameplay.rs"]
+mod gameplay;
+#[allow(dead_code)]
+#[path = "../../frontend/src/mods.rs"]
+mod mods;
+mod ui {
+    #[allow(dead_code)]
+    #[path = "../../../frontend/src/ui/text.rs"]
+    pub mod text;
+}
+/// The desktop settings' texture-pack fields, all `mods.rs` reads (the app
+/// has no Mods tab yet, so they stay off).
+mod settings {
+    #[derive(Default)]
+    pub struct Settings {
+        pub texture_pack: String,
+        pub hd_textures: bool,
+        pub texture_dumps: bool,
+    }
+}
 
 mod audio;
 mod logcat;
@@ -154,7 +180,7 @@ impl Render {
         let short = w.width().min(w.height()).max(1) as u32;
         let scale = if self.cfg.scale == 0 { short.div_ceil(480).clamp(1, 8) } else { self.cfg.scale };
         let _ = std::fs::create_dir_all("cache");
-        let opts = vk_render::Options { scale, vsync: self.cfg.vsync, pipeline_cache: Some(PathBuf::from("cache/pipelines.bin")), efb_copies_to_ram: false };
+        let opts = vk_render::Options { scale: scale as f32, vsync: self.cfg.vsync, pipeline_cache: Some(PathBuf::from("cache/pipelines.bin")), efb_copies_to_ram: false };
         let mut r = Renderer::new(display, handle, opts).map_err(|e| e.to_string())?;
         r.aspect = if self.cfg.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
         println!("vulkan device: {}; EFB {scale}x; surface {}x{}; V-Sync {}{}", r.device_name, w.width(), w.height(), self.cfg.vsync, if r.validation { "; validation layer on" } else { "" });
