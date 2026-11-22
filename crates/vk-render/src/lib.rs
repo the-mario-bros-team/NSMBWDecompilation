@@ -1680,6 +1680,9 @@ impl Renderer {
                         self.begin_efb(cmd, vb, set);
                         rendering = true;
                         bound = None;
+                        // The pass restarts after a copy, whose pipeline left
+                        // scissor, cull and depth state of its own.
+                        state = None;
                     }
                     let rect = [vk::ClearRect { rect: self.scaled(c.rect), base_array_layer: 0, layer_count: 1 }];
                     let mut atts = Vec::new();
