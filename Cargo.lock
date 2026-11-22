@@ -2279,7 +2279,7 @@ dependencies = [
 
 [[package]]
 name = "port-update"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "miniz_oxide 0.8.9",
  "serde_json",

@@ -2,7 +2,7 @@
 name = "port-update"
 # The port's release version: the launcher and the game compare this with the
 # newest release's tag. Raise it when a release is cut.
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [dependencies]
