@@ -898,12 +898,17 @@ impl Gpu {
             let (bw, _, block_bytes) = texture::block(tex_format);
             let stride = (self.bp[0x4D] & 0x3FF) << 5;
             let stride = if stride as usize > (w as usize).div_ceil(bw) * block_bytes { stride } else { 0 };
+            // The destination's bytes now, kept while unchanged (`range_hash`).
             let ram_hash = if stride == 0 {
                 let size = texture::level_size(tex_format, w as usize, h as usize);
-                self.textures.hashed_bytes += size as u64;
-                texture::hash(mem.ram(addr, size).unwrap_or(&[]))
+                let bytes = mem.ram(addr, size).unwrap_or(&[]);
+                self.textures.range_hash(addr, size, 0, mem.view(), || (texture::hash(bytes), bytes.len()))
             } else {
-                texture::hash(&texture::copy_bytes(mem, addr, tex_format, w as usize, h as usize, stride as usize).unwrap_or_default())
+                let span = texture::copy_rows(tex_format, w as usize, h as usize, stride as usize).last().map_or(0, |(at, len)| at + len);
+                self.textures.range_hash(addr, span, stride as usize, mem.view(), || {
+                    let bytes = texture::copy_bytes(mem, addr, tex_format, w as usize, h as usize, stride as usize).unwrap_or_default();
+                    (texture::hash(&bytes), bytes.len())
+                })
             };
             let id = self.textures.add_efb_copy(addr, w as u16, h as u16, ram_hash);
             self.stats.tex_copies += 1;

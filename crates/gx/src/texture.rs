@@ -365,6 +365,20 @@ struct Piece {
     used: u64,
 }
 
+/// EFB copy destinations at least this large have their hash kept
+/// ([`Cache::range_hash`]).
+const RANGE_MEMO: usize = 16 << 10;
+
+/// A kept [`hash`] of RAM ([`Cache::range_hash`]): the write generations of
+/// the chunks it covers when it was taken, and the generation (frame) it was
+/// taken in and last used in.
+struct RangeMemo {
+    gens: Vec<u32>,
+    hash: u64,
+    hashed: u64,
+    used: u64,
+}
+
 /// An EFB copy kept on the GPU as texture `id`, standing in for the bytes at
 /// its destination while those bytes are unchanged.
 struct EfbCopy {
@@ -403,6 +417,8 @@ pub struct Cache {
     /// generation each chunk was first watched in ([`Cache::content_hash`]).
     pieces: FastMap<(usize, usize), Piece>,
     watched: FastMap<usize, u64>,
+    /// Hashes of EFB copy destinations by (RAM offset, span, row stride).
+    ranges: FastMap<(usize, usize, usize), RangeMemo>,
     /// Bytes hashed for texture lookups since the last take.
     pub hashed_bytes: u64,
 }
@@ -452,6 +468,7 @@ impl Cache {
             });
             self.live.retain(|_, (_, last)| g - *last < 60);
             self.pieces.retain(|_, p| g - p.used < 60);
+            self.ranges.retain(|_, r| g - r.used < 60);
         }
     }
 
@@ -492,6 +509,58 @@ impl Cache {
         }
     }
 
+    /// Chunk `chunk`'s generation, watching it from now on if it was not;
+    /// and the generation (frame) it has been watched since.
+    fn chunk(&mut self, view: &guest_mem::RamView, chunk: usize) -> (u32, u64) {
+        let g = self.generation;
+        let watched = *self.watched.entry(chunk).or_insert_with(|| {
+            view.watch(chunk);
+            g
+        });
+        (view.chunk_gen(chunk), watched)
+    }
+
+    /// [`hash`] of RAM at `addr` (`span` bytes there, or rows of them `stride`
+    /// apart: an EFB copy's destination), as `hash_bytes` takes it, and the
+    /// number of bytes it hashed. The hash from the last time is used again
+    /// if no chunk in the span has been written since (the same rules as
+    /// [`Cache::content_hash`]): a copy's destination is hashed when the copy
+    /// is made and each frame its texture is drawn, and most copies (the
+    /// screen for depth of field, light textures) go to the same RAM every
+    /// frame, which nothing else writes. The hash is the plain one: the game
+    /// thread compares it with the bytes when the texels come back.
+    pub fn range_hash(&mut self, addr: u32, span: usize, stride: usize, view: Option<&guest_mem::RamView>, hash_bytes: impl FnOnce() -> (u64, usize)) -> u64 {
+        let base = match view {
+            Some(v) if span >= RANGE_MEMO => v.offset(addr, span),
+            _ => None,
+        };
+        let (Some(view), Some(base)) = (view, base) else {
+            let (h, n) = hash_bytes();
+            self.hashed_bytes += n as u64;
+            return h;
+        };
+        let g = self.generation;
+        // The generations first, then the bytes (see `content_hash`).
+        let mut watched = 0;
+        let gens: Vec<u32> = (base / guest_mem::CHUNK..=(base + span - 1) / guest_mem::CHUNK)
+            .map(|c| {
+                let (gen, since) = self.chunk(view, c);
+                watched = watched.max(since);
+                gen
+            })
+            .collect();
+        if let Some(m) = self.ranges.get_mut(&(base, span, stride)) {
+            m.used = g;
+            if m.hashed > watched && m.gens == gens {
+                return m.hash;
+            }
+        }
+        let (h, n) = hash_bytes();
+        self.hashed_bytes += n as u64;
+        self.ranges.insert((base, span, stride), RangeMemo { gens, hash: h, hashed: g, used: g });
+        h
+    }
+
     /// A hash of texture bytes `data`, read from RAM at `addr` through
     /// `view` (if they were): from its pieces' hashes for a large one
     /// ([`CHUNKED`]), hashing again only the pieces written since.
@@ -514,15 +583,10 @@ impl Cache {
         let mut at = 0;
         while at < data.len() {
             let off = base + at;
-            let chunk = off / guest_mem::CHUNK;
             let end = (at + guest_mem::CHUNK - off % guest_mem::CHUNK).min(data.len());
-            let watched = *self.watched.entry(chunk).or_insert_with(|| {
-                view.watch(chunk);
-                g
-            });
             // The generation first, then the bytes: a write after this read
             // moves it, and the piece is hashed again next time.
-            let gen = view.chunk_gen(chunk);
+            let (gen, watched) = self.chunk(view, off / guest_mem::CHUNK);
             let piece = self.pieces.entry((off, end - at)).or_insert(Piece { gen: gen.wrapping_sub(1), digest: 0, hashed: 0, used: g });
             piece.used = g;
             if piece.gen != gen || piece.hashed <= watched {
@@ -542,11 +606,9 @@ impl Cache {
         if let Some(&id) = self.checked.get(&key) {
             return id;
         }
-        if let Some(c) = self.efb_copies.get(&key.addr) {
+        if let Some(&EfbCopy { id, width, height, ram_hash }) = self.efb_copies.get(&key.addr) {
             let size = level_size(key.format, key.width.into(), key.height.into()).min(data.len());
-            self.hashed_bytes += size as u64;
-            if c.width == key.width && c.height == key.height && hash(&data[..size]) == c.ram_hash {
-                let id = c.id;
+            if width == key.width && height == key.height && self.range_hash(key.addr, size, 0, view, || (hash(&data[..size]), size)) == ram_hash {
                 self.checked.insert(key, id);
                 return id;
             }
@@ -745,6 +807,32 @@ mod tests {
         c.next_generation();
         assert_ne!(look(&mut c), new);
         assert_eq!(c.hashed_bytes - after, CHUNK as u64);
+    }
+
+    #[test]
+    fn copy_destinations_hash_again_only_once_written() {
+        use guest_mem::{Mem, NullMmio, Ram};
+        let mut mem = Mem::new(Box::new(NullMmio));
+        let view = mem.view();
+        let size = 64 << 10;
+        let mut c = Cache::default();
+        let mut take = |c: &mut Cache| {
+            let bytes = view.ram(0x8020_0000, size).unwrap();
+            c.range_hash(0x0020_0000, size, 0, Some(&view), || (hash(bytes), bytes.len()))
+        };
+        let h = take(&mut c);
+        assert_eq!(h, hash(view.ram(0x8020_0000, size).unwrap()));
+        c.next_generation();
+        take(&mut c);
+        let before = c.hashed_bytes;
+        c.next_generation();
+        assert_eq!(take(&mut c), h);
+        assert_eq!(c.hashed_bytes, before, "unchanged: kept");
+        mem.write_u8(0x8020_0000 + 100, 1).unwrap();
+        c.next_generation();
+        let new = take(&mut c);
+        assert_ne!(new, h);
+        assert_eq!(new, hash(view.ram(0x8020_0000, size).unwrap()));
     }
 
     #[test]
