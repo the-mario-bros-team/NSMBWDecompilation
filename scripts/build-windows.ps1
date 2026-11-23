@@ -31,7 +31,11 @@ $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 if ($Target -eq '') { $Target = Join-Path $repo 'target' }
 $gen = Join-Path $repo 'crates\game-recomp\gen'
-if (-not $Local -and (Test-Path $gen) -and (Get-ChildItem $gen -Force | Select-Object -First 1)) {
+# The empty stubs game-recomp's build scripts write (no recompiled code) don't count.
+$code = if (Test-Path $gen) {
+    Get-ChildItem $gen -Force | Where-Object { $_.PSIsContainer -or -not (Select-String -Path $_.FullName -Pattern '^// Empty: run ppc-recomp' -Quiet) -or $_.Length -gt 512 }
+}
+if (-not $Local -and $code) {
     throw "$gen holds recompiled game code, which must never be shipped. Build releases from a clean checkout (or pass -Local for a build that stays on this PC)."
 }
 
