@@ -5,7 +5,9 @@
 use std::collections::VecDeque;
 use std::path::PathBuf;
 use std::process::Child;
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::mpsc::{channel, Receiver, Sender};
+use std::sync::Arc;
 use std::time::Instant;
 
 use egui::{pos2, vec2, Align2, Color32, ColorImage, Pos2, Rect, TextureHandle, TextureOptions};
@@ -113,6 +115,9 @@ pub struct Update {
 /// Where a picked game folder is in its validation.
 pub enum Check {
     None,
+    /// A disc image is being extracted to a game folder: bytes written and
+    /// the total, and the flag that stops it.
+    Extracting { found: Found, format: String, done: Arc<AtomicU64>, total: Arc<AtomicU64>, cancel: Arc<AtomicBool> },
     /// Identified and accepted; the game's own check is running.
     Running { found: Found },
     Done {
@@ -150,6 +155,9 @@ pub enum Action {
     SetSkip(bool),
     PickFolder(PathBuf),
     WindowsDialog,
+    /// Windows' file dialog, for a disc image.
+    ImageDialog,
+    CancelExtract,
     ForgetFolder,
     Setting(usize, usize),
     SetUpdateCheck(bool),
@@ -187,6 +195,9 @@ pub struct Options {
     pub frames: Option<u64>,
     /// Something to tell the player at start (why skipping did not work).
     pub notice: Option<(String, String)>,
+    /// A game folder or disc image given on the command line, picked at the
+    /// first frame as if dropped on the window.
+    pub open: Option<PathBuf>,
 }
 
 pub struct App {
@@ -218,6 +229,11 @@ pub struct App {
     art_rx: Receiver<(usize, PathBuf, Pictures)>,
     check_tx: Sender<(usize, Report)>,
     check_rx: Receiver<(usize, Report)>,
+    /// Extracted disc images: the version, and its game folder or why not.
+    extract_tx: Sender<(usize, Result<PathBuf, String>)>,
+    extract_rx: Receiver<(usize, Result<PathBuf, String>)>,
+    /// `Options::open`, until the first frame.
+    open: Option<PathBuf>,
     update_rx: Option<Receiver<Result<port_update::Status, String>>>,
     /// A release found while the launcher was skipped: shown once it is
     /// confirmed by this start's check.
@@ -250,6 +266,7 @@ impl App {
         let config = port_update::Config::load(&options.root);
         let (art_tx, art_rx) = channel();
         let (check_tx, check_rx) = channel();
+        let (extract_tx, extract_rx) = channel();
         let scripted = !options.script.is_empty() || !options.shots.is_empty() || options.frames.is_some();
         let mut app = Self {
             shared: Shared { store, versions, slots, selected, update: Update { config, status: UpdateStatus::Off }, check: Check::None, pad: None },
@@ -274,6 +291,9 @@ impl App {
             art_rx,
             check_tx,
             check_rx,
+            extract_tx,
+            extract_rx,
+            open: options.open.clone(),
             update_rx: None,
             update_pending,
             shots: options.shots,
@@ -352,6 +372,16 @@ impl App {
                 (banner, textures, self.time)
             });
         }
+        if let Some(path) = self.open.take() {
+            if disc_image::is_image(&path) {
+                self.pick_image(path);
+            } else {
+                self.pick_folder(path);
+            }
+        }
+        while let Ok((i, extracted)) = self.extract_rx.try_recv() {
+            self.extracted(i, extracted);
+        }
         while let Ok((i, report)) = self.check_rx.try_recv() {
             let Check::Running { found } = &self.shared.check else { continue };
             let found = found.clone();
@@ -418,10 +448,8 @@ impl App {
         self.open(Kind::Dialog(Dialog::message(title, body)));
     }
 
-    /// A folder was picked for the selected version: identify it, judge it,
-    /// and run the game's own check when the version can be played.
-    fn pick_folder(&mut self, picked: PathBuf) {
-        // Back to the setup sheet, which shows the result.
+    /// Back to the setup sheet (from the browser), which shows a pick's result.
+    fn show_setup(&mut self) {
         if let Some(Kind::Browser(browser)) = self.layers.iter().rev().find(|l| !l.closing).map(|l| &l.kind) {
             self.browsed = browser.dir().map(PathBuf::from);
             self.close_top();
@@ -429,6 +457,92 @@ impl App {
         if !self.layers.iter().any(|l| !l.closing && matches!(l.kind, Kind::Setup(_))) {
             self.open(Kind::Setup(Focus::default()));
         }
+    }
+
+    /// A disc image was picked for the selected version: identified and
+    /// judged from its header, then extracted on a thread of its own to the
+    /// version's `game` folder (written as `game.importing` and renamed when
+    /// it is whole), which is then picked like any game folder. A folder the
+    /// same disc was extracted to before is used as it is.
+    fn pick_image(&mut self, image: PathBuf) {
+        self.show_setup();
+        let sh = &mut self.shared;
+        if matches!(sh.check, Check::Extracting { .. }) {
+            return;
+        }
+        let v = &sh.versions[sh.selected];
+        let opened = match disc_image::Image::open(&image) {
+            Ok(o) => o,
+            Err(e) => {
+                sh.check = Check::Done { found: None, verdict: Err(e), report: None, saved: false };
+                return;
+            }
+        };
+        let target = sh.store.version_dir(v).join("game");
+        let found = Found { root: target.clone(), id: opened.id(), revision: opened.revision() };
+        if let Err(e) = disc::judge(&found, v, &sh.versions) {
+            sh.check = Check::Done { found: Some(found), verdict: Err(e), report: None, saved: false };
+            return;
+        }
+        if disc::identify(&target).is_ok_and(|f| f.id == found.id && f.revision == found.revision) && disc::find_root(&target).as_deref() == Some(target.as_path()) {
+            self.pick_folder(target);
+            return;
+        }
+        let (done, total, cancel) = (Arc::new(AtomicU64::new(0)), Arc::new(AtomicU64::new(1)), Arc::new(AtomicBool::new(false)));
+        let (d, t, c, tx, i) = (done.clone(), total.clone(), cancel.clone(), self.extract_tx.clone(), sh.selected);
+        sh.check = Check::Extracting { found, format: opened.format().to_string(), done, total, cancel };
+        drop(opened);
+        std::thread::spawn(move || {
+            let partial = target.with_extension("importing");
+            let _ = std::fs::remove_dir_all(&partial);
+            let r = std::fs::create_dir_all(&partial).map_err(|e| format!("{}: {e}", partial.display())).and_then(|()| {
+                let img = disc_image::Image::open(&image)?;
+                img.extract(&partial, &mut |a, b| {
+                    d.store(a, Ordering::Relaxed);
+                    t.store(b, Ordering::Relaxed);
+                }, &c)
+            });
+            let r = r.and_then(|_| {
+                // The disc extracted here before (another revision, say) goes.
+                let _ = std::fs::remove_dir_all(&target);
+                std::fs::rename(&partial, &target).map(|()| target.clone()).map_err(|e| format!("{}: {e}", target.display()))
+            });
+            if r.is_err() {
+                let _ = std::fs::remove_dir_all(&partial);
+            }
+            let _ = tx.send((i, r));
+        });
+    }
+
+    /// A disc image's extraction ended: its folder is picked (for the
+    /// version it was for), or the sheet says why it stopped.
+    fn extracted(&mut self, i: usize, r: Result<PathBuf, String>) {
+        match r {
+            Ok(game) if i == self.shared.selected => self.pick_folder(game),
+            Ok(game) => {
+                let sh = &mut self.shared;
+                let verdict = sh.store.set_game_dir(&sh.versions[i], Some(&game));
+                sh.check = Check::None;
+                if let Err(e) = verdict {
+                    self.message("The game folder could not be saved", &e);
+                }
+                self.refresh(i);
+            }
+            Err(e) if e == "cancelled" => self.shared.check = Check::None,
+            Err(e) => self.shared.check = Check::Done { found: None, verdict: Err(format!("The disc image could not be extracted: {e}")), report: None, saved: false },
+        }
+    }
+
+    /// A folder was picked for the selected version: identify it, judge it,
+    /// and run the game's own check when the version can be played. A disc
+    /// image is extracted first ([`App::pick_image`]).
+    fn pick_folder(&mut self, picked: PathBuf) {
+        if picked.is_file() {
+            self.pick_image(picked);
+            return;
+        }
+        // Back to the setup sheet, which shows the result.
+        self.show_setup();
         let sh = &mut self.shared;
         let v = &sh.versions[sh.selected];
         let found = match disc::identify(&picked) {
@@ -506,6 +620,17 @@ impl App {
                 self.shared.store.save();
             }
             Action::PickFolder(picked) => self.pick_folder(picked),
+            Action::ImageDialog => {
+                let picked = rfd::FileDialog::new().set_title("Pick your disc image of the game").add_filter("Wii disc images", disc_image::EXTENSIONS).set_parent(frame).pick_file();
+                if let Some(picked) = picked {
+                    self.pick_image(picked);
+                }
+            }
+            Action::CancelExtract => {
+                if let Check::Extracting { cancel, .. } = &self.shared.check {
+                    cancel.store(true, Ordering::Relaxed);
+                }
+            }
             Action::WindowsDialog => {
                 let picked = rfd::FileDialog::new().set_title("Pick the extracted game folder (it holds sys and files)").set_parent(frame).pick_folder();
                 if let Some(picked) = picked {
@@ -659,8 +784,13 @@ impl eframe::App for App {
             ctx.send_viewport_cmd(egui::ViewportCommand::Fullscreen(!now));
         }
         if let Some(path) = dropped.filter(|_| self.launch.is_none()) {
-            // A folder dropped on the window is a picked game folder.
-            self.pick_folder(if path.is_dir() { path } else { path.parent().map(PathBuf::from).unwrap_or(path) });
+            // A folder dropped on the window is a picked game folder; so is
+            // a disc image, which is extracted.
+            if disc_image::is_image(&path) {
+                self.pick_image(path);
+            } else {
+                self.pick_folder(if path.is_dir() { path } else { path.parent().map(PathBuf::from).unwrap_or(path) });
+            }
         }
 
         // The selected version's picture and colours, crossing over from

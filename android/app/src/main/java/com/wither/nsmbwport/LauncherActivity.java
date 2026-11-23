@@ -33,6 +33,7 @@ import java.util.Locale;
 public final class LauncherActivity extends Activity {
     private static final int REQUEST_IMPORT = 1;
     private static final int REQUEST_ZIP = 2;
+    private static final int REQUEST_IMAGE = 3;
     /** Set by the game's "Start Menu": show this screen even with Skip Start Menu on. */
     static final String EXTRA_SHOW_START_MENU = "showStartMenu";
 
@@ -151,6 +152,14 @@ public final class LauncherActivity extends Activity {
         final Button importZip = button(Lang.t("Import Game Data Zip…"), false);
         importZip.setOnClickListener(v -> pickZip());
         gameData.addView(importZip, matchWidth(dp(10)));
+        final Button importImage = button(Lang.t("Import Disc Image (ISO, WBFS, RVZ)…"), false);
+        importImage.setOnClickListener(v -> pickImage());
+        gameData.addView(importImage, matchWidth(dp(10)));
+        final TextView imageHelp = text(Lang.t("Or import your disc image straight away (.iso, .wbfs, .rvz or .wia): "
+                + "it is extracted once."), 13);
+        imageHelp.setGravity(Gravity.START);
+        imageHelp.setTextColor(MUTED);
+        gameData.addView(imageHelp, matchWidth(dp(6)));
 
         final TextView version = text("NSMBW " + versionText(), 13);
         version.setTextColor(FAINT);
@@ -288,6 +297,14 @@ public final class LauncherActivity extends Activity {
         startActivityForResult(intent, REQUEST_ZIP);
     }
 
+    private void pickImage() {
+        final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        // .wbfs, .rvz and .wia have no type of their own: any file, checked by its header.
+        intent.setType("*/*");
+        startActivityForResult(intent, REQUEST_IMAGE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -297,6 +314,8 @@ public final class LauncherActivity extends Activity {
             runImport(progress -> GameFiles.copyFolder(this, uri, progress));
         } else if (requestCode == REQUEST_ZIP) {
             runImport(progress -> GameFiles.copyZip(this, uri, progress));
+        } else if (requestCode == REQUEST_IMAGE) {
+            runImport(progress -> GameFiles.copyImage(this, uri, progress));
         }
     }
 

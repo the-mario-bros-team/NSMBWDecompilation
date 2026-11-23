@@ -62,8 +62,8 @@ use std::time::{Duration, Instant};
 
 use hle_ios::bt::REMOTES;
 use hle_ios::wiimote::Input;
-use jni::objects::{JClass, JObject, JString};
-use jni::sys::{jboolean, jfloat, jint, jstring};
+use jni::objects::{JClass, JObject, JString, JValue};
+use jni::sys::{jboolean, jbyteArray, jfloat, jint, jstring};
 use jni::JNIEnv;
 use ndk::native_window::NativeWindow;
 use raw_window_handle::{AndroidDisplayHandle, AndroidNdkWindowHandle, RawDisplayHandle, RawWindowHandle};
@@ -411,5 +411,55 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_takeError<'l>(env: JNIEn
     match e {
         Some(e) => env.new_string(e).map(JString::into_raw).unwrap_or(std::ptr::null_mut()),
         None => std::ptr::null_mut(),
+    }
+}
+
+/// The disc image open as `fd`, which the app detached for us: ours to own
+/// and close.
+fn disc_image(fd: jint) -> Result<disc_image::Image, String> {
+    // SAFETY: the app hands over a valid descriptor it no longer uses.
+    let file = unsafe { <std::fs::File as std::os::fd::FromRawFd>::from_raw_fd(fd) };
+    disc_image::Image::from_file(file)
+}
+
+/// `Native.discHeader(fd)`: the image's game ID and revision as the first 8
+/// bytes of `sys/boot.bin` hold them (ID, disc number, revision), so the app
+/// can refuse another disc before extracting it; null when it is not a Wii
+/// disc image this can read.
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_discHeader<'l>(env: JNIEnv<'l>, _: JClass<'l>, fd: jint) -> jbyteArray {
+    let Ok(image) = disc_image(fd) else { return std::ptr::null_mut() };
+    let mut header: Vec<u8> = image.id().into_bytes();
+    header.resize(6, b' ');
+    header.extend([0, image.revision()]);
+    env.byte_array_from_slice(&header).map(|a| a.into_raw()).unwrap_or(std::ptr::null_mut())
+}
+
+/// `Native.extractDisc(fd, dest, progress)`: extracts the disc image open as
+/// `fd` into the folder `dest` (`disc_image::Image::extract`: sys/, files/,
+/// tmd.bin, ...), calling `progress.update(permille, 1000, text)` (a
+/// `GameFiles.Progress`) as it goes. Returns null when done, or why not.
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_extractDisc<'l>(mut env: JNIEnv<'l>, _: JClass<'l>, fd: jint, dest: JString<'l>, progress: JObject<'l>) -> jstring {
+    let result = (|| -> Result<(), String> {
+        let dest = java_string(&mut env, &dest)?;
+        let image = disc_image(fd)?;
+        let mut shown = u64::MAX;
+        let mut tell = |done: u64, total: u64| {
+            let permille = done * 1000 / total.max(1);
+            if permille == shown {
+                return;
+            }
+            shown = permille;
+            if let Ok(text) = env.new_string(format!("{} of {} MB", done >> 20, total >> 20)) {
+                let _ = env.call_method(&progress, "update", "(IILjava/lang/String;)V", &[JValue::Int(permille as i32), JValue::Int(1000), JValue::Object(&text)]);
+                let _ = env.delete_local_ref(text);
+            }
+        };
+        image.extract(std::path::Path::new(&dest), &mut tell, &std::sync::atomic::AtomicBool::new(false)).map(|_| ())
+    })();
+    match result {
+        Ok(()) => std::ptr::null_mut(),
+        Err(e) => env.new_string(e).map(JString::into_raw).unwrap_or(std::ptr::null_mut()),
     }
 }

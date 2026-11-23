@@ -31,11 +31,13 @@ use std::path::PathBuf;
 use std::process::ExitCode;
 use std::time::{Duration, Instant};
 
-const USAGE: &str = "usage: nsmbw-launcher [--launcher] [--root <folder>]
+const USAGE: &str = "usage: nsmbw-launcher [--launcher] [--root <folder>] [<game folder or disc image>]
                       [--script <frame>:<move>,...] [--shot <frame>:<file.png>]... [--frames <n>] [--size <w>x<h>]
   --launcher         show the launcher even when Skip Launcher is on (as holding Shift does)
   --root <folder>    where the launcher keeps everything and looks for nsmbw-port.exe
                      (default: the folder nsmbw-launcher.exe is in)
+  <path>             a game folder or a disc image (ISO, WBFS, RVZ, WIA, ...) to use, as if dropped
+                     on the window (Windows' Open with passes the file this way)
   for tests, as nsmbw-port's --press and --shot:
   --script <moves>   controller moves at given frames: up down left right a b x y start lb rb,
                      and the mouse: point@<x>x<y>, click@<x>x<y> (the window is 720 units tall)
@@ -50,10 +52,11 @@ struct Args {
     shots: Vec<(u64, PathBuf)>,
     frames: Option<u64>,
     size: [f32; 2],
+    open: Option<PathBuf>,
 }
 
 fn parse_args() -> Result<Args, String> {
-    let mut args = Args { launcher: false, root: port_update::install_dir(), script: Vec::new(), shots: Vec::new(), frames: None, size: [1280.0, 720.0] };
+    let mut args = Args { launcher: false, root: port_update::install_dir(), script: Vec::new(), shots: Vec::new(), frames: None, size: [1280.0, 720.0], open: None };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -71,6 +74,7 @@ fn parse_args() -> Result<Args, String> {
                 let size = v.split_once('x').and_then(|(w, h)| Some([w.parse().ok()?, h.parse().ok()?]));
                 args.size = size.ok_or(format!("--size {v}: expected <w>x<h>"))?;
             }
+            other if !other.starts_with("--") && args.open.is_none() => args.open = Some(PathBuf::from(other)),
             other => return Err(format!("unknown argument: {other}")),
         }
     }
@@ -143,7 +147,7 @@ fn main() -> ExitCode {
     let mut notice = None;
     let state = store::Store::load(args.root.clone()).state;
     // A release found during the last skipped start is shown first.
-    if state.skip_launcher && state.update_pending.is_empty() && !args.launcher && !launch::shift_held() && !launch::pad_back_held() {
+    if state.skip_launcher && state.update_pending.is_empty() && !args.launcher && args.open.is_none() && !launch::shift_held() && !launch::pad_back_held() {
         match skip_to_game(&args.root) {
             Ok(()) => return ExitCode::SUCCESS,
             Err(why) => notice = Some(why),
@@ -158,7 +162,7 @@ fn main() -> ExitCode {
         .with_min_inner_size([960.0, 540.0])
         .with_icon(egui::IconData { rgba: icon.pixels.iter().flat_map(|c| c.to_array()).collect(), width: 64, height: 64 });
     let native = eframe::NativeOptions { viewport, centered: true, ..Default::default() };
-    let options = app::Options { root: args.root, script: args.script, shots: args.shots, frames: args.frames, notice };
+    let options = app::Options { root: args.root, script: args.script, shots: args.shots, frames: args.frames, notice, open: args.open };
     match eframe::run_native("nsmbw-launcher", native, Box::new(move |cc| Ok(Box::new(app::App::new(cc, options))))) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => fail(&format!("The launcher's window could not be opened: {e}

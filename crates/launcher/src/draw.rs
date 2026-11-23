@@ -423,6 +423,8 @@ pub enum Icon {
     Lock,
     Up,
     Drive,
+    /// A disc image.
+    Disc,
     ChevronLeft,
     ChevronRight,
 }
@@ -478,6 +480,10 @@ pub fn icon(p: &Painter, which: Icon, c: Pos2, s: f32, color: Color32) {
         Icon::Drive => {
             line(&[(-0.44, -0.18), (0.44, -0.18), (0.44, 0.24), (-0.44, 0.24), (-0.44, -0.18)]);
             p.circle_filled(at(0.26, 0.03), s * 0.07, color);
+        }
+        Icon::Disc => {
+            p.circle_stroke(c, s * 0.44, pen);
+            p.circle_stroke(c, s * 0.13, pen);
         }
         Icon::ChevronLeft => line(&[(0.16, -0.36), (-0.20, 0.0), (0.16, 0.36)]),
         Icon::ChevronRight => line(&[(-0.16, -0.36), (0.20, 0.0), (-0.16, 0.36)]),

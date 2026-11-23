@@ -18,6 +18,7 @@ png = "0.18"
 rfd = { version = "0.15", default-features = false }
 gx = { path = "../gx" }
 port-update = { path = "../port-update" }
+disc-image = { path = "../disc-image" }
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_ProcessStatus", "Win32_System_Threading", "Win32_UI_Input_KeyboardAndMouse", "Win32_UI_Input_XboxController", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }

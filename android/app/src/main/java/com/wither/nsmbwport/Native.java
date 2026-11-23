@@ -33,4 +33,17 @@ final class Native {
 
     /** Why the game stopped, once; else null. */
     static native String takeError();
+
+    /**
+     * The disc image open as fd (detached: the library closes it): its game ID and revision as the
+     * first 8 bytes of sys/boot.bin hold them, or null when it isn't a Wii disc image it can read
+     * (ISO, WBFS, RVZ, WIA, CISO, GCZ).
+     */
+    static native byte[] discHeader(int fd);
+
+    /**
+     * Extracts the disc image open as fd (detached) into dest, as Dolphin's Extract Entire Disc
+     * lays it out, telling progress as it goes. Returns null when done, or why not.
+     */
+    static native String extractDisc(int fd, String dest, GameFiles.Progress progress);
 }

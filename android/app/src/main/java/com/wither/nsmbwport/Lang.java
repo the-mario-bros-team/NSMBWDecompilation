@@ -203,6 +203,15 @@ final class Lang {
         put("Import Game Data Zip…", "Importar zip de datos del juego…",
                 "Importer un zip des données du jeu…");
         put("Import Disc Image (.iso)…", "Importar imagen de disco (.iso)…", "Importer une image disque (.iso)…");
+        put("Import Disc Image (ISO, WBFS, RVZ)…", "Importar imagen de disco (ISO, WBFS, RVZ)…",
+                "Importer une image disque (ISO, WBFS, RVZ)…");
+        put("Or import your disc image straight away (.iso, .wbfs, .rvz or .wia): it is extracted once.",
+                "O importa directamente tu imagen de disco (.iso, .wbfs, .rvz o .wia): se extrae una sola vez.",
+                "Ou importez directement votre image disque (.iso, .wbfs, .rvz ou .wia) : elle est extraite une seule fois.");
+        put("That isn't a Wii disc image this app can read (ISO, WBFS, RVZ or WIA).",
+                "Eso no es una imagen de disco de Wii que esta app pueda leer (ISO, WBFS, RVZ o WIA).",
+                "Ce n'est pas une image disque Wii que cette appli peut lire (ISO, WBFS, RVZ ou WIA).");
+        put("Extracting the disc image…", "Extrayendo la imagen de disco…", "Extraction de l'image disque…");
         put("Have the disc image itself? Import the .iso: it's extracted on this phone, the way Dolphin does it, "
                 + "with no computer needed.",
                 "¿Tienes la imagen del disco? Importa el .iso: se extrae en este teléfono, como lo hace Dolphin, "
@@ -740,6 +749,12 @@ final class Lang {
                 + "o uno zip di quella cartella. I salvataggi vengono mantenuti.");
         it("Import from Extracted Game Data Folder…", "Importa dalla cartella dei dati estratti…");
         it("Import Game Data Zip…", "Importa zip dei dati del gioco…");
+        it("Import Disc Image (ISO, WBFS, RVZ)…", "Importa immagine disco (ISO, WBFS, RVZ)…");
+        it("Or import your disc image straight away (.iso, .wbfs, .rvz or .wia): it is extracted once.",
+                "Oppure importa direttamente l'immagine disco (.iso, .wbfs, .rvz o .wia): viene estratta una sola volta.");
+        it("That isn't a Wii disc image this app can read (ISO, WBFS, RVZ or WIA).",
+                "Non è un'immagine disco Wii che questa app può leggere (ISO, WBFS, RVZ o WIA).");
+        it("Extracting the disc image…", "Estrazione dell'immagine disco…");
         it("Import Disc Image (.iso)…", "Importa immagine disco (.iso)…");
         it("Have the disc image itself? Import the .iso: it's extracted on this phone, the way Dolphin does it, "
                 + "with no computer needed.",

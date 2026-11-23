@@ -32,6 +32,15 @@ Uninstalling removes the programs and shortcuts; settings and saves stay.
   launcher reads the game ID and revision from `sys\boot.bin`, says what it
   found, refuses anything the version does not accept with the reason, and
   then runs the game's own validation (`nsmbw-port --check`).
+- **Disc images**: an ISO, WBFS, RVZ or WIA (also CISO, GCZ, NFS, TGC) can be
+  picked instead (the **Disc image** button, the browser, dropping it on the
+  window, or `nsmbw-launcher <image>`, as Windows' Open with does). Its game
+  ID and revision are read from the image first, so another disc is refused
+  before anything is written; then it is extracted once, with a progress bar,
+  to the version's `game` folder (as `game.importing` until it is whole), the
+  way Dolphin's Extract Entire Disc lays it out, and used like any game
+  folder. The reading is `crates/disc-image`, on Encounter's `nod` crate (MIT
+  OR Apache-2.0). The Android app imports images the same way.
 - **Settings**: the selected version's display settings (single keys of its
   `settings.toml`; everything else in the file is left as it is) and the
   launcher's own switches.

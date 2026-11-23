@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 
@@ -200,6 +201,45 @@ final class GameFiles {
             return Lang.t(INCOMPLETE);
         }
         return install(context, root, count);
+    }
+
+    /**
+     * A disc image (ISO, WBFS, RVZ, WIA, ...): its header checked first, so another disc is refused
+     * before anything is written; then extracted into the staging folder by the native library,
+     * checked, and swapped in.
+     */
+    static String copyImage(Context context, Uri image, Progress progress) throws IOException {
+        final ContentResolver resolver = context.getContentResolver();
+        final byte[] header;
+        try (ParcelFileDescriptor fd = resolver.openFileDescriptor(image, "r")) {
+            if (fd == null) throw new IOException("cannot read the disc image");
+            header = Native.discHeader(fd.detachFd());
+        }
+        if (header == null) return Lang.t("That isn't a Wii disc image this app can read (ISO, WBFS, RVZ or WIA).");
+        final String problem = headerProblem(header);
+        if (problem != null) return Lang.f("%s\n\nNothing was changed.", problem);
+        final File staging = stagingDir(context);
+        deleteRecursively(staging);
+        if (!staging.mkdirs()) throw new IOException("cannot create " + staging);
+        progress.update(0, 1000, Lang.t("Extracting the disc image…"));
+        final String error;
+        try (ParcelFileDescriptor fd = resolver.openFileDescriptor(image, "r")) {
+            if (fd == null) throw new IOException("cannot read the disc image");
+            error = Native.extractDisc(fd.detachFd(), staging.getPath(), progress);
+        }
+        if (error != null) {
+            deleteRecursively(staging);
+            throw new IOException(error);
+        }
+        return install(context, staging, countFiles(new File(staging, "files")));
+    }
+
+    private static int countFiles(File dir) {
+        final File[] children = dir.listFiles();
+        if (children == null) return 0;
+        int n = 0;
+        for (File child : children) n += child.isDirectory() ? countFiles(child) : 1;
+        return n;
     }
 
     /** Unpacks `zip` into a fresh `staging` folder; returns how many files it held. */

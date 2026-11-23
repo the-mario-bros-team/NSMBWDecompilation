@@ -22,6 +22,8 @@ vk-render = { path = "../vk-render" }
 game-recomp = { path = "../game-recomp" }
 # For the frontend's mods.rs (texture packs; its download is not offered here).
 port-update = { path = "../port-update" }
+# Importing a disc image (ISO, WBFS, RVZ, WIA, ...).
+disc-image = { path = "../disc-image" }
 sevenz-rust2 = { version = "0.25", default-features = false }
 raw-window-handle = "0.6"
 miniz_oxide = "0.8"

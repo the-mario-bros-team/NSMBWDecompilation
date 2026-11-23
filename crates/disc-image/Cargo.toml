@@ -1,0 +1,11 @@
+[package]
+name = "disc-image"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Wii disc images (ISO, WBFS, RVZ, WIA, ...) extracted to a folder, as Dolphin's Extract Entire Disc does"
+
+[dependencies]
+# Encounter's nod (MIT OR Apache-2.0): reads ISO, WBFS, RVZ, WIA, CISO, GCZ,
+# NFS and TGC images, decrypting Wii partitions.
+nod = { version = "1.4.4", default-features = false, features = ["compress-zstd", "compress-bzip2", "compress-lzma", "compress-zlib"] }

@@ -1,8 +1,10 @@
 //! The game folder: a sheet that explains what is needed, shows the folder
-//! and what picking one found, and a folder browser that works with a
-//! controller as well as the mouse (Windows' own dialog is one click away).
+//! and what picking one found, and a browser that works with a controller as
+//! well as the mouse (Windows' own dialogs are one click away). A disc image
+//! (ISO, WBFS, RVZ, ...) is extracted to a game folder once.
 
 use std::path::{Path, PathBuf};
+use std::sync::atomic::Ordering;
 
 use egui::{pos2, vec2, Align2, Color32, Rect, Stroke, StrokeKind};
 
@@ -40,7 +42,7 @@ pub fn draw(sh: &Shared, cx: &mut Cx, focus: &mut Focus, t: f32) -> Vec<Action> 
         })
         .collect();
     let about = format!(
-        "The port plays your own copy of the game. Extract it with Dolphin (right-click the game, Properties, Filesystem, right-click the disc, Extract Entire Disc), then pick the folder that holds sys and files. This version needs: {}.",
+        "The port plays your own copy of the game. Pick your disc image (ISO, WBFS, RVZ or WIA), which is extracted once, or a folder Dolphin's Extract Entire Disc made (it holds sys and files). This version needs: {}.",
         wanted.join(" or ")
     );
     y += wrapped(&cx.p, pos2(x, y), width, &about, 15.5, REGULAR, white(0.82)) + 18.0;
@@ -74,7 +76,18 @@ pub fn draw(sh: &Shared, cx: &mut Cx, focus: &mut Focus, t: f32) -> Vec<Action> 
     let lines_at = pos2(x + 34.0, y);
     match &sh.check {
         Check::None => {
-            text(&cx.p, pos2(x, y + 10.0), Align2::LEFT_CENTER, "You can also drop the folder onto this window.", 14.5, SEMI, white(0.5));
+            text(&cx.p, pos2(x, y + 10.0), Align2::LEFT_CENTER, "You can also drop the folder or the disc image onto this window.", 14.5, SEMI, white(0.5));
+        }
+        Check::Extracting { found, format, done, total, .. } => {
+            let (done, total) = (done.load(Ordering::Relaxed), total.load(Ordering::Relaxed).max(1));
+            let part = (done as f32 / total as f32).clamp(0.0, 1.0);
+            icon(&cx.p, Icon::Disc, pos2(x + 11.0, y + 11.0), 20.0, cx.pal.accent[0]);
+            let head = format!("Extracting {} ({}) from the {format} image: {:.0}%", found.describe(), gib(total), part * 100.0);
+            text(&cx.p, pos2(x + 34.0, y + 11.0), Align2::LEFT_CENTER, &head, 16.0, SEMI, Color32::WHITE);
+            let bar = Rect::from_min_size(pos2(x + 34.0, y + 34.0), vec2(width - 34.0, 10.0));
+            cx.p.rect_filled(bar, 5.0, white(0.14));
+            cx.p.rect_filled(Rect::from_min_size(bar.min, vec2(bar.width() * part, bar.height())), 5.0, cx.pal.accent[0]);
+            text(&cx.p, pos2(x + 34.0, y + 62.0), Align2::LEFT_CENTER, "This happens once. The game folder is kept next to this version's saves.", 13.5, REGULAR, white(0.6));
         }
         Check::Running { found } => {
             for k in 0..3 {
@@ -118,15 +131,24 @@ pub fn draw(sh: &Shared, cx: &mut Cx, focus: &mut Focus, t: f32) -> Vec<Action> 
         bx += w + 14.0;
         r
     };
-    let busy = matches!(sh.check, Check::Running { .. });
-    if button(cx, focus, Button::new("browse", place(190.0), "Choose folder").icon(Icon::Folder).on(slot.game.is_none())) && !busy {
-        actions.push(Action::OpenBrowser);
-    }
-    if button(cx, focus, Button::new("windows", place(190.0), "Windows dialog")) && !busy {
-        actions.push(Action::WindowsDialog);
-    }
-    if slot.game.is_some() && button(cx, focus, Button::new("forget", place(130.0), "Remove")) && !busy {
-        actions.push(Action::ForgetFolder);
+    let busy = matches!(sh.check, Check::Running { .. } | Check::Extracting { .. });
+    if matches!(sh.check, Check::Extracting { .. }) {
+        if button(cx, focus, Button::new("cancel-extract", place(170.0), "Stop").icon(Icon::Cross)) {
+            actions.push(Action::CancelExtract);
+        }
+    } else {
+        if button(cx, focus, Button::new("browse", place(180.0), "Choose").icon(Icon::Folder).on(slot.game.is_none())) && !busy {
+            actions.push(Action::OpenBrowser);
+        }
+        if button(cx, focus, Button::new("image", place(170.0), "Disc image").icon(Icon::Disc)) && !busy {
+            actions.push(Action::ImageDialog);
+        }
+        if button(cx, focus, Button::new("windows", place(170.0), "Folder dialog")) && !busy {
+            actions.push(Action::WindowsDialog);
+        }
+        if slot.game.is_some() && button(cx, focus, Button::new("forget", place(110.0), "Remove")) && !busy {
+            actions.push(Action::ForgetFolder);
+        }
     }
     let done = Rect::from_min_size(pos2(rect.right() - 40.0 - 130.0, by), vec2(130.0, 52.0));
     if button(cx, focus, Button::new("done", done, "Done").on(slot.game.is_some())) || cx.pressed(Nav::Back) {
@@ -144,10 +166,12 @@ struct Entry {
     path: PathBuf,
     /// The game in it, when it is an extracted disc.
     game: Option<Found>,
+    /// A disc image, picked (and extracted) when opened.
+    image: bool,
 }
 
-/// A folder browser: drives, then folders; folders holding an extracted
-/// game are marked and can be picked directly.
+/// A browser: drives, then folders and disc images; folders holding an
+/// extracted game are marked and can be picked directly, and so can images.
 pub struct Browser {
     /// The folder shown; `None` lists the drives.
     dir: Option<PathBuf>,
@@ -200,16 +224,23 @@ impl Browser {
         match &dir {
             None => {
                 for letter in drives() {
-                    self.entries.push(Entry { name: format!("{letter}:"), path: PathBuf::from(format!("{letter}:\\")), game: None });
+                    self.entries.push(Entry { name: format!("{letter}:"), path: PathBuf::from(format!("{letter}:\\")), game: None, image: false });
                 }
             }
             Some(d) => {
-                let mut folders: Vec<PathBuf> = std::fs::read_dir(d).map(|rd| rd.flatten().map(|e| e.path()).filter(|p| p.is_dir() && !hidden(p)).collect()).unwrap_or_default();
-                folders.sort_by_key(|p| p.file_name().map(|n| n.to_string_lossy().to_lowercase()));
+                let all: Vec<PathBuf> = std::fs::read_dir(d).map(|rd| rd.flatten().map(|e| e.path()).filter(|p| !hidden(p)).collect()).unwrap_or_default();
+                let by_name = |p: &PathBuf| p.file_name().map(|n| n.to_string_lossy().to_lowercase());
+                let (mut folders, mut images): (Vec<PathBuf>, Vec<PathBuf>) = all.into_iter().filter(|p| p.is_dir() || disc_image::is_image(p)).partition(|p| p.is_dir());
+                folders.sort_by_key(by_name);
+                images.sort_by_key(by_name);
                 for path in folders {
                     let name = path.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
                     let game = disc::find_root(&path).and_then(|_| disc::identify(&path).ok());
-                    self.entries.push(Entry { name, path, game });
+                    self.entries.push(Entry { name, path, game, image: false });
+                }
+                for path in images {
+                    let name = path.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+                    self.entries.push(Entry { name, path, game: None, image: true });
                 }
             }
         }
@@ -241,12 +272,12 @@ pub fn browse(_sh: &Shared, cx: &mut Cx, b: &mut Browser, t: f32) -> Vec<Action>
     let x = rect.left() + 36.0;
     let width = rect.width() - 72.0;
 
-    spaced(&cx.p, pos2(x, rect.top() + 44.0), Align2::LEFT_CENTER, "CHOOSE THE GAME FOLDER", 14.0, BOLD, cx.pal.accent[0], 2.4);
+    spaced(&cx.p, pos2(x, rect.top() + 44.0), Align2::LEFT_CENTER, "CHOOSE THE GAME FOLDER OR DISC IMAGE", 14.0, BOLD, cx.pal.accent[0], 2.4);
     let place = b.dir.as_ref().map_or("This PC".to_string(), |d| d.to_string_lossy().into_owned());
     text(&cx.p, pos2(x, rect.top() + 78.0), Align2::LEFT_CENTER, &fit_middle(&cx.p, &place, 22.0, BOLD, width), 22.0, BOLD, Color32::WHITE);
     let (color, words) = match (&b.here, &b.dir) {
         (Some(found), _) => (GOOD, format!("This folder holds a game: {}", found.describe())),
-        (None, Some(_)) => (IDLE, "Open the folder that holds sys and files, or pick one marked GAME.".to_string()),
+        (None, Some(_)) => (IDLE, "Open the folder that holds sys and files, pick one marked GAME, or a disc image.".to_string()),
         (None, None) => (IDLE, "Pick a drive.".to_string()),
     };
     dot(&cx.p, cx.time, pos2(x + 7.0, rect.top() + 110.0), color);
@@ -286,7 +317,7 @@ pub fn browse(_sh: &Shared, cx: &mut Cx, b: &mut Browser, t: f32) -> Vec<Action>
     let shown = cx.anim.to(("browser-shown", b.dir.clone()), first, 18.0, cx.dt);
     let rows = cx.p.with_clip_rect(list.shrink(2.0));
     if n == 0 {
-        text(&rows, list.center(), Align2::CENTER_CENTER, "No folders in here", 15.0, SEMI, white(0.5));
+        text(&rows, list.center(), Align2::CENTER_CENTER, "No folders or disc images in here", 15.0, SEMI, white(0.5));
     }
     for (i, e) in b.entries.iter().enumerate() {
         let row = Rect::from_min_size(pos2(list.left() + 6.0, list.top() + 6.0 + (i as f32 - shown) * ROW), vec2(list.width() - 12.0, ROW - 4.0));
@@ -306,8 +337,8 @@ pub fn browse(_sh: &Shared, cx: &mut Cx, b: &mut Browser, t: f32) -> Vec<Action>
             rows.rect_filled(row, 11.0, white(0.11 * f));
             rows.rect_stroke(row, 11.0, Stroke::new(2.0, white(0.85 * f)), StrokeKind::Inside);
         }
-        icon(&rows, if b.dir.is_none() { Icon::Drive } else { Icon::Folder }, pos2(row.left() + 26.0, row.center().y), 20.0, white(0.72));
-        let room = row.width() - 60.0 - if e.game.is_some() { 250.0 } else { 40.0 };
+        icon(&rows, if b.dir.is_none() { Icon::Drive } else if e.image { Icon::Disc } else { Icon::Folder }, pos2(row.left() + 26.0, row.center().y), 20.0, white(0.72));
+        let room = row.width() - 60.0 - if e.game.is_some() || e.image { 250.0 } else { 40.0 };
         text(&rows, pos2(row.left() + 52.0, row.center().y), Align2::LEFT_CENTER, &fit_middle(&rows, &e.name, 16.0, SEMI, room), 16.0, SEMI, Color32::WHITE);
         match &e.game {
             Some(found) => {
@@ -317,6 +348,13 @@ pub fn browse(_sh: &Shared, cx: &mut Cx, b: &mut Browser, t: f32) -> Vec<Action>
                 rows.rect_filled(tag, 12.0, with_alpha(cx.pal.accent[0], 0.22));
                 rows.rect_stroke(tag, 12.0, Stroke::new(1.2, cx.pal.accent[0]), StrokeKind::Inside);
                 text(&rows, tag.center(), Align2::CENTER_CENTER, &label, 12.0, BOLD, Color32::WHITE);
+            }
+            None if e.image => {
+                let label = "DISC IMAGE";
+                let w = measure(&rows, label, 12.0, BOLD).x + 22.0;
+                let tag = Rect::from_min_size(pos2(row.right() - 14.0 - w, row.center().y - 12.0), vec2(w, 24.0));
+                rows.rect_stroke(tag, 12.0, Stroke::new(1.2, white(0.5)), StrokeKind::Inside);
+                text(&rows, tag.center(), Align2::CENTER_CENTER, label, 12.0, BOLD, white(0.85));
             }
             None => icon(&rows, Icon::ChevronRight, pos2(row.right() - 22.0, row.center().y), 14.0, white(0.4)),
         }
@@ -341,7 +379,7 @@ pub fn browse(_sh: &Shared, cx: &mut Cx, b: &mut Browser, t: f32) -> Vec<Action>
 
     if let Some(i) = open {
         let e = &b.entries[i];
-        if e.game.is_some() {
+        if e.game.is_some() || e.image {
             actions.push(Action::PickFolder(e.path.clone()));
         } else {
             let path = e.path.clone();
@@ -356,4 +394,9 @@ pub fn browse(_sh: &Shared, cx: &mut Cx, b: &mut Browser, t: f32) -> Vec<Action>
     }
     hints(cx, pos2(rect.center().x - 250.0, rect.bottom() + 34.0), &[(Hint::Confirm, "Open"), (Hint::Extra, "Use this folder"), (Hint::Back, "Up one level"), (Hint::Sides, "Page")], false);
     actions
+}
+
+/// `bytes` as "4.3 GB".
+fn gib(bytes: u64) -> String {
+    format!("{:.1} GB", bytes as f64 / 1e9)
 }
