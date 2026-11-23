@@ -327,6 +327,9 @@ struct App {
     /// Looks for Wii Remotes paired with Windows (the Wii Remotes switch).
     #[cfg(windows)]
     wii_remotes: Option<input::wii_hid::Scanner>,
+    /// Bluetooth passthrough's pairing key (F8) held since then, and
+    /// whether holding it 10 s already forgot the pairings.
+    sync_down: Option<(Instant, bool)>,
     /// The game started in widescreen (it reads 4:3 or not at boot).
     booted_widescreen: bool,
     /// What the game thread was last told about the picture.
@@ -493,7 +496,7 @@ impl App {
         menus.set_booted_widescreen(self.booted_widescreen);
         self.menus = Some(menus);
         let settings_label = Some(settings_label(&self.settings.language).to_string());
-        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), ..self.opts.emu.clone() });
+        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), bt_passthrough: self.settings.bt_passthrough, ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));
         if let crate::net::Mode::Host { port, .. } = self.opts.emu.net {
             if crate::lan::announce(port, crate::lan::computer_name()).is_err() {
@@ -574,6 +577,7 @@ impl App {
                 m.set_pointer_used(false);
             }
         }
+        self.sync_held();
         let Some(emu) = &self.emu else { return Ok(()) };
         let interpolate = !self.native();
         if self.sent_interpolate != Some(interpolate) {
@@ -1241,6 +1245,7 @@ impl App {
         self.inputs.set_smart_spin(self.settings.smart_spin);
         self.inputs.set_mouse_gyro(self.settings.mouse_gyro);
         self.inputs.set_reverse_tilt(self.settings.reverse_tilt);
+        self.inputs.set_motion_sensors(self.settings.motion_sensors);
         // Real Wii Remotes: not in net games (their reports would bypass the
         // shared input) or scripted runs.
         #[cfg(windows)]
@@ -1343,6 +1348,7 @@ impl App {
                 format!("F11 FULLSCREEN ({})", on(self.settings.fullscreen)),
             ]
             .into_iter()
+            .chain(self.settings.bt_passthrough.then(|| "F8  PAIR WII REMOTES (HOLD 10 S: FORGET)".to_string()))
             .map(|l| (overlay::WHITE, l))
             .collect();
             let w = lines.iter().map(|(_, l)| l.len() as i32).max().unwrap_or(0) * 6 * px + 4 * px;
@@ -1380,6 +1386,27 @@ impl App {
     fn pointer_used(&mut self) {
         if let Some(m) = &mut self.menus {
             m.set_pointer_used(true);
+        }
+    }
+
+    /// Bluetooth passthrough's pairing key: a press looks for remotes to
+    /// pair; held 10 s, it forgets them all (`sync_held`).
+    fn sync_key(&mut self, down: bool) {
+        if down {
+            self.sync_down = Some((Instant::now(), false));
+        } else if let Some((_, false)) = self.sync_down.take() {
+            if let Some(emu) = &self.emu {
+                let _ = emu.to_emu.send(ToEmu::SyncButton(false));
+            }
+        }
+    }
+
+    fn sync_held(&mut self) {
+        if let (Some((at, forgot @ false)), Some(emu)) = (&mut self.sync_down, &self.emu) {
+            if at.elapsed() >= Duration::from_secs(10) {
+                *forgot = true;
+                let _ = emu.to_emu.send(ToEmu::SyncButton(true));
+            }
         }
     }
 
@@ -1522,7 +1549,9 @@ impl ApplicationHandler for App {
                         }
                     }
                     if !event.repeat {
-                        if self.inputs.key(code, down) {
+                        if code == KeyCode::F8 && self.settings.bt_passthrough {
+                            self.sync_key(down);
+                        } else if self.inputs.key(code, down) {
                             if down {
                                 self.note_device(ui::prompts::Style::Keys);
                                 if let Some(m) = &mut self.menus {
@@ -1708,6 +1737,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         relaunch: None,
         #[cfg(windows)]
         wii_remotes: None,
+        sync_down: None,
         main_player: 0,
         players: Vec::new(),
         textures: HashMap::new(),

@@ -115,6 +115,49 @@ and the Settings window's **Mods** tab turns them on and off:
   instead of the disc's own from the next start. Mods load in name order,
   and a later one's file wins. They are off in net games.
 
+## The port's controllers
+
+Controllers are read through SDL 3, which `crates/input` builds from source
+(building the port needs CMake and a C compiler). If CMake's Visual Studio
+generator can't build anything on your PC ("No CMAKE_C_COMPILER could be
+found"), build with `CMAKE_GENERATOR=Ninja` and the `ninja` that comes with
+Visual Studio (`Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja`) on `PATH`.
+
+- **Motion sensors** (Settings > Gameplay > Motion Sensors, on by default): on
+  a controller that has them (DualShock 4, DualSense, Switch Pro, Joy-Cons and
+  the others SDL knows), turning it like a steering wheel tilts the Wii Remote
+  (full tilt at 30°, nothing under 4°) and a sharp jolt shakes it. Gravity is
+  followed as you play, so there is nothing to calibrate. A stick or trigger
+  bound to Tilt comes first while it is pushed. `[controller] motion_sensors`
+  in `settings.toml`.
+- **Bluetooth passthrough** (experimental, off by default, Windows): the game's
+  own Bluetooth stack drives real Wii Remotes through a spare USB Bluetooth
+  adapter, as on a Wii. Not yet tried with a real adapter or remote.
+  1. Use a spare USB Bluetooth adapter, not the one your keyboard, mouse or
+     headphones use. As with Dolphin's passthrough, a Broadcom BCM20702 or
+     CSR8510 A10 chip works best.
+  2. Give it the WinUSB driver with [Zadig](https://zadig.akeo.ie): *Options >
+     List All Devices*, pick the adapter (check its USB ID so it is not your
+     PC's own Bluetooth), choose **WinUSB** and **Replace Driver**. To give it
+     back to Windows: Device Manager > the adapter > *Uninstall device* with
+     its driver, then unplug and replug it.
+  3. Turn on **Settings > Gameplay > Bluetooth Passthrough** and restart the
+     game. Adapters on any other driver are left alone; the console says why
+     none could be used, and the keyboard and controllers then play as usual.
+  4. Pair each remote once: press **F8**, then the red SYNC button under the
+     remote's battery cover. After that, any button connects it. Holding F8
+     for 10 seconds forgets every pairing.
+
+  While it is on, the keyboard and controllers don't drive the game. It is
+  off in net games and scripted runs. Pairings are kept in
+  `saves\bt-passthrough\`, apart from the emulated remotes'. The console's
+  `[bluetooth]` lines say what happened.
+
+To check without the game: `cargo run -p input --example controllers` lists the
+controllers SDL finds with their accelerometer and the tilt it makes, and says
+which adapter passthrough would use. `NSMBW_INPUT_LOG=1` prints each change of
+a remote's buttons, shake or tilt as it goes to the game.
+
 ## Legal
 
 Use your own dump. No game assets or extracted content are redistributed here.
@@ -131,6 +174,11 @@ Use your own dump. No game assets or extracted content are redistributed here.
   liblinkernsbypass, Copyright (c) 2021 Billy Laws, used under the BSD
   2-Clause License; the source and both licence texts are in
   `android/third_party/libadrenotools` (see its `NOTICE.md` there).
+- Controllers: [SDL 3](https://libsdl.org) (zlib License), through the
+  `sdl3-sys` bindings (zlib License).
+- Bluetooth passthrough's USB access: [nusb](https://github.com/kevinmehall/nusb)
+  (MIT or Apache-2.0). Its design follows Dolphin's real-adapter mode and
+  WitherBlitz's NSMB-Wii-Recompilation.
 
 ## License
 

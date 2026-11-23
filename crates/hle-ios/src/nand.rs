@@ -210,6 +210,13 @@ pub fn set_sysconf_big(conf: &mut [u8], name: &str, data: &[u8]) -> bool {
     }
 }
 
+/// The contents of the big-array item `name`.
+pub fn sysconf_big<'a>(conf: &'a [u8], name: &str) -> Option<&'a [u8]> {
+    let at = sysconf_item(conf, name, 1)?;
+    let len = u16::from_be_bytes([*conf.get(at)?, *conf.get(at + 1)?]) as usize + 1;
+    conf.get(at + 2..at + 2 + len)
+}
+
 /// `BT.DINF`: the paired Wii Remotes. A count, ten registered devices,
 /// then the active ones; each is the address (most significant byte first)
 /// and a 64-byte name. `remotes` holds HCI-order (least significant first)
@@ -316,6 +323,7 @@ mod tests {
         let mut s = sysconf();
         let remote = [0x11, 0x02, 0x19, 0x79, 0x00, 0x01];
         assert!(set_sysconf_big(&mut s, "BT.DINF", &bt_dinf(&[remote])));
+        assert_eq!(sysconf_big(&s, "BT.DINF"), Some(&bt_dinf(&[remote])[..]));
         assert!(sysconf_valid(&s));
         let at = s.windows(7).position(|w| w == b"BT.DINF").unwrap() + 7;
         assert_eq!(&s[at..at + 2], &[0x04, 0x60]);

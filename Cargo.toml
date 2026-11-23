@@ -19,6 +19,12 @@ panic = "abort"
 # module (21 minutes on one thread); thin LTO links it in parallel.
 lto = "thin"
 
+# SDL 3 (crates/input) is C built through CMake: optimized even in debug
+# builds, so it uses the release C runtime, as Rust does on MSVC.
+[profile.dev.package.sdl3-sys]
+opt-level = 2
+debug = false
+
 # Release without cross-crate LTO, for checks that only need the same
 # results (the `--hash-every` script): after a change outside guest-cpu,
 # guest-mem and the generated code it rebuilds in seconds instead of

@@ -182,7 +182,9 @@ const ROW_POWER_UP: i32 = 3;
 const ROW_AUTOSAVE: i32 = 4;
 const ROW_EXIT_COURSE: i32 = 5;
 const ROW_P1_CHARACTER: i32 = 6;
-const GAMEPLAY_LAST: i32 = 6;
+const ROW_MOTION: i32 = 7;
+const ROW_BT_PASSTHROUGH: i32 = 8;
+const GAMEPLAY_LAST: i32 = 8;
 // Mods rows: the HD Texture Pack, the pack in use (once one is installed),
 // then the file mods, one a row.
 const ROW_HD: i32 = 1;
@@ -1187,6 +1189,8 @@ impl SettingsWindow {
         self.row_toggle(ctx, a, c, rows, 3, "Autosave", s.autosave, ROW_AUTOSAVE);
         self.row_toggle(ctx, a, c, rows, 4, "Exit Course", s.exit_course, ROW_EXIT_COURSE);
         self.row_toggle(ctx, a, c, rows, 5, "P1 Character", s.p1_character, ROW_P1_CHARACTER);
+        self.row_toggle(ctx, a, c, rows, 6, "Motion Sensors", s.motion_sensors, ROW_MOTION);
+        self.row_toggle(ctx, a, c, rows, 7, "Bluetooth Passthrough", s.bt_passthrough, ROW_BT_PASSTHROUGH);
         let given = self.power_up_at.is_some_and(|t| self.now - t < 3.0);
         let note = match self.cursor {
             ROW_TIME => "The course timer stands still: take your time.",
@@ -1196,6 +1200,8 @@ impl SettingsWindow {
             ROW_AUTOSAVE => "The game is saved after every course you clear, as the map's Save does.",
             ROW_EXIT_COURSE => "The pause menu's Exit Course in every course, cleared or not.",
             ROW_P1_CHARACTER => "Player 1 picks a character too, on the game's own screen (from the next start).",
+            ROW_MOTION => "A controller's motion sensors tilt (turn it like a wheel) and shake (jolt it) its remote.",
+            ROW_BT_PASSTHROUGH => "Experimental: real Wii Remotes on a WinUSB Bluetooth adapter; F8 pairs (from the next start).",
             _ => Tab::Gameplay.help(),
         };
         self.help_line(a, c, note, u32::MAX);
@@ -1900,6 +1906,14 @@ impl SettingsWindow {
             }
             (Tab::Gameplay, ROW_P1_CHARACTER) if toggle => {
                 s.p1_character = !s.p1_character;
+                changes.push(Change::Gameplay);
+            }
+            (Tab::Gameplay, ROW_MOTION) if toggle => {
+                s.motion_sensors = !s.motion_sensors;
+                changes.push(Change::Keymap);
+            }
+            (Tab::Gameplay, ROW_BT_PASSTHROUGH) if toggle => {
+                s.bt_passthrough = !s.bt_passthrough;
                 changes.push(Change::Gameplay);
             }
             (Tab::Lan, ROW_LAN_ROOM) if confirm => changes.push(if self.lan.mode == 0 { Change::LanHost } else { Change::LanLeave }),

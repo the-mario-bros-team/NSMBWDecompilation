@@ -17,17 +17,20 @@ pub mod capture;
 pub mod combo;
 pub mod gyro;
 pub mod keymap;
+pub mod motion;
 pub mod padmap;
+pub mod pads;
 pub mod smart_spin;
+#[cfg(windows)]
+pub mod bt_usb;
 #[cfg(windows)]
 pub mod wii_hid;
 
 use std::collections::HashSet;
 use std::time::{Duration, Instant};
 
-use gilrs::{Button, GamepadId, Gilrs};
 use hle_ios::wiimote::{button, Input};
-use padmap::PadInput;
+use padmap::{Button, PadInput};
 use winit::keyboard::KeyCode;
 
 pub const PLAYERS: usize = 4;
@@ -79,28 +82,6 @@ fn keymap_action(action: usize) -> Action {
         keymap::TILT_RIGHT => Tilt(1.0),
         keymap::PLUS => Buttons(button::PLUS),
         _ => Buttons(button::MINUS),
-    }
-}
-
-/// How far `p` is pushed on `pad`, 0 to 1.
-fn pad_value(pad: &gilrs::Gamepad, p: PadInput) -> f32 {
-    match p {
-        PadInput::Button(b) => {
-            let v = pad.button_data(b).map_or(0.0, |d| d.value());
-            if pad.is_pressed(b) {
-                v.max(STICK_PRESS)
-            } else {
-                v
-            }
-        }
-        PadInput::Stick(axis, positive) => {
-            let v = pad.value(axis);
-            if positive {
-                v.max(0.0)
-            } else {
-                (-v).max(0.0)
-            }
-        }
     }
 }
 
@@ -163,17 +144,18 @@ pub struct Inputs {
     pointer: Option<(f32, f32)>,
     /// Every remote's tilt mirrored (the Reverse Tilt switch).
     reverse_tilt: bool,
-    gilrs: Option<Gilrs>,
-    /// Gamepads in the order they connected; index = player.
-    pads: Vec<GamepadId>,
+    /// The controllers (SDL), each in its player's slot.
+    pads: Option<pads::Pads>,
+    /// Controllers' motion sensors tilt and shake (the Motion Sensors
+    /// switch), and each player's controller's motion.
+    motion_sensors: bool,
+    pad_motion: [motion::PadMotion; PLAYERS],
     /// Players whose remote has been switched on.
     on: [bool; PLAYERS],
     /// The Keybinds tab's Rumble switch.
     rumble_enabled: bool,
     /// Players whose controller is rumbling.
     rumbling: [bool; PLAYERS],
-    /// Each controller's rumble, made the first time it rumbles.
-    effects: Vec<(GamepadId, gilrs::ff::Effect)>,
     /// What each controller had pressed at the last poll, and whether one
     /// pressed something new since [`Inputs::take_pad_pressed`].
     pad_was: [Vec<PadInput>; PLAYERS],
@@ -188,27 +170,14 @@ impl Default for Inputs {
 
 impl Inputs {
     pub fn new() -> Self {
-        let gilrs = match Gilrs::new() {
-            Ok(g) => Some(g),
-            Err(gilrs::Error::NotImplemented(g)) => Some(g),
-            Err(e) => {
-                eprintln!("gamepads unavailable: {e}");
-                None
-            }
-        };
-        let mut s = Self { gilrs, ..Self::without_pads() };
-        if let Some(g) = &s.gilrs {
-            let ids: Vec<GamepadId> = g.gamepads().filter(|(_, p)| p.is_connected()).map(|(id, _)| id).collect();
-            for id in ids {
-                s.add_pad(id);
-            }
-        }
+        let mut s = Self { pads: pads::Pads::new(), ..Self::without_pads() };
+        s.update_pads();
         s
     }
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, gilrs: None, pads: Vec::new(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], effects: Vec::new(), pad_was: Default::default(), pad_pressed: false }
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, pads: None, motion_sensors: true, pad_motion: Default::default(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], pad_was: Default::default(), pad_pressed: false }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -229,47 +198,21 @@ impl Inputs {
             return;
         }
         self.rumbling[player] = on;
-        let (Some(&id), Some(g)) = (self.pads.get(player), self.gilrs.as_mut()) else { return };
-        if !g.connected_gamepad(id).is_some_and(|p| p.is_ff_supported()) {
-            return;
-        }
-        let i = match self.effects.iter().position(|(p, _)| *p == id) {
-            Some(i) => i,
-            None => {
-                use gilrs::ff::{BaseEffect, BaseEffectType, EffectBuilder, Repeat, Replay, Ticks};
-                let replay = Replay { play_for: Ticks::from_ms(RUMBLE_MAX_MS), ..Replay::default() };
-                let motor = |kind| BaseEffect { kind, scheduling: replay, ..BaseEffect::default() };
-                let built = EffectBuilder::new()
-                    .add_effect(motor(BaseEffectType::Strong { magnitude: RUMBLE_LOW }))
-                    .add_effect(motor(BaseEffectType::Weak { magnitude: RUMBLE_HIGH }))
-                    .repeat(Repeat::For(Ticks::from_ms(RUMBLE_MAX_MS)))
-                    .gamepads(&[id])
-                    .finish(g);
-                match built {
-                    Ok(e) => {
-                        self.effects.push((id, e));
-                        self.effects.len() - 1
-                    }
-                    Err(e) => {
-                        eprintln!("rumble on gamepad {}: {e}", player + 1);
-                        return;
-                    }
-                }
-            }
-        };
-        let effect = &self.effects[i].1;
-        let _ = if on { effect.play() } else { effect.stop() };
+        let Some(pads) = &self.pads else { return };
+        let (low, high, ms) = if on { (RUMBLE_LOW, RUMBLE_HIGH, RUMBLE_MAX_MS) } else { (0, 0, 0) };
+        pads.rumble(player, low, high, ms);
     }
 
-    fn add_pad(&mut self, id: GamepadId) {
-        if self.pads.contains(&id) || self.pads.len() >= PLAYERS {
-            return;
+    /// Takes in controllers that connected since the last look; each new
+    /// one switches its player's remote on.
+    fn update_pads(&mut self) {
+        let Some(pads) = &mut self.pads else { return };
+        for (player, name) in pads.update() {
+            println!("gamepad {} ({name}) is player {}", player + 1, player + 1);
+            self.on[player] = true;
+            self.rumbling[player] = false;
+            self.pad_motion[player].reset();
         }
-        if let Some(g) = &self.gilrs {
-            println!("gamepad {} ({}) is player {}", self.pads.len() + 1, g.gamepad(id).name(), self.pads.len() + 1);
-        }
-        self.on[self.pads.len()] = true;
-        self.pads.push(id);
     }
 
     /// The keys from now on.
@@ -296,6 +239,15 @@ impl Inputs {
         self.gyro.reset();
     }
 
+    /// Motion Sensors: a controller's own accelerometer tilts (turned like a
+    /// steering wheel) and shakes (a jolt) its player's remote (`motion`).
+    pub fn set_motion_sensors(&mut self, on: bool) {
+        self.motion_sensors = on;
+        for m in &mut self.pad_motion {
+            m.reset();
+        }
+    }
+
     /// Reverse Tilt: every remote's tilt mirrored, whatever it comes from.
     pub fn set_reverse_tilt(&mut self, on: bool) {
         self.reverse_tilt = on;
@@ -320,17 +272,17 @@ impl Inputs {
 
     /// A controller is connected.
     pub fn pad_connected(&self) -> bool {
-        self.gilrs.as_ref().is_some_and(|g| self.pads.iter().any(|&id| g.connected_gamepad(id).is_some()))
+        self.pads.as_ref().is_some_and(pads::Pads::any_connected)
     }
 
     /// What is pressed on the connected controllers now (for picking a
     /// button in the Keybinds tab).
     pub fn pad_held(&self) -> Vec<PadInput> {
-        let Some(g) = &self.gilrs else { return Vec::new() };
+        let Some(pads) = &self.pads else { return Vec::new() };
         let mut held = Vec::new();
-        for pad in self.pads.iter().filter_map(|&id| g.connected_gamepad(id)) {
+        for player in (0..PLAYERS).filter(|&i| pads.connected(i)) {
             for p in padmap::all() {
-                if pad_value(&pad, p) >= STICK_PRESS && !held.contains(&p) {
+                if pads.value(player, p) >= STICK_PRESS && !held.contains(&p) {
                     held.push(p);
                 }
             }
@@ -390,17 +342,7 @@ impl Inputs {
 
     /// The remotes at time `now` (from `epoch`).
     fn poll_at(&mut self, now: Duration) -> [Input; PLAYERS] {
-        let mut connected = Vec::new();
-        if let Some(g) = &mut self.gilrs {
-            while let Some(ev) = g.next_event() {
-                if matches!(ev.event, gilrs::EventType::Connected) {
-                    connected.push(ev.id);
-                }
-            }
-        }
-        for id in connected {
-            self.add_pad(id);
-        }
+        self.update_pads();
         let mut out = [Input::default(); PLAYERS];
         self.pulses.retain(|p| p.2 > now);
         // The keyboard and mouse: combinations first, then the keys they
@@ -454,15 +396,16 @@ impl Inputs {
             }
             None => self.gyro.reset(),
         }
-        if let Some(g) = &self.gilrs {
-            for (player, &id) in self.pads.iter().enumerate() {
-                let pad = g.gamepad(id);
-                if !pad.is_connected() {
+        if let Some(pads) = &mut self.pads {
+            for player in 0..PLAYERS {
+                if !pads.connected(player) {
+                    self.pad_motion[player].reset();
                     continue;
                 }
+                let pad_value = |p| pads.value(player, p);
                 let input = &mut out[player];
                 let engine = &mut self.pad_combos[player];
-                let held: Vec<PadInput> = padmap::all().filter(|&p| pad_value(&pad, p) >= STICK_PRESS).collect();
+                let held: Vec<PadInput> = padmap::all().filter(|&p| pad_value(p) >= STICK_PRESS).collect();
                 self.pad_pressed |= held.iter().any(|p| !self.pad_was[player].contains(p));
                 self.pad_was[player].clone_from(&held);
                 let combos = if engine.is_empty() { 0 } else { engine.step(&held, now) };
@@ -472,9 +415,9 @@ impl Inputs {
                 for (i, bound) in self.padmap.buttons.iter().enumerate() {
                     match i {
                         keymap::TILT_LEFT | keymap::TILT_RIGHT => {
-                            tilt[usize::from(i == keymap::TILT_RIGHT)] = bound.iter().map(|&p| pad_value(&pad, p)).fold(0.0, f32::max);
+                            tilt[usize::from(i == keymap::TILT_RIGHT)] = bound.iter().map(|&p| pad_value(p)).fold(0.0, f32::max);
                         }
-                        _ if bound.iter().any(|&p| !engine.silenced(p) && pad_value(&pad, p) >= STICK_PRESS) => apply(input, keymap_action(i)),
+                        _ if bound.iter().any(|&p| !engine.silenced(p) && pad_value(p) >= STICK_PRESS) => apply(input, keymap_action(i)),
                         _ => {}
                     }
                     if bound.iter().any(|p| engine.tapped().contains(p)) {
@@ -486,8 +429,17 @@ impl Inputs {
                 if analog.abs() > TILT_DEAD_ZONE {
                     input.tilt += analog;
                 }
-                if pad.is_pressed(Button::Mode) {
+                if pad_value(PadInput::Button(Button::Mode)) >= STICK_PRESS {
                     input.buttons |= button::HOME;
+                }
+                // The controller's own motion sensors: its bound tilt
+                // inputs, when in use, come first.
+                if let Some(a) = self.motion_sensors.then(|| pads.accel(player)).flatten() {
+                    let m = self.pad_motion[player].update(a, now);
+                    input.shake |= m.shake;
+                    if analog.abs() <= TILT_DEAD_ZONE {
+                        input.tilt += m.tilt;
+                    }
                 }
             }
         }
