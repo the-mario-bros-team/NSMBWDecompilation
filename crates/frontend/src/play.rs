@@ -116,12 +116,13 @@ struct PlayerWindow {
     window: Window,
 }
 
-/// `vertices` (the field's own, or in-between ones laid out like them) into
-/// `dst`, with the world draws moved to `player`'s window when the field has
-/// one.
+/// The field's vertices into `dst` (the renderer's GPU buffer, only
+/// written), with the world draws moved to `player`'s window when the field
+/// has one.
 fn fill_view(out: &gx::Output, player: usize, dst: &mut [gx::Vertex], backdrop: &gx::backdrop::Backdrop) {
-    if let Some(view) = out.views.get(player).copied().flatten() {
-        out.world.apply(dst, &view, Some(backdrop));
+    match out.views.get(player).copied().flatten() {
+        Some(view) => out.world.apply_into(&out.vertices, dst, &view, Some(backdrop)),
+        None => dst.copy_from_slice(&out.vertices),
     }
 }
 
@@ -699,10 +700,7 @@ impl App {
                 pw.renderer.screenshot = Some(path.with_file_name(format!("{}-p{}.png", path.file_stem().and_then(|s| s.to_str()).unwrap_or("shot"), pw.player + 1)));
             }
             let (out, player, backdrop) = (&f.out, pw.player, &self.backdrop);
-            let mut fill = |dst: &mut [gx::Vertex]| {
-                dst.copy_from_slice(&out.vertices);
-                fill_view(out, player, dst, backdrop);
-            };
+            let mut fill = |dst: &mut [gx::Vertex]| fill_view(out, player, dst, backdrop);
             pw.renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, size.width, size.height).map_err(|e| e.to_string())?;
             // Only the main window's EFB copies go back to the game.
             let _ = pw.renderer.take_writebacks();
@@ -737,10 +735,7 @@ impl App {
             match main_view(&f.out, self.main_player) {
                 Some(view) => {
                     let (out, backdrop) = (&f.out, &self.backdrop);
-                    let mut fill = |dst: &mut [gx::Vertex]| {
-                        dst.copy_from_slice(&out.vertices);
-                        out.world.apply(dst, &view, Some(backdrop));
-                    };
+                    let mut fill = |dst: &mut [gx::Vertex]| out.world.apply_into(&out.vertices, dst, &view, Some(backdrop));
                     renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, w, h)
                 }
                 None => renderer.render(&f.out, &f.out.vertices, true, f.xfb, w, h),

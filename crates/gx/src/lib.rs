@@ -304,6 +304,35 @@ impl World {
     /// parallax instead ([`backdrop::Backdrop::layer_affine`]); ones it does
     /// not know yet move like the rest of the world.
     pub fn apply(&self, vertices: &mut [Vertex], view: &xf::View, backdrop: Option<&backdrop::Backdrop>) {
+        self.spans(vertices.len(), view, backdrop, |a, b, affine| {
+            for v in &mut vertices[a..b] {
+                moved(v, affine);
+            }
+        });
+    }
+
+    /// `src` into `dst` (the same length) with the world draws moved to
+    /// `view`: the same as copying and then [`World::apply`], but `dst` is
+    /// only written, never read. It is the renderer's mapped GPU memory,
+    /// where every CPU read is uncached: applying in place there took
+    /// 30-40 ms a window a field.
+    pub fn apply_into(&self, src: &[Vertex], dst: &mut [Vertex], view: &xf::View, backdrop: Option<&backdrop::Backdrop>) {
+        let mut done = 0;
+        self.spans(src.len(), view, backdrop, |a, b, affine| {
+            dst[done..a].copy_from_slice(&src[done..a]);
+            for (d, s) in dst[a..b].iter_mut().zip(&src[a..b]) {
+                let mut v = *s;
+                moved(&mut v, affine);
+                *d = v;
+            }
+            done = b;
+        });
+        dst[done..].copy_from_slice(&src[done..]);
+    }
+
+    /// Each world span of a field with `len` vertices, in vertex order
+    /// (`first..end`, the affine that moves it to `view`).
+    fn spans(&self, len: usize, view: &xf::View, backdrop: Option<&backdrop::Backdrop>, mut each: impl FnMut(usize, usize, [(f32, f32); 2])) {
         if self.ranges.is_empty() || view.size[0] <= 0.0 || view.size[1] <= 0.0 {
             return;
         }
@@ -327,17 +356,20 @@ impl World {
                     Some(l) if l.first < end => (l.first, world),
                     _ => (end, world),
                 };
-                if let Some(vs) = vertices.get_mut(at as usize..upto as usize) {
-                    for v in vs {
-                        let w = v.pos[3];
-                        v.pos[0] = affine[0].0 * v.pos[0] + affine[0].1 * w;
-                        v.pos[1] = affine[1].0 * v.pos[1] + affine[1].1 * w;
-                    }
+                if at < upto && upto as usize <= len {
+                    each(at as usize, upto as usize, affine);
                 }
                 at = upto.max(at + 1);
             }
         }
     }
+}
+
+/// One world vertex moved by a clip-space affine (per axis, X' = a X + b W).
+fn moved(v: &mut Vertex, affine: [(f32, f32); 2]) {
+    let w = v.pos[3];
+    v.pos[0] = affine[0].0 * v.pos[0] + affine[0].1 * w;
+    v.pos[1] = affine[1].0 * v.pos[1] + affine[1].1 * w;
 }
 
 #[derive(Default)]
@@ -1164,6 +1196,20 @@ mod tests {
         for i in 0..4 {
             assert!((v.pos[i] - want[i]).abs() < 1e-4, "{i}: {:?} vs {:?}", v.pos, want);
         }
+    }
+
+    #[test]
+    fn applying_into_matches_copying_then_applying() {
+        let src: Vec<Vertex> = (0..12).map(|i| Vertex { pos: [i as f32, -(i as f32), 0.5, 1.0 + i as f32 / 8.0], ..Default::default() }).collect();
+        let layer = Layer { first: 6, count: 2, z: -3000, scale: 1.0, t: [0.0; 2] };
+        let world = World { ranges: vec![(1, 3), (5, 4), (11, 5)], layers: vec![layer], camera: WorldCamera { size: [800.0, 440.0], ..Default::default() }, map: [0.9, -0.1, 0.8, 0.2], ..Default::default() };
+        let view = xf::View { offset: [120.0, -40.0], size: [416.0, 228.0] };
+        let mut want = src.clone();
+        world.apply(&mut want, &view, None);
+        let mut got = vec![Vertex::default(); src.len()];
+        world.apply_into(&src, &mut got, &view, None);
+        assert_eq!(got, want);
+        assert_ne!(got, src);
     }
 
     fn bp(v: u32) -> [u8; 5] {
