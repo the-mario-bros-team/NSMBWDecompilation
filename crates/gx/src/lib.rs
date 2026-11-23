@@ -492,6 +492,12 @@ pub struct Gpu {
     pub patches: bool,
     /// Draws are dropped (switched in the command stream: Depth Blur off).
     drop_draws: bool,
+    /// The shading block of the last draw, and whether anything it is built
+    /// from has changed since (a BP register or the viewport written with a
+    /// new value, the texture cache's epoch): consecutive draws with nothing
+    /// set between them, the most common case, reuse it instead of building
+    /// and comparing 640 bytes each.
+    last_shading: Option<(Shading, u64)>,
     textures: texture::Cache,
     /// Loaded draws and other steps for the transform half, and where they
     /// go (see `back`).
@@ -516,6 +522,7 @@ impl Default for Gpu {
             records_next: true,
             patches: true,
             drop_draws: false,
+            last_shading: None,
             textures: texture::Cache::default(),
             batch: Batch::default(),
             sink: Sink::Local(Box::default()),
@@ -622,6 +629,7 @@ impl Gpu {
             self.layouts = [None; 8];
             self.xf.setup_gen += 1;
             self.tex_memo = [None; 8];
+            self.last_shading = None;
             self.textures.epoch += 1;
             for i in 0..self.xf.mem.len() {
                 self.batch.ops.push(Op::Xf { addr: i as u32, v: self.xf.mem[i] });
@@ -658,6 +666,10 @@ impl Gpu {
 
     /// An XF write, for both halves.
     fn xf_write(&mut self, addr: u32, v: u32) {
+        // The viewport's width is in the shading block (fog range).
+        if (0x101A..0x1020).contains(&addr) {
+            self.last_shading = None;
+        }
         self.xf.write(addr, v);
         self.batch.ops.push(Op::Xf { addr, v });
     }
@@ -698,6 +710,7 @@ impl Gpu {
     pub fn set_texture_pack(&mut self, pack: Option<replace::Pack>) {
         self.textures.set_pack(pack);
         self.tex_memo = [None; 8];
+        self.last_shading = None;
     }
 
     /// Runs whole commands in `buf`; returns the bytes consumed. Display
@@ -785,6 +798,12 @@ impl Gpu {
             val = (self.bp[reg] & !self.bp_mask) | (val & self.bp_mask);
             self.bp_mask = 0xFF_FFFF;
         }
+        // A new value in any register: the next draw builds its shading
+        // block again (the game's GX library mostly skips writing a value a
+        // register already has; most registers are in the block).
+        if self.bp[reg] != val {
+            self.last_shading = None;
+        }
         self.bp[reg] = val;
         match reg {
             0x45 => events.push(Event::Finish),
@@ -811,6 +830,9 @@ impl Gpu {
                 } else {
                     self.tev_color[i][half] = val;
                 }
+                // The colour and konst registers share BP addresses: an
+                // unchanged BP value can still be a change of either.
+                self.last_shading = None;
             }
             0xFE => self.bp_mask = val,
             _ => {}
@@ -1134,12 +1156,24 @@ impl Gpu {
             layout.read_into(v, &self.cp, d, &arrays, mem);
         }
         let n = self.batch.raws.len() as u32 - first;
-        let shading = self.shading(mem);
-        let shading = match self.batch.shadings.last() {
-            Some(last) if *last == shading => self.batch.shadings.len() as u32 - 1,
-            _ => {
-                self.batch.shadings.push(shading);
+        let shading = match self.last_shading {
+            // Nothing changed since the last draw: its block, which is the
+            // batch's last unless the batch is new.
+            Some((_, epoch)) if epoch == self.textures.epoch && !self.batch.shadings.is_empty() => self.batch.shadings.len() as u32 - 1,
+            Some((s, epoch)) if epoch == self.textures.epoch => {
+                self.batch.shadings.push(s);
                 self.batch.shadings.len() as u32 - 1
+            }
+            _ => {
+                let shading = self.shading(mem);
+                self.last_shading = Some((shading, self.textures.epoch));
+                match self.batch.shadings.last() {
+                    Some(last) if *last == shading => self.batch.shadings.len() as u32 - 1,
+                    _ => {
+                        self.batch.shadings.push(shading);
+                        self.batch.shadings.len() as u32 - 1
+                    }
+                }
             }
         };
         let raster = Raster {

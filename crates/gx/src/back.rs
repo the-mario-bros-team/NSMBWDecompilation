@@ -82,17 +82,23 @@ pub(crate) struct Back {
     world_camera: Option<crate::WorldCamera>,
     /// Time spent applying batches on the transform thread this field.
     busy: std::time::Duration,
+    /// The last draw's shading block: its index in the batch being applied
+    /// and in the output (when it had no z-freeze plane), so the next draw
+    /// with the same block neither copies nor compares it.
+    last_shading: Option<(u32, u32)>,
     out: Output,
 }
 
 impl Default for Back {
     fn default() -> Self {
-        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], world_camera: None, busy: Default::default(), out: Output::default() }
+        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], world_camera: None, busy: Default::default(), last_shading: None, out: Output::default() }
     }
 }
 
 impl Back {
     pub fn apply(&mut self, batch: &Batch) {
+        // Shading indices are the batch's own.
+        self.last_shading = None;
         for op in &batch.ops {
             match op {
                 Op::Xf { addr, v } => self.xf.write(*addr, *v),
@@ -119,6 +125,7 @@ impl Back {
         self.records = records_next;
         let mut out = std::mem::replace(&mut self.out, fresh);
         out.busy[1] = std::mem::take(&mut self.busy);
+        self.last_shading = None;
         out
     }
 
@@ -158,6 +165,7 @@ impl Back {
         let first = self.out.indices.len() as u32;
         self.out.indices.extend([0, 1, 2, 0, 2, 3].map(|i| base + i));
         self.out.shadings.push(Shading(s));
+        self.last_shading = None;
         let raster = Raster { blend: if color_update { 8 } else { 0x10 }, zmode: 0, cull: 0, efb_alpha: true };
         let shading = self.out.shadings.len() as u32 - 1;
         self.out.cmds.push(Cmd::Draw(Draw { first, count: 6, shading, raster, scissor: rect }));
@@ -259,8 +267,10 @@ impl Back {
             return;
         }
         self.out.draw_ops += 1;
-        let mut shading = batch.shadings[d.shading as usize];
-        let frozen = shading.0[sh::FLAGS] & FLAG_ZFREEZE != 0;
+        // The same block as the last draw, which had no z-freeze plane: its
+        // output index (nothing to copy or compare).
+        let same = self.last_shading.filter(|l| l.0 == d.shading && !self.records).map(|l| l.1);
+        let frozen = batch.shadings[d.shading as usize].0[sh::FLAGS] & FLAG_ZFREEZE != 0;
         // Without z-freeze, this draw's first triangle sets the plane a later
         // frozen draw takes its depth from.
         if !frozen && !fixed && count >= 3 {
@@ -272,6 +282,11 @@ impl Back {
                 }
             }
         }
+        if let Some(o) = same {
+            self.scratch_model = model;
+            return self.push_draw(first, count, o, d);
+        }
+        let mut shading = batch.shadings[d.shading as usize];
         if frozen {
             for i in 0..3 {
                 shading.0[sh::ZPLANE + i] = self.zplane[i].to_bits();
@@ -288,6 +303,13 @@ impl Back {
                 self.out.shadings.len() as u32 - 1
             }
         };
+        self.last_shading = (!frozen).then_some((d.shading, shading));
+        self.push_draw(first, count, shading, d);
+    }
+
+    /// The draw's command: merged into the last one when that has the same
+    /// state and its indices end where these begin.
+    fn push_draw(&mut self, first: u32, count: u32, shading: u32, d: &DrawOp) {
         let draw = Draw { first, count, shading, raster: d.raster, scissor: d.scissor };
         if let Some(Cmd::Draw(prev)) = self.out.cmds.last_mut() {
             if prev.shading == draw.shading && prev.raster == draw.raster && prev.scissor == draw.scissor && prev.first + prev.count == first {
