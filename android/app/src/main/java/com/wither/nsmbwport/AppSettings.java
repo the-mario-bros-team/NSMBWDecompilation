@@ -78,6 +78,31 @@ final class AppSettings {
     boolean skipStartMenu() { return prefs().getBoolean("skip_start_menu", false); }
     void setSkipStartMenu(boolean on) { prefs().edit().putBoolean("skip_start_menu", on).commit(); }
 
+    /** Graphics Compatibility (the renderer's vk_render::Compat): stand-ins for dual-source blending
+     *  and logic ops, for GPUs without them (most Mali GPUs). Auto: only where the GPU lacks them. */
+    static final int GPU_COMPAT_AUTO = 0;
+    static final int GPU_COMPAT_ON = 1;
+    static final int GPU_COMPAT_OFF = 2;
+    int gpuCompat() { return prefs().getInt("gpu_compat", GPU_COMPAT_AUTO); }
+    void setGpuCompat(int mode) { prefs().edit().putInt("gpu_compat", mode).commit(); }
+
+    /** Auto Update: opening the app (or coming back to it) installs a newer GitHub release. Off by default. */
+    boolean autoUpdate() { return prefs().getBoolean("auto_update", false); }
+    void setAutoUpdate(boolean on) { prefs().edit().putBoolean("auto_update", on).commit(); }
+
+    /**
+     * Xiaomi Mode: the game in the app's main process (MainProcessGameActivity) instead of ":game",
+     * which Xiaomi's MIUI / HyperOS ends even while it is on screen (a black screen). On by default only
+     * on Xiaomi, Redmi and POCO phones.
+     */
+    boolean gameInMainProcess() { return prefs().getBoolean("game_in_main_process", isXiaomi()); }
+    void setGameInMainProcess(boolean on) { prefs().edit().putBoolean("game_in_main_process", on).commit(); }
+
+    static boolean isXiaomi() {
+        final String maker = (android.os.Build.MANUFACTURER + " " + android.os.Build.BRAND).toLowerCase(java.util.Locale.ROOT);
+        return maker.contains("xiaomi") || maker.contains("redmi") || maker.contains("poco");
+    }
+
     /** The start menu's and the game's language (Lang.CODES). */
     String language() { return prefs().getString("language", "en"); }
     void setLanguage(String code) { prefs().edit().putString("language", code).commit(); }

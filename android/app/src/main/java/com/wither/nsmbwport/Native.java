@@ -25,8 +25,27 @@ final class Native {
     /** Wii Remote player (0..3): WiiRemote button bits, shake, tilt -1..1. */
     static native void setRemote(int player, boolean connected, int buttons, boolean shake, float tilt);
 
-    /** The app left the screen (true) or came back: the game stops and nothing plays. */
+    /** The app left the screen (true) or came back: the game stops and nothing plays. Coming back
+     *  removes the backup backup() wrote. */
     static native void setPaused(boolean paused);
+
+    /**
+     * setPaused(true), after writing the game to path (a save state: the backup for Android ending the
+     * app while it is away). Waits up to timeoutMs; returns null once it is written, else why not. The
+     * file appears whole or not at all.
+     */
+    static native String backup(String path, int timeoutMs);
+
+    /** Before start: a backup to start the game from instead of power-on (removed once the game shows
+     *  a field), or null. */
+    static native void setLoadState(String path);
+
+    /**
+     * Before start: Graphics Compatibility (AppSettings.GPU_COMPAT_*) and, with hookDir, the GPU driver
+     * driverLib in driverDir opened through libadrenotools in hookDir (tmpDir: Android 9's patched
+     * libraries). Returns null, or why the driver can't be used (the phone's own is used then).
+     */
+    static native String setGraphics(int compat, String hookDir, String driverDir, String driverLib, String tmpDir);
 
     /** Whether Wii Remote 1's rumble motor is on. */
     static native boolean rumble();

@@ -101,6 +101,12 @@ pub enum ToEmu {
     RealRemote(usize, Option<Box<dyn hle_ios::bt::HidRemote>>),
     /// The picture's shape and the Graphics tab's options.
     Display(DisplayOptions),
+    /// Write the machine to this file (a state file, as `--save-state`
+    /// writes it) before the next field, if `Pause(true)` paused the game;
+    /// then say how it went. The Android app's backup when it leaves the
+    /// screen (the desktop never sends it).
+    #[allow(dead_code)]
+    SaveState(PathBuf, Sender<Result<(), String>>),
 }
 
 /// The save cards' "Cheated", in the language the Settings buttons read.
@@ -284,7 +290,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
         ToEmu::RealRemote(i, remote) => sys.hw.borrow_mut().ios.bt.set_real(i, remote),
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::Display(_) | ToEmu::TexturePack(_) => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) => {}
     }
 }
 
@@ -632,6 +638,18 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                     }
                     ToEmu::Display(d) => display = d,
                     ToEmu::TexturePack(spec) => pack_stats = set_texture_pack(&mut sys, &spec),
+                    ToEmu::SaveState(path, done) => {
+                        // Written beside it first, so a process ended
+                        // meanwhile leaves no half a state behind.
+                        let result = if paused {
+                            let state = sys.save_state();
+                            let part = path.with_extension("part");
+                            write_state(&part, index, &state).and_then(|()| std::fs::rename(&part, &path).map_err(|e| format!("{}: {e}", path.display())))
+                        } else {
+                            Err("the game is not paused".into())
+                        };
+                        let _ = done.send(result);
+                    }
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
                     msg => apply(&mut sys, &mut live, msg),
                 }

@@ -5,7 +5,8 @@
 //! - One ubershader pair (`shader.wgsl`, compiled to SPIR-V by `naga` at
 //!   startup); the TEV state of each draw sits in a storage buffer indexed
 //!   by the draw's instance index. Destination alpha uses dual-source
-//!   blending; logic ops use Vulkan's.
+//!   blending; logic ops use Vulkan's. GPUs without either (most Mali
+//!   GPUs) get approximations instead ([`Compat`]).
 //! - Textures and samplers are bound as arrays; each frame writes the slots
 //!   it uses into its own descriptor set.
 //! - Pipelines are keyed by blend state; cull mode, depth state and scissor
@@ -58,6 +59,78 @@ const EFB_H: u32 = gx::EFB_HEIGHT as u32;
 pub const PALETTE: [[u8; 4]; 8] = [[255, 255, 255, 255], [0, 0, 0, 255], [80, 220, 100, 255], [250, 210, 60, 255], [240, 70, 60, 255], [24, 24, 28, 255], [120, 120, 130, 255], [90, 150, 250, 255]];
 
 static VALIDATION_ERRORS: AtomicU32 = AtomicU32::new(0);
+
+/// Fallbacks for GPUs without dual-source blending or logic ops (the
+/// Android app's Graphics Compatibility): one fragment output, with the
+/// blending alpha written for pipelines that blend with it (a constant
+/// destination alpha is lost there), and the logic ops blending can stand
+/// for (clear, copy, no-op; the others draw as copy).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Compat {
+    /// The fallbacks for what the GPU lacks only.
+    #[default]
+    Auto,
+    /// The fallbacks even where the GPU has the features (a driver that
+    /// reports them but draws them wrong).
+    On,
+    /// Never: a GPU without the features can't be used.
+    Off,
+}
+
+static COMPAT: Mutex<Compat> = Mutex::new(Compat::Auto);
+static VULKAN_LOADER: Mutex<Option<vk::PFN_vkGetInstanceProcAddr>> = Mutex::new(None);
+
+/// The fallbacks the next renderer's device is made with (see [`Compat`]).
+pub fn set_compat(compat: Compat) {
+    *COMPAT.lock().unwrap() = compat;
+}
+
+/// Vulkan from this `vkGetInstanceProcAddr` instead of the system's
+/// `libvulkan` (Android: a GPU driver the player imported, opened with
+/// libadrenotools), for the next renderer's device.
+///
+/// # Safety
+/// `get_instance_proc_addr` must stay valid as long as any renderer.
+pub unsafe fn set_vulkan_loader(get_instance_proc_addr: vk::PFN_vkGetInstanceProcAddr) {
+    *VULKAN_LOADER.lock().unwrap() = Some(get_instance_proc_addr);
+}
+
+/// The ubershader's modules a draw pipeline is made from, and what the
+/// device can do.
+#[derive(Clone, Copy)]
+struct DrawModules {
+    vs: vk::ShaderModule,
+    /// Fragment stages and their entry points: with a depth output, and
+    /// without (early depth testing).
+    fs: [(vk::ShaderModule, &'static CStr); 2],
+    /// Without dual-source blending: the same writing the blending alpha,
+    /// for pipelines that blend with the source alpha.
+    fs_blend: Option<[(vk::ShaderModule, &'static CStr); 2]>,
+    logic_ops: bool,
+}
+
+impl DrawModules {
+    unsafe fn destroy(&self, device: &Device) {
+        unsafe {
+            device.destroy_shader_module(self.vs, None);
+            for (m, _) in self.fs.iter().chain(self.fs_blend.iter().flatten()) {
+                device.destroy_shader_module(*m, None);
+            }
+        }
+    }
+}
+
+/// A fragment entry point's name as Vulkan takes it.
+fn entry_name(name: &str) -> &'static CStr {
+    match name {
+        "fs" => c"fs",
+        "fs_early" => c"fs_early",
+        "fs_one" => c"fs_one",
+        "fs_one_early" => c"fs_one_early",
+        "fs_one_blend" => c"fs_one_blend",
+        _ => c"fs_one_early_blend",
+    }
+}
 static VALIDATION_WARNINGS: AtomicU32 = AtomicU32::new(0);
 
 pub fn validation_errors() -> u32 {
@@ -313,10 +386,7 @@ pub struct Renderer {
     pipeline_layout: vk::PipelineLayout,
     pipeline_cache: vk::PipelineCache,
     pipeline_cache_path: Option<PathBuf>,
-    vs: vk::ShaderModule,
-    fs: vk::ShaderModule,
-    /// `fs` without a depth output (early depth testing).
-    fs_early: vk::ShaderModule,
+    draw_modules: DrawModules,
     copy_modules: [vk::ShaderModule; 2],
     copy: CopyPass,
     pipelines: HashMap<u32, vk::Pipeline>,
@@ -418,6 +488,16 @@ fn blend_factor(f: u32, src: bool, efb_alpha: bool) -> vk::BlendFactor {
     }
 }
 
+/// A blend factor without dual-source blending: the second output's alpha
+/// is the only output's ([`Compat`]).
+fn single_source(f: vk::BlendFactor) -> vk::BlendFactor {
+    match f {
+        vk::BlendFactor::SRC1_ALPHA => vk::BlendFactor::SRC_ALPHA,
+        vk::BlendFactor::ONE_MINUS_SRC1_ALPHA => vk::BlendFactor::ONE_MINUS_SRC_ALPHA,
+        f => f,
+    }
+}
+
 /// Pipeline key: the BP blend-mode bits that pipelines bake in, plus whether
 /// the EFB has alpha.
 fn blend_key(r: &Raster) -> u32 {
@@ -453,6 +533,10 @@ pub struct Gpu {
     queue_lock: Mutex<()>,
     device_name: String,
     validation: bool,
+    /// The device has dual-source blending and logic ops on (else the
+    /// [`Compat`] fallbacks stand in for them).
+    dual_source: bool,
+    logic_ops: bool,
 }
 
 impl Drop for Gpu {
@@ -541,7 +625,12 @@ impl Renderer {
     /// surface).
     unsafe fn create_gpu(window: Option<(RawDisplayHandle, RawWindowHandle)>) -> Res<(Arc<Gpu>, Option<(surface::Instance, vk::SurfaceKHR)>)> {
         unsafe {
-            let entry = Entry::load()?;
+            let loader = *VULKAN_LOADER.lock().unwrap();
+            let entry = match loader {
+                Some(f) => Entry::from_static_fn(ash::StaticFn { get_instance_proc_addr: f }),
+                None => Entry::load()?,
+            };
+            let compat = *COMPAT.lock().unwrap();
             let layers_present = entry.enumerate_instance_layer_properties()?;
             let validation = (cfg!(debug_assertions) || std::env::var_os("NSMBW_VALIDATION").is_some()) && layers_present.iter().any(|l| l.layer_name_as_c_str().is_ok_and(|n| n == VALIDATION_LAYER));
             let mut extensions: Vec<*const c_char> = match window {
@@ -576,7 +665,8 @@ impl Renderer {
             for pd in instance.enumerate_physical_devices()? {
                 let props = instance.get_physical_device_properties(pd);
                 let features = instance.get_physical_device_features(pd);
-                if props.api_version < vk::API_VERSION_1_3 || features.dual_src_blend == 0 || features.logic_op == 0 {
+                let missing = features.dual_src_blend == 0 || features.logic_op == 0;
+                if props.api_version < vk::API_VERSION_1_3 || (missing && compat == Compat::Off) {
                     continue;
                 }
                 for (i, fam) in instance.get_physical_device_queue_family_properties(pd).iter().enumerate() {
@@ -594,13 +684,27 @@ impl Renderer {
                     }
                 }
             }
-            let (_, physical, family, props) = best.ok_or("no Vulkan 1.3 device with dual-source blending and logic ops can draw to this window")?;
+            let (_, physical, family, props) = best.ok_or(if compat == Compat::Off { "no Vulkan 1.3 device with dual-source blending and logic ops can draw to this window" } else { "no Vulkan 1.3 device can draw to this window" })?;
             let device_name = props.device_name_as_c_str().map(|s| s.to_string_lossy().into_owned()).unwrap_or_default();
+            let has = instance.get_physical_device_features(physical);
+            let dual_source = has.dual_src_blend != 0 && compat != Compat::On;
+            let logic_ops = has.logic_op != 0 && compat != Compat::On;
+            if !dual_source || !logic_ops {
+                let without: Vec<&str> = [(!dual_source).then_some("dual-source blending"), (!logic_ops).then_some("logic ops")].into_iter().flatten().collect();
+                println!("vulkan: {device_name} without {} (Graphics Compatibility {compat:?})", without.join(" and "));
+            }
+            let limits = props.limits;
+            if limits.max_per_stage_descriptor_sampled_images < MAX_TEXTURES || limits.max_per_stage_descriptor_samplers < MAX_SAMPLERS {
+                eprintln!(
+                    "vulkan: {device_name} allows {} sampled images and {} samplers per stage; the renderer binds up to {MAX_TEXTURES} and {MAX_SAMPLERS}",
+                    limits.max_per_stage_descriptor_sampled_images, limits.max_per_stage_descriptor_samplers
+                );
+            }
 
             let priorities = [1.0f32];
             let queues = [vk::DeviceQueueCreateInfo::default().queue_family_index(family).queue_priorities(&priorities)];
             let device_extensions: Vec<*const c_char> = if surface.is_some() { vec![swapchain::NAME.as_ptr()] } else { Vec::new() };
-            let features = vk::PhysicalDeviceFeatures::default().dual_src_blend(true).logic_op(true);
+            let features = vk::PhysicalDeviceFeatures::default().dual_src_blend(dual_source).logic_op(logic_ops);
             let mut f12 = vk::PhysicalDeviceVulkan12Features::default()
                 .descriptor_indexing(true)
                 .shader_sampled_image_array_non_uniform_indexing(true)
@@ -613,7 +717,7 @@ impl Renderer {
                 None,
             )?;
             let queue = device.get_device_queue(family, 0);
-            let gpu = Arc::new(Gpu { entry, instance, debug, physical, family, device, queue, queue_lock: Mutex::new(()), device_name, validation });
+            let gpu = Arc::new(Gpu { entry, instance, debug, physical, family, device, queue, queue_lock: Mutex::new(()), device_name, validation, dual_source, logic_ops });
             Ok((gpu, surface))
         }
     }
@@ -677,10 +781,14 @@ impl Renderer {
                 Err(_) => device.create_pipeline_cache(&vk::PipelineCacheCreateInfo::default(), None)?,
             };
 
-            let (vs_code, fs_code, early_code) = shaders::ubershader()?;
+            let names: Vec<&str> = if gpu.dual_source { shaders::DUAL_SOURCE.to_vec() } else { shaders::ONE.iter().chain(&shaders::ONE_BLEND).copied().collect() };
+            let (vs_code, fs_codes) = shaders::ubershader(&names)?;
             let vs = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&vs_code), None)?;
-            let fs = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&fs_code), None)?;
-            let fs_early = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&early_code), None)?;
+            let mut fs = Vec::new();
+            for (name, code) in names.iter().zip(&fs_codes) {
+                fs.push((device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(code), None)?, entry_name(name)));
+            }
+            let draw_modules = DrawModules { vs, fs: [fs[0], fs[1]], fs_blend: fs.get(2..4).map(|b| [b[0], b[1]]), logic_ops: gpu.logic_ops };
             let (cvs_code, cfs_code) = shaders::copy()?;
             let copy_modules = [
                 device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&cvs_code), None)?,
@@ -756,9 +864,7 @@ impl Renderer {
                 pipeline_layout,
                 pipeline_cache,
                 pipeline_cache_path: opts.pipeline_cache,
-                vs,
-                fs,
-                fs_early,
+                draw_modules,
                 copy_modules,
                 copy: CopyPass { pipeline: copy_pipeline, layout: copy_pipeline_layout, set: copy_set },
                 pipelines: HashMap::new(),
@@ -1036,15 +1142,15 @@ impl Renderer {
         if let Some(&p) = self.pipelines.get(&key) {
             return Ok(p);
         }
-        let p = unsafe { Self::create_pipeline(&self.device, self.pipeline_cache, self.pipeline_layout, [self.vs, self.fs, self.fs_early], key)? };
+        let p = unsafe { Self::create_pipeline(&self.device, self.pipeline_cache, self.pipeline_layout, self.draw_modules, key)? };
         self.pipelines.insert(key, p);
         Ok(p)
     }
 
     /// The draw pipeline for blend key `key` (with [`EARLY_DEPTH`]), from the
-    /// ubershader's modules (`vs`, `fs`, `fs_early`). Safe on any thread: the
-    /// pipeline cache is not externally synchronised.
-    unsafe fn create_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: [vk::ShaderModule; 3], key: u32) -> Result<vk::Pipeline, vk::Result> {
+    /// ubershader's modules. Safe on any thread: the pipeline cache is not
+    /// externally synchronised.
+    unsafe fn create_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: DrawModules, key: u32) -> Result<vk::Pipeline, vk::Result> {
         let efb_alpha = key & (1 << 16) != 0;
         let (blend_on, logic_on, subtract) = (key & 1 != 0, key & 2 != 0, key & (1 << 11) != 0);
         let mut mask = vk::ColorComponentFlags::empty();
@@ -1069,6 +1175,7 @@ impl Renderer {
         } else if blend_on {
             let src = blend_factor((key >> 8) & 7, true, efb_alpha);
             let dst = blend_factor((key >> 5) & 7, false, efb_alpha);
+            let (src, dst) = if modules.fs_blend.is_some() { (single_source(src), single_source(dst)) } else { (src, dst) };
             att = att
                 .blend_enable(true)
                 .src_color_blend_factor(src)
@@ -1077,10 +1184,33 @@ impl Renderer {
                 .src_alpha_blend_factor(src)
                 .dst_alpha_blend_factor(dst)
                 .alpha_blend_op(vk::BlendOp::ADD);
-        } else if logic_on {
+        } else if logic_on && modules.logic_ops {
             // GX and Vulkan list the sixteen logic ops in the same order.
             logic = Some(vk::LogicOp::from_raw(((key >> 12) & 0xF) as i32));
+        } else if logic_on {
+            // Without logic ops: clear and no-op as blending, the rest as copy.
+            let (src, dst) = match (key >> 12) & 0xF {
+                0 => (vk::BlendFactor::ZERO, vk::BlendFactor::ZERO),
+                5 => (vk::BlendFactor::ZERO, vk::BlendFactor::ONE),
+                _ => (vk::BlendFactor::ONE, vk::BlendFactor::ZERO),
+            };
+            att = att
+                .blend_enable(true)
+                .src_color_blend_factor(src)
+                .dst_color_blend_factor(dst)
+                .color_blend_op(vk::BlendOp::ADD)
+                .src_alpha_blend_factor(src)
+                .dst_alpha_blend_factor(dst)
+                .alpha_blend_op(vk::BlendOp::ADD);
         }
+        // Without dual-source blending, a pipeline that blends with the
+        // source alpha takes the stage that writes the blending alpha.
+        let uses_src_alpha = blend_on && !subtract && [(key >> 8) & 7, (key >> 5) & 7].iter().any(|&f| f == 4 || f == 5);
+        let fs = match modules.fs_blend {
+            Some(b) if uses_src_alpha => b,
+            _ => modules.fs,
+        };
+        let early = usize::from(key & EARLY_DEPTH != 0);
         let atts = [att];
 
         let binding = [vk::VertexInputBindingDescription { binding: 0, stride: VERTEX_SIZE, input_rate: vk::VertexInputRate::VERTEX }];
@@ -1115,12 +1245,8 @@ impl Renderer {
         let formats = [COLOR_FORMAT];
         let mut rendering = vk::PipelineRenderingCreateInfo::default().color_attachment_formats(&formats).depth_attachment_format(DEPTH_FORMAT);
         let stages = [
-            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules[0]).name(c"vs"),
-            if key & EARLY_DEPTH != 0 {
-                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(modules[2]).name(c"fs_early")
-            } else {
-                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(modules[1]).name(c"fs")
-            },
+            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules.vs).name(c"vs"),
+            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(fs[early].0).name(fs[early].1),
         ];
         let info = vk::GraphicsPipelineCreateInfo::default()
             .stages(&stages)
@@ -1158,7 +1284,7 @@ impl Renderer {
         let stop = Arc::new(AtomicBool::new(false));
         let (tx, built) = std::sync::mpsc::channel();
         let threads = std::thread::available_parallelism().map_or(2, |n| n.get()).saturating_sub(2).clamp(1, 4);
-        let (cache, layout, modules) = (self.pipeline_cache, self.pipeline_layout, [self.vs, self.fs, self.fs_early]);
+        let (cache, layout, modules) = (self.pipeline_cache, self.pipeline_layout, self.draw_modules);
         let workers = (0..threads)
             .filter_map(|i| {
                 let (device, queue, remaining, stop, tx) = (self.device.clone(), queue.clone(), remaining.clone(), stop.clone(), tx.clone());
@@ -2351,9 +2477,7 @@ impl Drop for Renderer {
             self.device.destroy_pipeline(self.copy.pipeline, None);
             self.device.destroy_pipeline_layout(self.copy.layout, None);
             self.device.destroy_pipeline_cache(self.pipeline_cache, None);
-            self.device.destroy_shader_module(self.vs, None);
-            self.device.destroy_shader_module(self.fs, None);
-            self.device.destroy_shader_module(self.fs_early, None);
+            self.draw_modules.destroy(&self.device);
             for m in self.copy_modules {
                 self.device.destroy_shader_module(m, None);
             }

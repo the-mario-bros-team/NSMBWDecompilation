@@ -42,6 +42,8 @@ android {
         main {
             // libnsmbw.so, staged by build.ps1 from crates/android; not checked in.
             jniLibs.srcDirs = ['../native/jniLibs']
+            // libadrenotools and its hooks (GPU Driver), staged by build.ps1; not checked in.
+            assets.srcDirs = ['../native/assets']
         }
     }
 
