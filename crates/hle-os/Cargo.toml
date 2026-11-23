@@ -8,3 +8,4 @@ guest-mem = { path = "../guest-mem" }
 guest-cpu = { path = "../guest-cpu" }
 hle-ios = { path = "../hle-ios" }
 hw = { path = "../hw" }
+gx = { path = "../gx" }

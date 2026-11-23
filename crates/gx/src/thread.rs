@@ -201,9 +201,10 @@ enum Msg {
     Sync,
     /// Reply with the field's output.
     TakeOutput,
-    View(Option<crate::xf::View>),
     Drop(bool),
     Wide(f32),
+    World(Option<crate::WorldCamera>),
+    Views([Option<crate::xf::View>; 4]),
     /// Reply with the registers saved ([`Gpu::snap_regs`]).
     SaveRegs,
     /// Load registers saved by `SaveRegs`.
@@ -242,9 +243,10 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
             Msg::Recycle(out) => gpu.recycle(*out),
             Msg::Records(on) => gpu.records_next = on,
             Msg::Patches(on) => gpu.patches = on,
-            Msg::View(v) => gpu.set_view(v),
             Msg::Drop(on) => gpu.set_drop(on),
             Msg::Wide(a) => gpu.set_wide(a),
+            Msg::World(c) => gpu.set_world(c),
+            Msg::Views(v) => gpu.set_views(v),
             Msg::Sync => {
                 // Let the transform thread get on with what is decoded.
                 gpu.flush_back();
@@ -495,13 +497,25 @@ impl GpuPort {
     }
 
     /// Whether fields from the next one carry interpolation records.
-    /// The host's view for the draws sent from now on ([`crate::xf::View`]).
-    pub fn set_view(&mut self, view: Option<crate::xf::View>) {
+    /// The game camera for the draws sent from now on (see
+    /// [`Gpu::set_world`]).
+    pub fn set_world(&mut self, camera: Option<crate::WorldCamera>) {
         match self {
-            Self::Inline(gpu) => gpu.set_view(view),
+            Self::Inline(gpu) => gpu.set_world(camera),
             Self::Thread(t) => {
                 t.flush();
-                t.send(Msg::View(view));
+                t.send(Msg::World(camera));
+            }
+        }
+    }
+
+    /// Each player's window (see [`Gpu::set_views`]).
+    pub fn set_views(&mut self, views: [Option<crate::xf::View>; 4]) {
+        match self {
+            Self::Inline(gpu) => gpu.set_views(views),
+            Self::Thread(t) => {
+                t.flush();
+                t.send(Msg::Views(views));
             }
         }
     }

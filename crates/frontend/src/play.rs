@@ -12,7 +12,7 @@
 //! `settings.toml`; F10 opens the Settings window (`ui`), which pauses the
 //! game while it is up.
 
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::sync::Arc;
 use std::path::{Path, PathBuf};
@@ -106,6 +106,47 @@ impl Mover {
 /// A field whose emulation takes longer than this is logged.
 const SLOW_FIELD: Duration = Duration::from_millis(20);
 
+/// Another local player's own window (docs/PORT_PLAN.md, section 12): the
+/// same fields as the main window, through that player's view. It shows
+/// each field as it comes (no in-between frames).
+struct PlayerWindow {
+    player: usize,
+    // Declared before `window`: the Vulkan surface must be destroyed first.
+    renderer: Renderer,
+    window: Window,
+}
+
+/// `vertices` (the field's own, or in-between ones laid out like them) into
+/// `dst`, with the world draws moved to `player`'s window when the field has
+/// one.
+fn fill_view(out: &gx::Output, player: usize, dst: &mut [gx::Vertex], backdrop: &gx::backdrop::Backdrop) {
+    if let Some(view) = out.views.get(player).copied().flatten() {
+        out.world.apply(dst, &view, Some(backdrop));
+    }
+}
+
+/// The main window's view of a field: its player's window while the game
+/// camera is a box around far-apart players. Otherwise the game's own
+/// camera is shown as it is, with in-between frames moved on the GPU.
+fn main_view(out: &gx::Output, player: usize) -> Option<gx::xf::View> {
+    out.views.get(player).copied().flatten().filter(|_| !out.world.camera.normal && !out.world.ranges.is_empty())
+}
+
+/// `out` kept on the GPU for in-between frames ([`Renderer::prepare`]). In
+/// the main player's window ([`main_view`]) its world draws are moved on the
+/// CPU first, and it is shown without in-between movement.
+fn prepare_field(renderer: &mut Renderer, key: (u64, u64), out: &gx::Output, moves: Option<&gx::interp::Moves>, player: usize, backdrop: &gx::backdrop::Backdrop) -> Result<(), String> {
+    match main_view(out, player) {
+        Some(view) => {
+            let mut vertices = out.vertices.clone();
+            out.world.apply(&mut vertices, &view, Some(backdrop));
+            renderer.prepare_with(key, out, &vertices, None)
+        }
+        None => renderer.prepare(key, out, moves),
+    }
+    .map_err(|e| e.to_string())
+}
+
 struct App {
     opts: Options,
     settings: Settings,
@@ -195,6 +236,16 @@ struct App {
     booted_widescreen: bool,
     /// What the game thread was last told about the picture.
     sent_display: Option<crate::emu::DisplayOptions>,
+    /// The player the main window shows, and windows of other local players.
+    main_player: usize,
+    players: Vec<PlayerWindow>,
+    /// Textures uploaded and not yet evicted, for a player window opened
+    /// later (a renderer only receives a texture in the field it is new).
+    textures: HashMap<u32, gx::texture::NewTexture>,
+    online: bool,
+    /// Background layers as the game draws them with its own camera, for
+    /// drawing them in each player's window.
+    backdrop: gx::backdrop::Backdrop,
 }
 
 /// Set for a game the LAN tab started to join a room.
@@ -592,6 +643,7 @@ impl App {
             // Paused under a menu: the last field again, with the menu.
             self.present_still()?;
         }
+        self.open_player_windows(event_loop)?;
         self.update_counters();
         Ok(())
     }
@@ -631,6 +683,30 @@ impl App {
             say!("frame {}: {} draws, {} texture copies", f.index + 1, f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count(), f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).count());
         }
         renderer.overlay = rects;
+        (self.main_player, self.online) = (f.main_player, f.online);
+        self.backdrop.learn(&f.out.world);
+        if !self.online {
+            for t in &f.out.new_textures {
+                self.textures.insert(t.id, t.clone());
+            }
+            for id in &f.out.evicted {
+                self.textures.remove(id);
+            }
+        }
+        for pw in &mut self.players {
+            let size = pw.window.inner_size();
+            if let Some((_, path)) = self.opts.shots.iter().find(|(n, _)| *n == f.index + 1) {
+                pw.renderer.screenshot = Some(path.with_file_name(format!("{}-p{}.png", path.file_stem().and_then(|s| s.to_str()).unwrap_or("shot"), pw.player + 1)));
+            }
+            let (out, player, backdrop) = (&f.out, pw.player, &self.backdrop);
+            let mut fill = |dst: &mut [gx::Vertex]| {
+                dst.copy_from_slice(&out.vertices);
+                fill_view(out, player, dst, backdrop);
+            };
+            pw.renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, size.width, size.height).map_err(|e| e.to_string())?;
+            // Only the main window's EFB copies go back to the game.
+            let _ = pw.renderer.take_writebacks();
+        }
         let started = Instant::now();
         if skip {
             // Its draws up to its last EFB-to-texture copy still run (later
@@ -658,7 +734,18 @@ impl App {
             let uploads = gx::Output { new_textures: std::mem::take(&mut f.out.new_textures), cmds, ..Default::default() };
             renderer.render(&uploads, &[], true, f.xfb, 0, 0).map_err(|e| e.to_string())?;
         } else {
-            renderer.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
+            match main_view(&f.out, self.main_player) {
+                Some(view) => {
+                    let (out, backdrop) = (&f.out, &self.backdrop);
+                    let mut fill = |dst: &mut [gx::Vertex]| {
+                        dst.copy_from_slice(&out.vertices);
+                        out.world.apply(dst, &view, Some(backdrop));
+                    };
+                    renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, w, h)
+                }
+                None => renderer.render(&f.out, &f.out.vertices, true, f.xfb, w, h),
+            }
+            .map_err(|e| e.to_string())?;
         }
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.spent[0] += started.elapsed();
@@ -698,6 +785,9 @@ impl App {
             let old = self.queue.pop_front().unwrap();
             if let Some(r) = &mut self.renderer {
                 r.evict(&old.out.evicted);
+            }
+            for pw in &mut self.players {
+                pw.renderer.evict(&old.out.evicted);
             }
             // Its buffers go back to the GX threads unless the mover still
             // holds it (then they are freed).
@@ -759,7 +849,7 @@ impl App {
         }
         let fb = &self.queue[b];
         if prepare {
-            renderer.prepare(key, &fb.out, moves.as_ref()).map_err(|e| e.to_string())?;
+            prepare_field(renderer, key, &fb.out, moves.as_ref(), self.main_player, &self.backdrop)?;
             self.spent[1] += started.elapsed();
         }
         let shown = Instant::now();
@@ -767,6 +857,38 @@ impl App {
         self.spent[2] += shown.elapsed();
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.presented_now();
+        Ok(())
+    }
+
+    /// Opens a window for each other local player in a course (one whose
+    /// window the last field has). Online, the other players are on their
+    /// own machines. A window stays open once opened, until it is closed.
+    fn open_player_windows(&mut self, event_loop: &ActiveEventLoop) -> Result<(), String> {
+        if self.online {
+            return Ok(());
+        }
+        let Some(last) = self.queue.back() else { return Ok(()) };
+        let wanted: Vec<usize> = (0..last.out.views.len()).filter(|&p| p != self.main_player && last.out.views[p].is_some() && self.players.iter().all(|w| w.player != p)).collect();
+        // The main window's picture: its aspect, and the widening the game
+        // and the renderer share (`update_picture`).
+        let (aspect, widened) = self.picture();
+        for player in wanted {
+            let attrs = Window::default_attributes().with_title(format!("New Super Mario Bros. Wii - Rust port - player {}", player + 1)).with_inner_size(LogicalSize::new(f64::from(540.0 * aspect), 540.0));
+            let window = event_loop.create_window(attrs).map_err(|e| e.to_string())?;
+            let display = window.display_handle().map_err(|e| e.to_string())?.as_raw();
+            let handle = window.window_handle().map_err(|e| e.to_string())?.as_raw();
+            let scale = self.renderer.as_ref().map_or(1.0, |r| r.scale());
+            // No pipeline cache file: the main window's renderer owns it.
+            let ropts = vk_render::Options { scale, vsync: false, pipeline_cache: None, efb_copies_to_ram: false };
+            let mut renderer = Renderer::new(display, handle, ropts).map_err(|e| e.to_string())?;
+            renderer.aspect = aspect;
+            renderer.set_stretch(if widened { aspect / hle_os::display::ASPECT_16_9 } else { 1.0 });
+            // Every texture the game still uses, before the first field.
+            let uploads = gx::Output { new_textures: self.textures.values().cloned().collect(), ..Default::default() };
+            renderer.render(&uploads, &[], true, last.xfb, 0, 0).map_err(|e| e.to_string())?;
+            println!("player {}: own window", player + 1);
+            self.players.push(PlayerWindow { player, renderer, window });
+        }
         Ok(())
     }
 
@@ -779,7 +901,7 @@ impl App {
         renderer.overlay = rects;
         let key = (fb.index, fb.index);
         if renderer.prepared() != Some(key) {
-            renderer.prepare(key, &fb.out, None).map_err(|e| e.to_string())?;
+            prepare_field(renderer, key, &fb.out, None, self.main_player, &self.backdrop)?;
         }
         renderer.render_prepared(&fb.out, 1.0, fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
         self.presented_now();
@@ -1175,7 +1297,22 @@ impl ApplicationHandler for App {
         }
     }
 
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
+        // A player's own window: closing it closes only that window.
+        if let Some(i) = self.players.iter().position(|w| w.window.id() == id) {
+            match event {
+                WindowEvent::CloseRequested => {
+                    self.players.remove(i);
+                    return;
+                }
+                WindowEvent::Resized(_) => {
+                    self.players[i].renderer.resized();
+                    return;
+                }
+                WindowEvent::RedrawRequested => return,
+                _ => {}
+            }
+        }
         // Mouse as Gyro follows the pointer while no menu has it.
         if let (WindowEvent::CursorMoved { position, .. }, Some(window)) = (&event, &self.window) {
             if !self.menus.as_ref().is_some_and(ui::Menus::is_open) {
@@ -1272,6 +1409,7 @@ impl ApplicationHandler for App {
         if let Some(emu) = &mut self.emu {
             report(&emu.stop());
         }
+        self.players.clear();
         self.renderer = None;
     }
 }
@@ -1400,6 +1538,11 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         relaunch: None,
         #[cfg(windows)]
         wii_remotes: None,
+        main_player: 0,
+        players: Vec::new(),
+        textures: HashMap::new(),
+        online: false,
+        backdrop: gx::backdrop::Backdrop::default(),
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     // A room the LAN tab joined could not be joined (gone, or out of

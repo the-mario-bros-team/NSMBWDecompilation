@@ -50,41 +50,27 @@ pub(crate) struct Light {
     dir: [f32; 3],
 }
 
-/// A host-side view (docs/PORT_PLAN.md, section 12): draws through the
-/// game's world projection (orthographic, centred, `2 / width` and
-/// `2 / height` of the game's camera) are drawn through `proj` instead, a
-/// window of the world centred elsewhere. Other projections (the HUD,
-/// light textures, layouts) are left alone.
+/// A player's window on the world (docs/PORT_PLAN.md, section 12): `size`
+/// in world units, centred `offset` from the game camera's centre (y up).
+/// Applied after the transform by [`crate::World::apply`], so one field can
+/// be shown through any number of windows.
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct View {
-    /// The game camera's width and height in world units.
-    pub camera: [f32; 2],
-    /// The replacement for projection registers 0..4 (x scale, x offset,
-    /// y scale, y offset); depth is kept.
-    pub proj: [f32; 4],
+    pub offset: [f32; 2],
+    pub size: [f32; 2],
 }
 
-impl View {
-    /// A window `size` wide and high whose centre is `offset` from the game
-    /// camera's centre (world units, y up), for a camera `camera` in size.
-    pub fn window(camera: [f32; 2], size: [f32; 2], offset: [f32; 2]) -> Self {
-        let (sx, sy) = (2.0 / size[0], 2.0 / size[1]);
-        Self { camera, proj: [sx, -sx * offset[0], sy, -sy * offset[1]] }
-    }
-
-    /// Whether `pr` is the game camera's projection.
-    fn is_world(&self, pr: &[f32; 6]) -> bool {
-        let close = |a: f32, b: f32| (a - b).abs() <= b.abs() * 1e-4;
-        pr[1] == 0.0 && pr[3] == 0.0 && close(pr[0] * self.camera[0], 2.0) && close(pr[2] * self.camera[1], 2.0)
-    }
+/// Whether `pr` is the projection of a camera `camera` in size: orthographic
+/// (the caller checks), centred, `2 / width` and `2 / height`.
+pub fn is_camera_projection(pr: &[f32; 6], camera: [f32; 2]) -> bool {
+    let close = |a: f32, b: f32| (a - b).abs() <= b.abs() * 1e-4;
+    pr[1] == 0.0 && pr[3] == 0.0 && close(pr[0] * camera[0], 2.0) && close(pr[2] * camera[1], 2.0)
 }
 
 pub struct Xf {
     /// Matrix and light memory, words 0x000..0x800 (floats as bits).
     pub mem: Vec<u32>,
     pub regs: [u32; REGS],
-    /// See [`View`]; set on the transform half only.
-    pub view: Option<View>,
     /// The picture's aspect when wider (or narrower) than the game's 16:9:
     /// 16:9 projections are widened to it (0: none). Transform half only.
     pub wide: f32,
@@ -95,7 +81,7 @@ pub struct Xf {
 
 impl Default for Xf {
     fn default() -> Self {
-        Self { mem: vec![0; 0x800], regs: [0; REGS], view: None, wide: 0.0, setup_gen: 0 }
+        Self { mem: vec![0; 0x800], regs: [0; REGS], wide: 0.0, setup_gen: 0 }
     }
 }
 
@@ -193,11 +179,7 @@ impl Xf {
 
     /// Projection registers and whether the projection is orthographic.
     pub fn projection(&self) -> ([f32; 6], bool) {
-        let mut pr: [f32; 6] = std::array::from_fn(|i| f(self.reg(0x1020 + i as u32)));
-        let ortho = self.reg(0x1026) & 1 != 0;
-        if let Some(v) = self.view.filter(|v| ortho && v.is_world(&pr)) {
-            pr[..4].copy_from_slice(&v.proj);
-        }
+        let (mut pr, ortho) = self.game_projection();
         // A wider picture: a camera set up for 16:9 (aspect 1.68 to 1.88)
         // takes the picture's aspect, with the same view height and more
         // to the sides (Hor+), around the same centre. Perspective cameras
@@ -216,18 +198,16 @@ impl Xf {
         (pr, ortho)
     }
 
+    /// The projection registers as the game wrote them (before any
+    /// widening), and whether the projection is orthographic.
+    pub fn game_projection(&self) -> ([f32; 6], bool) {
+        (std::array::from_fn(|i| f(self.reg(0x1020 + i as u32))), self.reg(0x1026) & 1 != 0)
+    }
+
     /// Sets the aspect 16:9 projections are widened to (0: none).
     pub fn set_wide(&mut self, aspect: f32) {
         if self.wide != aspect {
             self.wide = aspect;
-            self.setup_gen += 1;
-        }
-    }
-
-    /// Sets the view (see [`View`]).
-    pub fn set_view(&mut self, view: Option<View>) {
-        if self.view != view {
-            self.view = view;
             self.setup_gen += 1;
         }
     }

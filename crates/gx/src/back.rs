@@ -18,10 +18,12 @@ pub(crate) enum Op {
     Cmd(Cmd),
     /// A clear of colour or alpha only, as a masked full-rectangle draw.
     ClearQuad { rect: Rect, color: [u8; 4], z: u32, color_update: bool },
-    /// The host's view for the draws after it ([`xf::View`]).
-    View(Option<xf::View>),
     /// The aspect 16:9 projections are widened to from here (0: none).
     Wide(f32),
+    /// The game camera for the draws after it (`Gpu::set_world`).
+    World(Option<crate::WorldCamera>),
+    /// Each player's window (`Gpu::set_views`).
+    Views([Option<xf::View>; 4]),
 }
 
 /// A draw as the first half loaded it.
@@ -76,12 +78,14 @@ pub(crate) struct Back {
     scratch_model: Vec<([f32; 3], u8)>,
     /// Depth plane of the last triangle drawn without z-freeze.
     zplane: [f32; 3],
+    /// The game camera while in a course (`Op::World`).
+    world_camera: Option<crate::WorldCamera>,
     out: Output,
 }
 
 impl Default for Back {
     fn default() -> Self {
-        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], out: Output::default() }
+        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], world_camera: None, out: Output::default() }
     }
 }
 
@@ -93,8 +97,12 @@ impl Back {
                 Op::Draw(d) => self.draw(d, batch),
                 Op::Cmd(c) => self.out.cmds.push(*c),
                 Op::ClearQuad { rect, color, z, color_update } => self.clear_quad(*rect, *color, *z, *color_update),
-                Op::View(v) => self.xf.set_view(*v),
                 Op::Wide(a) => self.xf.set_wide(*a),
+                Op::World(c) => {
+                    self.world_camera = *c;
+                    self.out.world.camera = c.unwrap_or_default();
+                }
+                Op::Views(v) => self.out.views = *v,
             }
         }
     }
@@ -102,7 +110,10 @@ impl Back {
     /// The field so far; fields from the next one carry interpolation
     /// records if `records_next`.
     pub fn take_output(&mut self, records_next: bool) -> Output {
-        let fresh = self.spare.take().unwrap_or_default();
+        let mut fresh = self.spare.take().unwrap_or_default();
+        // The camera and the windows hold until they are set again.
+        fresh.world.camera = self.out.world.camera;
+        fresh.views = self.out.views;
         self.records = records_next;
         std::mem::replace(&mut self.out, fresh)
     }
@@ -117,6 +128,8 @@ impl Back {
         old.cmds.clear();
         old.new_textures = Vec::new();
         old.evicted = Vec::new();
+        old.world.ranges.clear();
+        old.world.layers.clear();
         self.spare = Some(old);
     }
 
@@ -210,6 +223,31 @@ impl Back {
         }
         let count = self.out.indices.len() as u32 - first;
         let vcount = self.out.vertices.len() as u32 - base;
+        if let Some(camera) = self.world_camera {
+            // Recognised by the game's own projection: a wider picture
+            // widens it on the host (`Xf::projection`).
+            let (pr, ortho) = self.xf.game_projection();
+            if ortho && vcount != 0 && xf::is_camera_projection(&pr, camera.size) {
+                let vp = self.xf.viewport();
+                let (half_w, half_h) = (crate::EFB_WIDTH / 2.0, crate::EFB_HEIGHT / 2.0);
+                // As `xf::project` maps projected coordinates to clip space,
+                // with the widening folded into the x scale.
+                let widen = self.xf.projection().0[0] / pr[0];
+                self.out.world.map = [widen * vp[0] / half_w, (vp[3] - d.screen.offset_x) / half_w - 1.0, vp[1] / half_h, (vp[4] - d.screen.offset_y) / half_h - 1.0];
+                match self.out.world.ranges.last_mut() {
+                    Some(r) if r.0 + r.1 == base => r.1 += vcount,
+                    _ => self.out.world.ranges.push((base, vcount)),
+                }
+                let m = self.xf.position_matrix(raw[0].pnmtx);
+                if m[2][3] < crate::LAYER_Z {
+                    let layer = crate::Layer { first: base, count: vcount, z: m[2][3].round() as i32, scale: m[0][0].hypot(m[1][0]), t: [m[0][3], m[1][3]] };
+                    match self.out.world.layers.last_mut() {
+                        Some(l) if l.first + l.count == base && (l.z, l.scale, l.t) == (layer.z, layer.scale, layer.t) => l.count += vcount,
+                        _ => self.out.world.layers.push(layer),
+                    }
+                }
+            }
+        }
         self.scratch_verts = verts;
         if count == 0 {
             self.scratch_model = model;

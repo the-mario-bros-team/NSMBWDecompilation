@@ -335,6 +335,7 @@ pub struct TexKey {
 }
 
 /// A decoded texture for the renderer to upload under `id`.
+#[derive(Clone)]
 pub struct NewTexture {
     pub id: u32,
     pub width: u32,

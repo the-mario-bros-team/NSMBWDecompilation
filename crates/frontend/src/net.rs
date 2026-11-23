@@ -492,6 +492,12 @@ impl Session {
         Ok(out)
     }
 
+    /// Remotes that start playing at field `index` after the session began:
+    /// their players are brought into the course (`System::joins`).
+    pub fn joining_at(&self, index: u64) -> Vec<usize> {
+        (0..REMOTES).filter(|&s| self.active_from[s] == Some(index) && index > 0).collect()
+    }
+
     /// After field `index` ran: every [`HASH_EVERY`] fields, sends and checks
     /// the RAM hash.
     pub fn after_field(&mut self, sys: &System, index: u64) -> Result<(), String> {

@@ -1329,9 +1329,15 @@ impl Renderer {
     /// between (`gx::interp::moves`; `None`: shown as it is). Its textures
     /// must have been uploaded (a `fresh` render of it).
     pub fn prepare(&mut self, key: (u64, u64), out: &Output, moves: Option<&gx::interp::Moves>) -> Res<()> {
+        self.prepare_with(key, out, &out.vertices, moves)
+    }
+
+    /// [`Renderer::prepare`] with `vertices` in place of the field's own
+    /// (laid out like them: a player's window on it).
+    pub fn prepare_with(&mut self, key: (u64, u64), out: &Output, vertices: &[Vertex], moves: Option<&gx::interp::Moves>) -> Res<()> {
         // Storage buffer offsets: 256 bytes is the largest alignment Vulkan allows.
         const ALIGN: u64 = 256;
-        let vlen = (out.vertices.len() * VERTEX_SIZE as usize) as u64;
+        let vlen = (vertices.len() * VERTEX_SIZE as usize) as u64;
         let index_offset = vlen.next_multiple_of(ALIGN);
         let mut at = index_offset + (out.indices.len() as u64 * 4);
         let mut ranges = [(0u64, 0u64); 3];
@@ -1354,7 +1360,7 @@ impl Renderer {
         };
         {
             let dst = buffer.alloc.as_mut().and_then(|a| a.mapped_slice_mut()).ok_or("prepared buffer not mapped")?;
-            dst[..vlen as usize].copy_from_slice(as_bytes(&out.vertices));
+            dst[..vlen as usize].copy_from_slice(as_bytes(vertices));
             let idx = as_bytes(&out.indices);
             dst[index_offset as usize..index_offset as usize + idx.len()].copy_from_slice(idx);
             if let Some(parts) = &parts {

@@ -1172,59 +1172,234 @@ player found in `daPyMng_c`'s ID list (0x80354E10, one word per player).
     byte-identical between host and joiner;
   - the host's hashes before the join equal a plain solo run's.
 
-**M6 (camera per player): started; paused 2026-11-18.**
-- Approach chosen (keeps the game identical on every PC): the game's own
-  camera is to become a box around every player (activation, spawning and
-  the off-screen checks then cover everyone), and each PC re-projects the
-  world draws onto its own player at normal size. Only the GX transform
-  changes per PC, never guest state.
-- **Done, the per-PC view** (`gx::xf::View`, `GpuPort::set_view`,
-  `--view-player <n>`, `--view-zoom <z>`; a net session uses its own
-  remote). Each field the game thread reads the game camera and the
-  player, and the transform half swaps the world projection for a window
-  centred on the player and clamped inside the camera. Checked: in 1-1 with
-  `--view-zoom 2` the world is drawn 2x around Mario while the HUD stays.
-  Known limit: background layers move with the world (no parallax fix-up)
-  when a view is away from the camera's centre.
-- Findings (1-1, field 6500):
-  - `dBg_c::m_bg_p` = *(r13 − 0x58B0) (r13 = 0x8042F680). Camera top-left
-    at +0x8FE88/+0x8FE8C, size at +0x8FE78/+0x8FE7C (471.8 × 258.6, y up),
-    zoom at +0x9000C (0.866; size = base 408.7 × 224 ÷ zoom). Zone size
-    used to cap the zoom: +0x8FEA0/+0x8FEA4 (6595.6 × 385 in 1-1).
-  - `dBgParameter_c::ms_Instance_p` = *(r13 − 0x5880): camera left/top at
-    +0x38/+0x3C, size +0x40/+0x44, centre +0x48/+0x4C.
-  - The world projection is orthographic and centred: `2/width`,
-    `2/height` of the camera, depth −5.00025e-5, −1.0000501. Other passes:
-    light textures (2/32), the HUD (608 × 456), a top strip (640 × 72), and
-    2 draws at 832 × 456 that would collide with the world's when the
-    camera is 832 × 456.
-  - Each frame `dBg_c::calcScroll` (0x8007A6C0) is called from 0x80155988
-    with the look-at point (r4 = 0x8043F9EC) and writes the camera left at
-    0x8007A94C. The copy to `dBgParameter_c` +0x38/+0x3C is at
-    0x801566F0/0x80156700 (called from 0x80156654). Both are in main.dol,
-    so they can be hooked like the others in `hle-os`.
-  - The multiplayer zoom (0x8007AC40) steps between three zoom levels
-    (min/mid/max tables, spread and shrink lines) and is capped so the
-    camera never exceeds the zone's height. A box around far-apart players
-    therefore cannot come from the zoom; the plan is to set the camera
-    rectangle (width and height separately) after the copy at 0x801566F0,
-    since each PC re-projects anyway.
+**M6 (camera per player): done** (2026-11-19/20). `crates/hle-os/src/camera.rs`.
+- **The box.** Two hooks in `hle_os::SPECIAL`:
+  - at `dBgGm_c::execute`'s first instruction (0x80154F60), every word the
+    box wrote gets the game's value back, unless the `dBg_c` or its zone
+    changed since (a zone set up again). The game's camera code also runs
+    outside `execute` (the multiplayer zoom at 0x8007AC40, 0x80068620,
+    0x80077060), so a first "only if unchanged" rule left the box's zoom in
+    its state and the camera grew on it;
+  - at its only `blr` (0x80156814), the box is written. It covers a window
+    of the game camera's size around every player the camera follows, kept
+    inside the zone, and is then grown about its centre to the camera's
+    width:height. That way width, height and zoom agree, and the game draws
+    it without stretching (a first version with free width and height was
+    seen "super squished").
+- **Words written.**
+  - `dBg_c` (`*(r13 − 0x58B0)`): left/top +0x8FE88/+0x8FE8C, size
+    +0x8FE78/+0x8FE7C, the copies at +0x900AC/+0x900B0, the zoom and its
+    copies (+0x9000C, +0x90088, +0x9009C: base 408.7 ÷ box width), and
+    +0x90028, the furthest zoom-out. Actors stay active within a screen of
+    base ÷ that value around the camera's centre (`0x800B56E0`), so it is
+    lowered until that screen covers the box.
+  - `dBgParameter_c` (`*(r13 − 0x5880)`): left/top +0x38/+0x3C, size
+    +0x40/+0x44, centre +0x48/+0x4C, and the copy at +0x60/+0x64.
 
-**Next steps when this resumes:**
-1. M6: hook after the camera update: outside auto-scroll and boss zones,
-   widen the camera rectangle (dBg_c and dBgParameter_c) to the players'
-   bounding box plus half a normal screen, and keep the view at the
-   players-together size. Then check bubbles and pushes stop, and that
-   enemies near the far player run.
-2. M5: mid-level join. `daPyMng_c::create` (0x8005EEE0) and
-   `isCreateBalloon` (0x80061110) look like the way to bring the joiner in
-   inside a bubble, at a field both machines agree on.
-3. M2's paced check (paced `--no-feedback` hashes equal unpaced), and
-   two players through 1-1 to the flagpole online.
-4. Not yet re-run after these changes: `scripts/1-1.press` to the flagpole,
-   the 4:3 strap screenshot, `--check`, `scripts/check.ps1`. The changes
-   leave the solo path's guest code alone (the M3 and M4 runs reproduced
-   solo hashes), apart from the RTC now running on emulated time.
+  The game draws through the box's projection, and places its background
+  layers for it, from these words. Writing only `dBgParameter_c` changed
+  neither; leaving the zoom alone dropped tiles.
+- **When the box is used.** On by default (`--game-camera` turns it off
+  locally; always on online), and only if all of these hold:
+  - two or more players the camera follows (`daPyMng_c::getActScrollInfo`,
+    0x8005FC70: in the game per `0x80354E50[i]`, and actor +0x153C ≠ 1,
+    the scroll mode a bubble has);
+  - a course played normally (`*(r13 − 0x547C)` = 0; the title's demo is 2
+    and has four players);
+  - zone camera mode 0 (`dBg_c` +0x900FE);
+  - no auto-scroll (+0x900C6), camera calculation on (+0x909CA), not
+    locked (+0x90117).
+
+  Otherwise guest RAM is exactly what the game wrote. Boss rooms,
+  auto-scroll and the other camera modes keep the game's rules. The zone
+  is +0x90030 (left), +0x90034 (right), +0x90038 (top) and +0x9003C
+  (bottom), y up.
+- **Bubbles must not be in the box.** A revival bubble is placed relative
+  to the camera. With bubbles in the box, it spawned at the box's edge, the
+  box grew to include it, and it ran away to x ≈ 5700.
+- **The live camera.** In a multiplayer course `dBg_c`'s rectangle
+  (+0x8FE88) is not where the camera is: it stayed at x 630 while the
+  screen followed Mario to x 4400. `dBgParameter_c`'s rectangle is the live
+  one, and it is what windows are placed against when there is no box.
+  The box itself still unites `dBg_c`'s rectangle with the players'
+  windows, which keeps the course start inside it. Built on the live
+  camera instead, the second player was pushed and Mario dragged back:
+  open issue 1 below.
+- **Checks** (two players in 1-1 via Add/Drop Players; Mario runs the 1-1
+  inputs and Luigi stands at the start):
+  - with the game's camera, it zooms out and Mario is held back by the
+    screen edge (and died);
+  - with the box, Mario runs on and Luigi stays at x 748, never pushed or
+    bubbled by the edge;
+  - a Goomba near Luigi stays active and walks into him, so enemies near
+    the far player run;
+  - after that death, Luigi's revival bubble appears beside Mario and
+    floats to him;
+  - the hooks leave a solo run unchanged: the 1-1 script gives the same RAM
+    hashes with and without them (every 100 fields to 6800). Note:
+    `--save-state` makes the light-texture keys be forgotten, which changes
+    the timing from then on, so references are recorded without it.
+
+**Own game windows** (2026-11-20, as asked: "the multiplayer views on their
+own character on their own game windows"; `gx::World`, `gx::backdrop`,
+`frontend/src/play.rs`).
+- **GX** no longer changes the projection while transforming. The
+  transform half records the vertex ranges drawn through the game camera's
+  projection, and how their clip space maps to the screen (`gx::World`).
+  The camera hook sends the game camera (`gx::WorldCamera`: size, centre,
+  normal size, whether it is the game's own) and every player's window
+  (`gx::xf::View`: a normal-size window around the player, kept in the zone)
+  with each frame. A window is an affine map of those ranges' clip
+  positions (`World::apply`, tested against projecting through the window
+  directly), so one frame can be shown in any number of windows.
+- **The front end**:
+  - the main window shows its player (this machine's online,
+    `--view-player`, else player 1);
+  - locally, each other player in a course gets a window of its own with
+    its own renderer. When it opens, that renderer is given every live
+    texture, since a renderer only receives a texture in the frame it is
+    new;
+  - closing a player's window closes only it;
+  - `--shot` also saves `<name>-p<n>.png` for those windows.
+- **Background layers** (world draws behind view-space z −10020) are not
+  just cut from the box: the game scales them up with the box and places
+  them for its centre and height, so they appeared enlarged in a player's
+  window. `gx::backdrop` learns each layer (named by its depth) on the host
+  from the frames drawn:
+  - its scale is linear in the camera's width (1-1's far hills:
+    0.502 + 0.00122 × width, so 1.107 at the normal 496);
+  - divided by the zoom, its x translation is a constant minus a share of
+    the camera's x, its parallax (13.8% for those hills; 1.0 for layers
+    fixed in the world);
+  - divided by the zoom, its y moves with the camera's height at a rate
+    learned per height (median of recent estimates, from frames 16 units
+    of height apart with the camera still vertically).
+
+  In each window a layer is drawn at its normal scale and normal-height
+  place, moved by its parallax share of the window's offset. Layers fixed
+  in the world, or not learned yet, move like the course.
+- **Checked:** in 1-1 with Mario running ahead and Luigi at the start, both
+  windows show a normal-size background, positioned for each player, as
+  the box grows to 2300 units. Solo hashes are unchanged.
+
+**M5 (mid-level join): done** (2026-11-19). `crates/hle-os/src/join.rs`.
+- **Requesting the join.** At the field a joiner's input starts
+  (`Session::joining_at`), every machine calls `System::joins.request(slot)`.
+  At the next end of `dBgGm_c::execute` in a course played normally
+  (`*(r13 − 0x547C)` = 0; it is 2 in the title's demo), the slot is brought
+  in:
+  - it is marked in the game (`0x80354E50[slot]` = 1), given a character
+    no one else plays (`0x80354E60`), and given the per-character "start in
+    a bubble" flag (bit 4 of `0x80354E80[char]`, read by
+    `daPyMng_c::isCreateBalloon`);
+  - its `dRemoconMng_c::dConnect_c` (`*(*(r13 − 0x5658) + 4 + 4·slot)`) is
+    marked allowed (+0x54 = 1). Otherwise the game disconnects a remote
+    that connects in a course;
+  - its remote pages the Wii once even though the game turns page scan off
+    in courses (`Remote::force_page`).
+- **The calls.** The CPU, at the `blr`, is sent into
+  `daPyMng_c::create(slot, &pos, 0, 0)` (0x8005EEE0), in a stack frame of
+  our own holding `pos` (`dActor_c::construct` keeps only a pointer to
+  it). When that returns to the same `blr`, it is sent into
+  `dAcPy_c::setBalloonInDamage` (0x80138E60) for the new actor. Then the
+  flag, r1, r3 and LR are put back and `execute` returns as usual.
+- **Why the second call.** `create` alone gives the course-start kind of
+  bubble (`setBalloonInNextgoto`: demo "none" with argument 1, bubble type
+  2), which never moves. The second call makes it a revival's bubble
+  (demo "none" 0, type 0): the player waits below the zone (`pos`), then
+  the bubble comes in from the screen edge and floats to the others.
+- Pending joins and a call in flight are in the save state (layout
+  `NSMBWst7`). A join on the map waits for the next course, and is dropped
+  if the player is in the game by then (Add/Drop Players).
+- **Checks** (host and joiner on 127.0.0.1, interpreter):
+  - joined at the start of 1-1: RAM hashes agree every 100 fields;
+  - the bubble comes in at field 6530 and floats to Mario;
+  - Mario stomps the Goomba and hops into the bubble at 7820;
+  - Luigi then runs and jumps on remote 2.
+- **Shaking does not move a bubble faster.** A bubble pops when a player
+  touches it.
+- **Known gap:** the HUD has no lives counter for a player who joined in
+  the middle of a course (it shows them from the next course).
+
+**Other P9 checks (2026-11-20)** — all on branch `p9`, with the recompiled code regenerated for
+the new hooks (9549 functions):
+- **Solo 1-1** (`scripts/1-1.press`, 9700 fields, `--no-feedback`):
+  recompiled and `--interpreter` runs give the same RAM hashes at all 98
+  points and the same 13,194,609,027 instructions as P6's check. The
+  flagpole is reached at the same place (x 6704.0 at field 8880), and the
+  run is back on the map. Recompiled code ran 99.34% of instructions.
+- **M2, paced:** the same run paced (59.94 fields a second, 512 slow
+  fields) with `--no-feedback` gives the same hashes as unpaced at all 98
+  points.
+- **Online, mid-course join** (host and joiner on 127.0.0.1, recompiled):
+  RAM hashes agree at all 19 points to field 8200. Luigi comes in by
+  bubble, is popped when Mario hops into it, and runs on the joiner's
+  remote. Each machine's window is centred on its own player, and no
+  extra windows open online.
+- **Online, joined on the map** through Add/Drop Players: hashes agree at
+  all 45 points to field 10400 (open issue 2 is about the scripts).
+- **Title demo:** its four players get no windows of their own (fixed after
+  a first run opened three).
+- The 4:3 strap screen (400 fields) is byte-identical to
+  `docs/img/p3_strap.png`, and `--check` prints OK.
+- `scripts/check.ps1` passes `cargo check` (run through the CPU-limited
+  wrapper), doc-lint, source integrity and merge-ledger. `verify-ledger`
+  needs the untracked `work/ghidra` exports, which a worktree does not
+  have; `src/`, `ledger/` and `tools/` are unchanged from `main`.
+
+**Merged into `main` (2026-11-22).** Notes on how P9 fits main's later work:
+- **Ultrawide and 16:10.** The camera projection is recognised from the
+  game's own projection registers (`Xf::game_projection`), before main's
+  widening; the widening factor goes into `World.map`. The box is written
+  on top of the widened stage width, so the two compose.
+- **The main window** uses its player's view only while the box is active.
+  Then the vertices are moved on the CPU and the frame is shown without
+  main's GPU in-between frames. Otherwise the main window is drawn exactly
+  as on main, in-between frames included. Player windows take the main
+  window's picture shape and stretch.
+- **Android** does not apply views: with two or more players there it shows
+  the whole box.
+- **Checks** (recompiled code regenerated, 12,805 functions):
+  - Unit tests pass, and the Android release build compiles.
+  - Solo 1-1: RAM hashes match main's at all 98 points on both engines.
+  - 4p with `--game-camera`: RAM hashes match main's at all 111 points.
+  - 4p with the box: recompiled and `--interpreter` agree at all 111 points.
+  - Windowed: players 2–4 each get a window, 16:10 gives 1152×912 for every
+    window, and an online host and joiner agree at all 18 shared hashes.
+    The joiner's Luigi stayed in his bubble, so per-machine views were not
+    exercised online in this run.
+
+**Open issues and next steps:**
+1. **The box is built around `dBg_c`'s stale rectangle** (see "The live
+   camera" above). In a multiplayer course it keeps the course start inside
+   the box, so the game draws a far wider area than needed. Building the
+   box on `dBgParameter_c`'s live rectangle let the game push the second
+   player and drag Mario back: some camera code after `dBgGm_c::execute`
+   recomputes the camera before the players read it. Find that code (trace
+   writes to `dBgParameter_c` +0x38 across a frame) and write the box after
+   it.
+2. **Scripted two-player runs do not reach the flagpole.** With the solo
+   inputs on both remotes Luigi falls into the first pit; with Luigi idle,
+   Mario's run (aligned to x 772 rather than 760 by starting 4 frames
+   later) gets stuck at x ≈ 4440. That is the scripts, not the lockstep:
+   host and joiner hashes agreed at all 45 points of such a run.
+3. Background layers: a window opened mid-course draws not-yet-learned
+   layers like the course (enlarged) until they have been seen at two
+   widths. Vertical placement is extrapolated below the smallest box seen,
+   so the 1-1 castle sits a little low when the players are far apart.
+4. The HUD shows no lives counter for a player who joined mid-course.
+5. A joiner who leaves mid-course leaves its player with a disconnected
+   remote; the game's own handling of that (a pause) is untested online.
+6. **Occasional nondeterminism with renderer feedback on.** One
+   `--interpreter` boot run of 300 fields gave different RAM hashes from
+   field 100; three reruns of the same binary matched. The likely source
+   is EFB snapshots answering CPU peeks in timing order. Net sessions turn
+   feedback off; comparisons should use `--no-feedback`.
+7. **A player floating back in a bubble is not in their own window.**
+   Bubbled players are not followed, so the box covers only the others and
+   that player's window stays inside it. Seen in 1-1 at field 7000: Mario's
+   bubble at x 1152 was just off the right edge of his window.
+
 
 ## 13. P5 status (2026-11-18)
 

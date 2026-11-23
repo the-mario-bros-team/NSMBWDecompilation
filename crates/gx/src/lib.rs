@@ -9,6 +9,7 @@
 
 mod back;
 pub mod dff;
+pub mod backdrop;
 pub mod interp;
 pub mod replace;
 pub mod texture;
@@ -234,6 +235,111 @@ pub struct DrawRecord {
     pub fixed: bool,
 }
 
+/// The game camera at the end of the game's camera update, for the draws
+/// after it ([`Gpu::set_world`]).
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct WorldCamera {
+    /// Width and height (world units): the world projection is
+    /// `2 / width`, `2 / height`.
+    pub size: [f32; 2],
+    /// Its centre in the world (y up).
+    pub centre: [f32; 2],
+    /// It is the game's own camera (no box around far-apart players), so
+    /// background layers are drawn at their normal size and place
+    /// ([`backdrop::Backdrop`] learns them from such fields).
+    pub normal: bool,
+    /// The game camera's size without a box: what players' windows show.
+    pub normal_size: [f32; 2],
+}
+
+/// View-space depth behind which a world draw is a background layer. In
+/// 1-1 the course (tiles, actors) is drawn from about -5500 to -10000 and
+/// the background (sun rays at -10050, layers from -13500 to -18500)
+/// behind it.
+pub const LAYER_Z: f32 = -10020.0;
+
+/// A world draw of a background layer: its vertices and its position
+/// matrix's scale and translation (view space, world units).
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct Layer {
+    pub first: u32,
+    pub count: u32,
+    /// The matrix's z translation, rounded: the same for every frame of a
+    /// layer, so it names it.
+    pub z: i32,
+    pub scale: f32,
+    pub t: [f32; 2],
+}
+
+/// The world draws of a field, so a player's window can be applied to them
+/// after the transform ([`World::apply`]).
+#[derive(Clone, Debug, Default)]
+pub struct World {
+    /// Ranges of [`Output::vertices`] (first, count) drawn through the game
+    /// camera's projection.
+    pub ranges: Vec<(u32, u32)>,
+    /// Those of them that are background layers, in draw order.
+    pub layers: Vec<Layer>,
+    pub camera: WorldCamera,
+    /// How projected coordinates map to clip space (x scale, x offset,
+    /// y scale, y offset, per unit of w), from their viewport.
+    pub map: [f32; 4],
+}
+
+impl World {
+    /// The clip-space affine (per axis: X' = a X + b W) that moves a
+    /// world draw from the game camera to `view`.
+    pub(crate) fn world_affine(&self, view: &xf::View) -> [(f32, f32); 2] {
+        std::array::from_fn(|i| {
+            let k = self.camera.size[i] / view.size[i];
+            let d = 2.0 * view.offset[i] / view.size[i];
+            let (s, o) = (self.map[2 * i], self.map[2 * i + 1]);
+            (k, o * (1.0 - k) - s * d)
+        })
+    }
+
+    /// Moves the world vertices in `vertices` (laid out as the field's
+    /// output) from the game camera to `view`. Background layers that
+    /// `backdrop` knows are drawn at their normal size and shifted by their
+    /// parallax instead ([`backdrop::Backdrop::layer_affine`]); ones it does
+    /// not know yet move like the rest of the world.
+    pub fn apply(&self, vertices: &mut [Vertex], view: &xf::View, backdrop: Option<&backdrop::Backdrop>) {
+        if self.ranges.is_empty() || view.size[0] <= 0.0 || view.size[1] <= 0.0 {
+            return;
+        }
+        let world = self.world_affine(view);
+        let mut layer = self.layers.iter().peekable();
+        for &(first, count) in &self.ranges {
+            let (mut at, end) = (first, first + count);
+            while at < end {
+                // Skip layers already behind us, then take the next one in this range.
+                while layer.peek().is_some_and(|l| l.first + l.count <= at) {
+                    layer.next();
+                }
+                let (upto, affine) = match layer.peek() {
+                    Some(l) if l.first <= at => {
+                        let a = match backdrop {
+                            Some(b) => b.layer_affine(self, l, view),
+                            None => None,
+                        };
+                        ((l.first + l.count).min(end), a.unwrap_or(world))
+                    }
+                    Some(l) if l.first < end => (l.first, world),
+                    _ => (end, world),
+                };
+                if let Some(vs) = vertices.get_mut(at as usize..upto as usize) {
+                    for v in vs {
+                        let w = v.pos[3];
+                        v.pos[0] = affine[0].0 * v.pos[0] + affine[0].1 * w;
+                        v.pos[1] = affine[1].0 * v.pos[1] + affine[1].1 * w;
+                    }
+                }
+                at = upto.max(at + 1);
+            }
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct Output {
     /// Each draw's vertices once, in order; [`Output::indices`] makes them
@@ -251,6 +357,10 @@ pub struct Output {
     pub cmds: Vec<Cmd>,
     pub new_textures: Vec<texture::NewTexture>,
     pub evicted: Vec<u32>,
+    /// The world draws, while a game camera is set ([`Gpu::set_world`]).
+    pub world: World,
+    /// Each player's window, as last set ([`Gpu::set_views`]).
+    pub views: [Option<xf::View>; 4],
 }
 
 impl Output {
@@ -483,9 +593,16 @@ impl Gpu {
         }
     }
 
-    /// The host's view for the draws decoded from now on ([`xf::View`]).
-    pub fn set_view(&mut self, view: Option<xf::View>) {
-        self.batch.ops.push(Op::View(view));
+    /// The game camera for the draws decoded from now on: draws through its
+    /// projection are recorded in [`Output::world`]. `None` outside a
+    /// course.
+    pub fn set_world(&mut self, camera: Option<WorldCamera>) {
+        self.batch.ops.push(Op::World(camera));
+    }
+
+    /// Each player's window ([`xf::View`]), kept in the output from here on.
+    pub fn set_views(&mut self, views: [Option<xf::View>; 4]) {
+        self.batch.ops.push(Op::Views(views));
     }
 
     /// The draws decoded from now on are dropped (`on`) or drawn.
@@ -1029,6 +1146,25 @@ pub(crate) fn point_quad(out: &mut Vec<Vertex>, p: Vertex, size: f32) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn world_window_matches_projecting_through_it() {
+        // A world point in view space (the camera at the origin), the world
+        // viewport, and the game camera's projection.
+        let (cam, win, off) = ([2000.0f32, 1100.0], [480.0f32, 264.0], [700.0f32, -200.0]);
+        let vp = [320.0, -228.0, 16_777_216.0, 662.0, 570.0, 16_777_216.0];
+        let screen = xf::Screen { offset_x: 342.0, offset_y: 342.0 };
+        let proj = |w: f32, h: f32, ox: f32, oy: f32| [2.0 / w, -2.0 / w * ox, 2.0 / h, -2.0 / h * oy, -5e-5, -1.0];
+        let p = [640.0, -150.0, -10.0];
+        let mut v = Vertex { pos: xf::project(p, &proj(cam[0], cam[1], 0.0, 0.0), true, &vp, screen), ..Default::default() };
+        let half = (EFB_WIDTH / 2.0, EFB_HEIGHT / 2.0);
+        let world = World { ranges: vec![(0, 1)], camera: WorldCamera { size: cam, ..Default::default() }, map: [vp[0] / half.0, (vp[3] - screen.offset_x) / half.0 - 1.0, vp[1] / half.1, (vp[4] - screen.offset_y) / half.1 - 1.0], ..Default::default() };
+        world.apply(std::slice::from_mut(&mut v), &xf::View { offset: off, size: win }, None);
+        let want = xf::project(p, &proj(win[0], win[1], off[0], off[1]), true, &vp, screen);
+        for i in 0..4 {
+            assert!((v.pos[i] - want[i]).abs() < 1e-4, "{i}: {:?} vs {:?}", v.pos, want);
+        }
+    }
 
     fn bp(v: u32) -> [u8; 5] {
         let b = v.to_be_bytes();
