@@ -51,6 +51,8 @@ pub struct Options {
     pub shots: Vec<(u64, PathBuf)>,
     /// Print frames shown and game speed once a second.
     pub log_fps: bool,
+    /// Time every field (`crate::perf`).
+    pub perf: Option<crate::perf::Options>,
 }
 
 /// Fields kept for interpolation; older ones are dropped and their evicted
@@ -270,6 +272,8 @@ struct App {
     spent: [Duration; 3],
     help: bool,
     slow_fields: u64,
+    /// `--perf`.
+    perf: Option<crate::perf::Perf>,
     done: bool,
     inputs: input::Inputs,
     sent_input: Option<[Input; REMOTES]>,
@@ -804,6 +808,9 @@ impl App {
             say!("frame {}: {} draws, {} texture copies", f.index + 1, f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count(), f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).count());
         }
         renderer.overlay = rects;
+        if let Some(p) = &self.perf {
+            p.filter(&mut f.out);
+        }
         (self.main_player, self.online) = (f.main_player, f.online);
         self.backdrop.learn(&f.out.world);
         if !self.online {
@@ -853,6 +860,9 @@ impl App {
         }
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.spent[0] += started.elapsed();
+        if let Some(p) = &mut self.perf {
+            p.field(&f, started.elapsed(), None);
+        }
         let writebacks = renderer.take_writebacks();
         if !writebacks.is_empty() {
             let _ = emu.to_emu.send(ToEmu::Writebacks(writebacks));
@@ -1676,6 +1686,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
     let cheats = Arc::new(crate::gameplay::Cheats::new(settings.cheated));
     let characters = Arc::new(crate::gameplay::Characters::new(settings.file_characters));
     // Not in test runs (a frame count, scripted presses, screenshots).
+    let perf = opts.perf.as_ref().map(crate::perf::Perf::open).transpose()?;
     let update_check = if opts.max_frames.is_none() && opts.emu.script.is_empty() && opts.shots.is_empty() && !opts.unpaced { check_for_update() } else { None };
     let mut app = App {
         opts,
@@ -1702,6 +1713,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         spent: [Duration::ZERO; 3],
         help: false,
         slow_fields: 0,
+        perf,
         done: false,
         inputs: input::Inputs::new(),
         sent_input: None,
@@ -1745,6 +1757,9 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         backdrop: gx::backdrop::Backdrop::default(),
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
+    if let Some(p) = &mut app.perf {
+        p.finish();
+    }
     // A room the LAN tab joined could not be joined (gone, or out of
     // reach): the game starts again on its own rather than closing.
     if let (Some(e), crate::net::Mode::Join { .. }) = (&app.error, &app.opts.emu.net) {

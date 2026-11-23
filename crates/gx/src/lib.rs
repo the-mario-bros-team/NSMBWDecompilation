@@ -393,6 +393,13 @@ pub struct Output {
     pub world: World,
     /// Each player's window, as last set ([`Gpu::set_views`]).
     pub views: [Option<xf::View>; 4],
+    /// Time the GX threads spent on this field: decoding (the GX thread)
+    /// and transforming (its transform thread). Zero for work done inline.
+    pub busy: [std::time::Duration; 2],
+    /// Draws the game made this field (before merging into `cmds`), and
+    /// texture bytes hashed to look textures up (for `--perf`).
+    pub draw_ops: u32,
+    pub hashed: u64,
 }
 
 impl Output {
@@ -485,6 +492,12 @@ pub struct Gpu {
     pub patches: bool,
     /// Draws are dropped (switched in the command stream: Depth Blur off).
     drop_draws: bool,
+    /// The shading block of the last draw, and whether anything it is built
+    /// from has changed since (a BP register or the viewport written with a
+    /// new value, the texture cache's epoch): consecutive draws with nothing
+    /// set between them, the most common case, reuse it instead of building
+    /// and comparing 640 bytes each.
+    last_shading: Option<(Shading, u64)>,
     textures: texture::Cache,
     /// Loaded draws and other steps for the transform half, and where they
     /// go (see `back`).
@@ -509,6 +522,7 @@ impl Default for Gpu {
             records_next: true,
             patches: true,
             drop_draws: false,
+            last_shading: None,
             textures: texture::Cache::default(),
             batch: Batch::default(),
             sink: Sink::Local(Box::default()),
@@ -558,6 +572,7 @@ impl Gpu {
         let mut out = self.sink.take_output(self.records_next);
         out.new_textures = std::mem::take(&mut self.textures.new);
         out.evicted = std::mem::take(&mut self.textures.evicted);
+        out.hashed = std::mem::take(&mut self.textures.hashed_bytes);
         self.textures.next_generation();
         out
     }
@@ -614,6 +629,7 @@ impl Gpu {
             self.layouts = [None; 8];
             self.xf.setup_gen += 1;
             self.tex_memo = [None; 8];
+            self.last_shading = None;
             self.textures.epoch += 1;
             for i in 0..self.xf.mem.len() {
                 self.batch.ops.push(Op::Xf { addr: i as u32, v: self.xf.mem[i] });
@@ -650,6 +666,10 @@ impl Gpu {
 
     /// An XF write, for both halves.
     fn xf_write(&mut self, addr: u32, v: u32) {
+        // The viewport's width is in the shading block (fog range).
+        if (0x101A..0x1020).contains(&addr) {
+            self.last_shading = None;
+        }
         self.xf.write(addr, v);
         self.batch.ops.push(Op::Xf { addr, v });
     }
@@ -690,6 +710,7 @@ impl Gpu {
     pub fn set_texture_pack(&mut self, pack: Option<replace::Pack>) {
         self.textures.set_pack(pack);
         self.tex_memo = [None; 8];
+        self.last_shading = None;
     }
 
     /// Runs whole commands in `buf`; returns the bytes consumed. Display
@@ -777,6 +798,12 @@ impl Gpu {
             val = (self.bp[reg] & !self.bp_mask) | (val & self.bp_mask);
             self.bp_mask = 0xFF_FFFF;
         }
+        // A new value in any register: the next draw builds its shading
+        // block again (the game's GX library mostly skips writing a value a
+        // register already has; most registers are in the block).
+        if self.bp[reg] != val {
+            self.last_shading = None;
+        }
         self.bp[reg] = val;
         match reg {
             0x45 => events.push(Event::Finish),
@@ -803,6 +830,9 @@ impl Gpu {
                 } else {
                     self.tev_color[i][half] = val;
                 }
+                // The colour and konst registers share BP addresses: an
+                // unchanged BP value can still be a change of either.
+                self.last_shading = None;
             }
             0xFE => self.bp_mask = val,
             _ => {}
@@ -868,11 +898,17 @@ impl Gpu {
             let (bw, _, block_bytes) = texture::block(tex_format);
             let stride = (self.bp[0x4D] & 0x3FF) << 5;
             let stride = if stride as usize > (w as usize).div_ceil(bw) * block_bytes { stride } else { 0 };
+            // The destination's bytes now, kept while unchanged (`range_hash`).
             let ram_hash = if stride == 0 {
                 let size = texture::level_size(tex_format, w as usize, h as usize);
-                texture::hash(mem.ram(addr, size).unwrap_or(&[]))
+                let bytes = mem.ram(addr, size).unwrap_or(&[]);
+                self.textures.range_hash(addr, size, 0, mem.view(), || (texture::hash(bytes), bytes.len()))
             } else {
-                texture::hash(&texture::copy_bytes(mem, addr, tex_format, w as usize, h as usize, stride as usize).unwrap_or_default())
+                let span = texture::copy_rows(tex_format, w as usize, h as usize, stride as usize).last().map_or(0, |(at, len)| at + len);
+                self.textures.range_hash(addr, span, stride as usize, mem.view(), || {
+                    let bytes = texture::copy_bytes(mem, addr, tex_format, w as usize, h as usize, stride as usize).unwrap_or_default();
+                    (texture::hash(&bytes), bytes.len())
+                })
             };
             let id = self.textures.add_efb_copy(addr, w as u16, h as u16, ram_hash);
             self.stats.tex_copies += 1;
@@ -1006,7 +1042,9 @@ impl Gpu {
         } else {
             &[]
         };
-        let id = self.textures.lookup(key, data, tlut_bytes);
+        // Bytes read from RAM on the GX thread are hashed per chunk written.
+        let view = if tmem_data.is_some() { None } else { mem.view() };
+        let id = self.textures.lookup(key, data, tlut_bytes, view);
         // Sampler key: wrap s/t, mag, min filter, LOD bias, max LOD (if
         // mipmapped), and bit 24 for a texture pack's image, whose own mip
         // levels are all used.
@@ -1123,12 +1161,24 @@ impl Gpu {
             layout.read_into(v, &self.cp, d, &arrays, mem);
         }
         let n = self.batch.raws.len() as u32 - first;
-        let shading = self.shading(mem);
-        let shading = match self.batch.shadings.last() {
-            Some(last) if *last == shading => self.batch.shadings.len() as u32 - 1,
-            _ => {
-                self.batch.shadings.push(shading);
+        let shading = match self.last_shading {
+            // Nothing changed since the last draw: its block, which is the
+            // batch's last unless the batch is new.
+            Some((_, epoch)) if epoch == self.textures.epoch && !self.batch.shadings.is_empty() => self.batch.shadings.len() as u32 - 1,
+            Some((s, epoch)) if epoch == self.textures.epoch => {
+                self.batch.shadings.push(s);
                 self.batch.shadings.len() as u32 - 1
+            }
+            _ => {
+                let shading = self.shading(mem);
+                self.last_shading = Some((shading, self.textures.epoch));
+                match self.batch.shadings.last() {
+                    Some(last) if *last == shading => self.batch.shadings.len() as u32 - 1,
+                    _ => {
+                        self.batch.shadings.push(shading);
+                        self.batch.shadings.len() as u32 - 1
+                    }
+                }
             }
         };
         let raster = Raster {

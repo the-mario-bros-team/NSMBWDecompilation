@@ -16,6 +16,7 @@ mod gameplay;
 mod gamefiles;
 mod mods;
 mod overlay;
+mod perf;
 mod play;
 mod replay;
 mod say;
@@ -57,6 +58,10 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
   --trace-ios        print every IOS request and the Bluetooth conversation
   --profile-guest    sample the guest PC and print the hottest functions at exit
   --log-fps          print frames shown and game speed once a second
+  --perf <file.csv>  time every game frame (game thread, GX threads, render) into a CSV file, with
+                     p50/p99/worst in the log every --perf-window frames (default 300) and at the end
+  --perf-skip <list> leave out one draw category per window, in turn, to measure what it costs: none, all,
+                     blend, depth, nodepth, tev2, tex2, indirect, copies (e.g. none,blend,tex2)
   --gx-inline        decode GX on the game thread instead of its own (slower; for comparisons)
   --watch-player     print the players' positions every 10 game frames (for scripting --press runs)
   --save-state <f>:<file>  save the whole machine at the start of game frame f (repeatable)
@@ -109,6 +114,7 @@ struct Args {
     trace_ios: bool,
     profile: bool,
     log_fps: bool,
+    perf: Option<perf::Options>,
     gx_inline: bool,
     watch_player: bool,
     save_states: Vec<(u64, PathBuf)>,
@@ -171,7 +177,7 @@ fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &st
 
 fn parse_args() -> Result<Args, String> {
     let settings = settings::Settings::load(Path::new(settings::FILE));
-    let mut args = Args { settings_buttons: false, gameplay_options: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), clicks: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, game_camera: false, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false, wide: None, course: None };
+    let mut args = Args { settings_buttons: false, gameplay_options: false, check: false, boot: false, steps: 500_000_000, frames: None, screenshot: None, unpaced: false, game: None, settings, replay: None, frame: None, compare: None, min_psnr: 30.0, script: Vec::new(), clicks: Vec::new(), shots: Vec::new(), trace_ios: false, profile: false, log_fps: false, perf: None, gx_inline: false, watch_player: false, save_states: Vec::new(), load_state: None, hash_every: 0, hash_gx: false, no_feedback: false, net: net::Mode::Off, dump_ram: Vec::new(), view_player: None, view_zoom: 1.0, game_camera: false, wav: None, no_audio: false, code_profile: None, interpreter: false, headless: false, wide: None, course: None };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -199,6 +205,9 @@ fn parse_args() -> Result<Args, String> {
             "--trace-ios" => args.trace_ios = true,
             "--profile-guest" => args.profile = true,
             "--log-fps" => args.log_fps = true,
+            "--perf" => args.perf.get_or_insert_with(Default::default).csv = Some(it.next().ok_or("--perf needs a CSV file")?.into()),
+            "--perf-skip" => args.perf.get_or_insert_with(Default::default).skip = perf::Skip::parse_list(&it.next().ok_or("--perf-skip needs categories")?)?,
+            "--perf-window" => args.perf.get_or_insert_with(Default::default).window = number(&mut it, "--perf-window")?,
             "--gx-inline" => args.gx_inline = true,
             "--watch-player" => args.watch_player = true,
             "--wav" => args.wav = Some(it.next().ok_or("--wav needs a file")?.into()),
@@ -352,7 +361,7 @@ fn main() -> ExitCode {
     // A window always applies settings.toml's Gameplay options (play.rs).
     let gameplay = if args.gameplay_options { play::gameplay_options(&args.settings) } else { Default::default() };
     let (texture_pack, mods) = (mods::PackSpec::from_settings(&args.settings), args.settings.mods.clone());
-    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, game_camera: args.game_camera, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), gameplay, force_gameplay_options: args.gameplay_options, characters: Default::default(), clicks: args.clicks, wide: args.wide, texture_pack, mods, course: args.course, bt_passthrough: false } };
+    let opts = play::Options { game, max_frames: args.frames, screenshot: args.screenshot, unpaced: args.unpaced, settings: args.settings, shots: args.shots, log_fps: args.log_fps, perf: args.perf, emu: emu::EmuOptions { unpaced: args.unpaced, trace_ios: args.trace_ios, profile: args.profile, script: args.script, gx_inline: args.gx_inline, watch_player: args.watch_player, save_states: args.save_states, load_state: args.load_state, hash_every: args.hash_every, hash_gx: args.hash_gx, no_feedback: args.no_feedback, net: args.net, dump_ram: args.dump_ram, view_player: args.view_player, view_zoom: args.view_zoom, game_camera: args.game_camera, wav: args.wav, audio: !args.no_audio, code_profile: args.code_profile, interpreter: args.interpreter, stop_after: None, settings_label: args.settings_buttons.then(|| "Settings".into()), force_settings_buttons: args.settings_buttons, auto_close_settings: false, cheats: Default::default(), gameplay, force_gameplay_options: args.gameplay_options, characters: Default::default(), clicks: args.clicks, wide: args.wide, texture_pack, mods, course: args.course, bt_passthrough: false } };
     if args.headless {
         // As a window would, before the game boots: the game reads its
         // aspect ratio from SYSCONF once.
@@ -361,7 +370,14 @@ fn main() -> ExitCode {
         }
         win::tune_process();
         let emu = emu::EmuOptions { stop_after: opts.max_frames, auto_close_settings: true, ..opts.emu };
-        return match emu::run_headless(opts.game, emu) {
+        let perf = match opts.perf.as_ref().map(perf::Perf::open).transpose() {
+            Ok(p) => p,
+            Err(e) => {
+                eprintln!("{e}");
+                return ExitCode::from(2);
+            }
+        };
+        return match emu::run_headless(opts.game, emu, perf) {
             Ok((totals, fields)) => {
                 play::report(&totals);
                 println!("{fields} game frames, headless");

@@ -37,6 +37,10 @@ pub struct GameFrame {
     pub time: Instant,
     /// Host time the guest took for it.
     pub emu: Duration,
+    /// Of `emu`, waiting for the GX thread (syncs at PE events); then
+    /// waiting for the GX threads to finish the field's output.
+    pub gx_wait: Duration,
+    pub output_wait: Duration,
     pub index: u64,
     /// The game read the EFB recently: send a snapshot back.
     pub wants_efb: bool,
@@ -803,6 +807,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let _ = frames.send(Err(e));
             break;
         }
+        // Bulk writes the GX thread watches (`gx::texture::CHUNKED`) count
+        // again now they are done.
+        sys.mem.settle();
         // Net games keep the game's own rules.
         if session.is_none() {
             for line in gameplay.after_field(&mut sys, gameplay_options, &cheats, &characters) {
@@ -909,17 +916,18 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
             due += FIELD;
         }
-        let out = {
+        let (out, output_wait) = {
             let mut hw = sys.hw.borrow_mut();
             let waited = hw.gpu.waited();
             let out = hw.gpu.finish_output();
-            totals.output_wait += hw.gpu.waited() - waited;
+            let output_wait = hw.gpu.waited() - waited;
+            totals.output_wait += output_wait;
             if hash_gx {
                 gx_digest = (gx_digest.rotate_left(13) ^ out.digest()).wrapping_mul(0x9E37_79B9_7F4A_7C15);
             }
-            out
+            (out, output_wait)
         };
-        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some(), visible })).is_err() {
+        if frames.send(Ok(GameFrame { out, xfb, time, emu, gx_wait, output_wait, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some(), visible })).is_err() {
             break;
         }
         index += 1;
@@ -992,7 +1000,7 @@ fn start_passthrough(sys: &mut System, off: Option<&str>) {
 /// Nothing comes back from a renderer (EFB copies, EFB snapshots for CPU
 /// peeks) and no host input arrives, so a run depends on its options only.
 /// Returns the totals and the fields run.
-pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), String> {
+pub fn run_headless(game: PathBuf, opts: EmuOptions, mut perf: Option<crate::perf::Perf>) -> Result<(Totals, u64), String> {
     let mut emu = Emu::spawn(game, opts);
     // As a window at 60 fps (no frame interpolation) asks for.
     let _ = emu.to_emu.send(ToEmu::Interpolate(false));
@@ -1003,6 +1011,9 @@ pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), St
         match f {
             Ok(f) => {
                 fields += 1;
+                if let Some(p) = &mut perf {
+                    p.field(&f, Duration::ZERO, None);
+                }
                 let _ = emu.to_emu.send(ToEmu::Recycle(Box::new(f.out)));
             }
             Err(e) => {
@@ -1012,6 +1023,9 @@ pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), St
         }
     }
     let totals = emu.stop();
+    if let Some(p) = &mut perf {
+        p.finish();
+    }
     error.map_or(Ok((totals, fields)), Err)
 }
 
