@@ -1,6 +1,8 @@
 # Builds the Windows installer (scripts/installer.iss) from a release folder
-# holding nsmbw-launcher.exe, nsmbw-port.exe, LICENSE.txt and README.txt, as
-# the release zip does. The setup program is written next to the folder:
+# holding nsmbw-launcher.exe, nsmbw-port.exe, compat\nsmbw-port.exe (the
+# build for processors without AVX2), LICENSE.txt and README.txt, as the
+# release zip does; scripts\build-windows.ps1 builds the programs into it.
+# The setup program is written next to the folder:
 # nsmbw-port-v<version>-windows-x64-setup.exe. Needs Inno Setup 6.
 #
 #   powershell -File scripts\make-installer.ps1 -Release C:\nsmbw-data\release-v0.0.2\nsmbw-port-v0.0.2
@@ -15,7 +17,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 $Release = (Resolve-Path $Release).Path
-foreach ($f in 'nsmbw-launcher.exe', 'nsmbw-port.exe', 'LICENSE.txt', 'README.txt') {
+foreach ($f in 'nsmbw-launcher.exe', 'nsmbw-port.exe', 'compat\nsmbw-port.exe', 'LICENSE.txt', 'README.txt') {
     if (-not (Test-Path (Join-Path $Release $f))) { throw "$Release has no $f" }
 }
 if ($Version -eq '') {

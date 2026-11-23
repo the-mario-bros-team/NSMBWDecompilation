@@ -12,6 +12,7 @@
 
 mod app;
 mod banner;
+mod cpu;
 mod dialogs;
 mod disc;
 mod draw;

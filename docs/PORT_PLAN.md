@@ -2267,3 +2267,55 @@ and shader patches loaded at start, all since removed):
 menus, the Power-Up button, the quick-save backup when leaving the app, and
 the in-game settings window (built on another branch; options will meet
 through a shared settings file).
+
+## 17. Older PC processors: the compat build (2026-11-23)
+
+The Windows build is x86-64-v3 (`.cargo/config.toml`: AVX2, FMA, BMI2;
+Intel Haswell, AMD Excavator or newer). As NSMB-Wii-Recompilation does,
+a release now also carries `compat\nsmbw-port.exe`, the same game built for
+x86-64-v2 (SSE4.2, POPCNT; Intel Nehalem, AMD Bulldozer or newer), and the
+launcher is built for any x86-64. `scripts\build-windows.ps1` builds the
+three, each with its own `RUSTFLAGS` and target folder; the setup program,
+the zip and the in-game updater carry `compat\` (details:
+`crates/launcher/README.md`, "Older processors").
+
+- **Same results.** The only floating-point difference is fused
+  multiply-add: without the FMA instruction, `guest_cpu::fp::fma` uses
+  `fp::fma_soft`: `libm::fma` (musl's algorithm, MIT; in the game's build
+  other crates turn on libm's "arch" feature, so it uses FMA4 on AMD
+  Bulldozer, and its software path elsewhere), with NaNs handled as the
+  instruction does (given a NaN, it returns it quieted, even for
+  0 * inf + NaN, where libm gives the default NaN: the test found that).
+  `crates/guest-cpu/tests/soft_fma.rs` checks it bit for bit against the
+  instruction on edge cases and 3 million random ones. Of several NaN
+  inputs, the instruction's pick depends on the form the compiler chose
+  (vfmadd132/213/231), so the normal build itself has no one answer there;
+  the test only asks that one of them comes out. The C runtime's `fma`, which
+  `f64::mul_add` calls in a build without FMA, was not used: here it ran
+  at the instruction's speed (it seems to use the instruction where there
+  is one), so its software path could not be tested on this PC. Where the processor has FMA but not AVX2 (AMD
+  Piledriver, Steamroller), the compat build still uses the instruction.
+- **Choosing it.** The launcher checks the processor and starts the compat
+  build. `nsmbw-port.exe` started directly checks too, before anything
+  built for v3 can run: an assembly routine in the C runtime's initialiser
+  table (`crates/frontend/src/cpu_guard.rs`) hands over to the compat
+  build with the same command line, or says why it cannot.
+  `NSMBW_FORCE_COMPAT` (any value) forces the compat build for testing.
+- **Checked on the development PC** (which has AVX2, so the compat build
+  was forced with `NSMBW_FORCE_COMPAT`; it is untested on a processor
+  without AVX2):
+  - 1-1 headless (`--headless --unpaced --no-audio --press-file
+    scripts/1-1.press --frames 9700 --hash-every 100`), started through
+    `nsmbw-port.exe` with the variable set: it handed over to the compat
+    build, and all 98 RAM hashes equal main's reference log. So did the
+    compat build started directly (twice) and the normal build (twice).
+  - Speed, unpaced, two runs each, alternating, with other builds running
+    on the PC: normal 238 and 246 M guest instructions/s (55.4 and 53.6 s
+    of host time), compat 223 and 237 M/s (59.3 and 55.7 s), about 5%
+    slower. This PC has FMA, so the compat build used the instruction: on
+    a processor without it, the software FMA will cost more (not measured).
+  - The launcher, built for any x86-64, started `compat\nsmbw-port.exe`
+    with the variable set (Skip Launcher, 120 frames, no validation errors).
+  - `scripts\build-windows.ps1 -Local` assembled the folder, and
+    `scripts\make-installer.ps1` built a setup program from it (not
+    installed).

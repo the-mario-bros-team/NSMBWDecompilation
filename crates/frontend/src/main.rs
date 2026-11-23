@@ -8,6 +8,9 @@
 mod audio;
 mod boot;
 mod click;
+// The processor check before main (Windows x86-64 only).
+#[cfg(all(windows, target_arch = "x86_64"))]
+mod cpu_guard;
 mod emu;
 mod gameplay;
 mod gamefiles;
@@ -306,6 +309,9 @@ fn game_dir(cli: Option<PathBuf>) -> Result<PathBuf, String> {
 }
 
 fn main() -> ExitCode {
+    if cfg!(all(target_arch = "x86_64", not(target_feature = "avx2"))) {
+        eprintln!("compat build (x86-64-v2, for processors without AVX2)");
+    }
     if std::env::args().any(|a| a == "-h" || a == "--help") {
         println!("{USAGE}");
         return ExitCode::SUCCESS;

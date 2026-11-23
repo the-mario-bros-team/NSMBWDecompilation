@@ -26,10 +26,11 @@ pub enum Progress {
     Installing,
 }
 
-/// Downloads `release` and installs it in `folder` (the programs' folder),
-/// which must then hold a new `program` (the running program's file name,
-/// such as `nsmbw-port.exe`). Blocks; `cancel` stops the download. On
-/// success the caller starts `program` again ([`restart`]).
+/// Downloads `release` and installs it in `folder` (the installation,
+/// [`crate::install_dir`]), which must then hold a new `program` (the running
+/// program's path in it, such as `nsmbw-port.exe`, or
+/// `compat\nsmbw-port.exe` for the compat build). Blocks; `cancel` stops the
+/// download. On success the caller starts `program` again ([`restart`]).
 pub fn update(release: &Release, folder: &Path, program: &str, progress: &dyn Fn(Progress), cancel: &AtomicBool) -> Result<(), String> {
     let download = release.download.as_ref().ok_or("this release has no download for Windows")?;
     cleanup(folder);

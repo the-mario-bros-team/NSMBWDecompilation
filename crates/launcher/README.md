@@ -3,6 +3,7 @@
 A Windows launcher for the port: pick a version of the game, point it at your
 own extracted copy, and play. It is built on its own
 (`cargo build --release -p launcher`) and lives next to `nsmbw-port.exe`.
+`scripts\build-windows.ps1` builds all of a release's programs (below).
 
 ## Installing
 
@@ -14,6 +15,63 @@ installs for the current user, without admin rights, to
 the Start menu, and adds an uninstaller to Settings > Apps. The folder stays
 the player's to write to, as the launcher and the game's updater need.
 Uninstalling removes the programs and shortcuts; settings and saves stay.
+
+The zip and the setup program carry the same files:
+
+```
+nsmbw-launcher.exe       the launcher, built for any x86-64 processor
+nsmbw-port.exe           the game, for x86-64-v3 (AVX2, FMA, BMI2)
+compat\nsmbw-port.exe    the game for older processors, x86-64-v2 (SSE4.2, POPCNT)
+LICENSE.txt
+README.txt
+```
+
+The zip has them in one folder, `nsmbw-port-v<version>\`. Keep the `compat`
+folder next to `nsmbw-port.exe`.
+
+`scripts\build-windows.ps1 -Out <folder> -Target <cargo target folder>`
+builds the three programs into a release folder (each in a target folder of
+its own: `<Target>`, `<Target>-compat` and `<Target>-launcher`, as their
+`RUSTFLAGS` differ) and adds `LICENSE.txt`; README.txt is written by hand.
+It refuses to run while `crates\game-recomp\gen` holds recompiled code
+(releases never carry it) unless `-Local` is given.
+
+## Older processors: the compat build
+
+`nsmbw-port.exe` is built for x86-64-v3 (`.cargo/config.toml`): Intel
+Haswell, AMD Excavator or newer. For processors without AVX2, FMA or BMI2,
+the release also holds `compat\nsmbw-port.exe`, the same game built for
+x86-64-v2 (Intel Nehalem, AMD Bulldozer or newer), as NSMB-Wii-Recompilation
+does. Its results are the same: where there is no FMA instruction, the
+guest's fused multiply-adds are done in software (`guest_cpu::fp::fma_soft`,
+on `libm::fma`) with the instruction's results bit for bit, only slower
+(`crates/guest-cpu/tests/soft_fma.rs`).
+
+- **The launcher** checks the processor (`src/cpu.rs`) and starts
+  `compat\nsmbw-port.exe` instead of `nsmbw-port.exe` when one of
+  x86-64-v3's features is missing; the game's folder check (`--check`) uses
+  the same program. The launcher is built for any x86-64 so that it runs
+  there too, and says so when a processor lacks even x86-64-v2.
+- **The game started directly** (a shortcut, a script): code built for
+  x86-64-v3 may use AVX2 or BMI2 anywhere, even in `main`'s first lines,
+  so the check in `nsmbw-port.exe` is written in assembly
+  (`crates/frontend/src/cpu_guard.rs`) and runs from the C runtime's
+  initialiser table (`.CRT$XCB`) before `main` and before any Rust
+  initialiser. On a processor without x86-64-v3 it starts
+  `compat\nsmbw-port.exe` with the same command line, folder and standard
+  handles, waits, and leaves with its exit code; if that program cannot be
+  started, it says why (standard error and a message box) instead of
+  crashing. The compat build checks for x86-64-v2 the same way. Stopping
+  the first program does not stop the compat one it started: start the
+  game from the launcher, which starts the compat build itself.
+- **Testing:** the environment variable `NSMBW_FORCE_COMPAT`, set to
+  anything, makes the launcher and `nsmbw-port.exe` use the compat build
+  on any processor. The compat build says `compat build` on its first line
+  of output.
+- **Updates:** the zip holds `compat\nsmbw-port.exe`, and the updater
+  installs every file of the zip, so both builds are updated together. The
+  compat build, which runs from `compat\`, updates the installation above
+  it (`port_update::install_dir`) and starts its own new copy.
 
 ## What it does
 
@@ -118,8 +176,9 @@ options. A release without a Windows download offers its web page instead.
 Test runs (`--frames`, `--press`, `--shot`, `--unpaced`, `--headless`) do
 not ask the release source.
 
-A release's zip holds the programs (`nsmbw-port.exe`, `nsmbw-launcher.exe`
-and what they need), at its root or in one folder. Raise
+A release's zip holds the programs (`nsmbw-port.exe`,
+`compat\nsmbw-port.exe`, `nsmbw-launcher.exe` and what they need), at its
+root or in one folder (see Installing). Raise
 `crates/port-update/Cargo.toml`'s version before building a release:
 otherwise the new build finds itself out of date.
 

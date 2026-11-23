@@ -1324,6 +1324,7 @@ name = "guest-cpu"
 version = "0.1.0"
 dependencies = [
  "guest-mem",
+ "libm",
 ]
 
 [[package]]
