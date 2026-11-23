@@ -6,8 +6,9 @@ use naga::valid::{Capabilities, ValidationFlags, Validator};
 const UBERSHADER: &str = include_str!("shader.wgsl");
 const COPY: &str = include_str!("copy.wgsl");
 
-fn entry(module: &naga::Module, info: &naga::valid::ModuleInfo, stage: naga::ShaderStage, name: &str) -> Result<Vec<u32>, String> {
-    let mut opts = spv::Options { lang_version: (1, 5), ..Default::default() };
+/// SPIR-V version `spirv`: 1.5 for Vulkan 1.3, 1.3 for Vulkan 1.1.
+fn entry(module: &naga::Module, info: &naga::valid::ModuleInfo, stage: naga::ShaderStage, name: &str, spirv: (u8, u8)) -> Result<Vec<u32>, String> {
+    let mut opts = spv::Options { lang_version: spirv, ..Default::default() };
     // The CPU already outputs Vulkan clip space; don't flip y.
     opts.flags.remove(spv::WriterFlags::ADJUST_COORDINATE_SPACE);
     let pipeline = spv::PipelineOptions { shader_stage: stage, entry_point: name.to_string() };
@@ -21,9 +22,9 @@ fn parse(source: &str) -> Result<(naga::Module, naga::valid::ModuleInfo), String
 }
 
 /// (vertex, fragment) SPIR-V for one WGSL source with entry points `vs` and `fs`.
-fn compile(source: &str) -> Result<(Vec<u32>, Vec<u32>), String> {
+fn compile(source: &str, spirv: (u8, u8)) -> Result<(Vec<u32>, Vec<u32>), String> {
     let (module, info) = parse(source)?;
-    Ok((entry(&module, &info, naga::ShaderStage::Vertex, "vs")?, entry(&module, &info, naga::ShaderStage::Fragment, "fs")?))
+    Ok((entry(&module, &info, naga::ShaderStage::Vertex, "vs", spirv)?, entry(&module, &info, naga::ShaderStage::Fragment, "fs", spirv)?))
 }
 
 /// The ubershader's fragment entry points: with dual-source blending
@@ -36,16 +37,16 @@ pub const ONE_BLEND: [&str; 2] = ["fs_one_blend", "fs_one_early_blend"];
 
 /// SPIR-V for the ubershader's vertex stage and the fragment entry points
 /// `names` (each a module of its own).
-pub fn ubershader(names: &[&str]) -> Result<(Vec<u32>, Vec<Vec<u32>>), String> {
+pub fn ubershader(names: &[&str], spirv: (u8, u8)) -> Result<(Vec<u32>, Vec<Vec<u32>>), String> {
     let (module, info) = parse(UBERSHADER)?;
-    let vs = entry(&module, &info, naga::ShaderStage::Vertex, "vs")?;
-    let fs = names.iter().map(|n| entry(&module, &info, naga::ShaderStage::Fragment, n)).collect::<Result<_, _>>()?;
+    let vs = entry(&module, &info, naga::ShaderStage::Vertex, "vs", spirv)?;
+    let fs = names.iter().map(|n| entry(&module, &info, naga::ShaderStage::Fragment, n, spirv)).collect::<Result<_, _>>()?;
     Ok((vs, fs))
 }
 
 /// The EFB copy pass.
-pub fn copy() -> Result<(Vec<u32>, Vec<u32>), String> {
-    compile(COPY)
+pub fn copy(spirv: (u8, u8)) -> Result<(Vec<u32>, Vec<u32>), String> {
+    compile(COPY, spirv)
 }
 
 #[cfg(test)]
@@ -70,15 +71,19 @@ mod tests {
     #[test]
     fn shaders_compile() {
         let all: Vec<&str> = super::DUAL_SOURCE.iter().chain(&super::ONE).chain(&super::ONE_BLEND).copied().collect();
-        let (vs, fs) = super::ubershader(&all).unwrap_or_else(|e| panic!("{e}"));
-        assert_eq!(vs[0], 0x0723_0203);
-        for (name, code) in all.iter().zip(&fs) {
-            assert_eq!(code[0], 0x0723_0203);
-            // The single-output stages must run on GPUs without dual-source blending.
-            assert_eq!(has_index_decoration(code), name.starts_with("fs") && !name.starts_with("fs_one"), "{name}");
+        // SPIR-V 1.5 for Vulkan 1.3, 1.3 for Vulkan 1.1 (word 1 is the version).
+        for spirv in [(1, 5), (1, 3)] {
+            let version = u32::from(spirv.0) << 16 | u32::from(spirv.1) << 8;
+            let (vs, fs) = super::ubershader(&all, spirv).unwrap_or_else(|e| panic!("{e}"));
+            assert_eq!(vs[..2], [0x0723_0203, version]);
+            for (name, code) in all.iter().zip(&fs) {
+                assert_eq!(code[..2], [0x0723_0203, version]);
+                // The single-output stages must run on GPUs without dual-source blending.
+                assert_eq!(has_index_decoration(code), name.starts_with("fs") && !name.starts_with("fs_one"), "{name}");
+            }
+            let (vs, fs) = super::copy(spirv).unwrap_or_else(|e| panic!("{e}"));
+            assert_eq!(vs[..2], [0x0723_0203, version]);
+            assert_eq!(fs[..2], [0x0723_0203, version]);
         }
-        let (vs, fs) = super::copy().unwrap_or_else(|e| panic!("{e}"));
-        assert_eq!(vs[0], 0x0723_0203);
-        assert_eq!(fs[0], 0x0723_0203);
     }
 }
