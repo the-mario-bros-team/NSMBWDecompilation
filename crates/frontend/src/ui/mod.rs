@@ -91,9 +91,11 @@ pub enum Change {
 pub struct LanView {
     /// 0 not in a room, 1 hosting one, 2 in someone's.
     pub mode: u8,
-    /// Hosting: where others join; in a room: its address.
+    /// Hosting: where others join (and over Tailscale, when it is on); in
+    /// a room: its address.
     pub addr: String,
-    /// The rooms found on the network: their names and addresses.
+    /// The rooms found on the network and over Tailscale: their names
+    /// (" (Tailscale)" after those found over it) and addresses.
     pub rooms: Vec<(String, String)>,
 }
 

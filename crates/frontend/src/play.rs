@@ -496,7 +496,9 @@ impl App {
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));
         if let crate::net::Mode::Host { port, .. } = self.opts.emu.net {
-            crate::lan::announce(port, crate::lan::computer_name());
+            if crate::lan::announce(port, crate::lan::computer_name()).is_err() {
+                say_err!("LAN: another game on this PC already answers room queries");
+            }
         }
         self.emu = Some(emu);
         if let Some(pin) = self.prompt_pin {
@@ -629,12 +631,14 @@ impl App {
             }
             let rooms = self.finder.as_mut().map(|f| f.poll()).unwrap_or_default();
             let here = self.finder.as_ref().and_then(|f| f.here).map_or_else(|| "this PC".to_string(), |ip| ip.to_string());
+            // Over Tailscale, others join at this PC's Tailscale address.
+            let tailscale = self.finder.as_ref().and_then(|f| f.tailscale);
             let (mode, addr) = match &self.opts.emu.net {
-                crate::net::Mode::Host { port, .. } => (1, format!("{here}:{port}")),
+                crate::net::Mode::Host { port, .. } => (1, tailscale.map_or_else(|| format!("{here}:{port}"), |ts| format!("{here}:{port} (Tailscale {ts}:{port})"))),
                 crate::net::Mode::Join { addr } => (2, addr.clone()),
                 crate::net::Mode::Off => (0, String::new()),
             };
-            let view = ui::LanView { mode, addr, rooms: rooms.into_iter().map(|r| (r.name, r.addr.to_string())).collect() };
+            let view = ui::LanView { mode, addr, rooms: rooms.into_iter().map(|r| (if r.tailscale() { format!("{} (Tailscale)", r.name) } else { r.name }, r.addr.to_string())).collect() };
             if let Some(m) = &mut self.menus {
                 m.set_lan(view);
             }
@@ -1132,7 +1136,11 @@ impl App {
                     self.updater = Some((state, cancel));
                 }
                 ui::Change::LanHost => self.relaunch = Some(vec!["--host".into(), crate::lan::GAME_PORT.to_string()]),
-                ui::Change::LanJoin(addr) => self.relaunch = Some(vec!["--join".into(), crate::lan::with_port(&addr)]),
+                ui::Change::LanJoin(addr) => {
+                    let addr = crate::lan::with_port(&addr);
+                    crate::lan::joined(&addr);
+                    self.relaunch = Some(vec!["--join".into(), addr]);
+                }
                 ui::Change::LanLeave => self.relaunch = Some(Vec::new()),
                 ui::Change::UpdateCancel => {
                     if let Some((_, cancel)) = &self.updater {

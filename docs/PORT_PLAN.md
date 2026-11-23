@@ -1150,7 +1150,8 @@ player found in `daPyMng_c`'s ID list (0x80354E10, one word per player).
   new process: RAM hashes match the run that never stopped at every 100
   fields to 7000, and screenshots at 6500 and 6990 are byte-identical.
 
-**M4 (lockstep and joining): done for two machines.** `crates/frontend/src/net.rs`.
+**M4 (lockstep and joining): done for two machines.** `crates/frontend/src/net.rs`
+(now `crates/netplay/src/net.rs`, shared with the Android app).
 - `--host <port>` plays remote 1 and listens; `--join <host>:<port>`
   joins at any time. At its next field the host saves its machine and
   sends it with its NAND files (deflated); the joiner writes the files to
@@ -2054,9 +2055,9 @@ Branch `claude/android-7bd682`.
 
 **Pieces:**
 - `crates/android` builds `libnsmbw.so` (package `nsmbw-android`; empty on
-  other targets). It runs the desktop game thread unchanged: `emu.rs`,
-  `net.rs` and `say.rs` are included from `crates/frontend/src` with
-  `#[path]`. Its own `audio` (AAudio through the `ndk` crate, the same
+  other targets). It runs the desktop game thread unchanged: `emu.rs`
+  and `say.rs` are included from `crates/frontend/src` with `#[path]`;
+  `net` is the `netplay` crate's, as on the desktop. Its own `audio` (AAudio through the `ndk` crate, the same
   queue and resampling as the `cpal` one) and `win` (thread priority nice
   -8, thread CPU time) stand in for the frontend modules of those names.
   stdout and stderr go to logcat (`adb logcat -s nsmbw`).

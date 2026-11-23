@@ -564,6 +564,28 @@ final class Lang {
                 "En LAN se juega con las reglas normales del juego.",
                 "En LAN, ce sont les règles normales du jeu.",
                 "In LAN valgono le regole normali del gioco.");
+        // --- LAN Play (LanPlay) ---
+        newer("LAN Play", "Juego en LAN", "Jeu en LAN", "Gioco in LAN");
+        newer("Play with other phones and PCs on your Wi-Fi, or over Tailscale. Every player needs their own "
+                + "game and the same version of NSMBW.",
+                "Juega con otros teléfonos y PC de tu Wi-Fi, o por Tailscale. Cada jugador necesita su propio "
+                + "juego y la misma versión de NSMBW.",
+                "Jouez avec d'autres téléphones et PC de votre Wi-Fi, ou par Tailscale. Chaque joueur a besoin "
+                + "de son propre jeu et de la même version de NSMBW.",
+                "Gioca con altri telefoni e PC sulla tua rete Wi-Fi, o con Tailscale. Ogni giocatore ha bisogno "
+                + "del proprio gioco e della stessa versione di NSMBW.");
+        newer("Create Room", "Crear sala", "Créer une salle", "Crea stanza");
+        newer("Rooms", "Salas", "Salles", "Stanze");
+        newer("Looking for rooms…", "Buscando salas…", "Recherche de salles…", "Ricerca delle stanze…");
+        newer("Join by Address…", "Unirse por dirección…", "Rejoindre par adresse…", "Entra tramite indirizzo…");
+        newer("Join a Room", "Unirse a una sala", "Rejoindre une salle", "Entra in una stanza");
+        newer("The host's address, as its LAN Play shows it, or its Tailscale name.",
+                "La dirección del anfitrión, como la muestra su Juego en LAN, o su nombre de Tailscale.",
+                "L'adresse de l'hôte, telle que son Jeu en LAN l'affiche, ou son nom Tailscale.",
+                "L'indirizzo di chi ospita, come lo mostra il suo Gioco in LAN, o il suo nome Tailscale.");
+        newer("Join", "Unirse", "Rejoindre", "Entra");
+        newer("Can't look for rooms: %s", "No se pueden buscar salas: %s", "Impossible de chercher des salles : %s",
+                "Impossibile cercare le stanze: %s");
         // --- Edit Touch Controls (TouchLayoutEditor) ---
         newer("Edit Touch Controls", "Editar controles táctiles", "Modifier les commandes tactiles",
                 "Modifica i controlli touch");

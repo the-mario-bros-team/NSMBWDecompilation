@@ -24,9 +24,10 @@ game-recomp = { path = "../game-recomp" }
 port-update = { path = "../port-update" }
 # Importing a disc image (ISO, WBFS, RVZ, WIA, ...).
 disc-image = { path = "../disc-image" }
+# LAN and online play, shared with the desktop.
+netplay = { path = "../netplay" }
 sevenz-rust2 = { version = "0.25", default-features = false }
 raw-window-handle = "0.6"
-miniz_oxide = "0.8"
 jni = "0.21"
 ndk = { version = "0.9", default-features = false, features = ["audio", "api-level-28"] }
 libc = "0.2"

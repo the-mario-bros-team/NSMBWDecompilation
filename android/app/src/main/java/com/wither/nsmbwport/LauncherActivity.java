@@ -41,6 +41,7 @@ public final class LauncherActivity extends Activity {
     private TextView skip;
     private TextView status;
     private Button play;
+    private Button lanPlay;
     private View steps;
     private boolean incompleteShown;
     private final Handler main = new Handler(Looper.getMainLooper());
@@ -106,6 +107,9 @@ public final class LauncherActivity extends Activity {
         play = button(Lang.t("Play"), true);
         play.setOnClickListener(v -> startActivity(new Intent(this, GameActivity.class)));
         intro.addView(play, matchWidth(dp(14)));
+        lanPlay = button(Lang.t("LAN Play"), false);
+        lanPlay.setOnClickListener(v -> LanPlay.show(this));
+        intro.addView(lanPlay, matchWidth(dp(10)));
 
         final LinearLayout options = card(Lang.t("Options"));
         final Button settingsButton = button(Lang.t("Settings"), false);
@@ -228,6 +232,7 @@ public final class LauncherActivity extends Activity {
             showStatus(Lang.t("Game data is installed and checked."), GREEN);
         }
         play.setEnabled(present && problem == null);
+        lanPlay.setEnabled(present && problem == null);
         steps.setVisibility(present && problem == null ? View.GONE : View.VISIBLE);
     }
 

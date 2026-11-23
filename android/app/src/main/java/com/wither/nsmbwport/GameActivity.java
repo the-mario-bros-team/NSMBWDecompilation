@@ -63,6 +63,7 @@ public class GameActivity extends Activity
             openStartMenu();
             return;
         }
+        LanPlay.beforeStart(this);  // started from LAN Play: host or join
         final String error = Native.start(GameFiles.dataDir(this).getAbsolutePath(), GameFiles.gameDir(this).getAbsolutePath(),
                 settings.nativeScale(), settings.widescreen(), settings.vsync(), Lang.wiiLanguage());
         if (error != null) {
