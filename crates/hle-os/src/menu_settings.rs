@@ -27,12 +27,14 @@
 //!
 //! The save-select screen (`dFileSelect_c`, also in `d_basesNP`) keeps its
 //! cursor as a number: its three files (0-2), Free-for-All (3) and Coin
-//! Battle (4). Settings, in the title bar, is 5: up from a file goes to it
-//! and down goes back, through the screen's own button-change state (the
-//! file's card and the button play their off and on animations, with the
-//! cursor sound); 2 or A plays the button's hit animation and the decide
-//! sound, then the Settings window opens, and closing it leaves the cursor
-//! on Settings.
+//! Battle (4). In the title bar the port draws Settings (a cog, 5) and
+//! Multiplayer (6) on two empty panes of the layout's: up from a file goes
+//! to Multiplayer, left and right between the two, and down back to the
+//! file, through the screen's own button-change state (the file's card goes
+//! out or lights up, the corner cursor moves, the cursor sound plays); 2 or
+//! A plays the decide sound and, once the button's hit animation has had
+//! its time, the Settings window or the Multiplayer screen opens. Closing
+//! it leaves the cursor on its button.
 //!
 //! Each hook acts only while the live layout has its button (so never in a
 //! net game, whose archives are not patched); otherwise it declines and the
@@ -189,19 +191,14 @@ const FILE_PREV: u32 = 0x2A8;
 const FILE_LAST: u32 = 0x2CC;
 const CARD_COMMAND: u32 = 0xDD8;
 const FILE_SETTINGS: u32 = 5;
+const FILE_MULTI: u32 = 6;
+/// Fields between 2 or A on one of them and its window (the port's hit
+/// animation of the button).
+const FILE_HIT_FIELDS: u8 = 18;
 const FILE_STATE_CHANGE: u32 = 0x8099_2010; // ButtonSelectAnimeEndWait
 const FILE_STATE_RETURN_TITLE: u32 = 0x8099_20D0;
-/// Its create's group names (45 of them; entries 4, 6, 8 and 10 are the OK
-/// button's on, idle, hit and off).
-const FILE_GROUP_NAMES: u32 = 0x8094_3B54;
-const FILE_GROUPS: u32 = 45;
-/// Settings' on, hit and off, after the game's groups (idle is 46).
-const FILE_ON: u32 = 45;
-const FILE_HIT: u32 = 47;
-const FILE_OFF: u32 = 48;
 /// The multi-player buttons' on animations (Free-for-All, Coin Battle).
 const FILE_MULTI_ON: u32 = 0x22;
-const IS_ANIME: u32 = 0x800C_9610; // LytBase_c::isAnime(int)
 
 /// Where nested calls return to; never executed (the call stops there).
 const NESTED_RETURN: u32 = 0x8000_1800;
@@ -239,12 +236,17 @@ pub struct MenuSettings {
     map_settings: u8,
     /// The map menu is opening again after the Settings window: on Settings.
     map_back: bool,
-    /// The save-select screen's Settings after 2 or A: 0 not picked, 1 its
-    /// hit animation playing, 2 the Settings window is up.
+    /// The save-select screen's Settings or Multiplayer after 2 or A: 0 not
+    /// picked, 1 its hit animation playing, 2 its window is up.
     file_settings: u8,
+    /// Which was picked (5 or 6), and the fields its hit still plays.
+    file_picked: u32,
+    file_hit_left: u8,
     file_open_requested: bool,
-    /// The save-select screen and its Settings pane, once found.
-    file_pane: (u32, u32),
+    file_multiplayer_requested: bool,
+    /// The save-select screen and its Settings and Multiplayer panes, once
+    /// found.
+    file_panes: (u32, [u32; 2]),
     /// A hooked function the next call runs as the game has it.
     bypass: Option<u32>,
     /// Main.dol's copies of the groups' names (0: not found yet).
@@ -256,6 +258,18 @@ impl MenuSettings {
     /// menu is gone, for the Settings window to open.
     pub fn take_open(&mut self) -> bool {
         std::mem::take(&mut self.open_requested) | std::mem::take(&mut self.map_open_requested) | std::mem::take(&mut self.file_open_requested)
+    }
+
+    /// The save-select screen's Multiplayer was picked: true once, for the
+    /// Multiplayer screen to open.
+    pub fn take_open_multiplayer(&mut self) -> bool {
+        std::mem::take(&mut self.file_multiplayer_requested)
+    }
+
+    /// The save select's button picked (5 Settings, 6 Multiplayer) while its
+    /// hit plays or its window is up.
+    pub fn file_picked(&self) -> Option<u32> {
+        (self.file_settings != 0).then_some(self.file_picked)
     }
 
     /// The pause window's Settings was picked, waiting for it to close.
@@ -489,18 +503,10 @@ impl System {
             // Copies of Quick Save's on, idle, hit and off.
             let a = [4, 8, 12, 16].map(|g| self.r32(MAP_GROUP_ANIMS + g * 4));
             (map_group, a)
-        } else if count == FILE_GROUPS && names == FILE_GROUP_NAMES {
-            // Copies of the OK button's on, idle, hit and off.
-            let a = [4, 6, 8, 10].map(|g| self.r32(anims + g * 4));
-            (pause_group, a)
         } else {
             return false;
         };
-        let pane = match count {
-            WINDOW_GROUPS => "P_SBBase_03",
-            MAP_GROUPS => "P_SBBase_06",
-            _ => crate::menu_layout::FILE_PANE,
-        };
+        let pane = if count == WINDOW_GROUPS { "P_SBBase_03" } else { "P_SBBase_06" };
         let root = self.root_pane(layout);
         if group == 0 || self.find_pane(root, pane, 0) == 0 {
             return false;
@@ -660,16 +666,18 @@ impl System {
 
     // ------------------------------------------------------------ the save-select screen
 
-    /// The save-select screen's Settings pane, 0 if its layout has none.
-    fn file_settings_pane(&mut self, this: u32) -> u32 {
-        let (screen, pane) = self.menu.file_pane;
-        if screen == this && pane != 0 && self.pane_name(pane) == crate::menu_layout::FILE_PANE {
-            return pane;
+    /// The save-select screen's Settings and Multiplayer panes, 0 if its
+    /// layout has none.
+    fn file_panes(&mut self, this: u32) -> [u32; 2] {
+        let (screen, panes) = self.menu.file_panes;
+        let names = [crate::menu_layout::FILE_COG_PANE, crate::menu_layout::FILE_MULTI_PANE];
+        if screen == this && panes[0] != 0 && panes[1] != 0 && self.pane_name(panes[0]) == names[0] && self.pane_name(panes[1]) == names[1] {
+            return panes;
         }
         let root = self.root_pane(this + FILE_LAYOUT);
-        let pane = self.find_pane(root, crate::menu_layout::FILE_PANE, 0);
-        self.menu.file_pane = (this, pane);
-        pane
+        let panes = names.map(|n| self.find_pane(root, n, 0));
+        self.menu.file_panes = (this, panes);
+        panes
     }
 
     fn file_change_state(&mut self, this: u32, state: u32) {
@@ -679,48 +687,62 @@ impl System {
         self.call(change, &[states, state]);
     }
 
-    /// SelectWait: up from a file goes to Settings; on Settings, down goes
-    /// back to the file, 1 leaves the screen as it does anywhere on it, and
-    /// 2 or A picks Settings.
+    /// The cursor from `from` to `next`, through the screen's button-change
+    /// state.
+    fn file_move(&mut self, this: u32, from: u32, next: u32) {
+        self.w32(this + FILE_PREV, from);
+        self.w32(this + FILE_CURSOR, next);
+        self.file_change_state(this, FILE_STATE_CHANGE);
+    }
+
+    /// SelectWait: up from a file goes to Multiplayer; on Settings or
+    /// Multiplayer, left and right go between them, down back to the file,
+    /// 1 leaves the screen as it does anywhere on it, and 2 or A picks.
     fn file_select_wait(&mut self) -> bool {
         let this = self.cpu.gpr[3];
         let cursor = self.r32(this + FILE_CURSOR);
-        if cursor != FILE_SETTINGS && cursor >= 3 {
+        let ours = cursor == FILE_SETTINGS || cursor == FILE_MULTI;
+        if !ours && cursor >= 3 {
             return false;
         }
-        if self.file_settings_pane(this) == 0 {
+        if self.file_panes(this).contains(&0) {
             return false;
         }
         let player = self.r32(MAP_PLAYER);
         let trigger = self.trigger(player);
-        if cursor < 3 {
+        if !ours {
             // 0x2: up, the remote held sideways.
             if trigger & 0x2 == 0 {
                 return false;
             }
-            self.w32(this + FILE_PREV, cursor);
-            self.w32(this + FILE_CURSOR, FILE_SETTINGS);
-            self.file_change_state(this, FILE_STATE_CHANGE);
+            self.file_move(this, cursor, FILE_MULTI);
             return true;
         }
-        let layout = this + FILE_LAYOUT;
         match self.menu.file_settings {
             1 => {
-                // Once the hit animation has played, the Settings window.
-                if self.call(IS_ANIME, &[layout, 0xFFFF_FFFF]) == 0 {
+                // Once the button's hit has played, its window.
+                self.menu.file_hit_left = self.menu.file_hit_left.saturating_sub(1);
+                if self.menu.file_hit_left == 0 {
                     self.menu.file_settings = 2;
-                    self.menu.file_open_requested = true;
+                    if self.menu.file_picked == FILE_MULTI {
+                        self.menu.file_multiplayer_requested = true;
+                    } else {
+                        self.menu.file_open_requested = true;
+                    }
                 }
                 return true;
             }
             2 => return true,
             _ => {}
         }
+        // Sideways: 0x1 down, 0x8 left, 0x4 right.
         if trigger & 0x1 != 0 {
             let file = self.r32(this + FILE_LAST).min(2);
-            self.w32(this + FILE_PREV, FILE_SETTINGS);
-            self.w32(this + FILE_CURSOR, file);
-            self.file_change_state(this, FILE_STATE_CHANGE);
+            self.file_move(this, cursor, file);
+        } else if trigger & 0x8 != 0 && cursor == FILE_SETTINGS {
+            self.file_move(this, cursor, FILE_MULTI);
+        } else if trigger & 0x4 != 0 && cursor == FILE_MULTI {
+            self.file_move(this, cursor, FILE_SETTINGS);
         } else if self.call(MAP_CLOSE_KEY, &[0]) != 0 {
             self.sound(SE_BACK);
             self.file_change_state(this, FILE_STATE_RETURN_TITLE);
@@ -730,49 +752,49 @@ impl System {
             let pressed = self.r32(vtable + 0x20);
             if self.call(pressed, &[keys, 0x900]) != 0 {
                 self.sound(SE_DECIDE);
-                self.call(ANIME_START, &[layout, FILE_HIT, 0]);
                 self.menu.file_settings = 1;
+                self.menu.file_picked = cursor;
+                self.menu.file_hit_left = FILE_HIT_FIELDS;
             }
         }
         true
     }
 
-    /// ButtonSelectAnimeEndWait's start, to or from Settings: where the
-    /// cursor was goes out (with the cursor sound), where it goes lights up.
+    /// ButtonSelectAnimeEndWait's start, to or from Settings or
+    /// Multiplayer: a file's card goes out or lights up (the port draws its
+    /// own buttons' looks), with the cursor sound.
     fn file_change(&mut self) -> bool {
         let this = self.cpu.gpr[3];
         let (prev, next) = (self.r32(this + FILE_PREV), self.r32(this + FILE_CURSOR));
-        if prev != FILE_SETTINGS && next != FILE_SETTINGS {
+        let ours = |c: u32| c == FILE_SETTINGS || c == FILE_MULTI;
+        if !ours(prev) && !ours(next) {
             return false;
         }
         let layout = this + FILE_LAYOUT;
         self.call(ALL_ANIME_END, &[layout]);
-        if prev == FILE_SETTINGS {
-            self.call(ANIME_START, &[layout, FILE_OFF, 0]);
-            self.sound(SE_CURSOR);
-        } else if prev < 3 {
+        if prev < 3 {
             let card = self.r32(this + FILE_CARDS + prev * 4);
             self.w32(card + CARD_COMMAND, 4);
-            self.sound(SE_CURSOR);
         }
-        if next == FILE_SETTINGS {
-            self.call(ANIME_START, &[layout, FILE_ON, 0]);
-        } else if next < 3 {
+        self.sound(SE_CURSOR);
+        if next < 3 {
             let card = self.r32(this + FILE_CARDS + next * 4);
             self.w32(card + CARD_COMMAND, 1);
-        } else {
+        } else if !ours(next) {
             self.call(ANIME_START, &[layout, FILE_MULTI_ON + (next - 3).min(1), 0]);
         }
         true
     }
 
-    /// ButtonSelectAnimeEndWait's end: the corner cursor onto Settings.
+    /// ButtonSelectAnimeEndWait's end: the corner cursor onto Settings or
+    /// Multiplayer.
     fn file_change_end(&mut self) -> bool {
         let this = self.cpu.gpr[3];
-        if self.r32(this + FILE_CURSOR) != FILE_SETTINGS {
+        let cursor = self.r32(this + FILE_CURSOR);
+        if cursor != FILE_SETTINGS && cursor != FILE_MULTI {
             return false;
         }
-        let pane = self.file_settings_pane(this);
+        let pane = self.file_panes(this)[(cursor - FILE_SETTINGS) as usize];
         if pane != 0 {
             self.call(SELECT_CURSOR_SETUP, &[pane, 1, 0]); // the screen's cursor slot
         }

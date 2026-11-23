@@ -13,9 +13,10 @@
 //!   Back hint; its group is `B01_noButton`.
 //!
 //! - The save-select screen (`/Layout/fileSelectBase/fileSelectBase.arc`,
-//!   `fileSelectBase_18`): a copy of the OK button as Settings at the right
-//!   of the title bar, under the title's own pane, so it comes in with the
-//!   title when the screen opens. Its group is `B00_yesButton` too.
+//!   `fileSelectBase_18`): two empty panes at the right of the title bar,
+//!   under the title's own pane, so they come in with the title when the
+//!   screen opens: where the port draws its Multiplayer and Settings (cog)
+//!   buttons, and where the game's corner cursor goes when either is picked.
 //!
 //! - A save file's card (`/Layout/dateFile/dateFile.arc`, `dateFile_09`): a
 //!   text pane, `T_cheated_00`, hidden, at the top of the card; the port
@@ -32,8 +33,10 @@ use hle_ios::Disc;
 pub const PAUSE_ARC: &str = "/Layout/pauseMenu/pauseMenu.arc";
 pub const MAP_ARC: &str = "/Layout/corseSelectMenu/corseSelectMenu.arc";
 pub const FILE_ARC: &str = "/Layout/fileSelectBase/fileSelectBase.arc";
-/// The save-select screen's Settings button (its picture pane).
-pub const FILE_PANE: &str = "P_SBBase_02";
+/// The save-select screen's Settings (cog) and Multiplayer buttons: empty
+/// panes the port draws its buttons on.
+pub const FILE_COG_PANE: &str = "N_setCog_00";
+pub const FILE_MULTI_PANE: &str = "N_setMulti_00";
 pub const CARD_ARC: &str = "/Layout/dateFile/dateFile.arc";
 /// A save file's card's "Cheated" text.
 pub const CHEATED_PANE: &str = "T_cheated_00";
@@ -570,88 +573,68 @@ fn patch_map_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
     patch_archive(arc, "corseSelectMenu_11", label, patch_map_layout, "B03_Button", MAP_GROUP, false)
 }
 
-/// `fileSelectBase_18.brlyt` with the Settings button: the OK button's
-/// subtree copied under the title's pane (`N_titlePos_00`), at the right of
-/// the title bar and smaller, in the look the game gives a button that is
-/// not selected. `N_titlePos_00` is animated when the screen opens and
-/// closes, so the button comes and goes with the title.
-fn patch_file_layout(file: &mut Vec<u8>, renames: &mut BTreeMap<String, String>, label: &[u16]) -> Option<()> {
-    const NAMES: [(&str, &str); 5] = [("P_SBBase_01", FILE_PANE), ("T_ok_00", "T_set_00"), ("T_ok_01", "T_set_01"), ("W_SButton_1", "W_SButton_2"), ("P_shadow_01", "P_shadow_04")];
-    /// The button's size (the OK button is 262 by 53).
-    const SIZE: (f32, f32) = (184.0, 44.0);
-    /// Its frame's right edge, in the 4:3 picture (the screen ends at 304).
+/// `fileSelectBase_18.brlyt` with the Settings and Multiplayer buttons'
+/// places: a pane of its own under the title's (`N_titlePos_00`, animated
+/// when the screen opens and closes, so the buttons come and go with the
+/// title), at the right of the title bar, holding an empty pane for each
+/// button, Multiplayer at the left of the cog. The two keep their shape and
+/// their distance on a 16:9 screen (bit 2: the 16:9 shrink also moves a
+/// pane toward its parent), so their holder alone moves out to the right.
+fn patch_file_layout(file: &mut Vec<u8>) -> Option<()> {
+    /// The buttons' sizes, in layout units.
+    const COG: (f32, f32) = (60.0, 46.0);
+    const MULTI: (f32, f32) = (200.0, 46.0);
+    const GAP: f32 = 10.0;
+    /// The cog's right edge, in the 4:3 picture (the screen ends at 304).
     const RIGHT: f32 = 288.0;
+    /// The holder's x: where the OK-button copy that was the Settings
+    /// button sat (its centre, 184 wide).
+    const HOLDER_X: f32 = RIGHT - (184.0 + 8.0) / 2.0;
     let (header, mut sections) = read_sections(file, b"RLYT")?;
-    let ok = find_pane(&sections, "P_SBBase_01")?;
     let title = find_pane(&sections, "N_titlePos_00")?;
     let existing = pane_names(&sections);
-    if NAMES.iter().any(|n| existing.contains(n.1)) || existing.contains("N_setPos_00") {
+    if [FILE_COG_PANE, FILE_MULTI_PANE, "N_setPos_00"].iter().any(|n| existing.contains(*n)) {
         return None;
     }
-    let mut copy = sections[ok..=subtree_end(&sections, ok)].to_vec();
-    let (dw, dh) = (SIZE.0 - getf(&copy[0].bytes, 0x44), SIZE.1 - getf(&copy[0].bytes, 0x48));
-    if !(-200.0..=0.0).contains(&dw) || !(-40.0..=0.0).contains(&dh) {
+    if &sections[title].kind != b"pan1" || sections[title].bytes.len() < 0x4C {
         return None;
     }
-    // The label's size: the button's share of the OK button's, smaller if
-    // the word would not fit (about 0.58 of the font's height a letter).
-    let letters = label.len().max(1) as f32;
-    let text_scale = (SIZE.1 / (SIZE.1 - dh)).min(((SIZE.0 - 30.0) / letters - 2.0) / (0.58 * 32.0));
-    for (i, s) in copy.iter_mut().enumerate().filter(|(_, s)| is_pane(s)) {
-        let from = pane_name(s);
-        let to = NAMES.iter().find(|n| n.0 == from)?.1;
-        set_name(&mut s.bytes, 0x0C, 16, to);
-        renames.insert(from, to.into());
-        let (w, h) = (getf(&s.bytes, 0x44), getf(&s.bytes, 0x48));
-        putf(&mut s.bytes, 0x44, w + dw);
-        putf(&mut s.bytes, 0x48, h + dh);
-        if i == 0 {
-            // At its new parent's place, shown (the OK button starts at
-            // scale 0), keeping its shape on a 16:9 screen (bit 2).
-            s.bytes[8] |= 4;
-            putf(&mut s.bytes, 0x24, 0.0);
-            putf(&mut s.bytes, 0x28, 0.0);
-            putf(&mut s.bytes, 0x3C, 0.98);
-            putf(&mut s.bytes, 0x40, 0.98);
+    // An empty pane from the title's: named, shown, at (x, y), unscaled.
+    let pane = |name: &str, x: f32, y: f32, size: (f32, f32), flags: u8| {
+        let mut p = sections[title].clone();
+        p.bytes.truncate(0x4C);
+        put32(&mut p.bytes, 4, 0x4C);
+        set_name(&mut p.bytes, 0x0C, 16, name);
+        p.bytes[8] = flags;
+        p.bytes[9] = 4; // centred on its place
+        p.bytes[0xA] = 255;
+        putf(&mut p.bytes, 0x24, x);
+        putf(&mut p.bytes, 0x28, y);
+        putf(&mut p.bytes, 0x2C, 0.0);
+        for at in [0x30, 0x34, 0x38] {
+            putf(&mut p.bytes, at, 0.0);
         }
-        if &s.kind == b"txt1" && s.bytes.len() >= 0x74 {
-            for at in [0x64, 0x68] {
-                let size = getf(&s.bytes, at);
-                putf(&mut s.bytes, at, size * text_scale);
-            }
-            set_pane_text(s, label);
+        for at in [0x3C, 0x40] {
+            putf(&mut p.bytes, at, 1.0);
         }
-    }
-    // Its place: a pane of its own under the title's, so the 16:9 shrink
-    // (which also moves a pane toward its parent) leaves it where it is.
-    let mut place = sections[title].clone();
-    if &place.kind != b"pan1" || place.bytes.len() < 0x4C {
-        return None;
-    }
-    place.bytes.truncate(0x4C);
-    put32(&mut place.bytes, 4, 0x4C);
-    set_name(&mut place.bytes, 0x0C, 16, "N_setPos_00");
-    place.bytes[8] = 1;
+        putf(&mut p.bytes, 0x44, size.0);
+        putf(&mut p.bytes, 0x48, size.1);
+        p
+    };
     let title_x = getf(&sections[title].bytes, 0x24);
     let title_y = find_pane(&sections, "T_title_00").map_or(12.0, |t| getf(&sections[t].bytes, 0x28));
-    putf(&mut place.bytes, 0x24, RIGHT - (SIZE.0 + 8.0) / 2.0 - title_x);
-    putf(&mut place.bytes, 0x28, title_y);
-    for at in [0x3C, 0x40] {
-        putf(&mut place.bytes, at, 1.0);
-    }
+    let cog_x = RIGHT - COG.0 / 2.0 - HOLDER_X;
+    let multi_x = cog_x - (COG.0 + MULTI.0) / 2.0 - GAP;
+    let holder = pane("N_setPos_00", HOLDER_X - title_x, title_y, (0.0, 0.0), 1);
+    let cog = pane(FILE_COG_PANE, cog_x, 0.0, COG, 1 | 4);
+    let multi = pane(FILE_MULTI_PANE, multi_x, 0.0, MULTI, 1 | 4);
     let mark = |kind: &[u8; 4]| Section { kind: *kind, bytes: [&kind[..], &[0, 0, 0, 8]].concat() };
     // Last among the title pane's children.
     let end = subtree_end(&sections, title);
     if end == title || &sections[end].kind != b"pae1" {
         return None;
     }
-    let mut new = vec![place, mark(b"pas1")];
-    new.extend(copy);
-    new.push(mark(b"pae1"));
-    sections.splice(end..end, new);
-    if !copy_group(&mut sections, "G01_yesButton", PAUSE_GROUP, renames) {
-        return None;
-    }
+    sections.splice(end..end, [holder, mark(b"pas1"), multi, cog, mark(b"pae1")]);
     *file = write_sections(header, &sections);
     Some(())
 }
@@ -700,10 +683,12 @@ fn patch_card_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
     Some(())
 }
 
-fn patch_file_archive(arc: &mut Vec<u8>, label: &[u16]) -> Option<()> {
-    // Only the button animations (in, on, idle, hit, off, out): the others
-    // hold the OK button's tracks too, hiding it while the screen opens.
-    patch_archive(arc, "fileSelectBase_18", label, patch_file_layout, "G01_yesButton", PAUSE_GROUP, true)
+fn patch_file_archive(arc: &mut Vec<u8>, _label: &[u16]) -> Option<()> {
+    let mut nodes = read_u8(arc)?;
+    let layout = nodes.iter_mut().find(|n| n.kind == 0 && n.path.ends_with(".brlyt") && n.path.contains("fileSelectBase_18"))?;
+    patch_file_layout(&mut layout.data)?;
+    *arc = write_u8(&nodes);
+    Some(())
 }
 
 #[cfg(test)]
@@ -729,7 +714,18 @@ mod tests {
         let (_, sections) = read_sections(&lyt.data, b"RLYT").unwrap();
         let label = &sections[find_pane(&sections, CHEATED_PANE).unwrap()];
         assert_eq!(label.bytes[8] & 1, 0, "hidden until a file is marked");
-        for (path, before, layout, pane, group) in [(PAUSE_ARC, pause_before, "pauseMenu_16", "P_SBBase_03", PAUSE_GROUP), (MAP_ARC, map_before, "corseSelectMenu_11", "P_SBBase_06", MAP_GROUP), (FILE_ARC, file_before, "fileSelectBase_18", FILE_PANE, PAUSE_GROUP)] {
+        // The save select's two places, each centred and keeping its shape.
+        let after = disc.file(FILE_ARC).unwrap();
+        assert!(after.len() > file_before.len(), "{FILE_ARC} grew");
+        let nodes = read_u8(&after).unwrap();
+        let lyt = nodes.iter().find(|n| n.path.contains("fileSelectBase_18") && n.path.ends_with(".brlyt")).unwrap();
+        let (_, sections) = read_sections(&lyt.data, b"RLYT").unwrap();
+        for pane in [FILE_COG_PANE, FILE_MULTI_PANE] {
+            let p = &sections[find_pane(&sections, pane).unwrap()];
+            assert_eq!((p.bytes[8], p.bytes[9]), (5, 4), "{pane}");
+        }
+        assert!(getf(&sections[find_pane(&sections, FILE_MULTI_PANE).unwrap()].bytes, 0x24) < getf(&sections[find_pane(&sections, FILE_COG_PANE).unwrap()].bytes, 0x24));
+        for (path, before, layout, pane, group) in [(PAUSE_ARC, pause_before, "pauseMenu_16", "P_SBBase_03", PAUSE_GROUP), (MAP_ARC, map_before, "corseSelectMenu_11", "P_SBBase_06", MAP_GROUP)] {
             let after = disc.file(path).unwrap();
             assert!(after.len() > before.len(), "{path} grew");
             let nodes = read_u8(&after).unwrap();
