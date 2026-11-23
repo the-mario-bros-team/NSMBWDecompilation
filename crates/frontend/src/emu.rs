@@ -47,6 +47,9 @@ pub struct GameFrame {
     /// Online: other players have their own machines, so no window opens
     /// for them here.
     pub online: bool,
+    /// The video interface shows a picture (not black): the startup screen
+    /// lifts a second after the first such field.
+    pub visible: bool,
 }
 
 /// Scripted input (`--press`): `input` is held on remote `player` (0-based)
@@ -799,14 +802,14 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         totals.recomp_entries = sys.recomp_entries;
         totals.recomp_changed = sys.recomp.as_ref().map_or(0, |r| r.changed);
         (totals.light_texture_calls, totals.light_texture_skips) = (sys.light_textures.calls, sys.light_textures.skips);
-        let (xfb, now_peeks, remotes) = {
+        let (xfb, now_peeks, remotes, visible) = {
             let mut hw = sys.hw.borrow_mut();
             let remotes = std::array::from_fn(|i| hw.ios.bt.remote_status(i));
             // The GX threads finish the field's output (transform, and the
             // interpolation records above 60 fps) while this thread sleeps
             // until the field's slot ends; it used to wait for them first.
             hw.gpu.request_output();
-            (hw.xfb_addr(), hw.efb_peeks, remotes)
+            (hw.xfb_addr(), hw.efb_peeks, remotes, hw.display_on())
         };
         let wants_efb = now_peeks != peeks && !no_feedback;
         peeks = now_peeks;
@@ -836,7 +839,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
             out
         };
-        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some() })).is_err() {
+        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some(), visible })).is_err() {
             break;
         }
         index += 1;

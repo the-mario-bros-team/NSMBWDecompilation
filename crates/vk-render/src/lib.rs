@@ -26,7 +26,11 @@ use std::error::Error;
 use std::ffi::{c_char, c_void, CStr};
 use std::mem::ManuallyDrop;
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+use std::sync::mpsc::Receiver;
+use std::sync::{Arc, Mutex};
+use std::thread::JoinHandle;
+use std::time::Instant;
 
 use ash::ext::debug_utils;
 use ash::khr::{surface, swapchain};
@@ -290,6 +294,9 @@ pub struct Renderer {
     swap_views: Vec<vk::ImageView>,
     swap_format: vk::Format,
     ui: Option<UiLayer>,
+    /// Texture changes handed over before the UI layer could be made (it
+    /// needs the swapchain): applied once it is.
+    ui_pending: egui::TexturesDelta,
     ui_frame: Option<UiFrame>,
     swap_extent: vk::Extent2D,
     /// Per swapchain image: signalled when its frame is done, waited on by present.
@@ -313,6 +320,7 @@ pub struct Renderer {
     copy_modules: [vk::ShaderModule; 2],
     copy: CopyPass,
     pipelines: HashMap<u32, vk::Pipeline>,
+    prewarm: Option<Prewarm>,
     efb_color: Image,
     efb_depth: Image,
     /// Native-size scratch target for writebacks and peeks.
@@ -418,6 +426,25 @@ fn blend_key(r: &Raster) -> u32 {
 
 /// Pipeline key bit: the fragment shader leaves depth to the rasteriser.
 const EARLY_DEPTH: u32 = 1 << 17;
+
+/// Draw pipelines New Super Mario Bros. Wii uses, built at startup before
+/// any saved list exists: the keys `cache/pipelines.keys` held after runs
+/// through boot, the title, the World 1 map and 1-1, alone and with four
+/// players (2026-11-22). The ubershader does the rest, so there are only
+/// these few.
+const STARTUP_KEYS: &[u32] = &[
+    0x5018, 0x2_0128, 0x2_0129, 0x3_0010, 0x3_0069, 0x3_0429, 0x3_04A9, 0x3_3118, 0x3_3209, 0x3_3429, 0x3_3439, 0x3_34A8, 0x3_34A9, 0x3_34B8, 0x3_5131, 0x3_5931, 0x3_F118, 0x3_F119, 0x3_F4A9, 0x3_F4B9,
+];
+
+/// The startup pipelines' worker threads ([`Renderer::pipelines_compiling`]).
+struct Prewarm {
+    built: Receiver<(u32, vk::Pipeline)>,
+    remaining: Arc<AtomicU32>,
+    stop: Arc<AtomicBool>,
+    workers: Vec<JoinHandle<()>>,
+    total: u32,
+    started: Instant,
+}
 
 /// Whether a draw's depth is the rasterised one: no z-freeze plane and no
 /// Z texture.
@@ -634,6 +661,7 @@ impl Renderer {
                 swap_views: Vec::new(),
                 swap_format: vk::Format::UNDEFINED,
                 ui: None,
+                ui_pending: egui::TexturesDelta::default(),
                 ui_frame: None,
                 swap_extent: vk::Extent2D::default(),
                 rendered: Vec::new(),
@@ -654,6 +682,7 @@ impl Renderer {
                 copy_modules,
                 copy: CopyPass { pipeline: copy_pipeline, layout: copy_pipeline_layout, set: copy_set },
                 pipelines: HashMap::new(),
+                prewarm: None,
                 efb_color,
                 efb_depth,
                 native,
@@ -678,6 +707,9 @@ impl Renderer {
                 stats: FrameStats::default(),
             };
             r.upload_palette()?;
+            if r.pipeline_cache_path.is_some() {
+                r.start_prewarm();
+            }
             Ok(r)
         }
     }
@@ -920,6 +952,19 @@ impl Renderer {
         if let Some(&p) = self.pipelines.get(&key) {
             return Ok(p);
         }
+        self.collect_prewarmed();
+        if let Some(&p) = self.pipelines.get(&key) {
+            return Ok(p);
+        }
+        let p = unsafe { Self::create_pipeline(&self.device, self.pipeline_cache, self.pipeline_layout, [self.vs, self.fs, self.fs_early], key)? };
+        self.pipelines.insert(key, p);
+        Ok(p)
+    }
+
+    /// The draw pipeline for blend key `key` (with [`EARLY_DEPTH`]), from the
+    /// ubershader's modules (`vs`, `fs`, `fs_early`). Safe on any thread: the
+    /// pipeline cache is not externally synchronised.
+    unsafe fn create_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: [vk::ShaderModule; 3], key: u32) -> Result<vk::Pipeline, vk::Result> {
         let efb_alpha = key & (1 << 16) != 0;
         let (blend_on, logic_on, subtract) = (key & 1 != 0, key & 2 != 0, key & (1 << 11) != 0);
         let mut mask = vk::ColorComponentFlags::empty();
@@ -990,11 +1035,11 @@ impl Renderer {
         let formats = [COLOR_FORMAT];
         let mut rendering = vk::PipelineRenderingCreateInfo::default().color_attachment_formats(&formats).depth_attachment_format(DEPTH_FORMAT);
         let stages = [
-            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(self.vs).name(c"vs"),
+            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules[0]).name(c"vs"),
             if key & EARLY_DEPTH != 0 {
-                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(self.fs_early).name(c"fs_early")
+                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(modules[2]).name(c"fs_early")
             } else {
-                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(self.fs).name(c"fs")
+                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(modules[1]).name(c"fs")
             },
         ];
         let info = vk::GraphicsPipelineCreateInfo::default()
@@ -1007,11 +1052,84 @@ impl Renderer {
             .depth_stencil_state(&ds)
             .color_blend_state(&blend)
             .dynamic_state(&dyn_info)
-            .layout(self.pipeline_layout)
+            .layout(layout)
             .push_next(&mut rendering);
-        let p = unsafe { self.device.create_graphics_pipelines(self.pipeline_cache, &[info], None).map_err(|(_, e)| e)?[0] };
-        self.pipelines.insert(key, p);
-        Ok(p)
+        Ok(device.create_graphics_pipelines(cache, &[info], None).map_err(|(_, e)| e)?[0])
+    }
+
+    /// Starts building the draw pipelines this game used before (the keys
+    /// saved next to the pipeline cache) and [`STARTUP_KEYS`] on worker
+    /// threads, so a draw rarely waits for one ("Compiling shaders" on the
+    /// startup screen, [`Renderer::pipelines_compiling`]).
+    fn start_prewarm(&mut self) {
+        let mut keys: Vec<u32> = STARTUP_KEYS.to_vec();
+        if let Some(text) = self.pipeline_cache_path.as_ref().and_then(|p| std::fs::read_to_string(p.with_extension("keys")).ok()) {
+            keys.extend(text.lines().filter_map(|l| u32::from_str_radix(l.trim(), 16).ok()));
+        }
+        keys.sort_unstable();
+        keys.dedup();
+        keys.retain(|k| !self.pipelines.contains_key(k));
+        if keys.is_empty() {
+            return;
+        }
+        let total = keys.len() as u32;
+        let queue = Arc::new(Mutex::new(keys));
+        let remaining = Arc::new(AtomicU32::new(total));
+        let stop = Arc::new(AtomicBool::new(false));
+        let (tx, built) = std::sync::mpsc::channel();
+        let threads = std::thread::available_parallelism().map_or(2, |n| n.get()).saturating_sub(2).clamp(1, 4);
+        let (cache, layout, modules) = (self.pipeline_cache, self.pipeline_layout, [self.vs, self.fs, self.fs_early]);
+        let workers = (0..threads)
+            .filter_map(|i| {
+                let (device, queue, remaining, stop, tx) = (self.device.clone(), queue.clone(), remaining.clone(), stop.clone(), tx.clone());
+                std::thread::Builder::new()
+                    .name(format!("pipelines-{i}"))
+                    .spawn(move || {
+                        while !stop.load(Ordering::Relaxed) {
+                            let Some(key) = queue.lock().unwrap().pop() else { break };
+                            // SAFETY: the device, cache, layout and modules outlive the
+                            // workers (joined first in `Drop`).
+                            if let Ok(p) = unsafe { Self::create_pipeline(&device, cache, layout, modules, key) } {
+                                let _ = tx.send((key, p));
+                            }
+                            remaining.fetch_sub(1, Ordering::Relaxed);
+                        }
+                    })
+                    .ok()
+            })
+            .collect();
+        self.prewarm = Some(Prewarm { built, remaining, stop, workers, total, started: Instant::now() });
+    }
+
+    /// Pipelines the workers have finished, into the table (one a draw
+    /// already made meanwhile is dropped).
+    fn collect_prewarmed(&mut self) {
+        let Some(w) = &self.prewarm else { return };
+        let done: Vec<(u32, vk::Pipeline)> = w.built.try_iter().collect();
+        for (key, p) in done {
+            if self.pipelines.contains_key(&key) {
+                unsafe { self.device.destroy_pipeline(p, None) };
+            } else {
+                self.pipelines.insert(key, p);
+            }
+        }
+    }
+
+    /// Startup pipelines still being built (0 once they all are, or with no
+    /// pipeline cache file).
+    pub fn pipelines_compiling(&mut self) -> u32 {
+        self.collect_prewarmed();
+        let Some(w) = &self.prewarm else { return 0 };
+        let left = w.remaining.load(Ordering::Relaxed);
+        if left == 0 && !w.workers.is_empty() {
+            let w = self.prewarm.as_mut().unwrap();
+            for t in w.workers.drain(..) {
+                let _ = t.join();
+            }
+            println!("shaders: {} pipelines built at startup in {:.2} s", w.total, w.started.elapsed().as_secs_f32());
+            self.collect_prewarmed();
+        }
+        left
     }
 
     /// What the menus draw over the frames shown from now on (`None`: no
@@ -1027,7 +1145,13 @@ impl Renderer {
             let renderer = egui_ash_renderer::Renderer::with_default_allocator(&self.instance, self.physical, self.device.clone(), mode, options).map_err(|e| format!("menus: {e}"))?;
             self.ui = Some(UiLayer { renderer, format: self.swap_format });
         }
-        if let Some(ui) = &mut self.ui {
+        let Some(ui) = &mut self.ui else {
+            // Too early (the startup screen's first frames): kept for later.
+            self.ui_pending.append(textures.clone());
+            self.ui_frame = frame;
+            return Ok(());
+        };
+        for textures in [std::mem::take(&mut self.ui_pending), textures.clone()] {
             for (id, deltas) in &textures.set {
                 for delta in deltas {
                     ui.renderer.set_texture(self.queue, self.pool, *id, delta).map_err(|e| format!("menus: {e}"))?;
@@ -2066,12 +2190,31 @@ fn as_bytes<T: Copy>(v: &[T]) -> &[u8] {
 
 impl Drop for Renderer {
     fn drop(&mut self) {
+        if let Some(w) = self.prewarm.take() {
+            w.stop.store(true, Ordering::Relaxed);
+            for t in w.workers {
+                let _ = t.join();
+            }
+            for (key, p) in w.built.try_iter() {
+                if self.pipelines.contains_key(&key) {
+                    unsafe { self.device.destroy_pipeline(p, None) };
+                } else {
+                    self.pipelines.insert(key, p);
+                }
+            }
+        }
         unsafe {
             let _ = self.device.device_wait_idle();
             if let Some(path) = &self.pipeline_cache_path {
                 if let Ok(data) = self.device.get_pipeline_cache_data(self.pipeline_cache) {
                     let _ = std::fs::write(path, data);
                 }
+                // The draw pipelines this run had, built first next time.
+                let mut keys: Vec<u32> = self.pipelines.keys().copied().collect();
+                keys.sort_unstable();
+                let text: String = keys.iter().map(|k| format!("{k:x}
+")).collect();
+                let _ = std::fs::write(path.with_extension("keys"), text);
             }
         }
         let mut images: Vec<Image> = self.textures.drain().map(|(_, i)| i).collect();

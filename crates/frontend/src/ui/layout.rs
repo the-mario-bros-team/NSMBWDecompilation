@@ -695,6 +695,34 @@ pub fn measure_text(font: &Font, text: &str, size: f32) -> f32 {
     split_lines(font, &utf16(text), size / f32::from(font.width), 0.0, true).iter().map(|l| l.width).fold(0.0, f32::max)
 }
 
+/// `text` broken at spaces into lines no wider than `max_width` at `size`
+/// (a word wider than that has a line of its own).
+pub fn wrap_text(font: &Font, text: &str, size: f32, max_width: f32) -> Vec<String> {
+    let mut lines = Vec::new();
+    let mut line = String::new();
+    for word in text.split(' ') {
+        let candidate = if line.is_empty() { word.to_string() } else { format!("{line} {word}") };
+        if !line.is_empty() && measure_text(font, &candidate, size) > max_width {
+            lines.push(std::mem::replace(&mut line, word.to_string()));
+        } else {
+            line = candidate;
+        }
+    }
+    if !line.is_empty() {
+        lines.push(line);
+    }
+    lines
+}
+
+/// The distance between lines of `font` at `size`, in layout units.
+pub fn line_height(font: &Font, size: f32) -> f32 {
+    if font.height == 0 {
+        0.0
+    } else {
+        f32::from(font.linefeed) * size / f32::from(font.height)
+    }
+}
+
 /// `text` at (`x`, `y`), the point `origin_h`/`origin_v` (0 left/top, 1
 /// centre, 2 right/bottom) of its box.
 #[allow(clippy::too_many_arguments)]

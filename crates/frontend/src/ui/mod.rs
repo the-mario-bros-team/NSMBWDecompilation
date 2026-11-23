@@ -9,6 +9,7 @@ mod key_caps;
 pub mod layout;
 pub mod prompts;
 mod settings;
+mod startup;
 pub mod text;
 
 use std::time::Instant;
@@ -117,6 +118,9 @@ pub struct Menus {
     repeat: Option<(u16, f64)>,
     /// What was last handed to the renderer: a menu, or nothing.
     shown: bool,
+    /// The startup screen, while it is up: the game picture's aspect and
+    /// the startup pipelines still being built (shown when `Some`).
+    startup: Option<(f32, Option<u32>)>,
 }
 
 impl Menus {
@@ -131,7 +135,7 @@ impl Menus {
         let winit = egui_winit::State::new(ctx.clone(), ctx.viewport_id(), window, Some(window.scale_factor() as f32), None, None);
         let mut settings_window = settings::SettingsWindow::default();
         settings_window.active_file = -1;
-        Self { ctx, winit, window: settings_window, started: Instant::now(), held: 0, repeat: None, shown: false }
+        Self { ctx, winit, window: settings_window, started: Instant::now(), held: 0, repeat: None, shown: false, startup: None }
     }
 
     /// The LAN tab's rooms and this game's own.
@@ -172,6 +176,13 @@ impl Menus {
 
     pub fn is_open(&self) -> bool {
         self.window.is_open()
+    }
+
+    /// The startup screen ([`startup`]) over everything while `Some`: the
+    /// game picture's aspect, and the startup pipelines still being built
+    /// when the shader line shows.
+    pub fn set_startup(&mut self, screen: Option<(f32, Option<u32>)>) {
+        self.startup = screen;
     }
 
     /// The HD texture pack's download, for the Mods tab (`None`: none).
@@ -282,22 +293,29 @@ impl Menus {
     /// while no menu is up), with what the window changed in `settings`.
     pub fn frame(&mut self, window: &Window, settings: &mut Settings, buttons: u16) -> Option<(Option<vk_render::UiFrame>, egui::TexturesDelta, Vec<Change>)> {
         let now = self.started.elapsed().as_secs_f64();
-        if !self.window.is_open() {
+        let open = self.window.is_open();
+        if !open {
             self.held = buttons;
-            if self.shown {
-                self.shown = false;
-                return Some((None, egui::TexturesDelta::default(), Vec::new()));
+            if self.startup.is_none() {
+                if self.shown {
+                    self.shown = false;
+                    return Some((None, egui::TexturesDelta::default(), Vec::new()));
+                }
+                return None;
             }
-            return None;
         }
-        let nav = self.nav(buttons, now);
+        let nav = if open { self.nav(buttons, now) } else { Nav::default() };
         let _ = nav.any();
         let raw = self.winit.take_egui_input(window);
         let mut changes = Vec::new();
-        let Self { ctx, window: settings_window, .. } = self;
+        let Self { ctx, window: settings_window, startup, .. } = self;
         let out = ctx.run_ui(raw, |ui| {
             let ctx = ui.ctx();
-            let shapes = settings_window.draw(ctx, settings, nav, now, &mut changes);
+            let mut shapes = if open { settings_window.draw(ctx, settings, nav, now, &mut changes) } else { Vec::new() };
+            // Over everything, the Settings window too.
+            if let Some((aspect, compiling)) = *startup {
+                shapes.extend(startup::draw(ctx, aspect, compiling));
+            }
             ctx.layer_painter(egui::LayerId::new(egui::Order::Foreground, egui::Id::new("menus"))).extend(shapes);
         });
         self.winit.handle_platform_output(window, out.platform_output);

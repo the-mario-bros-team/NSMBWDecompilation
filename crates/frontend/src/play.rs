@@ -57,6 +57,25 @@ pub struct Options {
 /// textures released.
 const QUEUE: usize = 3;
 
+/// The startup screen (WitherBlitz's NSMB-Wii-Recompilation's): the credits
+/// over the game from launch until it has shown a picture for
+/// [`STARTUP_COVER_FRAMES`] and the startup pipelines are built.
+struct Startup {
+    on: bool,
+    began: Instant,
+    /// Pipelines were still being built when it was checked: the shader
+    /// line shows until they all are.
+    notice: bool,
+    /// The frame count (`presented`) at which it may lift, from the game's
+    /// first field with a picture.
+    lift_at: Option<u64>,
+}
+
+/// Frames the startup screen stays up over the game's first picture.
+const STARTUP_COVER_FRAMES: u64 = 60;
+/// The longest the startup screen waits for the startup pipelines.
+const STARTUP_SHADER_LIMIT: Duration = Duration::from_secs(180);
+
 /// A field kept for frames shown in between; its output is shared with the
 /// [`Mover`] thread while it pairs the field with the one before.
 struct Queued {
@@ -160,6 +179,7 @@ struct App {
     mover: Option<Mover>,
     games: u64,
     presented: u64,
+    startup: Startup,
     last_present: Instant,
     next_display: Instant,
     /// Recent display frame times (ms) for the performance monitor.
@@ -611,6 +631,7 @@ impl App {
             let _ = emu.to_emu.send(ToEmu::Input(controls));
             self.sent_input = Some(controls);
         }
+        self.update_startup();
         self.update_menus(p1)?;
         let Some(emu) = &self.emu else { return Ok(()) };
         let mut new = Vec::new();
@@ -654,6 +675,10 @@ impl App {
     fn ingest(&mut self, mut f: GameFrame, present: bool) -> Result<(), String> {
         self.games += 1;
         self.title_games += 1;
+        if f.visible && self.startup.lift_at.is_none() {
+            self.startup.lift_at = Some(self.presented + STARTUP_COVER_FRAMES);
+            say!("startup screen: the game shows a picture from field {}", f.index);
+        }
         let last = self.opts.max_frames.is_some_and(|m| self.games >= m);
         // 30 fps (or the battery saver): every other field is not shown,
         // and only partly drawn (below), unless its EFB is read back.
@@ -901,6 +926,27 @@ impl App {
         renderer.render_prepared(&fb.out, 1.0, fb.xfb, size.width, size.height).map_err(|e| e.to_string())?;
         self.presented_now();
         Ok(())
+    }
+
+    /// The startup screen ([`Startup`]): its shader line, and lifting it once
+    /// the game has shown a picture for a second and the startup pipelines
+    /// are built (or after [`STARTUP_SHADER_LIMIT`]).
+    fn update_startup(&mut self) {
+        if !self.startup.on {
+            return;
+        }
+        let compiling = self.renderer.as_mut().map_or(0, |r| r.pipelines_compiling());
+        let ready = compiling == 0 || self.startup.began.elapsed() > STARTUP_SHADER_LIMIT;
+        self.startup.notice |= compiling > 0;
+        let (aspect, _) = self.picture();
+        let Some(menus) = &mut self.menus else { return };
+        if ready && self.startup.lift_at.is_some_and(|at| self.presented >= at) {
+            self.startup.on = false;
+            menus.set_startup(None);
+            say!("startup screen lifted after {:.1} s", self.startup.began.elapsed().as_secs_f32());
+            return;
+        }
+        menus.set_startup(Some((aspect, (self.startup.notice && !ready).then_some(compiling))));
     }
 
     /// The menus' next frame to the renderer, and what they changed applied.
@@ -1485,6 +1531,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         mover: None,
         games: 0,
         presented: 0,
+        startup: Startup { on: true, began: now, notice: false, lift_at: None },
         last_present: now,
         next_display: now,
         times: VecDeque::new(),

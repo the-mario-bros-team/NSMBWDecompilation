@@ -504,6 +504,13 @@ impl Hw {
 
     /// Physical address of the XFB the video interface scans out (top
     /// field, VI register 0x1C).
+    /// The video interface shows a picture: VISetBlack sets the active lines
+    /// (VTR's ACV) to zero while the screen is black, as before the game
+    /// first sets up the video.
+    pub fn display_on(&self) -> bool {
+        (self.vi[0] >> 4) & 0x3FF != 0
+    }
+
     pub fn xfb_addr(&self) -> u32 {
         let v = u32::from(self.vi[0x1C / 2]) << 16 | u32::from(self.vi[0x1E / 2]);
         if v & (1 << 28) != 0 {
