@@ -92,10 +92,16 @@ impl Store {
         }
     }
 
-    /// The game program.
+    /// The game program: on a processor without AVX2, FMA or BMI2 (or with
+    /// `NSMBW_FORCE_COMPAT` set), its compat build in the `compat` folder
+    /// next to it (`crate::cpu`).
     pub fn game_exe(&self) -> PathBuf {
         let name = if self.state.game_exe.is_empty() { DEFAULT_EXE } else { &self.state.game_exe };
-        self.root.join(name)
+        let exe = self.root.join(name);
+        match (crate::cpu::wants_compat(), exe.parent(), exe.file_name()) {
+            (true, Some(dir), Some(file)) => dir.join(crate::cpu::COMPAT_DIR).join(file),
+            _ => exe,
+        }
     }
 
     /// The version's working folder (its settings and saves).

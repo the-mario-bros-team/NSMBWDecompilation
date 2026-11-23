@@ -44,10 +44,26 @@ pub const SOURCE_ENV: &str = "NSMBW_UPDATE_SOURCE";
 /// A release's download for this system ends with this.
 pub const ASSET_SUFFIX: &str = "-windows-x64.zip";
 
-/// The folder the running program is in: where `update.toml` is kept, so the
-/// launcher and the game read the same one.
+/// The folder, inside the installation, of the game's build for processors
+/// without AVX2 (`compat\nsmbw-port.exe`).
+pub const COMPAT_DIR: &str = "compat";
+
+/// The installation's folder: where `update.toml` is kept, so the launcher
+/// and the game read the same one. It is the running program's folder, or
+/// the one above it for the compat build.
 pub fn install_dir() -> PathBuf {
-    std::env::current_exe().ok().and_then(|p| p.parent().map(Path::to_path_buf)).unwrap_or_else(|| PathBuf::from("."))
+    let dir = std::env::current_exe().ok().and_then(|p| p.parent().map(Path::to_path_buf)).unwrap_or_else(|| PathBuf::from("."));
+    installation_of(dir)
+}
+
+/// The installation a program in `dir` belongs to: the folder above a
+/// [`COMPAT_DIR`] that sits next to the main programs.
+fn installation_of(dir: PathBuf) -> PathBuf {
+    let in_compat = dir.file_name().is_some_and(|n| n.eq_ignore_ascii_case(COMPAT_DIR));
+    match dir.parent() {
+        Some(up) if in_compat && ["nsmbw-port.exe", "nsmbw-launcher.exe"].iter().any(|p| up.join(p).is_file()) => up.to_path_buf(),
+        _ => dir,
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -219,6 +235,19 @@ pub fn is_newer(remote: &str, local: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_compat_build_belongs_to_the_folder_above() {
+        let dir = std::env::temp_dir().join(format!("port-update-compat-{}", std::process::id()));
+        let compat = dir.join("Compat");
+        std::fs::create_dir_all(&compat).unwrap();
+        // No programs above: a folder that only happens to be called compat.
+        assert_eq!(installation_of(compat.clone()), compat);
+        std::fs::write(dir.join("nsmbw-port.exe"), "").unwrap();
+        assert_eq!(installation_of(compat.clone()), dir);
+        assert_eq!(installation_of(dir.clone()), dir);
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 
     const RELEASE: &str = r#"{
         "tag_name": "v0.2.0",

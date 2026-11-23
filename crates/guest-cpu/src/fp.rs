@@ -168,16 +168,41 @@ mod tests {
 }
 
 /// Fused multiply-add `a * b + c` with a single rounding, as Broadway does.
-/// Uses the host FMA instruction when there is one: without it,
-/// `f64::mul_add` is a software routine many times slower.
+/// Uses the host FMA instruction when there is one (always, in the normal
+/// x86-64-v3 build). Without it (the compat build on an older processor),
+/// [`fma_soft`], many times slower, with the same results bit for bit
+/// (tests/soft_fma.rs).
 #[inline(always)]
 pub fn fma(a: f64, b: f64, c: f64) -> f64 {
     #[cfg(target_arch = "x86_64")]
-    if std::arch::is_x86_feature_detected!("fma") {
-        // SAFETY: the host supports FMA (checked above).
-        return unsafe { fma_x86(a, b, c) };
+    {
+        if std::arch::is_x86_feature_detected!("fma") {
+            // SAFETY: the host supports FMA (checked above).
+            return unsafe { fma_x86(a, b, c) };
+        }
+        fma_soft(a, b, c)
     }
+    #[cfg(not(target_arch = "x86_64"))]
     a.mul_add(b, c)
+}
+
+/// The x86 FMA instruction in software: `libm::fma` (musl's algorithm),
+/// except for NaNs. In the game's build other crates turn on libm's "arch"
+/// feature, and libm then uses an FMA4 instruction where there is one
+/// (AMD Bulldozer), which also rounds once; elsewhere it is its software
+/// path, which tests/soft_fma.rs checks (guest-cpu alone, without "arch"). Given a NaN, the instruction returns it, quieted, even
+/// when the product is invalid (0 * inf + NaN), where libm returns the
+/// default NaN. Of several NaNs, the instruction returns the first in its
+/// operand order, which depends on the form the compiler picked
+/// (vfmadd132/213/231); this returns the first of `a`, `b`, `c`.
+#[cfg(target_arch = "x86_64")]
+#[cold]
+pub fn fma_soft(a: f64, b: f64, c: f64) -> f64 {
+    const QUIET: u64 = 1 << 51;
+    match [a, b, c].into_iter().find(|x| x.is_nan()) {
+        Some(nan) => f64::from_bits(nan.to_bits() | QUIET),
+        None => libm::fma(a, b, c),
+    }
 }
 
 #[cfg(target_arch = "x86_64")]

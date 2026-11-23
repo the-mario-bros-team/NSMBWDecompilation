@@ -1117,8 +1117,9 @@ impl App {
                     let cancel = Arc::new(std::sync::atomic::AtomicBool::new(false));
                     let (s, c) = (state.clone(), cancel.clone());
                     std::thread::spawn(move || {
-                        let name = program.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+                        // Its path in the installation: compat\nsmbw-port.exe for the compat build.
                         let folder = port_update::install_dir();
+                        let name = program.strip_prefix(&folder).map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
                         let set = |v: ui::UpdateState| *s.lock().unwrap_or_else(|e| e.into_inner()) = v;
                         let r = port_update::install::update(&release, &folder, &name, &|p| set(match p {
                             port_update::install::Progress::Downloading { done, total } => ui::UpdateState::Downloading { done, total },
