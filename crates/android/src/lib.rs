@@ -4,8 +4,8 @@
 //! on-screen Wii Remote, the phone's motion sensors, controllers and the
 //! settings; it calls the `Native` class's functions below.
 //!
-//! The game thread is the desktop frontend's own (`emu.rs`, with `net.rs`
-//! and `say.rs`, included from `crates/frontend/src`); `audio` and `win`
+//! The game thread is the desktop frontend's own (`emu.rs` and `say.rs`,
+//! included from `crates/frontend/src`; `net` is the `netplay` crate's); `audio` and `win`
 //! are this crate's versions of the frontend modules of those names. A
 //! render thread of this crate takes each field from the game thread and
 //! presents it at the game's own 60 fps, as the desktop window does at
@@ -16,9 +16,9 @@
 #[allow(dead_code)]
 #[path = "../../frontend/src/emu.rs"]
 mod emu;
-#[allow(dead_code)]
-#[path = "../../frontend/src/net.rs"]
-mod net;
+// Online multiplayer (shared with the desktop), and LAN Play's side of it.
+use netplay::net;
+mod lobby;
 #[allow(dead_code, unused_imports, unused_macros)]
 #[path = "../../frontend/src/say.rs"]
 mod say;
@@ -196,7 +196,19 @@ impl Render {
         if !audio {
             println!("sound off (files/no-audio)");
         }
-        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, ..EmuOptions::default() });
+        // A LAN game (`Native.setNet`): hosting answers room queries; a
+        // Tailscale host joined is asked for rooms from now on.
+        let (net, name) = lobby::take_net();
+        match &net {
+            net::Mode::Host { port, .. } => {
+                if let Err(e) = netplay::lan::announce(*port, name) {
+                    eprintln!("LAN: can't answer room queries: {e}");
+                }
+            }
+            net::Mode::Join { addr } => netplay::lan::joined(addr),
+            net::Mode::Off => {}
+        }
+        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, net, ..EmuOptions::default() });
         let _ = emu.to_emu.send(ToEmu::Interpolate(false));
         self.emu = Some(emu);
         Ok(())
@@ -250,7 +262,9 @@ impl Render {
 
     fn run(mut self, rx: Receiver<ToRender>) {
         loop {
-            let busy = self.emu.is_some() && !self.paused && !self.failed;
+            // A LAN game runs on while the app is away: the others wait for it.
+            let running = |r: &Self| r.emu.is_some() && (!r.paused || lobby::online()) && !r.failed;
+            let busy = running(&self);
             // With nothing to draw, wait for the Java side.
             let first = if busy {
                 rx.try_recv().ok()
@@ -266,7 +280,7 @@ impl Render {
                     self.handle(m);
                 }
             }
-            if !(self.emu.is_some() && !self.paused && !self.failed) {
+            if !running(&self) {
                 continue;
             }
             let Some(emu) = &self.emu else { continue };

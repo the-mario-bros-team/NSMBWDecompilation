@@ -14,9 +14,7 @@ mod cpu_guard;
 mod emu;
 mod gameplay;
 mod gamefiles;
-mod lan;
 mod mods;
-mod net;
 mod overlay;
 mod play;
 mod replay;
@@ -24,6 +22,9 @@ mod say;
 mod settings;
 mod ui;
 mod win;
+
+// Online multiplayer and finding rooms: shared with the Android app.
+use netplay::{lan, net};
 
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;

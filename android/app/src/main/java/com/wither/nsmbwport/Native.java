@@ -46,4 +46,31 @@ final class Native {
      * lays it out, telling progress as it goes. Returns null when done, or why not.
      */
     static native String extractDisc(int fd, String dest, GameFiles.Progress progress);
+
+    // --- LAN Play (LanPlay; crates/android/src/lobby.rs) ---------------------------------------------
+
+    /**
+     * In the game's process, before start: 0 a game of one's own, 1 host a room called name, 2 join the
+     * room at address (ip, ip:port or a Tailscale name).
+     */
+    static native void setNet(int mode, String address, String name);
+
+    /** Starts looking for rooms (the known devices are kept under filesDir); null, or why not. */
+    static native String lanOpen(String filesDir);
+
+    static native void lanClose();
+
+    /** The rooms heard from lately: name, ip:port, and "1" when found over Tailscale, for each. */
+    static native String[] lanRooms();
+
+    /** This phone's addresses, Tailscale first. */
+    static native String[] lanAddresses();
+
+    /** The devices asked for rooms directly (over Tailscale, which carries no broadcasts). */
+    static native String[] lanDevices();
+
+    /** False when it is known already or isn't a name or address. */
+    static native boolean lanAddDevice(String nameOrAddress);
+
+    static native void lanRemoveDevice(String nameOrAddress);
 }

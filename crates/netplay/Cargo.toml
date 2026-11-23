@@ -1,0 +1,13 @@
+[package]
+name = "netplay"
+version = "0.1.0"
+edition = "2021"
+
+# Online multiplayer, shared by the PC frontend and the Android app: the
+# lockstep session (`net`) and finding rooms on the LAN and over Tailscale
+# (`lan`).
+[dependencies]
+guest-mem = { path = "../guest-mem" }
+hle-ios = { path = "../hle-ios" }
+hle-os = { path = "../hle-os" }
+miniz_oxide = "0.8"

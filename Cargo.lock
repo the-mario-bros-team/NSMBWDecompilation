@@ -1074,7 +1074,7 @@ dependencies = [
  "hle-ios",
  "hle-os",
  "input",
- "miniz_oxide 0.8.9",
+ "netplay",
  "port-update",
  "raw-window-handle",
  "sevenz-rust2",
@@ -1927,6 +1927,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "netplay"
+version = "0.1.0"
+dependencies = [
+ "guest-mem",
+ "hle-ios",
+ "hle-os",
+ "miniz_oxide 0.8.9",
+]
+
+[[package]]
 name = "nix"
 version = "0.31.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1996,8 +2006,8 @@ dependencies = [
  "hle-os",
  "jni 0.21.1",
  "libc",
- "miniz_oxide 0.8.9",
  "ndk 0.9.0",
+ "netplay",
  "port-update",
  "raw-window-handle",
  "sevenz-rust2",
