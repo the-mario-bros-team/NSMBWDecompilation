@@ -682,6 +682,8 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                     for slot in session.joining_at(index) {
                         sys.joins.request(slot);
                     }
+                    // Time sync: this machine's fields a little later.
+                    due += session.take_shift();
                 }
                 Err(e) => {
                     let _ = frames.send(Err(e));

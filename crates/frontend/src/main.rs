@@ -67,6 +67,7 @@ const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game 
   --host <port>      host an online game: you are player 1, others join at any time with --join
   --wait-join <f>    with --host: at game frame f, wait until someone joins (for scripted tests)
   --join <host>:<port>  join an online game in progress as the next free player
+  --net-latency <ms> online: hold every message this machine sends for ms first (for testing long connections)
   --wav <file>       also write the sound the game plays (16-bit stereo, 32 kHz) to a WAV file
   --no-audio         no sound output (unpaced runs never play sound)
   --interpreter      do not run recompiled code (crates/game-recomp), only the interpreter
@@ -266,6 +267,7 @@ fn parse_args() -> Result<Args, String> {
                 };
             }
             "--join" => args.net = net::Mode::Join { addr: it.next().ok_or("--join needs <host>:<port>")? },
+            "--net-latency" => net::LATENCY_MS.store(number(&mut it, "--net-latency")?, std::sync::atomic::Ordering::Relaxed),
             "--shot" => {
                 let v = it.next().ok_or("--shot needs <frame>:<file.png>")?;
                 let (f, p) = v.split_once(':').ok_or(format!("--shot {v}: expected <frame>:<file.png>"))?;
