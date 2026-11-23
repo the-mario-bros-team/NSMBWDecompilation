@@ -18,6 +18,21 @@ these tests. The online code does have real design problems, listed below,
 that would cause lag over the internet and break games with 3 or more
 players.
 
+## Status (2026-11-23)
+
+- **Fixed:**
+  - Section 1, the cause of the 1 fps: 4 players in a course run at 60 fps,
+    100% game speed.
+  - Online, section 3, items 1–5: delay from the round trip, instant relay,
+    time sync, no polling, and 3+ players in sync.
+  - Local, section 2, items 1–2: each player window draws on its own thread,
+    with a renderer on the main window's device.
+- **Open:**
+  - Local, section 2, items 3–6. Textures are still uploaded to each window
+    (shared device, not shared textures).
+  - Online, section 3, item 6: the host still saves the state on its game
+    thread, but deflating it no longer blocks.
+
 ## Measurements (paced, 7400 fields of 1-1)
 
 | Run | Game speed | Frames shown | Main window render |

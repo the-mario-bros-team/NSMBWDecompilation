@@ -79,7 +79,7 @@ impl Learned {
 }
 
 /// What is known about the background layers, kept by each window's owner.
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Backdrop {
     layers: HashMap<i32, Learned>,
     /// The last field: its camera centre and size, and each layer's

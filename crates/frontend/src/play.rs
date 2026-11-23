@@ -126,13 +126,87 @@ impl Mover {
 const SLOW_FIELD: Duration = Duration::from_millis(20);
 
 /// Another local player's own window (docs/PORT_PLAN.md, section 12): the
-/// same fields as the main window, through that player's view. It shows
-/// each field as it comes (no in-between frames).
+/// same fields as the main window, through that player's view. It draws on
+/// a thread of its own ([`run_player_window`]) with a renderer on the main
+/// window's GPU device, so the windows draw side by side rather than one
+/// after another on the window thread. It shows each field as it comes (no
+/// in-between frames).
 struct PlayerWindow {
     player: usize,
-    // Declared before `window`: the Vulkan surface must be destroyed first.
-    renderer: Renderer,
+    /// To its thread (taken to stop it).
+    tx: Option<Sender<ToPlayer>>,
+    thread: Option<std::thread::JoinHandle<()>>,
+    // Dropped last: the thread's renderer (and its Vulkan surface) first.
     window: Window,
+}
+
+impl Drop for PlayerWindow {
+    fn drop(&mut self) {
+        self.tx = None;
+        if let Some(t) = self.thread.take() {
+            let _ = t.join();
+        }
+    }
+}
+
+/// What a player's window's thread is sent, in order.
+enum ToPlayer {
+    /// A field: its output, XFB, the window's size, a screenshot to take of
+    /// it, and the background layers learned up to it.
+    Field { out: Arc<gx::Output>, xfb: u32, size: (u32, u32), shot: Option<PathBuf>, backdrop: gx::backdrop::Backdrop },
+    /// Textures the game no longer uses.
+    Evict(Vec<u32>),
+    Resized,
+}
+
+/// A player's window's thread. It shows the newest field it has been sent;
+/// fields before that one (when it fell behind) are not shown, and only
+/// drawn when they copy the EFB to textures (otherwise their textures are
+/// just uploaded), so it catches up at once.
+fn run_player_window(mut renderer: Renderer, player: usize, rx: Receiver<ToPlayer>) {
+    while let Ok(first) = rx.recv() {
+        let mut batch = vec![first];
+        batch.extend(rx.try_iter());
+        let newest = batch.iter().rposition(|m| matches!(m, ToPlayer::Field { .. }));
+        for (i, m) in batch.into_iter().enumerate() {
+            let r = match m {
+                ToPlayer::Evict(ids) => {
+                    renderer.evict(&ids);
+                    Ok(())
+                }
+                ToPlayer::Resized => {
+                    renderer.resized();
+                    Ok(())
+                }
+                ToPlayer::Field { out, xfb, size, shot, backdrop } => {
+                    let copies = out.cmds.iter().any(|c| matches!(c, gx::Cmd::CopyTex(_)));
+                    let show = Some(i) == newest || shot.is_some();
+                    let r = if show || copies {
+                        if shot.is_some() {
+                            renderer.screenshot = shot;
+                        }
+                        // A field skipped still draws when it copies the EFB to
+                        // textures: later fields sample them (light textures
+                        // are drawn once and used for many fields).
+                        let (w, h) = if show { size } else { (0, 0) };
+                        let mut fill = |dst: &mut [gx::Vertex]| fill_view(&out, player, dst, &backdrop);
+                        renderer.render_with(&out, out.vertices.len(), &mut fill, true, xfb, w, h).map(|_| ())
+                    } else {
+                        let cmds = out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).copied().collect();
+                        let uploads = gx::Output { new_textures: out.new_textures.clone(), cmds, ..Default::default() };
+                        renderer.render(&uploads, &[], true, xfb, 0, 0).map(|_| ())
+                    };
+                    // Only the main window's EFB copies go back to the game.
+                    let _ = renderer.take_writebacks();
+                    r
+                }
+            };
+            if let Err(e) = r {
+                say_err!("player {}'s window: {e}", player + 1);
+                return;
+            }
+        }
+    }
 }
 
 /// The field's vertices into `dst` (the renderer's GPU buffer, only
@@ -719,17 +793,6 @@ impl App {
                 self.textures.remove(id);
             }
         }
-        for pw in &mut self.players {
-            let size = pw.window.inner_size();
-            if let Some((_, path)) = self.opts.shots.iter().find(|(n, _)| *n == f.index + 1) {
-                pw.renderer.screenshot = Some(path.with_file_name(format!("{}-p{}.png", path.file_stem().and_then(|s| s.to_str()).unwrap_or("shot"), pw.player + 1)));
-            }
-            let (out, player, backdrop) = (&f.out, pw.player, &self.backdrop);
-            let mut fill = |dst: &mut [gx::Vertex]| fill_view(out, player, dst, backdrop);
-            pw.renderer.render_with(&f.out, f.out.vertices.len(), &mut fill, true, f.xfb, size.width, size.height).map_err(|e| e.to_string())?;
-            // Only the main window's EFB copies go back to the game.
-            let _ = pw.renderer.take_writebacks();
-        }
         let started = Instant::now();
         if skip {
             // Its draws up to its last EFB-to-texture copy still run (later
@@ -794,6 +857,17 @@ impl App {
             self.presented_now();
         }
         let queued = Queued { index: f.index, time: f.time, xfb: f.xfb, out: Arc::new(f.out) };
+        // The players' windows draw it on their own threads meanwhile.
+        if !self.players.is_empty() {
+            let shot = self.opts.shots.iter().find(|(n, _)| *n == queued.index + 1).map(|(_, p)| p.clone());
+            for pw in &self.players {
+                let size = pw.window.inner_size();
+                let shot = shot.as_ref().map(|path| path.with_file_name(format!("{}-p{}.png", path.file_stem().and_then(|s| s.to_str()).unwrap_or("shot"), pw.player + 1)));
+                if let Some(tx) = &pw.tx {
+                    let _ = tx.send(ToPlayer::Field { out: queued.out.clone(), xfb: queued.xfb, size: (size.width, size.height), shot, backdrop: self.backdrop.clone() });
+                }
+            }
+        }
         if !native {
             if let Some(prev) = self.queue.back() {
                 let mover = self.mover.get_or_insert_with(Mover::spawn);
@@ -806,8 +880,10 @@ impl App {
             if let Some(r) = &mut self.renderer {
                 r.evict(&old.out.evicted);
             }
-            for pw in &mut self.players {
-                pw.renderer.evict(&old.out.evicted);
+            for pw in &self.players {
+                if let Some(tx) = &pw.tx {
+                    let _ = tx.send(ToPlayer::Evict(old.out.evicted.clone()));
+                }
             }
             // Its buffers go back to the GX threads unless the mover still
             // holds it (then they are freed).
@@ -897,17 +973,20 @@ impl App {
             let window = event_loop.create_window(attrs).map_err(|e| e.to_string())?;
             let display = window.display_handle().map_err(|e| e.to_string())?.as_raw();
             let handle = window.window_handle().map_err(|e| e.to_string())?.as_raw();
-            let scale = self.renderer.as_ref().map_or(1.0, |r| r.scale());
+            let Some(main) = self.renderer.as_ref() else { return Ok(()) };
             // No pipeline cache file: the main window's renderer owns it.
-            let ropts = vk_render::Options { scale, vsync: false, pipeline_cache: None, efb_copies_to_ram: false };
-            let mut renderer = Renderer::new(display, handle, ropts).map_err(|e| e.to_string())?;
+            let ropts = vk_render::Options { scale: main.scale(), vsync: false, pipeline_cache: None, efb_copies_to_ram: false };
+            // On the main window's device: no device (and driver memory) of its own.
+            let mut renderer = Renderer::new_sharing(main, display, handle, ropts).map_err(|e| e.to_string())?;
             renderer.aspect = aspect;
             renderer.set_stretch(if widened { aspect / hle_os::display::ASPECT_16_9 } else { 1.0 });
             // Every texture the game still uses, before the first field.
             let uploads = gx::Output { new_textures: self.textures.values().cloned().collect(), ..Default::default() };
             renderer.render(&uploads, &[], true, last.xfb, 0, 0).map_err(|e| e.to_string())?;
+            let (tx, rx) = mpsc::channel();
+            let thread = std::thread::Builder::new().name(format!("player {} window", player + 1)).spawn(move || run_player_window(renderer, player, rx)).map_err(|e| e.to_string())?;
             println!("player {}: own window", player + 1);
-            self.players.push(PlayerWindow { player, renderer, window });
+            self.players.push(PlayerWindow { player, tx: Some(tx), thread: Some(thread), window });
         }
         Ok(())
     }
@@ -1347,7 +1426,9 @@ impl ApplicationHandler for App {
                     return;
                 }
                 WindowEvent::Resized(_) => {
-                    self.players[i].renderer.resized();
+                    if let Some(tx) = &self.players[i].tx {
+                        let _ = tx.send(ToPlayer::Resized);
+                    }
                     return;
                 }
                 WindowEvent::RedrawRequested => return,

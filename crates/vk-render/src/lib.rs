@@ -277,9 +277,9 @@ pub struct Renderer {
     efb_stale: bool,
     vsync: bool,
     copies_to_ram: bool,
-    _entry: Entry,
+    /// The instance, device and queue, shared with the players' windows.
+    gpu: Arc<Gpu>,
     instance: Instance,
-    debug: Option<(debug_utils::Instance, vk::DebugUtilsMessengerEXT)>,
     surface: Option<(surface::Instance, vk::SurfaceKHR)>,
     physical: vk::PhysicalDevice,
     /// The queue family drawn and presented with.
@@ -436,6 +436,44 @@ const STARTUP_KEYS: &[u32] = &[
     0x5018, 0x2_0128, 0x2_0129, 0x3_0010, 0x3_0069, 0x3_0429, 0x3_04A9, 0x3_3118, 0x3_3209, 0x3_3429, 0x3_3439, 0x3_34A8, 0x3_34A9, 0x3_34B8, 0x3_5131, 0x3_5931, 0x3_F118, 0x3_F119, 0x3_F4A9, 0x3_F4B9,
 ];
 
+/// What renderers on one GPU share ([`Renderer::new_sharing`]): the Vulkan
+/// instance, the device and its queue. Destroyed with the last renderer.
+pub struct Gpu {
+    entry: Entry,
+    instance: Instance,
+    debug: Option<(debug_utils::Instance, vk::DebugUtilsMessengerEXT)>,
+    physical: vk::PhysicalDevice,
+    /// The queue family drawn and presented with.
+    family: u32,
+    device: Device,
+    queue: vk::Queue,
+    /// Held for every use of the queue (submitting, presenting, waiting for
+    /// the device): Vulkan wants one thread at a time on a queue, and the
+    /// players' windows draw on threads of their own.
+    queue_lock: Mutex<()>,
+    device_name: String,
+    validation: bool,
+}
+
+impl Drop for Gpu {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.device_wait_idle().ok();
+            self.device.destroy_device(None);
+            if let Some((f, m)) = &self.debug {
+                f.destroy_debug_utils_messenger(*m, None);
+            }
+            self.instance.destroy_instance(None);
+        }
+    }
+}
+
+/// Waits for the whole device, holding its queue.
+fn wait_idle(gpu: &Gpu) -> Result<(), vk::Result> {
+    let _queue = gpu.queue_lock.lock().unwrap();
+    unsafe { gpu.device.device_wait_idle() }
+}
+
 /// The startup pipelines' worker threads ([`Renderer::pipelines_compiling`]).
 struct Prewarm {
     built: Receiver<(u32, vk::Pipeline)>,
@@ -455,18 +493,53 @@ fn rasterised_depth(s: &[u32]) -> bool {
 impl Renderer {
     /// A renderer presenting to a window.
     pub fn new(display: RawDisplayHandle, window: RawWindowHandle, opts: Options) -> Res<Self> {
-        Self::create(Some((display, window)), opts)
+        Self::create(Some((display, window)), opts, None)
+    }
+
+    /// A renderer presenting to another window on `other`'s GPU: the same
+    /// instance, device and queue, not a device of its own (a player's
+    /// window). It may draw on another thread than `other`.
+    pub fn new_sharing(other: &Renderer, display: RawDisplayHandle, window: RawWindowHandle, opts: Options) -> Res<Self> {
+        Self::create(Some((display, window)), opts, Some(other.gpu.clone()))
     }
 
     /// A renderer without a window: `render` with a zero window size never
     /// presents; results come from [`Renderer::efb_snapshot`], screenshots
     /// and writebacks.
     pub fn headless(opts: Options) -> Res<Self> {
-        Self::create(None, opts)
+        Self::create(None, opts, None)
     }
 
-    fn create(window: Option<(RawDisplayHandle, RawWindowHandle)>, opts: Options) -> Res<Self> {
+    fn create(window: Option<(RawDisplayHandle, RawWindowHandle)>, opts: Options, shared: Option<Arc<Gpu>>) -> Res<Self> {
         let scale = opts.scale.max(0.25);
+        unsafe {
+            let (gpu, surface) = match shared {
+                Some(gpu) => {
+                    let surface = match window {
+                        Some((display, handle)) => {
+                            let f = surface::Instance::new(&gpu.entry, &gpu.instance);
+                            let s = ash_window::create_surface(&gpu.entry, &gpu.instance, display, handle, None)?;
+                            if !f.get_physical_device_surface_support(gpu.physical, gpu.family, s)? {
+                                f.destroy_surface(s, None);
+                                return Err("the GPU cannot draw to this window".into());
+                            }
+                            Some((f, s))
+                        }
+                        None => None,
+                    };
+                    (gpu, surface)
+                }
+                None => Self::create_gpu(window)?,
+            };
+            let (instance, physical, family, device, queue) = (gpu.instance.clone(), gpu.physical, gpu.family, gpu.device.clone(), gpu.queue);
+            let (device_name, validation) = (gpu.device_name.clone(), gpu.validation);
+            Self::create_on(gpu, surface, instance, physical, family, device, queue, device_name, validation, scale, opts)
+        }
+    }
+
+    /// A Vulkan instance and device that can draw to `window` (with its
+    /// surface).
+    unsafe fn create_gpu(window: Option<(RawDisplayHandle, RawWindowHandle)>) -> Res<(Arc<Gpu>, Option<(surface::Instance, vk::SurfaceKHR)>)> {
         unsafe {
             let entry = Entry::load()?;
             let layers_present = entry.enumerate_instance_layer_properties()?;
@@ -540,6 +613,14 @@ impl Renderer {
                 None,
             )?;
             let queue = device.get_device_queue(family, 0);
+            let gpu = Arc::new(Gpu { entry, instance, debug, physical, family, device, queue, queue_lock: Mutex::new(()), device_name, validation });
+            Ok((gpu, surface))
+        }
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    unsafe fn create_on(gpu: Arc<Gpu>, surface: Option<(surface::Instance, vk::SurfaceKHR)>, instance: Instance, physical: vk::PhysicalDevice, family: u32, device: Device, queue: vk::Queue, device_name: String, validation: bool, scale: f32, opts: Options) -> Res<Self> {
+        unsafe {
             let swapchain_fn = surface.is_some().then(|| swapchain::Device::new(&instance, &device));
             let mut alloc = Allocator::new(&AllocatorCreateDesc {
                 instance: instance.clone(),
@@ -646,9 +727,8 @@ impl Renderer {
                 efb_stale: false,
                 vsync: opts.vsync,
                 copies_to_ram: opts.efb_copies_to_ram,
-                _entry: entry,
+                gpu,
                 instance,
-                debug,
                 surface,
                 physical,
                 family,
@@ -757,7 +837,7 @@ impl Renderer {
     /// New EFB images for the current stretch, once the GPU is done with
     /// the old ones; they start cleared, as at the start.
     fn remake_efb(&mut self) -> Res<()> {
-        unsafe { self.device.device_wait_idle()? };
+        wait_idle(&self.gpu)?;
         let (ew, eh) = (at_scale(EFB_W, self.sx()), at_scale(EFB_H, self.sy()));
         let usage = vk::ImageUsageFlags::COLOR_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_SRC | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
         let color = Self::create_image(&self.device, &mut self.alloc, ew, eh, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
@@ -1137,7 +1217,7 @@ impl Renderer {
     /// uploaded now; freed ones go once the GPU is done with them.
     pub fn set_ui(&mut self, frame: Option<UiFrame>, textures: &egui::TexturesDelta) -> Res<()> {
         if self.ui.as_ref().is_none_or(|u| u.format != self.swap_format) && self.swap_format != vk::Format::UNDEFINED && !self.swap_views.is_empty() {
-            unsafe { self.device.device_wait_idle()? };
+            wait_idle(&self.gpu)?;
             self.ui = None;
             let mode = egui_ash_renderer::RenderMode::DynamicRendering(egui_ash_renderer::DynamicRendering { color_attachment_format: self.swap_format, depth_attachment_format: None, stencil_attachment_format: None });
             // The swapchain is UNORM: egui's shader outputs sRGB itself.
@@ -1151,6 +1231,8 @@ impl Renderer {
             self.ui_frame = frame;
             return Ok(());
         };
+        // egui's uploads use the queue too.
+        let _queue = self.gpu.queue_lock.lock().unwrap();
         for textures in [std::mem::take(&mut self.ui_pending), textures.clone()] {
             for (id, deltas) in &textures.set {
                 for delta in deltas {
@@ -1184,7 +1266,7 @@ impl Renderer {
     pub fn detach_window(&mut self) {
         let Some((surface_fn, surface)) = &mut self.surface else { return };
         unsafe {
-            let _ = self.device.device_wait_idle();
+            let _ = wait_idle(&self.gpu);
             if let Some(f) = &self.swapchain_fn {
                 if self.swapchain != vk::SwapchainKHR::null() {
                     f.destroy_swapchain(self.swapchain, None);
@@ -1206,7 +1288,7 @@ impl Renderer {
         self.detach_window();
         let Some((surface_fn, surface)) = &mut self.surface else { return Err("a headless renderer cannot present to a window".into()) };
         unsafe {
-            let s = ash_window::create_surface(&self._entry, &self.instance, display, window, None)?;
+            let s = ash_window::create_surface(&self.gpu.entry, &self.instance, display, window, None)?;
             if !surface_fn.get_physical_device_surface_support(self.physical, self.family, s)? {
                 surface_fn.destroy_surface(s, None);
                 return Err("the GPU's queue cannot present to this window".into());
@@ -1225,7 +1307,7 @@ impl Renderer {
             return Ok(());
         }
         unsafe {
-            self.device.device_wait_idle()?;
+            wait_idle(&self.gpu)?;
             let caps = surface_fn.get_physical_device_surface_capabilities(self.physical, *surface)?;
             if !caps.supported_usage_flags.contains(vk::ImageUsageFlags::TRANSFER_DST) {
                 return Err("swapchain images cannot be written by transfers (no TRANSFER_DST usage)".into());
@@ -1322,8 +1404,11 @@ impl Renderer {
             record(self, cmd)?;
             self.device.end_command_buffer(cmd)?;
             let cmds = [cmd];
-            self.device.queue_submit(self.queue, &[vk::SubmitInfo::default().command_buffers(&cmds)], vk::Fence::null())?;
-            self.device.queue_wait_idle(self.queue)?;
+            {
+                let _queue = self.gpu.queue_lock.lock().unwrap();
+                self.device.queue_submit(self.queue, &[vk::SubmitInfo::default().command_buffers(&cmds)], vk::Fence::null())?;
+                self.device.queue_wait_idle(self.queue)?;
+            }
             self.device.free_command_buffers(self.pool, &cmds);
         }
         Ok(())
@@ -1565,7 +1650,7 @@ impl Renderer {
 
     /// Waits for the GPU and collects every outstanding writeback.
     pub fn finish(&mut self) -> Res<()> {
-        unsafe { self.device.device_wait_idle()? };
+        wait_idle(&self.gpu)?;
         for f in 0..FRAMES_IN_FLIGHT {
             self.collect_writebacks(f);
         }
@@ -1587,7 +1672,7 @@ impl Renderer {
 
     /// The EFB at native resolution (waits for the GPU).
     pub fn efb_snapshot(&mut self) -> Res<EfbSnapshot> {
-        unsafe { self.device.device_wait_idle()? };
+        wait_idle(&self.gpu)?;
         let bytes = u64::from(EFB_W * EFB_H * 4);
         let color_buf = self.create_buffer(bytes, vk::BufferUsageFlags::TRANSFER_DST, MemoryLocation::GpuToCpu)?;
         let depth_buf = self.create_buffer(bytes, vk::BufferUsageFlags::TRANSFER_DST, MemoryLocation::GpuToCpu)?;
@@ -2123,7 +2208,10 @@ impl Renderer {
                 signal = [self.rendered[i as usize]];
                 submit = submit.wait_semaphores(&wait).wait_dst_stage_mask(&stages).signal_semaphores(&signal);
             }
-            dev.queue_submit(self.queue, &[submit], self.frames[f].fence)?;
+            {
+                let _queue = self.gpu.queue_lock.lock().unwrap();
+                dev.queue_submit(self.queue, &[submit], self.frames[f].fence)?;
+            }
             // Retired so far: possibly used by this or an earlier submission.
             self.frames[f].retired_images.append(&mut self.trash_images);
             self.frames[f].retired_buffers.append(&mut self.trash_buffers);
@@ -2132,7 +2220,11 @@ impl Renderer {
                 let swapchains = [self.swapchain];
                 let indices = [i];
                 let signal = [self.rendered[i as usize]];
-                match swapchain_fn.queue_present(self.queue, &vk::PresentInfoKHR::default().wait_semaphores(&signal).swapchains(&swapchains).image_indices(&indices)) {
+                let presented = {
+                    let _queue = self.gpu.queue_lock.lock().unwrap();
+                    swapchain_fn.queue_present(self.queue, &vk::PresentInfoKHR::default().wait_semaphores(&signal).swapchains(&swapchains).image_indices(&indices))
+                };
+                match presented {
                     Ok(false) => {}
                     // An upright swapchain on a turned display is reported
                     // suboptimal at every present (Android): that is the
@@ -2204,7 +2296,7 @@ impl Drop for Renderer {
             }
         }
         unsafe {
-            let _ = self.device.device_wait_idle();
+            let _ = wait_idle(&self.gpu);
             if let Some(path) = &self.pipeline_cache_path {
                 if let Ok(data) = self.device.get_pipeline_cache_data(self.pipeline_cache) {
                     let _ = std::fs::write(path, data);
@@ -2286,16 +2378,19 @@ impl Drop for Renderer {
                     f.destroy_swapchain(self.swapchain, None);
                 }
             }
-            self.device.destroy_device(None);
             if let Some((f, s)) = &self.surface {
                 if *s != vk::SurfaceKHR::null() {
                     f.destroy_surface(*s, None);
                 }
             }
-            if let Some((f, m)) = &self.debug {
-                f.destroy_debug_utils_messenger(*m, None);
-            }
-            self.instance.destroy_instance(None);
+            // The device and the instance go with the last renderer on them
+            // (`Gpu`'s drop).
         }
     }
 }
+
+// A player's window draws on a thread of its own.
+const _: fn() = || {
+    fn send<T: Send>() {}
+    send::<Renderer>();
+};
