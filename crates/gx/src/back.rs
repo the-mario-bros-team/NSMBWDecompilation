@@ -80,12 +80,14 @@ pub(crate) struct Back {
     zplane: [f32; 3],
     /// The game camera while in a course (`Op::World`).
     world_camera: Option<crate::WorldCamera>,
+    /// Time spent applying batches on the transform thread this field.
+    busy: std::time::Duration,
     out: Output,
 }
 
 impl Default for Back {
     fn default() -> Self {
-        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], world_camera: None, out: Output::default() }
+        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], world_camera: None, busy: Default::default(), out: Output::default() }
     }
 }
 
@@ -115,7 +117,9 @@ impl Back {
         fresh.world.camera = self.out.world.camera;
         fresh.views = self.out.views;
         self.records = records_next;
-        std::mem::replace(&mut self.out, fresh)
+        let mut out = std::mem::replace(&mut self.out, fresh);
+        out.busy[1] = std::mem::take(&mut self.busy);
+        out
     }
 
     pub fn recycle(&mut self, mut old: Output) {
@@ -130,6 +134,7 @@ impl Back {
         old.evicted = Vec::new();
         old.world.ranges.clear();
         old.world.layers.clear();
+        old.draw_ops = 0;
         self.spare = Some(old);
     }
 
@@ -253,6 +258,7 @@ impl Back {
             self.scratch_model = model;
             return;
         }
+        self.out.draw_ops += 1;
         let mut shading = batch.shadings[d.shading as usize];
         let frozen = shading.0[sh::FLAGS] & FLAG_ZFREEZE != 0;
         // Without z-freeze, this draw's first triangle sets the plane a later
@@ -350,7 +356,9 @@ impl BackThread {
                 for msg in msgs {
                     match msg {
                         Msg::Batch(mut b) => {
+                            let t = std::time::Instant::now();
                             back.apply(&b);
+                            back.busy += t.elapsed();
                             b.clear();
                             let _ = spare.send(b);
                         }

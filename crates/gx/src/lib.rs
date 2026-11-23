@@ -393,6 +393,13 @@ pub struct Output {
     pub world: World,
     /// Each player's window, as last set ([`Gpu::set_views`]).
     pub views: [Option<xf::View>; 4],
+    /// Time the GX threads spent on this field: decoding (the GX thread)
+    /// and transforming (its transform thread). Zero for work done inline.
+    pub busy: [std::time::Duration; 2],
+    /// Draws the game made this field (before merging into `cmds`), and
+    /// texture bytes hashed to look textures up (for `--perf`).
+    pub draw_ops: u32,
+    pub hashed: u64,
 }
 
 impl Output {
@@ -558,6 +565,7 @@ impl Gpu {
         let mut out = self.sink.take_output(self.records_next);
         out.new_textures = std::mem::take(&mut self.textures.new);
         out.evicted = std::mem::take(&mut self.textures.evicted);
+        out.hashed = std::mem::take(&mut self.textures.hashed_bytes);
         self.textures.next_generation();
         out
     }
@@ -870,6 +878,7 @@ impl Gpu {
             let stride = if stride as usize > (w as usize).div_ceil(bw) * block_bytes { stride } else { 0 };
             let ram_hash = if stride == 0 {
                 let size = texture::level_size(tex_format, w as usize, h as usize);
+                self.textures.hashed_bytes += size as u64;
                 texture::hash(mem.ram(addr, size).unwrap_or(&[]))
             } else {
                 texture::hash(&texture::copy_bytes(mem, addr, tex_format, w as usize, h as usize, stride as usize).unwrap_or_default())

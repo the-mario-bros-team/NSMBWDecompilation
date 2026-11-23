@@ -381,6 +381,8 @@ pub struct Cache {
     /// Ids drawn from the game's texture while their pack file is read:
     /// the pack's key, and the texture's size.
     waiting: FastMap<u32, (crate::replace::Key, u16, u16)>,
+    /// Bytes hashed for texture lookups since the last take.
+    pub hashed_bytes: u64,
 }
 
 /// Generations a texture may go unused before the renderer drops it.
@@ -475,6 +477,7 @@ impl Cache {
         }
         if let Some(c) = self.efb_copies.get(&key.addr) {
             let size = level_size(key.format, key.width.into(), key.height.into()).min(data.len());
+            self.hashed_bytes += size as u64;
             if c.width == key.width && c.height == key.height && hash(&data[..size]) == c.ram_hash {
                 let id = c.id;
                 self.checked.insert(key, id);

@@ -33,6 +33,12 @@ mod gameplay;
 #[allow(dead_code)]
 #[path = "../../frontend/src/mods.rs"]
 mod mods;
+// Per-field timings: on while the app's files hold a file named `perf`
+// (its text: the draw categories to leave out in turn, if any), into
+// `perf.csv` there and logcat.
+#[allow(dead_code)]
+#[path = "../../frontend/src/perf.rs"]
+mod perf;
 mod ui {
     #[allow(dead_code)]
     #[path = "../../../frontend/src/ui/text.rs"]
@@ -124,6 +130,7 @@ struct Render {
     /// Speed over the last [`SPEED_EVERY`]: since when, fields, and their
     /// emulation and render times.
     speed: (Instant, u32, Duration, Duration),
+    perf: Option<perf::Perf>,
 }
 
 /// How often the game's speed goes to logcat.
@@ -196,6 +203,15 @@ impl Render {
         if !audio {
             println!("sound off (files/no-audio)");
         }
+        if let Ok(skip) = std::fs::read_to_string("perf") {
+            match perf::Skip::parse_list(skip.trim()).and_then(|s| perf::Perf::new(Some(Path::new("perf.csv")), s, 300)) {
+                Ok(p) => {
+                    println!("perf: timing every field into perf.csv (files/perf)");
+                    self.perf = Some(p);
+                }
+                Err(e) => eprintln!("perf: {e}"),
+            }
+        }
         let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, ..EmuOptions::default() });
         let _ = emu.to_emu.send(ToEmu::Interpolate(false));
         self.emu = Some(emu);
@@ -204,11 +220,17 @@ impl Render {
 
     /// Draws a field and presents it (when there is a surface), and sends
     /// the game what only the GPU knows.
-    fn ingest(&mut self, f: GameFrame) -> Result<(), String> {
+    fn ingest(&mut self, mut f: GameFrame) -> Result<(), String> {
         let (w, h) = self.window.as_ref().map_or((0, 0), |w| (w.width().max(0) as u32, w.height().max(0) as u32));
         let (Some(r), Some(emu)) = (&mut self.renderer, &self.emu) else { return Ok(()) };
+        if let Some(p) = &self.perf {
+            p.filter(&mut f.out);
+        }
         let started = Instant::now();
         r.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
+        if let Some(p) = &mut self.perf {
+            p.field(&f, started.elapsed(), None);
+        }
         self.speed.1 += 1;
         self.speed.2 += f.emu;
         self.speed.3 += started.elapsed();
@@ -343,7 +365,7 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_start<'l>(mut env: JNIEn
         SHARED.set(Shared { tx: Mutex::new(tx), inputs: Mutex::new(inputs), error: Mutex::new(None), rumble: AtomicBool::new(false) }).map_err(|_| "already started".to_string())?;
         let cfg = Config { game: PathBuf::from(game), scale: scale.clamp(0, 8) as u32, widescreen: widescreen != 0, vsync: vsync != 0, language: u8::try_from(language).unwrap_or(1) };
         println!("starting: game {}, files {files}", cfg.game.display());
-        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None, speed: (Instant::now(), 0, Duration::ZERO, Duration::ZERO) };
+        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None, speed: (Instant::now(), 0, Duration::ZERO, Duration::ZERO), perf: None };
         std::thread::Builder::new().name("render".into()).spawn(move || render.run(rx)).map_err(|e| e.to_string())?;
         Ok(())
     })();
