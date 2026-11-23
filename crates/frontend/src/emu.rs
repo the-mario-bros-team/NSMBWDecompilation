@@ -99,6 +99,9 @@ pub enum ToEmu {
     /// A real Wii Remote for this player (0-3) in place of the emulated one,
     /// or (`None`) the emulated one again.
     RealRemote(usize, Option<Box<dyn hle_ios::bt::HidRemote>>),
+    /// Bluetooth passthrough: the console's sync button pressed (pair
+    /// remotes), or (`true`) held 10 s (forget them all).
+    SyncButton(bool),
     /// The picture's shape and the Graphics tab's options.
     Display(DisplayOptions),
 }
@@ -284,6 +287,13 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
         ToEmu::RealRemote(i, remote) => sys.hw.borrow_mut().ios.bt.set_real(i, remote),
+        ToEmu::SyncButton(held) => {
+            let mut hw = sys.hw.borrow_mut();
+            if hw.ios.bt.passthrough.is_some() {
+                hw.ios.sync_button(held);
+                say!("Bluetooth passthrough: {}", if held { "forgetting every paired Wii Remote" } else { "pairing: press the red SYNC button on each Wii Remote (under its battery cover)" });
+            }
+        }
         ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::Display(_) | ToEmu::TexturePack(_) => {}
     }
 }
@@ -397,6 +407,9 @@ pub struct EmuOptions {
     pub mods: Vec<String>,
     /// Start this course when the game next starts one (`--course`).
     pub course: Option<Course>,
+    /// Bluetooth passthrough (`bt_passthrough`): a real adapter runs the
+    /// game's Bluetooth (not in a net game or a scripted run).
+    pub bt_passthrough: bool,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -458,7 +471,7 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 
 #[allow(clippy::too_many_arguments)]
 fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>, player: Arc<AtomicU64>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, mut game_camera, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters, wide, texture_pack, mods, mut course } = opts;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, mut game_camera, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters, wide, texture_pack, mods, mut course, bt_passthrough } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -531,6 +544,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     sys.camera.enabled = !game_camera;
     sys.camera.view_zoom = view_zoom;
     let mut fields_without_camera = 0u32;
+    // `NSMBW_INPUT_LOG=1`: each change of a remote's buttons, shake or tilt
+    // (in tenths) as it goes to the emulated remote.
+    let mut input_log = std::env::var("NSMBW_INPUT_LOG").is_ok_and(|v| v == "1").then(|| [(0u16, false, 0i32); REMOTES]);
     sys.hw.borrow_mut().dsp.ax.aux_return = sys.aux_effects;
     if code_profile.is_some() {
         sys.blocks.starts = Some(Default::default());
@@ -557,6 +573,10 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         let mut hw = sys.hw.borrow_mut();
         hw.ios.trace = true;
         hw.ios.bt.trace = true;
+    }
+    if bt_passthrough {
+        let off = if session.is_some() { Some("net games use the usual controls") } else if !script.is_empty() { Some("a scripted run") } else { None };
+        start_passthrough(&mut sys, off);
     }
     let mut index = 0;
     if let Some((field, state)) = joined {
@@ -693,7 +713,19 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         {
             let mut hw = sys.hw.borrow_mut();
+            if let Some(p) = &mut hw.ios.bt.passthrough {
+                for line in p.take_log() {
+                    say!("[bluetooth] {line}");
+                }
+            }
             for (i, mut input) in inputs.into_iter().enumerate() {
+                if let Some(log) = &mut input_log {
+                    let now = (input.buttons, input.shake, (input.tilt * 10.0).round() as i32);
+                    if now != log[i] {
+                        log[i] = now;
+                        say!("input: field {index} player {}: buttons {:#06x}{} tilt {:+.2}", i + 1, input.buttons, if input.shake { " shake" } else { "" }, input.tilt);
+                    }
+                }
                 // A real remote is on while Windows has it connected.
                 input.connected |= hw.ios.bt.has_real(i);
                 hw.ios.bt.set_input(i, input);
@@ -869,9 +901,44 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     if let Some(a) = &audio {
         totals.audio_dropouts = a.dropouts();
     }
+    if let Some((stats, counts)) = sys.hw.borrow_mut().ios.stop_passthrough() {
+        let counts: Vec<String> = counts.iter().map(|(op, n)| format!("{op:#06x} x{n}")).collect();
+        say!("[bluetooth] totals: {}; the game's commands: {}", stats.summary(), counts.join(", "));
+    }
     totals.thread_cpu = crate::win::thread_cpu_time() - cpu_at_start;
     totals.texture_pack = pack_stats;
     totals
+}
+
+/// Bluetooth passthrough (experimental): the first usable USB Bluetooth
+/// adapter (or with `NSMBW_BT_FAKE_ADAPTER=1` one that answers every
+/// command itself) in place of the emulated remotes; off, with the reason
+/// said, otherwise.
+fn start_passthrough(sys: &mut System, off: Option<&str>) {
+    use hle_ios::bt_passthrough::{Adapter, FakeAdapter};
+    if let Some(why) = off {
+        say!("Bluetooth passthrough: off ({why})");
+        return;
+    }
+    let opened: Result<(Box<dyn Adapter>, String, bool), String> = if std::env::var("NSMBW_BT_FAKE_ADAPTER").is_ok_and(|v| v == "1") {
+        Ok((Box::<FakeAdapter>::default(), "a fake adapter (NSMBW_BT_FAKE_ADAPTER=1)".into(), false))
+    } else {
+        #[cfg(windows)]
+        let opened = input::bt_usb::open().map(|o| (Box::new(o.adapter) as Box<dyn Adapter>, o.name, o.wii_module));
+        #[cfg(not(windows))]
+        let opened = Err("Windows only".to_string());
+        opened
+    };
+    match opened {
+        Ok((adapter, name, wii_module)) => match sys.hw.borrow_mut().ios.start_passthrough(adapter, wii_module, PathBuf::from("saves/bt-passthrough")) {
+            Ok(()) => say!(
+                "Bluetooth passthrough: {name}{}. The game's own Bluetooth drives real Wii Remotes; the keyboard and controllers don't. F8 pairs remotes (held 10 s, it forgets them all).",
+                if wii_module { " (a Wii's own Bluetooth module)" } else { "" }
+            ),
+            Err(e) => say_err!("Bluetooth passthrough: {e}; the emulated remotes play"),
+        },
+        Err(e) => say_err!("Bluetooth passthrough couldn't start: {e}. The keyboard and controllers play as usual."),
+    }
 }
 
 /// Runs the game thread with no window or renderer (`--headless`) until it

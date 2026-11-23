@@ -6,9 +6,21 @@ edition = "2021"
 [dependencies]
 hle-ios = { path = "../hle-ios" }
 winit = "0.30"
-gilrs = "0.11"
+# Controllers (`pads`): SDL 3 (zlib licence), built from source and linked
+# in, with only its joystick, HIDAPI, sensor and haptic parts. It reads
+# buttons, sticks, rumble and the motion sensors of DualShock 4, DualSense,
+# Switch Pro, Joy-Cons and the rest of SDL's list. Building it needs CMake
+# and a C compiler.
+sdl3-sys = { version = "0.7.3", default-features = false, features = [
+    "build-from-source-static",
+    "sdl-joystick", "sdl-hidapi", "sdl-sensor", "sdl-haptic",
+    "no-sdl-audio", "no-sdl-video", "no-sdl-gpu", "no-sdl-render", "no-sdl-camera",
+    "no-sdl-dialog", "no-sdl-tray", "no-sdl-power",
+] }
 
 # Real Wii Remotes paired with Windows (`wii_hid`): Windows' own HID calls,
-# no C library.
+# no C library. Bluetooth passthrough (`bt_usb`): nusb (MIT or Apache-2.0),
+# pure Rust over WinUSB.
 [target.'cfg(windows)'.dependencies]
 hidapi = { version = "2.6", default-features = false, features = ["windows-native"] }
+nusb = "0.2.9"

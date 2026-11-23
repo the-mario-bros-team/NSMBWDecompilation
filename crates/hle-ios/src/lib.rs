@@ -6,6 +6,7 @@
 //! result, moves the command to `+8` and sets `+0` to 8 (reply), as IOS does.
 
 pub mod bt;
+pub mod bt_passthrough;
 mod di;
 pub mod nand;
 pub mod wiimote;
@@ -68,9 +69,16 @@ pub struct Ios {
     /// Requests held without a reply (device, request address).
     pub held: Vec<(String, u32)>,
     pub bt: bt::Bt,
+    /// Bluetooth passthrough's folder: its pairings, apart from the
+    /// emulated remotes' (`start_passthrough`).
+    passthrough: Option<PathBuf>,
     /// Extra detail for the trace line of the request being handled.
     note: String,
 }
+
+const SYSCONF: &str = "/shared2/sys/SYSCONF";
+const LINK_KEYS: &str = "link_keys.txt";
+const DINF: &str = "BT.DINF";
 
 fn rd32(mem: &mut Mem, a: u32) -> u32 {
     mem.read_u32(a).unwrap_or(0)
@@ -122,7 +130,51 @@ impl Ios {
         let remotes: Vec<[u8; 6]> = (0..bt::REMOTES).map(bt::remote_address).collect();
         nand::register_wiimotes(&nand, &remotes).map_err(|e| format!("{}: {e}", nand.display()))?;
         let tmd = std::fs::read(game.join("tmd.bin")).map_err(|e| format!("tmd.bin: {e}"))?;
-        Ok(Self { nand, disc: Disc::open(game)?, tmd, title_id, fds: Vec::new(), trace: false, held: Vec::new(), bt: bt::Bt::default(), note: String::new() })
+        Ok(Self { nand, disc: Disc::open(game)?, tmd, title_id, fds: Vec::new(), trace: false, held: Vec::new(), bt: bt::Bt::default(), passthrough: None, note: String::new() })
+    }
+
+    /// Bluetooth passthrough from now on, before the game starts: `adapter`
+    /// in place of the emulated remotes (`bt_passthrough`). Its pairings
+    /// live in `folder`: the link keys (`link_keys.txt`), and the game's
+    /// list of paired remotes (`BT.DINF`), put in `SYSCONF` in place of the
+    /// emulated remotes' and copied back whenever the game writes it.
+    pub fn start_passthrough(&mut self, adapter: Box<dyn bt_passthrough::Adapter>, wii_module: bool, folder: PathBuf) -> Result<(), String> {
+        std::fs::create_dir_all(&folder).map_err(|e| format!("{}: {e}", folder.display()))?;
+        let keys = std::fs::read_to_string(folder.join(LINK_KEYS)).map(|t| bt_passthrough::parse_link_keys(&t)).unwrap_or_default();
+        let dinf = std::fs::read(folder.join(DINF)).ok().filter(|d| d.len() == 0x461).unwrap_or_else(|| nand::bt_dinf(&[]));
+        let path = nand::host_path(&self.nand, SYSCONF).ok_or("SYSCONF")?;
+        let mut conf = std::fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        if !nand::set_sysconf_big(&mut conf, "BT.DINF", &dinf) {
+            return Err("SYSCONF has no BT.DINF".into());
+        }
+        std::fs::write(&path, conf).map_err(|e| format!("{}: {e}", path.display()))?;
+        self.bt.passthrough = Some(bt_passthrough::Passthrough::new(adapter, wii_module, keys));
+        self.passthrough = Some(folder);
+        Ok(())
+    }
+
+    /// Passthrough's pairings to its folder (when the game wrote them).
+    fn save_link_keys(&mut self) {
+        let (Some(p), Some(folder)) = (&mut self.bt.passthrough, &self.passthrough) else { return };
+        if p.take_keys_changed() {
+            let _ = std::fs::write(folder.join(LINK_KEYS), bt_passthrough::format_link_keys(&p.link_keys));
+        }
+    }
+
+    /// The console's sync button (passthrough only): pressed, or held 10 s.
+    pub fn sync_button(&mut self, held: bool) {
+        if let Some(p) = &mut self.bt.passthrough {
+            p.sync_button(held);
+        }
+    }
+
+    /// The game is done: passthrough's adapter is reset and let go, and
+    /// its counts returned (with the game's commands by opcode).
+    pub fn stop_passthrough(&mut self) -> Option<(bt_passthrough::Stats, std::collections::BTreeMap<u16, u64>)> {
+        self.save_link_keys();
+        let mut p = self.bt.passthrough.take()?;
+        p.shutdown();
+        Some((p.stats, std::mem::take(&mut p.command_counts)))
     }
 
     /// Runs the request at physical address `req`. Returns true if it was
@@ -157,6 +209,7 @@ impl Ios {
     /// their addresses for the IPC reply queue.
     pub fn poll(&mut self, mem: &mut Mem, now: u64) -> Vec<u32> {
         self.bt.update(now);
+        self.save_link_keys();
         let mut done = Vec::new();
         while self.bt.has_event() && !self.bt.intr_waiting.is_empty() {
             let (req, buf, len) = self.bt.intr_waiting.pop_front().unwrap();
@@ -202,6 +255,12 @@ impl Ios {
                 if let Some(Handle::File(f)) = self.fds[fd as usize].take() {
                     if f.dirty {
                         let _ = std::fs::write(&f.host, &f.data);
+                        // Passthrough's paired remotes, as the game left them.
+                        if let Some(folder) = self.passthrough.as_ref().filter(|_| nand::host_path(&self.nand, SYSCONF).as_ref() == Some(&f.host)) {
+                            if let Some(dinf) = nand::sysconf_big(&f.data, "BT.DINF") {
+                                let _ = std::fs::write(folder.join(DINF), dinf);
+                            }
+                        }
                     }
                 }
                 Some(0)

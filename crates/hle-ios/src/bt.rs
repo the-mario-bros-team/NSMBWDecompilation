@@ -14,6 +14,7 @@
 
 use std::collections::VecDeque;
 
+use crate::bt_passthrough::Passthrough;
 use crate::wiimote::{Input, Wiimote, REPORTS_PER_SECOND};
 
 /// A pending request: (request address, buffer address, buffer length).
@@ -162,6 +163,9 @@ pub struct Bt {
     /// Real Wii Remotes standing in for players' emulated ones (not part of
     /// a saved state).
     real: Vec<Option<Box<dyn HidRemote>>>,
+    /// Bluetooth passthrough: a real adapter in place of all of the above
+    /// (not part of a saved state).
+    pub passthrough: Option<Passthrough>,
     /// Print the HCI and L2CAP conversation.
     pub trace: bool,
 }
@@ -179,6 +183,7 @@ impl Default for Bt {
             ident: 0,
             remotes: (0..REMOTES).map(|_| Remote::new()).collect(),
             real: (0..REMOTES).map(|_| None).collect(),
+            passthrough: None,
             trace: false,
         }
     }
@@ -258,6 +263,10 @@ impl Bt {
 
     /// Handles one HCI command packet (opcode LE, length, parameters).
     pub fn command(&mut self, packet: &[u8]) {
+        if let Some(p) = &mut self.passthrough {
+            p.command(packet);
+            return;
+        }
         if packet.len() < 3 {
             return;
         }
@@ -461,6 +470,10 @@ impl Bt {
 
     /// An ACL packet from the Wii.
     pub fn acl(&mut self, packet: &[u8]) {
+        if let Some(p) = &mut self.passthrough {
+            p.acl(packet);
+            return;
+        }
         let (h, len) = (le16(packet, 0), le16(packet, 2) as usize);
         let Some(data) = packet.get(4..4 + len) else { return };
         let mut ev = vec![1];
@@ -612,6 +625,10 @@ impl Bt {
     /// channel setup, and data reports.
     pub fn update(&mut self, now: u64) {
         self.now = now;
+        if let Some(p) = &mut self.passthrough {
+            p.pump();
+            return;
+        }
         for i in 0..REMOTES {
             let r = &mut self.remotes[i];
             // A real remote stays on while Windows has it connected.
@@ -717,19 +734,25 @@ impl Bt {
     }
 
     pub fn next_event(&mut self) -> Option<Vec<u8>> {
-        self.events.pop_front()
+        match &mut self.passthrough {
+            Some(p) => p.next_event(),
+            None => self.events.pop_front(),
+        }
     }
 
     pub fn has_event(&self) -> bool {
-        !self.events.is_empty()
+        self.passthrough.as_ref().map_or(!self.events.is_empty(), Passthrough::has_event)
     }
 
     pub fn next_acl(&mut self) -> Option<Vec<u8>> {
-        self.acl.pop_front()
+        match &mut self.passthrough {
+            Some(p) => p.next_acl(),
+            None => self.acl.pop_front(),
+        }
     }
 
     pub fn has_acl(&self) -> bool {
-        !self.acl.is_empty()
+        self.passthrough.as_ref().map_or(!self.acl.is_empty(), Passthrough::has_acl)
     }
 }
 
