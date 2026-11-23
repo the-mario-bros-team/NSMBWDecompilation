@@ -1,7 +1,7 @@
 //! NSMBW Rust port — frontend binary (docs/PORT_PLAN.md).
 //!
 //! - default: runs the game in a window (interpreter, hardware and IOS HLE,
-//!   GX decoded and drawn through Vulkan).
+//!   GX decoded and drawn through Vulkan, Direct3D 12 or Direct3D 11).
 //! - `--check` validates the extracted game folder against the analysed image.
 //! - `--boot` boots `main.dol` without a window and reports progress.
 
@@ -11,11 +11,13 @@ mod click;
 mod emu;
 mod gameplay;
 mod gamefiles;
+mod gfx;
 mod lan;
 mod mods;
 mod net;
 mod overlay;
 mod play;
+mod probe;
 mod replay;
 mod say;
 mod settings;
@@ -27,21 +29,23 @@ use std::process::ExitCode;
 
 const USAGE: &str = "usage: nsmbw-port [--check | --boot [--steps <n>]] [--game <folder>] [--frames <n>] [--screenshot <file.png>]
                    [--fps <30|60|90|120|144|165|180|240|300|360|400|unlocked>] [--vsync | --no-vsync] [--fullscreen] [--scale <n|native>] [--unpaced]
+                   [--renderer <auto|vulkan|d3d12|d3d11>]
                    [--press <frame>:<buttons>[:<frames>]]... [--shot <frame>:<file.png>]... [--trace-ios] [--profile-guest]
-       nsmbw-port --replay <log.dff> [--frame <n>] [--scale <n>] [--screenshot <png>] [--compare <png>] [--min-psnr <dB>]
+       nsmbw-port --replay <log.dff> [--frame <n>] [--scale <n>] [--renderer <r>] [--screenshot <png>] [--compare <png>] [--min-psnr <dB>]
   (no mode)          run the game in a window (display settings from settings.toml; F1 lists the hotkeys)
   --replay <log.dff> play a Dolphin FIFO log headless, capture a frame (default the last), compare by PSNR (default 30 dB)
   --check            validate the extracted game folder and exit
   --boot             boot main.dol without a window and report progress (default limit 500M guest cycles)
   --steps <n>        guest-cycle limit for --boot (instructions plus idle time skipped)
   --game <folder>    extracted disc (holds sys/ and files/); default: game_dir in port.toml, else ./game
-  --frames <n>       exit after presenting n frames and print the Vulkan validation summary
+  --frames <n>       exit after presenting n frames and print the debug layer's summary (validation errors)
   --screenshot <png> with --frames: save the last frame's XFB
   --fps <rate>       frames shown per second; 30 shows every other field; above 60, in-between frames are interpolated
                      (the game always runs at 59.94)
   --vsync, --no-vsync  wait for the display's refresh, or not
   --fullscreen       borderless fullscreen (F11 toggles)
   --scale <n|native> EFB resolution: 0.5..8 times 480 lines, or the window's height
+  --renderer <r>     auto (Vulkan, else Direct3D 12, else Direct3D 11), vulkan, d3d12 or d3d11 (Direct3D: Windows)
   --unpaced          run the game as fast as possible instead of 59.94 frames per second
   --press [p<k>:]<f>:<b>[:<n>]  hold Wii Remote k's (default 1) buttons b (a b 1 2 up down left right plus
                      minus home shake, joined with +; the remote's own D-pad) for n game frames (default 6)
@@ -186,6 +190,10 @@ fn parse_args() -> Result<Args, String> {
             "--vsync" => args.settings.vsync = true,
             "--no-vsync" => args.settings.vsync = false,
             "--fullscreen" => args.settings.fullscreen = true,
+            "--renderer" => {
+                let v = it.next().ok_or("--renderer needs auto, vulkan, d3d12 or d3d11")?;
+                args.settings.renderer = settings::RendererChoice::parse(&v).ok_or(format!("--renderer: auto, vulkan, d3d12 or d3d11, not {v}"))?;
+            }
             "--replay" => args.replay = Some(it.next().ok_or("--replay needs a .dff file")?.into()),
             "--frame" => args.frame = Some(number(&mut it, "--frame")?),
             "--compare" => args.compare = Some(it.next().ok_or("--compare needs a PNG")?.into()),
@@ -319,9 +327,9 @@ fn main() -> ExitCode {
     };
     if let Some(log) = args.replay {
         let scale = if args.settings.scale == 0.0 { 1.0 } else { args.settings.scale };
-        let opts = replay::Options { log, frame: args.frame, scale, screenshot: args.screenshot, compare: args.compare, min_psnr: args.min_psnr };
+        let opts = replay::Options { log, frame: args.frame, scale, screenshot: args.screenshot, compare: args.compare, min_psnr: args.min_psnr, renderer: args.settings.renderer };
         return match replay::run(&opts) {
-            Ok(true) if vk_render::validation_errors() == 0 => ExitCode::SUCCESS,
+            Ok(true) if render::validation_errors() == 0 => ExitCode::SUCCESS,
             Ok(_) => ExitCode::FAILURE,
             Err(e) => {
                 eprintln!("error: {e}");
@@ -368,8 +376,8 @@ fn main() -> ExitCode {
     }
     match play::run(opts) {
         Ok((games, presented)) => {
-            let errors = vk_render::validation_errors();
-            println!("{games} game frames, {presented} presented; validation errors: {errors}, warnings: {}", vk_render::validation_warnings());
+            let errors = render::validation_errors();
+            println!("{games} game frames, {presented} presented; validation errors: {errors}, warnings: {}", render::validation_warnings());
             if errors == 0 {
                 ExitCode::SUCCESS
             } else {

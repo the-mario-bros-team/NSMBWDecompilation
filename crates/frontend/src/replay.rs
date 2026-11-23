@@ -8,7 +8,6 @@ use std::path::PathBuf;
 
 use guest_mem::{Mem, NullMmio};
 use gx::Gpu;
-use vk_render::Renderer;
 
 pub struct Options {
     pub log: PathBuf,
@@ -19,6 +18,7 @@ pub struct Options {
     /// Reference image (same size as the capture).
     pub compare: Option<PathBuf>,
     pub min_psnr: f64,
+    pub renderer: crate::settings::RendererChoice,
 }
 
 /// PSNR in dB over RGB (infinite when identical).
@@ -69,7 +69,8 @@ pub fn run(o: &Options) -> Result<bool, String> {
     let mut mem = Mem::new(Box::new(NullMmio));
     let mut gpu = Gpu::default();
     gpu.load_tmem(&log.tmem);
-    let mut r = Renderer::headless(vk_render::Options { scale: o.scale, vsync: false, pipeline_cache: None, efb_copies_to_ram: true }).map_err(|e| e.to_string())?;
+    let mut r = crate::gfx::headless(o.renderer, render::Options { scale: o.scale, vsync: false, pipeline_cache: None, efb_copies_to_ram: true })?;
+    println!("renderer: {} ({})", r.api().name(), r.device_name());
     let shot = o.screenshot.clone().unwrap_or_else(|| std::env::temp_dir().join("nsmbw-replay.png"));
     let _ = std::fs::remove_file(&shot);
     gpu.feed(&log.setup_stream(), &mem, &mut Vec::new());
@@ -77,7 +78,7 @@ pub fn run(o: &Options) -> Result<bool, String> {
         feed(&mut gpu, &mut mem, frame);
         let out = gpu.take_output();
         if i == target {
-            r.screenshot = Some(shot.clone());
+            r.set_screenshot(Some(shot.clone()));
         }
         r.render(&out, &out.vertices, true, 0, 0, 0).map_err(|e| e.to_string())?;
         r.evict(&out.evicted);
@@ -101,8 +102,8 @@ pub fn run(o: &Options) -> Result<bool, String> {
     }
     println!("captured {}", shot.display());
     let Some(reference) = &o.compare else { return Ok(true) };
-    let (w, h, ours) = vk_render::load_png(&shot).map_err(|e| e.to_string())?;
-    let (rw, rh, theirs) = vk_render::load_png(reference).map_err(|e| format!("{}: {e}", reference.display()))?;
+    let (w, h, ours) = render::load_png(&shot).map_err(|e| e.to_string())?;
+    let (rw, rh, theirs) = render::load_png(reference).map_err(|e| format!("{}: {e}", reference.display()))?;
     if (w, h) != (rw, rh) {
         return Err(format!("size differs: capture {w}x{h}, reference {rw}x{rh} (try --scale)"));
     }
@@ -177,7 +178,7 @@ mod tests {
 
     #[test]
     fn replays_a_synthetic_log() {
-        if Renderer::headless(vk_render::Options::default()).is_err() {
+        if vk_render::Renderer::headless(render::Options::default()).is_err() {
             eprintln!("skipped: no Vulkan device");
             return;
         }
@@ -185,9 +186,9 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         let (path, shot) = (dir.join("quad.dff"), dir.join("quad.png"));
         save(&path, &log());
-        let opts = Options { log: path.clone(), frame: None, scale: 1.0, screenshot: Some(shot.clone()), compare: None, min_psnr: 30.0 };
+        let opts = Options { log: path.clone(), frame: None, scale: 1.0, screenshot: Some(shot.clone()), compare: None, min_psnr: 30.0, renderer: crate::settings::RendererChoice::Vulkan };
         assert!(run(&opts).unwrap());
-        let (w, h, px) = vk_render::load_png(&shot).unwrap();
+        let (w, h, px) = render::load_png(&shot).unwrap();
         assert_eq!((w, h), (640, 528));
         assert_eq!(&px[..4], &[0, 255, 0, 255]);
         // Against itself: identical.

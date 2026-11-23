@@ -3,8 +3,7 @@
 use naga::back::spv;
 use naga::valid::{Capabilities, ValidationFlags, Validator};
 
-const UBERSHADER: &str = include_str!("shader.wgsl");
-const COPY: &str = include_str!("copy.wgsl");
+use render::{COPY, UBERSHADER};
 
 fn entry(module: &naga::Module, info: &naga::valid::ModuleInfo, stage: naga::ShaderStage, name: &str) -> Result<Vec<u32>, String> {
     let mut opts = spv::Options { lang_version: (1, 5), ..Default::default() };

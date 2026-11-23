@@ -699,6 +699,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f27ae1dd37df86211c42e150270f82743308803d90a6f6e6651cd730d5e1732f"
 
 [[package]]
+name = "d3d-render"
+version = "0.1.0"
+dependencies = [
+ "egui",
+ "guest-mem",
+ "gx",
+ "naga",
+ "raw-window-handle",
+ "render",
+ "windows 0.62.2",
+]
+
+[[package]]
 name = "dasp_sample"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1065,6 +1078,7 @@ name = "frontend"
 version = "0.1.0"
 dependencies = [
  "cpal",
+ "d3d-render",
  "egui",
  "egui-winit",
  "game-recomp",
@@ -1077,6 +1091,7 @@ dependencies = [
  "miniz_oxide 0.8.9",
  "port-update",
  "raw-window-handle",
+ "render",
  "sevenz-rust2",
  "toml",
  "vk-render",
@@ -2839,6 +2854,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d902046e6a28a1e4c3cab97258a0ce11e994903f01c2d97a9447a0b3df85f4f6"
 
 [[package]]
+name = "render"
+version = "0.1.0"
+dependencies = [
+ "egui",
+ "gx",
+ "png",
+ "raw-window-handle",
+]
+
+[[package]]
 name = "rfd"
 version = "0.15.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3480,6 +3505,7 @@ version = "0.1.0"
 dependencies = [
  "ash",
  "ash-window",
+ "d3d-render",
  "egui",
  "egui-ash-renderer",
  "gpu-allocator",
@@ -3488,6 +3514,7 @@ dependencies = [
  "naga",
  "png",
  "raw-window-handle",
+ "render",
 ]
 
 [[package]]

@@ -1,0 +1,13 @@
+[package]
+name = "render"
+version = "0.1.0"
+edition = "2021"
+
+# What every renderer shares (Vulkan in vk-render, Direct3D 12 and 11 in
+# d3d-render): the interface the frontend draws through, its types, the GX
+# ubershader's WGSL source and the helpers the backends decode GX state with.
+[dependencies]
+egui = "0.36"
+raw-window-handle = "0.6"
+png = "0.18"
+gx = { path = "../gx" }

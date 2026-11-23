@@ -19,7 +19,7 @@ use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-use vk_render::Renderer;
+use crate::gfx::Renderer;
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
 use winit::event::{ElementState, WindowEvent};
@@ -183,7 +183,7 @@ fn run_player_window(mut renderer: Renderer, player: usize, rx: Receiver<ToPlaye
                     let show = Some(i) == newest || shot.is_some();
                     let r = if show || copies {
                         if shot.is_some() {
-                            renderer.screenshot = shot;
+                            renderer.set_screenshot(shot);
                         }
                         // A field skipped still draws when it copies the EFB to
                         // textures: later fields sample them (light textures
@@ -467,13 +467,14 @@ impl App {
             self.settings.scale
         };
         let _ = std::fs::create_dir_all("cache");
-        let ropts = vk_render::Options { scale, vsync: self.settings.vsync, pipeline_cache: Some(PathBuf::from("cache/pipelines.bin")), efb_copies_to_ram: self.settings.efb_copies_to_ram };
-        let renderer = Renderer::new(display, handle, ropts).map_err(|e| e.to_string())?;
+        let ropts = render::Options { scale, vsync: self.settings.vsync, pipeline_cache: Some(PathBuf::from("cache/pipelines.bin")), efb_copies_to_ram: self.settings.efb_copies_to_ram };
+        let renderer = crate::gfx::create(self.settings.renderer, display, handle, ropts)?;
         self.booted_widescreen = self.settings.widescreen;
         println!(
-            "vulkan device: {} (validation layer: {}); EFB {}x; {} fps; V-Sync {}",
-            renderer.device_name,
-            if renderer.validation { "on" } else { "not available" },
+            "{} device: {} (debug layer: {}); EFB {}x; {} fps; V-Sync {}",
+            renderer.api().name(),
+            renderer.device_name(),
+            if renderer.validation() { "on" } else { "not available" },
             scale,
             settings::fps_label(self.settings.fps),
             on(self.settings.vsync)
@@ -541,7 +542,7 @@ impl App {
     fn update_picture(&mut self) {
         let (aspect, widened) = self.picture();
         if let Some(r) = &mut self.renderer {
-            r.aspect = aspect;
+            r.set_aspect(aspect);
             r.set_stretch(if widened { aspect / hle_os::display::ASPECT_16_9 } else { 1.0 });
         }
         let d = crate::emu::DisplayOptions { aspect: if widened { aspect } else { hle_os::display::ASPECT_16_9 }, spinning_coins: self.settings.spinning_coins, depth_blur: self.settings.depth_blur };
@@ -770,19 +771,19 @@ impl App {
         let (w, h) = if show { (size.width, size.height) } else { (0, 0) };
         let (Some(renderer), Some(emu)) = (&mut self.renderer, &self.emu) else { return Ok(()) };
         if last {
-            renderer.screenshot = self.opts.screenshot.clone();
+            renderer.set_screenshot(self.opts.screenshot.clone());
         }
         if let Some((_, path)) = self.opts.shots.iter().find(|(n, _)| *n == f.index + 1) {
             // Interpolating, the shot is the next frame shown (in between
             // this field and the one before).
             if native {
-                renderer.screenshot = Some(path.clone());
+                renderer.set_screenshot(Some(path.clone()));
             } else {
                 self.pending_shot = Some(path.clone());
             }
             say!("frame {}: {} draws, {} texture copies", f.index + 1, f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count(), f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).count());
         }
-        renderer.overlay = rects;
+        renderer.set_overlay(rects);
         (self.main_player, self.online) = (f.main_player, f.online);
         self.backdrop.learn(&f.out.world);
         if !self.online {
@@ -792,6 +793,9 @@ impl App {
             for id in &f.out.evicted {
                 self.textures.remove(id);
             }
+        }
+        if std::env::var("NSMBW_PROBE_FIELD").ok().and_then(|v| v.parse::<u64>().ok()) == Some(f.index + 1) {
+            crate::probe::run(&self.textures, &f.out);
         }
         let started = Instant::now();
         if skip {
@@ -939,9 +943,9 @@ impl App {
             None
         };
         let Some(renderer) = &mut self.renderer else { return Ok(()) };
-        renderer.overlay = rects;
+        renderer.set_overlay(rects);
         if let Some(path) = self.pending_shot.take() {
-            renderer.screenshot = Some(path);
+            renderer.set_screenshot(Some(path));
         }
         let fb = &self.queue[b];
         if prepare {
@@ -975,10 +979,10 @@ impl App {
             let handle = window.window_handle().map_err(|e| e.to_string())?.as_raw();
             let Some(main) = self.renderer.as_ref() else { return Ok(()) };
             // No pipeline cache file: the main window's renderer owns it.
-            let ropts = vk_render::Options { scale: main.scale(), vsync: false, pipeline_cache: None, efb_copies_to_ram: false };
+            let ropts = render::Options { scale: main.scale(), vsync: false, pipeline_cache: None, efb_copies_to_ram: false };
             // On the main window's device: no device (and driver memory) of its own.
-            let mut renderer = Renderer::new_sharing(main, display, handle, ropts).map_err(|e| e.to_string())?;
-            renderer.aspect = aspect;
+            let mut renderer = main.new_sharing(display, handle, ropts).map_err(|e| e.to_string())?;
+            renderer.set_aspect(aspect);
             renderer.set_stretch(if widened { aspect / hle_os::display::ASPECT_16_9 } else { 1.0 });
             // Every texture the game still uses, before the first field.
             let uploads = gx::Output { new_textures: self.textures.values().cloned().collect(), ..Default::default() };
@@ -997,7 +1001,7 @@ impl App {
         let Some(size) = self.window.as_ref().map(|w| w.inner_size()) else { return Ok(()) };
         let rects = self.overlay_rects(size.width, size.height);
         let (Some(renderer), Some(fb)) = (&mut self.renderer, self.queue.back()) else { return Ok(()) };
-        renderer.overlay = rects;
+        renderer.set_overlay(rects);
         let key = (fb.index, fb.index);
         if renderer.prepared() != Some(key) {
             prepare_field(renderer, key, &fb.out, None, self.main_player, &self.backdrop)?;
@@ -1153,7 +1157,7 @@ impl App {
                     }
                 }
                 // From the next start, or read every frame.
-                ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics | ui::Change::Mods => {}
+                ui::Change::Renderer | ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics | ui::Change::Mods => {}
             }
         }
     }
@@ -1284,7 +1288,7 @@ impl App {
         format!("New Super Mario Bros. Wii - Rust port - {} fps", settings::fps_label(self.settings.fps).to_lowercase())
     }
 
-    fn overlay_rects(&self, width: u32, height: u32) -> Vec<vk_render::OverlayRect> {
+    fn overlay_rects(&self, width: u32, height: u32) -> Vec<render::OverlayRect> {
         let mut out = Vec::new();
         let px = (height / 360).clamp(1, 4) as i32;
         let margin = 4 * px;

@@ -11,7 +11,7 @@ use super::key_caps::{self, Caps, Glyph};
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
 use super::{Change, LanView, Nav, UpdateState};
 use crate::gameplay::POWER_UPS;
-use crate::settings::{Settings, WideMode};
+use crate::settings::{RendererChoice, Settings, WideMode};
 
 // ---------------------------------------------------------------- assets
 
@@ -342,6 +342,7 @@ fn row_text(rows: i32) -> f32 {
 
 #[derive(Clone, Copy)]
 enum DropKind {
+    Renderer,
     Resolution,
     Aspect,
     Interpolation,
@@ -1091,14 +1092,15 @@ impl SettingsWindow {
 
     fn draw_graphics(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
         let rows = GRAPHICS_LAST;
-        self.row_button(ctx, a, c, rows, 0, "Renderer", "Vulkan", ROW_RENDERER, false, 1.0, false);
+        self.row_button(ctx, a, c, rows, 0, "Renderer", s.renderer.label(), ROW_RENDERER, true, 1.0, true);
         self.row_toggle(ctx, a, c, rows, 1, "Spinning Coins", s.spinning_coins, ROW_COINS);
         self.row_toggle(ctx, a, c, rows, 2, "Depth Blur", s.depth_blur, ROW_DEPTH_BLUR);
         self.row_toggle(ctx, a, c, rows, 3, "Battery Saver", s.battery_saver, ROW_BATTERY);
         self.row_button(ctx, a, c, rows, 4, "Frame Interpolation", &rate_label(s.fps), ROW_INTERPOLATION, true, 0.92, true);
         let note = match self.cursor {
             0 => Tab::Graphics.help(),
-            ROW_RENDERER => "This port draws with Vulkan.",
+            ROW_RENDERER if s.renderer == RendererChoice::Auto => "Vulkan, else Direct3D 12, else Direct3D 11 (from the next start).",
+            ROW_RENDERER => "The graphics API the game draws with (from the next start).",
             ROW_COINS => "Animates coins and blocks; off saves a little GPU work.",
             ROW_DEPTH_BLUR => "The blur and heat haze of desert, beach, water and lava areas.",
             ROW_BATTERY => "Shows 30 frames a second while the game keeps running at 60.",
@@ -1547,6 +1549,7 @@ impl SettingsWindow {
 
     fn open_dropdown(&mut self, kind: DropKind, s: &Settings) {
         let (row, labels, current): (i32, Vec<String>, i32) = match kind {
+            DropKind::Renderer => (ROW_RENDERER, RendererChoice::ALL.iter().map(|r| r.label().to_string()).collect(), RendererChoice::ALL.iter().position(|&r| r == s.renderer).map_or(-1, |i| i as i32)),
             DropKind::Resolution => (ROW_RESOLUTION, SCALES.iter().map(|&x| scale_label(x)).collect(), SCALES.iter().position(|&x| x == s.scale).map_or(-1, |i| i as i32)),
             DropKind::Aspect => (ROW_ASPECT, ASPECTS.iter().map(|a| a.2.to_string()).collect(), aspect_index(s) as i32),
             DropKind::Interpolation => (ROW_INTERPOLATION, FRAME_RATES.iter().map(|&f| rate_label(f)).collect(), FRAME_RATES.iter().position(|&f| f == s.fps).map_or(-1, |i| i as i32)),
@@ -1556,6 +1559,10 @@ impl SettingsWindow {
 
     fn pick(&mut self, kind: DropKind, item: usize, s: &mut Settings, changes: &mut Vec<Change>) {
         match kind {
+            DropKind::Renderer => {
+                s.renderer = RendererChoice::ALL[item];
+                changes.push(Change::Renderer);
+            }
             DropKind::Resolution => {
                 s.scale = SCALES[item];
                 changes.push(Change::Scale);
@@ -1829,6 +1836,7 @@ impl SettingsWindow {
                 s.perf_size = (s.perf_size as i32 + if left { -5 } else { 5 }).clamp(5, 200) as u32;
                 changes.push(Change::PerfMonitor);
             }
+            (Tab::Graphics, ROW_RENDERER) if confirm => self.open_dropdown(DropKind::Renderer, s),
             (Tab::Graphics, ROW_COINS) if toggle => {
                 s.spinning_coins = !s.spinning_coins;
                 changes.push(Change::Graphics);

@@ -13,6 +13,10 @@ gpu-allocator = { version = "0.28", default-features = false, features = ["std",
 naga = { version = "30", features = ["wgsl-in", "spv-out"] }
 png = "0.18"
 gx = { path = "../gx" }
+render = { path = "../render" }
 
 [dev-dependencies]
 guest-mem = { path = "../guest-mem" }
+
+[target.'cfg(windows)'.dev-dependencies]
+d3d-render = { path = "../d3d-render" }

@@ -1,7 +1,7 @@
 //! The performance monitor and the hotkey help, drawn as solid rectangles
-//! (`vk_render::OverlayRect`) with a 5x7 bitmap font.
+//! (`render::OverlayRect`) with a 5x7 bitmap font.
 
-use vk_render::OverlayRect;
+use render::OverlayRect;
 
 pub const WHITE: u8 = 0;
 pub const GREEN: u8 = 2;

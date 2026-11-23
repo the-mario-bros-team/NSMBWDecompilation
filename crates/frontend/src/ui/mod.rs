@@ -39,6 +39,8 @@ impl Nav {
 /// A setting the window changed that the app applies (and saves).
 #[derive(Clone, Debug, PartialEq)]
 pub enum Change {
+    /// The Renderer (from the next start).
+    Renderer,
     Fps,
     VSync,
     Fullscreen,
@@ -291,7 +293,7 @@ impl Menus {
 
     /// This frame's menus for the renderer (`None` and nothing to upload
     /// while no menu is up), with what the window changed in `settings`.
-    pub fn frame(&mut self, window: &Window, settings: &mut Settings, buttons: u16) -> Option<(Option<vk_render::UiFrame>, egui::TexturesDelta, Vec<Change>)> {
+    pub fn frame(&mut self, window: &Window, settings: &mut Settings, buttons: u16) -> Option<(Option<render::UiFrame>, egui::TexturesDelta, Vec<Change>)> {
         let now = self.started.elapsed().as_secs_f64();
         let open = self.window.is_open();
         if !open {
@@ -321,6 +323,6 @@ impl Menus {
         self.winit.handle_platform_output(window, out.platform_output);
         let primitives = self.ctx.tessellate(out.shapes, out.pixels_per_point);
         self.shown = true;
-        Some((Some(vk_render::UiFrame { primitives, pixels_per_point: out.pixels_per_point }), out.textures_delta, changes))
+        Some((Some(render::UiFrame { primitives, pixels_per_point: out.pixels_per_point }), out.textures_delta, changes))
     }
 }

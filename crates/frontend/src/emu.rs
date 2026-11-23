@@ -16,7 +16,7 @@ use hle_ios::wiimote::Input;
 use hle_os::System;
 
 use crate::say::{say, say_err};
-use vk_render::{EfbSnapshot, Writeback};
+use render::{EfbSnapshot, Writeback};
 
 /// One NTSC field.
 pub const FIELD: Duration = Duration::from_nanos(1_000_000_000 * 1001 / 60_000);

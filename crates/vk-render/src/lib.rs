@@ -22,7 +22,6 @@
 mod shaders;
 
 use std::collections::HashMap;
-use std::error::Error;
 use std::ffi::{c_char, c_void, CStr};
 use std::mem::ManuallyDrop;
 use std::path::PathBuf;
@@ -37,10 +36,11 @@ use ash::khr::{surface, swapchain};
 use ash::{vk, Device, Entry, Instance};
 use gpu_allocator::vulkan::{Allocation, AllocationCreateDesc, AllocationScheme, Allocator, AllocatorCreateDesc};
 use gpu_allocator::MemoryLocation;
-use gx::{sh, Cmd, Output, Raster, Rect, Vertex, NO_TEXTURE, SHADING_WORDS};
+use gx::{sh, Cmd, Output, Rect, Vertex, NO_TEXTURE, SHADING_WORDS};
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle};
 
-pub type Res<T> = Result<T, Box<dyn Error>>;
+pub use render::{load_png, save_png, validation_errors, validation_warnings, EfbSnapshot, FrameStats, OverlayRect, Options, Res, UiFrame, Writeback, PALETTE};
+use render::{as_bytes, at_scale, blend_key, rasterised_depth, CopyParams, EARLY_DEPTH, EFB_H, EFB_W, MAX_XFBS};
 
 const FRAMES_IN_FLIGHT: usize = 2;
 const MAX_TEXTURES: u32 = 4096;
@@ -49,24 +49,6 @@ const COLOR_FORMAT: vk::Format = vk::Format::R8G8B8A8_UNORM;
 const DEPTH_FORMAT: vk::Format = vk::Format::D32_SFLOAT;
 const VERTEX_SIZE: u32 = std::mem::size_of::<Vertex>() as u32;
 const VALIDATION_LAYER: &CStr = c"VK_LAYER_KHRONOS_validation";
-/// Kept XFB images (the game double- or triple-buffers its XFB).
-const MAX_XFBS: usize = 4;
-const EFB_W: u32 = gx::EFB_WIDTH as u32;
-const EFB_H: u32 = gx::EFB_HEIGHT as u32;
-
-/// Overlay colours: white, black, green, yellow, red, dark grey, grey, blue.
-pub const PALETTE: [[u8; 4]; 8] = [[255, 255, 255, 255], [0, 0, 0, 255], [80, 220, 100, 255], [250, 210, 60, 255], [240, 70, 60, 255], [24, 24, 28, 255], [120, 120, 130, 255], [90, 150, 250, 255]];
-
-static VALIDATION_ERRORS: AtomicU32 = AtomicU32::new(0);
-static VALIDATION_WARNINGS: AtomicU32 = AtomicU32::new(0);
-
-pub fn validation_errors() -> u32 {
-    VALIDATION_ERRORS.load(Ordering::Relaxed)
-}
-
-pub fn validation_warnings() -> u32 {
-    VALIDATION_WARNINGS.load(Ordering::Relaxed)
-}
 
 unsafe extern "system" fn on_validation_message(
     severity: vk::DebugUtilsMessageSeverityFlagsEXT,
@@ -80,81 +62,9 @@ unsafe extern "system" fn on_validation_message(
         CStr::from_ptr((*data).p_message).to_string_lossy()
     };
     let error = severity.contains(vk::DebugUtilsMessageSeverityFlagsEXT::ERROR);
-    if error {
-        VALIDATION_ERRORS.fetch_add(1, Ordering::Relaxed);
-    } else {
-        VALIDATION_WARNINGS.fetch_add(1, Ordering::Relaxed);
-    }
-    // A message repeated every draw would bury the others (and overrun a
-    // phone's log): each kind is printed 20 times, then at every power of two.
-    static SEEN: std::sync::Mutex<Option<HashMap<i32, u64>>> = std::sync::Mutex::new(None);
     let id = if data.is_null() { 0 } else { (*data).message_id_number };
-    let n = {
-        let mut seen = SEEN.lock().unwrap_or_else(|e| e.into_inner());
-        let n = seen.get_or_insert_with(HashMap::new).entry(id).or_insert(0);
-        *n += 1;
-        *n
-    };
-    if n <= 20 || n.is_power_of_two() {
-        let times = if n > 20 { format!(" ({n} times so far)") } else { String::new() };
-        eprintln!("[vulkan {}] {msg}{times}", if error { "error" } else { "warning" });
-    }
+    render::note_validation("vulkan", error, i64::from(id), &msg);
     vk::FALSE
-}
-
-/// How the renderer is set up.
-#[derive(Clone, Debug)]
-pub struct Options {
-    /// EFB resolution multiplier (fractions too: 0.5 renders 320x264).
-    pub scale: f32,
-    /// Present on vertical blank (FIFO); otherwise mailbox or immediate.
-    pub vsync: bool,
-    /// Where the Vulkan pipeline cache is loaded from and saved to.
-    pub pipeline_cache: Option<PathBuf>,
-    /// Read EFB-to-texture copies back for the CPU to write into RAM
-    /// ([`Renderer::take_writebacks`]). Off, copies stay on the GPU only
-    /// (Dolphin's default), which is much cheaper.
-    pub efb_copies_to_ram: bool,
-}
-
-impl Default for Options {
-    fn default() -> Self {
-        Self { scale: 2.0, vsync: true, pipeline_cache: None, efb_copies_to_ram: true }
-    }
-}
-
-/// Texels of an EFB copy at native resolution (RGBA8, as the texture
-/// decoder would produce them), for the frontend to encode into RAM.
-pub struct Writeback {
-    pub addr: u32,
-    /// The destination's hash at copy time (`gx::CopyTex::ram_hash`).
-    pub ram_hash: u64,
-    pub tex_format: u32,
-    pub width: u32,
-    pub height: u32,
-    /// `gx::CopyTex::stride`: its rows' spacing in RAM when it patches a
-    /// wider texture (0: one after another).
-    pub stride: u32,
-    pub rgba: Vec<u8>,
-}
-
-/// The EFB at native resolution, for CPU peeks.
-pub struct EfbSnapshot {
-    /// 640 x 528 RGBA8.
-    pub color: Vec<u8>,
-    /// 640 x 528 24-bit depth.
-    pub depth: Vec<u32>,
-}
-
-/// A solid rectangle drawn over the presented image, in window pixels.
-#[derive(Clone, Copy, Debug)]
-pub struct OverlayRect {
-    pub x: i32,
-    pub y: i32,
-    pub w: i32,
-    pub h: i32,
-    /// Index into [`PALETTE`].
-    pub color: u8,
 }
 
 struct Image {
@@ -221,13 +131,6 @@ struct Prepared {
     moves: Option<[(u64, u64); 3]>,
 }
 
-/// The menus drawn over the picture (the settings window): egui's output for
-/// the frames shown until the next one ([`Renderer::set_ui`]).
-pub struct UiFrame {
-    pub primitives: Vec<egui::ClippedPrimitive>,
-    pub pixels_per_point: f32,
-}
-
 /// egui's Vulkan renderer, made the first time a menu is drawn, for the
 /// swapchain's format.
 struct UiLayer {
@@ -245,24 +148,6 @@ struct CopyPass {
     pipeline: vk::Pipeline,
     layout: vk::PipelineLayout,
     set: vk::DescriptorSet,
-}
-
-#[repr(C)]
-#[derive(Clone, Copy)]
-struct CopyParams {
-    src: [f32; 4],
-    dst: [f32; 2],
-    format: u32,
-    flags: u32,
-}
-
-/// Frame statistics for the window title and logs.
-#[derive(Default, Clone, Copy, Debug)]
-pub struct FrameStats {
-    pub draws: u32,
-    pub pipelines: usize,
-    pub textures: usize,
-    pub uploads: usize,
 }
 
 pub struct Renderer {
@@ -388,11 +273,6 @@ fn offsets(x: u32, y: u32, w: u32, h: u32) -> [vk::Offset3D; 2] {
     [vk::Offset3D { x: x as i32, y: y as i32, z: 0 }, vk::Offset3D { x: (x + w) as i32, y: (y + h) as i32, z: 1 }]
 }
 
-/// `n` EFB pixels at scale `s`: rounded, and at least one.
-fn at_scale(n: u32, s: f32) -> u32 {
-    ((n as f32 * s).round() as u32).max(1)
-}
-
 fn rect2d(x: u32, y: u32, w: u32, h: u32) -> vk::Rect2D {
     vk::Rect2D { offset: vk::Offset2D { x: x as i32, y: y as i32 }, extent: vk::Extent2D { width: w, height: h } }
 }
@@ -417,24 +297,6 @@ fn blend_factor(f: u32, src: bool, efb_alpha: bool) -> vk::BlendFactor {
         _ => B::ZERO,
     }
 }
-
-/// Pipeline key: the BP blend-mode bits that pipelines bake in, plus whether
-/// the EFB has alpha.
-fn blend_key(r: &Raster) -> u32 {
-    (r.blend & 0xFFFB) | u32::from(r.efb_alpha) << 16
-}
-
-/// Pipeline key bit: the fragment shader leaves depth to the rasteriser.
-const EARLY_DEPTH: u32 = 1 << 17;
-
-/// Draw pipelines New Super Mario Bros. Wii uses, built at startup before
-/// any saved list exists: the keys `cache/pipelines.keys` held after runs
-/// through boot, the title, the World 1 map and 1-1, alone and with four
-/// players (2026-11-22). The ubershader does the rest, so there are only
-/// these few.
-const STARTUP_KEYS: &[u32] = &[
-    0x5018, 0x2_0128, 0x2_0129, 0x3_0010, 0x3_0069, 0x3_0429, 0x3_04A9, 0x3_3118, 0x3_3209, 0x3_3429, 0x3_3439, 0x3_34A8, 0x3_34A9, 0x3_34B8, 0x3_5131, 0x3_5931, 0x3_F118, 0x3_F119, 0x3_F4A9, 0x3_F4B9,
-];
 
 /// What renderers on one GPU share ([`Renderer::new_sharing`]): the Vulkan
 /// instance, the device and its queue. Destroyed with the last renderer.
@@ -482,12 +344,6 @@ struct Prewarm {
     workers: Vec<JoinHandle<()>>,
     total: u32,
     started: Instant,
-}
-
-/// Whether a draw's depth is the rasterised one: no z-freeze plane and no
-/// Z texture.
-fn rasterised_depth(s: &[u32]) -> bool {
-    s[sh::FLAGS] & gx::FLAG_ZFREEZE == 0 && (s[sh::ZTEX + 1] >> 2) & 3 == 0
 }
 
 impl Renderer {
@@ -1138,16 +994,11 @@ impl Renderer {
     }
 
     /// Starts building the draw pipelines this game used before (the keys
-    /// saved next to the pipeline cache) and [`STARTUP_KEYS`] on worker
+    /// saved next to the pipeline cache) and [`render::STARTUP_KEYS`] on worker
     /// threads, so a draw rarely waits for one ("Compiling shaders" on the
     /// startup screen, [`Renderer::pipelines_compiling`]).
     fn start_prewarm(&mut self) {
-        let mut keys: Vec<u32> = STARTUP_KEYS.to_vec();
-        if let Some(text) = self.pipeline_cache_path.as_ref().and_then(|p| std::fs::read_to_string(p.with_extension("keys")).ok()) {
-            keys.extend(text.lines().filter_map(|l| u32::from_str_radix(l.trim(), 16).ok()));
-        }
-        keys.sort_unstable();
-        keys.dedup();
+        let mut keys = render::startup_keys(self.pipeline_cache_path.as_deref());
         keys.retain(|k| !self.pipelines.contains_key(k));
         if keys.is_empty() {
             return;
@@ -2246,40 +2097,6 @@ impl Renderer {
     }
 }
 
-/// Writes `rgba` (opaque: the EFB keeps no alpha the display uses) as a PNG.
-pub fn save_png(path: &std::path::Path, w: u32, h: u32, rgba: &[u8]) -> Res<()> {
-    let file = std::io::BufWriter::new(std::fs::File::create(path)?);
-    let mut enc = png::Encoder::new(file, w, h);
-    enc.set_color(png::ColorType::Rgba);
-    enc.set_depth(png::BitDepth::Eight);
-    let mut writer = enc.write_header()?;
-    let opaque: Vec<u8> = rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
-    writer.write_image_data(&opaque)?;
-    Ok(())
-}
-
-/// Reads a PNG as RGBA8: (width, height, pixels).
-pub fn load_png(path: &std::path::Path) -> Res<(u32, u32, Vec<u8>)> {
-    let mut dec = png::Decoder::new(std::io::BufReader::new(std::fs::File::open(path)?));
-    dec.set_transformations(png::Transformations::EXPAND | png::Transformations::STRIP_16);
-    let mut reader = dec.read_info()?;
-    let mut buf = vec![0; reader.output_buffer_size().ok_or("PNG too large")?];
-    let info = reader.next_frame(&mut buf)?;
-    let px = &buf[..info.buffer_size()];
-    let rgba = match info.color_type {
-        png::ColorType::Rgba => px.to_vec(),
-        png::ColorType::Rgb => px.chunks_exact(3).flat_map(|p| [p[0], p[1], p[2], 255]).collect(),
-        png::ColorType::GrayscaleAlpha => px.chunks_exact(2).flat_map(|p| [p[0], p[0], p[0], p[1]]).collect(),
-        _ => px.iter().flat_map(|&g| [g, g, g, 255]).collect(),
-    };
-    Ok((info.width, info.height, rgba))
-}
-
-fn as_bytes<T: Copy>(v: &[T]) -> &[u8] {
-    // SAFETY: T is plain old data (`gx::Vertex` is repr(C) f32s; u32).
-    unsafe { std::slice::from_raw_parts(v.as_ptr().cast::<u8>(), std::mem::size_of_val(v)) }
-}
-
 impl Drop for Renderer {
     fn drop(&mut self) {
         if let Some(w) = self.prewarm.take() {
@@ -2302,11 +2119,7 @@ impl Drop for Renderer {
                     let _ = std::fs::write(path, data);
                 }
                 // The draw pipelines this run had, built first next time.
-                let mut keys: Vec<u32> = self.pipelines.keys().copied().collect();
-                keys.sort_unstable();
-                let text: String = keys.iter().map(|k| format!("{k:x}
-")).collect();
-                let _ = std::fs::write(path.with_extension("keys"), text);
+                render::save_keys(path, self.pipelines.keys().copied());
             }
         }
         let mut images: Vec<Image> = self.textures.drain().map(|(_, i)| i).collect();
@@ -2394,3 +2207,78 @@ const _: fn() = || {
     fn send<T: Send>() {}
     send::<Renderer>();
 };
+
+impl render::Backend for Renderer {
+    fn api(&self) -> render::Api {
+        render::Api::Vulkan
+    }
+    fn device_name(&self) -> &str {
+        &self.device_name
+    }
+    fn validation(&self) -> bool {
+        self.validation
+    }
+    fn scale(&self) -> f32 {
+        Renderer::scale(self)
+    }
+    fn set_stretch(&mut self, stretch: f32) {
+        Renderer::set_stretch(self, stretch)
+    }
+    fn set_aspect(&mut self, aspect: f32) {
+        self.aspect = aspect;
+    }
+    fn set_screenshot(&mut self, path: Option<PathBuf>) {
+        self.screenshot = path;
+    }
+    fn set_overlay(&mut self, rects: Vec<OverlayRect>) {
+        self.overlay = rects;
+    }
+    fn stats(&self) -> FrameStats {
+        self.stats
+    }
+    fn set_vsync(&mut self, on: bool) {
+        Renderer::set_vsync(self, on)
+    }
+    fn resized(&mut self) {
+        Renderer::resized(self)
+    }
+    fn set_ui(&mut self, frame: Option<UiFrame>, textures: &egui::TexturesDelta) -> Res<()> {
+        Renderer::set_ui(self, frame, textures)
+    }
+    fn pipelines_compiling(&mut self) -> u32 {
+        Renderer::pipelines_compiling(self)
+    }
+    fn render(&mut self, out: &Output, vertices: &[Vertex], fresh: bool, xfb_addr: u32, width: u32, height: u32) -> Res<bool> {
+        Renderer::render(self, out, vertices, fresh, xfb_addr, width, height)
+    }
+    fn render_with(&mut self, out: &Output, count: usize, fill: &mut dyn FnMut(&mut [Vertex]), fresh: bool, xfb_addr: u32, width: u32, height: u32) -> Res<bool> {
+        Renderer::render_with(self, out, count, fill, fresh, xfb_addr, width, height)
+    }
+    fn prepared(&self) -> Option<(u64, u64)> {
+        Renderer::prepared(self)
+    }
+    fn prepare(&mut self, key: (u64, u64), out: &Output, moves: Option<&gx::interp::Moves>) -> Res<()> {
+        Renderer::prepare(self, key, out, moves)
+    }
+    fn prepare_with(&mut self, key: (u64, u64), out: &Output, vertices: &[Vertex], moves: Option<&gx::interp::Moves>) -> Res<()> {
+        Renderer::prepare_with(self, key, out, vertices, moves)
+    }
+    fn render_prepared(&mut self, out: &Output, t: f32, xfb_addr: u32, width: u32, height: u32) -> Res<bool> {
+        Renderer::render_prepared(self, out, t, xfb_addr, width, height)
+    }
+    fn evict(&mut self, ids: &[u32]) {
+        Renderer::evict(self, ids)
+    }
+    fn take_writebacks(&mut self) -> Vec<Writeback> {
+        Renderer::take_writebacks(self)
+    }
+    fn finish(&mut self) -> Res<()> {
+        Renderer::finish(self)
+    }
+    fn efb_snapshot(&mut self) -> Res<EfbSnapshot> {
+        Renderer::efb_snapshot(self)
+    }
+    fn new_sharing(&self, display: RawDisplayHandle, window: RawWindowHandle, opts: Options) -> Res<Box<dyn render::Backend>> {
+        Ok(Box::new(Renderer::new_sharing(self, display, window, opts)?))
+    }
+}

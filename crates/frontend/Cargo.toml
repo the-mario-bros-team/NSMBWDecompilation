@@ -17,6 +17,7 @@ guest-cpu = { path = "../guest-cpu" }
 hle-os = { path = "../hle-os" }
 game-recomp = { path = "../game-recomp" }
 vk-render = { path = "../vk-render" }
+render = { path = "../render" }
 gx = { path = "../gx" }
 hle-ios = { path = "../hle-ios" }
 input = { path = "../input" }
@@ -28,4 +29,5 @@ egui-winit = { version = "0.36", default-features = false }
 sevenz-rust2 = { version = "0.25", default-features = false }
 
 [target.'cfg(windows)'.dependencies]
+d3d-render = { path = "../d3d-render" }
 windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_System_Threading", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }

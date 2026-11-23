@@ -27,8 +27,55 @@ pub enum WideMode {
     Fill,
 }
 
+/// The graphics API the game draws with (applies at the next start).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RendererChoice {
+    /// Vulkan where there is a Vulkan 1.3 device with what the renderer
+    /// needs, else Direct3D 12, else Direct3D 11 (`crate::gfx`).
+    Auto,
+    Vulkan,
+    D3d12,
+    D3d11,
+}
+
+impl RendererChoice {
+    /// The choices the Settings window cycles through on this platform.
+    pub const ALL: &'static [RendererChoice] = if cfg!(windows) { &[Self::Auto, Self::D3d12, Self::Vulkan, Self::D3d11] } else { &[Self::Auto, Self::Vulkan] };
+
+    /// As `settings.toml` and `--renderer` spell it.
+    pub fn key(self) -> &'static str {
+        match self {
+            Self::Auto => "auto",
+            Self::Vulkan => "vulkan",
+            Self::D3d12 => "d3d12",
+            Self::D3d11 => "d3d11",
+        }
+    }
+
+    pub fn parse(s: &str) -> Option<Self> {
+        Some(match s.to_ascii_lowercase().as_str() {
+            "auto" | "automatic" => Self::Auto,
+            "vulkan" | "vk" => Self::Vulkan,
+            "d3d12" | "dx12" => Self::D3d12,
+            "d3d11" | "dx11" => Self::D3d11,
+            _ => return None,
+        })
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Auto => "Automatic",
+            Self::Vulkan => "Vulkan",
+            Self::D3d12 => "Direct3D 12",
+            Self::D3d11 => "Direct3D 11",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Settings {
+    /// The graphics API (next start).
+    pub renderer: RendererChoice,
     /// One of [`FPS_CHOICES`].
     pub fps: u32,
     pub vsync: bool,
@@ -113,7 +160,7 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
+        Self { renderer: RendererChoice::Auto, fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
     }
 }
 
@@ -172,6 +219,9 @@ impl Settings {
         if let Some(v) = t.get("fps") {
             let text = v.as_str().map(str::to_string).or_else(|| v.as_integer().map(|n| n.to_string())).unwrap_or_default();
             s.fps = parse_fps(&text).unwrap_or(s.fps);
+        }
+        if let Some(r) = t.get("renderer").and_then(toml::Value::as_str).and_then(RendererChoice::parse) {
+            s.renderer = r;
         }
         s.vsync = flag("vsync", s.vsync);
         s.fullscreen = flag("fullscreen", s.fullscreen);
@@ -265,6 +315,8 @@ impl Settings {
         let text = format!(
             "# NSMBW port display settings (hotkeys change them while playing; see F1).\n\
              # fps: 30, 60, 90, 120, 144, 165, 180, 240, 300, 360 or \"unlocked\"; 30 shows every other field; above 60 draws interpolated frames.\n\
+             # Renderer: \"auto\" (Vulkan, else Direct3D 12, else Direct3D 11), \"vulkan\", \"d3d12\" or \"d3d11\" (next start).\n\
+             renderer = \"{}\"\n\
              fps = {fps}\nvsync = {}\nfullscreen = {}\n\
              # EFB resolution: 0.5..8 times 480 lines (0.5, 0.75, 1, 1.5, 2, 3, 4, 6 or 8), or \"native\" for the window's height (next start).\n\
              scale = {scale}\n\
@@ -289,6 +341,7 @@ impl Settings {
              # Player 1 picks a character too (from the next start), and each save file's last one\n\
              # (0 Mario, 1 Luigi, 2 Blue Toad, 3 Yellow Toad).\n\
              p1_character = {}\nfile1_character = {}\nfile2_character = {}\nfile3_character = {}\n",
+            self.renderer.key(),
             self.vsync,
             self.fullscreen,
             self.aspect_name(),
@@ -379,7 +432,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("nsmbw-settings-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(FILE);
-        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0.0, widescreen: false, wide_mode: WideMode::Fill, spinning_coins: false, depth_blur: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], autosave: false, exit_course: false, p1_character: false, file_characters: [1, 3, 2], keymap: {
+        let s = Settings { renderer: RendererChoice::D3d11, fps: 0, vsync: true, fullscreen: true, scale: 0.0, widescreen: false, wide_mode: WideMode::Fill, spinning_coins: false, depth_blur: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], autosave: false, exit_course: false, p1_character: false, file_characters: [1, 3, 2], keymap: {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.bind(input::keymap::RUN, input::keymap::Key::Mouse(5));

@@ -1,10 +1,25 @@
 //! GX features end to end: hand-built command streams go through `gx::Gpu`
 //! and a headless `Renderer`, and the EFB is read back the way a CPU peek
 //! sees it. Skipped (with a message) when no Vulkan device is available.
+//!
+//! `NSMBW_TEST_RENDERER=d3d12` (or `d3d11`) runs it on a Direct3D renderer
+//! instead (Windows).
 
 use guest_mem::{Mem, NullMmio};
 use gx::Gpu;
-use vk_render::{Options, Renderer};
+use render::{Backend, Options};
+
+type Renderer = Box<dyn Backend>;
+
+fn headless(opts: Options) -> render::Res<Renderer> {
+    match std::env::var("NSMBW_TEST_RENDERER").as_deref() {
+        #[cfg(windows)]
+        Ok("d3d12") => Ok(Box::new(d3d_render::d3d12::Renderer::headless(opts)?)),
+        #[cfg(windows)]
+        Ok("d3d11") => Ok(Box::new(d3d_render::d3d11::Renderer::headless(opts)?)),
+        _ => Ok(Box::new(vk_render::Renderer::headless(opts)?)),
+    }
+}
 
 const TEX0: u32 = 0x1000;
 const TEX1: u32 = 0x2000;
@@ -93,17 +108,17 @@ struct Rig {
 }
 
 fn rig() -> Option<Rig> {
-    match Renderer::headless(Options { scale: 2.0, ..Default::default() }) {
+    match headless(Options { scale: 2.0, ..Default::default() }) {
         Ok(r) => Some(Rig { mem: Mem::new(Box::new(NullMmio)), gpu: Gpu::default(), r }),
         Err(e) => {
-            eprintln!("skipped: no Vulkan device ({e})");
+            eprintln!("skipped: no device ({e})");
             None
         }
     }
 }
 
 impl Rig {
-    fn run(&mut self, s: &Stream) -> vk_render::EfbSnapshot {
+    fn run(&mut self, s: &Stream) -> render::EfbSnapshot {
         let mut ev = Vec::new();
         self.gpu.feed(&s.0, &self.mem, &mut ev);
         let out = self.gpu.take_output();
@@ -112,7 +127,7 @@ impl Rig {
     }
 }
 
-fn px(s: &vk_render::EfbSnapshot, x: usize, y: usize) -> [u8; 4] {
+fn px(s: &render::EfbSnapshot, x: usize, y: usize) -> [u8; 4] {
     let i = (y * 640 + x) * 4;
     [s.color[i], s.color[i + 1], s.color[i + 2], s.color[i + 3]]
 }
