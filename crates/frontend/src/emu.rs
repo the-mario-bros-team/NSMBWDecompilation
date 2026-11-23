@@ -739,6 +739,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let _ = frames.send(Err(e));
             break;
         }
+        // Bulk writes the GX thread watches (`gx::texture::CHUNKED`) count
+        // again now they are done.
+        sys.mem.settle();
         // Net games keep the game's own rules.
         if session.is_none() {
             for line in gameplay.after_field(&mut sys, gameplay_options, &cheats, &characters) {

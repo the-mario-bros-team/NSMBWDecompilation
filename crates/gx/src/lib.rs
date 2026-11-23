@@ -1015,7 +1015,9 @@ impl Gpu {
         } else {
             &[]
         };
-        let id = self.textures.lookup(key, data, tlut_bytes);
+        // Bytes read from RAM on the GX thread are hashed per chunk written.
+        let view = if tmem_data.is_some() { None } else { mem.view() };
+        let id = self.textures.lookup(key, data, tlut_bytes, view);
         // Sampler key: wrap s/t, mag, min filter, LOD bias, max LOD (if
         // mipmapped), and bit 24 for a texture pack's image, whose own mip
         // levels are all used.
