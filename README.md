@@ -126,6 +126,11 @@ Use your own dump. No game assets or extracted content are redistributed here.
   ([mkwcat/gecko-codes](https://github.com/mkwcat/gecko-codes), `nsmbw/`),
   Copyright (c) 2024 mkwcat, used under the MIT License; the notice is in
   `crates/hle-os/src/p1_character.rs`.
+- The Android app's GPU Driver option loads an imported driver with
+  [libadrenotools](https://github.com/bylaws/libadrenotools) and its
+  liblinkernsbypass, Copyright (c) 2021 Billy Laws, used under the BSD
+  2-Clause License; the source and both licence texts are in
+  `android/third_party/libadrenotools` (see its `NOTICE.md` there).
 
 ## License
 

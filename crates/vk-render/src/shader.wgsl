@@ -460,6 +460,52 @@ fn fs_early(i: VOut) -> FOutEarly {
     return o;
 }
 
+// Without dual-source blending (GPUs that lack it, such as Mali, or
+// Graphics Compatibility forced on): one output. `fs_one` writes what the
+// EFB gets; `fs_one_blend`, for pipelines that blend with the source
+// alpha, writes the alpha blending uses instead (the EFB then gets that
+// alpha, not a constant destination alpha).
+struct FOne {
+    @location(0) color: vec4<f32>,
+    @builtin(frag_depth) depth: f32,
+}
+
+struct FOneEarly {
+    @location(0) color: vec4<f32>,
+}
+
+@fragment
+fn fs_one(i: VOut) -> FOne {
+    let s = shade(i);
+    var o: FOne;
+    o.color = s.color;
+    o.depth = s.depth;
+    return o;
+}
+
+@fragment
+fn fs_one_early(i: VOut) -> FOneEarly {
+    var o: FOneEarly;
+    o.color = shade(i).color;
+    return o;
+}
+
+@fragment
+fn fs_one_blend(i: VOut) -> FOne {
+    let s = shade(i);
+    var o: FOne;
+    o.color = s.blend;
+    o.depth = s.depth;
+    return o;
+}
+
+@fragment
+fn fs_one_early_blend(i: VOut) -> FOneEarly {
+    var o: FOneEarly;
+    o.color = shade(i).blend;
+    return o;
+}
+
 fn shade(i: VOut) -> FOut {
     sidx = i.draw;
     var o: FOut;

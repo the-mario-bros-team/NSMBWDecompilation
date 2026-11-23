@@ -2269,6 +2269,83 @@ menus, the Power-Up button, the quick-save backup when leaving the app, and
 the in-game settings window (built on another branch; options will meet
 through a shared settings file).
 
+### 16.1 Android extras (2026-11-23)
+
+Six of NSMB-Wii-Recompilation's Android features, re-implemented for this
+port (its app was read for behaviour; its renderer fixes were for aurora
+and Dawn, not `vk-render`). Strings are in `Lang.java` (en/es/fr/it).
+
+- **Backup when the player leaves the app.** `onPause` (screen on, not
+  quitting) calls `Native.backup`: the render thread sends the game thread
+  `ToEmu::Pause(true)` and `ToEmu::SaveState` and keeps taking fields until
+  the game thread stops; the state (`System::save_state`, the
+  `--save-state` file format) is written to `files/backup-<versionCode>.state`
+  through a `.part` file, so it is whole or absent. `onPause` waits up to
+  2 s. Coming back (`setPaused(false)`) removes it. The next start finds it
+  only when Android ended the app meanwhile: it is renamed `restore.state`,
+  the game starts from it (`EmuOptions::load_state`, as `--load-state`) with
+  a "Continuing where you left off." note, and it is deleted once a field
+  is shown. Another version's backup is never loaded. As in the recomp,
+  turning the screen off only pauses, and a net game (which doesn't
+  pause) writes none.
+- **Xiaomi Mode** (start menu, Options). MIUI / HyperOS ends an app's extra
+  processes even on screen; the game's `:game` process then dies and the
+  screen stays black. With it on (default only when the maker or brand is
+  Xiaomi, Redmi or POCO) Play opens `MainProcessGameActivity`, the same game
+  in the main process; since `libnsmbw.so` starts once per process, leaving
+  it goes through `RestartActivity` (process `:restart`), which ends the old
+  main process and opens the start menu in a new one.
+- **GPU Driver** (start menu, Options; Snapdragon only). A driver zip
+  (meta.json + library, as Turnip's) is unpacked under
+  `files/gpu_drivers/installed`; libadrenotools (BSD-2,
+  `android/third_party/libadrenotools`, built by `build.ps1` with the SDK's
+  CMake and packed as assets) and its hooks are unpacked next to it only
+  when a driver is picked. `Native.setGraphics` opens Vulkan through
+  `adrenotools_open_libvulkan` and hands its `vkGetInstanceProcAddr` to
+  `vk_render::set_vulkan_loader`. A new pick is on trial for 20 s of
+  running without an error; a start that dies first, or a driver
+  libadrenotools can't open, puts it back to Default and the start menu
+  says so once.
+- **Graphics Compatibility** (Settings, Video: Auto/On/Off,
+  `vk_render::Compat`). What `vk-render` needs that phones may lack is
+  dual-source blending (GX's source alpha and destination alpha) and logic
+  ops; the device used to be refused without them, and Arm's Mali GPUs
+  don't have dual-source blending. Auto uses stand-ins only for what the
+  GPU lacks, On always, Off never (such a GPU can't start). The stand-ins:
+  single-output fragment stages (`fs_one*`), the ones for pipelines that
+  blend with the source alpha writing the blending alpha (a constant
+  destination alpha is lost there), and clear/no-op logic ops as blending
+  (the rest as copy). The derivative fix Adreno needed (above) applies on
+  every GPU and needs no option. The renderer logs which stand-ins it uses,
+  and when the GPU allows fewer sampled images or samplers per stage than
+  it binds (4096, 256).
+- **Check for Updates and Auto Update** (start menu, Updates; Auto Update
+  off by default). `Updater.java` reads `port_update::DEFAULT_SOURCE`
+  (GitHub's latest release), takes its `*-android-arm64.apk`, streams it
+  into a `PackageInstaller` session while hashing it, checks its size and
+  GitHub's `digest` SHA-256, and commits; `UpdateReceiver` shows the
+  system's confirmation. The first time, the player allows installs from
+  the app (`REQUEST_INSTALL_PACKAGES`). Auto Update installs without
+  asking, also when the player comes back after 5 minutes; with Skip Start
+  Menu it checks first and then opens the game. For tests, files named
+  `update-source` (another address) and `update-test-version` (the version
+  to compare) in the app's files stand in.
+- **Download Logs (For Github Reports).** `libnsmbw.so` now also writes
+  its stdout and stderr to `files/logs/run-<seconds>.log` (the newest 5
+  runs are kept). The zip (saved where the player picks) holds those, what
+  logcat still has of the app, `settings.xml` and a device summary (model,
+  Android, chip, ABIs, GPU driver). No saves or game files.
+
+**Checked:** `androiduild.ps1` builds the APK (libnsmbw.so, the three
+libadrenotools libraries as assets, no warnings in the changed crates);
+the 12 JNI exports match `Native.java`; `vk-render`'s shader test compiles
+every fragment stage and checks that the single-output ones carry no
+dual-source `Index` decoration; `cargo check -p frontend` passes.
+
+**Not checked on a device** (no phone was connected): every feature above.
+The GPU Driver needs a Snapdragon phone and a driver zip, and the
+compatibility stand-ins need a Mali GPU (or On on an Adreno) to be seen.
+
 ## 17. Older PC processors: the compat build (2026-11-23)
 
 The Windows build is x86-64-v3 (`.cargo/config.toml`: AVX2, FMA, BMI2;

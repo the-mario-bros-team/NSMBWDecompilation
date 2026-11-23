@@ -23,7 +23,8 @@ import android.widget.FrameLayout;
 /**
  * The game: libnsmbw.so drawing with Vulkan into a SurfaceView, with NSMB-Wii-Recompilation's
  * on-screen Wii Remote and the phone's motion on top, controllers as Wii Remotes, the Back gesture's
- * menu, and the game paused while the app is away.
+ * menu, and the game paused while the app is away (after writing a backup: if Android ends the app
+ * meanwhile, the next start carries on from it).
  */
 public class GameActivity extends Activity
         implements TouchControlsView.Listener, MotionInput.Listener, SurfaceHolder.Callback {
@@ -63,6 +64,9 @@ public class GameActivity extends Activity
             openStartMenu();
             return;
         }
+        GpuDrivers.applyToGame(this, settings.gpuCompat());
+        final java.io.File restore = takeBackup();
+        Native.setLoadState(restore != null ? restore.getAbsolutePath() : null);
         LanPlay.beforeStart(this);  // started from LAN Play: host or join
         final String error = Native.start(GameFiles.dataDir(this).getAbsolutePath(), GameFiles.gameDir(this).getAbsolutePath(),
                 settings.nativeScale(), settings.widescreen(), settings.vsync(), Lang.wiiLanguage());
@@ -73,6 +77,44 @@ public class GameActivity extends Activity
         started = true;
         pushInput();
         main.post(pollErrors);
+        if (restore != null) {
+            Log.i(TAG, "starting from the backup of a run Android ended");
+            android.widget.Toast.makeText(this, Lang.t("Continuing where you left off."), android.widget.Toast.LENGTH_LONG).show();
+        }
+        // A GPU driver on trial has kept the game running (no error): it stays picked.
+        final Context app = getApplicationContext();
+        main.postDelayed(() -> {
+            if (errorDialog == null) GpuDrivers.endTrial(app);
+        }, GpuDrivers.TRIAL_MS);
+    }
+
+    // --- the backup ----------------------------------------------------------------------------------
+
+    /** Where leaving the app writes the backup: named for this build, so another version's isn't loaded. */
+    private java.io.File backupFile() {
+        long build = 0;
+        try {
+            build = getPackageManager().getPackageInfo(getPackageName(), 0).getLongVersionCode();
+        } catch (android.content.pm.PackageManager.NameNotFoundException ignored) {
+        }
+        return new java.io.File(GameFiles.dataDir(this), "backup-" + build + ".state");
+    }
+
+    /**
+     * At the game's start: the backup a run left when Android ended it while away, renamed so it is
+     * tried once (libnsmbw.so removes it once the game runs from it); null for a normal start. Others'
+     * backups (older versions, half-written ones) go.
+     */
+    private java.io.File takeBackup() {
+        final java.io.File dir = GameFiles.dataDir(this), mine = backupFile();
+        final java.io.File restore = new java.io.File(dir, "restore.state");
+        restore.delete();
+        final boolean found = mine.isFile() && mine.renameTo(restore);
+        final java.io.File[] others = dir.listFiles((d, name) -> name.startsWith("backup-"));
+        if (others != null) {
+            for (java.io.File f : others) f.delete();
+        }
+        return found ? restore : null;
     }
 
     // --- the surface -------------------------------------------------------------------------------
@@ -153,9 +195,18 @@ public class GameActivity extends Activity
 
     @Override
     protected void onPause() {
-        // Leaving the app (or the screen turning off) pauses the game: it waits in memory, nothing
-        // runs or plays.
-        if (started) Native.setPaused(true);
+        // Leaving the app pauses the game: it waits in memory, nothing runs or plays. Leaving for another
+        // app writes a backup first, in case Android ends this one meanwhile; the screen turning off and
+        // quitting don't.
+        if (started) {
+            final android.os.PowerManager power = (android.os.PowerManager) getSystemService(POWER_SERVICE);
+            if (!isFinishing() && (power == null || power.isInteractive())) {
+                final String why = Native.backup(backupFile().getPath(), BACKUP_WAIT_MS);
+                if (why != null) Log.i(TAG, "no backup: " + why);
+            } else {
+                Native.setPaused(true);
+            }
+        }
         vibrateForGame(false);
         motion.stop();
         touch.release();
@@ -175,6 +226,9 @@ public class GameActivity extends Activity
             pushInput();
         }
     }
+
+    /** How long leaving the app waits for the backup (it carries on being written after that). */
+    private static final int BACKUP_WAIT_MS = 2000;
 
     @Override
     protected void onDestroy() {
@@ -334,10 +388,21 @@ public class GameActivity extends Activity
 
     /** Back to the start menu (its settings, Skip Start Menu); the game's process ends. */
     private void openStartMenu() {
-        startActivity(new Intent(this, LauncherActivity.class)
+        final Intent next = new Intent(this, LauncherActivity.class)
                 .putExtra(LauncherActivity.EXTRA_SHOW_START_MENU, true)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        // In the main process (Xiaomi Mode) the start menu needs a fresh one: the game's ends with it.
+        if (this instanceof MainProcessGameActivity) {
+            RestartActivity.replaceProcess(this, next);
+        } else {
+            startActivity(next);
+        }
         finish();
+    }
+
+    /** The game, in the process this phone needs (Xiaomi Mode: the main one). */
+    static Intent intent(Context context) {
+        return new Intent(context, new AppSettings(context).gameInMainProcess() ? MainProcessGameActivity.class : GameActivity.class);
     }
 
     private void hideSystemBars() {

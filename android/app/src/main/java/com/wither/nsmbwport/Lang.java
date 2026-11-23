@@ -692,6 +692,23 @@ final class Lang {
                 "la descarga no coincide con el módulo de esta versión",
                 "le téléchargement ne correspond pas au module de cette version",
                 "il download non corrisponde al modulo di questa versione");
+        // --- this port's Android extras ---
+        newer("Continuing where you left off.", "Continuando donde lo dejaste.", "Reprise là où vous en étiez.",
+                "Riprendi da dove avevi lasciato.");
+        newer("Your saves, settings and game files are kept.",
+                "Se conservan tus partidas, ajustes y archivos del juego.",
+                "Vos sauvegardes, réglages et fichiers du jeu sont conservés.",
+                "Salvataggi, impostazioni e file del gioco restano.");
+        newer("Update", "Actualizar", "Mettre à jour", "Aggiorna");
+        newer("Stand-ins for GPUs without dual-source blending or logic ops, such as most Mali GPUs. Auto: on "
+                + "for the GPUs that need them. Takes effect at the next start.",
+                "Sustitutos para GPU sin mezcla de doble fuente ni operaciones lógicas, como la mayoría de las "
+                + "Mali. Auto: activados en las GPU que los necesitan. Se aplica en el próximo inicio.",
+                "Des remplaçants pour les GPU sans mélange à double source ni opérations logiques, comme la "
+                + "plupart des Mali. Auto : activés pour les GPU qui en ont besoin. Prend effet au prochain "
+                + "démarrage.",
+                "Sostituti per le GPU senza blending a doppia sorgente né operazioni logiche, come la maggior "
+                + "parte delle Mali. Auto: attivi sulle GPU che ne hanno bisogno. Vale dal prossimo avvio.");
         // --- Italian, by the same English wording ---
         it("Language", "Lingua");
         it("Help", "Aiuto");

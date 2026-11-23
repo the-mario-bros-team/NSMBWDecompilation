@@ -1,11 +1,16 @@
 //! stdout and stderr into logcat (tag `nsmbw`): an app's own are not
 //! connected to anything, and the game thread, the IOS layer and panics
-//! report through them. `adb logcat -s nsmbw` shows the lines.
+//! report through them. `adb logcat -s nsmbw` shows the lines. Once the
+//! app's files are known ([`keep_in`]), each line also goes to this run's
+//! log file there, for the app's Download Logs.
 
 use std::ffi::{c_char, c_int, CString};
-use std::io::{BufRead, BufReader};
+use std::fs::File;
+use std::io::{BufRead, BufReader, Write};
 use std::os::fd::FromRawFd;
-use std::sync::Once;
+use std::path::Path;
+use std::sync::{Mutex, Once};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[link(name = "log")]
 extern "C" {
@@ -15,8 +20,32 @@ extern "C" {
 const INFO: c_int = 4;
 const WARN: c_int = 5;
 
-/// One line to logcat.
+/// This run's log file.
+static FILE: Mutex<Option<File>> = Mutex::new(None);
+
+/// Runs whose logs are kept (the newest).
+const KEEP: usize = 5;
+
+/// From now on, lines also go to a new file in `dir`, named by the time
+/// (`run-<seconds since 1970>.log`); the oldest beyond [`KEEP`] go.
+pub fn keep_in(dir: &Path) {
+    let _ = std::fs::create_dir_all(dir);
+    let mut old: Vec<_> = std::fs::read_dir(dir).into_iter().flatten().flatten().map(|e| e.path()).filter(|p| p.extension().is_some_and(|e| e == "log")).collect();
+    old.sort();
+    for p in old.iter().rev().skip(KEEP - 1) {
+        let _ = std::fs::remove_file(p);
+    }
+    let secs = SystemTime::now().duration_since(UNIX_EPOCH).map_or(0, |d| d.as_secs());
+    if let Ok(f) = File::create(dir.join(format!("run-{secs:012}.log"))) {
+        *FILE.lock().unwrap() = Some(f);
+    }
+}
+
+/// One line to logcat (and the log file).
 pub fn line(warn: bool, text: &str) {
+    if let Some(f) = FILE.lock().unwrap().as_mut() {
+        let _ = writeln!(f, "{}{text}", if warn { "! " } else { "" });
+    }
     let text = CString::new(text.replace('\0', " ")).unwrap_or_default();
     // SAFETY: two valid NUL-terminated strings.
     unsafe {
