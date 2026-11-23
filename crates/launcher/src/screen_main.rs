@@ -167,12 +167,16 @@ fn hero(sh: &Shared, cx: &mut Cx, center: Pos2, appear: f32) {
     if let Some((banner, textures, since)) = &slot.banner {
         // The game's own banner, playing inside a frame. The frame's
         // rounded inside edge hides the square corners of the picture.
-        let card = Rect::from_center_size(center, vec2(392.0, 392.0 * banner.size[1] / banner.size[0].max(1.0)).min(vec2(392.0, 320.0)));
+        // Only its top 16:9 shows, as on a widescreen Wii Menu: below it
+        // (a quarter of the 4:3 banner) the cast waits off screen before
+        // it comes up.
+        let shown = [banner.size[0], banner.size[0] * 9.0 / 16.0];
+        let card = Rect::from_center_size(center, vec2(392.0, 392.0 * shown[1] / shown[0].max(1.0)));
         let frame = 8.0;
         let inside = card.shrink(frame - 1.0);
         let inner = p.with_clip_rect(inside.intersect(p.clip_rect()));
-        let scale = (inside.width() / banner.size[0]).max(inside.height() / banner.size[1]);
-        let place = |c: [f32; 2]| pos2(inside.center().x + c[0] * scale, inside.center().y - c[1] * scale);
+        let scale = (inside.width() / shown[0]).max(inside.height() / shown[1]);
+        let place = |c: [f32; 2]| pos2(inside.center().x + c[0] * scale, inside.top() + (banner.size[1] / 2.0 - c[1]) * scale);
         for quad in banner.quads(t - since) {
             let mut mesh = match quad.picture.and_then(|i| textures.get(i)) {
                 Some(texture) => egui::Mesh::with_texture(texture.id()),
@@ -188,10 +192,10 @@ fn hero(sh: &Shared, cx: &mut Cx, center: Pos2, appear: f32) {
         }
         p.rect_stroke(card, radius - 6.0, Stroke::new(frame, Color32::WHITE), StrokeKind::Inside);
         p.rect_stroke(card, radius - 6.0, Stroke::new(1.0, black(0.18)), StrokeKind::Outside);
-        // The previews sit lower here: the banner's cast stands along its
-        // bottom edge.
-        gallery(slot, &p, center + vec2(0.0, 44.0), t);
-        text(&p, center + vec2(0.0, if slot.gallery.is_empty() { card.height() / 2.0 + 24.0 } else { 300.0 }), Align2::CENTER_CENTER, "Art from your own game files", 12.5, SEMI, white(0.70));
+        // The previews sit lower here, just over the card's bottom edge:
+        // the banner's cast stands along it.
+        gallery(slot, &p, center + vec2(0.0, card.height() / 2.0 - 103.0), t);
+        text(&p, center + vec2(0.0, card.height() / 2.0 + if slot.gallery.is_empty() { 24.0 } else { 153.0 }), Align2::CENTER_CENTER, "Art from your own game files", 12.5, SEMI, white(0.70));
         return;
     }
     // The still picture, drifting slowly inside the card.

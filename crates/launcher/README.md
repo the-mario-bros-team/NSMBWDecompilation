@@ -4,6 +4,17 @@ A Windows launcher for the port: pick a version of the game, point it at your
 own extracted copy, and play. It is built on its own
 (`cargo build --release -p launcher`) and lives next to `nsmbw-port.exe`.
 
+## Installing
+
+A release comes as a zip and as a setup program
+(`nsmbw-port-v<version>-windows-x64-setup.exe`, made from the release
+folder by `scripts\make-installer.ps1` with Inno Setup 6). The setup program
+installs for the current user, without admin rights, to
+`%LOCALAPPDATA%\Programs\NSMBW Port`, puts **NSMBW Port** (the launcher) in
+the Start menu, and adds an uninstaller to Settings > Apps. The folder stays
+the player's to write to, as the launcher and the game's updater need.
+Uninstalling removes the programs and shortcuts; settings and saves stay.
+
 ## What it does
 
 - **Play** starts `nsmbw-port.exe --game <folder>` for the selected version and
