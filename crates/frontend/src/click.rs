@@ -14,7 +14,8 @@
 //!   map's + menu, yes/no windows, ...): the D-pad toward the click until
 //!   the cursor's box holds it, then 2;
 //! - the save select: its files, Free-for-All, Coin Battle, Copy and Erase,
-//!   and the port's Settings button;
+//!   and the port's Settings (cog) and Multiplayer buttons; its Back button
+//!   is the window's own ([`Clicker::back`]);
 //! - Select Players: 1 to 4 players, and Back;
 //! - the character screen: player 1's OK bar, its arrows, and Back;
 //! - the world map: its button hints (Menu, Select World, View Map,
@@ -64,7 +65,7 @@ const PROFILE_SELECT_CURSOR: u16 = 0x2CF;
 
 const FILE_SELECT_STATE: u32 = 0x238;
 const FILE_SELECT_WAIT: u32 = 0x8099_2050; // dFileSelect_c::StateID_SelectWait
-const FILE_SELECT_CURSOR: u32 = 0x2A4; // 0-2 files, 3 Free-for-All, 4 Coin Battle, 5 Settings
+const FILE_SELECT_CURSOR: u32 = 0x2A4; // 0-2 files, 3 Free-for-All, 4 Coin Battle, 5 Settings, 6 Multiplayer
 const FILE_SELECT_LAYOUT: u32 = 0x74;
 const SELECT_PLAYERS_STATE: u32 = 0x9C;
 const SELECT_PLAYERS_CURSOR: u32 = 0x26C; // 0-3: 1-4 players
@@ -132,7 +133,8 @@ struct Walk {
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Grid {
     /// The save select: files 0-2 across the top, Free-for-All (3) and
-    /// Coin Battle (4) below, the port's Settings (5) above.
+    /// Coin Battle (4) below, the port's Multiplayer (6) and Settings (5)
+    /// above, at the right.
     FileSelect,
     /// Select Players: 1 player (0) on top, 2-4 players (1-3) below.
     SelectPlayers,
@@ -195,6 +197,70 @@ impl Clicker {
         self.tick = (self.tick + 1) % STEP;
         held
     }
+
+    /// The save select's Back button (the window's, after
+    /// NSMB-Wii-Recompilation's): 1, the screen's way back to the title,
+    /// while it waits for a choice and nothing else is under way.
+    pub fn back(&mut self, sys: &System) {
+        let waiting = scene(sys) == SCENE_GAME_SETUP && find(sys, PROFILE_FILE_SELECT).is_some_and(|fs| r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT);
+        if waiting && self.job.is_none() {
+            self.job = Some(Job::Once(button::ONE));
+            self.tick = 0;
+        }
+    }
+}
+
+/// The save select's buttons the port draws (Settings as a cog, and
+/// Multiplayer, in the title bar), as the game thread last saw them
+/// ([`save_select`]).
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct SaveSelect {
+    /// Settings' and Multiplayer's places in layout units (x0, y0, x1, y1;
+    /// y up), from the empty panes the game's layout keeps for them.
+    pub buttons: [(f32, f32, f32, f32); 2],
+    /// Their places' alpha (they fade with the title).
+    pub alpha: f32,
+    /// The one with the game's cursor (0 Settings, 1 Multiplayer).
+    pub cursor: Option<u8>,
+    /// The one picked: its hit plays, then its window is up.
+    pub picked: Option<u8>,
+    /// The screen waits for a choice (the Back button can show).
+    pub waiting: bool,
+}
+
+/// The save select's buttons the port draws over the title bar
+/// ([`SaveSelect`]), from their empty panes in the game's layout;
+/// `None` when it is not up (or has no such panes).
+pub fn save_select(sys: &mut System) -> Option<SaveSelect> {
+    if scene(sys) != SCENE_GAME_SETUP {
+        return None;
+    }
+    let fs = find(sys, PROFILE_FILE_SELECT)?;
+    let root = sys.root_pane(fs + FILE_SELECT_LAYOUT);
+    if root == 0 {
+        return None;
+    }
+    let mut buttons = [(0.0, 0.0, 0.0, 0.0); 2];
+    let mut alpha = 0;
+    for (i, name) in [hle_os::menu_layout::FILE_COG_PANE, hle_os::menu_layout::FILE_MULTI_PANE].into_iter().enumerate() {
+        let pane = sys.find_pane(root, name, 0);
+        if pane == 0 || !shown(sys, pane) {
+            return None;
+        }
+        let (x0, y0, x1, y1) = pane_box(sys, pane)?;
+        let squeeze = pane_squeeze(sys, pane);
+        buttons[i] = (x0 / squeeze, y0, x1 / squeeze, y1);
+        alpha = r8(sys, pane + PANE_GLOBAL_ALPHA);
+    }
+    // The game's numbers for them (5 Settings, 6 Multiplayer) to 0 and 1.
+    let ours = |c: u32| (5..=6).contains(&c).then(|| (c - 5) as u8);
+    Some(SaveSelect {
+        buttons,
+        alpha: f32::from(alpha) / 255.0,
+        cursor: ours(r32(sys, fs + FILE_SELECT_CURSOR)),
+        picked: sys.menu.file_picked().and_then(ours),
+        waiting: r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT,
+    })
 }
 
 /// `NSMBW_CLICK_LOG`: what a click started, and on the world map where its
@@ -321,6 +387,20 @@ fn pane_box(sys: &System, pane: u32) -> Option<(f32, f32, f32, f32)> {
     Some((x0, y1 - h, x0 + w, y1))
 }
 
+/// The horizontal squeeze of a pane that keeps its shape on a 16:9 screen
+/// (layout x times this is its x): its global x scale over its y scale.
+/// The save select's buttons' places use this rather than [`SQUEEZE`],
+/// which put them a third too wide in a 4:3 game.
+fn pane_squeeze(sys: &System, pane: u32) -> f32 {
+    let (sx, sy) = (f32_at(sys, pane + PANE_GLOBAL).abs(), f32_at(sys, pane + PANE_GLOBAL + 0x14).abs());
+    let s = if sy > 0.0 { sx / sy } else { 1.0 };
+    if (0.1..=2.0).contains(&s) {
+        s
+    } else {
+        1.0
+    }
+}
+
 /// The corner-bracket cursor's box, in pane units: from the visible
 /// `SELECT_CURSOR` layout's four corner panes' global positions.
 fn cursor_box(sys: &mut System) -> Option<(f32, f32, f32, f32)> {
@@ -385,7 +465,7 @@ fn start(sys: &mut System, c: Click) -> Option<Job> {
         // (the character screen's object is there all along).
         if let Some(fs) = objects.iter().find(|o| o.0 == PROFILE_FILE_SELECT).map(|o| o.1) {
             if r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT {
-                return file_select(sys, fs, c, squeeze);
+                return file_select(sys, fs, c);
             }
         }
         if let Some(sp) = objects.iter().find(|o| o.0 == PROFILE_SELECT_PLAYERS).map(|o| o.1) {
@@ -722,7 +802,7 @@ fn character_screen(sys: &mut System, objects: &[(u16, u32)], c: Click, squeeze:
 }
 
 /// The save select's buttons (only while it waits for a choice).
-fn file_select(sys: &mut System, fs: u32, c: Click, squeeze: f32) -> Option<Job> {
+fn file_select(sys: &mut System, fs: u32, c: Click) -> Option<Job> {
     let grid = |target| Some(Job::Grid { screen: Grid::FileSelect, target, steps: 0 });
     for n in 0..3 {
         if inside(c.x, c.y, (-190.0 + 190.0 * n as f32, 45.0, 184.0, 196.0)) {
@@ -741,14 +821,16 @@ fn file_select(sys: &mut System, fs: u32, c: Click, squeeze: f32) -> Option<Job>
     if inside(c.x, c.y, (265.0, -62.0, 190.0, 46.0)) {
         return Some(Job::Once(button::PLUS)); // Copy
     }
-    // The port's Settings button in the title bar.
+    // The port's Settings (5) and Multiplayer (6) buttons in the title bar.
     let layout = fs + FILE_SELECT_LAYOUT;
     let root = sys.root_pane(layout);
-    let settings = if root == 0 { 0 } else { sys.find_pane(root, hle_os::menu_layout::FILE_PANE, 0) };
-    if let Some((x0, y0, x1, y1)) = pane_box(sys, settings) {
-        let x = c.x * squeeze;
-        if (x0 - 4.0..=x1 + 4.0).contains(&x) && (y0 - 4.0..=y1 + 4.0).contains(&c.y) {
-            return grid(5);
+    for (target, name) in [(5, hle_os::menu_layout::FILE_COG_PANE), (6, hle_os::menu_layout::FILE_MULTI_PANE)] {
+        let pane = if root == 0 { 0 } else { sys.find_pane(root, name, 0) };
+        if let Some((x0, y0, x1, y1)) = pane_box(sys, pane) {
+            let x = c.x * pane_squeeze(sys, pane);
+            if (x0 - 4.0..=x1 + 4.0).contains(&x) && (y0 - 4.0..=y1 + 4.0).contains(&c.y) {
+                return grid(target);
+            }
         }
     }
     None
@@ -889,7 +971,8 @@ fn grid_step(sys: &mut System, screen: Grid, target: u32) -> Step {
                 0..=2 => (1, v as i32),
                 3 => (2, 0),
                 4 => (2, 2),
-                _ => (0, 1), // Settings, above the files
+                5 => (0, 2), // Settings and Multiplayer, above the files
+                _ => (0, 1),
             },
             Grid::SelectPlayers => match v {
                 0 => (0, 1),

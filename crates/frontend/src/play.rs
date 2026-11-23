@@ -566,9 +566,13 @@ impl App {
             }
         }
         self.apply_changes(picked);
-        // A controller pressed at the last poll: the prompts show its buttons.
+        // A controller pressed at the last poll: the prompts show its buttons
+        // (and the save select's Back button goes).
         if self.inputs.take_pad_pressed() {
             self.note_device(ui::prompts::Style::Pad);
+            if let Some(m) = &mut self.menus {
+                m.set_pointer_used(false);
+            }
         }
         let Some(emu) = &self.emu else { return Ok(()) };
         let interpolate = !self.native();
@@ -592,8 +596,10 @@ impl App {
             self.settings.file_characters = characters;
             self.settings.save(Path::new(settings::FILE));
         }
+        let (aspect, _) = self.picture();
         if let Some(m) = &mut self.menus {
             m.set_active_file(self.cheats.active.load(std::sync::atomic::Ordering::Relaxed));
+            m.set_save_select(*emu.save_select.lock().unwrap_or_else(|e| e.into_inner()), aspect);
         }
         // A newer release of the port: said on screen for a while, and the
         // Settings window asks whether to open its page.
@@ -624,7 +630,7 @@ impl App {
                 event_loop.exit();
             }
         }
-        // The LAN tab: the rooms on the network, and this game's own.
+        // The Multiplayer screen: the rooms on the network, and this game's own.
         if self.menus.as_ref().is_some_and(ui::Menus::wants_rooms) {
             if self.finder.is_none() {
                 self.finder = crate::lan::Finder::new().map_err(|e| say_err!("LAN: {e}")).ok();
@@ -669,10 +675,17 @@ impl App {
                 }
             }
         }
-        // A game menu's Settings button was picked and its menu has gone.
+        // A game menu's Settings button was picked and its menu has gone, or
+        // the save select's Multiplayer button.
         if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
             if let Some(m) = &mut self.menus {
                 m.open();
+                self.settings_from_game = true;
+            }
+        }
+        if emu.multiplayer_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
+            if let Some(m) = &mut self.menus {
+                m.open_multiplayer();
                 self.settings_from_game = true;
             }
         }
@@ -1348,6 +1361,11 @@ impl App {
     /// high with the origin at its centre and y up.
     fn click_at(&mut self, x: f64, y: f64) {
         let (Some(window), Some(emu)) = (&self.window, &self.emu) else { return };
+        // The save select's Back button is the window's own.
+        if self.menus.as_ref().is_some_and(|m| m.on_back(window, x, y)) {
+            let _ = emu.to_emu.send(ToEmu::FileBack);
+            return;
+        }
         let size = window.inner_size();
         let (w, h) = (f64::from(size.width.max(1)), f64::from(size.height.max(1)));
         let aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
@@ -1355,6 +1373,14 @@ impl App {
         let scale = picture_h / 456.0;
         let c = crate::click::Click { x: ((x - w / 2.0) / scale) as f32, y: ((h / 2.0 - y) / scale) as f32, half_width: (w / 2.0 / scale) as f32 };
         let _ = emu.to_emu.send(ToEmu::Click(c));
+    }
+
+    /// The mouse moved or clicked, or the screen was touched: the save
+    /// select's Back button shows (until a key or controller is pressed).
+    fn pointer_used(&mut self) {
+        if let Some(m) = &mut self.menus {
+            m.set_pointer_used(true);
+        }
     }
 
     fn key(&mut self, code: KeyCode) {
@@ -1499,6 +1525,9 @@ impl ApplicationHandler for App {
                         if self.inputs.key(code, down) {
                             if down {
                                 self.note_device(ui::prompts::Style::Keys);
+                                if let Some(m) = &mut self.menus {
+                                    m.set_pointer_used(false);
+                                }
                             }
                         } else if down {
                             self.key(code);
@@ -1508,13 +1537,22 @@ impl ApplicationHandler for App {
             }
             WindowEvent::Focused(false) => self.inputs.release_keys(),
             // Clicks and taps on the game's menus (`crate::click`).
-            WindowEvent::CursorMoved { position, .. } => self.pointer = Some((position.x, position.y)),
+            WindowEvent::CursorMoved { position, .. } => {
+                if self.pointer.is_some_and(|p| p != (position.x, position.y)) {
+                    self.pointer_used();
+                }
+                self.pointer = Some((position.x, position.y));
+            }
             WindowEvent::MouseInput { state: ElementState::Pressed, button: winit::event::MouseButton::Left, .. } => {
+                self.pointer_used();
                 if let Some((x, y)) = self.pointer {
                     self.click_at(x, y);
                 }
             }
-            WindowEvent::Touch(t) if t.phase == winit::event::TouchPhase::Started => self.click_at(t.location.x, t.location.y),
+            WindowEvent::Touch(t) if t.phase == winit::event::TouchPhase::Started => {
+                self.pointer_used();
+                self.click_at(t.location.x, t.location.y);
+            }
             _ => {}
         }
     }

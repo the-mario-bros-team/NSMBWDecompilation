@@ -92,6 +92,8 @@ pub enum ToEmu {
     Sound(u32),
     /// A click on the game's picture (`crate::click`; not in a net game).
     Click(crate::click::Click),
+    /// The save select's Back button was clicked (`Clicker::back`).
+    FileBack,
     /// The Music, Sound Effects and Menu Sounds volumes (percent), applied
     /// per voice by the mixer (`hw::ax`). Not in a net game, whose players
     /// must mix the same: there only the master volume (host side) counts.
@@ -175,12 +177,22 @@ pub struct Totals {
     pub texture_pack: Option<std::sync::Arc<gx::replace::Stats>>,
 }
 
+/// What the game thread shares with the window's for the game's menus: the
+/// Settings and Multiplayer buttons picked, and the save select's buttons.
+type MenuShare = (Arc<AtomicBool>, Arc<AtomicBool>, Arc<std::sync::Mutex<Option<crate::click::SaveSelect>>>);
+
 pub struct Emu {
     pub frames: Receiver<Result<GameFrame, String>>,
     pub to_emu: Sender<ToEmu>,
     /// Set when a game menu's Settings button was picked and the menu has
     /// gone: the Settings window should open.
     pub settings_button: Arc<AtomicBool>,
+    /// Set when the save select's Multiplayer button was picked: the
+    /// Multiplayer screen should open.
+    pub multiplayer_button: Arc<AtomicBool>,
+    /// The save select's buttons the port draws, after the last field
+    /// (`None` when it is not up, and in net games).
+    pub save_select: Arc<std::sync::Mutex<Option<crate::click::SaveSelect>>>,
     /// This machine's player after the last field ([`player_motion`],
     /// packed: the state in the high half, the move's bits in the low; 0
     /// for no player), for Space Smart Spin.
@@ -290,7 +302,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
         ToEmu::RealRemote(i, remote) => sys.hw.borrow_mut().ios.bt.set_real(i, remote),
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::FileBack | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) => {}
     }
 }
 
@@ -463,7 +475,8 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 #[allow(clippy::too_many_arguments)]
-fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>, player: Arc<AtomicU64>) -> Totals {
+fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, menus: MenuShare, player: Arc<AtomicU64>) -> Totals {
+    let (settings_button, multiplayer_button, save_select) = menus;
     let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, mut game_camera, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters, wide, texture_pack, mods, mut course } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
@@ -632,6 +645,11 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                         }
                     }
                     ToEmu::Click(c) => click = Some(c),
+                    ToEmu::FileBack => {
+                        if session.is_none() {
+                            clicker.back(&sys);
+                        }
+                    }
                     ToEmu::Volumes(v) => {
                         let gains = if session.is_none() { v.map(|p| (p.min(100) * 0x8000 / 100) as u16) } else { [0x8000; 3] };
                         sys.hw.borrow_mut().dsp.ax.gains = gains;
@@ -774,10 +792,20 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                     settings_button.store(true, Ordering::Relaxed);
                 }
             }
+            if closed && sys.menu.take_open_multiplayer() {
+                say!("field {index}: the save select's Multiplayer button");
+                if auto_close_settings {
+                    close_settings_at = Some(index + 30);
+                } else {
+                    multiplayer_button.store(true, Ordering::Relaxed);
+                }
+            }
             if close_settings_at == Some(index) {
                 close_settings_at = None;
                 sys.menu.reopen();
             }
+            let view = crate::click::save_select(&mut sys);
+            *save_select.lock().unwrap_or_else(|e| e.into_inner()) = view;
         }
         // This machine's player for Space Smart Spin (reading changes nothing).
         let motion = player_motion(&sys.mem, view_player.unwrap_or(0));
@@ -928,10 +956,12 @@ impl Emu {
         let (to_emu, to_emu_rx) = mpsc::channel();
         let stop = Arc::new(AtomicBool::new(false));
         let settings_button = Arc::new(AtomicBool::new(false));
+        let multiplayer_button = Arc::new(AtomicBool::new(false));
+        let save_select = Arc::new(std::sync::Mutex::new(None));
         let player = Arc::new(AtomicU64::new(0));
-        let (s, b, p) = (stop.clone(), settings_button.clone(), player.clone());
-        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s, b, p)).expect("spawn the game thread");
-        Self { frames, to_emu, settings_button, player, stop, thread: Some(thread) }
+        let (s, m, p) = (stop.clone(), (settings_button.clone(), multiplayer_button.clone(), save_select.clone()), player.clone());
+        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s, m, p)).expect("spawn the game thread");
+        Self { frames, to_emu, settings_button, multiplayer_button, save_select, player, stop, thread: Some(thread) }
     }
 
     /// This machine's player after the last field: their state and vertical
