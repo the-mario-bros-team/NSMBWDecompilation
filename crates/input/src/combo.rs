@@ -342,7 +342,7 @@ mod tests {
 
     #[test]
     fn combinations_move_between_actions_four_at_most() {
-        let mut combos: Vec<Vec<Vec<u32>>> = vec![Vec::new(); 12];
+        let mut combos: Vec<Vec<Vec<u32>>> = vec![Vec::new(); crate::keymap::ACTIONS.len()];
         add(&mut combos, A, vec![CTRL, X]);
         add(&mut combos, JUMP, vec![X, CTRL]);
         assert!(combos[A].is_empty(), "the same one, in another order: moved");

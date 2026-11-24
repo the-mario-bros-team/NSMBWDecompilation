@@ -54,6 +54,13 @@ pub struct GameFrame {
     /// The video interface shows a picture (not black): the startup screen
     /// lifts a second after the first such field.
     pub visible: bool,
+    /// The field's length at the game speed now: [`FIELD`] at 100%, zero
+    /// at Unlimited (as fast as it runs).
+    pub period: Duration,
+    /// The players' controls the field ran with (the input display).
+    pub inputs: [Input; REMOTES],
+    /// The Practice tab's counts after the field.
+    pub practice: crate::practice::Stats,
 }
 
 /// Scripted input (`--press`): `input` is held on remote `player` (0-based)
@@ -65,6 +72,8 @@ pub struct Press {
     pub start: u64,
     pub count: u64,
     pub input: Input,
+    /// `restart`: Restart Course at field `start` (instead of buttons).
+    pub restart: bool,
 }
 
 /// Wii Remote buttons by name, for scripted input (`--press`): a b 1 2 up
@@ -95,7 +104,7 @@ pub fn parse_buttons(names: &str) -> Result<Input, String> {
 }
 
 /// One scripted press: `[p<n>:]<frame>:<buttons>[:<frames>]` (6 frames
-/// when not given).
+/// when not given); `<frame>:restart` restarts the course then.
 pub fn parse_press(v: &str) -> Result<Press, String> {
     let (player, rest) = match v.strip_prefix('p').and_then(|r| r.split_once(':')) {
         Some((n, rest)) => match n.parse::<usize>() {
@@ -106,12 +115,16 @@ pub fn parse_press(v: &str) -> Result<Press, String> {
     };
     let mut parts = rest.split(':');
     let start = parts.next().and_then(|s| s.parse().ok()).ok_or(format!("--press {v}: expected <frame>:<buttons>[:<frames>]"))?;
-    let input = parse_buttons(parts.next().unwrap_or(""))?;
+    let buttons = parts.next().unwrap_or("");
+    if buttons.eq_ignore_ascii_case("restart") {
+        return Ok(Press { player, start, count: 0, input: Input::default(), restart: true });
+    }
+    let input = parse_buttons(buttons)?;
     let count = match parts.next() {
         Some(n) => n.parse().map_err(|_| format!("--press {v}: bad frame count"))?,
         None => 6,
     };
-    Ok(Press { player, start, count, input })
+    Ok(Press { player, start, count, input, restart: false })
 }
 
 /// A press file (`--press-file`; the Android app's `press`): one press per
@@ -174,6 +187,20 @@ pub enum ToEmu {
     /// movie, as a click does (`gameplay::MovieSkip`).
     #[allow(dead_code)]
     Tap,
+    /// The game's speed in percent (0: unlimited), the Practice tab's or
+    /// Fast Forward's. Ignored in a net game, which runs at 100%.
+    Speed(u32),
+    /// Restart Course (`practice`). Ignored in a net game.
+    RestartCourse,
+}
+
+/// A field's length at `speed` percent; zero for unlimited.
+fn field_period(speed: u32) -> Duration {
+    if speed == 0 {
+        Duration::ZERO
+    } else {
+        FIELD * 100 / speed
+    }
 }
 
 /// The save cards' "Cheated", in the language the Settings buttons read.
@@ -374,7 +401,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
                 say!("Bluetooth passthrough: {}", if held { "forgetting every paired Wii Remote" } else { "pairing: press the red SYNC button on each Wii Remote (under its battery cover)" });
             }
         }
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::FileBack | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) | ToEmu::Tap => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::FileBack | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) | ToEmu::Tap | ToEmu::Speed(_) | ToEmu::RestartCourse => {}
     }
 }
 
@@ -389,7 +416,7 @@ fn set_texture_pack(sys: &mut System, spec: &crate::mods::PackSpec) -> Option<Ar
 /// Live controls plus the presses scripted for field `index`.
 fn controls(live: &[Input; REMOTES], script: &[Press], index: u64) -> [Input; REMOTES] {
     let mut out = *live;
-    for p in script.iter().filter(|p| index >= p.start) {
+    for p in script.iter().filter(|p| index >= p.start && !p.restart) {
         out[p.player].connected = true;
         if index < p.start + p.count {
             out[p.player].buttons |= p.input.buttons;
@@ -713,6 +740,16 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut sent_display = (0.0f32, true);
     // With `auto_close_settings`: the field the Settings window "closes" at.
     let mut close_settings_at = None;
+    // The Practice tab: the game's speed (always 100 in a net game), a
+    // Restart Course asked for, and the counts.
+    let mut speed = 100u32;
+    let mut restart = false;
+    let mut practice = crate::practice::Practice::default();
+    // Sound away from 100%: stretched to last real time (`stretch`), or
+    // silent at Unlimited (and faded in again after).
+    let mut stretch: Option<crate::stretch::Stretch> = None;
+    let mut silent = false;
+    let mut sound = Vec::new();
     while !stop.load(Ordering::Relaxed) && last_field.is_none_or(|l| index <= l) {
         loop {
             while let Ok(msg) = to_emu.try_recv() {
@@ -760,6 +797,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                         };
                         let _ = done.send(result);
                     }
+                    ToEmu::Speed(s) => {
+                        if session.is_none() && s != speed {
+                            speed = s;
+                            due = Instant::now() + field_period(speed);
+                        }
+                    }
+                    ToEmu::RestartCourse => restart |= session.is_none(),
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
                     msg => apply(&mut sys, &mut live, msg),
                 }
@@ -770,7 +814,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             // Paused: no field runs, and the schedule starts again from the
             // end of the pause.
             std::thread::sleep(Duration::from_millis(5));
-            due = Instant::now() + FIELD;
+            due = Instant::now() + field_period(speed);
         }
         for (_, path) in save_states.iter().filter(|s| s.0 == index) {
             let state = sys.save_state();
@@ -801,6 +845,10 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         let mut inputs = controls(&live, &script, index);
         inputs[0].buttons |= click_buttons;
+        restart |= session.is_none() && script.iter().any(|p| p.restart && p.start == index);
+        if std::mem::take(&mut restart) {
+            say!("field {index}: {}", practice.restart(&mut sys));
+        }
         if skip_movies {
             let mut buttons = inputs.map(|i| i.buttons);
             if let Some(line) = movie_skip.before_field(&mut sys, &mut buttons, std::mem::take(&mut tapped)) {
@@ -889,6 +937,10 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         // Bulk writes the GX thread watches (`gx::texture::CHUNKED`) count
         // again now they are done.
         sys.mem.settle();
+        // Before the Gameplay options fix up lives and the clock.
+        for line in practice.count(&sys) {
+            say!("field {index}: {line}");
+        }
         // Net games keep the game's own rules.
         if session.is_none() {
             for line in gameplay.after_field(&mut sys, gameplay_options, &cheats, &characters) {
@@ -926,6 +978,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let view = crate::click::save_select(&mut sys);
             *save_select.lock().unwrap_or_else(|e| e.into_inner()) = view;
         }
+        practice.settle(&sys);
         // This machine's player for Space Smart Spin (reading changes nothing).
         let motion = player_motion(&sys.mem, view_player.unwrap_or(0));
         player.store(motion.map_or(0, |(state, vertical)| u64::from(state) << 32 | u64::from(vertical.to_bits())), Ordering::Relaxed);
@@ -939,11 +992,44 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let mut hw = sys.hw.borrow_mut();
             let rate = hw.dsp.audio_rate;
             let played = std::mem::take(&mut hw.dsp.audio);
-            if let Some(a) = &audio {
-                a.push(&played, rate);
+            // What is heard: at 100% the game's sound as it is; at other
+            // speeds stretched to last real time (`stretch`); at Unlimited
+            // nothing, the device kept playing silence, and faded in again
+            // after. The WAV file gets the same.
+            let heard = if audio.is_none() && wav.is_none() {
+                None
+            } else if speed == 0 {
+                if !std::mem::replace(&mut silent, true) {
+                    if let Some(a) = &audio {
+                        a.fade_tail(10);
+                    }
+                    stretch = None;
+                }
+                if let Some(a) = &audio {
+                    a.fill_silence(rate);
+                }
+                None
+            } else {
+                sound.clear();
+                if speed != 100 || stretch.is_some() {
+                    // Steered to the playing level, so the queue neither runs
+                    // dry nor grows when the PC can't keep up.
+                    let level = audio.as_ref().map_or(1.0, |a| f64::from(a.queued_ms()) / crate::audio::TARGET_MS as f64);
+                    let ratio = f64::from(speed) / 100.0 * level.clamp(0.5, 1.5);
+                    stretch.get_or_insert_with(Default::default).process(&played, rate, ratio, &mut sound);
+                } else {
+                    sound.extend_from_slice(&played);
+                }
+                if std::mem::take(&mut silent) {
+                    crate::stretch::fade_in(&mut sound, rate as usize / 100);
+                }
+                Some(&sound)
+            };
+            if let (Some(a), Some(heard)) = (&audio, heard) {
+                a.push(heard, rate);
             }
-            if let Some(w) = &mut wav {
-                if let Err(e) = w.write(&played) {
+            if let (Some(w), Some(heard)) = (&mut wav, heard) {
+                if let Err(e) = w.write(heard) {
                     say_err!("WAV: {e}");
                     wav = None;
                 }
@@ -980,12 +1066,15 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         };
         let wants_efb = now_peeks != peeks && !no_feedback;
         peeks = now_peeks;
-        let time = if unpaced { Instant::now() } else { due };
-        if !unpaced {
+        // Paced at the game speed (Unlimited: as fast as it runs).
+        let unlimited = unpaced || speed == 0;
+        let period = field_period(speed);
+        let time = if unlimited { Instant::now() } else { due };
+        if !unlimited {
             let now = Instant::now();
             if due > now {
                 std::thread::sleep(due - now);
-            } else if now - due > CATCH_UP {
+            } else if now - due > CATCH_UP * 100 / speed {
                 // Far behind (a stall): carry on from now rather than run
                 // fields back to back to catch up. Up to CATCH_UP late (a
                 // scene load's slow field, or sleep overshoot), the next
@@ -994,7 +1083,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                 // ahead of real time.
                 due = now;
             }
-            due += FIELD;
+            due += period;
         }
         let (out, output_wait) = {
             let mut hw = sys.hw.borrow_mut();
@@ -1007,7 +1096,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
             (out, output_wait)
         };
-        if frames.send(Ok(GameFrame { out, xfb, time, emu, gx_wait, output_wait, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some(), visible })).is_err() {
+        if frames.send(Ok(GameFrame { out, xfb, time, emu, gx_wait, output_wait, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some(), visible, period, inputs, practice: practice.stats })).is_err() {
             break;
         }
         index += 1;

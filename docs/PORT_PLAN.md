@@ -875,6 +875,15 @@ Measured in real time (paced) with `--fps 240 --log-fps` at EFB 2x in a
      frame keeps its scheduled time (`GameFrame::time`), so interpolated
      frames stay evenly placed during the catch-up. The per-second game
      speed reading can show up to ~103% just after such a field.
+   - Later (2026-11-23, the Practice tab): 100% is now the default game
+     speed, not a cap. `ToEmu::Speed` sets 50-300% or Unlimited, and the
+     Fast Forward binding (held) its own speed; the field slot is
+     `FIELD * 100 / speed` and the catch-up scales with it. Net games
+     ignore it (100%). Sound is time-stretched (`stretch.rs`, WSOLA) to
+     last real time at its own pitch, steered by the output queue's fill;
+     Unlimited is silent. Above 100% the window shows fields as they come
+     (no interpolation) and only partly draws the ones it does not show;
+     below 100% interpolation lags one (longer) field.
 2. **GPU time per frame** (world map, timestamp queries): 3.65 ms became
    1.2 ms, with identical pixels (world map frame 5700, and the 4:3 strap
    screen).

@@ -197,6 +197,27 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("Installing version {version}...", "Installation de la version {version}...", "Instalando la versión {version}..."),
     ("Done. The game is restarting.", "Terminé. Le jeu redémarre.", "Listo. El juego se está reiniciando."),
     ("The update failed", "La mise à jour a échoué", "La actualización ha fallado"),
+    // Practice, and its keys.
+    ("Practice", "Entraînement", "Práctica"),
+    ("Game speed and practice tools. LAN games run at 100% and can't restart.", "Vitesse du jeu et outils d'entraînement. En réseau local, le jeu tourne à 100 % et ne redémarre pas.", "Velocidad del juego y herramientas de práctica. En red local el juego va al 100 % y no se reinicia."),
+    ("Game Speed", "Vitesse du jeu", "Velocidad del juego"),
+    ("Fast-Forward Speed", "Vitesse d'avance rapide", "Velocidad de avance rápido"),
+    ("Level Timer", "Chrono du niveau", "Cronómetro del nivel"),
+    ("Death Counter", "Compteur de vies perdues", "Contador de vidas perdidas"),
+    ("Input Display", "Affichage des boutons", "Mostrar botones"),
+    ("Unlimited", "Illimitée", "Ilimitada"),
+    ("Player 1", "Joueur 1", "Jugador 1"),
+    ("All Players", "Tous les joueurs", "Todos los jugadores"),
+    ("As fast as the PC runs the game, without sound.", "Aussi vite que le PC fait tourner le jeu, sans le son.", "Tan rápido como el PC mueva el juego, sin sonido."),
+    ("The game, and its sound at its own pitch, at this speed.", "Le jeu, et son son à sa propre hauteur, à cette vitesse.", "El juego, y su sonido con su tono propio, a esta velocidad."),
+    ("The speed while Fast Forward is held (its key is in Keybinds).", "La vitesse tant qu'Avance rapide est maintenue (sa touche est dans Touches).", "La velocidad mientras se mantiene Avance rápido (su tecla está en Controles)."),
+    ("The course's time in game frames from each start; it stops at the goal.", "Le temps du niveau en images de jeu depuis chaque départ ; il s'arrête à l'arrivée.", "El tiempo del nivel en fotogramas de juego desde cada salida; se detiene en la meta."),
+    ("Lives lost in this course, and since the game started.", "Vies perdues dans ce niveau, et depuis le lancement du jeu.", "Vidas perdidas en este nivel, y desde que empezó el juego."),
+    ("The buttons the game gets, at the bottom left.", "Les boutons que reçoit le jeu, en bas à gauche.", "Los botones que recibe el juego, abajo a la izquierda."),
+    ("Fast Forward", "Avance rapide", "Avance rápido"),
+    ("Restart Course", "Recommencer le niveau", "Reiniciar el nivel"),
+    ("Held: the game runs at the Practice tab's Fast-Forward Speed (not in LAN games).", "Maintenue : le jeu tourne à la Vitesse d'avance rapide de l'onglet Entraînement (pas en réseau local).", "Mantenido: el juego va a la Velocidad de avance rápido de la pestaña Práctica (no en red local)."),
+    ("Starts the course again from its start (not in LAN games).", "Recommence le niveau depuis son début (pas en réseau local).", "Vuelve a empezar el nivel desde su inicio (no en red local)."),
 ];
 
 /// `english` in the menus' language (`fr`, `es`; anything else is

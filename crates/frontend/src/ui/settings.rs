@@ -17,7 +17,7 @@ use super::key_caps::{self, Caps, Glyph};
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
 use super::{Change, LanView, Nav, SaveSelect, UpdateState};
 use crate::gameplay::POWER_UPS;
-use crate::settings::{RendererChoice, Settings, WideMode};
+use crate::settings::{RendererChoice, Settings, WideMode, FAST_FORWARD_SPEEDS, INPUT_DISPLAYS, SPEEDS};
 
 // ---------------------------------------------------------------- assets
 
@@ -122,10 +122,11 @@ enum Tab {
     Language,
     Lan,
     Mods,
+    Practice,
 }
 
 /// The Settings window's tabs (LAN Play is the Multiplayer screen's).
-const TABS: [Tab; 7] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Language, Tab::Mods];
+const TABS: [Tab; 8] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Practice, Tab::Language, Tab::Mods];
 
 impl Tab {
     fn name(self) -> &'static str {
@@ -138,6 +139,7 @@ impl Tab {
             Tab::Language => "Language",
             Tab::Lan => "LAN Play",
             Tab::Mods => "Mods",
+            Tab::Practice => "Practice",
         }
     }
 
@@ -151,6 +153,7 @@ impl Tab {
             Tab::Language => "The language of the game's text and these menus.",
             Tab::Lan => "Play with other PCs on your network; each one needs the game.",
             Tab::Mods => "HD textures, and mods that change the game's files.",
+            Tab::Practice => "Game speed and practice tools. LAN games run at 100% and can't restart.",
         }
     }
 }
@@ -187,6 +190,13 @@ const ROW_COLLISION: i32 = 8;
 const ROW_MOTION: i32 = 9;
 const ROW_BT_PASSTHROUGH: i32 = 10;
 const GAMEPLAY_LAST: i32 = 10;
+// Practice rows.
+const ROW_SPEED: i32 = 1;
+const ROW_FAST_FORWARD: i32 = 2;
+const ROW_TIMER: i32 = 3;
+const ROW_DEATHS: i32 = 4;
+const ROW_INPUTS: i32 = 5;
+const PRACTICE_LAST: i32 = 5;
 // Mods rows: the HD Texture Pack, the pack in use (once one is installed),
 // then the file mods, one a row.
 const ROW_HD: i32 = 1;
@@ -201,8 +211,10 @@ const VOLUMES: [(&str, &str); 4] = [
     ("Menu Sounds", "The menus' cursor, select and back sounds."),
 ];
 const SLIDER_H: f32 = 34.0;
-// Keybinds: 1-12 the controls (two columns of six, `input::keymap::ACTIONS`).
-const KEY_HELP: [&str; 12] = [
+// Keybinds: 1-14 the controls (two columns of seven, `input::keymap::ACTIONS`).
+const KEYS: i32 = input::keymap::ACTIONS.len() as i32;
+const KEY_ROWS: i32 = 7;
+const KEY_HELP: [&str; input::keymap::ACTIONS.len()] = [
     "The D-pad's up: climb vines, and go through doors and pipes.",
     "The D-pad's down: crouch, and ground-pound in the air.",
     "The D-pad's left: walk left, and move a menu's cursor.",
@@ -215,15 +227,17 @@ const KEY_HELP: [&str; 12] = [
     "Tilts the Wii Remote right, for the platforms that tilt.",
     "The + button: pause a course, or open the world map's menu.",
     "The - button: open Select a World on the world map.",
+    "Held: the game runs at the Practice tab's Fast-Forward Speed (not in LAN games).",
+    "Starts the course again from its start (not in LAN games).",
 ];
 /// A key capture with nothing pressed for this long is cancelled.
 const CAPTURE_TIMEOUT: f64 = 10.0;
 /// The controls' rows: the first's centre, the step down, a button's height.
-const KEY_TOP: f32 = 88.0;
-const KEY_STEP: f32 = 27.0;
-const KEY_H: f32 = 21.0;
+const KEY_TOP: f32 = 90.0;
+const KEY_STEP: f32 = 25.0;
+const KEY_H: f32 = 20.0;
 /// The Keybinds tab's switches under the controls, up to three a row; their
-/// cursors follow the controls' (13 on).
+/// cursors follow the controls' (15 on).
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum KeySwitch {
     /// Which bindings the controls show: the keyboard's or the controllers'.
@@ -235,9 +249,9 @@ enum KeySwitch {
     MouseGyro,
 }
 const KEY_SWITCHES: [KeySwitch; 6] = [KeySwitch::Device, KeySwitch::Rumble, KeySwitch::WiiRemotes, KeySwitch::SmartSpin, KeySwitch::ReverseTilt, KeySwitch::MouseGyro];
-const SWITCH_CURSOR: i32 = 13;
-const SWITCH_TOP: f32 = -76.0;
-const SWITCH_STEP: f32 = 28.0;
+const SWITCH_CURSOR: i32 = KEYS + 1;
+const SWITCH_TOP: f32 = -88.0;
+const SWITCH_STEP: f32 = 26.0;
 const SWITCH_W: f32 = 236.0;
 const SWITCH_GAP: f32 = 250.0;
 const SWITCH_H: f32 = 24.0;
@@ -479,6 +493,13 @@ pub struct SettingsWindow {
     pointer: Option<(f32, f32)>,
     pressed: bool,
     held: bool,
+}
+
+/// The choice before (`back`) or after `now` in `choices`, round.
+fn step(choices: &[u32], now: u32, back: bool) -> u32 {
+    let n = choices.len();
+    let i = choices.iter().position(|&c| c == now).unwrap_or(0);
+    choices[if back { (i + n - 1) % n } else { (i + 1) % n }]
 }
 
 /// The character a key types into an address: digits, `.` and `:`.
@@ -1215,6 +1236,40 @@ impl SettingsWindow {
         self.help_line(a, c, note, u32::MAX);
     }
 
+    /// A row whose value left and right (or a press) step through.
+    #[allow(clippy::too_many_arguments)]
+    fn row_picker(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, rows: i32, index: i32, label: &str, value: &str, cursor: i32) {
+        let (step, h, size) = (row_step(rows), row_h(rows), row_text(rows));
+        let y = rows_top(rows) - index as f32 * step;
+        self.row_y[cursor as usize] = y;
+        self.label(a, c, label, y, cursor, size);
+        self.picker(ctx, a, c, cursor, value, y, h, self.cursor == cursor, size);
+        self.add_hit(COL_X0 + ARROW_W / 2.0, y, ARROW_W + 8.0, step - 2.0, cursor, EV_LEFT);
+        self.add_hit(COL_X1 - ARROW_W / 2.0, y, ARROW_W + 8.0, step - 2.0, cursor, EV_RIGHT);
+        self.add_hit(COL_X, y, COL_W - 2.0 * ARROW_W - 8.0, step - 2.0, cursor, EV_CONFIRM);
+    }
+
+    fn draw_practice(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings) {
+        let rows = PRACTICE_LAST;
+        let (speed, fast) = (crate::settings::speed_label(s.game_speed), crate::settings::speed_label(s.fast_forward_speed));
+        self.row_picker(ctx, a, c, rows, 0, "Game Speed", &speed, ROW_SPEED);
+        self.row_picker(ctx, a, c, rows, 1, "Fast-Forward Speed", &fast, ROW_FAST_FORWARD);
+        self.row_toggle(ctx, a, c, rows, 2, "Level Timer", s.level_timer, ROW_TIMER);
+        self.row_toggle(ctx, a, c, rows, 3, "Death Counter", s.death_counter, ROW_DEATHS);
+        let inputs = INPUT_DISPLAYS[(s.input_display as usize).min(INPUT_DISPLAYS.len() - 1)];
+        self.row_picker(ctx, a, c, rows, 4, "Input Display", inputs, ROW_INPUTS);
+        let note = match self.cursor {
+            ROW_SPEED if s.game_speed == 0 => "As fast as the PC runs the game, without sound.",
+            ROW_SPEED => "The game, and its sound at its own pitch, at this speed.",
+            ROW_FAST_FORWARD => "The speed while Fast Forward is held (its key is in Keybinds).",
+            ROW_TIMER => "The course's time in game frames from each start; it stops at the goal.",
+            ROW_DEATHS => "Lives lost in this course, and since the game started.",
+            ROW_INPUTS => "The buttons the game gets, at the bottom left.",
+            _ => Tab::Practice.help(),
+        };
+        self.help_line(a, c, note, u32::MAX);
+    }
+
     fn volume_y(row: usize) -> f32 {
         78.0 - 54.0 * row as f32
     }
@@ -1269,7 +1324,7 @@ impl SettingsWindow {
             }
         }
         for (i, (_, name)) in input::keymap::ACTIONS.iter().enumerate() {
-            let (column, row) = (i / 6, i % 6);
+            let (column, row) = (i as i32 / KEY_ROWS, i as i32 % KEY_ROWS);
             let x0 = if column == 0 { -190.0 } else { 190.0 };
             let y = KEY_TOP - KEY_STEP * row as f32;
             let color = if self.cursor == 1 + i as i32 { u32::MAX } else { LABEL_DIM };
@@ -1307,7 +1362,7 @@ impl SettingsWindow {
             (Some(_), _) if self.pad_view => "Hold a button, or 2 or 3 together, then let go. Esc cancels, Delete clears.",
             (Some(_), _) => "Hold a key or mouse button, or 2 or 3 together, then let go. Esc cancels, Delete clears.",
             (None, 0) => Tab::Keybinds.help(),
-            (None, n) if (1..=12).contains(&n) => KEY_HELP[n as usize - 1],
+            (None, n) if (1..=KEYS).contains(&n) => KEY_HELP[n as usize - 1],
             _ => switch.map_or("", |sw| sw.help()),
         };
         self.help_line(a, c, note, u32::MAX);
@@ -1395,20 +1450,20 @@ impl SettingsWindow {
         ((column as f32 - (in_row - 1) as f32 / 2.0) * SWITCH_GAP, SWITCH_TOP - row as f32 * SWITCH_STEP)
     }
 
-    /// The Keybinds tab's moves: the controls in two columns of six, the
+    /// The Keybinds tab's moves: the controls in two columns of seven, the
     /// switches under them in rows of three; a press picks a control's new
     /// key or flips a switch.
     fn keybinds_handle(&mut self, nav: Nav, s: &mut Settings, changes: &mut Vec<Change>) {
         let Nav { left, right, up, down, confirm, .. } = nav;
         let switches = KEY_SWITCHES.len() as i32;
         let c = self.cursor;
-        if (1..=12).contains(&c) {
-            let (column, row) = ((c - 1) / 6, (c - 1) % 6);
+        if (1..=KEYS).contains(&c) {
+            let (column, row) = ((c - 1) / KEY_ROWS, (c - 1) % KEY_ROWS);
             if left || right {
-                self.cursor = 1 + (1 - column) * 6 + row;
+                self.cursor = 1 + (1 - column) * KEY_ROWS + row;
             } else if up {
                 self.cursor = if row == 0 { 0 } else { c - 1 };
-            } else if down && row < 5 {
+            } else if down && row < KEY_ROWS - 1 {
                 self.cursor = c + 1;
             } else if down && switches > 0 {
                 // The switch under the column.
@@ -1427,7 +1482,7 @@ impl SettingsWindow {
             } else if up && row == 0 {
                 // The control above: the bottom of the nearer column.
                 let x = Self::switch_at(i as usize).0;
-                self.cursor = if x <= 0.0 { 6 } else { 12 };
+                self.cursor = if x <= 0.0 { KEY_ROWS } else { KEYS };
             } else if up {
                 self.cursor = c - 3;
             } else if down && i + 3 < switches {
@@ -1841,7 +1896,8 @@ impl SettingsWindow {
             Tab::Display => DISPLAY_LAST,
             Tab::Graphics => GRAPHICS_LAST,
             Tab::Audio => VOLUMES.len() as i32,
-            Tab::Keybinds => 12,
+            Tab::Keybinds => KEYS,
+            Tab::Practice => PRACTICE_LAST,
             Tab::Gameplay => GAMEPLAY_LAST,
             Tab::Language => LANGUAGES.len() as i32,
             Tab::Lan => ROW_LAN_FOUND - 1 + self.lan.rooms.len().min(LAN_ROOMS_SHOWN) as i32,
@@ -1937,6 +1993,27 @@ impl SettingsWindow {
             (Tab::Gameplay, ROW_BT_PASSTHROUGH) if toggle => {
                 s.bt_passthrough = !s.bt_passthrough;
                 changes.push(Change::Gameplay);
+            }
+            (Tab::Practice, ROW_SPEED) if toggle => {
+                s.game_speed = step(&SPEEDS, s.game_speed, left);
+                changes.push(Change::Practice);
+            }
+            (Tab::Practice, ROW_FAST_FORWARD) if toggle => {
+                s.fast_forward_speed = step(&FAST_FORWARD_SPEEDS, s.fast_forward_speed, left);
+                changes.push(Change::Practice);
+            }
+            (Tab::Practice, ROW_TIMER) if toggle => {
+                s.level_timer = !s.level_timer;
+                changes.push(Change::Practice);
+            }
+            (Tab::Practice, ROW_DEATHS) if toggle => {
+                s.death_counter = !s.death_counter;
+                changes.push(Change::Practice);
+            }
+            (Tab::Practice, ROW_INPUTS) if toggle => {
+                let n = INPUT_DISPLAYS.len() as u32;
+                s.input_display = if left { (s.input_display + n - 1) % n } else { (s.input_display + 1) % n };
+                changes.push(Change::Practice);
             }
             (Tab::Lan, ROW_LAN_ROOM) if confirm => changes.push(if self.lan.mode == 0 { Change::LanHost } else { Change::LanLeave }),
             (Tab::Lan, ROW_LAN_ADDRESS) if confirm && self.lan.mode == 0 => self.typing = Some(String::new()),
@@ -2199,6 +2276,7 @@ impl SettingsWindow {
             Tab::Language => self.draw_language(ctx, &a, &c, s, &at_boot),
             Tab::Lan => self.draw_lan(ctx, &a, &c),
             Tab::Mods => self.draw_mods(ctx, &a, &c, s),
+            Tab::Practice => self.draw_practice(ctx, &a, &c, s),
         }
         self.defer_cursor = false;
         if let Some((cc, x, y, w, h)) = self.deferred.take().filter(|_| self.dropdown.is_none()) {

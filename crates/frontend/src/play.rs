@@ -10,7 +10,9 @@
 //!
 //! Hotkeys (F1 shows them) change the display settings and save them to
 //! `settings.toml`; F10 opens the Settings window (`ui`), which pauses the
-//! game while it is up.
+//! game while it is up. The Practice tab's game speed, Fast Forward (held)
+//! and Restart Course (bindable like the controls, `input::keymap`) go to
+//! the game thread; a net game runs at 100% and never restarts.
 
 use std::collections::{HashMap, VecDeque};
 use std::sync::mpsc::{self, Receiver, Sender};
@@ -83,6 +85,8 @@ const STARTUP_SHADER_LIMIT: Duration = Duration::from_secs(180);
 struct Queued {
     index: u64,
     time: Instant,
+    /// The field's length at the game speed (`GameFrame::period`).
+    period: Duration,
     xfb: u32,
     out: Arc<gx::Output>,
 }
@@ -348,6 +352,15 @@ struct App {
     /// Background layers as the game draws them with its own camera, for
     /// drawing them in each player's window.
     backdrop: gx::backdrop::Backdrop,
+    /// The game speed the game thread was last told (percent, 0
+    /// unlimited), Fast Forward held, and Restart Course held at the last
+    /// frame (a press restarts once).
+    sent_speed: Option<u32>,
+    fast_forward: bool,
+    restart_held: bool,
+    /// The last field's Practice counts and controls, for the overlays.
+    practice: crate::practice::Stats,
+    shown_inputs: [Input; REMOTES],
 }
 
 /// Set for a game the LAN tab started to join a room.
@@ -447,9 +460,42 @@ fn on(b: bool) -> &'static str {
 }
 
 impl App {
-    /// 60 or 30 fps, or unpaced runs: no interpolation.
+    /// 60 or 30 fps, or unpaced runs: no interpolation. Nor above 100%
+    /// game speed, whose fields come at 90 a second or more.
     fn native(&self) -> bool {
-        self.settings.fps == 60 || self.settings.fps == 30 || self.opts.unpaced
+        self.settings.fps == 60 || self.settings.fps == 30 || self.opts.unpaced || !(1..=100).contains(&self.speed())
+    }
+
+    /// The game speed the game thread runs at (percent, 0 unlimited).
+    fn speed(&self) -> u32 {
+        self.sent_speed.unwrap_or(100)
+    }
+
+    /// The Practice tab's speed, Fast Forward and Restart Course, from the
+    /// bindings held at the last poll (not under a menu, not in a net game).
+    fn practice_keys(&mut self, open: bool) {
+        let net = !matches!(self.opts.emu.net, crate::net::Mode::Off);
+        let Some(emu) = &self.emu else { return };
+        let allowed = !open && !net;
+        let restart = allowed && self.inputs.hotkey(input::keymap::RESTART);
+        if restart && !self.restart_held {
+            let _ = emu.to_emu.send(ToEmu::RestartCourse);
+        }
+        self.restart_held = restart;
+        self.fast_forward = allowed && self.inputs.hotkey(input::keymap::FAST_FORWARD);
+        let speed = match () {
+            _ if net => 100,
+            _ if self.fast_forward => self.settings.fast_forward_speed,
+            _ => self.settings.game_speed,
+        };
+        if self.sent_speed != Some(speed) {
+            let _ = emu.to_emu.send(ToEmu::Speed(speed));
+            if self.sent_speed.is_some() {
+                say!("game speed: {}", settings::speed_label(speed));
+            }
+            self.sent_speed = Some(speed);
+            self.next_display = Instant::now();
+        }
     }
 
     /// Every other field is not shown (30 fps, or the battery saver).
@@ -486,7 +532,7 @@ impl App {
             settings::fps_label(self.settings.fps),
             on(self.settings.vsync)
         );
-        println!("keys: F1 help, F3 performance monitor, F4 battery saver, F5/F6 frame rate, F7 V-Sync, F9 aspect, F10 settings, F11 fullscreen");
+        println!("keys: F1 help, F3 performance monitor, F4 battery saver, F5/F6 frame rate, F7 V-Sync, F9 aspect, F10 settings, F11 fullscreen; {} held fast-forwards, {} restarts the course (Keybinds)", self.settings.keymap.label(input::keymap::FAST_FORWARD), self.settings.keymap.label(input::keymap::RESTART));
         println!("controls (sideways Wii Remote): arrows D-pad, X/Space 2, Z/Shift 1, C/Ctrl shake, Q/E tilt, B the A button, Enter/Esc +, Tab/- minus, Home HOME; gamepads too");
         // The game reads its aspect ratio from SYSCONF once, at boot.
         if let Err(e) = hle_ios::nand::set_widescreen(Path::new("saves/nand"), self.settings.widescreen) {
@@ -738,6 +784,7 @@ impl App {
             let _ = emu.to_emu.send(ToEmu::Input(controls));
             self.sent_input = Some(controls);
         }
+        self.practice_keys(open);
         self.update_startup();
         self.update_menus(p1)?;
         let Some(emu) = &self.emu else { return Ok(()) };
@@ -790,7 +837,8 @@ impl App {
         // 30 fps (or the battery saver): every other field is not shown,
         // and only partly drawn (below), unless its EFB is read back.
         let copies = f.out.cmds.iter().any(|c| matches!(c, gx::Cmd::CopyTex(_)));
-        let skip = self.half_rate() && f.index % 2 == 1 && !last && !f.wants_efb;
+        // Above 100% game speed, a field not shown is only partly drawn too.
+        let skip = (self.half_rate() && f.index % 2 == 1 || !present && self.speed() != 100 && self.native()) && !last && !f.wants_efb;
         // Interpolating, a new field is only shown by the in-between frames,
         // which draw it again: unless its EFB is read back (copies to RAM, CPU
         // peeks, a screenshot), it only needs its textures uploaded and its
@@ -820,6 +868,7 @@ impl App {
             p.filter(&mut f.out);
         }
         (self.main_player, self.online) = (f.main_player, f.online);
+        (self.practice, self.shown_inputs) = (f.practice, f.inputs);
         self.backdrop.learn(&f.out.world);
         if !self.online {
             for t in &f.out.new_textures {
@@ -898,7 +947,7 @@ impl App {
         if show {
             self.presented_now();
         }
-        let queued = Queued { index: f.index, time: f.time, xfb: f.xfb, out: Arc::new(f.out) };
+        let queued = Queued { index: f.index, time: f.time, period: f.period, xfb: f.xfb, out: Arc::new(f.out) };
         // The players' windows draw it on their own threads meanwhile.
         if !self.players.is_empty() {
             let shot = self.opts.shots.iter().find(|(n, _)| *n == queued.index + 1).map(|(_, p)| p.clone());
@@ -954,8 +1003,11 @@ impl App {
         if self.queue.is_empty() {
             return Ok(());
         }
+        // A field behind real time: at the game speed's field length (longer
+        // below 100%).
         let now = Instant::now();
-        let shown = now.checked_sub(FIELD).unwrap_or(now);
+        let lag = self.queue.back().map_or(FIELD, |q| q.period.max(FIELD));
+        let shown = now.checked_sub(lag).unwrap_or(now);
         let q = &self.queue;
         let (a, b, t) = match (0..q.len() - 1).find(|&i| q[i].time <= shown && shown < q[i + 1].time) {
             Some(i) => {
@@ -1200,7 +1252,7 @@ impl App {
                     }
                 }
                 // From the next start, or read every frame.
-                ui::Change::Renderer | ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics | ui::Change::Mods => {}
+                ui::Change::Renderer | ui::Change::Scale | ui::Change::PerfMonitor | ui::Change::BatterySaver | ui::Change::Sound(_) | ui::Change::Graphics | ui::Change::Mods | ui::Change::Practice => {}
             }
         }
     }
@@ -1344,7 +1396,7 @@ impl App {
             };
             let lines = vec![
                 (overlay::WHITE, format!("FPS {:.1} / {}", self.shown_fps, settings::fps_label(self.settings.fps))),
-                (overlay::WHITE, format!("GAME {:.1} FPS  CPU {:.1} MS", self.game_fps, self.emu_ms)),
+                (overlay::WHITE, format!("GAME {:.1} FPS ({:.0}%)  CPU {:.1} MS", self.game_fps, self.game_fps / 59.94 * 100.0, self.emu_ms)),
                 (overlay::WHITE, format!("RENDER {:.1} MS  VSYNC {}", self.render_ms, on(self.settings.vsync))),
                 (overlay::WHITE, {
                     let on: Vec<String> = self.remotes.iter().enumerate().filter(|(_, r)| r.connected).map(|(i, _)| format!("P{}", i + 1)).collect();
@@ -1370,11 +1422,25 @@ impl App {
             ]
             .into_iter()
             .chain(self.settings.bt_passthrough.then(|| "F8  PAIR WII REMOTES (HOLD 10 S: FORGET)".to_string()))
+            .chain([(input::keymap::FAST_FORWARD, "HOLD: FAST FORWARD"), (input::keymap::RESTART, "RESTART COURSE")].into_iter().filter_map(|(action, what)| {
+                let key = self.settings.keymap.label(action);
+                (!key.is_empty()).then(|| format!("{}  {what}", key.to_uppercase()))
+            }))
             .map(|l| (overlay::WHITE, l))
             .collect();
             let w = lines.iter().map(|(_, l)| l.len() as i32).max().unwrap_or(0) * 6 * px + 4 * px;
             overlay::panel(&mut out, (width as i32 - w - margin).max(0), margin, px, &lines);
         }
+        let view = crate::practice::View {
+            stats: self.practice,
+            speed: self.speed(),
+            fast_forward: self.fast_forward,
+            timer: self.settings.level_timer,
+            deaths: self.settings.death_counter,
+            input_display: self.settings.input_display,
+            inputs: &self.shown_inputs,
+        };
+        crate::practice::draw(&mut out, width as i32, height as i32, px, &view);
         if let Some((release, _)) = self.update.as_ref().filter(|(_, found)| found.elapsed() < UPDATE_NOTE) {
             let lines = [(overlay::WHITE, format!("UPDATE {} IS OUT - SEE SETTINGS (F10)", release.version))];
             let h = lines.len() as i32 * 9 * px + 3 * px;
@@ -1766,6 +1832,11 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         textures: HashMap::new(),
         online: false,
         backdrop: gx::backdrop::Backdrop::default(),
+        sent_speed: None,
+        fast_forward: false,
+        restart_held: false,
+        practice: crate::practice::Stats::default(),
+        shown_inputs: [Input::default(); REMOTES],
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
     if let Some(p) = &mut app.perf {

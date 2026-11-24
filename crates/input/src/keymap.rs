@@ -8,8 +8,9 @@ use winit::keyboard::KeyCode;
 use crate::combo;
 
 /// The actions, in the Keybinds tab's order: their `[keyboard]` key, the
-/// name shown, and their default keys.
-pub const ACTIONS: [(&str, &str); 12] = [
+/// name shown, and their default keys. The first [`REMOTE_ACTIONS`] are the
+/// Wii Remote's; the rest are the port's own (hotkeys the game never sees).
+pub const ACTIONS: [(&str, &str); 14] = [
     ("up", "Up"),
     ("down", "Down"),
     ("left", "Left"),
@@ -22,7 +23,12 @@ pub const ACTIONS: [(&str, &str); 12] = [
     ("tilt_right", "Tilt Right"),
     ("plus", "+ (Pause)"),
     ("minus", "- (Minus)"),
+    ("fast_forward", "Fast Forward"),
+    ("restart", "Restart Course"),
 ];
+
+/// The Wii Remote's actions: the first this many of [`ACTIONS`].
+pub const REMOTE_ACTIONS: usize = 12;
 
 pub const UP: usize = 0;
 pub const DOWN: usize = 1;
@@ -36,6 +42,10 @@ pub const TILT_LEFT: usize = 8;
 pub const TILT_RIGHT: usize = 9;
 pub const PLUS: usize = 10;
 pub const MINUS: usize = 11;
+/// Held: the game runs at the fast-forward speed (Practice tab).
+pub const FAST_FORWARD: usize = 12;
+/// Pressed: the course starts again from its start.
+pub const RESTART: usize = 13;
 
 /// Keys a binding can be, with their names (as saved and shown). F10 and
 /// F11 open Settings and switch fullscreen; Home is the HOME button.
@@ -170,13 +180,16 @@ pub fn key_by_name(name: &str) -> Option<Key> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Keymap {
     /// Each action's keys ([`ACTIONS`] order).
-    pub keys: [Vec<Key>; 12],
+    pub keys: [Vec<Key>; ACTIONS.len()],
     /// Each action's combinations: 2 or 3 keys held together (`combo`).
-    pub combos: [Vec<Vec<Key>>; 12],
+    pub combos: [Vec<Vec<Key>>; ACTIONS.len()],
 }
 
 impl Default for Keymap {
-    /// Right click crouches, as in WitherBlitz's port.
+    /// Right click crouches, as in WitherBlitz's port. Fast Forward is the
+    /// key under Esc (Tab, many emulators' choice, is the - button here);
+    /// Restart Course is F2, with the port's other hotkeys, where it is not
+    /// pressed by accident.
     fn default() -> Self {
         use KeyCode::*;
         let k = |codes: &[KeyCode]| codes.iter().map(|&c| Key::Code(c)).collect::<Vec<_>>();
@@ -194,6 +207,8 @@ impl Default for Keymap {
                 k(&[KeyE]),
                 k(&[Enter, Escape]),
                 k(&[Minus, Tab]),
+                k(&[Backquote]),
+                k(&[F2]),
             ],
             combos: Default::default(),
         }

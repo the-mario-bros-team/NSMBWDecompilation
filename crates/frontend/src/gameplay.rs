@@ -562,7 +562,7 @@ fn find_profile(sys: &System, profile: u16) -> Option<u32> {
     None
 }
 
-fn has_profile(sys: &System, profile: u16) -> bool {
+pub(crate) fn has_profile(sys: &System, profile: u16) -> bool {
     find_profile(sys, profile).is_some()
 }
 

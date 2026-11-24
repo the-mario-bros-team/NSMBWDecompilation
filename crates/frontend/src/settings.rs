@@ -15,6 +15,24 @@ pub const FPS_CHOICES: [u32; 12] = [30, 60, 90, 120, 144, 165, 180, 240, 300, 36
 
 pub const FILE: &str = "settings.toml";
 
+/// Game speeds in percent (the Practice tab); 0 is unlimited, as fast as
+/// the PC runs it. Off in net games, which run at 100%.
+pub const SPEEDS: [u32; 6] = [50, 100, 150, 200, 300, 0];
+/// The speeds Fast Forward can be set to.
+pub const FAST_FORWARD_SPEEDS: [u32; 4] = [150, 200, 300, 0];
+
+/// A speed as shown: "150%", or "Unlimited".
+pub fn speed_label(speed: u32) -> String {
+    if speed == 0 {
+        "Unlimited".into()
+    } else {
+        format!("{speed}%")
+    }
+}
+
+/// Input Display's choices: off, player 1, every player.
+pub const INPUT_DISPLAYS: [&str; 3] = ["Off", "Player 1", "All Players"];
+
 /// What the widescreen picture is (after WitherBlitz's port's aspect modes).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum WideMode {
@@ -171,11 +189,22 @@ pub struct Settings {
     pub texture_dumps: bool,
     /// The file mods under `mods/` turned on (from the next start).
     pub mods: Vec<String>,
+    /// Practice tab: the game's speed ([`SPEEDS`]; 100 the game's own, 0
+    /// unlimited), and Fast Forward's while its key is held
+    /// ([`FAST_FORWARD_SPEEDS`]). Net games always run at 100%.
+    pub game_speed: u32,
+    pub fast_forward_speed: u32,
+    /// Practice tab: the course's time (game frames, split at the goal), the
+    /// misses in this course and this session, and the players' buttons
+    /// ([`INPUT_DISPLAYS`] index), drawn over the picture.
+    pub level_timer: bool,
+    pub death_counter: bool,
+    pub input_display: u32,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { renderer: RendererChoice::Auto, fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], power_up_freeze: true, player_collision: true, keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, motion_sensors: true, bt_passthrough: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
+        Self { renderer: RendererChoice::Auto, fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], power_up_freeze: true, player_collision: true, keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, motion_sensors: true, bt_passthrough: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new(), game_speed: 100, fast_forward_speed: 300, level_timer: false, death_counter: false, input_display: 0 }
     }
 }
 
@@ -300,12 +329,22 @@ impl Settings {
         if let Some(mods) = t.get("mods").and_then(toml::Value::as_array) {
             s.mods = mods.iter().filter_map(toml::Value::as_str).map(str::to_string).collect();
         }
+        let speed = |k: &str, choices: &[u32]| number(k).and_then(|n| u32::try_from(n).ok()).filter(|n| choices.contains(n));
+        s.game_speed = speed("game_speed", &SPEEDS).unwrap_or(s.game_speed);
+        s.fast_forward_speed = speed("fast_forward_speed", &FAST_FORWARD_SPEEDS).unwrap_or(s.fast_forward_speed);
+        s.level_timer = flag("level_timer", s.level_timer);
+        s.death_counter = flag("death_counter", s.death_counter);
+        if let Some(n) = number("input_display") {
+            s.input_display = n.clamp(0, INPUT_DISPLAYS.len() as i64 - 1) as u32;
+        }
         if let Some(keyboard) = t.get("keyboard").and_then(toml::Value::as_table) {
+            // An action the file does not have yet (newer than the file)
+            // keeps its default keys and combinations.
             for (i, (key, _)) in ACTIONS.iter().enumerate() {
                 if let Some(label) = keyboard.get(*key).and_then(toml::Value::as_str) {
                     s.keymap.set_label(i, label);
+                    s.keymap.set_combo_names(i, &combo_names(keyboard, key));
                 }
-                s.keymap.set_combo_names(i, &combo_names(keyboard, key));
             }
             let flag = |k: &str, d: bool| keyboard.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
             s.smart_spin = flag("smart_spin", s.smart_spin);
@@ -321,8 +360,8 @@ impl Settings {
             for (i, (key, _)) in ACTIONS.iter().enumerate() {
                 if let Some(label) = controller.get(*key).and_then(toml::Value::as_str) {
                     s.padmap.set_label(i, label);
+                    s.padmap.set_combo_names(i, &combo_names(controller, key));
                 }
-                s.padmap.set_combo_names(i, &combo_names(controller, key));
             }
         }
         s
@@ -404,6 +443,18 @@ impl Settings {
             self.texture_dumps,
             mods.join(", ")
         ));
+        text.push_str(&format!(
+            "# Practice tab. game_speed: 50, 100, 150, 200 or 300 percent, or 0 for unlimited; fast_forward_speed: the speed while
+             # the Fast Forward key is held (150, 200, 300 or 0). Net games run at 100%. The level timer, death counter and
+             # input display (0 off, 1 player 1, 2 all players) are drawn over the picture.
+             game_speed = {}
+fast_forward_speed = {}
+level_timer = {}
+death_counter = {}
+input_display = {}
+",
+            self.game_speed, self.fast_forward_speed, self.level_timer, self.death_counter, self.input_display
+        ));
         // Last: a table ends the file's top-level keys.
         text.push_str("\n# Keys for the Wii Remote's buttons, by name, separated by commas (\"\" for none).\n# <action>_combos: keys held together, 2 or 3 a combination: jump_combos = [[\"Left Ctrl\", \"X\"]].\n[keyboard]\n");
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
@@ -474,9 +525,18 @@ mod tests {
             p.buttons[input::keymap::TILT_LEFT].clear();
             p.take(input::keymap::PLUS, vec![input::padmap::by_name("LB").unwrap(), input::padmap::by_name("RB").unwrap()]);
             p
-        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true, motion_sensors: false, bt_passthrough: true, hd_textures: true, texture_pack: "My \"Pack\"".into(), texture_dumps: true, mods: vec!["One".into(), "Two \\ Three".into()] };
+        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true, motion_sensors: false, bt_passthrough: true, hd_textures: true, texture_pack: "My \"Pack\"".into(), texture_dumps: true, mods: vec!["One".into(), "Two \\ Three".into()], game_speed: 0, fast_forward_speed: 150, level_timer: true, death_counter: true, input_display: 2 };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
+        // A file from before Fast Forward and Restart Course keeps their
+        // defaults, Restart's controller combination too.
+        std::fs::write(&path, "[keyboard]
+jump = \"X\"
+[controller]
+jump = \"A\"
+").unwrap();
+        let old = Settings::load(&path);
+        assert_eq!((old.keymap.keys[input::keymap::RESTART].clone(), old.padmap.combos[input::keymap::RESTART].len()), (Settings::default().keymap.keys[input::keymap::RESTART].clone(), 1));
         let s = Settings { fps: 144, scale: 3.0, ..Settings::default() };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);

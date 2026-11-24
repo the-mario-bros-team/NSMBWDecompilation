@@ -20,10 +20,12 @@ mod overlay;
 mod perf;
 mod play;
 mod probe;
+mod practice;
 mod replay;
 mod save_backup;
 mod say;
 mod settings;
+mod stretch;
 mod ui;
 mod win;
 

@@ -22,6 +22,10 @@ final class Native {
 
     static native void surfaceResized();
 
+    /** The Practice settings: game speed in percent (0 unlimited; LAN games run at 100%), the level
+     *  timer, the death counter, and the input display (0 off, 1 player 1, 2 all players). */
+    static native void setPractice(int speed, boolean timer, boolean deaths, int inputDisplay);
+
     /** Wii Remote player (0..3): WiiRemote button bits, shake, tilt -1..1. */
     static native void setRemote(int player, boolean connected, int buttons, boolean shake, float tilt);
 

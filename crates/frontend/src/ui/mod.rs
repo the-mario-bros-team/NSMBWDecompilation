@@ -88,6 +88,8 @@ pub enum Change {
     LanJoin(String),
     /// Stop hosting, or leave the room (the game starts again on its own).
     LanLeave,
+    /// A Practice tab setting (read every frame).
+    Practice,
 }
 
 pub use crate::click::SaveSelect;

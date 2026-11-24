@@ -433,6 +433,35 @@ final class Lang {
                 + "cette source sur l'écran suivant, puis revenez au jeu.");
         // --- Settings (SettingsActivity), worded as the game's settings window ---
         newer("Video", "Vídeo", "Vidéo", "Video");
+        // --- Practice ---
+        newer("Practice", "Práctica", "Entraînement", "Allenamento");
+        newer("Game Speed", "Velocidad del juego", "Vitesse du jeu", "Velocità di gioco");
+        newer("Level Timer", "Cronómetro del nivel", "Chrono du niveau", "Cronometro del livello");
+        newer("Death Counter", "Contador de vidas perdidas", "Compteur de vies perdues", "Contatore di vite perse");
+        newer("Input Display", "Mostrar botones", "Affichage des boutons", "Mostra pulsanti");
+        newer("Unlimited", "Ilimitada", "Illimitée", "Illimitata");
+        newer("Player 1", "Jugador 1", "Joueur 1", "Giocatore 1");
+        newer("All Players", "Todos los jugadores", "Tous les joueurs", "Tutti i giocatori");
+        newer("The game, and its sound at its own pitch, at this speed. LAN games run at 100%.",
+                "El juego, y su sonido con su tono propio, a esta velocidad. En red local va al 100 %.",
+                "Le jeu, et son son à sa propre hauteur, à cette vitesse. En réseau local, il tourne à 100 %.",
+                "Il gioco, e il suo audio con la sua intonazione, a questa velocità. In LAN va al 100%.");
+        newer("The course's time in game frames from each start; it stops at the goal.",
+                "El tiempo del nivel en fotogramas de juego desde cada salida; se detiene en la meta.",
+                "Le temps du niveau en images de jeu depuis chaque départ ; il s'arrête à l'arrivée.",
+                "Il tempo del livello in fotogrammi di gioco da ogni partenza; si ferma al traguardo.");
+        newer("Lives lost in this course, and since the game started.",
+                "Vidas perdidas en este nivel, y desde que empezó el juego.",
+                "Vies perdues dans ce niveau, et depuis le lancement du jeu.",
+                "Vite perse in questo livello, e da quando è partito il gioco.");
+        newer("The buttons the game gets, at the bottom left.",
+                "Los botones que recibe el juego, abajo a la izquierda.",
+                "Les boutons que reçoit le jeu, en bas à gauche.",
+                "I pulsanti che riceve il gioco, in basso a sinistra.");
+        newer("Game speed and practice tools, applied when you go back to the game.",
+                "Velocidad del juego y herramientas de práctica; se aplican al volver al juego.",
+                "Vitesse du jeu et outils d'entraînement, appliqués au retour dans le jeu.",
+                "Velocità di gioco e strumenti di allenamento, applicati al ritorno nel gioco.");
         newer("Audio", "Audio", "Audio", "Audio");
         newer("Resolution", "Resolución", "Résolution", "Risoluzione");
         newer("Rendered at this many lines, then scaled to the screen. Match screen: the screen's own.",
