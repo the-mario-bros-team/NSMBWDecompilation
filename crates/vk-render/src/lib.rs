@@ -281,6 +281,8 @@ struct Frame {
     retired_images: Vec<Image>,
     retired_buffers: Vec<Buffer>,
     retired_framebuffers: Vec<vk::Framebuffer>,
+    /// Its last submission wrote both GPU timestamps ([`Renderer::gpu_time`]).
+    timed: bool,
     /// Prepared-field buffers retired the same way, reused afterwards.
     retired_spare: Vec<Buffer>,
 }
@@ -447,6 +449,11 @@ pub struct Renderer {
     /// Drawn over the presented image.
     pub overlay: Vec<OverlayRect>,
     pub stats: FrameStats,
+    /// GPU timestamps at the start and end of each frame's commands (two
+    /// per frame in flight), and nanoseconds per tick; `None` when the
+    /// queue has no timestamps.
+    timer: Option<(vk::QueryPool, f32)>,
+    gpu_time: Option<std::time::Duration>,
 }
 
 fn range(aspect: vk::ImageAspectFlags, levels: u32) -> vk::ImageSubresourceRange {
@@ -931,6 +938,7 @@ impl Renderer {
                     retired_images: Vec::new(),
                     retired_buffers: Vec::new(),
                     retired_framebuffers: Vec::new(),
+                    timed: false,
                     retired_spare: Vec::new(),
                 });
             }
@@ -951,6 +959,14 @@ impl Renderer {
                 p.efb_framebuffer = framebuffer(&device, p.efb, &[efb_color.view, efb_depth.view], efb_color.w, efb_color.h)?;
             }
 
+            let queue_family = instance.get_physical_device_queue_family_properties(physical)[family as usize];
+            let period = instance.get_physical_device_properties(physical).limits.timestamp_period;
+            let timer = if queue_family.timestamp_valid_bits > 0 && period > 0.0 {
+                let info = vk::QueryPoolCreateInfo::default().query_type(vk::QueryType::TIMESTAMP).query_count(2 * FRAMES_IN_FLIGHT as u32);
+                Some((device.create_query_pool(&info, None)?, period))
+            } else {
+                None
+            };
             let mut r = Self {
                 device_name,
                 validation,
@@ -1017,6 +1033,8 @@ impl Renderer {
                 screenshot: None,
                 overlay: Vec::new(),
                 stats: FrameStats::default(),
+                timer,
+                gpu_time: None,
             };
             r.upload_palette()?;
             if r.pipeline_cache_path.is_some() {
@@ -1520,6 +1538,29 @@ impl Renderer {
         Ok(())
     }
 
+    /// Reads the GPU time of frame slot `f`'s last submission (its fence has
+    /// signalled) and starts timing the commands being recorded in `cmd`.
+    fn time_frame(&mut self, f: usize, cmd: vk::CommandBuffer) {
+        let Some((pool, period)) = self.timer else { return };
+        unsafe {
+            if self.frames[f].timed {
+                let mut t = [0u64; 2];
+                if self.device.get_query_pool_results(pool, 2 * f as u32, &mut t, vk::QueryResultFlags::TYPE_64).is_ok() {
+                    self.gpu_time = Some(std::time::Duration::from_nanos((t[1].wrapping_sub(t[0]) as f64 * f64::from(period)) as u64));
+                }
+            }
+            self.device.cmd_reset_query_pool(cmd, pool, 2 * f as u32, 2);
+            self.device.cmd_write_timestamp(cmd, vk::PipelineStageFlags::TOP_OF_PIPE, pool, 2 * f as u32);
+        }
+        self.frames[f].timed = false;
+    }
+
+    /// How long the GPU took for the last frame it finished (a frame or two
+    /// behind the one just drawn); `None` without timestamps.
+    pub fn gpu_time(&self) -> Option<std::time::Duration> {
+        self.gpu_time
+    }
+
     /// Drops the UI layer and its render pass (the GPU done with them).
     fn drop_ui(&mut self) {
         if let Some(rp) = self.ui.take().and_then(|u| u.render_pass) {
@@ -1750,6 +1791,7 @@ impl Renderer {
             dev.reset_command_buffer(cmd, vk::CommandBufferResetFlags::empty())?;
             dev.begin_command_buffer(cmd, &vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT))?;
         }
+        self.time_frame(f, cmd);
         if fresh {
             self.upload_textures(f, cmd, out)?;
             // Images that EFB copies will fill.
@@ -1897,6 +1939,7 @@ impl Renderer {
             dev.reset_command_buffer(cmd, vk::CommandBufferResetFlags::empty())?;
             dev.begin_command_buffer(cmd, &vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT))?;
         }
+        self.time_frame(f, cmd);
         self.stats.uploads = 0;
         let p = self.prepared.as_ref().ok_or("render_prepared: nothing prepared")?;
         let (serial, vb, index_offset, moves) = (p.serial, p.buffer.buffer, p.index_offset, p.moves);
@@ -2504,6 +2547,10 @@ impl Renderer {
             }
         }
         unsafe {
+            if let Some((pool, _)) = self.timer {
+                dev.cmd_write_timestamp(cmd, vk::PipelineStageFlags::BOTTOM_OF_PIPE, pool, 2 * f as u32 + 1);
+                self.frames[f].timed = true;
+            }
             dev.end_command_buffer(cmd)?;
             dev.reset_fences(&[self.frames[f].fence])?;
             let cmds = [cmd];
@@ -2669,6 +2716,9 @@ impl Drop for Renderer {
             self.device.destroy_pipeline(self.copy.pipeline, None);
             self.device.destroy_pipeline_layout(self.copy.layout, None);
             self.device.destroy_pipeline_cache(self.pipeline_cache, None);
+            if let Some((pool, _)) = self.timer {
+                self.device.destroy_query_pool(pool, None);
+            }
             self.draw_modules.destroy(&self.device);
             for m in self.copy_modules {
                 self.device.destroy_shader_module(m, None);

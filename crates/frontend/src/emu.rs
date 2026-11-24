@@ -12,7 +12,7 @@ use std::thread::JoinHandle;
 use std::time::{Duration, Instant};
 
 use hle_ios::bt::{RemoteStatus, REMOTES};
-use hle_ios::wiimote::Input;
+use hle_ios::wiimote::{button, Input};
 use hle_os::System;
 
 use crate::say::{say, say_err};
@@ -65,6 +65,59 @@ pub struct Press {
     pub start: u64,
     pub count: u64,
     pub input: Input,
+}
+
+/// Wii Remote buttons by name, for scripted input (`--press`): a b 1 2 up
+/// down left right (the remote's own D-pad) plus minus home, and shake.
+pub fn parse_buttons(names: &str) -> Result<Input, String> {
+    let mut input = Input { connected: true, ..Input::default() };
+    for n in names.split('+').filter(|s| !s.is_empty()) {
+        input.buttons |= match n.to_ascii_lowercase().as_str() {
+            "a" => button::A,
+            "b" => button::B,
+            "1" => button::ONE,
+            "2" => button::TWO,
+            "up" => button::UP,
+            "down" => button::DOWN,
+            "left" => button::LEFT,
+            "right" => button::RIGHT,
+            "plus" => button::PLUS,
+            "minus" => button::MINUS,
+            "home" => button::HOME,
+            "shake" => {
+                input.shake = true;
+                0
+            }
+            other => return Err(format!("unknown Wii Remote button: {other}")),
+        };
+    }
+    Ok(input)
+}
+
+/// One scripted press: `[p<n>:]<frame>:<buttons>[:<frames>]` (6 frames
+/// when not given).
+pub fn parse_press(v: &str) -> Result<Press, String> {
+    let (player, rest) = match v.strip_prefix('p').and_then(|r| r.split_once(':')) {
+        Some((n, rest)) => match n.parse::<usize>() {
+            Ok(n @ 1..=4) => (n - 1, rest),
+            _ => return Err(format!("--press {v}: player is p1..p4")),
+        },
+        None => (0, v),
+    };
+    let mut parts = rest.split(':');
+    let start = parts.next().and_then(|s| s.parse().ok()).ok_or(format!("--press {v}: expected <frame>:<buttons>[:<frames>]"))?;
+    let input = parse_buttons(parts.next().unwrap_or(""))?;
+    let count = match parts.next() {
+        Some(n) => n.parse().map_err(|_| format!("--press {v}: bad frame count"))?,
+        None => 6,
+    };
+    Ok(Press { player, start, count, input })
+}
+
+/// A press file (`--press-file`; the Android app's `press`): one press per
+/// line or several per line; `#` starts a comment.
+pub fn parse_script(text: &str) -> Result<Vec<Press>, String> {
+    text.lines().flat_map(|l| l.split('#').next().unwrap_or("").split_whitespace()).map(parse_press).collect()
 }
 
 pub enum ToEmu {
@@ -1058,5 +1111,21 @@ impl Emu {
         // Unblock a pending send.
         while self.frames.try_recv().is_ok() {}
         self.thread.take().map(|t| t.join().unwrap_or_default()).unwrap_or_default()
+    }
+}
+
+#[cfg(test)]
+mod press_tests {
+    use super::*;
+
+    #[test]
+    fn scripted_buttons() {
+        let s = parse_buttons("2+right+shake").unwrap();
+        assert_eq!(s.buttons, button::TWO | button::RIGHT);
+        assert!(s.shake);
+        assert!(parse_buttons("x").is_err());
+        let p = parse_script("10:a # boot\np2:20:2+right:3").unwrap();
+        assert_eq!((p[0].player, p[0].start, p[0].count, p[0].input.buttons), (0, 10, 6, button::A));
+        assert_eq!((p[1].player, p[1].start, p[1].count), (1, 20, 3));
     }
 }

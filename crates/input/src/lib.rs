@@ -458,33 +458,6 @@ impl Inputs {
     }
 }
 
-/// Wii Remote buttons by name, for scripted input (`--press`): a b 1 2 up
-/// down left right (the remote's own D-pad) plus minus home, and shake.
-pub fn parse_buttons(names: &str) -> Result<Input, String> {
-    let mut input = Input { connected: true, ..Input::default() };
-    for n in names.split('+').filter(|s| !s.is_empty()) {
-        input.buttons |= match n.to_ascii_lowercase().as_str() {
-            "a" => button::A,
-            "b" => button::B,
-            "1" => button::ONE,
-            "2" => button::TWO,
-            "up" => button::UP,
-            "down" => button::DOWN,
-            "left" => button::LEFT,
-            "right" => button::RIGHT,
-            "plus" => button::PLUS,
-            "minus" => button::MINUS,
-            "home" => button::HOME,
-            "shake" => {
-                input.shake = true;
-                0
-            }
-            other => return Err(format!("unknown Wii Remote button: {other}")),
-        };
-    }
-    Ok(input)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -589,13 +562,5 @@ mod tests {
         i.set_reverse_tilt(true);
         i.key(KeyCode::KeyE, true);
         assert_eq!(i.poll_at(ms(400))[0].tilt, -1.0);
-    }
-
-    #[test]
-    fn scripted_buttons() {
-        let s = parse_buttons("2+right+shake").unwrap();
-        assert_eq!(s.buttons, button::TWO | button::RIGHT);
-        assert!(s.shake);
-        assert!(parse_buttons("x").is_err());
     }
 }

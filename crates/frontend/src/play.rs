@@ -861,7 +861,7 @@ impl App {
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.spent[0] += started.elapsed();
         if let Some(p) = &mut self.perf {
-            p.field(&f, started.elapsed(), None);
+            p.field(&f, started.elapsed(), renderer.gpu_time());
         }
         let writebacks = renderer.take_writebacks();
         if !writebacks.is_empty() {

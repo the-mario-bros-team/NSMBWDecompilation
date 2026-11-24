@@ -152,24 +152,6 @@ fn parse_course(v: &str) -> Result<emu::Course, String> {
 }
 
 /// `[p<n>:]<frame>:<buttons>[:<frames>]`
-fn parse_press(v: &str) -> Result<emu::Press, String> {
-    let (player, rest) = match v.strip_prefix('p').and_then(|r| r.split_once(':')) {
-        Some((n, rest)) => match n.parse::<usize>() {
-            Ok(n @ 1..=4) => (n - 1, rest),
-            _ => return Err(format!("--press {v}: player is p1..p4")),
-        },
-        None => (0, v),
-    };
-    let mut parts = rest.split(':');
-    let start = parts.next().and_then(|s| s.parse().ok()).ok_or(format!("--press {v}: expected <frame>:<buttons>[:<frames>]"))?;
-    let input = input::parse_buttons(parts.next().unwrap_or(""))?;
-    let count = match parts.next() {
-        Some(n) => n.parse().map_err(|_| format!("--press {v}: bad frame count"))?,
-        None => 6,
-    };
-    Ok(emu::Press { player, start, count, input })
-}
-
 fn number<T: std::str::FromStr>(it: &mut impl Iterator<Item = String>, flag: &str) -> Result<T, String> {
     let v = it.next().ok_or(format!("{flag} needs a number"))?;
     v.parse().map_err(|_| format!("{flag}: not a number: {v}"))
@@ -233,14 +215,11 @@ fn parse_args() -> Result<Args, String> {
                 let c = click::Click { x: x.parse().map_err(|_| bad())?, y: y.parse().map_err(|_| bad())?, half_width: 228.0 * 16.0 / 9.0 };
                 args.clicks.push((f.parse().map_err(|_| bad())?, c));
             }
-            "--press" => args.script.push(parse_press(&it.next().ok_or("--press needs <frame>:<buttons>")?)?),
+            "--press" => args.script.push(emu::parse_press(&it.next().ok_or("--press needs <frame>:<buttons>")?)?),
             "--press-file" => {
                 let path = it.next().ok_or("--press-file needs a file")?;
                 let text = std::fs::read_to_string(&path).map_err(|e| format!("{path}: {e}"))?;
-                // One press per line or several per line; `#` starts a comment.
-                for word in text.lines().flat_map(|l| l.split('#').next().unwrap_or("").split_whitespace()) {
-                    args.script.push(parse_press(word)?);
-                }
+                args.script.extend(emu::parse_script(&text)?);
             }
             "--save-state" => {
                 let v = it.next().ok_or("--save-state needs <frame>:<file>")?;

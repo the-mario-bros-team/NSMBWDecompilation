@@ -310,7 +310,20 @@ impl Render {
                 Err(e) => eprintln!("perf: {e}"),
             }
         }
-        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, net, load_state, ..EmuOptions::default() });
+        // A scripted run, for measuring (as `--press-file`): a file named
+        // `press` in the app's files.
+        let script = match std::fs::read_to_string("press").map(|t| emu::parse_script(&t)) {
+            Ok(Ok(s)) => {
+                println!("press: {} scripted presses (files/press)", s.len());
+                s
+            }
+            Ok(Err(e)) => {
+                eprintln!("press: {e}");
+                Vec::new()
+            }
+            Err(_) => Vec::new(),
+        };
+        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, net, load_state, script, ..EmuOptions::default() });
         let _ = emu.to_emu.send(ToEmu::Interpolate(false));
         if self.paused {
             let _ = emu.to_emu.send(ToEmu::Pause(true));
@@ -333,7 +346,7 @@ impl Render {
         }
         r.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
         if let Some(p) = &mut self.perf {
-            p.field(&f, started.elapsed(), None);
+            p.field(&f, started.elapsed(), r.gpu_time());
         }
         self.speed.1 += 1;
         self.speed.2 += f.emu;
