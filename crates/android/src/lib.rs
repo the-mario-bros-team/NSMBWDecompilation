@@ -296,11 +296,18 @@ impl Render {
         }
         // A backup is never loaded into a net game: every machine has to
         // start from power-on.
-        let load_state = LOAD_STATE.lock().unwrap().take().filter(|_| matches!(net, net::Mode::Off));
+        let mut load_state = LOAD_STATE.lock().unwrap().take().filter(|_| matches!(net, net::Mode::Off));
         if let Some(p) = &load_state {
             println!("starting from the backup {}", p.display());
         }
         self.loaded = load_state.clone();
+        // For measuring: a save state named `state` in the app's files
+        // (`--save-state`'s format) is started from, as `--load-state`, and
+        // kept (unlike a backup).
+        if load_state.is_none() && matches!(net, net::Mode::Off) && Path::new("state").is_file() {
+            println!("state: starting from files/state");
+            load_state = Some(PathBuf::from("state"));
+        }
         if let Ok(skip) = std::fs::read_to_string("perf") {
             match perf::Skip::parse_list(skip.trim()).and_then(|s| perf::Perf::new(Some(Path::new("perf.csv")), s, 300)) {
                 Ok(p) => {
