@@ -145,7 +145,16 @@ pub struct Draw {
     pub shading: u32,
     pub raster: Raster,
     pub scissor: Rect,
+    /// [`NO_STATE`]: the indices are into [`Output::vertices`]. Otherwise
+    /// the renderer transforms the vertices: the indices are word offsets
+    /// into [`Output::packed`], and this is the [`Output::states`] entry
+    /// they are transformed with. Only for a renderer that asked for them
+    /// ([`Gpu::gpu_vertices`]).
+    pub state: u32,
 }
+
+/// [`Draw::state`] of a draw whose vertices are already transformed.
+pub const NO_STATE: u32 = u32::MAX;
 
 /// EFB clear (after a copy, or a CPU poke of one pixel).
 #[derive(Clone, Copy, Debug)]
@@ -378,9 +387,21 @@ pub struct Output {
     /// Each draw's vertices once, in order; [`Output::indices`] makes them
     /// triangle lists.
     pub vertices: Vec<Vertex>,
-    /// Triangle-list indices into `vertices`. `model` and `records` (for frame
-    /// interpolation) are left empty when the frontend does not interpolate.
+    /// Triangle-list indices into `vertices`, or for a packed draw
+    /// ([`Draw::state`]) word offsets into `packed`. `model` and `records`
+    /// (for frame interpolation) are left empty when the frontend does not
+    /// interpolate.
     pub indices: Vec<u32>,
+    /// Vertices the renderer transforms, packed ([`vertex::Pack`]: only the
+    /// attributes their format has), for draws with a [`Draw::state`].
+    pub packed: Vec<u32>,
+    /// The XF state those draws are transformed with, as blocks of words
+    /// ([`xf::block`]), and per state: its setup block's offset, its matrix
+    /// block's, the vertex format ([`vertex::Pack::bits`]) and flags
+    /// ([`xf::block::FULL`]). [`xf::transform_packed`] does on the CPU what
+    /// the renderer does with them.
+    pub xf_blocks: Vec<u32>,
+    pub states: Vec<[u32; 4]>,
     /// Per vertex: model-space position and position-matrix slot.
     pub model: Vec<([f32; 3], u8)>,
     pub records: Vec<DrawRecord>,
@@ -423,6 +444,9 @@ impl Output {
             hash_words(&mut h, &w);
         }
         hash_words(&mut h, &self.indices);
+        hash_words(&mut h, &self.packed);
+        hash_words(&mut h, &self.xf_blocks);
+        hash_words(&mut h, self.states.as_flattened());
         for s in &self.shadings {
             hash_words(&mut h, &s.0);
         }
@@ -494,6 +518,12 @@ pub struct Gpu {
     /// EFB copies into part of a texture patch it ([`Cmd::Patch`]); off,
     /// the animated tiles stand still.
     pub patches: bool,
+    /// The renderer transforms vertices itself ([`Output::packed`]): set by
+    /// the frontend for a renderer that can.
+    pub gpu_vertices: bool,
+    /// A player's window is set: its draws need transformed vertices on the
+    /// CPU ([`World::apply`]).
+    views_on: bool,
     /// Draws are dropped (switched in the command stream: Depth Blur off).
     drop_draws: bool,
     /// The shading block of the last draw, and whether anything it is built
@@ -525,6 +555,8 @@ impl Default for Gpu {
             tex_memo: [None; 8],
             records_next: true,
             patches: true,
+            gpu_vertices: false,
+            views_on: false,
             drop_draws: false,
             last_shading: None,
             textures: texture::Cache::default(),
@@ -659,6 +691,7 @@ impl Gpu {
 
     /// Each player's window ([`xf::View`]), kept in the output from here on.
     pub fn set_views(&mut self, views: [Option<xf::View>; 4]) {
+        self.views_on = views.iter().any(Option::is_some);
         self.batch.ops.push(Op::Views(views));
     }
 
@@ -1159,17 +1192,41 @@ impl Gpu {
         let (ox, oy) = self.scissor_offset();
         let screen = xf::Screen { offset_x: ox, offset_y: oy };
         let has_color = [layout.has_color(0), layout.has_color(1)];
-        let first = self.batch.raws.len() as u32;
         let arrays = vertex::Arrays::new(&self.cp, &layout, mem);
-        // Each vertex is read straight into its slot, which starts as the
-        // template (defaults); see `Layout::read_into`.
         let chunks = data.chunks_exact(layout.size.max(1)).take(n);
-        let start = self.batch.raws.len();
-        self.batch.raws.resize(start + chunks.len(), vertex::Layout::template(pm, tm));
-        for (v, d) in self.batch.raws[start..].iter_mut().zip(chunks) {
-            layout.read_into(v, &self.cp, d, &arrays, mem);
-        }
-        let n = self.batch.raws.len() as u32 - first;
+        let n = chunks.len() as u32;
+        // Triangles for a renderer that transforms them go packed
+        // (`vertex::Pack`); the rest are transformed on the CPU. Frame
+        // interpolation and players' windows move vertices on the CPU.
+        let pack = (self.gpu_vertices && prim < 0xA8 && !self.records_next && !self.views_on).then(|| layout.pack()).filter(|p| p.words > 0);
+        let first = match pack {
+            Some(pack) => {
+                // Only the attributes the format has, packed straight from the
+                // data (formats without a plan: read into a copy of the
+                // template, then packed).
+                let first = self.batch.packed.len();
+                let words = pack.words as usize;
+                self.batch.packed.resize(first + n as usize * words, 0);
+                for (out, d) in self.batch.packed[first..].chunks_exact_mut(words.max(1)).zip(chunks) {
+                    if !layout.read_packed(&pack, pm, tm, &self.cp, d, &arrays, mem, out) {
+                        let mut v = vertex::Layout::template(pm, tm);
+                        layout.read_into(&mut v, &self.cp, d, &arrays, mem);
+                        pack.write_into(&v, out);
+                    }
+                }
+                first as u32
+            }
+            None => {
+                // Each vertex is read straight into its slot, which starts as
+                // the template (defaults); see `Layout::read_into`.
+                let first = self.batch.raws.len() as u32;
+                self.batch.raws.resize(first as usize + n as usize, vertex::Layout::template(pm, tm));
+                for (v, d) in self.batch.raws[first as usize..].iter_mut().zip(chunks) {
+                    layout.read_into(v, &self.cp, d, &arrays, mem);
+                }
+                first
+            }
+        };
         let shading = match self.last_shading {
             // Nothing changed since the last draw: its block, which is the
             // batch's last unless the batch is new.
@@ -1197,7 +1254,7 @@ impl Gpu {
             efb_alpha: self.efb_alpha(),
         };
         let scissor = self.scissor();
-        self.batch.ops.push(Op::Draw(DrawOp { op, first, n, has_color, screen, shading, raster, scissor, line_point: self.bp[0x22], same_matrices: !layout.has_matrix_indices() }));
+        self.batch.ops.push(Op::Draw(DrawOp { op, first, n, has_color, screen, shading, raster, scissor, line_point: self.bp[0x22], same_matrices: !layout.has_matrix_indices(), pack }));
     }
 }
 

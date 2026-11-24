@@ -3,7 +3,7 @@
 use naga::back::spv;
 use naga::valid::{Capabilities, ValidationFlags, Validator};
 
-use render::{COPY, UBERSHADER};
+use render::{COPY, PACKED, UBERSHADER};
 
 /// SPIR-V version `spirv`: 1.5 for Vulkan 1.3, 1.3 for Vulkan 1.1.
 fn entry(module: &naga::Module, info: &naga::valid::ModuleInfo, stage: naga::ShaderStage, name: &str, spirv: (u8, u8)) -> Result<Vec<u32>, String> {
@@ -41,6 +41,13 @@ pub fn ubershader(names: &[&str], spirv: (u8, u8)) -> Result<(Vec<u32>, Vec<Vec<
     let vs = entry(&module, &info, naga::ShaderStage::Vertex, "vs", spirv)?;
     let fs = names.iter().map(|n| entry(&module, &info, naga::ShaderStage::Fragment, n, spirv)).collect::<Result<_, _>>()?;
     Ok((vs, fs))
+}
+
+/// The vertex stage for draws whose vertices the GPU transforms: `vs_packed`
+/// (`render::PACKED`, appended to the ubershader).
+pub fn packed_vertex(spirv: (u8, u8)) -> Result<Vec<u32>, String> {
+    let (module, info) = parse(&format!("{UBERSHADER}\n{PACKED}"))?;
+    entry(&module, &info, naga::ShaderStage::Vertex, "vs_packed", spirv)
 }
 
 /// The ubershader's fragment entry point `name` with shading words baked in
@@ -104,6 +111,8 @@ mod tests {
                 // The single-output stages must run on GPUs without dual-source blending.
                 assert_eq!(has_index_decoration(code), name.starts_with("fs") && !name.starts_with("fs_one"), "{name}");
             }
+            let packed = super::packed_vertex(spirv).unwrap_or_else(|e| panic!("{e}"));
+            assert_eq!(packed[..2], [0x0723_0203, version]);
             let (vs, fs) = super::copy(spirv).unwrap_or_else(|e| panic!("{e}"));
             assert_eq!(vs[..2], [0x0723_0203, version]);
             assert_eq!(fs[..2], [0x0723_0203, version]);

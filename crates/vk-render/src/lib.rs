@@ -37,7 +37,7 @@ use ash::khr::{surface, swapchain};
 use ash::{vk, Device, Entry, Instance};
 use gpu_allocator::vulkan::{Allocation, AllocationCreateDesc, AllocationScheme, Allocator, AllocatorCreateDesc};
 use gpu_allocator::MemoryLocation;
-use gx::{sh, Cmd, Output, Rect, Vertex, NO_TEXTURE, SHADING_WORDS};
+use gx::{sh, Cmd, Output, Rect, Vertex, NO_STATE, NO_TEXTURE, SHADING_WORDS};
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle};
 
 pub use render::{load_png, save_png, validation_errors, validation_warnings, EfbSnapshot, FrameStats, OverlayRect, Options, Res, UiFrame, Writeback, PALETTE};
@@ -90,6 +90,9 @@ pub unsafe fn set_vulkan_loader(get_instance_proc_addr: vk::PFN_vkGetInstancePro
 #[derive(Clone, Copy)]
 struct DrawModules {
     vs: vk::ShaderModule,
+    /// The vertex stage for draws whose vertices the GPU transforms
+    /// (`render::PACKED`, [`PACKED`] keys).
+    vs_packed: vk::ShaderModule,
     /// Fragment stages and their entry points: with a depth output, and
     /// without (early depth testing).
     fs: [(vk::ShaderModule, &'static CStr); 2],
@@ -107,6 +110,7 @@ impl DrawModules {
     unsafe fn destroy(&self, device: &Device) {
         unsafe {
             device.destroy_shader_module(self.vs, None);
+            device.destroy_shader_module(self.vs_packed, None);
             for (m, _) in self.fs.iter().chain(self.fs_blend.iter().flatten()) {
                 device.destroy_shader_module(*m, None);
             }
@@ -180,6 +184,8 @@ struct Frame {
     shadings: Option<Buffer>,
     staging: Option<Buffer>,
     readback: Option<Buffer>,
+    /// Packed vertices, XF blocks, states and packed draws (bindings 6-9).
+    packed: Option<Buffer>,
     writebacks: Vec<PendingWriteback>,
     /// What this frame's descriptor set and draw states were last written
     /// for by [`Renderer::render_prepared`]: (prepare serial, texture
@@ -536,6 +542,9 @@ struct Specializer {
 /// cull mode (2 bits) and Z mode (5 bits: test, compare op, update).
 const CULL_SHIFT: u32 = 18;
 const ZMODE_SHIFT: u32 = 20;
+/// Pipeline key bit: the draw's vertices are packed and the vertex stage
+/// transforms them (`gx::Draw::state`).
+const PACKED: u32 = 1 << 25;
 
 /// What renderers on one GPU share ([`Renderer::new_sharing`]): the Vulkan
 /// instance, the device and its queue. Destroyed with the last renderer.
@@ -786,9 +795,14 @@ impl Renderer {
                 vk::DescriptorSetLayoutBinding::default().binding(3).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
                 vk::DescriptorSetLayoutBinding::default().binding(4).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
                 vk::DescriptorSetLayoutBinding::default().binding(5).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
+                // Vertices the GPU transforms: packed vertices, XF blocks, states, packed draws.
+                vk::DescriptorSetLayoutBinding::default().binding(6).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
+                vk::DescriptorSetLayoutBinding::default().binding(7).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
+                vk::DescriptorSetLayoutBinding::default().binding(8).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
+                vk::DescriptorSetLayoutBinding::default().binding(9).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::VERTEX),
             ];
             let partial = vk::DescriptorBindingFlags::PARTIALLY_BOUND;
-            let flags = [vk::DescriptorBindingFlags::empty(), partial, partial, partial, partial, partial];
+            let flags = [vk::DescriptorBindingFlags::empty(), partial, partial, partial, partial, partial, partial, partial, partial, partial];
             let mut flag_info = vk::DescriptorSetLayoutBindingFlagsCreateInfo::default().binding_flags(&flags);
             let set_layout = device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings).push_next(&mut flag_info), None)?;
             let copy_bindings = [
@@ -798,7 +812,7 @@ impl Renderer {
             let copy_set_layout = device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&copy_bindings), None)?;
             let n = FRAMES_IN_FLIGHT as u32;
             let sizes = [
-                vk::DescriptorPoolSize { ty: vk::DescriptorType::STORAGE_BUFFER, descriptor_count: 4 * n },
+                vk::DescriptorPoolSize { ty: vk::DescriptorType::STORAGE_BUFFER, descriptor_count: 8 * n },
                 vk::DescriptorPoolSize { ty: vk::DescriptorType::SAMPLED_IMAGE, descriptor_count: n * MAX_TEXTURES + 2 },
                 vk::DescriptorPoolSize { ty: vk::DescriptorType::SAMPLER, descriptor_count: n * MAX_SAMPLERS },
             ];
@@ -833,11 +847,12 @@ impl Renderer {
             let (efb_pass, copy_pass) = passes.as_ref().map_or((vk::RenderPass::null(), vk::RenderPass::null()), |p| (p.efb, p.copy));
             let (vs_code, fs_codes) = shaders::ubershader(&names, spirv)?;
             let vs = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&vs_code), None)?;
+            let vs_packed = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&shaders::packed_vertex(spirv)?), None)?;
             let mut fs = Vec::new();
             for (name, code) in names.iter().zip(&fs_codes) {
                 fs.push((device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(code), None)?, entry_name(name)));
             }
-            let draw_modules = DrawModules { vs, fs: [fs[0], fs[1]], fs_blend: fs.get(2..4).map(|b| [b[0], b[1]]), logic_ops: gpu.logic_ops, render_pass: efb_pass };
+            let draw_modules = DrawModules { vs, vs_packed, fs: [fs[0], fs[1]], fs_blend: fs.get(2..4).map(|b| [b[0], b[1]]), logic_ops: gpu.logic_ops, render_pass: efb_pass };
             let (cvs_code, cfs_code) = shaders::copy(spirv)?;
             let copy_modules = [
                 device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&cvs_code), None)?,
@@ -856,6 +871,7 @@ impl Renderer {
                     shadings: None,
                     staging: None,
                     readback: None,
+                    packed: None,
                     writebacks: Vec::new(),
                     described: None,
                     retired_images: Vec::new(),
@@ -1145,12 +1161,14 @@ impl Renderer {
             0 => &mut self.frames[f].vertices,
             1 => &mut self.frames[f].shadings,
             2 => &mut self.frames[f].staging,
+            4 => &mut self.frames[f].packed,
             _ => &mut self.frames[f].readback,
         }
     }
 
     /// A host-visible buffer of at least `size` bytes in `slot` of frame `f`
-    /// (0 vertices, 1 draw states, 2 upload staging, 3 readback), reused
+    /// (0 vertices, 1 draw states, 2 upload staging, 3 readback, 4 packed
+    /// vertices and XF state), reused
     /// while it is big enough.
     fn frame_buffer(&mut self, f: usize, which: u8, size: u64, usage: vk::BufferUsageFlags) -> Res<vk::Buffer> {
         if let Some(b) = self.slot(f, which).as_ref().filter(|b| b.size >= size) {
@@ -1283,6 +1301,8 @@ impl Renderer {
         let fs_module = fragment.unwrap_or(fs_module);
         let atts = [att];
 
+        // Packed draws read their vertices from storage buffers.
+        let packed = key & PACKED != 0;
         let binding = [vk::VertexInputBindingDescription { binding: 0, stride: VERTEX_SIZE, input_rate: vk::VertexInputRate::VERTEX }];
         let mut attrs = vec![
             vk::VertexInputAttributeDescription { location: 0, binding: 0, format: vk::Format::R32G32B32A32_SFLOAT, offset: 0 },
@@ -1292,7 +1312,7 @@ impl Renderer {
         for i in 0..8 {
             attrs.push(vk::VertexInputAttributeDescription { location: 3 + i, binding: 0, format: vk::Format::R32G32B32_SFLOAT, offset: 48 + 12 * i });
         }
-        let vertex_input = vk::PipelineVertexInputStateCreateInfo::default().vertex_binding_descriptions(&binding).vertex_attribute_descriptions(&attrs);
+        let vertex_input = if packed { vk::PipelineVertexInputStateCreateInfo::default() } else { vk::PipelineVertexInputStateCreateInfo::default().vertex_binding_descriptions(&binding).vertex_attribute_descriptions(&attrs) };
         let assembly = vk::PipelineInputAssemblyStateCreateInfo::default().topology(vk::PrimitiveTopology::TRIANGLE_LIST);
         let viewport = vk::PipelineViewportStateCreateInfo::default().viewport_count(1).scissor_count(1);
         let legacy = modules.render_pass != vk::RenderPass::null();
@@ -1321,7 +1341,11 @@ impl Renderer {
         let formats = [COLOR_FORMAT];
         let mut rendering = vk::PipelineRenderingCreateInfo::default().color_attachment_formats(&formats).depth_attachment_format(DEPTH_FORMAT);
         let stages = [
-            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules.vs).name(c"vs"),
+            if packed {
+                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules.vs_packed).name(c"vs_packed")
+            } else {
+                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules.vs).name(c"vs")
+            },
             vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(fs_module).name(fs_name),
         ];
         let info = vk::GraphicsPipelineCreateInfo::default()
@@ -1345,7 +1369,8 @@ impl Renderer {
     /// startup screen, [`Renderer::pipelines_compiling`]).
     fn start_prewarm(&mut self) {
         // On Vulkan 1.1 the keys carry cull and depth state, which these don't.
-        let mut keys: Vec<u32> = if self.passes.is_some() { Vec::new() } else { render::STARTUP_KEYS.to_vec() };
+        // Each also packed (the GPU transforms most draws' vertices).
+        let mut keys: Vec<u32> = if self.passes.is_some() { Vec::new() } else { render::STARTUP_KEYS.iter().flat_map(|&k| [k, k | PACKED]).collect() };
         if let Some(text) = self.pipeline_cache_path.as_ref().and_then(|p| std::fs::read_to_string(p.with_extension("keys")).ok()) {
             keys.extend(text.lines().filter_map(|l| u32::from_str_radix(l.trim(), 16).ok()));
         }
@@ -2172,6 +2197,33 @@ impl Renderer {
             writes.push(vk::WriteDescriptorSet::default().dst_set(set).dst_binding(2).descriptor_type(vk::DescriptorType::SAMPLER).image_info(&samplers));
         }
         let move_infos = moves.map(|(buffer, ranges)| ranges.map(|(offset, range)| [vk::DescriptorBufferInfo { buffer, offset, range }]));
+        // Packed draws: their vertices, the XF blocks and states, and per
+        // packed draw (its instance index in `record_efb`) its shading and state.
+        let packed_infos = if out.states.is_empty() {
+            None
+        } else {
+            const ALIGN: u64 = 256;
+            let draws: Vec<[u32; 2]> = out.cmds.iter().filter_map(|c| if let Cmd::Draw(d) = c { (d.state != NO_STATE).then_some([d.shading, d.state]) } else { None }).collect();
+            let parts: [&[u8]; 4] = [as_bytes(&out.packed), as_bytes(&out.xf_blocks), as_bytes(&out.states), as_bytes(&draws)];
+            let mut ranges = [(0u64, 0u64); 4];
+            let mut at = 0u64;
+            for (r, part) in ranges.iter_mut().zip(&parts) {
+                at = at.next_multiple_of(ALIGN);
+                *r = (at, (part.len() as u64).max(16));
+                at += r.1;
+            }
+            let buffer = self.frame_buffer(f, 4, at, vk::BufferUsageFlags::STORAGE_BUFFER)?;
+            let dst = self.frame_bytes(f, 4);
+            for ((offset, _), part) in ranges.iter().zip(&parts) {
+                dst[*offset as usize..*offset as usize + part.len()].copy_from_slice(part);
+            }
+            Some(ranges.map(|(offset, range)| [vk::DescriptorBufferInfo { buffer, offset, range }]))
+        };
+        if let Some(infos) = &packed_infos {
+            for (i, info) in infos.iter().enumerate() {
+                writes.push(vk::WriteDescriptorSet::default().dst_set(set).dst_binding(6 + i as u32).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(info));
+            }
+        }
         if let Some(infos) = &move_infos {
             for (i, info) in infos.iter().enumerate() {
                 writes.push(vk::WriteDescriptorSet::default().dst_set(set).dst_binding(3 + i as u32).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).buffer_info(info));
@@ -2307,9 +2359,14 @@ impl Renderer {
         self.baked_hashes.clear();
         self.baked_hashes.resize(out.shadings.len(), None);
         self.collect_specialized();
+        // Packed draws are numbered in command order (`write_draw_states`).
+        let mut packed_draws = 0u32;
         for c in &out.cmds {
             match *c {
                 Cmd::Draw(d) => {
+                    let packed = d.state != NO_STATE;
+                    let slot = packed_draws;
+                    packed_draws += u32::from(packed);
                     if d.scissor.w == 0 || d.scissor.h == 0 || d.raster.cull == 3 {
                         continue;
                     }
@@ -2321,7 +2378,7 @@ impl Renderer {
                     }
                     let early = out.shadings.get(d.shading as usize).is_some_and(|s| rasterised_depth(&s.0));
                     let z = d.raster.zmode;
-                    let mut key = blend_key(&d.raster) | if early { EARLY_DEPTH } else { 0 };
+                    let mut key = blend_key(&d.raster) | if early { EARLY_DEPTH } else { 0 } | if packed { PACKED } else { 0 };
                     if legacy {
                         key |= d.raster.cull << CULL_SHIFT | (z & 0x1F) << ZMODE_SHIFT;
                     }
@@ -2351,7 +2408,9 @@ impl Renderer {
                             dev.cmd_set_depth_compare_op(cmd, vk::CompareOp::from_raw(((z >> 1) & 7) as i32));
                         }
                         state = Some((scissor, d.raster.cull, z));
-                        dev.cmd_draw_indexed(cmd, d.count, 1, d.first, 0, d.shading);
+                        // The instance index: the shading block, or for a packed
+                        // draw its slot in binding 9 (which holds its shading).
+                        dev.cmd_draw_indexed(cmd, d.count, 1, d.first, 0, if packed { slot } else { d.shading });
                     }
                     draws += 1;
                 }
@@ -2698,6 +2757,7 @@ impl Drop for Renderer {
             buffers.extend(f.shadings.take());
             buffers.extend(f.staging.take());
             buffers.extend(f.readback.take());
+            buffers.extend(f.packed.take());
         }
         for i in images {
             self.destroy_image(i);

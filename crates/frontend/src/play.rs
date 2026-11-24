@@ -283,6 +283,8 @@ struct App {
     sent_input: Option<[Input; REMOTES]>,
     /// What the game thread was last told about interpolation records.
     sent_interpolate: Option<bool>,
+    /// What `ToEmu::GpuVertices` last said.
+    sent_gpu_vertices: Option<bool>,
     /// A `--shot` to take from the next in-between frame.
     pending_shot: Option<PathBuf>,
     remotes: [RemoteStatus; REMOTES],
@@ -645,6 +647,14 @@ impl App {
         if self.sent_interpolate != Some(interpolate) {
             let _ = emu.to_emu.send(ToEmu::Interpolate(interpolate));
             self.sent_interpolate = Some(interpolate);
+        }
+        // The Vulkan renderer transforms vertices on the GPU (set
+        // NSMBW_CPU_VERTICES to compare with the CPU's). The renderer probe
+        // draws fields on other renderers too, which cannot.
+        let gpu_vertices = self.renderer.as_ref().is_some_and(|r| r.api() == render::Api::Vulkan) && std::env::var_os("NSMBW_CPU_VERTICES").is_none() && std::env::var_os("NSMBW_PROBE_FIELD").is_none();
+        if self.sent_gpu_vertices != Some(gpu_vertices) {
+            let _ = emu.to_emu.send(ToEmu::GpuVertices(gpu_vertices));
+            self.sent_gpu_vertices = Some(gpu_vertices);
         }
         self.inputs.set_player(emu.player());
         #[cfg(windows)]
@@ -1799,6 +1809,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         inputs: input::Inputs::new(),
         sent_input: None,
         sent_interpolate: None,
+        sent_gpu_vertices: None,
         pending_shot: None,
         remotes: [RemoteStatus::default(); REMOTES],
         menus: None,

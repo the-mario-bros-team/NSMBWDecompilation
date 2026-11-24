@@ -387,6 +387,9 @@ impl Render {
         let gameplay = *GAMEPLAY.lock().unwrap();
         let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, net, load_state, script, gameplay, ..EmuOptions::default() });
         let _ = emu.to_emu.send(ToEmu::Interpolate(false));
+        // The GPU transforms vertices; a file named `cpu-vertices` in the
+        // app's files leaves it to the CPU (for comparing).
+        let _ = emu.to_emu.send(ToEmu::GpuVertices(!Path::new("cpu-vertices").exists()));
         if self.paused {
             let _ = emu.to_emu.send(ToEmu::Pause(true));
         }

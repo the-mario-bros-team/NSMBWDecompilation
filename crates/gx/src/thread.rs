@@ -196,6 +196,7 @@ enum Msg {
     Writeback(u32, Vec<u8>),
     Recycle(Box<Output>),
     Records(bool),
+    GpuVertices(bool),
     Patches(bool),
     /// Reply once everything before has been decoded.
     Sync,
@@ -267,6 +268,7 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
             Msg::Writeback(addr, bytes) => gpu.note_writeback(addr, &bytes),
             Msg::Recycle(out) => gpu.recycle(*out),
             Msg::Records(on) => gpu.records_next = on,
+            Msg::GpuVertices(on) => gpu.gpu_vertices = on,
             Msg::Patches(on) => gpu.patches = on,
             Msg::Drop(on) => gpu.set_drop(on),
             Msg::Wide(a) => gpu.set_wide(a),
@@ -632,6 +634,18 @@ impl GpuPort {
         match self {
             Self::Inline(gpu) => gpu.records_next = on,
             Self::Thread(t) => t.send(Msg::Records(on)),
+        }
+    }
+
+    /// Whether triangles' vertices are left for the renderer to transform
+    /// ([`Gpu::gpu_vertices`]), from the next draw on.
+    pub fn set_gpu_vertices(&mut self, on: bool) {
+        match self {
+            Self::Inline(gpu) => gpu.gpu_vertices = on,
+            Self::Thread(t) => {
+                t.flush();
+                t.send(Msg::GpuVertices(on));
+            }
         }
     }
 

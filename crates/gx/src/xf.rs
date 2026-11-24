@@ -559,6 +559,223 @@ fn light_channel(d: &DrawSetup, ctl: u32, vertex: [f32; 4], c: usize, pos: [f32;
     std::array::from_fn(|k| mat[k] * sum[k].clamp(0.0, 1.0))
 }
 
+/// XF state for draws the renderer transforms ([`crate::Output::packed`]),
+/// as blocks of words in [`crate::Output::xf_blocks`]: a setup block
+/// (projection, viewport, lighting channels, lights, texgens) and a matrix
+/// block per change of matrices. `render`'s `packed.wgsl` reads them at
+/// these offsets; [`transform_packed`] is the same on the CPU.
+pub mod block {
+    /// Setup block: projection (6 floats), orthographic (0/1), viewport
+    /// (6: wd, ht, zRange, xOrig, yOrig, farZ), channels in use, the colour
+    /// and alpha control words of channels 0 and 1, material and ambient
+    /// colours (2 x RGBA floats each), texgens in use, dual texture (0/1),
+    /// whether lighting needs the normal and the normal matrix, the eight
+    /// texgen info words, the eight post matrices (3 rows of 4), a mask of
+    /// the texgens normalised before theirs, and the eight lights (16 words
+    /// each: RGBA colour, cos a0-a2, dist k0-k2, position, direction).
+    pub const PROJECTION: usize = 0;
+    pub const ORTHO: usize = 6;
+    pub const VIEWPORT: usize = 7;
+    pub const CHANS: usize = 13;
+    pub const CTL: usize = 14;
+    pub const MAT: usize = 18;
+    pub const AMB: usize = 26;
+    pub const GENS: usize = 34;
+    pub const DUAL: usize = 35;
+    pub const NEED_NORMAL: usize = 36;
+    pub const NEED_NRM_MTX: usize = 37;
+    pub const GEN_INFO: usize = 38;
+    pub const POST: usize = 46;
+    pub const POST_NORM: usize = 142;
+    pub const LIGHTS: usize = 143;
+    pub const SETUP_WORDS: usize = 272;
+
+    /// Matrix block, both kinds: the scissor offset (x, y; floats).
+    pub const SCREEN: usize = 0;
+    /// The draw's own matrices, for vertices without matrix indices:
+    /// position (3 rows of 4), normal (3 of 3), and each texgen's (3 of 4).
+    pub const POS: usize = 2;
+    pub const NRM: usize = 14;
+    pub const TEX: usize = 23;
+    pub const MATRIX_WORDS: usize = 119;
+    /// All of matrix memory, for vertices with matrix indices: XF words
+    /// 0x000-0x0FF (position and texture matrices) and 0x400-0x467
+    /// (normal matrices).
+    pub const MEM: usize = 2;
+    pub const NRM_MEM: usize = 258;
+    pub const FULL_MATRIX_WORDS: usize = 362;
+
+    /// A state's flags ([`crate::Output::states`] word 3): the matrix block
+    /// holds all of matrix memory.
+    pub const FULL: u32 = 1;
+}
+
+impl Xf {
+    /// Appends the setup block for `d` (built by [`Xf::setup`] from this
+    /// state).
+    pub(crate) fn write_setup_block(&self, d: &DrawSetup, out: &mut Vec<u32>) {
+        let at = out.len();
+        out.resize(at + block::SETUP_WORDS, 0);
+        let b = &mut out[at..];
+        let fl = |v: &[f32]| v.iter().map(|x| x.to_bits()).collect::<Vec<u32>>();
+        b[block::PROJECTION..block::PROJECTION + 6].copy_from_slice(&fl(&d.projection));
+        b[block::ORTHO] = u32::from(d.ortho);
+        b[block::VIEWPORT..block::VIEWPORT + 6].copy_from_slice(&fl(&d.viewport));
+        b[block::CHANS] = d.chans as u32;
+        b[block::CTL..block::CTL + 4].copy_from_slice(&[d.ctl[0][0], d.ctl[0][1], d.ctl[1][0], d.ctl[1][1]]);
+        b[block::MAT..block::MAT + 8].copy_from_slice(&fl(d.mat.as_flattened()));
+        b[block::AMB..block::AMB + 8].copy_from_slice(&fl(d.amb.as_flattened()));
+        b[block::GENS] = d.gens as u32;
+        b[block::DUAL] = u32::from(d.dual);
+        b[block::NEED_NORMAL] = u32::from(d.need_normal);
+        b[block::NEED_NRM_MTX] = u32::from(d.need_nrm_mtx);
+        b[block::GEN_INFO..block::GEN_INFO + 8].copy_from_slice(&d.gen_info);
+        for (i, (norm, rows)) in d.post.iter().enumerate() {
+            b[block::POST + 12 * i..block::POST + 12 * i + 12].copy_from_slice(&fl(rows.as_flattened()));
+            b[block::POST_NORM] |= u32::from(*norm) << i;
+        }
+        // All eight lights as XF memory has them: emboss reads a light's
+        // position whether or not a channel is lit.
+        for l in 0..8 {
+            let m = 0x600 + l * 16;
+            let g = |i: usize| self.mem[m + i];
+            let o = block::LIGHTS + 16 * l;
+            b[o..o + 4].copy_from_slice(&fl(&unpack_rgba(g(3))));
+            for i in 0..12 {
+                b[o + 4 + i] = g(4 + i);
+            }
+        }
+    }
+
+    /// Appends a matrix block: the scissor offset `screen`, then all of
+    /// matrix memory (`full`, for vertices with matrix indices) or the
+    /// default matrices' rows.
+    pub(crate) fn write_matrix_block(&self, screen: Screen, full: bool, out: &mut Vec<u32>) {
+        let mem = self.words();
+        out.extend([screen.offset_x.to_bits(), screen.offset_y.to_bits()]);
+        if full {
+            out.extend_from_slice(&mem[..0x100]);
+            out.extend_from_slice(&mem[0x400..0x468]);
+            return;
+        }
+        let (pm, tm) = self.default_matrices();
+        let v = RawVertex { pnmtx: pm, texmtx: tm, ..Default::default() };
+        for r in 0..3 {
+            out.extend(mem.pos_row(&v, r).map(f32::to_bits));
+        }
+        out.extend(mem.nrm_rows(&v).as_flattened().iter().map(|x| x.to_bits()));
+        for i in 0..8 {
+            for r in 0..3 {
+                out.extend(mem.tex_row(&v, i, r).map(f32::to_bits));
+            }
+        }
+    }
+}
+
+impl DrawSetup {
+    /// The setup a setup block holds, for vertices whose format carries the
+    /// colours `has_color`, at scissor offset `screen`.
+    fn from_block(b: &[u32], screen: Screen, has_color: [bool; 2]) -> Self {
+        let f = |i: usize| f32::from_bits(b[i]);
+        let v4 = |i: usize| -> [f32; 4] { std::array::from_fn(|k| f(i + k)) };
+        let v3 = |i: usize| -> [f32; 3] { std::array::from_fn(|k| f(i + k)) };
+        let rows = |i: usize| -> [[f32; 4]; 3] { std::array::from_fn(|r| v4(i + 4 * r)) };
+        DrawSetup {
+            screen,
+            has_color,
+            projection: std::array::from_fn(|i| f(block::PROJECTION + i)),
+            ortho: b[block::ORTHO] != 0,
+            viewport: std::array::from_fn(|i| f(block::VIEWPORT + i)),
+            need_normal: b[block::NEED_NORMAL] != 0,
+            need_nrm_mtx: b[block::NEED_NRM_MTX] != 0,
+            chans: b[block::CHANS] as usize,
+            ctl: [[b[block::CTL], b[block::CTL + 1]], [b[block::CTL + 2], b[block::CTL + 3]]],
+            mat: [v4(block::MAT), v4(block::MAT + 4)],
+            amb: [v4(block::AMB), v4(block::AMB + 4)],
+            lights: std::array::from_fn(|l| {
+                let o = block::LIGHTS + 16 * l;
+                Light { color: v4(o), cos_a: v3(o + 4), dist_k: v3(o + 7), pos: v3(o + 10), dir: v3(o + 13) }
+            }),
+            gens: b[block::GENS] as usize,
+            gen_info: std::array::from_fn(|i| b[block::GEN_INFO + i]),
+            dual: b[block::DUAL] != 0,
+            post: std::array::from_fn(|i| ((b[block::POST_NORM] >> i) & 1 != 0, rows(block::POST + 12 * i))),
+        }
+    }
+}
+
+/// A matrix block's matrices.
+struct BlockMatrices<'a> {
+    b: &'a [u32],
+    full: bool,
+}
+
+impl BlockMatrices<'_> {
+    fn f(&self, i: usize) -> f32 {
+        f32::from_bits(self.b[i])
+    }
+
+    /// Row `r` of the matrix at row index `idx` in the block's memory.
+    fn mem_row(&self, idx: usize, r: usize) -> [f32; 4] {
+        let at = (idx * 4 + r * 4) & 0xFF;
+        std::array::from_fn(|c| self.f(block::MEM + ((at + c) & 0xFF)))
+    }
+}
+
+impl Matrices for BlockMatrices<'_> {
+    fn pos_row(&self, v: &RawVertex, r: usize) -> [f32; 4] {
+        if self.full {
+            self.mem_row(v.pnmtx as usize, r)
+        } else {
+            std::array::from_fn(|c| self.f(block::POS + 4 * r + c))
+        }
+    }
+
+    fn nrm_rows(&self, v: &RawVertex) -> [[f32; 3]; 3] {
+        if self.full {
+            let nb = (v.pnmtx as usize & 31) * 3;
+            std::array::from_fn(|r| std::array::from_fn(|c| self.f(block::NRM_MEM + nb + r * 3 + c)))
+        } else {
+            std::array::from_fn(|r| std::array::from_fn(|c| self.f(block::NRM + 3 * r + c)))
+        }
+    }
+
+    fn tex_row(&self, v: &RawVertex, i: usize, r: usize) -> [f32; 4] {
+        if self.full {
+            self.mem_row(v.texmtx[i] as usize, r)
+        } else {
+            std::array::from_fn(|c| self.f(block::TEX + 12 * i + 4 * r + c))
+        }
+    }
+}
+
+/// What the renderer's `vs_packed` computes for the packed vertex at word
+/// `at` of `packed`, drawn with `state` (an [`crate::Output::states`]
+/// entry) over `blocks` ([`crate::Output::xf_blocks`]), on the CPU: the
+/// same as transforming it before it was packed, bit for bit.
+pub fn transform_packed(blocks: &[u32], state: [u32; 4], packed: &[u32], at: usize) -> Vertex {
+    let pack = crate::vertex::Pack::from_bits(state[2]);
+    let full = state[3] & block::FULL != 0;
+    let setup = &blocks[state[0] as usize..state[0] as usize + block::SETUP_WORDS];
+    let mb = &blocks[state[1] as usize..state[1] as usize + if full { block::FULL_MATRIX_WORDS } else { block::MATRIX_WORDS }];
+    let screen = Screen { offset_x: f32::from_bits(mb[block::SCREEN]), offset_y: f32::from_bits(mb[block::SCREEN + 1]) };
+    let d = DrawSetup::from_block(setup, screen, pack.colors());
+    let v = pack.read(&packed[at..at + pack.words as usize], &RawVertex { color: [[1.0; 4]; 2], ..Default::default() });
+    // Emboss reads the light positions from XF memory.
+    let mut mem = [0u32; 0x800];
+    for l in 0..8 {
+        for k in 0..3 {
+            mem[0x600 + 16 * l + 10 + k] = setup[block::LIGHTS + 16 * l + 10 + k];
+        }
+    }
+    let mut out = std::mem::MaybeUninit::<Vertex>::uninit();
+    // SAFETY: `transform_one` writes every field of `out`.
+    unsafe {
+        transform_one(&mem, &BlockMatrices { b: mb, full }, &v, &d, out.as_mut_ptr());
+        out.assume_init()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -609,6 +826,81 @@ mod tests {
         let bits = |v: &[Vertex]| -> Vec<u32> { v.iter().flat_map(|v| v.pos.iter().chain(v.color.iter().flatten()).chain(v.tex.iter().flatten()).map(|f| f.to_bits()).collect::<Vec<_>>()).collect() };
         assert_eq!(bits(&a), bits(&b));
         assert!(a.iter().any(|v| v.tex[1] != [0.0; 3]) && a.iter().any(|v| v.color[0] != [0.0; 4]));
+    }
+
+    /// Blocks and packed vertices, transformed as the renderer does
+    /// ([`transform_packed`]), give the CPU transform's vertices bit for bit:
+    /// lit channels (spot, specular and plain lights), emboss and colour
+    /// texgens, per-vertex matrix indices (all of matrix memory) and NBT.
+    #[test]
+    fn packed_blocks_match_the_cpu() {
+        for full in [false, true] {
+            let mut xf = Xf::default();
+            for (i, w) in xf.mem.iter_mut().enumerate() {
+                *w = (((i * 71 % 113) as f32 - 56.0) / 11.0).to_bits();
+            }
+            // Light colours as RGBA8.
+            for l in 0..8 {
+                xf.mem[0x600 + 16 * l + 3] = 0x8040_C0FF ^ (l as u32 * 0x1111_1111);
+            }
+            for (i, v) in [0.01f32, 0.3, 0.02, -0.2, -0.5, 3.0].iter().enumerate() {
+                xf.regs[0x20 + i] = v.to_bits();
+            }
+            for (i, v) in [320.0f32, -240.0, 16_777_215.0, 662.0, 582.0, 16_777_215.0].iter().enumerate() {
+                xf.regs[0x1A + i] = v.to_bits();
+            }
+            xf.regs[0x09] = 2;
+            xf.regs[0x0A] = 0x2040_6080;
+            xf.regs[0x0C] = 0x8040_20FF;
+            xf.regs[0x0D] = 0x1122_3344;
+            // Channel 0: lit by lights 0-3, attenuation, spot; its alpha lit
+            // without attenuation; channel 1: specular (attenuation, no spot).
+            xf.regs[0x0E] = 0x1 | 0x2 | (0xF << 2) | (2 << 7) | (1 << 9) | (1 << 10);
+            xf.regs[0x10] = 0x2 | (0x3 << 2) | (1 << 7) | 0x40;
+            xf.regs[0x0F] = 0x2 | (0x1 << 11) | (1 << 10) | (2 << 7);
+            xf.regs[0x11] = 0x700;
+            xf.regs[0x12] = 1;
+            xf.regs[0x18] = 3 | (6 << 6) | (9 << 12) | (12 << 18) | (15 << 24);
+            xf.regs[0x3F] = 5;
+            // Texgens: tex0, normal (STQ, normalised after), emboss of 0 by
+            // light 2, colour 1, binormal (STQ).
+            xf.regs[0x40] = 5 << 7;
+            xf.regs[0x41] = (1 << 7) | 2 | 4;
+            xf.regs[0x42] = (1 << 4) | (2 << 15);
+            xf.regs[0x43] = 3 << 4;
+            xf.regs[0x44] = (4 << 7) | 2 | 4;
+            for i in 0..5 {
+                xf.regs[0x50 + i] = (3 * i as u32 + 1) | if i == 1 { 0x100 } else { 0 };
+            }
+            let (pm, tm) = xf.default_matrices();
+            let raws: Vec<RawVertex> = (0..5)
+                .map(|k| {
+                    let k = k as f32;
+                    let (p, t) = if full { (7 + 2 * k as u8, [k as u8 * 3, 9, 12, 15, 18, 21, 24, 27]) } else { (pm, tm) };
+                    RawVertex { pnmtx: p, texmtx: t, pos: [k, 2.0 * k - 3.0, 0.5 * k - 1.0], nbt: [[0.3, k, -1.0], [1.0, 0.2 * k, 0.0], [0.0, -1.0, k]], color: [[0.5, 0.25, k / 16.0, 1.0], [0.1, 0.2, 0.3, k / 16.0]], tex: [[k / 4.0, 1.0 - k / 4.0], [k, -k], [0.0; 2], [0.0; 2], [0.0; 2], [0.0; 2], [0.0; 2], [0.0; 2]] }
+                })
+                .collect();
+            // Colours as packing keeps them (8-bit).
+            let raws: Vec<RawVertex> = raws.into_iter().map(|mut v| { v.color = v.color.map(|c| c.map(|x| (x * 255.0).round() / 255.0)); v }).collect();
+            let screen = Screen { offset_x: 342.0, offset_y: 340.0 };
+            let setup = xf.setup(screen, [true, true]);
+            let mut blocks = Vec::new();
+            xf.write_setup_block(&setup, &mut blocks);
+            let mb = blocks.len() as u32;
+            xf.write_matrix_block(screen, full, &mut blocks);
+            let pack = crate::vertex::Pack::from_bits(u32::from(full) | 2 | 9 << 2 | 0x40 | 0x80 | 0x3 << 8 | (if full { 3 } else { 0 } + 3 + 9 + 2 + 4) << 16);
+            let state = [0, mb, pack.bits(), if full { block::FULL } else { 0 }];
+            let mut cpu = Vec::new();
+            xf.transform_into(&raws, &setup, &mut cpu, false);
+            for (v, want) in raws.iter().zip(&cpu) {
+                let mut words = Vec::new();
+                pack.write(v, &mut words);
+                let got = transform_packed(&blocks, state, &words, 0);
+                let bits = |v: &Vertex| -> Vec<u32> { v.pos.iter().chain(v.color.iter().flatten()).chain(v.tex.iter().flatten()).map(|f| f.to_bits()).collect() };
+                assert_eq!(bits(&got), bits(want), "full {full}");
+            }
+            assert!(cpu.iter().any(|v| v.color[0] != v.color[1] && v.tex[2] != [0.0; 3]));
+        }
     }
 
     #[test]

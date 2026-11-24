@@ -143,6 +143,9 @@ pub enum ToEmu {
     Recycle(Box<gx::Output>),
     /// Whether fields should carry frame-interpolation records.
     Interpolate(bool),
+    /// Whether the renderer transforms triangles' vertices itself
+    /// (`gx::Gpu::gpu_vertices`: the Vulkan renderer).
+    GpuVertices(bool),
     /// Stop running fields until `Pause(false)` (the Settings window is
     /// open). Ignored in a net game, which the other players keep running.
     Pause(bool),
@@ -394,6 +397,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Input(i) => *live = i,
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
+        ToEmu::GpuVertices(on) => sys.hw.borrow_mut().gpu.set_gpu_vertices(on),
         ToEmu::RealRemote(i, remote) => sys.hw.borrow_mut().ios.bt.set_real(i, remote),
         ToEmu::SyncButton(held) => {
             let mut hw = sys.hw.borrow_mut();
@@ -1175,6 +1179,11 @@ pub fn run_headless(game: PathBuf, opts: EmuOptions, mut perf: Option<crate::per
     let mut emu = Emu::spawn(game, opts);
     // As a window at 60 fps (no frame interpolation) asks for.
     let _ = emu.to_emu.send(ToEmu::Interpolate(false));
+    // GX output as the Vulkan renderer asks for it (for timing checks:
+    // there is no renderer to draw it).
+    if std::env::var_os("NSMBW_GPU_VERTICES").is_some() {
+        let _ = emu.to_emu.send(ToEmu::GpuVertices(true));
+    }
     let mut fields = 0;
     let mut error = None;
     // Ends when the game thread stops and drops its sender.

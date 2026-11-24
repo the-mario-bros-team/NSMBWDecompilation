@@ -19,6 +19,9 @@ pub type Res<T> = Result<T, Box<dyn Error>>;
 pub const UBERSHADER: &str = include_str!("shader.wgsl");
 /// The EFB copy pass (`vs`, `fs`).
 pub const COPY: &str = include_str!("copy.wgsl");
+/// The vertex stage for vertices the GPU transforms (`gx::Output::packed`),
+/// appended to [`UBERSHADER`] by renderers that ask for packed draws.
+pub const PACKED: &str = include_str!("packed.wgsl");
 
 /// Overlay colours: white, black, green, yellow, red, dark grey, grey, blue.
 pub const PALETTE: [[u8; 4]; 8] = [[255, 255, 255, 255], [0, 0, 0, 255], [80, 220, 100, 255], [250, 210, 60, 255], [240, 70, 60, 255], [24, 24, 28, 255], [120, 120, 130, 255], [90, 150, 250, 255]];
