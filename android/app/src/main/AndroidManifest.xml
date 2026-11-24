@@ -8,6 +8,13 @@
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- LAN Play (crates/netplay): rooms found on the Wi-Fi and over Tailscale, games over TCP. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <!-- Check for Updates / Auto Update: GitHub's latest release, its APK handed to the system installer. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:allowBackup="false"
@@ -38,6 +45,27 @@
             android:theme="@style/GameTheme"
             android:configChanges="layoutDirection|locale|grammaticalGender|fontScale|fontWeightAdjustment|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation" />
 
+        <!-- Xiaomi Mode (AppSettings.gameInMainProcess): the same game in the main process, for phones
+             whose system ends an app's extra processes. Leaving it starts the main process afresh. -->
+        <activity
+            android:name=".MainProcessGameActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorLandscape"
+            android:resizeableActivity="false"
+            android:preferMinimalPostProcessing="true"
+            android:theme="@style/GameTheme"
+            android:configChanges="layoutDirection|locale|grammaticalGender|fontScale|fontWeightAdjustment|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation" />
+
+        <!-- Starts the main process afresh after a game that ran in it. -->
+        <activity
+            android:name=".RestartActivity"
+            android:exported="false"
+            android:process=":restart"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
@@ -47,5 +75,8 @@
             android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/GameTheme" />
+        <receiver
+            android:name=".UpdateReceiver"
+            android:exported="false" />
     </application>
 </manifest>

@@ -149,7 +149,8 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("Player 1 picks a character too, on the game's own screen (from the next start).", "Le joueur 1 choisit aussi un personnage, sur l'écran du jeu (au prochain démarrage).", "El jugador 1 también elige personaje, en la pantalla del propio juego (desde el próximo inicio)."),
     // Language.
     ("Shows the game's text and these menus in {name}.", "Affiche les textes du jeu et ces menus en {name}.", "Muestra los textos del juego y estos menús en {name}."),
-    // LAN Play.
+    // The Multiplayer screen (LAN Play).
+    ("Multiplayer", "Multijoueur", "Multijugador"),
     ("LAN Play", "Réseau local", "Red local"),
     ("Play with other PCs on your network; each one needs the game.", "Jouez avec d'autres PC de votre réseau ; chacun a besoin du jeu.", "Juega con otros PC de tu red; cada uno necesita el juego."),
     ("Your Room", "Votre salle", "Tu sala"),

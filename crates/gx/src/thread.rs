@@ -232,10 +232,14 @@ pub struct GxThread {
 
 fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply>) {
     let mut events = Vec::new();
+    // Time spent decoding this field (`Output::busy`).
+    let mut busy = std::time::Duration::ZERO;
     for msg in msgs {
         match msg {
             Msg::Data(bytes) => {
+                let t = std::time::Instant::now();
                 gpu.feed(&bytes, &ram, &mut events);
+                busy += t.elapsed();
                 events.clear();
             }
             Msg::Poke { x, y, value, z } => gpu.poke(x, y, value, z),
@@ -255,7 +259,9 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
                 }
             }
             Msg::TakeOutput => {
-                if replies.send(Reply::Output(Box::new(gpu.take_output()))).is_err() {
+                let mut out = gpu.take_output();
+                out.busy[0] = std::mem::take(&mut busy);
+                if replies.send(Reply::Output(Box::new(out))).is_err() {
                     return;
                 }
             }

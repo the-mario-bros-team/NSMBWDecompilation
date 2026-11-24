@@ -8,10 +8,10 @@ use crate::settings::RendererChoice;
 /// A renderer of any backend.
 pub type Renderer = Box<dyn Backend>;
 
-/// The APIs tried for `choice`, in order. Automatic: Vulkan when there is a
-/// Vulkan 1.3 device with dual-source blending and logic ops (what
-/// `vk-render` asks for, so making it fails without one), then Direct3D 12,
-/// then Direct3D 11.
+/// The APIs tried for `choice`, in order. Automatic (Windows): Vulkan when
+/// there is a Vulkan 1.3 (or 1.1) device with dual-source blending and logic
+/// ops (its approximations without them are off then, so making it fails),
+/// then Direct3D 12, then Direct3D 11.
 fn order(choice: RendererChoice) -> &'static [Api] {
     match choice {
         RendererChoice::Auto if cfg!(windows) => &[Api::Vulkan, Api::D3d12, Api::D3d11],
@@ -41,7 +41,16 @@ fn make(api: Api, window: Option<(RawDisplayHandle, RawWindowHandle)>, opts: Opt
 fn first(choice: RendererChoice, window: Option<(RawDisplayHandle, RawWindowHandle)>, opts: Options) -> Result<Renderer, String> {
     let mut failed = Vec::new();
     for &api in order(choice) {
-        match make(api, window, opts.clone()) {
+        // Automatic prefers Direct3D, which has both, to Vulkan's approximations.
+        let strict = choice == RendererChoice::Auto && cfg!(windows) && api == Api::Vulkan;
+        if strict {
+            vk_render::set_compat(vk_render::Compat::Off);
+        }
+        let made = make(api, window, opts.clone());
+        if strict {
+            vk_render::set_compat(vk_render::Compat::Auto);
+        }
+        match made {
             Ok(r) => {
                 for f in &failed {
                     println!("renderer: {f}; using {}", api.name());

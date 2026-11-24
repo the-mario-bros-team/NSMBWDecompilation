@@ -27,13 +27,16 @@ import java.util.Locale;
 
 /**
  * Start screen (NSMB-Wii-Recompilation's, trimmed to what this port has): Play, the language, Help,
- * Settings, Edit Touch Controls, Skip Start Menu, and importing the player's own game the way Dolphin
- * extracts it (the folder, or a zip of it).
+ * Check for Updates and Auto Update, Settings, Edit Touch Controls, Skip Start Menu, Xiaomi Mode, GPU
+ * Driver, importing the player's own game the way Dolphin extracts it (the folder, or a zip of it),
+ * and Download Logs.
  */
 public final class LauncherActivity extends Activity {
     private static final int REQUEST_IMPORT = 1;
     private static final int REQUEST_ZIP = 2;
     private static final int REQUEST_IMAGE = 3;
+    private static final int REQUEST_LOGS = 4;
+    private static final int REQUEST_GPU_DRIVER = 5;
     /** Set by the game's "Start Menu": show this screen even with Skip Start Menu on. */
     static final String EXTRA_SHOW_START_MENU = "showStartMenu";
 
@@ -41,9 +44,23 @@ public final class LauncherActivity extends Activity {
     private TextView skip;
     private TextView status;
     private Button play;
+    private Button lanPlay;
     private View steps;
     private boolean incompleteShown;
     private final Handler main = new Handler(Looper.getMainLooper());
+    private TextView autoUpdate;
+    private TextView mainProcess;
+    private TextView gpuDriver;
+    /** Skip Start Menu with Auto Update on: the game opens once the check finds nothing to install. */
+    private boolean openGameAfterCheck;
+    /** An update waiting for the player to allow installs from this app. */
+    private Updater.Release waitingUpdate;
+    /** An update is being offered or installed: a later check doesn't start another. */
+    private boolean updating;
+    /** When the app last looked for an update (elapsedRealtime), or -1: Auto Update looks again when the
+     *  player comes back after a while. */
+    private static long lastCheck = -1;
+    private static final long CHECK_AGAIN_MS = 5 * 60 * 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +69,13 @@ public final class LauncherActivity extends Activity {
         final Intent launch = getIntent();
         final boolean asked = launch != null && launch.getBooleanExtra(EXTRA_SHOW_START_MENU, false);
         if (savedInstanceState == null && !asked && settings.skipStartMenu() && GameFiles.gameReady(this)) {
-            startActivity(new Intent(this, GameActivity.class));
-            overridePendingTransition(0, 0);
-            finish();
-            return;
+            if (!settings.autoUpdate()) {
+                startActivity(GameActivity.intent(this));
+                overridePendingTransition(0, 0);
+                finish();
+                return;
+            }
+            openGameAfterCheck = true;  // Auto Update first; the game opens once there is nothing to install
         }
         Lang.load(this);
         final int pad = dp(20);
@@ -104,8 +124,22 @@ public final class LauncherActivity extends Activity {
         intro.addView(status, matchWidth(dp(20)));
 
         play = button(Lang.t("Play"), true);
-        play.setOnClickListener(v -> startActivity(new Intent(this, GameActivity.class)));
+        play.setOnClickListener(v -> startActivity(GameActivity.intent(this)));
         intro.addView(play, matchWidth(dp(14)));
+        lanPlay = button(Lang.t("LAN Play"), false);
+        lanPlay.setOnClickListener(v -> LanPlay.show(this));
+        intro.addView(lanPlay, matchWidth(dp(10)));
+
+        final LinearLayout updates = card(Lang.t("Updates"));
+        final Button check = button(Lang.t("Check for Updates"), false);
+        check.setOnClickListener(v -> checkForUpdates(false));
+        updates.addView(check, matchWidth(dp(10)));
+        autoUpdate = toggle(updates, Lang.t("Auto Update"), Lang.t("On: opening the app installs the latest release from "
+                + "GitHub when there is one. Your saves, settings and game files are kept."), v -> {
+                    settings.setAutoUpdate(!settings.autoUpdate());
+                    showToggle(autoUpdate, settings.autoUpdate());
+                });
+        showToggle(autoUpdate, settings.autoUpdate());
 
         final LinearLayout options = card(Lang.t("Options"));
         final Button settingsButton = button(Lang.t("Settings"), false);
@@ -120,6 +154,28 @@ public final class LauncherActivity extends Activity {
                     showToggle(skip, settings.skipStartMenu());
                 });
         showToggle(skip, settings.skipStartMenu());
+        mainProcess = toggle(options, Lang.t("Xiaomi Mode"), Lang.t("On: the game runs in the app's main process. For "
+                + "Xiaomi, Redmi and POCO phones (on by default there), whose system closes the game's own "
+                + "process and leaves a black screen."), v -> {
+                    settings.setGameInMainProcess(!settings.gameInMainProcess());
+                    showToggle(mainProcess, settings.gameInMainProcess());
+                });
+        showToggle(mainProcess, settings.gameInMainProcess());
+        final boolean snapdragon = GpuDrivers.supported();
+        gpuDriver = toggle(options, Lang.t("GPU Driver"), Lang.t(snapdragon
+                ? "Run the game on a driver from a zip, such as Turnip, in place of the phone's own. If a new "
+                + "driver stops the game from starting, Default comes back by itself."
+                : "Only for phones with a Snapdragon chip."), v -> chooseGpuDriver());
+        gpuDriver.setSingleLine(true);
+        gpuDriver.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        gpuDriver.setMaxWidth(dp(180));
+        if (!snapdragon) {
+            final View row = (View) gpuDriver.getParent();
+            row.setOnClickListener(null);
+            row.setClickable(false);
+            row.setAlpha(0.4f);
+        }
+        showGpuDriver();
 
         final LinearLayout gameData = card(Lang.t("Game Data"));
         final LinearLayout stepsBox = new LinearLayout(this);
@@ -161,6 +217,9 @@ public final class LauncherActivity extends Activity {
         imageHelp.setTextColor(MUTED);
         gameData.addView(imageHelp, matchWidth(dp(6)));
 
+        final Button downloadLogs = button(Lang.t("Download Logs (For Github Reports)"), false);
+        downloadLogs.setOnClickListener(v -> LogExport.pickDestination(this, REQUEST_LOGS));
+
         final TextView version = text("NSMBW " + versionText(), 13);
         version.setTextColor(FAINT);
 
@@ -176,8 +235,10 @@ public final class LauncherActivity extends Activity {
             page.addView(intro, new LinearLayout.LayoutParams(left, LinearLayout.LayoutParams.WRAP_CONTENT));
             final LinearLayout cards = new LinearLayout(this);
             cards.setOrientation(LinearLayout.VERTICAL);
-            cards.addView(options, matchWidth(0));
+            cards.addView(updates, matchWidth(0));
+            cards.addView(options, matchWidth(dp(14)));
             cards.addView(gameData, matchWidth(dp(14)));
+            cards.addView(downloadLogs, matchWidth(dp(14)));
             final LinearLayout.LayoutParams cardsParams = new LinearLayout.LayoutParams(right, LinearLayout.LayoutParams.WRAP_CONTENT);
             cardsParams.leftMargin = dp(24);
             page.addView(cards, cardsParams);
@@ -188,8 +249,10 @@ public final class LauncherActivity extends Activity {
             final LinearLayout column = new LinearLayout(this);
             column.setOrientation(LinearLayout.VERTICAL);
             column.addView(intro, matchWidth(0));
-            column.addView(options, matchWidth(dp(20)));
+            column.addView(updates, matchWidth(dp(20)));
+            column.addView(options, matchWidth(dp(14)));
             column.addView(gameData, matchWidth(dp(14)));
+            column.addView(downloadLogs, matchWidth(dp(14)));
             column.addView(version, matchWidth(dp(18)));
             page.addView(column, new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
@@ -197,6 +260,7 @@ public final class LauncherActivity extends Activity {
         scroll.setFillViewport(true);
         scroll.addView(page);
         setContentView(scroll);
+        if (settings.autoUpdate() && savedInstanceState == null) checkForUpdates(true);
     }
 
     @Override
@@ -211,6 +275,231 @@ public final class LauncherActivity extends Activity {
             return;
         }
         refresh();
+        showGpuDriver();
+        if (GpuDrivers.takeFailure(this)) {
+            new AlertDialog.Builder(this).setTitle(Lang.t("GPU Driver"))
+                    .setMessage(Lang.t("The game closed right after starting on the new GPU driver, so it's back on "
+                            + "Default. You can pick that driver again under GPU Driver."))
+                    .setPositiveButton(Lang.t("OK"), null).show();
+        }
+        // Back from "Allow from this source": carry on with the update that waited for it.
+        if (waitingUpdate != null) {
+            final Updater.Release release = waitingUpdate;
+            waitingUpdate = null;
+            if (Updater.canInstall(this)) {
+                install(release);
+            } else {
+                updating = false;
+            }
+        } else if (settings.autoUpdate() && !updating && lastCheck >= 0
+                && android.os.SystemClock.elapsedRealtime() - lastCheck >= CHECK_AGAIN_MS) {
+            // Android often keeps the app in memory: coming back looks again after a while.
+            checkForUpdates(true);
+        }
+    }
+
+    // --- updates -------------------------------------------------------------------------------
+
+    /** Check for Updates (automatic: Auto Update, which says nothing unless there is one to install). */
+    private void checkForUpdates(boolean automatic) {
+        if (updating) return;
+        lastCheck = android.os.SystemClock.elapsedRealtime();
+        final AlertDialog checking = automatic ? null : new AlertDialog.Builder(this)
+                .setMessage(Lang.t("Checking for updates…")).setCancelable(false).show();
+        new Thread(() -> {
+            Updater.Release release = null;
+            String problem = null;
+            try {
+                release = Updater.latest(this);
+            } catch (Exception e) {
+                problem = e.getMessage();
+            }
+            final Updater.Release found = release;
+            final String error = problem;
+            main.post(() -> {
+                if (checking != null) checking.dismiss();
+                if (isFinishing()) return;
+                final String installed = Updater.installedVersion(this);
+                if (found != null && Updater.isNewer(found.version, installed)) {
+                    offerUpdate(found, automatic);
+                    return;
+                }
+                if (openGameAfterCheck) {
+                    openGameAfterCheck = false;
+                    startActivity(GameActivity.intent(this));
+                    finish();
+                    return;
+                }
+                if (automatic) return;
+                final String message = error != null ? Lang.f("Couldn't check for updates: %s", error)
+                        : found == null ? Lang.t("The latest release has no Android download.")
+                        : Lang.f("You have the latest version (%s).", installed);
+                new AlertDialog.Builder(this).setMessage(message).setPositiveButton(Lang.t("OK"), null).show();
+            });
+        }, "update-check").start();
+    }
+
+    /** A newer release: Auto Update installs it, Check for Updates asks first. */
+    private void offerUpdate(Updater.Release release, boolean automatic) {
+        updating = true;
+        openGameAfterCheck = false;
+        if (automatic) {
+            install(release);
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(Lang.f("NSMBW %s is available", release.version))
+                .setMessage(Lang.t("Your saves, settings and game files are kept."))
+                .setPositiveButton(Lang.t("Update"), (d, w) -> install(release))
+                .setNegativeButton(Lang.t("Not Now"), (d, w) -> updating = false)
+                .setOnCancelListener(d -> updating = false)
+                .show();
+    }
+
+    /** Downloads, checks and hands `release` to the system installer, after the install permission. */
+    private void install(Updater.Release release) {
+        if (!Updater.canInstall(this)) {
+            new AlertDialog.Builder(this)
+                    .setMessage(Lang.t("To install updates, let NSMBW install apps: turn on Allow from this source on "
+                            + "the next screen, then come back here."))
+                    .setPositiveButton(Lang.t("Open Settings"), (d, w) -> {
+                        waitingUpdate = release;
+                        startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                Uri.parse("package:" + getPackageName())));
+                    })
+                    .setNegativeButton(Lang.t("Not Now"), (d, w) -> updating = false)
+                    .setOnCancelListener(d -> updating = false)
+                    .show();
+            return;
+        }
+        final ProgressBar bar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        final TextView label = text(Lang.t("Downloading…"), 14);
+        final LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(dp(24), dp(16), dp(24), dp(8));
+        box.addView(bar);
+        box.addView(label);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(Lang.f("Updating to NSMBW %s", release.version)).setView(box).setCancelable(false).show();
+        new Thread(() -> {
+            String error = null;
+            try {
+                Updater.downloadAndInstall(getApplicationContext(), release, (done, total) -> main.post(() -> {
+                    bar.setIndeterminate(total <= 0);
+                    if (total > 0) {
+                        bar.setMax(1000);
+                        bar.setProgress((int) (done * 1000 / total));
+                        label.setText(Lang.f("Downloading… %d of %d MB", done >> 20, total >> 20));
+                    }
+                }));
+            } catch (Exception e) {
+                error = e.getMessage();
+            }
+            final String failed = error;
+            main.post(() -> {
+                if (failed == null) {
+                    // The system takes over (its confirmation, then the new version).
+                    bar.setIndeterminate(true);
+                    label.setText(Lang.f("Installing NSMBW %s…", release.version));
+                    main.postDelayed(() -> {
+                        if (dialog.isShowing()) dialog.dismiss();
+                        updating = false;
+                    }, 4000);
+                    return;
+                }
+                dialog.dismiss();
+                updating = false;
+                new AlertDialog.Builder(this).setMessage(Lang.f("The update failed: %s", failed))
+                        .setPositiveButton(Lang.t("OK"), null).show();
+            });
+        }, "update-download").start();
+    }
+
+    // --- GPU driver ----------------------------------------------------------------------------
+
+    private void showGpuDriver() {
+        if (gpuDriver == null) return;
+        final GpuDrivers.Driver picked = GpuDrivers.supported() ? GpuDrivers.picked(this) : null;
+        gpuDriver.setText(picked != null ? picked.name : Lang.t("Default"));
+        gpuDriver.setTextColor(picked != null ? Color.WHITE : MUTED);
+        final GradientDrawable shape = new GradientDrawable();
+        shape.setCornerRadius(dp(17));
+        shape.setColor(picked != null ? ACCENT : SURFACE);
+        gpuDriver.setBackground(shape);
+    }
+
+    /** Default, the imported drivers, Import… and Delete…. */
+    private void chooseGpuDriver() {
+        final java.util.List<GpuDrivers.Driver> drivers = GpuDrivers.list(this);
+        final GpuDrivers.Driver picked = GpuDrivers.picked(this);
+        final java.util.List<String> labels = new java.util.ArrayList<>();
+        labels.add(Lang.t("Default"));
+        int checked = 0;
+        for (GpuDrivers.Driver d : drivers) {
+            if (picked != null && picked.id.equals(d.id)) checked = labels.size();
+            labels.add(d.name);
+        }
+        labels.add(Lang.t("Import…"));
+        if (!drivers.isEmpty()) labels.add(Lang.t("Delete…"));
+        new AlertDialog.Builder(this)
+                .setTitle(Lang.t("GPU Driver"))
+                .setSingleChoiceItems(labels.toArray(new String[0]), checked, (dialog, which) -> {
+                    dialog.dismiss();
+                    if (which == drivers.size() + 1) {
+                        final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*")
+                                .putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"application/zip", "application/x-zip-compressed", "application/x-zip"});
+                        startActivityForResult(intent, REQUEST_GPU_DRIVER);
+                    } else if (which == drivers.size() + 2) {
+                        deleteGpuDriver(drivers);
+                    } else {
+                        try {
+                            GpuDrivers.pick(this, which == 0 ? null : drivers.get(which - 1));
+                        } catch (java.io.IOException e) {
+                            new AlertDialog.Builder(this).setMessage(e.getMessage()).setPositiveButton(Lang.t("OK"), null).show();
+                        }
+                        showGpuDriver();
+                    }
+                })
+                .setNegativeButton(Lang.t("Cancel"), null)
+                .show();
+    }
+
+    private void deleteGpuDriver(java.util.List<GpuDrivers.Driver> drivers) {
+        final String[] names = new String[drivers.size()];
+        for (int i = 0; i < names.length; ++i) names[i] = drivers.get(i).name;
+        new AlertDialog.Builder(this)
+                .setTitle(Lang.t("Delete a GPU driver"))
+                .setItems(names, (dialog, which) -> {
+                    try {
+                        GpuDrivers.delete(this, drivers.get(which));
+                    } catch (java.io.IOException e) {
+                        new AlertDialog.Builder(this).setMessage(e.getMessage()).setPositiveButton(Lang.t("OK"), null).show();
+                    }
+                    showGpuDriver();
+                })
+                .setNegativeButton(Lang.t("Cancel"), null)
+                .show();
+    }
+
+    /** `job` on a worker thread under a spinner titled `title`; then its message, or its error's. */
+    private void runInBackground(String title, java.util.concurrent.Callable<String> job) {
+        final ProgressBar spinner = new ProgressBar(this);
+        spinner.setPadding(0, dp(16), 0, dp(16));
+        final AlertDialog dialog = new AlertDialog.Builder(this).setTitle(title).setView(spinner).setCancelable(false).show();
+        new Thread(() -> {
+            String message;
+            try {
+                message = job.call();
+            } catch (Exception e) {
+                message = e.getMessage();
+            }
+            final String shown = message;
+            main.post(() -> {
+                dialog.dismiss();
+                showGpuDriver();
+                new AlertDialog.Builder(this).setMessage(shown).setPositiveButton(Lang.t("OK"), null).show();
+            });
+        }, "background").start();
     }
 
     private void refresh() {
@@ -228,6 +517,7 @@ public final class LauncherActivity extends Activity {
             showStatus(Lang.t("Game data is installed and checked."), GREEN);
         }
         play.setEnabled(present && problem == null);
+        lanPlay.setEnabled(present && problem == null);
         steps.setVisibility(present && problem == null ? View.GONE : View.VISIBLE);
     }
 
@@ -310,7 +600,22 @@ public final class LauncherActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
         final Uri uri = data.getData();
-        if (requestCode == REQUEST_IMPORT) {
+        if (requestCode == REQUEST_LOGS) {
+            final String version = versionText();
+            runInBackground(Lang.t("Download Logs (For Github Reports)"), () -> {
+                try {
+                    final int runs = LogExport.write(this, uri, version);
+                    return runs == 0 ? Lang.t("Saved, but there are no game logs yet: play once, then download them again.")
+                            : runs == 1 ? Lang.t("Saved the logs of the last game session. Attach the zip to your GitHub issue.")
+                            : Lang.f("Saved the logs of the last %d game sessions. Attach the zip to your GitHub issue.", runs);
+                } catch (java.io.IOException e) {
+                    return Lang.f("Could not save the logs: %s", e.getMessage());
+                }
+            });
+        } else if (requestCode == REQUEST_GPU_DRIVER) {
+            runInBackground(Lang.t("Importing the GPU driver"),
+                    () -> Lang.f("%s is ready. The game uses it from its next start.", GpuDrivers.importZip(this, uri).name));
+        } else if (requestCode == REQUEST_IMPORT) {
             runImport(progress -> GameFiles.copyFolder(this, uri, progress));
         } else if (requestCode == REQUEST_ZIP) {
             runImport(progress -> GameFiles.copyZip(this, uri, progress));

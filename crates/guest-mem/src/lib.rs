@@ -15,6 +15,8 @@
 mod flat;
 pub mod snap;
 
+use std::sync::atomic::{AtomicU32, AtomicU8, Ordering};
+
 pub const MEM1_SIZE: usize = 24 << 20;
 pub const MEM2_SIZE: usize = 64 << 20;
 pub const LOCKED_CACHE_SIZE: usize = 16 << 10;
@@ -97,7 +99,20 @@ fn page_table() -> Box<[u32; 1024]> {
 struct RamBuf {
     ptr: *mut u8,
     _backing: flat::Backing,
+    /// Per 4 KiB page of RAM: [`PAGE_CODE`], [`PAGE_WATCHED`].
+    flags: Box<[AtomicU8]>,
+    /// Per [`CHUNK`] of RAM: bumped by every write to a watched page in it
+    /// ([`RamView::chunk_gen`]).
+    chunk_gen: Box<[AtomicU32]>,
 }
+
+/// A page holds decoded code: writes to it are counted ([`Mem::code_gen`]).
+const PAGE_CODE: u8 = 1;
+/// A reader on another thread caches something read from this page (the GX
+/// thread: a large texture): writes to it bump its chunk's generation.
+const PAGE_WATCHED: u8 = 2;
+/// Bytes per write generation of watched memory ([`RamView::chunk_gen`]).
+pub const CHUNK: usize = 64 << 10;
 
 // SAFETY: plain memory; see `RamView` for how it is shared between threads.
 unsafe impl Send for RamBuf {}
@@ -107,6 +122,12 @@ unsafe impl Sync for RamBuf {}
 pub trait Ram {
     /// RAM bytes at `addr`, or `None` for MMIO or unmapped addresses.
     fn ram(&self, addr: u32, len: usize) -> Option<&[u8]>;
+
+    /// A view that can watch for writes ([`RamView::watch`]), when the
+    /// reader is on another thread than the guest.
+    fn view(&self) -> Option<&RamView> {
+        None
+    }
 }
 
 /// A read-only view of guest RAM for another thread (the GX thread).
@@ -131,6 +152,48 @@ impl Ram for RamView {
             Loc::Mmio => None,
         }
     }
+
+    fn view(&self) -> Option<&RamView> {
+        Some(self)
+    }
+}
+
+/// Watched memory: what a reader on another thread uses to tell whether RAM
+/// it read before has been written since, without reading it again.
+///
+/// The reader watches a [`CHUNK`] ([`RamView::watch`]); from then on every
+/// write to it ([`Mem`]'s stores, [`Mem::ram_mut`]) bumps the chunk's
+/// generation ([`RamView::chunk_gen`]). A write the guest made while the
+/// watch was being set up may not count: it is visible to the reader once
+/// the two threads have synchronised (a channel message each way), so what
+/// the reader reads after that is current, and from then on any change
+/// moves the generation. Stores relative to r1, r2 and r13 (stack and small
+/// data, [`Mem::raw_write_u32`] and co.) are not counted.
+impl RamView {
+    /// Offset in RAM of `len` bytes at `addr`, if they are RAM.
+    pub fn offset(&self, addr: u32, len: usize) -> Option<usize> {
+        match locate(addr, len)? {
+            Loc::Ram(off) => Some(off),
+            Loc::Mmio => None,
+        }
+    }
+
+    /// Starts counting writes to chunk `chunk` (RAM offset / [`CHUNK`]);
+    /// returns whether it was not counted before.
+    pub fn watch(&self, chunk: usize) -> bool {
+        let pages = CHUNK >> CODE_PAGE_SHIFT;
+        let mut new = false;
+        for f in self.buf.flags.iter().skip(chunk * pages).take(pages) {
+            new |= f.fetch_or(PAGE_WATCHED, Ordering::SeqCst) & PAGE_WATCHED == 0;
+        }
+        new
+    }
+
+    /// The write generation of watched chunk `chunk`: read it before reading
+    /// the chunk's bytes.
+    pub fn chunk_gen(&self, chunk: usize) -> u32 {
+        self.buf.chunk_gen.get(chunk).map_or(0, |g| g.load(Ordering::Acquire))
+    }
 }
 
 impl Ram for Mem {
@@ -145,11 +208,16 @@ pub struct Mem {
     buf: std::sync::Arc<RamBuf>,
     pages: Box<[u32; 1024]>,
     pub mmio: Box<dyn Mmio>,
-    /// Per 4 KiB of `ram`: whether decoded code lives there, and a
-    /// generation bumped by every write to code in such a page (stores and
-    /// [`Mem::ram_mut`]), so code caches can tell when to decode again.
-    code: Vec<bool>,
+    /// Per 4 KiB of `ram`: its flags (`buf.flags`: decoded code lives there,
+    /// another thread watches it), and a generation bumped by every write
+    /// to code in such a page (stores and [`Mem::ram_mut`]), so code caches
+    /// can tell when to decode again.
+    flags: &'static [AtomicU8],
     code_gen: Vec<u32>,
+    /// Watched chunks [`Mem::ram_mut`] handed out since the last
+    /// [`Mem::settle`]: their generations move again there, once the
+    /// caller has written them.
+    handed_out: Vec<u32>,
     /// One bit per [`CODE_LINE`] bytes of `ram`: decoded code lives there.
     /// A write to a code page that touches none of these lines (data next
     /// to code: the OS globals below the exception vectors, a module's data
@@ -175,12 +243,15 @@ impl Mem {
         let backing = flat::Backing::new();
         let (ptr, flat) = (backing.ptr, backing.flat);
         debug_assert!(size <= flat::SECTION_SIZE);
-        let buf = std::sync::Arc::new(RamBuf { ptr, _backing: backing });
-        // SAFETY: `buf` owns the memory and lives as long as `self`; the
-        // slice never leaves `Mem` with the `'static` lifetime.
+        let flags: Box<[AtomicU8]> = (0..code_pages).map(|_| AtomicU8::new(0)).collect();
+        let chunk_gen = (0..size.div_ceil(CHUNK)).map(|_| AtomicU32::new(0)).collect();
+        let buf = std::sync::Arc::new(RamBuf { ptr, _backing: backing, flags, chunk_gen });
+        // SAFETY: `buf` owns the memory and the flags and lives as long as
+        // `self`; the slices never leave `Mem` with the `'static` lifetime.
         let ram = unsafe { std::slice::from_raw_parts_mut(ptr, size) };
+        let flags = unsafe { std::slice::from_raw_parts(buf.flags.as_ptr(), code_pages) };
         let code_lines = vec![0; (size / CODE_LINE).div_ceil(64)];
-        Self { ram, buf, pages: page_table(), mmio, code: vec![false; code_pages], code_gen: vec![0; code_pages], code_lines, code_epoch: 0, flat }
+        Self { ram, buf, pages: page_table(), mmio, flags, code_gen: vec![0; code_pages], handed_out: Vec::new(), code_lines, code_epoch: 0, flat }
     }
 
     /// Whether guest addresses map straight to host memory ([`Mem::raw_read_u32`] and co.).
@@ -267,28 +338,39 @@ impl Mem {
         RamView { buf: self.buf.clone() }
     }
 
-    /// A write touched `ram[off..off + len]`: bump any code page in it.
+    /// A write touched `ram[off..off + len]`: bump any code page and watched
+    /// chunk in it.
     #[inline(always)]
     fn wrote(&mut self, off: usize, len: usize) {
         let (a, b) = (off >> CODE_PAGE_SHIFT, (off + len.max(1) - 1) >> CODE_PAGE_SHIFT);
-        // SAFETY: `off + len` lies within `ram`, and `code` has an entry per
+        // SAFETY: `off + len` lies within `ram`, and `flags` has an entry per
         // 4 KiB of it.
-        if unsafe { *self.code.get_unchecked(a) | *self.code.get_unchecked(b) } {
-            self.wrote_code(off, len);
+        if unsafe { self.flags.get_unchecked(a).load(Ordering::Relaxed) | self.flags.get_unchecked(b).load(Ordering::Relaxed) } != 0 {
+            self.wrote_flagged(off, len, false);
         }
     }
 
-    /// `ram[off..off + len]` was written: bump each code page whose code
-    /// lines it touched.
+    /// `ram[off..off + len]` was written (or, `handed_out`, is about to be,
+    /// by [`Mem::ram_mut`]'s caller): bump each code page whose code lines
+    /// it touched, and each watched chunk in it.
     #[cold]
-    fn wrote_code(&mut self, off: usize, len: usize) {
+    #[inline(never)]
+    fn wrote_flagged(&mut self, off: usize, len: usize, handed_out: bool) {
         let end = (off + len.max(1)).min(self.ram.len());
         if off >= end {
             return;
         }
         let page = 1usize << CODE_PAGE_SHIFT;
         for p in off >> CODE_PAGE_SHIFT..=(end - 1) >> CODE_PAGE_SHIFT {
-            if self.code[p] && self.has_code_line(off.max(p * page), end.min((p + 1) * page)) {
+            let flags = self.flags[p].load(Ordering::Relaxed);
+            if flags & PAGE_WATCHED != 0 {
+                let chunk = p * page / CHUNK;
+                self.buf.chunk_gen[chunk].fetch_add(1, Ordering::Release);
+                if handed_out && self.handed_out.last() != Some(&(chunk as u32)) {
+                    self.handed_out.push(chunk as u32);
+                }
+            }
+            if flags & PAGE_CODE != 0 && self.has_code_line(off.max(p * page), end.min((p + 1) * page)) {
                 self.code_gen[p] = self.code_gen[p].wrapping_add(1);
                 self.code_epoch = self.code_epoch.wrapping_add(1);
             }
@@ -311,12 +393,24 @@ impl Mem {
         false
     }
 
+    /// Watched memory [`Mem::ram_mut`] handed out since the last call has
+    /// been written by now: its generations move again, so a reader that
+    /// read it between the hand-out and the write reads it again. Call it
+    /// once per field, before the GX thread is sent more work.
+    pub fn settle(&mut self) {
+        for c in self.handed_out.drain(..) {
+            self.buf.chunk_gen[c as usize].fetch_add(1, Ordering::Release);
+        }
+    }
+
     /// Marks the `len` bytes at `addr` as code and returns their first and
     /// last code page (indices for [`Mem::code_gen`]), or `None` outside RAM.
     pub fn mark_code(&mut self, addr: u32, len: usize) -> Option<(u32, u32)> {
         let Some(Loc::Ram(off)) = locate(addr, len) else { return None };
         let (a, b) = (off >> CODE_PAGE_SHIFT, (off + len.max(1) - 1) >> CODE_PAGE_SHIFT);
-        self.code[a..=b].fill(true);
+        for f in &self.flags[a..=b] {
+            f.fetch_or(PAGE_CODE, Ordering::Relaxed);
+        }
         for l in off / CODE_LINE..=(off + len.max(1) - 1) / CODE_LINE {
             self.code_lines[l / 64] |= 1 << (l % 64);
         }
@@ -364,8 +458,12 @@ impl Mem {
     pub fn ram_mut(&mut self, addr: u32, len: usize) -> Option<&mut [u8]> {
         match locate(addr, len)? {
             Loc::Ram(off) => {
-                // Bulk writes (DMA, IOS replies) count as writes to any code there.
-                self.wrote_code(off, len);
+                // Bulk writes (DMA, IOS replies, dcbz) count as writes to
+                // any code or watched memory there.
+                let (a, b) = (off >> CODE_PAGE_SHIFT, (off + len.max(1) - 1) >> CODE_PAGE_SHIFT);
+                if self.flags[a..=b].iter().any(|f| f.load(Ordering::Relaxed) != 0) {
+                    self.wrote_flagged(off, len, true);
+                }
                 Some(&mut self.ram[off..off + len])
             }
             Loc::Mmio => None,
@@ -558,6 +656,9 @@ impl snap::Snapshot for Mem {
                 *g = g.wrapping_add(1);
             }
             self.code_epoch = self.code_epoch.wrapping_add(1);
+            for g in self.buf.chunk_gen.iter() {
+                g.fetch_add(1, Ordering::Release);
+            }
         }
     }
 }

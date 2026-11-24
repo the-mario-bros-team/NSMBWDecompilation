@@ -14,8 +14,8 @@ android {
         // As NSMB-Wii-Recompilation's app: its screens are built for 34's behaviour (Back as a key
         // event, no forced edge-to-edge).
         targetSdk 34
-        versionCode 2
-        versionName '0.0.2'
+        versionCode 3
+        versionName '0.1.0'
         ndk {
             abiFilters 'arm64-v8a'
         }
@@ -42,6 +42,8 @@ android {
         main {
             // libnsmbw.so, staged by build.ps1 from crates/android; not checked in.
             jniLibs.srcDirs = ['../native/jniLibs']
+            // libadrenotools and its hooks (GPU Driver), staged by build.ps1; not checked in.
+            assets.srcDirs = ['../native/assets']
         }
     }
 

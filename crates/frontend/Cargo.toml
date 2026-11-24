@@ -11,7 +11,6 @@ path = "src/main.rs"
 raw-window-handle = "0.6"
 winit = "0.30"
 toml = "0.8"
-miniz_oxide = "0.8"
 guest-mem = { path = "../guest-mem" }
 guest-cpu = { path = "../guest-cpu" }
 hle-os = { path = "../hle-os" }
@@ -22,6 +21,7 @@ gx = { path = "../gx" }
 hle-ios = { path = "../hle-ios" }
 input = { path = "../input" }
 port-update = { path = "../port-update" }
+netplay = { path = "../netplay" }
 cpal = "0.15"
 egui = "0.36"
 egui-winit = { version = "0.36", default-features = false }

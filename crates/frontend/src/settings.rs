@@ -148,6 +148,13 @@ pub struct Settings {
     /// `[controller] wii_remotes`: Wii Remotes paired with Windows play in
     /// place of players' emulated remotes (Windows only).
     pub wii_remotes: bool,
+    /// `[controller] motion_sensors`: a controller's own motion sensors
+    /// tilt (turned like a steering wheel) and shake (a jolt) its remote.
+    pub motion_sensors: bool,
+    /// `[controller] bt_passthrough` (experimental): a USB Bluetooth adapter
+    /// on the WinUSB driver runs real Wii Remotes through the game's own
+    /// Bluetooth stack (from the next start; Windows only).
+    pub bt_passthrough: bool,
     /// Mods tab (`crate::mods`): HD textures from a texture pack.
     pub hd_textures: bool,
     /// The pack's folder under `texture_packs/` ("": the first there).
@@ -160,7 +167,7 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { renderer: RendererChoice::Auto, fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
+        Self { renderer: RendererChoice::Auto, fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, motion_sensors: true, bt_passthrough: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
     }
 }
 
@@ -299,6 +306,8 @@ impl Settings {
             let flag = |k: &str, d: bool| controller.get(k).and_then(toml::Value::as_bool).unwrap_or(d);
             s.rumble = flag("rumble", s.rumble);
             s.wii_remotes = flag("wii_remotes", s.wii_remotes);
+            s.motion_sensors = flag("motion_sensors", s.motion_sensors);
+            s.bt_passthrough = flag("bt_passthrough", s.bt_passthrough);
             for (i, (key, _)) in ACTIONS.iter().enumerate() {
                 if let Some(label) = controller.get(*key).and_then(toml::Value::as_str) {
                     s.padmap.set_label(i, label);
@@ -396,6 +405,10 @@ impl Settings {
         text.push_str(&format!("rumble = {}\n", self.rumble));
         text.push_str("# Wii Remotes paired with Windows (Settings > Bluetooth) play as players 1-4 in turn.\n");
         text.push_str(&format!("wii_remotes = {}\n", self.wii_remotes));
+        text.push_str("# Motion Sensors: a controller's own sensors tilt (turn it like a steering wheel) and shake (jolt it).\n");
+        text.push_str(&format!("motion_sensors = {}\n", self.motion_sensors));
+        text.push_str("# Bluetooth passthrough (experimental, from the next start): a USB Bluetooth adapter on the WinUSB\n# driver (Zadig) runs real Wii Remotes through the game's own Bluetooth. F8 pairs them.\n");
+        text.push_str(&format!("bt_passthrough = {}\n", self.bt_passthrough));
         for (i, (key, _)) in ACTIONS.iter().enumerate() {
             text.push_str(&format!("{key} = {}\n", toml::Value::String(self.padmap.label(i))));
             text.push_str(&combo_line(key, self.padmap.combo_names(i)));
@@ -446,7 +459,7 @@ mod tests {
             p.buttons[input::keymap::TILT_LEFT].clear();
             p.take(input::keymap::PLUS, vec![input::padmap::by_name("LB").unwrap(), input::padmap::by_name("RB").unwrap()]);
             p
-        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true, hd_textures: true, texture_pack: "My \"Pack\"".into(), texture_dumps: true, mods: vec!["One".into(), "Two \\ Three".into()] };
+        }, rumble: false, smart_spin: false, mouse_gyro: true, reverse_tilt: false, wii_remotes: true, motion_sensors: false, bt_passthrough: true, hd_textures: true, texture_pack: "My \"Pack\"".into(), texture_dumps: true, mods: vec!["One".into(), "Two \\ Three".into()] };
         s.save(&path);
         assert_eq!(Settings::load(&path), s);
         let s = Settings { fps: 144, scale: 3.0, ..Settings::default() };

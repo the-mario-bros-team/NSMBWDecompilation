@@ -51,6 +51,8 @@ pub struct Options {
     pub shots: Vec<(u64, PathBuf)>,
     /// Print frames shown and game speed once a second.
     pub log_fps: bool,
+    /// Time every field (`crate::perf`).
+    pub perf: Option<crate::perf::Options>,
 }
 
 /// Fields kept for interpolation; older ones are dropped and their evicted
@@ -270,6 +272,8 @@ struct App {
     spent: [Duration; 3],
     help: bool,
     slow_fields: u64,
+    /// `--perf`.
+    perf: Option<crate::perf::Perf>,
     done: bool,
     inputs: input::Inputs,
     sent_input: Option<[Input; REMOTES]>,
@@ -327,6 +331,9 @@ struct App {
     /// Looks for Wii Remotes paired with Windows (the Wii Remotes switch).
     #[cfg(windows)]
     wii_remotes: Option<input::wii_hid::Scanner>,
+    /// Bluetooth passthrough's pairing key (F8) held since then, and
+    /// whether holding it 10 s already forgot the pairings.
+    sync_down: Option<(Instant, bool)>,
     /// The game started in widescreen (it reads 4:3 or not at boot).
     booted_widescreen: bool,
     /// What the game thread was last told about the picture.
@@ -494,10 +501,12 @@ impl App {
         menus.set_booted_widescreen(self.booted_widescreen);
         self.menus = Some(menus);
         let settings_label = Some(settings_label(&self.settings.language).to_string());
-        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), ..self.opts.emu.clone() });
+        let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), bt_passthrough: self.settings.bt_passthrough, ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));
         if let crate::net::Mode::Host { port, .. } = self.opts.emu.net {
-            crate::lan::announce(port, crate::lan::computer_name());
+            if crate::lan::announce(port, crate::lan::computer_name()).is_err() {
+                say_err!("LAN: another game on this PC already answers room queries");
+            }
         }
         self.emu = Some(emu);
         if let Some(pin) = self.prompt_pin {
@@ -565,10 +574,15 @@ impl App {
             }
         }
         self.apply_changes(picked);
-        // A controller pressed at the last poll: the prompts show its buttons.
+        // A controller pressed at the last poll: the prompts show its buttons
+        // (and the save select's Back button goes).
         if self.inputs.take_pad_pressed() {
             self.note_device(ui::prompts::Style::Pad);
+            if let Some(m) = &mut self.menus {
+                m.set_pointer_used(false);
+            }
         }
+        self.sync_held();
         let Some(emu) = &self.emu else { return Ok(()) };
         let interpolate = !self.native();
         if self.sent_interpolate != Some(interpolate) {
@@ -591,8 +605,10 @@ impl App {
             self.settings.file_characters = characters;
             self.settings.save(Path::new(settings::FILE));
         }
+        let (aspect, _) = self.picture();
         if let Some(m) = &mut self.menus {
             m.set_active_file(self.cheats.active.load(std::sync::atomic::Ordering::Relaxed));
+            m.set_save_select(*emu.save_select.lock().unwrap_or_else(|e| e.into_inner()), aspect);
         }
         // A newer release of the port: said on screen for a while, and the
         // Settings window asks whether to open its page.
@@ -623,19 +639,21 @@ impl App {
                 event_loop.exit();
             }
         }
-        // The LAN tab: the rooms on the network, and this game's own.
+        // The Multiplayer screen: the rooms on the network, and this game's own.
         if self.menus.as_ref().is_some_and(ui::Menus::wants_rooms) {
             if self.finder.is_none() {
                 self.finder = crate::lan::Finder::new().map_err(|e| say_err!("LAN: {e}")).ok();
             }
             let rooms = self.finder.as_mut().map(|f| f.poll()).unwrap_or_default();
             let here = self.finder.as_ref().and_then(|f| f.here).map_or_else(|| "this PC".to_string(), |ip| ip.to_string());
+            // Over Tailscale, others join at this PC's Tailscale address.
+            let tailscale = self.finder.as_ref().and_then(|f| f.tailscale);
             let (mode, addr) = match &self.opts.emu.net {
-                crate::net::Mode::Host { port, .. } => (1, format!("{here}:{port}")),
+                crate::net::Mode::Host { port, .. } => (1, tailscale.map_or_else(|| format!("{here}:{port}"), |ts| format!("{here}:{port} (Tailscale {ts}:{port})"))),
                 crate::net::Mode::Join { addr } => (2, addr.clone()),
                 crate::net::Mode::Off => (0, String::new()),
             };
-            let view = ui::LanView { mode, addr, rooms: rooms.into_iter().map(|r| (r.name, r.addr.to_string())).collect() };
+            let view = ui::LanView { mode, addr, rooms: rooms.into_iter().map(|r| (if r.tailscale() { format!("{} (Tailscale)", r.name) } else { r.name }, r.addr.to_string())).collect() };
             if let Some(m) = &mut self.menus {
                 m.set_lan(view);
             }
@@ -666,10 +684,17 @@ impl App {
                 }
             }
         }
-        // A game menu's Settings button was picked and its menu has gone.
+        // A game menu's Settings button was picked and its menu has gone, or
+        // the save select's Multiplayer button.
         if emu.settings_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
             if let Some(m) = &mut self.menus {
                 m.open();
+                self.settings_from_game = true;
+            }
+        }
+        if emu.multiplayer_button.swap(false, std::sync::atomic::Ordering::Relaxed) {
+            if let Some(m) = &mut self.menus {
+                m.open_multiplayer();
                 self.settings_from_game = true;
             }
         }
@@ -784,6 +809,9 @@ impl App {
             say!("frame {}: {} draws, {} texture copies", f.index + 1, f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count(), f.out.cmds.iter().filter(|c| matches!(c, gx::Cmd::CopyTex(_))).count());
         }
         renderer.set_overlay(rects);
+        if let Some(p) = &self.perf {
+            p.filter(&mut f.out);
+        }
         (self.main_player, self.online) = (f.main_player, f.online);
         self.backdrop.learn(&f.out.world);
         if !self.online {
@@ -836,6 +864,9 @@ impl App {
         }
         self.render_ms = started.elapsed().as_secs_f32() * 1000.0;
         self.spent[0] += started.elapsed();
+        if let Some(p) = &mut self.perf {
+            p.field(&f, started.elapsed(), renderer.gpu_time());
+        }
         let writebacks = renderer.take_writebacks();
         if !writebacks.is_empty() {
             let _ = emu.to_emu.send(ToEmu::Writebacks(writebacks));
@@ -1121,8 +1152,9 @@ impl App {
                     let cancel = Arc::new(std::sync::atomic::AtomicBool::new(false));
                     let (s, c) = (state.clone(), cancel.clone());
                     std::thread::spawn(move || {
-                        let name = program.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+                        // Its path in the installation: compat\nsmbw-port.exe for the compat build.
                         let folder = port_update::install_dir();
+                        let name = program.strip_prefix(&folder).map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
                         let set = |v: ui::UpdateState| *s.lock().unwrap_or_else(|e| e.into_inner()) = v;
                         let r = port_update::install::update(&release, &folder, &name, &|p| set(match p {
                             port_update::install::Progress::Downloading { done, total } => ui::UpdateState::Downloading { done, total },
@@ -1136,7 +1168,11 @@ impl App {
                     self.updater = Some((state, cancel));
                 }
                 ui::Change::LanHost => self.relaunch = Some(vec!["--host".into(), crate::lan::GAME_PORT.to_string()]),
-                ui::Change::LanJoin(addr) => self.relaunch = Some(vec!["--join".into(), crate::lan::with_port(&addr)]),
+                ui::Change::LanJoin(addr) => {
+                    let addr = crate::lan::with_port(&addr);
+                    crate::lan::joined(&addr);
+                    self.relaunch = Some(vec!["--join".into(), addr]);
+                }
                 ui::Change::LanLeave => self.relaunch = Some(Vec::new()),
                 ui::Change::UpdateCancel => {
                     if let Some((_, cancel)) = &self.updater {
@@ -1223,6 +1259,7 @@ impl App {
         self.inputs.set_smart_spin(self.settings.smart_spin);
         self.inputs.set_mouse_gyro(self.settings.mouse_gyro);
         self.inputs.set_reverse_tilt(self.settings.reverse_tilt);
+        self.inputs.set_motion_sensors(self.settings.motion_sensors);
         // Real Wii Remotes: not in net games (their reports would bypass the
         // shared input) or scripted runs.
         #[cfg(windows)]
@@ -1325,6 +1362,7 @@ impl App {
                 format!("F11 FULLSCREEN ({})", on(self.settings.fullscreen)),
             ]
             .into_iter()
+            .chain(self.settings.bt_passthrough.then(|| "F8  PAIR WII REMOTES (HOLD 10 S: FORGET)".to_string()))
             .map(|l| (overlay::WHITE, l))
             .collect();
             let w = lines.iter().map(|(_, l)| l.len() as i32).max().unwrap_or(0) * 6 * px + 4 * px;
@@ -1343,6 +1381,11 @@ impl App {
     /// high with the origin at its centre and y up.
     fn click_at(&mut self, x: f64, y: f64) {
         let (Some(window), Some(emu)) = (&self.window, &self.emu) else { return };
+        // The save select's Back button is the window's own.
+        if self.menus.as_ref().is_some_and(|m| m.on_back(window, x, y)) {
+            let _ = emu.to_emu.send(ToEmu::FileBack);
+            return;
+        }
         let size = window.inner_size();
         let (w, h) = (f64::from(size.width.max(1)), f64::from(size.height.max(1)));
         let aspect = if self.settings.widescreen { 16.0 / 9.0 } else { 4.0 / 3.0 };
@@ -1350,6 +1393,35 @@ impl App {
         let scale = picture_h / 456.0;
         let c = crate::click::Click { x: ((x - w / 2.0) / scale) as f32, y: ((h / 2.0 - y) / scale) as f32, half_width: (w / 2.0 / scale) as f32 };
         let _ = emu.to_emu.send(ToEmu::Click(c));
+    }
+
+    /// The mouse moved or clicked, or the screen was touched: the save
+    /// select's Back button shows (until a key or controller is pressed).
+    fn pointer_used(&mut self) {
+        if let Some(m) = &mut self.menus {
+            m.set_pointer_used(true);
+        }
+    }
+
+    /// Bluetooth passthrough's pairing key: a press looks for remotes to
+    /// pair; held 10 s, it forgets them all (`sync_held`).
+    fn sync_key(&mut self, down: bool) {
+        if down {
+            self.sync_down = Some((Instant::now(), false));
+        } else if let Some((_, false)) = self.sync_down.take() {
+            if let Some(emu) = &self.emu {
+                let _ = emu.to_emu.send(ToEmu::SyncButton(false));
+            }
+        }
+    }
+
+    fn sync_held(&mut self) {
+        if let (Some((at, forgot @ false)), Some(emu)) = (&mut self.sync_down, &self.emu) {
+            if at.elapsed() >= Duration::from_secs(10) {
+                *forgot = true;
+                let _ = emu.to_emu.send(ToEmu::SyncButton(true));
+            }
+        }
     }
 
     fn key(&mut self, code: KeyCode) {
@@ -1491,9 +1563,14 @@ impl ApplicationHandler for App {
                         }
                     }
                     if !event.repeat {
-                        if self.inputs.key(code, down) {
+                        if code == KeyCode::F8 && self.settings.bt_passthrough {
+                            self.sync_key(down);
+                        } else if self.inputs.key(code, down) {
                             if down {
                                 self.note_device(ui::prompts::Style::Keys);
+                                if let Some(m) = &mut self.menus {
+                                    m.set_pointer_used(false);
+                                }
                             }
                         } else if down {
                             self.key(code);
@@ -1503,13 +1580,22 @@ impl ApplicationHandler for App {
             }
             WindowEvent::Focused(false) => self.inputs.release_keys(),
             // Clicks and taps on the game's menus (`crate::click`).
-            WindowEvent::CursorMoved { position, .. } => self.pointer = Some((position.x, position.y)),
+            WindowEvent::CursorMoved { position, .. } => {
+                if self.pointer.is_some_and(|p| p != (position.x, position.y)) {
+                    self.pointer_used();
+                }
+                self.pointer = Some((position.x, position.y));
+            }
             WindowEvent::MouseInput { state: ElementState::Pressed, button: winit::event::MouseButton::Left, .. } => {
+                self.pointer_used();
                 if let Some((x, y)) = self.pointer {
                     self.click_at(x, y);
                 }
             }
-            WindowEvent::Touch(t) if t.phase == winit::event::TouchPhase::Started => self.click_at(t.location.x, t.location.y),
+            WindowEvent::Touch(t) if t.phase == winit::event::TouchPhase::Started => {
+                self.pointer_used();
+                self.click_at(t.location.x, t.location.y);
+            }
             _ => {}
         }
     }
@@ -1604,6 +1690,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
     let cheats = Arc::new(crate::gameplay::Cheats::new(settings.cheated));
     let characters = Arc::new(crate::gameplay::Characters::new(settings.file_characters));
     // Not in test runs (a frame count, scripted presses, screenshots).
+    let perf = opts.perf.as_ref().map(crate::perf::Perf::open).transpose()?;
     let update_check = if opts.max_frames.is_none() && opts.emu.script.is_empty() && opts.shots.is_empty() && !opts.unpaced { check_for_update() } else { None };
     let mut app = App {
         opts,
@@ -1630,6 +1717,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         spent: [Duration::ZERO; 3],
         help: false,
         slow_fields: 0,
+        perf,
         done: false,
         inputs: input::Inputs::new(),
         sent_input: None,
@@ -1665,6 +1753,7 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         relaunch: None,
         #[cfg(windows)]
         wii_remotes: None,
+        sync_down: None,
         main_player: 0,
         players: Vec::new(),
         textures: HashMap::new(),
@@ -1672,6 +1761,9 @@ pub fn run(opts: Options) -> Result<(u64, u64), String> {
         backdrop: gx::backdrop::Backdrop::default(),
     };
     event_loop.run_app(&mut app).map_err(|e| e.to_string())?;
+    if let Some(p) = &mut app.perf {
+        p.finish();
+    }
     // A room the LAN tab joined could not be joined (gone, or out of
     // reach): the game starts again on its own rather than closing.
     if let (Some(e), crate::net::Mode::Join { .. }) = (&app.error, &app.opts.emu.net) {

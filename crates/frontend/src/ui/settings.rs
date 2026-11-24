@@ -4,12 +4,18 @@
 //! (`runtime/src/netplay/netplay_ui.cpp`: `DrawSettings` and the tabs), on
 //! this port's own settings. Layout units: 456 across the picture's height,
 //! y up, the window centred.
+//!
+//! The same window, without tabs, is the Multiplayer screen (LAN rooms:
+//! create one, join one found or by its address), opened from the save
+//! select's Multiplayer button; and [`SettingsWindow::draw_save_select`]
+//! draws that button, the Settings cog beside it and the Back button over
+//! the save select.
 
 use std::sync::Arc;
 
 use super::key_caps::{self, Caps, Glyph};
 use super::layout::{self, Animation, DrawList, DrawParams, Font, Layout, Rgba, View};
-use super::{Change, LanView, Nav, UpdateState};
+use super::{Change, LanView, Nav, SaveSelect, UpdateState};
 use crate::gameplay::POWER_UPS;
 use crate::settings::{RendererChoice, Settings, WideMode};
 
@@ -118,7 +124,8 @@ enum Tab {
     Mods,
 }
 
-const TABS: [Tab; 8] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Language, Tab::Lan, Tab::Mods];
+/// The Settings window's tabs (LAN Play is the Multiplayer screen's).
+const TABS: [Tab; 7] = [Tab::Display, Tab::Graphics, Tab::Audio, Tab::Keybinds, Tab::Gameplay, Tab::Language, Tab::Mods];
 
 impl Tab {
     fn name(self) -> &'static str {
@@ -175,7 +182,9 @@ const ROW_POWER_UP: i32 = 3;
 const ROW_AUTOSAVE: i32 = 4;
 const ROW_EXIT_COURSE: i32 = 5;
 const ROW_P1_CHARACTER: i32 = 6;
-const GAMEPLAY_LAST: i32 = 6;
+const ROW_MOTION: i32 = 7;
+const ROW_BT_PASSTHROUGH: i32 = 8;
+const GAMEPLAY_LAST: i32 = 8;
 // Mods rows: the HD Texture Pack, the pack in use (once one is installed),
 // then the file mods, one a row.
 const ROW_HD: i32 = 1;
@@ -396,6 +405,11 @@ struct ButtonAnims {
 pub struct SettingsWindow {
     assets: Option<Arc<Assets>>,
     open: bool,
+    /// Open as the Multiplayer screen: the LAN rows alone, no tabs.
+    multiplayer: bool,
+    /// The save select's buttons' animations (the window's own are in
+    /// `anims`).
+    save_select_anims: ButtonAnims,
     opened_at: f64,
     closing: bool,
     closing_at: f64,
@@ -621,10 +635,20 @@ impl SettingsWindow {
     }
 
     pub fn open(&mut self, now: f64) {
+        self.open_as(now, false);
+    }
+
+    /// Opens the window as the Multiplayer screen.
+    pub fn open_multiplayer(&mut self, now: f64) {
+        self.open_as(now, true);
+    }
+
+    fn open_as(&mut self, now: f64, multiplayer: bool) {
         self.open = true;
+        self.multiplayer = multiplayer;
         self.closing = false;
         self.opened_at = now;
-        self.cursor = 0;
+        self.cursor = if multiplayer { ROW_LAN_ROOM } else { 0 };
         self.dropdown = None;
         self.ask = None;
         self.pad_view = self.pad_connected;
@@ -656,6 +680,9 @@ impl SettingsWindow {
     }
 
     fn tab(&self) -> Tab {
+        if self.multiplayer {
+            return Tab::Lan;
+        }
         TABS[self.tab.min(TABS.len() - 1)]
     }
 
@@ -1164,6 +1191,8 @@ impl SettingsWindow {
         self.row_toggle(ctx, a, c, rows, 3, "Autosave", s.autosave, ROW_AUTOSAVE);
         self.row_toggle(ctx, a, c, rows, 4, "Exit Course", s.exit_course, ROW_EXIT_COURSE);
         self.row_toggle(ctx, a, c, rows, 5, "P1 Character", s.p1_character, ROW_P1_CHARACTER);
+        self.row_toggle(ctx, a, c, rows, 6, "Motion Sensors", s.motion_sensors, ROW_MOTION);
+        self.row_toggle(ctx, a, c, rows, 7, "Bluetooth Passthrough", s.bt_passthrough, ROW_BT_PASSTHROUGH);
         let given = self.power_up_at.is_some_and(|t| self.now - t < 3.0);
         let note = match self.cursor {
             ROW_TIME => "The course timer stands still: take your time.",
@@ -1173,6 +1202,8 @@ impl SettingsWindow {
             ROW_AUTOSAVE => "The game is saved after every course you clear, as the map's Save does.",
             ROW_EXIT_COURSE => "The pause menu's Exit Course in every course, cleared or not.",
             ROW_P1_CHARACTER => "Player 1 picks a character too, on the game's own screen (from the next start).",
+            ROW_MOTION => "A controller's motion sensors tilt (turn it like a wheel) and shake (jolt it) its remote.",
+            ROW_BT_PASSTHROUGH => "Experimental: real Wii Remotes on a WinUSB Bluetooth adapter; F8 pairs (from the next start).",
             _ => Tab::Gameplay.help(),
         };
         self.help_line(a, c, note, u32::MAX);
@@ -1811,7 +1842,8 @@ impl SettingsWindow {
             Tab::Mods => self.mods_last(),
         };
         if up {
-            self.cursor -= 1;
+            // The Multiplayer screen has no tabs to go up to.
+            self.cursor = (self.cursor - 1).max(i32::from(self.multiplayer));
         }
         if down {
             self.cursor = (self.cursor + 1).min(last);
@@ -1882,6 +1914,14 @@ impl SettingsWindow {
             }
             (Tab::Gameplay, ROW_P1_CHARACTER) if toggle => {
                 s.p1_character = !s.p1_character;
+                changes.push(Change::Gameplay);
+            }
+            (Tab::Gameplay, ROW_MOTION) if toggle => {
+                s.motion_sensors = !s.motion_sensors;
+                changes.push(Change::Keymap);
+            }
+            (Tab::Gameplay, ROW_BT_PASSTHROUGH) if toggle => {
+                s.bt_passthrough = !s.bt_passthrough;
                 changes.push(Change::Gameplay);
             }
             (Tab::Lan, ROW_LAN_ROOM) if confirm => changes.push(if self.lan.mode == 0 { Change::LanHost } else { Change::LanLeave }),
@@ -2000,6 +2040,76 @@ impl SettingsWindow {
         Some(p.pane_scale.get("N_pauseMenu_00").map_or(1.0, |s| s.clamp(0.0, 1.2)))
     }
 
+    /// The save select's buttons over the game: Multiplayer and the
+    /// Settings cog where the game's layout keeps their places (`view`, as
+    /// the game thread last saw it), lit while the game's cursor is on one
+    /// and playing their hit when picked; and Back at `back` (centre x, y,
+    /// width, height). `aspect`: the game picture's, which the layout units
+    /// are of. Returns the shapes.
+    pub fn draw_save_select(&mut self, ctx: &egui::Context, lang: &str, view: &SaveSelect, back: Option<(f32, f32, f32, f32)>, aspect: f32, now: f64) -> Vec<egui::Shape> {
+        self.now = now;
+        self.lang = lang.to_string();
+        self.list = DrawList::default();
+        let a = self.assets.get_or_insert_with(|| Arc::new(Assets::load(ctx))).clone();
+        let screen = ctx.content_rect();
+        let unit = screen.height().min(screen.width() / aspect) / 456.0;
+        let c = Canvas { view: View { center_x: screen.center().x, center_y: screen.center().y, scale: unit }, alpha: view.alpha };
+        std::mem::swap(&mut self.anims, &mut self.save_select_anims);
+        const COG: i32 = 1;
+        const MULTIPLAYER: i32 = 2;
+        const BACK: i32 = 3;
+        match view.picked {
+            Some(i) if self.anims.hit != COG + i32::from(i) => {
+                self.anims.hit = COG + i32::from(i);
+                self.anims.hit_at = now;
+            }
+            None => self.anims.hit = 0,
+            _ => {}
+        }
+        for (i, (key, label)) in [(COG, ""), (MULTIPLAYER, "Multiplayer")].into_iter().enumerate() {
+            let (x0, y0, x1, y1) = view.buttons[i];
+            let (x, y) = ((x0 + x1) / 2.0, (y0 + y1) / 2.0);
+            let selected = view.cursor == Some(i as u8) || view.picked == Some(i as u8);
+            self.pause_button(ctx, &a, &c, key, label, x, y, x1 - x0, y1 - y0, selected, true, 26.0, false, 1.0, false);
+            if key == COG {
+                self.cog(ctx, &c, x, y, (y1 - y0) * 0.29);
+            }
+        }
+        if let Some((x, y, w, h)) = back {
+            let c = Canvas { alpha: 1.0, ..c };
+            self.pause_button(ctx, &a, &c, BACK, "Back", x, y, w, h, false, true, 26.0, false, 1.0, false);
+        }
+        std::mem::swap(&mut self.anims, &mut self.save_select_anims);
+        std::mem::take(&mut self.list).into_shapes()
+    }
+
+    /// A cog of radius `r` centred on (x, y): eight teeth round a ring, in
+    /// the dark of the game's text edges (as NSMB-Wii-Recompilation draws
+    /// its Settings button's).
+    fn cog(&mut self, ctx: &egui::Context, c: &Canvas, x: f32, y: f32, r: f32) {
+        let color = Rgba { r: 70.0 / 255.0, g: 62.0 / 255.0, b: 40.0 / 255.0, a: 235.0 / 255.0 * c.alpha };
+        let at = |angle: f32, radius: f32, side: f32| {
+            let (sn, cs) = angle.sin_cos();
+            (x + cs * radius - sn * side, y + sn * radius + cs * side)
+        };
+        for i in 0..8 {
+            let angle = i as f32 * std::f32::consts::FRAC_PI_4;
+            let (inner, outer, half) = (r * 0.72, r * 1.18, r * 0.26);
+            let q = [at(angle, inner, -half), at(angle, outer, -half), at(angle, outer, half), at(angle, inner, half)];
+            self.list.triangle(ctx, &c.view, [q[0], q[1], q[2]], color);
+            self.list.triangle(ctx, &c.view, [q[0], q[2], q[3]], color);
+        }
+        const SEGMENTS: usize = 24;
+        let (inner, outer) = (r * 0.41, r * 0.83);
+        for i in 0..SEGMENTS {
+            let step = std::f32::consts::TAU / SEGMENTS as f32;
+            let (a0, a1) = (i as f32 * step, (i + 1) as f32 * step);
+            let q = [at(a0, inner, 0.0), at(a0, outer, 0.0), at(a1, outer, 0.0), at(a1, inner, 0.0)];
+            self.list.triangle(ctx, &c.view, [q[0], q[1], q[2]], color);
+            self.list.triangle(ctx, &c.view, [q[0], q[2], q[3]], color);
+        }
+    }
+
     /// Draws the window and takes this frame's moves; returns the shapes.
     pub fn draw(&mut self, ctx: &egui::Context, s: &mut Settings, nav: Nav, now: f64, changes: &mut Vec<Change>) -> Vec<egui::Shape> {
         static AT_BOOT: std::sync::OnceLock<String> = std::sync::OnceLock::new();
@@ -2047,7 +2157,8 @@ impl SettingsWindow {
             c.view.scale *= scale;
             self.panel(ctx, &a, &c, WIDTH, HEIGHT);
             if a.mario.ready() {
-                layout::draw_text(&mut self.list, &c.view, &a.mario, super::text::tr(&self.lang, "Settings"), 0.0, TITLE_Y, 52.0, u32::MAX, u32::MAX, c.alpha, 1, 1);
+                let title = if self.multiplayer { "Multiplayer" } else { "Settings" };
+                layout::draw_text(&mut self.list, &c.view, &a.mario, super::text::tr(&self.lang, title), 0.0, TITLE_Y, 52.0, u32::MAX, u32::MAX, c.alpha, 1, 1);
             }
             self.rule(ctx, &c, -WIDTH / 2.0 + 14.0, WIDTH / 2.0 - 14.0, PROMPT_RULE_Y);
             // The picture font's 2 and 1.
@@ -2062,7 +2173,9 @@ impl SettingsWindow {
         self.defer_cursor = true;
         self.deferred = None;
         self.settings_look = true;
-        self.draw_tabs(ctx, &a, &c);
+        if !self.multiplayer {
+            self.draw_tabs(ctx, &a, &c);
+        }
         match self.tab() {
             Tab::Display => self.draw_display(ctx, &a, &c, s),
             Tab::Graphics => self.draw_graphics(ctx, &a, &c, s),

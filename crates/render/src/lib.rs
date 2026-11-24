@@ -149,6 +149,8 @@ pub struct UiFrame {
 #[derive(Default, Clone, Copy, Debug)]
 pub struct FrameStats {
     pub draws: u32,
+    /// Of `draws`, those drawn with a specialized pipeline (Vulkan).
+    pub specialized: u32,
     pub pipelines: usize,
     pub textures: usize,
     pub uploads: usize,
@@ -175,6 +177,11 @@ pub trait Backend: Send {
     /// Drawn over the presented image.
     fn set_overlay(&mut self, rects: Vec<OverlayRect>);
     fn stats(&self) -> FrameStats;
+    /// How long the GPU took for the last frame it finished; `None` where
+    /// the renderer doesn't time it.
+    fn gpu_time(&self) -> Option<std::time::Duration> {
+        None
+    }
     /// Switches V-Sync from the next present.
     fn set_vsync(&mut self, on: bool);
     /// The window changed size.

@@ -12,7 +12,7 @@ use std::thread::JoinHandle;
 use std::time::{Duration, Instant};
 
 use hle_ios::bt::{RemoteStatus, REMOTES};
-use hle_ios::wiimote::Input;
+use hle_ios::wiimote::{button, Input};
 use hle_os::System;
 
 use crate::say::{say, say_err};
@@ -37,6 +37,10 @@ pub struct GameFrame {
     pub time: Instant,
     /// Host time the guest took for it.
     pub emu: Duration,
+    /// Of `emu`, waiting for the GX thread (syncs at PE events); then
+    /// waiting for the GX threads to finish the field's output.
+    pub gx_wait: Duration,
+    pub output_wait: Duration,
     pub index: u64,
     /// The game read the EFB recently: send a snapshot back.
     pub wants_efb: bool,
@@ -61,6 +65,59 @@ pub struct Press {
     pub start: u64,
     pub count: u64,
     pub input: Input,
+}
+
+/// Wii Remote buttons by name, for scripted input (`--press`): a b 1 2 up
+/// down left right (the remote's own D-pad) plus minus home, and shake.
+pub fn parse_buttons(names: &str) -> Result<Input, String> {
+    let mut input = Input { connected: true, ..Input::default() };
+    for n in names.split('+').filter(|s| !s.is_empty()) {
+        input.buttons |= match n.to_ascii_lowercase().as_str() {
+            "a" => button::A,
+            "b" => button::B,
+            "1" => button::ONE,
+            "2" => button::TWO,
+            "up" => button::UP,
+            "down" => button::DOWN,
+            "left" => button::LEFT,
+            "right" => button::RIGHT,
+            "plus" => button::PLUS,
+            "minus" => button::MINUS,
+            "home" => button::HOME,
+            "shake" => {
+                input.shake = true;
+                0
+            }
+            other => return Err(format!("unknown Wii Remote button: {other}")),
+        };
+    }
+    Ok(input)
+}
+
+/// One scripted press: `[p<n>:]<frame>:<buttons>[:<frames>]` (6 frames
+/// when not given).
+pub fn parse_press(v: &str) -> Result<Press, String> {
+    let (player, rest) = match v.strip_prefix('p').and_then(|r| r.split_once(':')) {
+        Some((n, rest)) => match n.parse::<usize>() {
+            Ok(n @ 1..=4) => (n - 1, rest),
+            _ => return Err(format!("--press {v}: player is p1..p4")),
+        },
+        None => (0, v),
+    };
+    let mut parts = rest.split(':');
+    let start = parts.next().and_then(|s| s.parse().ok()).ok_or(format!("--press {v}: expected <frame>:<buttons>[:<frames>]"))?;
+    let input = parse_buttons(parts.next().unwrap_or(""))?;
+    let count = match parts.next() {
+        Some(n) => n.parse().map_err(|_| format!("--press {v}: bad frame count"))?,
+        None => 6,
+    };
+    Ok(Press { player, start, count, input })
+}
+
+/// A press file (`--press-file`; the Android app's `press`): one press per
+/// line or several per line; `#` starts a comment.
+pub fn parse_script(text: &str) -> Result<Vec<Press>, String> {
+    text.lines().flat_map(|l| l.split('#').next().unwrap_or("").split_whitespace()).map(parse_press).collect()
 }
 
 pub enum ToEmu {
@@ -92,6 +149,8 @@ pub enum ToEmu {
     Sound(u32),
     /// A click on the game's picture (`crate::click`; not in a net game).
     Click(crate::click::Click),
+    /// The save select's Back button was clicked (`Clicker::back`).
+    FileBack,
     /// The Music, Sound Effects and Menu Sounds volumes (percent), applied
     /// per voice by the mixer (`hw::ax`). Not in a net game, whose players
     /// must mix the same: there only the master volume (host side) counts.
@@ -99,8 +158,17 @@ pub enum ToEmu {
     /// A real Wii Remote for this player (0-3) in place of the emulated one,
     /// or (`None`) the emulated one again.
     RealRemote(usize, Option<Box<dyn hle_ios::bt::HidRemote>>),
+    /// Bluetooth passthrough: the console's sync button pressed (pair
+    /// remotes), or (`true`) held 10 s (forget them all).
+    SyncButton(bool),
     /// The picture's shape and the Graphics tab's options.
     Display(DisplayOptions),
+    /// Write the machine to this file (a state file, as `--save-state`
+    /// writes it) before the next field, if `Pause(true)` paused the game;
+    /// then say how it went. The Android app's backup when it leaves the
+    /// screen (the desktop never sends it).
+    #[allow(dead_code)]
+    SaveState(PathBuf, Sender<Result<(), String>>),
 }
 
 /// The save cards' "Cheated", in the language the Settings buttons read.
@@ -169,12 +237,22 @@ pub struct Totals {
     pub texture_pack: Option<std::sync::Arc<gx::replace::Stats>>,
 }
 
+/// What the game thread shares with the window's for the game's menus: the
+/// Settings and Multiplayer buttons picked, and the save select's buttons.
+type MenuShare = (Arc<AtomicBool>, Arc<AtomicBool>, Arc<std::sync::Mutex<Option<crate::click::SaveSelect>>>);
+
 pub struct Emu {
     pub frames: Receiver<Result<GameFrame, String>>,
     pub to_emu: Sender<ToEmu>,
     /// Set when a game menu's Settings button was picked and the menu has
     /// gone: the Settings window should open.
     pub settings_button: Arc<AtomicBool>,
+    /// Set when the save select's Multiplayer button was picked: the
+    /// Multiplayer screen should open.
+    pub multiplayer_button: Arc<AtomicBool>,
+    /// The save select's buttons the port draws, after the last field
+    /// (`None` when it is not up, and in net games).
+    pub save_select: Arc<std::sync::Mutex<Option<crate::click::SaveSelect>>>,
     /// This machine's player after the last field ([`player_motion`],
     /// packed: the state in the high half, the move's bits in the low; 0
     /// for no player), for Space Smart Spin.
@@ -284,7 +362,14 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
         ToEmu::Recycle(out) => sys.hw.borrow_mut().gpu.recycle(*out),
         ToEmu::Interpolate(on) => sys.hw.borrow_mut().gpu.set_records(on),
         ToEmu::RealRemote(i, remote) => sys.hw.borrow_mut().ios.bt.set_real(i, remote),
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::Display(_) | ToEmu::TexturePack(_) => {}
+        ToEmu::SyncButton(held) => {
+            let mut hw = sys.hw.borrow_mut();
+            if hw.ios.bt.passthrough.is_some() {
+                hw.ios.sync_button(held);
+                say!("Bluetooth passthrough: {}", if held { "forgetting every paired Wii Remote" } else { "pairing: press the red SYNC button on each Wii Remote (under its battery cover)" });
+            }
+        }
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::FileBack | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) => {}
     }
 }
 
@@ -397,6 +482,9 @@ pub struct EmuOptions {
     pub mods: Vec<String>,
     /// Start this course when the game next starts one (`--course`).
     pub course: Option<Course>,
+    /// Bluetooth passthrough (`bt_passthrough`): a real adapter runs the
+    /// game's Bluetooth (not in a net game or a scripted run).
+    pub bt_passthrough: bool,
 }
 
 /// A state file: this magic, the field it was saved at, then
@@ -457,8 +545,9 @@ fn print_profile(samples: &std::collections::HashMap<u32, u64>) {
 }
 
 #[allow(clippy::too_many_arguments)]
-fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, settings_button: Arc<AtomicBool>, player: Arc<AtomicU64>) -> Totals {
-    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, mut game_camera, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters, wide, texture_pack, mods, mut course } = opts;
+fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, String>>, to_emu: Receiver<ToEmu>, stop: Arc<AtomicBool>, menus: MenuShare, player: Arc<AtomicU64>) -> Totals {
+    let (settings_button, multiplayer_button, save_select) = menus;
+    let EmuOptions { unpaced, trace_ios, profile, script, gx_inline, watch_player, save_states, mut load_state, hash_every, hash_gx, mut no_feedback, net, dump_ram, mut view_player, view_zoom, mut game_camera, wav, audio, code_profile, interpreter, stop_after, settings_label, force_settings_buttons, auto_close_settings, cheats, clicks, gameplay: mut gameplay_options, force_gameplay_options, characters, wide, texture_pack, mods, mut course, bt_passthrough } = opts;
     // Sound: to the device in real time, and to a WAV file if asked.
     let audio = if audio && !unpaced {
         let a = crate::audio::Audio::open().map_err(|e| eprintln!("audio: {e}; continuing without sound")).ok();
@@ -531,6 +620,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     sys.camera.enabled = !game_camera;
     sys.camera.view_zoom = view_zoom;
     let mut fields_without_camera = 0u32;
+    // `NSMBW_INPUT_LOG=1`: each change of a remote's buttons, shake or tilt
+    // (in tenths) as it goes to the emulated remote.
+    let mut input_log = std::env::var("NSMBW_INPUT_LOG").is_ok_and(|v| v == "1").then(|| [(0u16, false, 0i32); REMOTES]);
     sys.hw.borrow_mut().dsp.ax.aux_return = sys.aux_effects;
     if code_profile.is_some() {
         sys.blocks.starts = Some(Default::default());
@@ -557,6 +649,10 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         let mut hw = sys.hw.borrow_mut();
         hw.ios.trace = true;
         hw.ios.bt.trace = true;
+    }
+    if bt_passthrough {
+        let off = if session.is_some() { Some("net games use the usual controls") } else if !script.is_empty() { Some("a scripted run") } else { None };
+        start_passthrough(&mut sys, off);
     }
     let mut index = 0;
     if let Some((field, state)) = joined {
@@ -626,12 +722,29 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                         }
                     }
                     ToEmu::Click(c) => click = Some(c),
+                    ToEmu::FileBack => {
+                        if session.is_none() {
+                            clicker.back(&sys);
+                        }
+                    }
                     ToEmu::Volumes(v) => {
                         let gains = if session.is_none() { v.map(|p| (p.min(100) * 0x8000 / 100) as u16) } else { [0x8000; 3] };
                         sys.hw.borrow_mut().dsp.ax.gains = gains;
                     }
                     ToEmu::Display(d) => display = d,
                     ToEmu::TexturePack(spec) => pack_stats = set_texture_pack(&mut sys, &spec),
+                    ToEmu::SaveState(path, done) => {
+                        // Written beside it first, so a process ended
+                        // meanwhile leaves no half a state behind.
+                        let result = if paused {
+                            let state = sys.save_state();
+                            let part = path.with_extension("part");
+                            write_state(&part, index, &state).and_then(|()| std::fs::rename(&part, &path).map_err(|e| format!("{}: {e}", path.display())))
+                        } else {
+                            Err("the game is not paused".into())
+                        };
+                        let _ = done.send(result);
+                    }
                     ToEmu::Writebacks(_) | ToEmu::Efb(_) if no_feedback => {}
                     msg => apply(&mut sys, &mut live, msg),
                 }
@@ -693,7 +806,19 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         {
             let mut hw = sys.hw.borrow_mut();
+            if let Some(p) = &mut hw.ios.bt.passthrough {
+                for line in p.take_log() {
+                    say!("[bluetooth] {line}");
+                }
+            }
             for (i, mut input) in inputs.into_iter().enumerate() {
+                if let Some(log) = &mut input_log {
+                    let now = (input.buttons, input.shake, (input.tilt * 10.0).round() as i32);
+                    if now != log[i] {
+                        log[i] = now;
+                        say!("input: field {index} player {}: buttons {:#06x}{} tilt {:+.2}", i + 1, input.buttons, if input.shake { " shake" } else { "" }, input.tilt);
+                    }
+                }
                 // A real remote is on while Windows has it connected.
                 input.connected |= hw.ios.bt.has_real(i);
                 hw.ios.bt.set_input(i, input);
@@ -735,6 +860,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             let _ = frames.send(Err(e));
             break;
         }
+        // Bulk writes the GX thread watches (`gx::texture::CHUNKED`) count
+        // again now they are done.
+        sys.mem.settle();
         // Net games keep the game's own rules.
         if session.is_none() {
             for line in gameplay.after_field(&mut sys, gameplay_options, &cheats, &characters) {
@@ -756,10 +884,20 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                     settings_button.store(true, Ordering::Relaxed);
                 }
             }
+            if closed && sys.menu.take_open_multiplayer() {
+                say!("field {index}: the save select's Multiplayer button");
+                if auto_close_settings {
+                    close_settings_at = Some(index + 30);
+                } else {
+                    multiplayer_button.store(true, Ordering::Relaxed);
+                }
+            }
             if close_settings_at == Some(index) {
                 close_settings_at = None;
                 sys.menu.reopen();
             }
+            let view = crate::click::save_select(&mut sys);
+            *save_select.lock().unwrap_or_else(|e| e.into_inner()) = view;
         }
         // This machine's player for Space Smart Spin (reading changes nothing).
         let motion = player_motion(&sys.mem, view_player.unwrap_or(0));
@@ -831,17 +969,18 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             }
             due += FIELD;
         }
-        let out = {
+        let (out, output_wait) = {
             let mut hw = sys.hw.borrow_mut();
             let waited = hw.gpu.waited();
             let out = hw.gpu.finish_output();
-            totals.output_wait += hw.gpu.waited() - waited;
+            let output_wait = hw.gpu.waited() - waited;
+            totals.output_wait += output_wait;
             if hash_gx {
                 gx_digest = (gx_digest.rotate_left(13) ^ out.digest()).wrapping_mul(0x9E37_79B9_7F4A_7C15);
             }
-            out
+            (out, output_wait)
         };
-        if frames.send(Ok(GameFrame { out, xfb, time, emu, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some(), visible })).is_err() {
+        if frames.send(Ok(GameFrame { out, xfb, time, emu, gx_wait, output_wait, index, wants_efb, remotes, main_player: view_player.unwrap_or(0), online: session.is_some(), visible })).is_err() {
             break;
         }
         index += 1;
@@ -869,9 +1008,44 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     if let Some(a) = &audio {
         totals.audio_dropouts = a.dropouts();
     }
+    if let Some((stats, counts)) = sys.hw.borrow_mut().ios.stop_passthrough() {
+        let counts: Vec<String> = counts.iter().map(|(op, n)| format!("{op:#06x} x{n}")).collect();
+        say!("[bluetooth] totals: {}; the game's commands: {}", stats.summary(), counts.join(", "));
+    }
     totals.thread_cpu = crate::win::thread_cpu_time() - cpu_at_start;
     totals.texture_pack = pack_stats;
     totals
+}
+
+/// Bluetooth passthrough (experimental): the first usable USB Bluetooth
+/// adapter (or with `NSMBW_BT_FAKE_ADAPTER=1` one that answers every
+/// command itself) in place of the emulated remotes; off, with the reason
+/// said, otherwise.
+fn start_passthrough(sys: &mut System, off: Option<&str>) {
+    use hle_ios::bt_passthrough::{Adapter, FakeAdapter};
+    if let Some(why) = off {
+        say!("Bluetooth passthrough: off ({why})");
+        return;
+    }
+    let opened: Result<(Box<dyn Adapter>, String, bool), String> = if std::env::var("NSMBW_BT_FAKE_ADAPTER").is_ok_and(|v| v == "1") {
+        Ok((Box::<FakeAdapter>::default(), "a fake adapter (NSMBW_BT_FAKE_ADAPTER=1)".into(), false))
+    } else {
+        #[cfg(windows)]
+        let opened = input::bt_usb::open().map(|o| (Box::new(o.adapter) as Box<dyn Adapter>, o.name, o.wii_module));
+        #[cfg(not(windows))]
+        let opened = Err("Windows only".to_string());
+        opened
+    };
+    match opened {
+        Ok((adapter, name, wii_module)) => match sys.hw.borrow_mut().ios.start_passthrough(adapter, wii_module, PathBuf::from("saves/bt-passthrough")) {
+            Ok(()) => say!(
+                "Bluetooth passthrough: {name}{}. The game's own Bluetooth drives real Wii Remotes; the keyboard and controllers don't. F8 pairs remotes (held 10 s, it forgets them all).",
+                if wii_module { " (a Wii's own Bluetooth module)" } else { "" }
+            ),
+            Err(e) => say_err!("Bluetooth passthrough: {e}; the emulated remotes play"),
+        },
+        Err(e) => say_err!("Bluetooth passthrough couldn't start: {e}. The keyboard and controllers play as usual."),
+    }
 }
 
 /// Runs the game thread with no window or renderer (`--headless`) until it
@@ -879,7 +1053,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
 /// Nothing comes back from a renderer (EFB copies, EFB snapshots for CPU
 /// peeks) and no host input arrives, so a run depends on its options only.
 /// Returns the totals and the fields run.
-pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), String> {
+pub fn run_headless(game: PathBuf, opts: EmuOptions, mut perf: Option<crate::perf::Perf>) -> Result<(Totals, u64), String> {
     let mut emu = Emu::spawn(game, opts);
     // As a window at 60 fps (no frame interpolation) asks for.
     let _ = emu.to_emu.send(ToEmu::Interpolate(false));
@@ -890,6 +1064,9 @@ pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), St
         match f {
             Ok(f) => {
                 fields += 1;
+                if let Some(p) = &mut perf {
+                    p.field(&f, Duration::ZERO, None);
+                }
                 let _ = emu.to_emu.send(ToEmu::Recycle(Box::new(f.out)));
             }
             Err(e) => {
@@ -899,6 +1076,9 @@ pub fn run_headless(game: PathBuf, opts: EmuOptions) -> Result<(Totals, u64), St
         }
     }
     let totals = emu.stop();
+    if let Some(p) = &mut perf {
+        p.finish();
+    }
     error.map_or(Ok((totals, fields)), Err)
 }
 
@@ -910,10 +1090,12 @@ impl Emu {
         let (to_emu, to_emu_rx) = mpsc::channel();
         let stop = Arc::new(AtomicBool::new(false));
         let settings_button = Arc::new(AtomicBool::new(false));
+        let multiplayer_button = Arc::new(AtomicBool::new(false));
+        let save_select = Arc::new(std::sync::Mutex::new(None));
         let player = Arc::new(AtomicU64::new(0));
-        let (s, b, p) = (stop.clone(), settings_button.clone(), player.clone());
-        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s, b, p)).expect("spawn the game thread");
-        Self { frames, to_emu, settings_button, player, stop, thread: Some(thread) }
+        let (s, m, p) = (stop.clone(), (settings_button.clone(), multiplayer_button.clone(), save_select.clone()), player.clone());
+        let thread = std::thread::Builder::new().name("game".into()).stack_size(64 << 20).spawn(move || run(game, opts, frames_tx, to_emu_rx, s, m, p)).expect("spawn the game thread");
+        Self { frames, to_emu, settings_button, multiplayer_button, save_select, player, stop, thread: Some(thread) }
     }
 
     /// This machine's player after the last field: their state and vertical
@@ -929,5 +1111,21 @@ impl Emu {
         // Unblock a pending send.
         while self.frames.try_recv().is_ok() {}
         self.thread.take().map(|t| t.join().unwrap_or_default()).unwrap_or_default()
+    }
+}
+
+#[cfg(test)]
+mod press_tests {
+    use super::*;
+
+    #[test]
+    fn scripted_buttons() {
+        let s = parse_buttons("2+right+shake").unwrap();
+        assert_eq!(s.buttons, button::TWO | button::RIGHT);
+        assert!(s.shake);
+        assert!(parse_buttons("x").is_err());
+        let p = parse_script("10:a # boot\np2:20:2+right:3").unwrap();
+        assert_eq!((p[0].player, p[0].start, p[0].count, p[0].input.buttons), (0, 10, 6, button::A));
+        assert_eq!((p[1].player, p[1].start, p[1].count), (1, 20, 3));
     }
 }

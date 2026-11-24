@@ -3,9 +3,41 @@
 //! `[controller]` table by name with Xbox labels ("B, X"). The actions are
 //! [`crate::keymap::ACTIONS`]; the guide button is always HOME.
 
-pub use gilrs::{Axis, Button};
-
 use crate::combo;
+
+/// A controller's buttons, by place on an Xbox-style controller (South is
+/// Xbox's A, PlayStation's cross; the bumpers are LeftTrigger and
+/// RightTrigger, the triggers LeftTrigger2 and RightTrigger2; Mode is the
+/// guide button).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum Button {
+    South,
+    East,
+    West,
+    North,
+    LeftTrigger,
+    RightTrigger,
+    LeftTrigger2,
+    RightTrigger2,
+    Select,
+    Start,
+    Mode,
+    LeftThumb,
+    RightThumb,
+    DPadUp,
+    DPadDown,
+    DPadLeft,
+    DPadRight,
+}
+
+/// A stick's axis; up and right are positive.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum Axis {
+    LeftStickX,
+    LeftStickY,
+    RightStickX,
+    RightStickY,
+}
 use crate::keymap::{DOWN, LEFT, RIGHT, TILT_LEFT, TILT_RIGHT, UP};
 
 /// One thing on a controller a binding can be.

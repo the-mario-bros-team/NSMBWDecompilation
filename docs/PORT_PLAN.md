@@ -1152,7 +1152,8 @@ player found in `daPyMng_c`'s ID list (0x80354E10, one word per player).
   new process: RAM hashes match the run that never stopped at every 100
   fields to 7000, and screenshots at 6500 and 6990 are byte-identical.
 
-**M4 (lockstep and joining): done for two machines.** `crates/frontend/src/net.rs`.
+**M4 (lockstep and joining): done for two machines.** `crates/frontend/src/net.rs`
+(now `crates/netplay/src/net.rs`, shared with the Android app).
 - `--host <port>` plays remote 1 and listens; `--join <host>:<port>`
   joins at any time. At its next field the host saves its machine and
   sends it with its NAND files (deflated); the joiner writes the files to
@@ -2056,9 +2057,9 @@ Branch `claude/android-7bd682`.
 
 **Pieces:**
 - `crates/android` builds `libnsmbw.so` (package `nsmbw-android`; empty on
-  other targets). It runs the desktop game thread unchanged: `emu.rs`,
-  `net.rs` and `say.rs` are included from `crates/frontend/src` with
-  `#[path]`. Its own `audio` (AAudio through the `ndk` crate, the same
+  other targets). It runs the desktop game thread unchanged: `emu.rs`
+  and `say.rs` are included from `crates/frontend/src` with `#[path]`;
+  `net` is the `netplay` crate's, as on the desktop. Its own `audio` (AAudio through the `ndk` crate, the same
   queue and resampling as the `cpal` one) and `win` (thread priority nice
   -8, thread CPU time) stand in for the frontend modules of those names.
   stdout and stderr go to logcat (`adb logcat -s nsmbw`).
@@ -2270,14 +2271,144 @@ menus, the Power-Up button, the quick-save backup when leaving the app, and
 the in-game settings window (built on another branch; options will meet
 through a shared settings file).
 
-## 17. Direct3D 12 and Direct3D 11 renderers (2026-11-23)
+### 16.1 Android extras (2026-11-23)
+
+Six of NSMB-Wii-Recompilation's Android features, re-implemented for this
+port (its app was read for behaviour; its renderer fixes were for aurora
+and Dawn, not `vk-render`). Strings are in `Lang.java` (en/es/fr/it).
+
+- **Backup when the player leaves the app.** `onPause` (screen on, not
+  quitting) calls `Native.backup`: the render thread sends the game thread
+  `ToEmu::Pause(true)` and `ToEmu::SaveState` and keeps taking fields until
+  the game thread stops; the state (`System::save_state`, the
+  `--save-state` file format) is written to `files/backup-<versionCode>.state`
+  through a `.part` file, so it is whole or absent. `onPause` waits up to
+  2 s. Coming back (`setPaused(false)`) removes it. The next start finds it
+  only when Android ended the app meanwhile: it is renamed `restore.state`,
+  the game starts from it (`EmuOptions::load_state`, as `--load-state`) with
+  a "Continuing where you left off." note, and it is deleted once a field
+  is shown. Another version's backup is never loaded. As in the recomp,
+  turning the screen off only pauses, and a net game (which doesn't
+  pause) writes none.
+- **Xiaomi Mode** (start menu, Options). MIUI / HyperOS ends an app's extra
+  processes even on screen; the game's `:game` process then dies and the
+  screen stays black. With it on (default only when the maker or brand is
+  Xiaomi, Redmi or POCO) Play opens `MainProcessGameActivity`, the same game
+  in the main process; since `libnsmbw.so` starts once per process, leaving
+  it goes through `RestartActivity` (process `:restart`), which ends the old
+  main process and opens the start menu in a new one.
+- **GPU Driver** (start menu, Options; Snapdragon only). A driver zip
+  (meta.json + library, as Turnip's) is unpacked under
+  `files/gpu_drivers/installed`; libadrenotools (BSD-2,
+  `android/third_party/libadrenotools`, built by `build.ps1` with the SDK's
+  CMake and packed as assets) and its hooks are unpacked next to it only
+  when a driver is picked. `Native.setGraphics` opens Vulkan through
+  `adrenotools_open_libvulkan` and hands its `vkGetInstanceProcAddr` to
+  `vk_render::set_vulkan_loader`. A new pick is on trial for 20 s of
+  running without an error; a start that dies first, or a driver
+  libadrenotools can't open, puts it back to Default and the start menu
+  says so once.
+- **Graphics Compatibility** (Settings, Video: Auto/On/Off,
+  `vk_render::Compat`). What `vk-render` needs that phones may lack is
+  dual-source blending (GX's source alpha and destination alpha) and logic
+  ops; the device used to be refused without them, and Arm's Mali GPUs
+  don't have dual-source blending. Auto uses stand-ins only for what the
+  GPU lacks, On always, Off never (such a GPU can't start). The stand-ins:
+  single-output fragment stages (`fs_one*`), the ones for pipelines that
+  blend with the source alpha writing the blending alpha (a constant
+  destination alpha is lost there), and clear/no-op logic ops as blending
+  (the rest as copy). The derivative fix Adreno needed (above) applies on
+  every GPU and needs no option. The renderer logs which stand-ins it uses,
+  and when the GPU allows fewer sampled images or samplers per stage than
+  it binds (4096, 256).
+- **Check for Updates and Auto Update** (start menu, Updates; Auto Update
+  off by default). `Updater.java` reads `port_update::DEFAULT_SOURCE`
+  (GitHub's latest release), takes its `*-android-arm64.apk`, streams it
+  into a `PackageInstaller` session while hashing it, checks its size and
+  GitHub's `digest` SHA-256, and commits; `UpdateReceiver` shows the
+  system's confirmation. The first time, the player allows installs from
+  the app (`REQUEST_INSTALL_PACKAGES`). Auto Update installs without
+  asking, also when the player comes back after 5 minutes; with Skip Start
+  Menu it checks first and then opens the game. For tests, files named
+  `update-source` (another address) and `update-test-version` (the version
+  to compare) in the app's files stand in.
+- **Download Logs (For Github Reports).** `libnsmbw.so` now also writes
+  its stdout and stderr to `files/logs/run-<seconds>.log` (the newest 5
+  runs are kept). The zip (saved where the player picks) holds those, what
+  logcat still has of the app, `settings.xml` and a device summary (model,
+  Android, chip, ABIs, GPU driver). No saves or game files.
+
+**Checked:** `androiduild.ps1` builds the APK (libnsmbw.so, the three
+libadrenotools libraries as assets, no warnings in the changed crates);
+the 12 JNI exports match `Native.java`; `vk-render`'s shader test compiles
+every fragment stage and checks that the single-output ones carry no
+dual-source `Index` decoration; `cargo check -p frontend` passes.
+
+**Not checked on a device** (no phone was connected): every feature above.
+The GPU Driver needs a Snapdragon phone and a driver zip, and the
+compatibility stand-ins need a Mali GPU (or On on an Adreno) to be seen.
+
+## 17. Older PC processors: the compat build (2026-11-23)
+
+The Windows build is x86-64-v3 (`.cargo/config.toml`: AVX2, FMA, BMI2;
+Intel Haswell, AMD Excavator or newer). As NSMB-Wii-Recompilation does,
+a release now also carries `compat\nsmbw-port.exe`, the same game built for
+x86-64-v2 (SSE4.2, POPCNT; Intel Nehalem, AMD Bulldozer or newer), and the
+launcher is built for any x86-64. `scripts\build-windows.ps1` builds the
+three, each with its own `RUSTFLAGS` and target folder; the setup program,
+the zip and the in-game updater carry `compat\` (details:
+`crates/launcher/README.md`, "Older processors").
+
+- **Same results.** The only floating-point difference is fused
+  multiply-add: without the FMA instruction, `guest_cpu::fp::fma` uses
+  `fp::fma_soft`: `libm::fma` (musl's algorithm, MIT; in the game's build
+  other crates turn on libm's "arch" feature, so it uses FMA4 on AMD
+  Bulldozer, and its software path elsewhere), with NaNs handled as the
+  instruction does (given a NaN, it returns it quieted, even for
+  0 * inf + NaN, where libm gives the default NaN: the test found that).
+  `crates/guest-cpu/tests/soft_fma.rs` checks it bit for bit against the
+  instruction on edge cases and 3 million random ones. Of several NaN
+  inputs, the instruction's pick depends on the form the compiler chose
+  (vfmadd132/213/231), so the normal build itself has no one answer there;
+  the test only asks that one of them comes out. The C runtime's `fma`, which
+  `f64::mul_add` calls in a build without FMA, was not used: here it ran
+  at the instruction's speed (it seems to use the instruction where there
+  is one), so its software path could not be tested on this PC. Where the processor has FMA but not AVX2 (AMD
+  Piledriver, Steamroller), the compat build still uses the instruction.
+- **Choosing it.** The launcher checks the processor and starts the compat
+  build. `nsmbw-port.exe` started directly checks too, before anything
+  built for v3 can run: an assembly routine in the C runtime's initialiser
+  table (`crates/frontend/src/cpu_guard.rs`) hands over to the compat
+  build with the same command line, or says why it cannot.
+  `NSMBW_FORCE_COMPAT` (any value) forces the compat build for testing.
+- **Checked on the development PC** (which has AVX2, so the compat build
+  was forced with `NSMBW_FORCE_COMPAT`; it is untested on a processor
+  without AVX2):
+  - 1-1 headless (`--headless --unpaced --no-audio --press-file
+    scripts/1-1.press --frames 9700 --hash-every 100`), started through
+    `nsmbw-port.exe` with the variable set: it handed over to the compat
+    build, and all 98 RAM hashes equal main's reference log. So did the
+    compat build started directly (twice) and the normal build (twice).
+  - Speed, unpaced, two runs each, alternating, with other builds running
+    on the PC: normal 238 and 246 M guest instructions/s (55.4 and 53.6 s
+    of host time), compat 223 and 237 M/s (59.3 and 55.7 s), about 5%
+    slower. This PC has FMA, so the compat build used the instruction: on
+    a processor without it, the software FMA will cost more (not measured).
+  - The launcher, built for any x86-64, started `compat\nsmbw-port.exe`
+    with the variable set (Skip Launcher, 120 frames, no validation errors).
+  - `scripts\build-windows.ps1 -Local` assembled the folder, and
+    `scripts\make-installer.ps1` built a setup program from it (not
+    installed).
+
+## 18. Direct3D 12 and Direct3D 11 renderers (2026-11-23)
 
 The Settings window's **Renderer** (Graphics tab), `renderer =` in
 `settings.toml` and `--renderer <auto|vulkan|d3d12|d3d11>` pick the
 graphics API, from the next start. **Automatic** makes the Vulkan renderer
-first (it fails without a Vulkan 1.3 device with dual-source blending and
-logic ops), then Direct3D 12, then Direct3D 11 (`frontend/src/gfx.rs`).
-Android stays Vulkan-only. `--replay` takes `--renderer` too.
+first (on a Vulkan 1.3 or 1.1 device with dual-source blending and logic
+ops; Automatic turns its approximations without them off), then Direct3D 12, then Direct3D 11 (`frontend/src/gfx.rs`).
+Direct3D is Windows-only: the Android app has no Direct3D and stays on
+Vulkan (incomplete there by choice; not planned for now). `--replay` takes `--renderer` too.
 
 **Layout.** `crates/render` holds what every renderer shares: the
 `Backend` trait the frontend draws through (what `play.rs` used of

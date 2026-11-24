@@ -10,7 +10,7 @@ path = "src/lib.rs"
 # plain `cargo check` (and scripts/check.ps1) on the reconstruction only; build
 # the port with `cargo run -p frontend`.
 [workspace]
-members = [".", "crates/frontend", "crates/guest-mem", "crates/guest-cpu", "crates/hle-ios", "crates/hw", "crates/hle-os", "crates/gx", "crates/vk-render", "crates/render", "crates/d3d-render", "crates/input", "crates/ppc-recomp", "crates/game-recomp", "crates/game-recomp/shards/*", "crates/port-update", "crates/launcher", "crates/android", "crates/disc-image"]
+members = [".", "crates/frontend", "crates/guest-mem", "crates/guest-cpu", "crates/hle-ios", "crates/hw", "crates/hle-os", "crates/gx", "crates/vk-render", "crates/render", "crates/d3d-render", "crates/input", "crates/ppc-recomp", "crates/game-recomp", "crates/game-recomp/shards/*", "crates/port-update", "crates/launcher", "crates/android", "crates/disc-image", "crates/netplay"]
 default-members = ["."]
 
 [profile.release]
@@ -18,6 +18,12 @@ panic = "abort"
 # Thin: the recompiled code (crates/game-recomp) is too big for one fat-LTO
 # module (21 minutes on one thread); thin LTO links it in parallel.
 lto = "thin"
+
+# SDL 3 (crates/input) is C built through CMake: optimized even in debug
+# builds, so it uses the release C runtime, as Rust does on MSVC.
+[profile.dev.package.sdl3-sys]
+opt-level = 2
+debug = false
 
 # Release without cross-crate LTO, for checks that only need the same
 # results (the `--hash-every` script): after a change outside guest-cpu,

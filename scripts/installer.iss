@@ -48,6 +48,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "{#Source}\nsmbw-launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#Source}\nsmbw-port.exe"; DestDir: "{app}"; Flags: ignoreversion
+; The game for processors without AVX2, FMA or BMI2; the launcher picks it.
+Source: "{#Source}\compat\nsmbw-port.exe"; DestDir: "{app}\compat"; Flags: ignoreversion
 Source: "{#Source}\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#Source}\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
 

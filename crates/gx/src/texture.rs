@@ -347,6 +347,38 @@ pub struct NewTexture {
     pub replacement: Option<std::sync::Arc<crate::replace::Image>>,
 }
 
+/// Textures at least this large are hashed in pieces, one per
+/// [`guest_mem::CHUNK`] of RAM they cover, each hashed again only when that
+/// chunk has been written ([`guest_mem::RamView::chunk_gen`]): a course's
+/// tile atlases are megabytes, and a few written bytes (an animated tile
+/// copied into one) used to mean hashing all of it again.
+pub const CHUNKED: usize = 128 << 10;
+
+/// One piece of a large texture ([`CHUNKED`]): the chunk's write generation
+/// when it was hashed, its hash, the generation (frame) it was hashed in, and
+/// the last one it was used in.
+#[derive(Clone, Copy)]
+struct Piece {
+    gen: u32,
+    digest: u64,
+    hashed: u64,
+    used: u64,
+}
+
+/// EFB copy destinations at least this large have their hash kept
+/// ([`Cache::range_hash`]).
+const RANGE_MEMO: usize = 16 << 10;
+
+/// A kept [`hash`] of RAM ([`Cache::range_hash`]): the write generations of
+/// the chunks it covers when it was taken, and the generation (frame) it was
+/// taken in and last used in.
+struct RangeMemo {
+    gens: Vec<u32>,
+    hash: u64,
+    hashed: u64,
+    used: u64,
+}
+
 /// An EFB copy kept on the GPU as texture `id`, standing in for the bytes at
 /// its destination while those bytes are unchanged.
 struct EfbCopy {
@@ -381,6 +413,14 @@ pub struct Cache {
     /// Ids drawn from the game's texture while their pack file is read:
     /// the pack's key, and the texture's size.
     waiting: FastMap<u32, (crate::replace::Key, u16, u16)>,
+    /// Pieces of large textures by (RAM offset, length), and the
+    /// generation each chunk was first watched in ([`Cache::content_hash`]).
+    pieces: FastMap<(usize, usize), Piece>,
+    watched: FastMap<usize, u64>,
+    /// Hashes of EFB copy destinations by (RAM offset, span, row stride).
+    ranges: FastMap<(usize, usize, usize), RangeMemo>,
+    /// Bytes hashed for texture lookups since the last take.
+    pub hashed_bytes: u64,
 }
 
 /// Generations a texture may go unused before the renderer drops it.
@@ -427,6 +467,8 @@ impl Cache {
                 keep
             });
             self.live.retain(|_, (_, last)| g - *last < 60);
+            self.pieces.retain(|_, p| g - p.used < 60);
+            self.ranges.retain(|_, r| g - r.used < 60);
         }
     }
 
@@ -467,23 +509,113 @@ impl Cache {
         }
     }
 
-    /// The texture id for `key`, decoding it from `levels` (the bytes of each
-    /// level) when its contents are new.
-    pub fn lookup(&mut self, key: TexKey, data: &[u8], tlut: &[u8]) -> u32 {
+    /// Chunk `chunk`'s generation, watching it from now on if it was not;
+    /// and the generation (frame) it has been watched since.
+    fn chunk(&mut self, view: &guest_mem::RamView, chunk: usize) -> (u32, u64) {
+        let g = self.generation;
+        let watched = *self.watched.entry(chunk).or_insert_with(|| {
+            view.watch(chunk);
+            g
+        });
+        (view.chunk_gen(chunk), watched)
+    }
+
+    /// [`hash`] of RAM at `addr` (`span` bytes there, or rows of them `stride`
+    /// apart: an EFB copy's destination), as `hash_bytes` takes it, and the
+    /// number of bytes it hashed. The hash from the last time is used again
+    /// if no chunk in the span has been written since (the same rules as
+    /// [`Cache::content_hash`]): a copy's destination is hashed when the copy
+    /// is made and each frame its texture is drawn, and most copies (the
+    /// screen for depth of field, light textures) go to the same RAM every
+    /// frame, which nothing else writes. The hash is the plain one: the game
+    /// thread compares it with the bytes when the texels come back.
+    pub fn range_hash(&mut self, addr: u32, span: usize, stride: usize, view: Option<&guest_mem::RamView>, hash_bytes: impl FnOnce() -> (u64, usize)) -> u64 {
+        let base = match view {
+            Some(v) if span >= RANGE_MEMO => v.offset(addr, span),
+            _ => None,
+        };
+        let (Some(view), Some(base)) = (view, base) else {
+            let (h, n) = hash_bytes();
+            self.hashed_bytes += n as u64;
+            return h;
+        };
+        let g = self.generation;
+        // The generations first, then the bytes (see `content_hash`).
+        let mut watched = 0;
+        let gens: Vec<u32> = (base / guest_mem::CHUNK..=(base + span - 1) / guest_mem::CHUNK)
+            .map(|c| {
+                let (gen, since) = self.chunk(view, c);
+                watched = watched.max(since);
+                gen
+            })
+            .collect();
+        if let Some(m) = self.ranges.get_mut(&(base, span, stride)) {
+            m.used = g;
+            if m.hashed > watched && m.gens == gens {
+                return m.hash;
+            }
+        }
+        let (h, n) = hash_bytes();
+        self.hashed_bytes += n as u64;
+        self.ranges.insert((base, span, stride), RangeMemo { gens, hash: h, hashed: g, used: g });
+        h
+    }
+
+    /// A hash of texture bytes `data`, read from RAM at `addr` through
+    /// `view` (if they were): from its pieces' hashes for a large one
+    /// ([`CHUNKED`]), hashing again only the pieces written since.
+    ///
+    /// A chunk watched for the first time in this generation may have been
+    /// written as the watch began without its generation moving (see
+    /// [`guest_mem::RamView`]); its pieces are hashed once more in a later
+    /// generation, after which an unchanged generation means unchanged bytes.
+    fn content_hash(&mut self, addr: u32, data: &[u8], view: Option<&guest_mem::RamView>) -> u64 {
+        let base = match view {
+            Some(v) if data.len() >= CHUNKED => v.offset(addr, data.len()),
+            _ => None,
+        };
+        let (Some(view), Some(base)) = (view, base) else {
+            self.hashed_bytes += data.len() as u64;
+            return hash(data);
+        };
+        let g = self.generation;
+        let mut h: u64 = 0xCBF2_9CE4_8422_2325 ^ data.len() as u64;
+        let mut at = 0;
+        while at < data.len() {
+            let off = base + at;
+            let end = (at + guest_mem::CHUNK - off % guest_mem::CHUNK).min(data.len());
+            // The generation first, then the bytes: a write after this read
+            // moves it, and the piece is hashed again next time.
+            let (gen, watched) = self.chunk(view, off / guest_mem::CHUNK);
+            let piece = self.pieces.entry((off, end - at)).or_insert(Piece { gen: gen.wrapping_sub(1), digest: 0, hashed: 0, used: g });
+            piece.used = g;
+            if piece.gen != gen || piece.hashed <= watched {
+                *piece = Piece { gen, digest: hash(&data[at..end]), hashed: g, used: g };
+                self.hashed_bytes += (end - at) as u64;
+            }
+            h = (h.rotate_left(5) ^ piece.digest).wrapping_mul(0x517C_C1B7_2722_0A95);
+            at = end;
+        }
+        h
+    }
+
+    /// The texture id for `key`, decoding it from `data` (the bytes of each
+    /// level, one after another) when its contents are new. `view`: what
+    /// `data` was read through, when it is RAM read from the GX thread.
+    pub fn lookup(&mut self, key: TexKey, data: &[u8], tlut: &[u8], view: Option<&guest_mem::RamView>) -> u32 {
         if let Some(&id) = self.checked.get(&key) {
             return id;
         }
-        if let Some(c) = self.efb_copies.get(&key.addr) {
+        if let Some(&EfbCopy { id, width, height, ram_hash }) = self.efb_copies.get(&key.addr) {
             let size = level_size(key.format, key.width.into(), key.height.into()).min(data.len());
-            if c.width == key.width && c.height == key.height && hash(&data[..size]) == c.ram_hash {
-                let id = c.id;
+            if width == key.width && height == key.height && self.range_hash(key.addr, size, 0, view, || (hash(&data[..size]), size)) == ram_hash {
                 self.checked.insert(key, id);
                 return id;
             }
             let old = self.efb_copies.remove(&key.addr).unwrap();
             self.evicted.push(old.id);
         }
-        let mut h = hash(data);
+        let mut h = self.content_hash(key.addr, data, view);
         if is_paletted(key.format) {
             h ^= hash(tlut).rotate_left(17);
         }
@@ -627,7 +759,7 @@ mod tests {
         let mut c = Cache::default();
         let key = TexKey { addr: 0x10_0000, width: 1024, height: 512, format: RGB5A3, levels: 1, tlut: 0, tlut_format: 0 };
         let data = vec![0u8; level_size(RGB5A3, 1024, 512)];
-        let id = c.lookup(key, &data, &[]);
+        let id = c.lookup(key, &data, &[], None);
         let stride = 256 * 32;
         let addr = 0x10_0000 + 2 * stride + 16 * 32;
         assert_eq!(c.patch_targets(addr, RGB5A3, 32, 32, stride), vec![(id, 64, 8)]);
@@ -641,17 +773,80 @@ mod tests {
     }
 
     #[test]
+    fn large_textures_hash_only_written_chunks() {
+        use guest_mem::{Mem, NullMmio, Ram, CHUNK};
+        let mut mem = Mem::new(Box::new(NullMmio));
+        let view = mem.view();
+        // A 1024x512 RGB5A3 texture: 1 MiB, sixteen chunks.
+        let key = TexKey { addr: 0x0010_0000, width: 1024, height: 512, format: RGB5A3, levels: 1, tlut: 0, tlut_format: 0 };
+        let size = level_size(RGB5A3, 1024, 512);
+        let mut c = Cache::default();
+        let mut look = |c: &mut Cache| {
+            let data = view.ram(0x8010_0000, size).unwrap();
+            c.lookup(key, data, &[], Some(&view))
+        };
+        let id = look(&mut c);
+        // Hashed whole twice: when first watched, and once more after.
+        c.next_generation();
+        assert_eq!(look(&mut c), id);
+        let after = c.hashed_bytes;
+        c.next_generation();
+        assert_eq!(look(&mut c), id);
+        assert_eq!(c.hashed_bytes, after, "nothing written, nothing hashed");
+        // A store into the fifth chunk: only it is hashed again, and the
+        // texture is new.
+        mem.write_u16(0x8010_0000 + 4 * CHUNK as u32 + 6, 0x1234).unwrap();
+        c.next_generation();
+        let new = look(&mut c);
+        assert_ne!(new, id);
+        assert_eq!(c.hashed_bytes - after, CHUNK as u64);
+        // A bulk write (DMA) counts too, also once written after the hand-out.
+        let after = c.hashed_bytes;
+        mem.ram_mut(0x8010_0000 + 9 * CHUNK as u32, 64).unwrap()[3] = 7;
+        mem.settle();
+        c.next_generation();
+        assert_ne!(look(&mut c), new);
+        assert_eq!(c.hashed_bytes - after, CHUNK as u64);
+    }
+
+    #[test]
+    fn copy_destinations_hash_again_only_once_written() {
+        use guest_mem::{Mem, NullMmio, Ram};
+        let mut mem = Mem::new(Box::new(NullMmio));
+        let view = mem.view();
+        let size = 64 << 10;
+        let mut c = Cache::default();
+        let mut take = |c: &mut Cache| {
+            let bytes = view.ram(0x8020_0000, size).unwrap();
+            c.range_hash(0x0020_0000, size, 0, Some(&view), || (hash(bytes), bytes.len()))
+        };
+        let h = take(&mut c);
+        assert_eq!(h, hash(view.ram(0x8020_0000, size).unwrap()));
+        c.next_generation();
+        take(&mut c);
+        let before = c.hashed_bytes;
+        c.next_generation();
+        assert_eq!(take(&mut c), h);
+        assert_eq!(c.hashed_bytes, before, "unchanged: kept");
+        mem.write_u8(0x8020_0000 + 100, 1).unwrap();
+        c.next_generation();
+        let new = take(&mut c);
+        assert_ne!(new, h);
+        assert_eq!(new, hash(view.ram(0x8020_0000, size).unwrap()));
+    }
+
+    #[test]
     fn cache_reuses_until_contents_change() {
         let mut c = Cache::default();
         let key = TexKey { addr: 0x100, width: 8, height: 4, format: I8, levels: 1, tlut: 0, tlut_format: 0 };
         let mut data = vec![7u8; 32];
-        let a = c.lookup(key, &data, &[]);
-        assert_eq!(c.lookup(key, &data, &[]), a);
+        let a = c.lookup(key, &data, &[], None);
+        assert_eq!(c.lookup(key, &data, &[], None), a);
         c.next_generation();
-        assert_eq!(c.lookup(key, &data, &[]), a);
+        assert_eq!(c.lookup(key, &data, &[], None), a);
         data[3] = 9;
         c.next_generation();
-        assert_ne!(c.lookup(key, &data, &[]), a);
+        assert_ne!(c.lookup(key, &data, &[], None), a);
         assert_eq!(c.new.len(), 2);
     }
 
@@ -661,19 +856,19 @@ mod tests {
         let mut c = Cache::default();
         let key = TexKey { addr: 0x100, width: 8, height: 4, format: I8, levels: 1, tlut: 0, tlut_format: 0 };
         let (data, other) = (vec![7u8; 32], vec![8u8; 32]);
-        let old = c.lookup(key, &data, &[]);
+        let old = c.lookup(key, &data, &[], None);
         let mut pack = Pack::new(None);
         pack.add(crate::replace::key(I8, 8, 4, &data, &[]), std::sync::Arc::new(Image::with_mips(16, 8, vec![1; 16 * 8 * 4])));
         c.set_pack(Some(pack));
         assert_eq!(c.evicted, vec![old]);
-        let id = c.lookup(key, &data, &[]);
+        let id = c.lookup(key, &data, &[], None);
         assert!(c.is_replaced(id) && id != old);
         let t = c.new.last().unwrap();
         assert!(t.levels.is_empty());
         assert_eq!(t.replacement.as_ref().map(|r| (r.width, r.levels.len())), Some((16, 5)));
         // Other contents at the same address: the game's own.
         c.next_generation();
-        let id = c.lookup(key, &other, &[]);
+        let id = c.lookup(key, &other, &[], None);
         assert!(!c.is_replaced(id) && c.new.last().unwrap().replacement.is_none());
     }
 
@@ -693,7 +888,7 @@ mod tests {
         c.set_pack(Some(pack));
         let key = TexKey { addr: 0x100, width: 8, height: 4, format: I8, levels: 1, tlut: 0, tlut_format: 0 };
         // First the game's texture, decoded as always.
-        let id = c.lookup(key, &data, &[]);
+        let id = c.lookup(key, &data, &[], None);
         assert!(!c.is_replaced(id) && c.new[0].levels.len() == 1 && c.new[0].replacement.is_none());
         c.new.clear();
         // Then, once read, the pack's image under the same id.
@@ -706,7 +901,7 @@ mod tests {
         }
         assert_eq!(c.new.len(), 1);
         assert_eq!((c.new[0].id, c.new[0].replacement.as_ref().map(|r| r.width)), (id, Some(32)));
-        assert!(c.is_replaced(id) && c.lookup(key, &data, &[]) == id);
+        assert!(c.is_replaced(id) && c.lookup(key, &data, &[], None) == id);
         std::fs::remove_dir_all(&dir).unwrap();
     }
 }

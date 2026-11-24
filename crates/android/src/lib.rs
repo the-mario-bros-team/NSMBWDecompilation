@@ -4,8 +4,8 @@
 //! on-screen Wii Remote, the phone's motion sensors, controllers and the
 //! settings; it calls the `Native` class's functions below.
 //!
-//! The game thread is the desktop frontend's own (`emu.rs`, with `net.rs`
-//! and `say.rs`, included from `crates/frontend/src`); `audio` and `win`
+//! The game thread is the desktop frontend's own (`emu.rs` and `say.rs`,
+//! included from `crates/frontend/src`; `net` is the `netplay` crate's); `audio` and `win`
 //! are this crate's versions of the frontend modules of those names. A
 //! render thread of this crate takes each field from the game thread and
 //! presents it at the game's own 60 fps, as the desktop window does at
@@ -16,9 +16,9 @@
 #[allow(dead_code)]
 #[path = "../../frontend/src/emu.rs"]
 mod emu;
-#[allow(dead_code)]
-#[path = "../../frontend/src/net.rs"]
-mod net;
+// Online multiplayer (shared with the desktop), and LAN Play's side of it.
+use netplay::net;
+mod lobby;
 #[allow(dead_code, unused_imports, unused_macros)]
 #[path = "../../frontend/src/say.rs"]
 mod say;
@@ -33,6 +33,12 @@ mod gameplay;
 #[allow(dead_code)]
 #[path = "../../frontend/src/mods.rs"]
 mod mods;
+// Per-field timings: on while the app's files hold a file named `perf`
+// (its text: the draw categories to leave out in turn, if any), into
+// `perf.csv` there and logcat.
+#[allow(dead_code)]
+#[path = "../../frontend/src/perf.rs"]
+mod perf;
 mod ui {
     #[allow(dead_code)]
     #[path = "../../../frontend/src/ui/text.rs"]
@@ -50,6 +56,7 @@ mod settings {
 }
 
 mod audio;
+mod gpu_driver;
 mod logcat;
 mod win;
 
@@ -89,7 +96,14 @@ enum ToRender {
     Window(Option<NativeWindow>, SyncSender<()>),
     Resized,
     Paused(bool),
+    /// Pause, after writing the game to this file (a backup in case
+    /// Android ends the app while it is away); then say how that went.
+    Backup(PathBuf, SyncSender<Result<(), String>>),
 }
+
+/// A state file to start the game from instead of power-on (the backup of
+/// a run Android ended), set before `start`.
+static LOAD_STATE: Mutex<Option<PathBuf>> = Mutex::new(None);
 
 struct Shared {
     tx: Mutex<Sender<ToRender>>,
@@ -124,6 +138,14 @@ struct Render {
     /// Speed over the last [`SPEED_EVERY`]: since when, fields, and their
     /// emulation and render times.
     speed: (Instant, u32, Duration, Duration),
+    /// A backup being written: the game thread's answer, who waits for it,
+    /// and the file.
+    backup: Option<(Receiver<Result<(), String>>, SyncSender<Result<(), String>>)>,
+    /// The last backup written: removed when the game carries on.
+    backup_file: Option<PathBuf>,
+    /// The state the game started from: removed once it has shown a field.
+    loaded: Option<PathBuf>,
+    perf: Option<perf::Perf>,
 }
 
 /// How often the game's speed goes to logcat.
@@ -136,6 +158,31 @@ impl Render {
             *s.error.lock().unwrap() = Some(e);
         }
         self.failed = true;
+        if let Some((_, ack)) = self.backup.take() {
+            let _ = ack.send(Err("the game stopped".into()));
+        }
+    }
+
+    /// Whether fields are taken from the game: while it runs, and while a
+    /// backup waits for the game thread to stop.
+    fn busy(&self) -> bool {
+        // A LAN game runs on while the app is away: the others wait for it.
+        self.emu.is_some() && (!self.paused || self.backup.is_some() || lobby::online()) && !self.failed
+    }
+
+    /// Hands on the game thread's answer about a backup, once it is in.
+    fn check_backup(&mut self) {
+        let Some((rx, _)) = &self.backup else { return };
+        let result = match rx.try_recv() {
+            Ok(r) => r,
+            Err(mpsc::TryRecvError::Empty) => return,
+            Err(mpsc::TryRecvError::Disconnected) => Err("the game thread stopped".into()),
+        };
+        let (_, ack) = self.backup.take().unwrap();
+        if let Err(e) = &result {
+            println!("backup: {e}");
+        }
+        let _ = ack.send(result);
     }
 
     fn handle(&mut self, msg: ToRender) {
@@ -162,8 +209,47 @@ impl Render {
                 }
             }
             ToRender::Paused(p) => {
+                if !p {
+                    // Back in the app: the backup is not needed. One still
+                    // being written is waited for first (the game thread
+                    // writes it before it runs on).
+                    if let Some((rx, ack)) = self.backup.take() {
+                        let result = rx.recv_timeout(Duration::from_secs(10)).unwrap_or_else(|_| Err("timed out".into()));
+                        let _ = ack.send(result);
+                    }
+                    if let Some(f) = self.backup_file.take() {
+                        let _ = std::fs::remove_file(f);
+                    }
+                }
                 self.paused = p;
                 audio::set_paused(p);
+                if let Some(emu) = &self.emu {
+                    if !lobby::online() {
+                        let _ = emu.to_emu.send(ToEmu::Pause(p));
+                    }
+                }
+            }
+            ToRender::Backup(path, ack) if lobby::online() => {
+                // A net game doesn't stop for a backup: the others wait for it.
+                self.paused = true;
+                audio::set_paused(true);
+                let _ = ack.send(Err(format!("a LAN game keeps running, no backup of {}", path.display())));
+            }
+            ToRender::Backup(path, ack) => {
+                self.paused = true;
+                audio::set_paused(true);
+                match &self.emu {
+                    Some(emu) if !self.failed && self.backup.is_none() => {
+                        let (tx, rx) = mpsc::channel();
+                        let _ = emu.to_emu.send(ToEmu::Pause(true));
+                        let _ = emu.to_emu.send(ToEmu::SaveState(path.clone(), tx));
+                        self.backup = Some((rx, ack));
+                        self.backup_file = Some(path);
+                    }
+                    _ => {
+                        let _ = ack.send(Err("no game running".into()));
+                    }
+                }
             }
         }
     }
@@ -196,19 +282,72 @@ impl Render {
         if !audio {
             println!("sound off (files/no-audio)");
         }
-        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, ..EmuOptions::default() });
+        // A LAN game (`Native.setNet`): hosting answers room queries; a
+        // Tailscale host joined is asked for rooms from now on.
+        let (net, name) = lobby::take_net();
+        match &net {
+            net::Mode::Host { port, .. } => {
+                if let Err(e) = netplay::lan::announce(*port, name) {
+                    eprintln!("LAN: can't answer room queries: {e}");
+                }
+            }
+            net::Mode::Join { addr } => netplay::lan::joined(addr),
+            net::Mode::Off => {}
+        }
+        // A backup is never loaded into a net game: every machine has to
+        // start from power-on.
+        let load_state = LOAD_STATE.lock().unwrap().take().filter(|_| matches!(net, net::Mode::Off));
+        if let Some(p) = &load_state {
+            println!("starting from the backup {}", p.display());
+        }
+        self.loaded = load_state.clone();
+        if let Ok(skip) = std::fs::read_to_string("perf") {
+            match perf::Skip::parse_list(skip.trim()).and_then(|s| perf::Perf::new(Some(Path::new("perf.csv")), s, 300)) {
+                Ok(p) => {
+                    println!("perf: timing every field into perf.csv (files/perf)");
+                    self.perf = Some(p);
+                }
+                Err(e) => eprintln!("perf: {e}"),
+            }
+        }
+        // A scripted run, for measuring (as `--press-file`): a file named
+        // `press` in the app's files.
+        let script = match std::fs::read_to_string("press").map(|t| emu::parse_script(&t)) {
+            Ok(Ok(s)) => {
+                println!("press: {} scripted presses (files/press)", s.len());
+                s
+            }
+            Ok(Err(e)) => {
+                eprintln!("press: {e}");
+                Vec::new()
+            }
+            Err(_) => Vec::new(),
+        };
+        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, net, load_state, script, ..EmuOptions::default() });
         let _ = emu.to_emu.send(ToEmu::Interpolate(false));
+        if self.paused {
+            let _ = emu.to_emu.send(ToEmu::Pause(true));
+        }
         self.emu = Some(emu);
         Ok(())
     }
 
     /// Draws a field and presents it (when there is a surface), and sends
     /// the game what only the GPU knows.
-    fn ingest(&mut self, f: GameFrame) -> Result<(), String> {
+    fn ingest(&mut self, mut f: GameFrame) -> Result<(), String> {
         let (w, h) = self.window.as_ref().map_or((0, 0), |w| (w.width().max(0) as u32, w.height().max(0) as u32));
         let (Some(r), Some(emu)) = (&mut self.renderer, &self.emu) else { return Ok(()) };
+        if let Some(p) = &self.perf {
+            p.filter(&mut f.out);
+        }
         let started = Instant::now();
+        if let Some(p) = self.loaded.take() {
+            let _ = std::fs::remove_file(p);
+        }
         r.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
+        if let Some(p) = &mut self.perf {
+            p.field(&f, started.elapsed(), r.gpu_time());
+        }
         self.speed.1 += 1;
         self.speed.2 += f.emu;
         self.speed.3 += started.elapsed();
@@ -217,12 +356,14 @@ impl Render {
             let (n, ms) = (self.speed.1.max(1), |d: Duration| d.as_secs_f32() * 1000.0);
             let (textures, used, reserved) = r.memory();
             println!(
-                "field {}: game {:.0}% ({:.1} fields/s), emulation {:.1} ms and render {:.1} ms a field; {textures} textures, GPU memory {} MB used of {} MB",
+                "field {}: game {:.0}% ({:.1} fields/s), emulation {:.1} ms and render {:.1} ms a field; {} of {} draws specialized; {textures} textures, GPU memory {} MB used of {} MB",
                 f.index,
                 self.speed.1 as f32 / secs / 59.94 * 100.0,
                 self.speed.1 as f32 / secs,
                 ms(self.speed.2) / n as f32,
                 ms(self.speed.3) / n as f32,
+                r.stats.specialized,
+                r.stats.draws,
                 used >> 20,
                 reserved >> 20
             );
@@ -250,7 +391,7 @@ impl Render {
 
     fn run(mut self, rx: Receiver<ToRender>) {
         loop {
-            let busy = self.emu.is_some() && !self.paused && !self.failed;
+            let busy = self.busy();
             // With nothing to draw, wait for the Java side.
             let first = if busy {
                 rx.try_recv().ok()
@@ -266,7 +407,8 @@ impl Render {
                     self.handle(m);
                 }
             }
-            if !(self.emu.is_some() && !self.paused && !self.failed) {
+            self.check_backup();
+            if !self.busy() {
                 continue;
             }
             let Some(emu) = &self.emu else { continue };
@@ -281,6 +423,8 @@ impl Render {
             }
             // While paused nothing takes fields: the game thread stops at
             // its next one, its frame queue full.
+            // While paused for a backup the game thread stops at its next
+            // field; the fields before it are drawn (unseen) meanwhile.
             match emu.frames.recv_timeout(FIELD) {
                 Ok(Ok(f)) => {
                     if let Err(e) = self.ingest(f) {
@@ -330,6 +474,8 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_start<'l>(mut env: JNIEn
             return Ok(());
         }
         std::env::set_current_dir(&files).map_err(|e| format!("{files}: {e}"))?;
+        logcat::keep_in(Path::new("logs"));
+        println!("NSMBW port {} on {}", env!("CARGO_PKG_VERSION"), std::env::consts::ARCH);
         // For finding renderer bugs: a file named `validation` in the app's
         // files turns the Vulkan validation layer on, when the APK carries
         // it (`android/build.ps1 -ValidationLayer`). Set before any other
@@ -343,7 +489,7 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_start<'l>(mut env: JNIEn
         SHARED.set(Shared { tx: Mutex::new(tx), inputs: Mutex::new(inputs), error: Mutex::new(None), rumble: AtomicBool::new(false) }).map_err(|_| "already started".to_string())?;
         let cfg = Config { game: PathBuf::from(game), scale: scale.clamp(0, 8) as u32, widescreen: widescreen != 0, vsync: vsync != 0, language: u8::try_from(language).unwrap_or(1) };
         println!("starting: game {}, files {files}", cfg.game.display());
-        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None, speed: (Instant::now(), 0, Duration::ZERO, Duration::ZERO) };
+        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None, speed: (Instant::now(), 0, Duration::ZERO, Duration::ZERO), backup: None, backup_file: None, loaded: None, perf: None };
         std::thread::Builder::new().name("render".into()).spawn(move || render.run(rx)).map_err(|e| e.to_string())?;
         Ok(())
     })();
@@ -392,10 +538,76 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_setRemote<'l>(_: JNIEnv<
 }
 
 /// `Native.setPaused(paused)`: the app left the screen (or came back). The
-/// game stops within a field or so and nothing plays.
+/// game stops within a field or so and nothing plays. Coming back removes
+/// the backup `backup` wrote.
 #[no_mangle]
 pub extern "system" fn Java_com_wither_nsmbwport_Native_setPaused<'l>(_: JNIEnv<'l>, _: JClass<'l>, paused: jboolean) {
     send(ToRender::Paused(paused != 0));
+}
+
+/// `Native.backup(path, timeoutMs)`: pauses as `setPaused(true)` does, after
+/// writing the game to `path` (a state file); returns null once it is
+/// written, else why not (a net game, which doesn't pause; the time ran
+/// out). The file appears whole or not at all.
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_backup<'l>(mut env: JNIEnv<'l>, _: JClass<'l>, path: JString<'l>, timeout_ms: jint) -> jstring {
+    let result = (|| -> Result<(), String> {
+        let path = PathBuf::from(java_string(&mut env, &path)?);
+        let (ack, done) = mpsc::sync_channel(1);
+        if !send(ToRender::Backup(path, ack)) {
+            return Err("the game has not started".into());
+        }
+        let started = Instant::now();
+        let result = done.recv_timeout(Duration::from_millis(timeout_ms.max(0) as u64)).unwrap_or_else(|_| Err("timed out".into()));
+        if result.is_ok() {
+            println!("backup written in {} ms", started.elapsed().as_millis());
+        }
+        result
+    })();
+    match result {
+        Ok(()) => std::ptr::null_mut(),
+        Err(e) => env.new_string(e).map(JString::into_raw).unwrap_or(std::ptr::null_mut()),
+    }
+}
+
+/// `Native.setLoadState(path)`: before `start`, a state file (`backup`'s) to
+/// start the game from instead of power-on; it is removed once the game
+/// shows a field. Null: power-on.
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_setLoadState<'l>(mut env: JNIEnv<'l>, _: JClass<'l>, path: JString<'l>) {
+    let path = if path.is_null() { None } else { java_string(&mut env, &path).ok().map(PathBuf::from) };
+    *LOAD_STATE.lock().unwrap() = path;
+}
+
+/// `Native.setGraphics(compat, hookDir, driverDir, driverLib, tmpDir)`: before
+/// `start`. `compat` is Graphics Compatibility (0 Auto, 1 On, 2 Off:
+/// `vk_render::Compat`); with `hookDir` the renderer runs on the GPU driver
+/// `driverLib` in `driverDir` through libadrenotools (`gpu_driver`). Returns
+/// null, or why the driver can't be used (the phone's own is then).
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_setGraphics<'l>(mut env: JNIEnv<'l>, _: JClass<'l>, compat: jint, hook_dir: JString<'l>, driver_dir: JString<'l>, driver_lib: JString<'l>, tmp_dir: JString<'l>) -> jstring {
+    logcat::redirect_std();
+    vk_render::set_compat(match compat {
+        1 => vk_render::Compat::On,
+        2 => vk_render::Compat::Off,
+        _ => vk_render::Compat::Auto,
+    });
+    if hook_dir.is_null() {
+        return std::ptr::null_mut();
+    }
+    let result = (|| -> Result<(), String> {
+        let (hooks, dir, lib, tmp) = (java_string(&mut env, &hook_dir)?, java_string(&mut env, &driver_dir)?, java_string(&mut env, &driver_lib)?, java_string(&mut env, &tmp_dir)?);
+        gpu_driver::open(&hooks, &dir, &lib, &tmp)?;
+        println!("GPU driver: {lib} (libadrenotools)");
+        Ok(())
+    })();
+    match result {
+        Ok(()) => std::ptr::null_mut(),
+        Err(e) => {
+            eprintln!("GPU driver: {e}; the phone's own is used");
+            env.new_string(e).map(JString::into_raw).unwrap_or(std::ptr::null_mut())
+        }
+    }
 }
 
 /// `Native.rumble()`: whether Wii Remote 1's rumble motor is on.

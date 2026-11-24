@@ -33,6 +33,9 @@ pub fn problem(store: &Store, version: &Version) -> Option<String> {
     if !game.join("sys").join("boot.bin").is_file() {
         return Some(format!("The game folder is not there any more: {}", game.display()));
     }
+    if !crate::cpu::has_v2() {
+        return Some("This processor is too old for the port: it needs SSE4.2 and POPCNT (Intel Nehalem, AMD Bulldozer or newer).".into());
+    }
     let exe = store.game_exe();
     if !exe.is_file() {
         return Some(format!("The game program is missing: {}", exe.display()));

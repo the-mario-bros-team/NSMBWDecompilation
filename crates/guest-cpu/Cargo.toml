@@ -5,3 +5,10 @@ edition = "2021"
 
 [dependencies]
 guest-mem = { path = "../guest-mem" }
+
+# Fused multiply-add on x86-64 processors without the FMA instruction (the
+# compat build): musl's algorithm in Rust (MIT). Asked for without its "arch"
+# feature, so that `cargo test -p guest-cpu --test soft_fma` checks its
+# software path even on a processor with FMA (see fp::fma_soft).
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+libm = { version = "0.2.16", default-features = false }

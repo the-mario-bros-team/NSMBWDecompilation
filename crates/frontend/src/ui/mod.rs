@@ -1,5 +1,7 @@
 //! The port's own menus, drawn in the game's style over the picture: the
-//! Settings window (F10), after WitherBlitz's NSMB-Wii-Recompilation
+//! Settings window (F10), the Multiplayer screen, and the save select's
+//! Settings, Multiplayer and Back buttons, after WitherBlitz's
+//! NSMB-Wii-Recompilation
 //! (`runtime/src/netplay/netplay_ui.cpp`, `game_layout.cpp`). egui carries
 //! the drawing (the game's layouts, fonts and textures as textured meshes)
 //! and the mouse; the remote's buttons (keyboard or controller, as mapped
@@ -88,14 +90,26 @@ pub enum Change {
     LanLeave,
 }
 
-/// What the LAN tab shows, from the window's thread.
+pub use crate::click::SaveSelect;
+
+/// The save select's Back button (after NSMB-Wii-Recompilation's), at the
+/// bottom right of the picture, below Coin Battle's bottom edge (about
+/// -186) so a 4:3 picture has room for it too: its size and height in
+/// layout units.
+const BACK_W: f32 = 130.0;
+const BACK_H: f32 = 34.0;
+const BACK_Y: f32 = -207.0;
+
+/// What the Multiplayer screen shows, from the window's thread.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct LanView {
     /// 0 not in a room, 1 hosting one, 2 in someone's.
     pub mode: u8,
-    /// Hosting: where others join; in a room: its address.
+    /// Hosting: where others join (and over Tailscale, when it is on); in
+    /// a room: its address.
     pub addr: String,
-    /// The rooms found on the network: their names and addresses.
+    /// The rooms found on the network and over Tailscale: their names
+    /// (" (Tailscale)" after those found over it) and addresses.
     pub rooms: Vec<(String, String)>,
 }
 
@@ -123,6 +137,13 @@ pub struct Menus {
     /// The startup screen, while it is up: the game picture's aspect and
     /// the startup pipelines still being built (shown when `Some`).
     startup: Option<(f32, Option<u32>)>,
+    /// The save select's buttons while it is up, and the game picture's
+    /// aspect.
+    save_select: Option<SaveSelect>,
+    aspect: f32,
+    /// The mouse (or a touch) was the last used: the save select's Back
+    /// button shows.
+    pointer_used: bool,
 }
 
 impl Menus {
@@ -137,15 +158,49 @@ impl Menus {
         let winit = egui_winit::State::new(ctx.clone(), ctx.viewport_id(), window, Some(window.scale_factor() as f32), None, None);
         let mut settings_window = settings::SettingsWindow::default();
         settings_window.active_file = -1;
-        Self { ctx, winit, window: settings_window, started: Instant::now(), held: 0, repeat: None, shown: false, startup: None }
+        Self { ctx, winit, window: settings_window, started: Instant::now(), held: 0, repeat: None, shown: false, startup: None, save_select: None, aspect: 16.0 / 9.0, pointer_used: false }
     }
 
-    /// The LAN tab's rooms and this game's own.
+    /// The Multiplayer screen's rooms and this game's own.
     pub fn set_lan(&mut self, view: LanView) {
         self.window.lan = view;
     }
 
-    /// The LAN tab is up: rooms are worth looking for.
+    /// The save select's buttons (`None`: it is not up), drawn over the
+    /// game picture of this aspect.
+    pub fn set_save_select(&mut self, view: Option<SaveSelect>, aspect: f32) {
+        self.save_select = view;
+        self.aspect = aspect;
+    }
+
+    /// The mouse or a touch was used (the save select's Back button shows),
+    /// or a key, controller or remote (it goes).
+    pub fn set_pointer_used(&mut self, used: bool) {
+        self.pointer_used = used;
+    }
+
+    /// The save select's Back button, if shown: its centre, width and
+    /// height in layout units, in a window `width` by `height` (any unit).
+    fn back_place(&self, width: f32, height: f32) -> Option<(f32, f32, f32, f32)> {
+        if !self.pointer_used || self.window.is_open() || !self.save_select.is_some_and(|v| v.waiting) {
+            return None;
+        }
+        let unit = height.min(width / self.aspect) / 456.0;
+        let right = (self.aspect * 228.0).min(width / 2.0 / unit);
+        Some((right - BACK_W / 2.0 - 8.0, BACK_Y, BACK_W, BACK_H))
+    }
+
+    /// A click at window pixel (x, y) is on the save select's Back button.
+    pub fn on_back(&self, window: &Window, x: f64, y: f64) -> bool {
+        let size = window.inner_size();
+        let (w, h) = (size.width.max(1) as f32, size.height.max(1) as f32);
+        let Some((bx, by, bw, bh)) = self.back_place(w, h) else { return false };
+        let unit = h.min(w / self.aspect) / 456.0;
+        let (lx, ly) = ((x as f32 - w / 2.0) / unit, (h / 2.0 - y as f32) / unit);
+        (lx - bx).abs() <= bw / 2.0 + 4.0 && (ly - by).abs() <= bh / 2.0 + 4.0
+    }
+
+    /// The Multiplayer screen is up: rooms are worth looking for.
     pub fn wants_rooms(&self) -> bool {
         self.window.is_open() && self.window.on_lan_tab()
     }
@@ -239,6 +294,13 @@ impl Menus {
         }
     }
 
+    /// Opens the Multiplayer screen (the save select's Multiplayer button).
+    pub fn open_multiplayer(&mut self) {
+        if !self.window.is_open() {
+            self.window.open_multiplayer(self.started.elapsed().as_secs_f64());
+        }
+    }
+
     /// Opens the Settings window, or closes it if open.
     pub fn toggle(&mut self) {
         let now = self.started.elapsed().as_secs_f64();
@@ -298,7 +360,7 @@ impl Menus {
         let open = self.window.is_open();
         if !open {
             self.held = buttons;
-            if self.startup.is_none() {
+            if self.startup.is_none() && self.save_select.is_none() {
                 if self.shown {
                     self.shown = false;
                     return Some((None, egui::TexturesDelta::default(), Vec::new()));
@@ -310,10 +372,19 @@ impl Menus {
         let _ = nav.any();
         let raw = self.winit.take_egui_input(window);
         let mut changes = Vec::new();
-        let Self { ctx, window: settings_window, startup, .. } = self;
+        let size = window.inner_size();
+        let back = self.back_place(size.width.max(1) as f32, size.height.max(1) as f32);
+        let Self { ctx, window: settings_window, startup, save_select, aspect, .. } = self;
         let out = ctx.run_ui(raw, |ui| {
             let ctx = ui.ctx();
-            let mut shapes = if open { settings_window.draw(ctx, settings, nav, now, &mut changes) } else { Vec::new() };
+            // The save select's buttons, under the window if one is up.
+            let mut shapes = match save_select {
+                Some(view) => settings_window.draw_save_select(ctx, &settings.language, view, back, *aspect, now),
+                None => Vec::new(),
+            };
+            if open {
+                shapes.extend(settings_window.draw(ctx, settings, nav, now, &mut changes));
+            }
             // Over everything, the Settings window too.
             if let Some((aspect, compiling)) = *startup {
                 shapes.extend(startup::draw(ctx, aspect, compiling));

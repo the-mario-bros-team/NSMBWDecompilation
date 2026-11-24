@@ -804,16 +804,29 @@ fn pow2(n: i32) -> f64 {
 }
 
 /// `psq_l*`: loads one or two values through GQR `i`. A single load sets ps1 = 1.0.
+///
+/// Float data (load types 0-3), what the game's matrix code loads, is done
+/// here; the integer types in [`quantized_load_int`], out of line. Inlined
+/// whole, every one of the thousands of `psq_l` in the recompiled code
+/// carried all eight types, unrolled for both values (on the Switch's
+/// Cortex-A57, whose 48 KB instruction cache that overflowed).
 #[inline(always)]
 fn quantized_load(cpu: &mut Cpu, mem: &mut Mem, ea: u32, i: usize, single: bool) -> Result<[f64; 2], Stop> {
     let gqr = cpu.gqr(i);
+    if (gqr >> 16) & 7 >= 4 {
+        return quantized_load_int(cpu, mem, ea, gqr, single);
+    }
+    let x = f64::from_bits(fp::single_to_double(m!(cpu, mem.read_u32(ea))));
+    let y = if single { 1.0 } else { f64::from_bits(fp::single_to_double(m!(cpu, mem.read_u32(ea.wrapping_add(4))))) };
+    Ok([x, y])
+}
+
+/// [`quantized_load`] of the integer types (4-7), dequantized by the GQR's scale.
+#[inline(never)]
+fn quantized_load_int(cpu: &mut Cpu, mem: &mut Mem, ea: u32, gqr: u32, single: bool) -> Result<[f64; 2], Stop> {
     let ty = (gqr >> 16) & 7;
     let scale = pow2(-sext6(gqr >> 24));
-    let size = match ty {
-        4 | 6 => 1,
-        5 | 7 => 2,
-        _ => 4,
-    };
+    let size = if ty & 1 == 0 { 1 } else { 2 };
     let mut out = [0.0, 1.0];
     for (k, slot) in out.iter_mut().enumerate().take(if single { 1 } else { 2 }) {
         let a = ea.wrapping_add(k as u32 * size);
@@ -821,24 +834,34 @@ fn quantized_load(cpu: &mut Cpu, mem: &mut Mem, ea: u32, i: usize, single: bool)
             4 => m!(cpu, mem.read_u8(a)) as f64 * scale,
             5 => m!(cpu, mem.read_u16(a)) as f64 * scale,
             6 => m!(cpu, mem.read_u8(a)) as i8 as f64 * scale,
-            7 => m!(cpu, mem.read_u16(a)) as i16 as f64 * scale,
-            _ => f64::from_bits(fp::single_to_double(m!(cpu, mem.read_u32(a)))),
+            _ => m!(cpu, mem.read_u16(a)) as i16 as f64 * scale,
         };
     }
     Ok(out)
 }
 
-/// `psq_st*`: stores ps0 (and ps1) through GQR `i`, saturating integer types.
+/// `psq_st*`: stores ps0 (and ps1) through GQR `i`, saturating integer
+/// types. Float data inline, the integer types out of line, as
+/// [`quantized_load`].
 #[inline(always)]
 fn quantized_store(cpu: &mut Cpu, mem: &mut Mem, ea: u32, i: usize, single: bool, v: [f64; 2]) -> R {
     let gqr = cpu.gqr(i);
+    if gqr & 7 >= 4 {
+        return quantized_store_int(cpu, mem, ea, gqr, single, v);
+    }
+    m!(cpu, mem.write_u32(ea, fp::double_to_single(v[0].to_bits())));
+    if !single {
+        m!(cpu, mem.write_u32(ea.wrapping_add(4), fp::double_to_single(v[1].to_bits())));
+    }
+    Ok(())
+}
+
+/// [`quantized_store`] of the integer types (4-7), quantized by the GQR's scale.
+#[inline(never)]
+fn quantized_store_int(cpu: &mut Cpu, mem: &mut Mem, ea: u32, gqr: u32, single: bool, v: [f64; 2]) -> R {
     let ty = gqr & 7;
     let scale = pow2(sext6(gqr >> 8));
-    let size = match ty {
-        4 | 6 => 1,
-        5 | 7 => 2,
-        _ => 4,
-    };
+    let size = if ty & 1 == 0 { 1 } else { 2 };
     for (k, &x) in v.iter().enumerate().take(if single { 1 } else { 2 }) {
         let a = ea.wrapping_add(k as u32 * size);
         let q = x * scale;
@@ -846,8 +869,7 @@ fn quantized_store(cpu: &mut Cpu, mem: &mut Mem, ea: u32, i: usize, single: bool
             4 => m!(cpu, mem.write_u8(a, q as u8)),
             5 => m!(cpu, mem.write_u16(a, q as u16)),
             6 => m!(cpu, mem.write_u8(a, q as i8 as u8)),
-            7 => m!(cpu, mem.write_u16(a, q as i16 as u16)),
-            _ => m!(cpu, mem.write_u32(a, fp::double_to_single(x.to_bits()))),
+            _ => m!(cpu, mem.write_u16(a, q as i16 as u16)),
         }
     }
     Ok(())

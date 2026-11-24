@@ -5,7 +5,8 @@
 //! - One ubershader pair (`shader.wgsl`, compiled to SPIR-V by `naga` at
 //!   startup); the TEV state of each draw sits in a storage buffer indexed
 //!   by the draw's instance index. Destination alpha uses dual-source
-//!   blending; logic ops use Vulkan's.
+//!   blending; logic ops use Vulkan's. GPUs without either (most Mali
+//!   GPUs) get approximations instead ([`Compat`]).
 //! - Textures and samplers are bound as arrays; each frame writes the slots
 //!   it uses into its own descriptor set.
 //! - Pipelines are keyed by blend state; cull mode, depth state and scissor
@@ -49,6 +50,81 @@ const COLOR_FORMAT: vk::Format = vk::Format::R8G8B8A8_UNORM;
 const DEPTH_FORMAT: vk::Format = vk::Format::D32_SFLOAT;
 const VERTEX_SIZE: u32 = std::mem::size_of::<Vertex>() as u32;
 const VALIDATION_LAYER: &CStr = c"VK_LAYER_KHRONOS_validation";
+/// Fallbacks for GPUs without dual-source blending or logic ops (the
+/// Android app's Graphics Compatibility): one fragment output, with the
+/// blending alpha written for pipelines that blend with it (a constant
+/// destination alpha is lost there), and the logic ops blending can stand
+/// for (clear, copy, no-op; the others draw as copy).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Compat {
+    /// The fallbacks for what the GPU lacks only.
+    #[default]
+    Auto,
+    /// The fallbacks even where the GPU has the features (a driver that
+    /// reports them but draws them wrong).
+    On,
+    /// Never: a GPU without the features can't be used.
+    Off,
+}
+
+static COMPAT: Mutex<Compat> = Mutex::new(Compat::Auto);
+static VULKAN_LOADER: Mutex<Option<vk::PFN_vkGetInstanceProcAddr>> = Mutex::new(None);
+
+/// The fallbacks the next renderer's device is made with (see [`Compat`]).
+pub fn set_compat(compat: Compat) {
+    *COMPAT.lock().unwrap() = compat;
+}
+
+/// Vulkan from this `vkGetInstanceProcAddr` instead of the system's
+/// `libvulkan` (Android: a GPU driver the player imported, opened with
+/// libadrenotools), for the next renderer's device.
+///
+/// # Safety
+/// `get_instance_proc_addr` must stay valid as long as any renderer.
+pub unsafe fn set_vulkan_loader(get_instance_proc_addr: vk::PFN_vkGetInstanceProcAddr) {
+    *VULKAN_LOADER.lock().unwrap() = Some(get_instance_proc_addr);
+}
+
+/// The ubershader's modules a draw pipeline is made from, and what the
+/// device can do.
+#[derive(Clone, Copy)]
+struct DrawModules {
+    vs: vk::ShaderModule,
+    /// Fragment stages and their entry points: with a depth output, and
+    /// without (early depth testing).
+    fs: [(vk::ShaderModule, &'static CStr); 2],
+    /// Without dual-source blending: the same writing the blending alpha,
+    /// for pipelines that blend with the source alpha.
+    fs_blend: Option<[(vk::ShaderModule, &'static CStr); 2]>,
+    logic_ops: bool,
+    /// Vulkan 1.1: the EFB's render pass the pipelines are made for, and
+    /// their cull and depth state is in the key ([`CULL_SHIFT`],
+    /// [`ZMODE_SHIFT`]). Null with dynamic rendering and dynamic state.
+    render_pass: vk::RenderPass,
+}
+
+impl DrawModules {
+    unsafe fn destroy(&self, device: &Device) {
+        unsafe {
+            device.destroy_shader_module(self.vs, None);
+            for (m, _) in self.fs.iter().chain(self.fs_blend.iter().flatten()) {
+                device.destroy_shader_module(*m, None);
+            }
+        }
+    }
+}
+
+/// A fragment entry point's name as Vulkan takes it.
+fn entry_name(name: &str) -> &'static CStr {
+    match name {
+        "fs" => c"fs",
+        "fs_early" => c"fs_early",
+        "fs_one" => c"fs_one",
+        "fs_one_early" => c"fs_one_early",
+        "fs_one_blend" => c"fs_one_blend",
+        _ => c"fs_one_early_blend",
+    }
+}
 
 unsafe extern "system" fn on_validation_message(
     severity: vk::DebugUtilsMessageSeverityFlagsEXT,
@@ -113,6 +189,9 @@ struct Frame {
     /// fence signals (submissions complete in order on the one queue).
     retired_images: Vec<Image>,
     retired_buffers: Vec<Buffer>,
+    retired_framebuffers: Vec<vk::Framebuffer>,
+    /// Its last submission wrote both GPU timestamps ([`Renderer::gpu_time`]).
+    timed: bool,
     /// Prepared-field buffers retired the same way, reused afterwards.
     retired_spare: Vec<Buffer>,
 }
@@ -136,6 +215,8 @@ struct Prepared {
 struct UiLayer {
     renderer: egui_ash_renderer::Renderer<egui_ash_renderer::allocator::DefaultAllocator>,
     format: vk::Format,
+    /// Vulkan 1.1: the render pass it draws in.
+    render_pass: Option<vk::RenderPass>,
 }
 
 /// The vertex stage's push constant: fraction between the two fields
@@ -148,6 +229,16 @@ struct CopyPass {
     pipeline: vk::Pipeline,
     layout: vk::PipelineLayout,
     set: vk::DescriptorSet,
+    /// Vulkan 1.1: the render pass it draws in (else null).
+    render_pass: vk::RenderPass,
+}
+
+/// Vulkan 1.1, without dynamic rendering: the render passes, and the EFB's
+/// framebuffer.
+struct Passes {
+    efb: vk::RenderPass,
+    copy: vk::RenderPass,
+    efb_framebuffer: vk::Framebuffer,
 }
 
 pub struct Renderer {
@@ -198,10 +289,7 @@ pub struct Renderer {
     pipeline_layout: vk::PipelineLayout,
     pipeline_cache: vk::PipelineCache,
     pipeline_cache_path: Option<PathBuf>,
-    vs: vk::ShaderModule,
-    fs: vk::ShaderModule,
-    /// `fs` without a depth output (early depth testing).
-    fs_early: vk::ShaderModule,
+    draw_modules: DrawModules,
     copy_modules: [vk::ShaderModule; 2],
     copy: CopyPass,
     pipelines: HashMap<u32, vk::Pipeline>,
@@ -234,6 +322,10 @@ pub struct Renderer {
     /// Retired resources, destroyed once every frame in flight is done.
     trash_images: Vec<Image>,
     trash_buffers: Vec<Buffer>,
+    /// Vulkan 1.1: framebuffers made for this frame's passes.
+    trash_framebuffers: Vec<vk::Framebuffer>,
+    /// Vulkan 1.1 (the GPU has no dynamic rendering): its render passes.
+    passes: Option<Passes>,
     /// Display aspect ratio (width / height) the XFB is letterboxed to.
     pub aspect: f32,
     /// Save the next presented XFB as a PNG here.
@@ -241,10 +333,92 @@ pub struct Renderer {
     /// Drawn over the presented image.
     pub overlay: Vec<OverlayRect>,
     pub stats: FrameStats,
+    /// GPU timestamps at the start and end of each frame's commands (two
+    /// per frame in flight), and nanoseconds per tick; `None` when the
+    /// queue has no timestamps.
+    timer: Option<(vk::QueryPool, f32)>,
+    gpu_time: Option<std::time::Duration>,
+    /// Specialized pipelines; `None` with `NSMBW_UBERSHADER` set.
+    specializer: Option<Specializer>,
+    /// This frame's baked hash of each shading block, once looked at.
+    baked_hashes: Vec<Option<u64>>,
 }
 
 fn range(aspect: vk::ImageAspectFlags, levels: u32) -> vk::ImageSubresourceRange {
     vk::ImageSubresourceRange { aspect_mask: aspect, base_mip_level: 0, level_count: levels, base_array_layer: 0, layer_count: 1 }
+}
+
+/// The fragment stage of the draw pipeline for key `key`: its module (the
+/// ubershader's) and entry point. Without dual-source blending, a pipeline
+/// that blends with the source alpha takes the stage that writes the
+/// blending alpha.
+fn fragment_stage(modules: &DrawModules, key: u32) -> (vk::ShaderModule, &'static CStr) {
+    let (blend_on, subtract) = (key & 1 != 0, key & (1 << 11) != 0);
+    let uses_src_alpha = blend_on && !subtract && [(key >> 8) & 7, (key >> 5) & 7].iter().any(|&f| f == 4 || f == 5);
+    let fs = match modules.fs_blend {
+        Some(b) if uses_src_alpha => b,
+        _ => modules.fs,
+    };
+    fs[usize::from(key & EARLY_DEPTH != 0)]
+}
+
+/// GX's cull mode (1 back, 2 front) as Vulkan's.
+fn cull_mode(cull: u32) -> vk::CullModeFlags {
+    match cull {
+        1 => vk::CullModeFlags::BACK,
+        2 => vk::CullModeFlags::FRONT,
+        _ => vk::CullModeFlags::NONE,
+    }
+}
+
+/// Ends a render pass, or dynamic rendering.
+unsafe fn end_pass(device: &Device, cmd: vk::CommandBuffer, render_pass: bool) {
+    unsafe {
+        if render_pass {
+            device.cmd_end_render_pass(cmd);
+        } else {
+            device.cmd_end_rendering(cmd);
+        }
+    }
+}
+
+/// Vulkan 1.1: a one-subpass render pass on a colour attachment (and a
+/// depth one) that keeps the layouts the barriers set (`transition`).
+fn render_pass(device: &Device, color: vk::Format, color_load: vk::AttachmentLoadOp, depth: Option<vk::Format>) -> Res<vk::RenderPass> {
+    let mut atts = vec![vk::AttachmentDescription::default()
+        .format(color)
+        .samples(vk::SampleCountFlags::TYPE_1)
+        .load_op(color_load)
+        .store_op(vk::AttachmentStoreOp::STORE)
+        .stencil_load_op(vk::AttachmentLoadOp::DONT_CARE)
+        .stencil_store_op(vk::AttachmentStoreOp::DONT_CARE)
+        .initial_layout(vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL)
+        .final_layout(vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL)];
+    if let Some(format) = depth {
+        atts.push(
+            vk::AttachmentDescription::default()
+                .format(format)
+                .samples(vk::SampleCountFlags::TYPE_1)
+                .load_op(vk::AttachmentLoadOp::LOAD)
+                .store_op(vk::AttachmentStoreOp::STORE)
+                .stencil_load_op(vk::AttachmentLoadOp::DONT_CARE)
+                .stencil_store_op(vk::AttachmentStoreOp::DONT_CARE)
+                .initial_layout(vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+                .final_layout(vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL),
+        );
+    }
+    let color_ref = [vk::AttachmentReference { attachment: 0, layout: vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL }];
+    let depth_ref = vk::AttachmentReference { attachment: 1, layout: vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL };
+    let mut subpass = vk::SubpassDescription::default().pipeline_bind_point(vk::PipelineBindPoint::GRAPHICS).color_attachments(&color_ref);
+    if depth.is_some() {
+        subpass = subpass.depth_stencil_attachment(&depth_ref);
+    }
+    let subpasses = [subpass];
+    Ok(unsafe { device.create_render_pass(&vk::RenderPassCreateInfo::default().attachments(&atts).subpasses(&subpasses), None)? })
+}
+
+fn framebuffer(device: &Device, pass: vk::RenderPass, views: &[vk::ImageView], w: u32, h: u32) -> Res<vk::Framebuffer> {
+    Ok(unsafe { device.create_framebuffer(&vk::FramebufferCreateInfo::default().render_pass(pass).attachments(views).width(w).height(h).layers(1), None)? })
 }
 
 /// Moves `img` to `layout` with a full barrier (simple, and fast enough here).
@@ -298,6 +472,71 @@ fn blend_factor(f: u32, src: bool, efb_alpha: bool) -> vk::BlendFactor {
     }
 }
 
+/// A blend factor without dual-source blending: the second output's alpha
+/// is the only output's ([`Compat`]).
+fn single_source(f: vk::BlendFactor) -> vk::BlendFactor {
+    match f {
+        vk::BlendFactor::SRC1_ALPHA => vk::BlendFactor::SRC_ALPHA,
+        vk::BlendFactor::ONE_MINUS_SRC1_ALPHA => vk::BlendFactor::ONE_MINUS_SRC_ALPHA,
+        f => f,
+    }
+}
+
+/// Shading words a specialized fragment stage bakes in, and the bits of
+/// each that count: what shapes the TEV program (stages, orders,
+/// combiners, selectors, alpha test functions, indirect setup, Z textures,
+/// fog mode, flags). Colours, textures, sizes and fog values stay read per
+/// draw, so draws differing only in those share a pipeline.
+const BAKED: &[(usize, usize, u32)] = &[
+    (sh::GENMODE, 1, u32::MAX),
+    (sh::TREF, 8, u32::MAX),
+    (sh::ENV, 32, u32::MAX),
+    (sh::KSEL, 8, u32::MAX),
+    (sh::ALPHA_TEST, 1, 0xFFFF_0000),
+    (sh::PE_CONTROL, 1, 7),
+    (sh::CONST_ALPHA, 1, 0x100),
+    (sh::IND_CMD, 16, u32::MAX),
+    (sh::IREF, 1, u32::MAX),
+    (sh::IND_SCALE, 2, u32::MAX),
+    (sh::FOG + 3, 1, 0xFFF0_0000),
+    (sh::FOG_RANGE, 1, 0x400),
+    (sh::ZTEX + 1, 1, u32::MAX),
+    (sh::FLAGS, 1, u32::MAX),
+];
+
+/// A shading block's baked words ([`BAKED`]), in order, masked.
+fn baked(s: &[u32]) -> Vec<u32> {
+    BAKED.iter().flat_map(|&(at, n, mask)| s[at..at + n].iter().map(move |w| w & mask)).collect()
+}
+
+/// [`baked`] as `shaders::specialized` takes it.
+fn baked_fixed(values: &[u32]) -> Vec<(u32, u32, u32)> {
+    BAKED.iter().flat_map(|&(at, n, mask)| (at..at + n).map(move |i| (i as u32, mask))).zip(values).map(|((i, mask), &v)| (i, mask, v)).collect()
+}
+
+fn baked_hash(values: &[u32]) -> u64 {
+    use std::hash::{Hash, Hasher};
+    let mut h = std::collections::hash_map::DefaultHasher::new();
+    values.hash(&mut h);
+    h.finish()
+}
+
+/// Builds specialized pipelines on worker threads ([`Renderer::specialized`]).
+struct Specializer {
+    jobs: Option<std::sync::mpsc::Sender<(u32, Vec<u32>)>>,
+    built: Receiver<(u32, u64, Vec<u32>, Option<vk::Pipeline>)>,
+    workers: Vec<JoinHandle<()>>,
+    /// By (pipeline key, baked hash): the pipeline, or `None` while it is built.
+    pipelines: HashMap<(u32, u64), Option<vk::Pipeline>>,
+    /// The baked words of each built pipeline, saved for the next start.
+    words: HashMap<(u32, u64), Vec<u32>>,
+}
+
+/// Vulkan 1.1 pipeline key bits, for what can't be set per draw there: GX's
+/// cull mode (2 bits) and Z mode (5 bits: test, compare op, update).
+const CULL_SHIFT: u32 = 18;
+const ZMODE_SHIFT: u32 = 20;
+
 /// What renderers on one GPU share ([`Renderer::new_sharing`]): the Vulkan
 /// instance, the device and its queue. Destroyed with the last renderer.
 pub struct Gpu {
@@ -315,6 +554,14 @@ pub struct Gpu {
     queue_lock: Mutex<()>,
     device_name: String,
     validation: bool,
+    /// The device has dual-source blending and logic ops on (else the
+    /// [`Compat`] fallbacks stand in for them).
+    dual_source: bool,
+    logic_ops: bool,
+    /// Vulkan 1.1 without dynamic rendering and extended dynamic state (the
+    /// Nintendo Switch's Tegra X1): render passes, and that state baked
+    /// into the pipelines. `NSMBW_VULKAN11` forces it, for testing.
+    legacy: bool,
 }
 
 impl Drop for Gpu {
@@ -397,7 +644,12 @@ impl Renderer {
     /// surface).
     unsafe fn create_gpu(window: Option<(RawDisplayHandle, RawWindowHandle)>) -> Res<(Arc<Gpu>, Option<(surface::Instance, vk::SurfaceKHR)>)> {
         unsafe {
-            let entry = Entry::load()?;
+            let loader = *VULKAN_LOADER.lock().unwrap();
+            let entry = match loader {
+                Some(f) => Entry::from_static_fn(ash::StaticFn { get_instance_proc_addr: f }),
+                None => Entry::load()?,
+            };
+            let compat = *COMPAT.lock().unwrap();
             let layers_present = entry.enumerate_instance_layer_properties()?;
             let validation = (cfg!(debug_assertions) || std::env::var_os("NSMBW_VALIDATION").is_some()) && layers_present.iter().any(|l| l.layer_name_as_c_str().is_ok_and(|n| n == VALIDATION_LAYER));
             let mut extensions: Vec<*const c_char> = match window {
@@ -409,7 +661,10 @@ impl Renderer {
                 extensions.push(debug_utils::NAME.as_ptr());
                 layers.push(VALIDATION_LAYER.as_ptr());
             }
-            let app = vk::ApplicationInfo::default().application_name(c"nsmbw-port").engine_name(c"nsmbw-port").api_version(vk::API_VERSION_1_3);
+            // A Vulkan 1.1 loader (Android 10) takes no higher version.
+            let api = entry.try_enumerate_instance_version()?.unwrap_or(vk::API_VERSION_1_0).min(vk::API_VERSION_1_3);
+            let force_legacy = std::env::var_os("NSMBW_VULKAN11").is_some();
+            let app = vk::ApplicationInfo::default().application_name(c"nsmbw-port").engine_name(c"nsmbw-port").api_version(api);
             let instance = entry.create_instance(&vk::InstanceCreateInfo::default().application_info(&app).enabled_extension_names(&extensions).enabled_layer_names(&layers), None)?;
             let debug = if validation {
                 let f = debug_utils::Instance::new(&entry, &instance);
@@ -427,12 +682,19 @@ impl Renderer {
                 None => None,
             };
 
-            // Prefer a discrete GPU with Vulkan 1.3; take the first queue family that can draw (and present).
-            let mut best: Option<(u32, vk::PhysicalDevice, u32, vk::PhysicalDeviceProperties)> = None;
+            // Prefer Vulkan 1.3, then a discrete GPU; Vulkan 1.1 with descriptor
+            // indexing does too. Take the first queue family that can draw
+            // (and present).
+            let mut best: Option<(u32, vk::PhysicalDevice, u32, vk::PhysicalDeviceProperties, bool)> = None;
             for pd in instance.enumerate_physical_devices()? {
                 let props = instance.get_physical_device_properties(pd);
                 let features = instance.get_physical_device_features(pd);
-                if props.api_version < vk::API_VERSION_1_3 || features.dual_src_blend == 0 || features.logic_op == 0 {
+                let missing = features.dual_src_blend == 0 || features.logic_op == 0;
+                let modern = props.api_version >= vk::API_VERSION_1_3 && api >= vk::API_VERSION_1_3 && !force_legacy;
+                let indexing = || {
+                    instance.enumerate_device_extension_properties(pd).is_ok_and(|exts| exts.iter().any(|e| e.extension_name_as_c_str().is_ok_and(|n| n == ash::ext::descriptor_indexing::NAME)))
+                };
+                if !(modern || (props.api_version >= vk::API_VERSION_1_1 && indexing())) || (missing && compat == Compat::Off) {
                     continue;
                 }
                 for (i, fam) in instance.get_physical_device_queue_family_properties(pd).iter().enumerate() {
@@ -442,34 +704,59 @@ impl Renderer {
                         None => true,
                     };
                     if fam.queue_flags.contains(vk::QueueFlags::GRAPHICS) && presents {
-                        let score = if props.device_type == vk::PhysicalDeviceType::DISCRETE_GPU { 2 } else { 1 };
+                        let score = if modern { 2 } else { 0 } + u32::from(props.device_type == vk::PhysicalDeviceType::DISCRETE_GPU);
                         if best.as_ref().is_none_or(|b| score > b.0) {
-                            best = Some((score, pd, i, props));
+                            best = Some((score, pd, i, props, !modern));
                         }
                         break;
                     }
                 }
             }
-            let (_, physical, family, props) = best.ok_or("no Vulkan 1.3 device with dual-source blending and logic ops can draw to this window")?;
+            let (_, physical, family, props, legacy) = best.ok_or(if compat == Compat::Off { "no Vulkan 1.3 device (or 1.1 with descriptor indexing) with dual-source blending and logic ops can draw to this window" } else { "no Vulkan 1.3 device (or 1.1 with descriptor indexing) can draw to this window" })?;
             let device_name = props.device_name_as_c_str().map(|s| s.to_string_lossy().into_owned()).unwrap_or_default();
+            let has = instance.get_physical_device_features(physical);
+            let dual_source = has.dual_src_blend != 0 && compat != Compat::On;
+            let logic_ops = has.logic_op != 0 && compat != Compat::On;
+            if !dual_source || !logic_ops {
+                let without: Vec<&str> = [(!dual_source).then_some("dual-source blending"), (!logic_ops).then_some("logic ops")].into_iter().flatten().collect();
+                println!("vulkan: {device_name} without {} (Graphics Compatibility {compat:?})", without.join(" and "));
+            }
+            let limits = props.limits;
+            if limits.max_per_stage_descriptor_sampled_images < MAX_TEXTURES || limits.max_per_stage_descriptor_samplers < MAX_SAMPLERS {
+                eprintln!(
+                    "vulkan: {device_name} allows {} sampled images and {} samplers per stage; the renderer binds up to {MAX_TEXTURES} and {MAX_SAMPLERS}",
+                    limits.max_per_stage_descriptor_sampled_images, limits.max_per_stage_descriptor_samplers
+                );
+            }
 
             let priorities = [1.0f32];
             let queues = [vk::DeviceQueueCreateInfo::default().queue_family_index(family).queue_priorities(&priorities)];
-            let device_extensions: Vec<*const c_char> = if surface.is_some() { vec![swapchain::NAME.as_ptr()] } else { Vec::new() };
-            let features = vk::PhysicalDeviceFeatures::default().dual_src_blend(true).logic_op(true);
-            let mut f12 = vk::PhysicalDeviceVulkan12Features::default()
-                .descriptor_indexing(true)
-                .shader_sampled_image_array_non_uniform_indexing(true)
-                .runtime_descriptor_array(true)
-                .descriptor_binding_partially_bound(true);
-            let mut f13 = vk::PhysicalDeviceVulkan13Features::default().dynamic_rendering(true);
-            let device = instance.create_device(
-                physical,
-                &vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&device_extensions).enabled_features(&features).push_next(&mut f12).push_next(&mut f13),
-                None,
-            )?;
+            let mut device_extensions: Vec<*const c_char> = if surface.is_some() { vec![swapchain::NAME.as_ptr()] } else { Vec::new() };
+            let features = vk::PhysicalDeviceFeatures::default().dual_src_blend(dual_source).logic_op(logic_ops);
+            let device = if legacy {
+                let api = props.api_version;
+                println!("vulkan: {device_name} with Vulkan {}.{}.{}: render passes, cull and depth state in the pipelines", vk::api_version_major(api), vk::api_version_minor(api), vk::api_version_patch(api));
+                device_extensions.extend([ash::ext::descriptor_indexing::NAME.as_ptr(), ash::khr::maintenance3::NAME.as_ptr()]);
+                let mut indexing = vk::PhysicalDeviceDescriptorIndexingFeatures::default()
+                    .shader_sampled_image_array_non_uniform_indexing(true)
+                    .runtime_descriptor_array(true)
+                    .descriptor_binding_partially_bound(true);
+                instance.create_device(physical, &vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&device_extensions).enabled_features(&features).push_next(&mut indexing), None)?
+            } else {
+                let mut f12 = vk::PhysicalDeviceVulkan12Features::default()
+                    .descriptor_indexing(true)
+                    .shader_sampled_image_array_non_uniform_indexing(true)
+                    .runtime_descriptor_array(true)
+                    .descriptor_binding_partially_bound(true);
+                let mut f13 = vk::PhysicalDeviceVulkan13Features::default().dynamic_rendering(true);
+                instance.create_device(
+                    physical,
+                    &vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&device_extensions).enabled_features(&features).push_next(&mut f12).push_next(&mut f13),
+                    None,
+                )?
+            };
             let queue = device.get_device_queue(family, 0);
-            let gpu = Arc::new(Gpu { entry, instance, debug, physical, family, device, queue, queue_lock: Mutex::new(()), device_name, validation });
+            let gpu = Arc::new(Gpu { entry, instance, debug, physical, family, device, queue, queue_lock: Mutex::new(()), device_name, validation, dual_source, logic_ops, legacy });
             Ok((gpu, surface))
         }
     }
@@ -533,16 +820,30 @@ impl Renderer {
                 Err(_) => device.create_pipeline_cache(&vk::PipelineCacheCreateInfo::default(), None)?,
             };
 
-            let (vs_code, fs_code, early_code) = shaders::ubershader()?;
+            let names: Vec<&str> = if gpu.dual_source { shaders::DUAL_SOURCE.to_vec() } else { shaders::ONE.iter().chain(&shaders::ONE_BLEND).copied().collect() };
+            // Vulkan 1.1 takes SPIR-V up to 1.3.
+            let spirv = if gpu.legacy { (1, 3) } else { (1, 5) };
+            let passes = if gpu.legacy {
+                let efb = render_pass(&device, COLOR_FORMAT, vk::AttachmentLoadOp::LOAD, Some(DEPTH_FORMAT))?;
+                let copy = render_pass(&device, COLOR_FORMAT, vk::AttachmentLoadOp::DONT_CARE, None)?;
+                Some(Passes { efb, copy, efb_framebuffer: vk::Framebuffer::null() })
+            } else {
+                None
+            };
+            let (efb_pass, copy_pass) = passes.as_ref().map_or((vk::RenderPass::null(), vk::RenderPass::null()), |p| (p.efb, p.copy));
+            let (vs_code, fs_codes) = shaders::ubershader(&names, spirv)?;
             let vs = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&vs_code), None)?;
-            let fs = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&fs_code), None)?;
-            let fs_early = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&early_code), None)?;
-            let (cvs_code, cfs_code) = shaders::copy()?;
+            let mut fs = Vec::new();
+            for (name, code) in names.iter().zip(&fs_codes) {
+                fs.push((device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(code), None)?, entry_name(name)));
+            }
+            let draw_modules = DrawModules { vs, fs: [fs[0], fs[1]], fs_blend: fs.get(2..4).map(|b| [b[0], b[1]]), logic_ops: gpu.logic_ops, render_pass: efb_pass };
+            let (cvs_code, cfs_code) = shaders::copy(spirv)?;
             let copy_modules = [
                 device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&cvs_code), None)?,
                 device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&cfs_code), None)?,
             ];
-            let copy_pipeline = Self::create_copy_pipeline(&device, pipeline_cache, copy_pipeline_layout, copy_modules)?;
+            let copy_pipeline = Self::create_copy_pipeline(&device, pipeline_cache, copy_pipeline_layout, copy_modules, copy_pass)?;
 
             let mut frames = Vec::new();
             for (i, cmd) in cmds.into_iter().enumerate() {
@@ -559,6 +860,8 @@ impl Renderer {
                     described: None,
                     retired_images: Vec::new(),
                     retired_buffers: Vec::new(),
+                    retired_framebuffers: Vec::new(),
+                    timed: false,
                     retired_spare: Vec::new(),
                 });
             }
@@ -574,7 +877,19 @@ impl Renderer {
             let palette = Self::create_image(&device, &mut alloc, PALETTE.len() as u32, 1, 1, COLOR_FORMAT, usage, vk::ImageAspectFlags::COLOR)?;
 
             Self::bind_efb(&device, copy_set, &efb_color, &efb_depth);
+            let mut passes = passes;
+            if let Some(p) = &mut passes {
+                p.efb_framebuffer = framebuffer(&device, p.efb, &[efb_color.view, efb_depth.view], efb_color.w, efb_color.h)?;
+            }
 
+            let queue_family = instance.get_physical_device_queue_family_properties(physical)[family as usize];
+            let period = instance.get_physical_device_properties(physical).limits.timestamp_period;
+            let timer = if queue_family.timestamp_valid_bits > 0 && period > 0.0 {
+                let info = vk::QueryPoolCreateInfo::default().query_type(vk::QueryType::TIMESTAMP).query_count(2 * FRAMES_IN_FLIGHT as u32);
+                Some((device.create_query_pool(&info, None)?, period))
+            } else {
+                None
+            };
             let mut r = Self {
                 device_name,
                 validation,
@@ -612,11 +927,9 @@ impl Renderer {
                 pipeline_layout,
                 pipeline_cache,
                 pipeline_cache_path: opts.pipeline_cache,
-                vs,
-                fs,
-                fs_early,
+                draw_modules,
                 copy_modules,
-                copy: CopyPass { pipeline: copy_pipeline, layout: copy_pipeline_layout, set: copy_set },
+                copy: CopyPass { pipeline: copy_pipeline, layout: copy_pipeline_layout, set: copy_set, render_pass: copy_pass },
                 pipelines: HashMap::new(),
                 prewarm: None,
                 efb_color,
@@ -637,11 +950,18 @@ impl Renderer {
                 writebacks: Vec::new(),
                 trash_images: Vec::new(),
                 trash_buffers: Vec::new(),
+                trash_framebuffers: Vec::new(),
+                passes,
                 aspect: 16.0 / 9.0,
                 screenshot: None,
                 overlay: Vec::new(),
                 stats: FrameStats::default(),
+                timer,
+                gpu_time: None,
+                specializer: None,
+                baked_hashes: Vec::new(),
             };
+            r.start_specializer(spirv);
             r.upload_palette()?;
             if r.pipeline_cache_path.is_some() {
                 r.start_prewarm();
@@ -700,6 +1020,10 @@ impl Renderer {
         let usage = vk::ImageUsageFlags::DEPTH_STENCIL_ATTACHMENT | vk::ImageUsageFlags::TRANSFER_DST | vk::ImageUsageFlags::SAMPLED;
         let depth = Self::create_image(&self.device, &mut self.alloc, ew, eh, 1, DEPTH_FORMAT, usage, vk::ImageAspectFlags::DEPTH)?;
         Self::bind_efb(&self.device, self.copy.set, &color, &depth);
+        if let Some(p) = &mut self.passes {
+            let new = framebuffer(&self.device, p.efb, &[color.view, depth.view], color.w, color.h)?;
+            unsafe { self.device.destroy_framebuffer(std::mem::replace(&mut p.efb_framebuffer, new), None) };
+        }
         let old = [std::mem::replace(&mut self.efb_color, color), std::mem::replace(&mut self.efb_depth, depth)];
         for img in old {
             self.destroy_image(img);
@@ -724,7 +1048,7 @@ impl Renderer {
         }
     }
 
-    unsafe fn create_copy_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: [vk::ShaderModule; 2]) -> Res<vk::Pipeline> {
+    unsafe fn create_copy_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: [vk::ShaderModule; 2], render_pass: vk::RenderPass) -> Res<vk::Pipeline> {
         let stages = [
             vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules[0]).name(c"vs"),
             vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(modules[1]).name(c"fs"),
@@ -749,8 +1073,8 @@ impl Renderer {
             .multisample_state(&ms)
             .color_blend_state(&blend)
             .dynamic_state(&dyn_info)
-            .layout(layout)
-            .push_next(&mut rendering);
+            .layout(layout);
+        let info = if render_pass != vk::RenderPass::null() { info.render_pass(render_pass) } else { info.push_next(&mut rendering) };
         Ok(device.create_graphics_pipelines(cache, &[info], None).map_err(|(_, e)| e)?[0])
     }
 
@@ -892,15 +1216,17 @@ impl Renderer {
         if let Some(&p) = self.pipelines.get(&key) {
             return Ok(p);
         }
-        let p = unsafe { Self::create_pipeline(&self.device, self.pipeline_cache, self.pipeline_layout, [self.vs, self.fs, self.fs_early], key)? };
+        let p = unsafe { Self::create_pipeline(&self.device, self.pipeline_cache, self.pipeline_layout, self.draw_modules, key, None)? };
         self.pipelines.insert(key, p);
         Ok(p)
     }
 
     /// The draw pipeline for blend key `key` (with [`EARLY_DEPTH`]), from the
-    /// ubershader's modules (`vs`, `fs`, `fs_early`). Safe on any thread: the
-    /// pipeline cache is not externally synchronised.
-    unsafe fn create_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: [vk::ShaderModule; 3], key: u32) -> Result<vk::Pipeline, vk::Result> {
+    /// ubershader's modules. Safe on any thread: the pipeline cache is not
+    /// externally synchronised.
+    /// `fragment`: a specialized fragment module in place of the
+    /// ubershader's (for the entry point [`fragment_stage`] names).
+    unsafe fn create_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: DrawModules, key: u32, fragment: Option<vk::ShaderModule>) -> Result<vk::Pipeline, vk::Result> {
         let efb_alpha = key & (1 << 16) != 0;
         let (blend_on, logic_on, subtract) = (key & 1 != 0, key & 2 != 0, key & (1 << 11) != 0);
         let mut mask = vk::ColorComponentFlags::empty();
@@ -925,6 +1251,7 @@ impl Renderer {
         } else if blend_on {
             let src = blend_factor((key >> 8) & 7, true, efb_alpha);
             let dst = blend_factor((key >> 5) & 7, false, efb_alpha);
+            let (src, dst) = if modules.fs_blend.is_some() { (single_source(src), single_source(dst)) } else { (src, dst) };
             att = att
                 .blend_enable(true)
                 .src_color_blend_factor(src)
@@ -933,10 +1260,27 @@ impl Renderer {
                 .src_alpha_blend_factor(src)
                 .dst_alpha_blend_factor(dst)
                 .alpha_blend_op(vk::BlendOp::ADD);
-        } else if logic_on {
+        } else if logic_on && modules.logic_ops {
             // GX and Vulkan list the sixteen logic ops in the same order.
             logic = Some(vk::LogicOp::from_raw(((key >> 12) & 0xF) as i32));
+        } else if logic_on {
+            // Without logic ops: clear and no-op as blending, the rest as copy.
+            let (src, dst) = match (key >> 12) & 0xF {
+                0 => (vk::BlendFactor::ZERO, vk::BlendFactor::ZERO),
+                5 => (vk::BlendFactor::ZERO, vk::BlendFactor::ONE),
+                _ => (vk::BlendFactor::ONE, vk::BlendFactor::ZERO),
+            };
+            att = att
+                .blend_enable(true)
+                .src_color_blend_factor(src)
+                .dst_color_blend_factor(dst)
+                .color_blend_op(vk::BlendOp::ADD)
+                .src_alpha_blend_factor(src)
+                .dst_alpha_blend_factor(dst)
+                .alpha_blend_op(vk::BlendOp::ADD);
         }
+        let (fs_module, fs_name) = fragment_stage(&modules, key);
+        let fs_module = fragment.unwrap_or(fs_module);
         let atts = [att];
 
         let binding = [vk::VertexInputBindingDescription { binding: 0, stride: VERTEX_SIZE, input_rate: vk::VertexInputRate::VERTEX }];
@@ -951,9 +1295,15 @@ impl Renderer {
         let vertex_input = vk::PipelineVertexInputStateCreateInfo::default().vertex_binding_descriptions(&binding).vertex_attribute_descriptions(&attrs);
         let assembly = vk::PipelineInputAssemblyStateCreateInfo::default().topology(vk::PrimitiveTopology::TRIANGLE_LIST);
         let viewport = vk::PipelineViewportStateCreateInfo::default().viewport_count(1).scissor_count(1);
-        let raster = vk::PipelineRasterizationStateCreateInfo::default().polygon_mode(vk::PolygonMode::FILL).line_width(1.0);
+        let legacy = modules.render_pass != vk::RenderPass::null();
+        let mut raster = vk::PipelineRasterizationStateCreateInfo::default().polygon_mode(vk::PolygonMode::FILL).line_width(1.0);
         let ms = vk::PipelineMultisampleStateCreateInfo::default().rasterization_samples(vk::SampleCountFlags::TYPE_1);
-        let ds = vk::PipelineDepthStencilStateCreateInfo::default();
+        let mut ds = vk::PipelineDepthStencilStateCreateInfo::default();
+        if legacy {
+            raster = raster.front_face(vk::FrontFace::CLOCKWISE).cull_mode(cull_mode((key >> CULL_SHIFT) & 3));
+            let z = (key >> ZMODE_SHIFT) & 0x1F;
+            ds = ds.depth_test_enable(z & 1 != 0).depth_write_enable(z & 1 != 0 && z & 0x10 != 0).depth_compare_op(vk::CompareOp::from_raw(((z >> 1) & 7) as i32));
+        }
         let mut blend = vk::PipelineColorBlendStateCreateInfo::default().attachments(&atts);
         if let Some(op) = logic {
             blend = blend.logic_op_enable(true).logic_op(op);
@@ -967,16 +1317,12 @@ impl Renderer {
             vk::DynamicState::DEPTH_WRITE_ENABLE,
             vk::DynamicState::DEPTH_COMPARE_OP,
         ];
-        let dyn_info = vk::PipelineDynamicStateCreateInfo::default().dynamic_states(&dynamic);
+        let dyn_info = vk::PipelineDynamicStateCreateInfo::default().dynamic_states(if legacy { &dynamic[..2] } else { &dynamic[..] });
         let formats = [COLOR_FORMAT];
         let mut rendering = vk::PipelineRenderingCreateInfo::default().color_attachment_formats(&formats).depth_attachment_format(DEPTH_FORMAT);
         let stages = [
-            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules[0]).name(c"vs"),
-            if key & EARLY_DEPTH != 0 {
-                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(modules[2]).name(c"fs_early")
-            } else {
-                vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(modules[1]).name(c"fs")
-            },
+            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules.vs).name(c"vs"),
+            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(fs_module).name(fs_name),
         ];
         let info = vk::GraphicsPipelineCreateInfo::default()
             .stages(&stages)
@@ -988,8 +1334,8 @@ impl Renderer {
             .depth_stencil_state(&ds)
             .color_blend_state(&blend)
             .dynamic_state(&dyn_info)
-            .layout(layout)
-            .push_next(&mut rendering);
+            .layout(layout);
+        let info = if legacy { info.render_pass(modules.render_pass) } else { info.push_next(&mut rendering) };
         Ok(device.create_graphics_pipelines(cache, &[info], None).map_err(|(_, e)| e)?[0])
     }
 
@@ -998,7 +1344,13 @@ impl Renderer {
     /// threads, so a draw rarely waits for one ("Compiling shaders" on the
     /// startup screen, [`Renderer::pipelines_compiling`]).
     fn start_prewarm(&mut self) {
-        let mut keys = render::startup_keys(self.pipeline_cache_path.as_deref());
+        // On Vulkan 1.1 the keys carry cull and depth state, which these don't.
+        let mut keys: Vec<u32> = if self.passes.is_some() { Vec::new() } else { render::STARTUP_KEYS.to_vec() };
+        if let Some(text) = self.pipeline_cache_path.as_ref().and_then(|p| std::fs::read_to_string(p.with_extension("keys")).ok()) {
+            keys.extend(text.lines().filter_map(|l| u32::from_str_radix(l.trim(), 16).ok()));
+        }
+        keys.sort_unstable();
+        keys.dedup();
         keys.retain(|k| !self.pipelines.contains_key(k));
         if keys.is_empty() {
             return;
@@ -1009,7 +1361,7 @@ impl Renderer {
         let stop = Arc::new(AtomicBool::new(false));
         let (tx, built) = std::sync::mpsc::channel();
         let threads = std::thread::available_parallelism().map_or(2, |n| n.get()).saturating_sub(2).clamp(1, 4);
-        let (cache, layout, modules) = (self.pipeline_cache, self.pipeline_layout, [self.vs, self.fs, self.fs_early]);
+        let (cache, layout, modules) = (self.pipeline_cache, self.pipeline_layout, self.draw_modules);
         let workers = (0..threads)
             .filter_map(|i| {
                 let (device, queue, remaining, stop, tx) = (self.device.clone(), queue.clone(), remaining.clone(), stop.clone(), tx.clone());
@@ -1020,7 +1372,7 @@ impl Renderer {
                             let Some(key) = queue.lock().unwrap().pop() else { break };
                             // SAFETY: the device, cache, layout and modules outlive the
                             // workers (joined first in `Drop`).
-                            if let Ok(p) = unsafe { Self::create_pipeline(&device, cache, layout, modules, key) } {
+                            if let Ok(p) = unsafe { Self::create_pipeline(&device, cache, layout, modules, key, None) } {
                                 let _ = tx.send((key, p));
                             }
                             remaining.fetch_sub(1, Ordering::Relaxed);
@@ -1069,12 +1421,19 @@ impl Renderer {
     pub fn set_ui(&mut self, frame: Option<UiFrame>, textures: &egui::TexturesDelta) -> Res<()> {
         if self.ui.as_ref().is_none_or(|u| u.format != self.swap_format) && self.swap_format != vk::Format::UNDEFINED && !self.swap_views.is_empty() {
             wait_idle(&self.gpu)?;
-            self.ui = None;
-            let mode = egui_ash_renderer::RenderMode::DynamicRendering(egui_ash_renderer::DynamicRendering { color_attachment_format: self.swap_format, depth_attachment_format: None, stencil_attachment_format: None });
+            self.drop_ui();
+            let render_pass = match self.passes {
+                Some(_) => Some(render_pass(&self.device, self.swap_format, vk::AttachmentLoadOp::LOAD, None)?),
+                None => None,
+            };
+            let mode = match render_pass {
+                Some(rp) => egui_ash_renderer::RenderMode::RenderPass(rp),
+                None => egui_ash_renderer::RenderMode::DynamicRendering(egui_ash_renderer::DynamicRendering { color_attachment_format: self.swap_format, depth_attachment_format: None, stencil_attachment_format: None }),
+            };
             // The swapchain is UNORM: egui's shader outputs sRGB itself.
             let options = egui_ash_renderer::Options { in_flight_frames: FRAMES_IN_FLIGHT, enable_depth_test: false, enable_depth_write: false, srgb_framebuffer: false };
             let renderer = egui_ash_renderer::Renderer::with_default_allocator(&self.instance, self.physical, self.device.clone(), mode, options).map_err(|e| format!("menus: {e}"))?;
-            self.ui = Some(UiLayer { renderer, format: self.swap_format });
+            self.ui = Some(UiLayer { renderer, format: self.swap_format, render_pass });
         }
         let Some(ui) = &mut self.ui else {
             // Too early (the startup screen's first frames): kept for later.
@@ -1099,6 +1458,136 @@ impl Renderer {
         }
         self.ui_frame = frame;
         Ok(())
+    }
+
+    /// Starts the threads that build specialized pipelines, and queues the
+    /// ones saved by earlier runs (`<pipeline cache>.spec`).
+    fn start_specializer(&mut self, spirv: (u8, u8)) {
+        if std::env::var_os("NSMBW_UBERSHADER").is_some() {
+            return;
+        }
+        let (jobs, rx) = std::sync::mpsc::channel::<(u32, Vec<u32>)>();
+        let rx = Arc::new(Mutex::new(rx));
+        let (tx, built) = std::sync::mpsc::channel();
+        // One thread on a four-core phone (the game uses the others), two on more.
+        let threads = std::thread::available_parallelism().map_or(1, |n| n.get()).saturating_sub(3).clamp(1, 2);
+        let (cache, layout, modules) = (self.pipeline_cache, self.pipeline_layout, self.draw_modules);
+        let workers = (0..threads)
+            .filter_map(|i| {
+                let (device, rx, tx) = (self.device.clone(), rx.clone(), tx.clone());
+                std::thread::Builder::new()
+                    .name(format!("specialize-{i}"))
+                    .spawn(move || loop {
+                        let Ok((key, values)) = rx.lock().unwrap().recv() else { break };
+                        let hash = baked_hash(&values);
+                        let (_, name) = fragment_stage(&modules, key);
+                        let built = shaders::specialized(name.to_str().unwrap_or("fs"), &baked_fixed(&values), spirv).ok().and_then(|code| {
+                            // SAFETY: the device, cache, layout and modules outlive
+                            // the workers (joined first in `Drop`).
+                            unsafe {
+                                let m = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&code), None).ok()?;
+                                let p = Self::create_pipeline(&device, cache, layout, modules, key, Some(m)).ok();
+                                device.destroy_shader_module(m, None);
+                                p
+                            }
+                        });
+                        if tx.send((key, hash, values, built)).is_err() {
+                            break;
+                        }
+                    })
+                    .ok()
+            })
+            .collect();
+        let mut s = Specializer { jobs: Some(jobs), built, workers, pipelines: HashMap::new(), words: HashMap::new() };
+        if let Some(text) = self.pipeline_cache_path.as_ref().and_then(|p| std::fs::read_to_string(p.with_extension("spec")).ok()) {
+            for line in text.lines() {
+                let mut parts = line.split_whitespace();
+                let (Some(key), Some(values)) = (parts.next().and_then(|k| u32::from_str_radix(k, 16).ok()), parts.next()) else { continue };
+                let values: Vec<u32> = values.split(',').filter_map(|v| u32::from_str_radix(v, 16).ok()).collect();
+                if values.len() == BAKED.iter().map(|b| b.1).sum::<usize>() && s.pipelines.insert((key, baked_hash(&values)), None).is_none() {
+                    let _ = s.jobs.as_ref().unwrap().send((key, values));
+                }
+            }
+        }
+        self.specializer = Some(s);
+    }
+
+    /// Specialized pipelines the workers have finished, into the table.
+    fn collect_specialized(&mut self) {
+        let Some(s) = &mut self.specializer else { return };
+        let mut got = false;
+        while let Ok((key, hash, values, p)) = s.built.try_recv() {
+            got = true;
+            match p {
+                Some(p) => {
+                    s.pipelines.insert((key, hash), Some(p));
+                    s.words.insert((key, hash), values);
+                }
+                // Left to the ubershader (it stays `None`, so it isn't asked again).
+                None => eprintln!("vulkan: no specialized pipeline for {key:x}"),
+            }
+        }
+        if got && s.pipelines.values().all(Option::is_some) {
+            println!("shaders: {} specialized pipelines", s.pipelines.len());
+        }
+    }
+
+    /// The specialized pipeline for pipeline key `key` and the draw's
+    /// shading block `shading`, when it is built; else asks for it (the
+    /// draw then uses the ubershader).
+    fn specialized(&mut self, key: u32, shading: usize, out: &Output) -> Option<vk::Pipeline> {
+        let s = self.specializer.as_mut()?;
+        let block = &out.shadings.get(shading)?.0;
+        let hash = match self.baked_hashes.get(shading).copied().flatten() {
+            Some(h) => h,
+            None => {
+                let h = baked_hash(&baked(block));
+                if let Some(slot) = self.baked_hashes.get_mut(shading) {
+                    *slot = Some(h);
+                }
+                h
+            }
+        };
+        match s.pipelines.get(&(key, hash)) {
+            Some(p) => *p,
+            None => {
+                s.pipelines.insert((key, hash), None);
+                if let Some(jobs) = &s.jobs {
+                    let _ = jobs.send((key, baked(block)));
+                }
+                None
+            }
+        }
+    }
+
+    /// Reads the GPU time of frame slot `f`'s last submission (its fence has
+    /// signalled) and starts timing the commands being recorded in `cmd`.
+    fn time_frame(&mut self, f: usize, cmd: vk::CommandBuffer) {
+        let Some((pool, period)) = self.timer else { return };
+        unsafe {
+            if self.frames[f].timed {
+                let mut t = [0u64; 2];
+                if self.device.get_query_pool_results(pool, 2 * f as u32, &mut t, vk::QueryResultFlags::TYPE_64).is_ok() {
+                    self.gpu_time = Some(std::time::Duration::from_nanos((t[1].wrapping_sub(t[0]) as f64 * f64::from(period)) as u64));
+                }
+            }
+            self.device.cmd_reset_query_pool(cmd, pool, 2 * f as u32, 2);
+            self.device.cmd_write_timestamp(cmd, vk::PipelineStageFlags::TOP_OF_PIPE, pool, 2 * f as u32);
+        }
+        self.frames[f].timed = false;
+    }
+
+    /// How long the GPU took for the last frame it finished (a frame or two
+    /// behind the one just drawn); `None` without timestamps.
+    pub fn gpu_time(&self) -> Option<std::time::Duration> {
+        self.gpu_time
+    }
+
+    /// Drops the UI layer and its render pass (the GPU done with them).
+    fn drop_ui(&mut self) {
+        if let Some(rp) = self.ui.take().and_then(|u| u.render_pass) {
+            unsafe { self.device.destroy_render_pass(rp, None) };
+        }
     }
 
     pub fn resized(&mut self) {
@@ -1315,12 +1804,16 @@ impl Renderer {
         for b in std::mem::take(&mut self.frames[f].retired_buffers) {
             self.destroy_buffer(b);
         }
+        for fb in std::mem::take(&mut self.frames[f].retired_framebuffers) {
+            unsafe { dev.destroy_framebuffer(fb, None) };
+        }
         self.reuse_spares(f);
         let cmd = self.frames[f].cmd;
         unsafe {
             dev.reset_command_buffer(cmd, vk::CommandBufferResetFlags::empty())?;
             dev.begin_command_buffer(cmd, &vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT))?;
         }
+        self.time_frame(f, cmd);
         if fresh {
             self.upload_textures(f, cmd, out)?;
             // Images that EFB copies will fill.
@@ -1459,12 +1952,16 @@ impl Renderer {
         for b in std::mem::take(&mut self.frames[f].retired_buffers) {
             self.destroy_buffer(b);
         }
+        for fb in std::mem::take(&mut self.frames[f].retired_framebuffers) {
+            unsafe { dev.destroy_framebuffer(fb, None) };
+        }
         self.reuse_spares(f);
         let cmd = self.frames[f].cmd;
         unsafe {
             dev.reset_command_buffer(cmd, vk::CommandBufferResetFlags::empty())?;
             dev.begin_command_buffer(cmd, &vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT))?;
         }
+        self.time_frame(f, cmd);
         self.stats.uploads = 0;
         let p = self.prepared.as_ref().ok_or("render_prepared: nothing prepared")?;
         let (serial, vb, index_offset, moves) = (p.serial, p.buffer.buffer, p.index_offset, p.moves);
@@ -1533,7 +2030,7 @@ impl Renderer {
             let src = r.scaled_f(full);
             for (flags, buf) in [(4u32, cb), (2 | 4, db)] {
                 let params = CopyParams { src, dst: [EFB_W as f32, EFB_H as f32], format: 6, flags };
-                r.copy_to_native(cmd, params, buf, 0);
+                r.copy_to_native(cmd, params, buf, 0)?;
             }
             Ok(())
         })?;
@@ -1704,7 +2201,7 @@ impl Renderer {
         let dev = &self.device;
         unsafe {
             transition(dev, cmd, &mut self.efb_color, vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
-            transition(dev, cmd, &mut self.efb_depth, vk::ImageLayout::DEPTH_ATTACHMENT_OPTIMAL);
+            transition(dev, cmd, &mut self.efb_depth, vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
             let color = [vk::RenderingAttachmentInfo::default()
                 .image_view(self.efb_color.view)
                 .image_layout(vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL)
@@ -1712,13 +2209,18 @@ impl Renderer {
                 .store_op(vk::AttachmentStoreOp::STORE)];
             let depth = vk::RenderingAttachmentInfo::default()
                 .image_view(self.efb_depth.view)
-                .image_layout(vk::ImageLayout::DEPTH_ATTACHMENT_OPTIMAL)
+                .image_layout(vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
                 .load_op(vk::AttachmentLoadOp::LOAD)
                 .store_op(vk::AttachmentStoreOp::STORE);
             let area = rect2d(0, 0, self.efb_color.w, self.efb_color.h);
-            dev.cmd_begin_rendering(cmd, &vk::RenderingInfo::default().render_area(area).layer_count(1).color_attachments(&color).depth_attachment(&depth));
+            match &self.passes {
+                Some(p) => dev.cmd_begin_render_pass(cmd, &vk::RenderPassBeginInfo::default().render_pass(p.efb).framebuffer(p.efb_framebuffer).render_area(area), vk::SubpassContents::INLINE),
+                None => dev.cmd_begin_rendering(cmd, &vk::RenderingInfo::default().render_area(area).layer_count(1).color_attachments(&color).depth_attachment(&depth)),
+            }
             dev.cmd_set_viewport(cmd, 0, &[vk::Viewport { x: 0.0, y: 0.0, width: self.efb_color.w as f32, height: self.efb_color.h as f32, min_depth: 0.0, max_depth: 1.0 }]);
-            dev.cmd_set_front_face(cmd, vk::FrontFace::CLOCKWISE);
+            if self.passes.is_none() {
+                dev.cmd_set_front_face(cmd, vk::FrontFace::CLOCKWISE);
+            }
             dev.cmd_bind_vertex_buffers(cmd, 0, &[vb], &[0]);
             dev.cmd_bind_index_buffer(cmd, vb, self.index_offset, vk::IndexType::UINT32);
             dev.cmd_bind_descriptor_sets(cmd, vk::PipelineBindPoint::GRAPHICS, self.pipeline_layout, 0, &[set], &[]);
@@ -1728,7 +2230,9 @@ impl Renderer {
 
     /// Runs the copy pass from the EFB into `target` (its top-left
     /// `params.dst` texels).
-    fn copy_pass(dev: &Device, cmd: vk::CommandBuffer, pass: CopyPass, efb: (&mut Image, &mut Image), target: &mut Image, params: CopyParams) {
+    /// On Vulkan 1.1 its framebuffer goes into `framebuffers`, to be
+    /// destroyed after the frame.
+    fn copy_pass(dev: &Device, cmd: vk::CommandBuffer, pass: CopyPass, efb: (&mut Image, &mut Image), target: &mut Image, params: CopyParams, framebuffers: &mut Vec<vk::Framebuffer>) -> Res<()> {
         unsafe {
             transition(dev, cmd, efb.0, vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL);
             transition(dev, cmd, efb.1, vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL);
@@ -1739,7 +2243,14 @@ impl Renderer {
                 .image_layout(vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL)
                 .load_op(vk::AttachmentLoadOp::DONT_CARE)
                 .store_op(vk::AttachmentStoreOp::STORE)];
-            dev.cmd_begin_rendering(cmd, &vk::RenderingInfo::default().render_area(rect2d(0, 0, w, h)).layer_count(1).color_attachments(&color));
+            let legacy = pass.render_pass != vk::RenderPass::null();
+            if legacy {
+                let fb = framebuffer(dev, pass.render_pass, &[target.view], target.w, target.h)?;
+                framebuffers.push(fb);
+                dev.cmd_begin_render_pass(cmd, &vk::RenderPassBeginInfo::default().render_pass(pass.render_pass).framebuffer(fb).render_area(rect2d(0, 0, w, h)), vk::SubpassContents::INLINE);
+            } else {
+                dev.cmd_begin_rendering(cmd, &vk::RenderingInfo::default().render_area(rect2d(0, 0, w, h)).layer_count(1).color_attachments(&color));
+            }
             dev.cmd_bind_pipeline(cmd, vk::PipelineBindPoint::GRAPHICS, pass.pipeline);
             dev.cmd_set_viewport(cmd, 0, &[vk::Viewport { x: 0.0, y: 0.0, width: w as f32, height: h as f32, min_depth: 0.0, max_depth: 1.0 }]);
             dev.cmd_set_scissor(cmd, 0, &[rect2d(0, 0, w, h)]);
@@ -1747,15 +2258,16 @@ impl Renderer {
             let bytes = std::slice::from_raw_parts((&params as *const CopyParams).cast::<u8>(), std::mem::size_of::<CopyParams>());
             dev.cmd_push_constants(cmd, pass.layout, vk::ShaderStageFlags::FRAGMENT, 0, bytes);
             dev.cmd_draw(cmd, 3, 1, 0, 0);
-            dev.cmd_end_rendering(cmd);
+            end_pass(dev, cmd, legacy);
         }
+        Ok(())
     }
 
     /// The copy pass at native size into the scratch image, then into
     /// `buffer` at `offset`.
-    fn copy_to_native(&mut self, cmd: vk::CommandBuffer, params: CopyParams, buffer: vk::Buffer, offset: u64) {
+    fn copy_to_native(&mut self, cmd: vk::CommandBuffer, params: CopyParams, buffer: vk::Buffer, offset: u64) -> Res<()> {
         let dev = self.device.clone();
-        Self::copy_pass(&dev, cmd, self.copy, (&mut self.efb_color, &mut self.efb_depth), &mut self.native, params);
+        Self::copy_pass(&dev, cmd, self.copy, (&mut self.efb_color, &mut self.efb_depth), &mut self.native, params, &mut self.trash_framebuffers)?;
         unsafe {
             transition(&dev, cmd, &mut self.native, vk::ImageLayout::TRANSFER_SRC_OPTIMAL);
             let region = vk::BufferImageCopy::default()
@@ -1764,6 +2276,7 @@ impl Renderer {
                 .image_extent(vk::Extent3D { width: params.dst[0] as u32, height: params.dst[1] as u32, depth: 1 });
             dev.cmd_copy_image_to_buffer(cmd, self.native.image, vk::ImageLayout::TRANSFER_SRC_OPTIMAL, buffer, &[region]);
         }
+        Ok(())
     }
 
     fn record_efb(&mut self, f: usize, cmd: vk::CommandBuffer, vb: vk::Buffer, out: &Output, fresh: bool) -> Res<()> {
@@ -1789,6 +2302,11 @@ impl Renderer {
         // world map has over 10,000 draws a frame.
         let mut state: Option<(vk::Rect2D, u32, u32)> = None;
         let mut draws = 0;
+        let mut specialized = 0;
+        let legacy = self.passes.is_some();
+        self.baked_hashes.clear();
+        self.baked_hashes.resize(out.shadings.len(), None);
+        self.collect_specialized();
         for c in &out.cmds {
             match *c {
                 Cmd::Draw(d) => {
@@ -1802,8 +2320,18 @@ impl Renderer {
                         state = None;
                     }
                     let early = out.shadings.get(d.shading as usize).is_some_and(|s| rasterised_depth(&s.0));
-                    let p = self.pipeline(blend_key(&d.raster) | if early { EARLY_DEPTH } else { 0 })?;
                     let z = d.raster.zmode;
+                    let mut key = blend_key(&d.raster) | if early { EARLY_DEPTH } else { 0 };
+                    if legacy {
+                        key |= d.raster.cull << CULL_SHIFT | (z & 0x1F) << ZMODE_SHIFT;
+                    }
+                    let p = match self.specialized(key, d.shading as usize, out) {
+                        Some(p) => {
+                            specialized += 1;
+                            p
+                        }
+                        None => self.pipeline(key)?,
+                    };
                     unsafe {
                         if bound != Some(p) {
                             dev.cmd_bind_pipeline(cmd, vk::PipelineBindPoint::GRAPHICS, p);
@@ -1814,14 +2342,10 @@ impl Renderer {
                         if last.0 != scissor {
                             dev.cmd_set_scissor(cmd, 0, &[scissor]);
                         }
-                        if last.1 != d.raster.cull {
-                            dev.cmd_set_cull_mode(cmd, match d.raster.cull {
-                                1 => vk::CullModeFlags::BACK,
-                                2 => vk::CullModeFlags::FRONT,
-                                _ => vk::CullModeFlags::NONE,
-                            });
+                        if last.1 != d.raster.cull && !legacy {
+                            dev.cmd_set_cull_mode(cmd, cull_mode(d.raster.cull));
                         }
-                        if last.2 != z {
+                        if last.2 != z && !legacy {
                             dev.cmd_set_depth_test_enable(cmd, z & 1 != 0);
                             dev.cmd_set_depth_write_enable(cmd, z & 1 != 0 && z & 0x10 != 0);
                             dev.cmd_set_depth_compare_op(cmd, vk::CompareOp::from_raw(((z >> 1) & 7) as i32));
@@ -1856,7 +2380,7 @@ impl Renderer {
                 }
                 Cmd::CopyXfb { src, addr, height } => {
                     if rendering {
-                        unsafe { dev.cmd_end_rendering(cmd) };
+                        unsafe { end_pass(&dev, cmd, legacy) };
                         rendering = false;
                     }
                     let (w, h) = (at_scale(src.w, self.sx()), at_scale(height, self.sy()));
@@ -1885,26 +2409,26 @@ impl Renderer {
                 }
                 Cmd::CopyTex(c) => {
                     if rendering {
-                        unsafe { dev.cmd_end_rendering(cmd) };
+                        unsafe { end_pass(&dev, cmd, legacy) };
                         rendering = false;
                     }
                     let flags = u32::from(c.intensity) | u32::from(c.depth) << 1 | u32::from(c.efb_alpha) << 2;
                     let src = self.scaled_f(c.src);
                     if let Some(dst) = self.textures.get_mut(&c.id) {
                         let params = CopyParams { src, dst: [dst.w as f32, dst.h as f32], format: c.format, flags };
-                        Self::copy_pass(&dev, cmd, self.copy, (&mut self.efb_color, &mut self.efb_depth), dst, params);
+                        Self::copy_pass(&dev, cmd, self.copy, (&mut self.efb_color, &mut self.efb_depth), dst, params, &mut self.trash_framebuffers)?;
                         unsafe { transition(&dev, cmd, dst, vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL) };
                     }
                     if let Some(buffer) = readback {
                         let params = CopyParams { src, dst: [c.w as f32, c.h as f32], format: c.format, flags };
-                        self.copy_to_native(cmd, params, buffer, readback_at as u64);
+                        self.copy_to_native(cmd, params, buffer, readback_at as u64)?;
                         self.frames[f].writebacks.push(PendingWriteback { addr: c.addr, ram_hash: c.ram_hash, tex_format: c.tex_format, w: c.w, h: c.h, stride: c.stride, offset: readback_at });
                         readback_at += (c.w * c.h * 4) as usize;
                     }
                 }
                 Cmd::Patch(p) => {
                     if rendering {
-                        unsafe { dev.cmd_end_rendering(cmd) };
+                        unsafe { end_pass(&dev, cmd, legacy) };
                         rendering = false;
                     }
                     if p.copy != p.target {
@@ -1916,9 +2440,10 @@ impl Renderer {
             }
         }
         if rendering {
-            unsafe { dev.cmd_end_rendering(cmd) };
+            unsafe { end_pass(&dev, cmd, legacy) };
         }
         self.stats.draws = draws;
+        self.stats.specialized = specialized;
         self.stats.pipelines = self.pipelines.len();
         Ok(())
     }
@@ -2038,9 +2563,16 @@ impl Renderer {
                             .load_op(vk::AttachmentLoadOp::LOAD)
                             .store_op(vk::AttachmentStoreOp::STORE)];
                         let area = rect2d(0, 0, target.w, target.h);
-                        dev.cmd_begin_rendering(cmd, &vk::RenderingInfo::default().render_area(area).layer_count(1).color_attachments(&color));
+                        match ui.render_pass {
+                            Some(rp) => {
+                                let fb = framebuffer(&dev, rp, &[view], target.w, target.h)?;
+                                self.trash_framebuffers.push(fb);
+                                dev.cmd_begin_render_pass(cmd, &vk::RenderPassBeginInfo::default().render_pass(rp).framebuffer(fb).render_area(area), vk::SubpassContents::INLINE);
+                            }
+                            None => dev.cmd_begin_rendering(cmd, &vk::RenderingInfo::default().render_area(area).layer_count(1).color_attachments(&color)),
+                        }
                         let drawn = ui.renderer.cmd_draw(cmd, self.swap_extent, frame.pixels_per_point, &frame.primitives);
-                        dev.cmd_end_rendering(cmd);
+                        end_pass(&dev, cmd, ui.render_pass.is_some());
                         drawn.map_err(|e| format!("menus: {e}"))?;
                     }
                 }
@@ -2048,6 +2580,10 @@ impl Renderer {
             }
         }
         unsafe {
+            if let Some((pool, _)) = self.timer {
+                dev.cmd_write_timestamp(cmd, vk::PipelineStageFlags::BOTTOM_OF_PIPE, pool, 2 * f as u32 + 1);
+                self.frames[f].timed = true;
+            }
             dev.end_command_buffer(cmd)?;
             dev.reset_fences(&[self.frames[f].fence])?;
             let cmds = [cmd];
@@ -2066,6 +2602,7 @@ impl Renderer {
             // Retired so far: possibly used by this or an earlier submission.
             self.frames[f].retired_images.append(&mut self.trash_images);
             self.frames[f].retired_buffers.append(&mut self.trash_buffers);
+            self.frames[f].retired_framebuffers.append(&mut self.trash_framebuffers);
             self.frames[f].retired_spare.append(&mut self.trash_spare);
             if let (Some(i), Some(swapchain_fn)) = (index, &self.swapchain_fn) {
                 let swapchains = [self.swapchain];
@@ -2112,8 +2649,30 @@ impl Drop for Renderer {
                 }
             }
         }
+        let specialized: Vec<vk::Pipeline> = match self.specializer.take() {
+            Some(mut s) => {
+                s.jobs = None;
+                for t in s.workers.drain(..) {
+                    let _ = t.join();
+                }
+                while let Ok((key, hash, values, Some(p))) = s.built.try_recv() {
+                    s.pipelines.insert((key, hash), Some(p));
+                    s.words.insert((key, hash), values);
+                }
+                if let Some(path) = &self.pipeline_cache_path {
+                    let mut lines: Vec<String> = s.words.iter().map(|(k, v)| format!("{:x} {}", k.0, v.iter().map(|w| format!("{w:x}")).collect::<Vec<_>>().join(","))).collect();
+                    lines.sort_unstable();
+                    let _ = std::fs::write(path.with_extension("spec"), lines.join("\n"));
+                }
+                s.pipelines.into_values().flatten().collect()
+            }
+            None => Vec::new(),
+        };
         unsafe {
             let _ = wait_idle(&self.gpu);
+            for p in specialized {
+                self.device.destroy_pipeline(p, None);
+            }
             if let Some(path) = &self.pipeline_cache_path {
                 if let Ok(data) = self.device.get_pipeline_cache_data(self.pipeline_cache) {
                     let _ = std::fs::write(path, data);
@@ -2129,7 +2688,9 @@ impl Drop for Renderer {
         buffers.append(&mut self.trash_spare);
         buffers.append(&mut self.spare);
         buffers.extend(self.prepared.take().map(|p| p.buffer));
+        let mut framebuffers = std::mem::take(&mut self.trash_framebuffers);
         for f in &mut self.frames {
+            framebuffers.append(&mut f.retired_framebuffers);
             images.append(&mut f.retired_images);
             buffers.append(&mut f.retired_buffers);
             buffers.append(&mut f.retired_spare);
@@ -2161,12 +2722,21 @@ impl Drop for Renderer {
             for (_, p) in self.pipelines.drain() {
                 self.device.destroy_pipeline(p, None);
             }
+            for fb in framebuffers {
+                self.device.destroy_framebuffer(fb, None);
+            }
+            if let Some(p) = self.passes.take() {
+                self.device.destroy_framebuffer(p.efb_framebuffer, None);
+                self.device.destroy_render_pass(p.efb, None);
+                self.device.destroy_render_pass(p.copy, None);
+            }
             self.device.destroy_pipeline(self.copy.pipeline, None);
             self.device.destroy_pipeline_layout(self.copy.layout, None);
             self.device.destroy_pipeline_cache(self.pipeline_cache, None);
-            self.device.destroy_shader_module(self.vs, None);
-            self.device.destroy_shader_module(self.fs, None);
-            self.device.destroy_shader_module(self.fs_early, None);
+            if let Some((pool, _)) = self.timer {
+                self.device.destroy_query_pool(pool, None);
+            }
+            self.draw_modules.destroy(&self.device);
             for m in self.copy_modules {
                 self.device.destroy_shader_module(m, None);
             }
@@ -2184,7 +2754,7 @@ impl Drop for Renderer {
             for &v in &self.swap_views {
                 self.device.destroy_image_view(v, None);
             }
-            self.ui = None;
+            self.drop_ui();
             self.device.destroy_command_pool(self.pool, None);
             if let Some(f) = &self.swapchain_fn {
                 if self.swapchain != vk::SwapchainKHR::null() {
@@ -2232,6 +2802,9 @@ impl render::Backend for Renderer {
     }
     fn set_overlay(&mut self, rects: Vec<OverlayRect>) {
         self.overlay = rects;
+    }
+    fn gpu_time(&self) -> Option<std::time::Duration> {
+        Renderer::gpu_time(self)
     }
     fn stats(&self) -> FrameStats {
         self.stats

@@ -183,6 +183,11 @@ public final class SettingsActivity extends Activity {
         choice(Lang.t("Aspect Ratio"), aspects[Math.max(0, Math.min(2, settings.aspectMode()))],
                 Lang.t("16:9 and 4:3 add black bars. Fill Screen shows 16:9 in this port for now."),
                 step -> settings.setAspectMode(Math.floorMod(settings.aspectMode() + step, 3)));
+        final String[] compat = {Lang.t("Auto"), Lang.t("On"), Lang.t("Off")};
+        choice(Lang.t("Graphics Compatibility"), compat[Math.max(0, Math.min(2, settings.gpuCompat()))],
+                Lang.t("Stand-ins for GPUs without dual-source blending or logic ops, such as most Mali GPUs. "
+                        + "Auto: on for the GPUs that need them. Takes effect at the next start."),
+                step -> settings.setGpuCompat(Math.floorMod(settings.gpuCompat() + step, 3)));
         hint.setText(Lang.t("Takes effect at the next start."));
     }
 
