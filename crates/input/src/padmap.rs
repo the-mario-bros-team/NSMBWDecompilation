@@ -95,16 +95,20 @@ pub fn by_name(name: &str) -> Option<PadInput> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Padmap {
     /// Each action's buttons ([`crate::keymap::ACTIONS`] order).
-    pub buttons: [Vec<PadInput>; 12],
+    pub buttons: [Vec<PadInput>; crate::keymap::ACTIONS.len()],
     /// Each action's combinations: 2 or 3 held together (`combo`).
-    pub combos: [Vec<Vec<PadInput>>; 12],
+    pub combos: [Vec<Vec<PadInput>>; crate::keymap::ACTIONS.len()],
 }
 
 impl Default for Padmap {
     /// The layout from before buttons could be rebound: the D-pad and the
     /// left stick move, A jumps (2), B and X run (1), Y and the bumpers
     /// shake, the triggers and the right stick tilt, Menu is +, View is -.
+    /// The right stick's click (RS) fast-forwards; both sticks' clicks
+    /// together restart the course, which a press by accident never does.
     fn default() -> Self {
+        let mut combos: [Vec<Vec<PadInput>>; crate::keymap::ACTIONS.len()] = Default::default();
+        combos[crate::keymap::RESTART] = vec![vec![B(Button::LeftThumb), B(Button::RightThumb)]];
         Self {
             buttons: [
                 vec![B(Button::DPadUp), S(Axis::LeftStickY, true)],
@@ -119,8 +123,10 @@ impl Default for Padmap {
                 vec![B(Button::RightTrigger2), S(Axis::RightStickX, true)],
                 vec![B(Button::Start)],
                 vec![B(Button::Select)],
+                vec![B(Button::RightThumb)],
+                vec![],
             ],
-            combos: Default::default(),
+            combos,
         }
     }
 }

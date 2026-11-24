@@ -81,7 +81,18 @@ fn keymap_action(action: usize) -> Action {
         keymap::TILT_LEFT => Tilt(-1.0),
         keymap::TILT_RIGHT => Tilt(1.0),
         keymap::PLUS => Buttons(button::PLUS),
-        _ => Buttons(button::MINUS),
+        keymap::MINUS => Buttons(button::MINUS),
+        // The port's own (`Inputs::hotkey`): nothing on the remote.
+        _ => Buttons(0),
+    }
+}
+
+/// Plays [`keymap::ACTIONS`] entry `action`: on the remote, or, for the
+/// port's own actions, as a bit in `hot` (`Inputs::hotkey`).
+fn play(input: &mut Input, hot: &mut u8, action: usize) {
+    match action.checked_sub(keymap::REMOTE_ACTIONS) {
+        Some(n) => *hot |= 1 << n,
+        None => apply(input, keymap_action(action)),
     }
 }
 
@@ -94,10 +105,10 @@ fn apply(input: &mut Input, a: Action) {
 }
 
 /// The actions held through combinations (`1 << action` bits).
-fn apply_bits(input: &mut Input, bits: u32) {
+fn apply_bits(input: &mut Input, hot: &mut u8, bits: u32) {
     for action in 0..keymap::ACTIONS.len() {
         if bits & (1 << action) != 0 {
-            apply(input, keymap_action(action));
+            play(input, hot, action);
         }
     }
 }
@@ -160,6 +171,9 @@ pub struct Inputs {
     /// pressed something new since [`Inputs::take_pad_pressed`].
     pad_was: [Vec<PadInput>; PLAYERS],
     pad_pressed: bool,
+    /// The port's own actions held at the last poll (bit n: action
+    /// `REMOTE_ACTIONS + n`), from any device.
+    hot: u8,
 }
 
 impl Default for Inputs {
@@ -177,7 +191,7 @@ impl Inputs {
 
     /// The keyboard alone (no gamepad library).
     fn without_pads() -> Self {
-        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, pads: None, motion_sensors: true, pad_motion: Default::default(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], pad_was: Default::default(), pad_pressed: false }
+        Self { keys: HashSet::new(), mouse: 0, keymap: keymap::Keymap::default(), padmap: padmap::Padmap::default(), key_combos: combo::Engine::default(), pad_combos: Default::default(), pulses: Vec::new(), epoch: Instant::now(), smart_spin: true, space: smart_spin::SmartSpin::default(), player: None, shake_until: [Duration::ZERO; PLAYERS], mouse_gyro: false, gyro: gyro::Gyro::default(), pointer: None, reverse_tilt: false, pads: None, motion_sensors: true, pad_motion: Default::default(), on: [true, false, false, false], rumble_enabled: true, rumbling: [false; PLAYERS], pad_was: Default::default(), pad_pressed: false, hot: 0 }
     }
 
     /// The Rumble switch: off stops any rumble at once.
@@ -328,6 +342,13 @@ impl Inputs {
         true
     }
 
+    /// Whether one of the port's own actions (`keymap::FAST_FORWARD`,
+    /// `keymap::RESTART`) was held at the last [`Inputs::poll`], on the
+    /// keyboard, the mouse or any controller.
+    pub fn hotkey(&self, action: usize) -> bool {
+        action.checked_sub(keymap::REMOTE_ACTIONS).is_some_and(|n| self.hot >> n & 1 != 0)
+    }
+
     /// Releases every key and mouse button (the window lost focus).
     pub fn release_keys(&mut self) {
         self.keys.clear();
@@ -344,6 +365,7 @@ impl Inputs {
     fn poll_at(&mut self, now: Duration) -> [Input; PLAYERS] {
         self.update_pads();
         let mut out = [Input::default(); PLAYERS];
+        let mut hot = 0u8;
         self.pulses.retain(|p| p.2 > now);
         // The keyboard and mouse: combinations first, then the keys they
         // leave alone.
@@ -368,7 +390,7 @@ impl Inputs {
             // Every action the key plays (a key may be bound to several).
             for (i, keys) in self.keymap.keys.iter().enumerate() {
                 if keys.contains(&k) && !(smart && k == space && i == keymap::JUMP) {
-                    apply(&mut out[0], keymap_action(i));
+                    play(&mut out[0], &mut hot, i);
                 }
             }
             if k == keymap::Key::Code(KeyCode::Home) {
@@ -382,7 +404,7 @@ impl Inputs {
                 }
             }
         }
-        apply_bits(&mut out[0], combos);
+        apply_bits(&mut out[0], &mut hot, combos);
         // The mouse as the remote's motion (keys' tilt comes first).
         match self.pointer.filter(|_| self.mouse_gyro && !self.pad_connected()) {
             Some((x, width)) => {
@@ -417,14 +439,14 @@ impl Inputs {
                         keymap::TILT_LEFT | keymap::TILT_RIGHT => {
                             tilt[usize::from(i == keymap::TILT_RIGHT)] = bound.iter().map(|&p| pad_value(p)).fold(0.0, f32::max);
                         }
-                        _ if bound.iter().any(|&p| !engine.silenced(p) && pad_value(p) >= STICK_PRESS) => apply(input, keymap_action(i)),
+                        _ if bound.iter().any(|&p| !engine.silenced(p) && pad_value(p) >= STICK_PRESS) => play(input, &mut hot, i),
                         _ => {}
                     }
                     if bound.iter().any(|p| engine.tapped().contains(p)) {
                         self.pulses.push((player, i, now + TAP));
                     }
                 }
-                apply_bits(input, combos);
+                apply_bits(input, &mut hot, combos);
                 let analog = tilt[1] - tilt[0];
                 if analog.abs() > TILT_DEAD_ZONE {
                     input.tilt += analog;
@@ -444,7 +466,7 @@ impl Inputs {
             }
         }
         for &(player, action, _) in &self.pulses {
-            apply(&mut out[player], keymap_action(action));
+            play(&mut out[player], &mut hot, action);
         }
         for (i, input) in out.iter_mut().enumerate() {
             input.connected = self.on[i];
@@ -454,6 +476,7 @@ impl Inputs {
                 input.tilt = -input.tilt;
             }
         }
+        self.hot = hot;
         out
     }
 }
@@ -477,6 +500,20 @@ mod tests {
         assert!(!s[1].connected);
         i.release_keys();
         assert_eq!(i.poll()[0].buttons, 0);
+    }
+
+    #[test]
+    fn hotkeys_are_not_the_remote() {
+        let mut i = Inputs::without_pads();
+        assert!(i.key(KeyCode::Backquote, true), "Fast Forward is a control");
+        assert!(i.key(KeyCode::F2, true));
+        let s = i.poll();
+        assert_eq!((s[0].buttons, s[0].shake, s[0].tilt), (0, false, 0.0), "the game sees nothing");
+        assert!(i.hotkey(keymap::FAST_FORWARD) && i.hotkey(keymap::RESTART));
+        assert!(!i.hotkey(keymap::JUMP));
+        i.key(KeyCode::F2, false);
+        i.poll();
+        assert!(i.hotkey(keymap::FAST_FORWARD) && !i.hotkey(keymap::RESTART));
     }
 
     #[test]

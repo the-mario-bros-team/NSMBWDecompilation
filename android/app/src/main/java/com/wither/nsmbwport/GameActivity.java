@@ -68,6 +68,7 @@ public class GameActivity extends Activity
         final java.io.File restore = takeBackup();
         Native.setLoadState(restore != null ? restore.getAbsolutePath() : null);
         LanPlay.beforeStart(this);  // started from LAN Play: host or join
+        applyPractice();
         final String error = Native.start(GameFiles.dataDir(this).getAbsolutePath(), GameFiles.gameDir(this).getAbsolutePath(),
                 settings.nativeScale(), settings.widescreen(), settings.vsync(), Lang.wiiLanguage());
         if (error != null) {
@@ -189,6 +190,7 @@ public class GameActivity extends Activity
     protected void onResume() {
         super.onResume();
         if (started) Native.setPaused(false);  // the game carries on where it stopped
+        if (started) applyPractice();  // changed in the settings meanwhile
         hideSystemBars();
         motion.start(settings.motionTilt(), settings.motionShake());
     }
@@ -310,6 +312,11 @@ public class GameActivity extends Activity
 
     /** Player 1: the on-screen remote, the phone's motion and the first controller; players 2-4 the
      *  other controllers. Reverse Tilt mirrors the tilt, wherever it comes from. */
+    /** The Practice settings to the game (they apply at once). */
+    private void applyPractice() {
+        Native.setPractice(settings.gameSpeed(), settings.levelTimer(), settings.deathCounter(), settings.inputDisplay());
+    }
+
     private void pushInput() {
         if (!started) return;
         final float sign = settings.reverseTilt() ? -1f : 1f;

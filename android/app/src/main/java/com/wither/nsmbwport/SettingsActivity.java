@@ -33,7 +33,7 @@ import android.widget.TextView;
  */
 public final class SettingsActivity extends Activity {
     private static final String TAG = "NSMBW";
-    private static final String[] TABS = {"Video", "Controls", "Language"};
+    private static final String[] TABS = {"Video", "Controls", "Practice", "Language"};
     private static final String EXTRA_TAB = "tab";
 
     // Greys for the tabs not picked, and the brown edge of the arrows and checkboxes.
@@ -147,6 +147,7 @@ public final class SettingsActivity extends Activity {
 
         if (tab == 0) videoTab();
         else if (tab == 1) controlsTab();
+        else if (tab == 2) practiceTab();
         else languageTab();
 
         final FrameLayout.LayoutParams windowParams;
@@ -213,6 +214,29 @@ public final class SettingsActivity extends Activity {
                 Lang.t("A short buzz when a touch button is pressed."),
                 () -> settings.setHaptics(!settings.haptics()));
         hint.setText(Lang.t("The on-screen Wii Remote. A controller hides it while you use it."));
+    }
+
+    private void practiceTab() {
+        final int[] speeds = AppSettings.GAME_SPEEDS;
+        int speedIndex = 1;
+        for (int i = 0; i < speeds.length; ++i) {
+            if (speeds[i] == settings.gameSpeed()) speedIndex = i;
+        }
+        final int current = speedIndex;
+        choice(Lang.t("Game Speed"), AppSettings.speedLabel(speeds[current]),
+                Lang.t("The game, and its sound at its own pitch, at this speed. LAN games run at 100%."),
+                step -> settings.setGameSpeed(speeds[Math.floorMod(current + step, speeds.length)]));
+        toggle(Lang.t("Level Timer"), settings.levelTimer(),
+                Lang.t("The course's time in game frames from each start; it stops at the goal."),
+                () -> settings.setLevelTimer(!settings.levelTimer()));
+        toggle(Lang.t("Death Counter"), settings.deathCounter(),
+                Lang.t("Lives lost in this course, and since the game started."),
+                () -> settings.setDeathCounter(!settings.deathCounter()));
+        final String[] inputs = {Lang.t("Off"), Lang.t("Player 1"), Lang.t("All Players")};
+        choice(Lang.t("Input Display"), inputs[Math.max(0, Math.min(2, settings.inputDisplay()))],
+                Lang.t("The buttons the game gets, at the bottom left."),
+                step -> settings.setInputDisplay(Math.floorMod(settings.inputDisplay() + step, 3)));
+        hint.setText(Lang.t("Game speed and practice tools, applied when you go back to the game."));
     }
 
     private void languageTab() {

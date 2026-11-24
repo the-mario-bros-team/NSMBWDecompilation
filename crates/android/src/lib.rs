@@ -44,6 +44,15 @@ mod ui {
     #[path = "../../../frontend/src/ui/text.rs"]
     pub mod text;
 }
+// The Practice tab's speed, counts and overlays, and sound away from 100%.
+#[allow(dead_code)]
+#[path = "../../frontend/src/practice.rs"]
+mod practice;
+#[path = "../../frontend/src/stretch.rs"]
+mod stretch;
+#[allow(dead_code)]
+#[path = "../../frontend/src/overlay.rs"]
+mod overlay;
 /// The desktop settings' texture-pack fields, all `mods.rs` reads (the app
 /// has no Mods tab yet, so they stay off).
 mod settings {
@@ -105,6 +114,19 @@ enum ToRender {
 /// a run Android ended), set before `start`.
 static LOAD_STATE: Mutex<Option<PathBuf>> = Mutex::new(None);
 
+/// The app's Practice settings (`Native.setPractice`): the game speed
+/// (percent, 0 unlimited), the level timer, the death counter and the input
+/// display (0 off, 1 player 1, 2 every player).
+#[derive(Clone, Copy)]
+struct PracticeSettings {
+    speed: u32,
+    timer: bool,
+    deaths: bool,
+    inputs: u32,
+}
+
+static PRACTICE: Mutex<PracticeSettings> = Mutex::new(PracticeSettings { speed: 100, timer: false, deaths: false, inputs: 0 });
+
 struct Shared {
     tx: Mutex<Sender<ToRender>>,
     inputs: Mutex<[Input; REMOTES]>,
@@ -146,6 +168,12 @@ struct Render {
     /// The state the game started from: removed once it has shown a field.
     loaded: Option<PathBuf>,
     perf: Option<perf::Perf>,
+    /// A LAN game (which runs at 100%), the speed the game thread was last
+    /// told, and the last field's Practice counts and controls.
+    net_game: bool,
+    sent_speed: Option<u32>,
+    practice: practice::Stats,
+    shown_inputs: [Input; REMOTES],
 }
 
 /// How often the game's speed goes to logcat.
@@ -285,6 +313,7 @@ impl Render {
         // A LAN game (`Native.setNet`): hosting answers room queries; a
         // Tailscale host joined is asked for rooms from now on.
         let (net, name) = lobby::take_net();
+        self.net_game = !matches!(net, net::Mode::Off);
         match &net {
             net::Mode::Host { port, .. } => {
                 if let Err(e) = netplay::lan::announce(*port, name) {
@@ -332,10 +361,13 @@ impl Render {
         Ok(())
     }
 
-    /// Draws a field and presents it (when there is a surface), and sends
-    /// the game what only the GPU knows.
-    fn ingest(&mut self, mut f: GameFrame) -> Result<(), String> {
-        let (w, h) = self.window.as_ref().map_or((0, 0), |w| (w.width().max(0) as u32, w.height().max(0) as u32));
+    /// Draws a field and presents it (when there is a surface and
+    /// `present`: fields that came faster than the screen are only drawn),
+    /// and sends the game what only the GPU knows.
+    fn ingest(&mut self, mut f: GameFrame, present: bool) -> Result<(), String> {
+        let (w, h) = self.window.as_ref().filter(|_| present).map_or((0, 0), |w| (w.width().max(0) as u32, w.height().max(0) as u32));
+        (self.practice, self.shown_inputs) = (f.practice, f.inputs);
+        let overlay = if w > 0 && h > 0 { self.overlay(w as i32, h as i32) } else { Vec::new() };
         let (Some(r), Some(emu)) = (&mut self.renderer, &self.emu) else { return Ok(()) };
         if let Some(p) = &self.perf {
             p.filter(&mut f.out);
@@ -344,6 +376,7 @@ impl Render {
         if let Some(p) = self.loaded.take() {
             let _ = std::fs::remove_file(p);
         }
+        r.overlay = overlay;
         r.render(&f.out, &f.out.vertices, true, f.xfb, w, h).map_err(|e| e.to_string())?;
         if let Some(p) = &mut self.perf {
             p.field(&f, started.elapsed(), r.gpu_time());
@@ -389,6 +422,16 @@ impl Render {
         Ok(())
     }
 
+    /// The Practice overlays for a `w` x `h` surface.
+    fn overlay(&self, w: i32, h: i32) -> Vec<vk_render::OverlayRect> {
+        let p = *PRACTICE.lock().unwrap();
+        let mut out = Vec::new();
+        let px = (h.min(w) / 360).clamp(1, 4);
+        let view = practice::View { stats: self.practice, speed: self.sent_speed.unwrap_or(100), fast_forward: false, timer: p.timer, deaths: p.deaths, input_display: p.inputs, inputs: &self.shown_inputs };
+        practice::draw(&mut out, w, h, px, &view);
+        out
+    }
+
     fn run(mut self, rx: Receiver<ToRender>) {
         loop {
             let busy = self.busy();
@@ -421,14 +464,29 @@ impl Render {
                 let _ = emu.to_emu.send(ToEmu::Input(inputs));
                 self.sent = Some(inputs);
             }
+            // The game speed (a LAN game runs at 100%).
+            let speed = if self.net_game { 100 } else { PRACTICE.lock().unwrap().speed };
+            if self.sent_speed != Some(speed) {
+                println!("game speed: {}%", speed);
+                let _ = emu.to_emu.send(ToEmu::Speed(speed));
+                self.sent_speed = Some(speed);
+            }
             // While paused nothing takes fields: the game thread stops at
             // its next one, its frame queue full.
             // While paused for a backup the game thread stops at its next
             // field; the fields before it are drawn (unseen) meanwhile.
             match emu.frames.recv_timeout(FIELD) {
                 Ok(Ok(f)) => {
-                    if let Err(e) = self.ingest(f) {
-                        self.fail(e);
+                    // Fields that came faster than they are shown (above
+                    // 100% game speed): only the newest is presented.
+                    let mut fields = vec![Ok(f)];
+                    fields.extend(emu.frames.try_iter());
+                    let count = fields.len();
+                    for (i, f) in fields.into_iter().enumerate() {
+                        if let Err(e) = f.and_then(|f| self.ingest(f, i + 1 == count)) {
+                            self.fail(e);
+                            break;
+                        }
                     }
                 }
                 Ok(Err(e)) => self.fail(e),
@@ -489,7 +547,7 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_start<'l>(mut env: JNIEn
         SHARED.set(Shared { tx: Mutex::new(tx), inputs: Mutex::new(inputs), error: Mutex::new(None), rumble: AtomicBool::new(false) }).map_err(|_| "already started".to_string())?;
         let cfg = Config { game: PathBuf::from(game), scale: scale.clamp(0, 8) as u32, widescreen: widescreen != 0, vsync: vsync != 0, language: u8::try_from(language).unwrap_or(1) };
         println!("starting: game {}, files {files}", cfg.game.display());
-        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None, speed: (Instant::now(), 0, Duration::ZERO, Duration::ZERO), backup: None, backup_file: None, loaded: None, perf: None };
+        let render = Render { cfg, renderer: None, window: None, emu: None, paused: false, failed: false, kept: VecDeque::new(), sent: None, speed: (Instant::now(), 0, Duration::ZERO, Duration::ZERO), backup: None, backup_file: None, loaded: None, perf: None, net_game: false, sent_speed: None, practice: practice::Stats::default(), shown_inputs: [Input::default(); REMOTES] };
         std::thread::Builder::new().name("render".into()).spawn(move || render.run(rx)).map_err(|e| e.to_string())?;
         Ok(())
     })();
@@ -608,6 +666,16 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_setGraphics<'l>(mut env:
             env.new_string(e).map(JString::into_raw).unwrap_or(std::ptr::null_mut())
         }
     }
+}
+
+/// `Native.setPractice(speed, timer, deaths, inputDisplay)`: the Practice
+/// settings: the game speed in percent (0 unlimited; a LAN game runs at
+/// 100%), the level timer, the death counter, and the input display (0 off,
+/// 1 player 1, 2 every player). Any time; they apply at once.
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_setPractice<'l>(_: JNIEnv<'l>, _: JClass<'l>, speed: jint, timer: jboolean, deaths: jboolean, input_display: jint) {
+    let speed = u32::try_from(speed).ok().filter(|s| [50, 100, 150, 200, 300, 0].contains(s)).unwrap_or(100);
+    *PRACTICE.lock().unwrap() = PracticeSettings { speed, timer: timer != 0, deaths: deaths != 0, inputs: input_display.clamp(0, 2) as u32 };
 }
 
 /// `Native.rumble()`: whether Wii Remote 1's rumble motor is on.

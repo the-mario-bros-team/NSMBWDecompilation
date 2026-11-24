@@ -50,6 +50,25 @@ final class AppSettings {
     boolean vsync() { return prefs().getBoolean("vsync", true); }
     void setVSync(boolean on) { prefs().edit().putBoolean("vsync", on).commit(); }
 
+    /** Practice: the game speed in percent (0 unlimited), as the PC's Practice tab offers. */
+    static final int[] GAME_SPEEDS = {50, 100, 150, 200, 300, 0};
+    int gameSpeed() { return prefs().getInt("game_speed", 100); }
+    void setGameSpeed(int speed) { prefs().edit().putInt("game_speed", speed).commit(); }
+
+    boolean levelTimer() { return prefs().getBoolean("level_timer", false); }
+    void setLevelTimer(boolean on) { prefs().edit().putBoolean("level_timer", on).commit(); }
+
+    boolean deathCounter() { return prefs().getBoolean("death_counter", false); }
+    void setDeathCounter(boolean on) { prefs().edit().putBoolean("death_counter", on).commit(); }
+
+    /** 0 off, 1 player 1, 2 all players. */
+    int inputDisplay() { return prefs().getInt("input_display", 0); }
+    void setInputDisplay(int which) { prefs().edit().putInt("input_display", which).commit(); }
+
+    static String speedLabel(int speed) {
+        return speed == 0 ? Lang.t("Unlimited") : speed + "%";
+    }
+
     /** Where the player moved the on-screen remote's controls and how big (TouchControlsView.layout). */
     String touchLayout() { return prefs().getString("touch_layout", ""); }
     void setTouchLayout(String layout) { prefs().edit().putString("touch_layout", layout).commit(); }

@@ -18,9 +18,11 @@ mod mods;
 mod overlay;
 mod perf;
 mod play;
+mod practice;
 mod replay;
 mod say;
 mod settings;
+mod stretch;
 mod ui;
 mod win;
 

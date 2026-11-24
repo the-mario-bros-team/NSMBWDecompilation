@@ -15,7 +15,7 @@ use std::sync::{Arc, Mutex};
 
 use ndk::audio::{AudioCallbackResult, AudioDirection, AudioFormat, AudioPerformanceMode, AudioSharingMode, AudioStream, AudioStreamBuilder, AudioUsage};
 
-const TARGET_MS: usize = 100;
+pub const TARGET_MS: usize = 100;
 const MAX_MS: usize = 250;
 
 static PAUSED: AtomicBool = AtomicBool::new(false);
@@ -117,6 +117,38 @@ impl Audio {
             q.frames.drain(..drop);
             q.pos = 0.0;
         }
+    }
+
+    /// Sound queued and not yet played, in milliseconds.
+    pub fn queued_ms(&self) -> f32 {
+        let q = self.queue.lock().unwrap();
+        (q.frames.len() as f64 - q.pos).max(0.0) as f32 * 1000.0 / q.rate as f32
+    }
+
+    /// Fades the last `ms` of what is queued out to silence (before
+    /// [`Audio::fill_silence`], so the sound stops without a click).
+    pub fn fade_tail(&self, ms: u32) {
+        let mut q = self.queue.lock().unwrap();
+        let n = (q.rate as usize * ms as usize / 1000).min(q.frames.len()).max(1);
+        let len = q.frames.len();
+        for (i, f) in q.frames.range_mut(len.saturating_sub(n)..).enumerate() {
+            let g = 1.0 - (i + 1) as f32 / n as f32;
+            *f = [f[0] * g, f[1] * g];
+        }
+    }
+
+    /// Silence queued up to the playing level at `rate` (Unlimited speed,
+    /// whose sound is not played): the output keeps going, with no dropout.
+    pub fn fill_silence(&self, rate: u32) {
+        let mut q = self.queue.lock().unwrap();
+        if q.rate != rate {
+            q.frames.clear();
+            q.pos = 0.0;
+            q.rate = rate;
+        }
+        let want = rate as usize * TARGET_MS / 1000 + q.pos as usize;
+        let have = q.frames.len();
+        q.frames.extend(std::iter::repeat_n([0.0; 2], want.saturating_sub(have)));
     }
 
     /// Times playback ran dry, so far.
