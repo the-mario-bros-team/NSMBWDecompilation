@@ -11,16 +11,16 @@ import java.util.Map;
 /**
  * The start menu's language, and the game's (the Wii's language in its SYSCONF, set at each start:
  * wiiLanguage). From NSMB-Wii-Recompilation's app, where it is the game's own Language setting. The USA disc's three languages, and
- * Italian, whose game text comes from a language pack (LauncherActivity.languagePack) or, on the European
- * disc, from the disc; English is the default. Text is looked up by its English wording.
+ * German and Italian, whose game text comes from a language pack (LauncherActivity.languagePack) or, on the
+ * European disc, from the disc; English is the default. Text is looked up by its English wording.
  */
 final class Lang {
-    static final String[] CODES = {"en", "es", "fr", "it"};
+    static final String[] CODES = {"en", "es", "fr", "de", "it"};
     /** Each language's name in itself, as the game's Language tab lists them. */
-    static final String[] NAMES = {"English", "Español", "Français", "Italiano"};
+    static final String[] NAMES = {"English", "Español", "Français", "Deutsch", "Italiano"};
 
     private static int current;
-    /** The imported disc is the European one, which has Italian text (and German) of its own. */
+    /** The imported disc is the European one, which has German and Italian text of its own. */
     private static boolean european;
     private static final Map<String, String[]> TABLE = new HashMap<>();
 
@@ -35,7 +35,9 @@ final class Lang {
     static int index() { return current; }
 
     /** Whether the disc has this language's text (the others need a language pack). */
-    static boolean onDisc(int index) { return index < 3 || (european && CODES[index].equals("it")); }
+    static boolean onDisc(int index) {
+        return index < 3 || (european && (CODES[index].equals("de") || CODES[index].equals("it")));
+    }
 
     /** Sets the game's language (it applies the next time the game starts) and the start menu's. */
     static void set(Context context, int index) {
@@ -45,13 +47,14 @@ final class Lang {
 
     /**
      * The Wii's language code (SYSCONF IPL.LNG) for the game: 1 English, 3 French, 4 Spanish, the
-     * USA disc's three, and 5 Italian on the European disc. Otherwise Italian menus keep the game in
-     * English (its text would need a language pack).
+     * USA disc's three, and 2 German and 5 Italian on the European disc. Otherwise German and Italian
+     * menus keep the game in English (its text would need a language pack).
      */
     static int wiiLanguage() {
         switch (CODES[current]) {
             case "fr": return 3;
             case "es": return 4;
+            case "de": return european ? 2 : 1;
             case "it": return european ? 5 : 1;
             default: return 1;
         }
@@ -79,8 +82,12 @@ final class Lang {
         row[1] = french;
     }
 
+    private static void de(String english, String german) {
+        row(english)[2] = german;
+    }
+
     private static void it(String english, String italian) {
-        row(english)[2] = italian;
+        row(english)[3] = italian;
     }
 
     private static void newer(String english, String spanish, String french, String italian) {
@@ -1027,5 +1034,488 @@ final class Lang {
                 + "files/US/EngUS del disco.");
         it("The language pack is installed. The game uses it the next time it starts.",
                 "Il pacchetto lingua è installato. Il gioco lo userà al prossimo avvio.");
+
+        // --- lines the app shows that had no row yet ---
+        newer("The game stopped", "El juego se detuvo", "Le jeu s'est arrêté", "Il gioco si è fermato");
+        newer("New Super Mario Bros. Wii, the Rust port", "New Super Mario Bros. Wii, el port en Rust",
+                "New Super Mario Bros. Wii, le portage en Rust", "New Super Mario Bros. Wii, il port in Rust");
+        newer("Tap Play. The on-screen Wii Remote is held sideways; turn the phone to tilt and jolt it to shake. "
+                + "The Back gesture opens the game's menu.",
+                "Toca Jugar. El Wii Remote en pantalla se sujeta de lado; gira el teléfono para inclinarlo y "
+                + "sacúdelo para agitarlo. El gesto Atrás abre el menú del juego.",
+                "Touchez Jouer. La Wiimote à l'écran se tient à l'horizontale ; tournez le téléphone pour "
+                + "l'incliner et secouez-le pour la secouer. Le geste Retour ouvre le menu du jeu.",
+                "Tocca Gioca. Il Wii Remote sullo schermo si tiene di lato; ruota il telefono per inclinarlo e "
+                + "scuotilo per agitarlo. Il gesto Indietro apre il menu del gioco.");
+        newer("16:9 and 4:3 add black bars. Fill Screen shows 16:9 in this port for now.",
+                "16:9 y 4:3 añaden barras negras. Llenar pantalla muestra 16:9 en este port por ahora.",
+                "16:9 et 4:3 ajoutent des bandes noires. Plein écran affiche du 16:9 dans ce portage pour l'instant.",
+                "16:9 e 4:3 aggiungono bande nere. Riempi lo schermo per ora mostra 16:9 in questo port.");
+        newer("Takes effect at the next start.", "Se aplica en el próximo inicio.", "Prend effet au prochain démarrage.",
+                "Vale dal prossimo avvio.");
+        newer("Reverse Tilt", "Inclinación invertida", "Inclinaison inversée", "Inclinazione invertita");
+        newer("Tilting platforms go the way you tilt, whatever the tilt comes from.",
+                "Las plataformas inclinables van hacia donde inclinas, venga de donde venga la inclinación.",
+                "Les plateformes inclinables penchent du côté où vous inclinez, d'où que vienne l'inclinaison.",
+                "Le piattaforme inclinabili vanno dove inclini, da qualunque cosa venga l'inclinazione.");
+
+        // --- German, by the same English wording ---
+        de("Language", "Sprache");
+        de("Help", "Hilfe");
+        de("New Super Mario Bros. Wii, recompiled to run natively",
+                "New Super Mario Bros. Wii, neu kompiliert, um nativ zu laufen");
+        de("Play", "Spielen");
+        de("Mods", "Mods");
+        de("Coming Soon!", "Demnächst!");
+        de("Updates", "Updates");
+        de("Check for Updates", "Nach Updates suchen");
+        de("Auto Update", "Automatische Updates");
+        de("On: opening the app installs the latest release from GitHub when there is one. Your saves, "
+                + "settings and game files are kept.",
+                "An: Beim Öffnen installiert die App die neueste Version von GitHub, falls es eine gibt. "
+                + "Spielstände, Einstellungen und Spieldateien bleiben erhalten.");
+        de("Options", "Optionen");
+        de("Settings", "Einstellungen");
+        de("Tailscale & LAN Devices", "Tailscale- und LAN-Geräte");
+        de("Skip Start Menu", "Startmenü überspringen");
+        de("On: opening the app goes straight into the game. In the game, the phone's Back gesture and "
+                + "Start Menu bring you back here.",
+                "An: Die App startet direkt das Spiel. Im Spiel bringen dich die Zurück-Geste des Telefons und "
+                + "Startmenü hierher zurück.");
+        de("Xiaomi Mode", "Xiaomi-Modus");
+        de("On: the game runs in the app's main process. For Xiaomi, Redmi and POCO phones (on by default "
+                + "there), whose system closes the game's own process and leaves a black screen.",
+                "An: Das Spiel läuft im Hauptprozess der App. Für Xiaomi-, Redmi- und POCO-Telefone (dort "
+                + "standardmäßig an), deren System den eigenen Prozess des Spiels schließt und einen schwarzen "
+                + "Bildschirm hinterlässt.");
+        de("GPU Driver", "GPU-Treiber");
+        de("Run the game on a driver from a zip, such as Turnip, in place of the phone's own. If a new "
+                + "driver stops the game from starting, Default comes back by itself.",
+                "Startet das Spiel mit einem Treiber aus einer ZIP-Datei, etwa Turnip, statt mit dem des "
+                + "Telefons. Startet das Spiel mit einem neuen Treiber nicht, kehrt Standard von selbst zurück.");
+        de("Only for phones with a Snapdragon chip.", "Nur für Telefone mit Snapdragon-Chip.");
+        de("Default", "Standard");
+        de("Import…", "Importieren…");
+        de("Delete…", "Löschen…");
+        de("Delete a GPU driver", "Einen GPU-Treiber löschen");
+        de("Importing the GPU driver", "GPU-Treiber wird importiert");
+        de("%s is ready. The game uses it from its next start.",
+                "%s ist bereit. Das Spiel nutzt ihn ab dem nächsten Start.");
+        de("This zip isn't a GPU driver: it has no meta.json.",
+                "Diese ZIP-Datei ist kein GPU-Treiber: Sie hat keine meta.json.");
+        de("This zip isn't a GPU driver: its meta.json can't be read.",
+                "Diese ZIP-Datei ist kein GPU-Treiber: Ihre meta.json ist nicht lesbar.");
+        de("This zip isn't a GPU driver: the library its meta.json names isn't in it.",
+                "Diese ZIP-Datei ist kein GPU-Treiber: Die Bibliothek aus ihrer meta.json fehlt darin.");
+        de("This driver needs Android API %s or newer.",
+                "Dieser Treiber braucht Android-API %s oder neuer.");
+        de("The game closed right after starting on the new GPU driver, so it's back on Default. You can "
+                + "pick that driver again under GPU Driver.",
+                "Das Spiel wurde mit dem neuen GPU-Treiber direkt nach dem Start beendet, daher gilt wieder "
+                + "Standard. Unter GPU-Treiber kannst du ihn erneut wählen.");
+        de("On", "An");
+        de("Off", "Aus");
+        de("Game Data", "Spieldaten");
+        de("Get the game files (once)", "Die Spieldateien holen (einmalig)");
+        de("1. In Dolphin on a computer, right-click New Super Mario Bros. Wii and choose Properties.\n"
+                + "2. Open Filesystem, right-click the disc at the top and choose Extract Entire Disc.\n"
+                + "3. Copy that folder (or a zip of it) to this phone.\n"
+                + "4. Tap Import from Extracted Game Data Folder… or Import Game Data Zip… below and "
+                + "choose it.\n\n"
+                + "Use the USA (SMNE01) or European (SMNP01) disc, revision 1: Dolphin shows the revision under "
+                + "Properties > Info.",
+                "1. Klicke in Dolphin auf einem Computer mit der rechten Maustaste auf New Super Mario Bros. Wii "
+                + "und wähle Eigenschaften.\n"
+                + "2. Öffne Dateisystem, klicke oben mit der rechten Maustaste auf die Disc und wähle Gesamte "
+                + "Disc extrahieren.\n"
+                + "3. Kopiere diesen Ordner (oder eine ZIP-Datei davon) auf dieses Telefon.\n"
+                + "4. Tippe unten auf Aus extrahiertem Spieldaten-Ordner importieren… oder Spieldaten-ZIP "
+                + "importieren… und wähle ihn aus.\n\n"
+                + "Nutze die US-Disc (SMNE01) oder die europäische (SMNP01), Revision 1: Dolphin zeigt die "
+                + "Revision unter Eigenschaften > Info.");
+        de("Import your own New Super Mario Bros. Wii (USA, SMNE01, or Europe, SMNP01) once. Easiest: the "
+                + "folder Dolphin's "
+                + "Extract Entire Disc makes (DATA, or the folder that holds it), or a zip of that folder. "
+                + "Your saves are kept.",
+                "Importiere einmal dein eigenes New Super Mario Bros. Wii (USA, SMNE01, oder Europa, SMNP01). "
+                + "Am einfachsten: der Ordner, den Gesamte Disc extrahieren in Dolphin erstellt (DATA oder der "
+                + "Ordner, der ihn enthält), oder eine ZIP-Datei davon. Deine Spielstände bleiben erhalten.");
+        de("Import from Extracted Game Data Folder…", "Aus extrahiertem Spieldaten-Ordner importieren…");
+        de("Import Game Data Zip…", "Spieldaten-ZIP importieren…");
+        de("Import Disc Image (.iso)…", "Disc-Image importieren (.iso)…");
+        de("Import Disc Image (ISO, WBFS, RVZ)…", "Disc-Image importieren (ISO, WBFS, RVZ)…");
+        de("Or import your disc image straight away (.iso, .wbfs, .rvz or .wia): it is extracted once.",
+                "Oder importiere direkt dein Disc-Image (.iso, .wbfs, .rvz oder .wia): Es wird einmal extrahiert.");
+        de("That isn't a Wii disc image this app can read (ISO, WBFS, RVZ or WIA).",
+                "Das ist kein Wii-Disc-Image, das diese App lesen kann (ISO, WBFS, RVZ oder WIA).");
+        de("Extracting the disc image…", "Disc-Image wird extrahiert…");
+        de("Have the disc image itself? Import the .iso: it's extracted on this phone, the way Dolphin does it, "
+                + "with no computer needed.",
+                "Hast du das Disc-Image selbst? Importiere die .iso: Sie wird auf diesem Telefon extrahiert, wie "
+                + "Dolphin es tut, ganz ohne Computer.");
+        de("Extracting the disc image", "Disc-Image wird extrahiert");
+        de("Reading the disc image…", "Disc-Image wird gelesen…");
+        de("That file isn't a Wii disc image. Pick the .iso itself; compressed images (.rvz, .wbfs, .wia) can be "
+                + "turned into one with Dolphin's Convert File.",
+                "Diese Datei ist kein Wii-Disc-Image. Wähle die .iso selbst; komprimierte Images (.rvz, .wbfs, "
+                + ".wia) lassen sich mit Datei konvertieren in Dolphin umwandeln.");
+        de("There isn't enough free space on this phone: the game takes %d MB.",
+                "Auf diesem Telefon ist nicht genug Speicher frei: Das Spiel braucht %d MB.");
+        de("that isn't a Wii disc image", "das ist kein Wii-Disc-Image");
+        de("that disc image isn't encrypted the way a Wii disc is",
+                "dieses Disc-Image ist nicht wie eine Wii-Disc verschlüsselt");
+        de("the disc image is cut short", "das Disc-Image ist unvollständig");
+        de("that disc image isn't from a retail Wii disc", "dieses Image stammt nicht von einer Wii-Kauf-Disc");
+        de("that disc image has no game partition", "dieses Disc-Image hat keine Spielpartition");
+        de("the disc's file table is damaged", "die Dateitabelle der Disc ist beschädigt");
+        de("Download Logs (For Github Reports)", "Logs herunterladen (für GitHub-Meldungen)");
+        de("No game data yet. Import the folder Dolphin made, or a zip of it.",
+                "Noch keine Spieldaten. Importiere den Ordner, den Dolphin erstellt hat, oder eine ZIP-Datei davon.");
+        de("The imported game can't be played. %s", "Das importierte Spiel kann nicht gespielt werden. %s");
+        de("Game data is installed and checked.", "Die Spieldaten sind installiert und geprüft.");
+        de("Starting the LAN game...", "LAN-Spiel wird gestartet...");
+        de("OK", "OK");
+        de("Done", "Fertig");
+        de("Back", "Zurück");
+        de("Cancel", "Abbrechen");
+
+        de("Checking for updates…", "Suche nach Updates…");
+        de("Couldn't check for updates: %s", "Suche nach Updates fehlgeschlagen: %s");
+        de("The latest release has no Android download.", "Die neueste Version hat keinen Android-Download.");
+        de("You have the latest version (%s).", "Du hast die neueste Version (%s).");
+        de("NSMBW %s is available", "NSMBW %s ist verfügbar");
+        de("To install updates, let NSMBW install apps: turn on Allow from this source on the next screen, "
+                + "then come back here.",
+                "Um Updates zu installieren, erlaube NSMBW, Apps zu installieren: Aktiviere auf dem nächsten "
+                + "Bildschirm Dieser Quelle vertrauen und komm dann hierher zurück.");
+        de("Open Settings", "Einstellungen öffnen");
+        de("Not Now", "Nicht jetzt");
+        de("Downloading…", "Wird heruntergeladen…");
+        de("Downloading… %d of %d MB", "Wird heruntergeladen… %d von %d MB");
+        de("Updating to NSMBW %s", "Update auf NSMBW %s");
+        de("The update failed: %s", "Das Update ist fehlgeschlagen: %s");
+        de("Installing NSMBW %s…", "NSMBW %s wird installiert…");
+
+        de("Getting Started", "Erste Schritte");
+        de("1. Import New Super Mario Bros. Wii", "1. New Super Mario Bros. Wii importieren");
+        de("Use your own New Super Mario Bros. Wii for the USA (SMNE01) or Europe (SMNP01), revision 1. "
+                + "Easiest: in Dolphin on a "
+                + "computer, right-click the game, choose Properties, Filesystem, then right-click the disc and "
+                + "choose Extract Entire Disc. Copy that folder (or a zip of it) to this phone and tap Import. "
+                + "Dolphin shows the revision under Properties > Info.",
+                "Nutze dein eigenes New Super Mario Bros. Wii für die USA (SMNE01) oder Europa (SMNP01), "
+                + "Revision 1. Am einfachsten: Klicke in Dolphin auf einem Computer mit der rechten Maustaste auf "
+                + "das Spiel, wähle Eigenschaften, Dateisystem, klicke dann mit der rechten Maustaste auf die Disc "
+                + "und wähle Gesamte Disc extrahieren. Kopiere diesen Ordner (oder eine ZIP-Datei davon) auf "
+                + "dieses Telefon und tippe auf Importieren. Dolphin zeigt die Revision unter Eigenschaften > Info.");
+        de("2. Play", "2. Spielen");
+        de("Tap Play. For LAN play, move up to the Couch button at the top right of the save file screen and "
+                + "switch it to LAN; every player imports their own game.",
+                "Tippe auf Spielen. Für LAN-Spiele gehst du zur Couch-Schaltfläche oben rechts im "
+                + "Dateiauswahl-Bildschirm und stellst sie auf LAN; jeder Spieler importiert sein eigenes Spiel.");
+        de("Stuck on a step?", "Bei einem Schritt hängen geblieben?");
+        de("The GitHub page covers the supported game, the steps above and common problems.",
+                "Die GitHub-Seite erklärt das unterstützte Spiel, die Schritte oben und häufige Probleme.");
+        de("Setup Guide on GitHub", "Einrichtungsanleitung auf GitHub");
+
+        de("Saved, but there are no game logs yet: play once, then download them again.",
+                "Gespeichert, aber es gibt noch keine Spiel-Logs: Spiele einmal und lade sie dann erneut herunter.");
+        de("Saved the logs of the last game session. Attach the zip to your GitHub issue.",
+                "Die Logs der letzten Spielsitzung wurden gespeichert. Hänge die ZIP-Datei an deine GitHub-Meldung an.");
+        de("Saved the logs of the last %d game sessions. Attach the zip to your GitHub issue.",
+                "Die Logs der letzten %d Spielsitzungen wurden gespeichert. Hänge die ZIP-Datei an deine "
+                + "GitHub-Meldung an.");
+        de("Could not save the logs: %s", "Die Logs konnten nicht gespeichert werden: %s");
+
+        de("Looking at the game files…", "Spieldateien werden geprüft…");
+        de("Importing game data", "Spieldaten werden importiert");
+        de("%s\n\nNothing was changed.", "%s\n\nEs wurde nichts geändert.");
+        de("Import failed: %s", "Import fehlgeschlagen: %s");
+        de("Imported %d files. Tap Play to start.", "%d Dateien importiert. Tippe zum Starten auf Spielen.");
+        de("%d of %d files", "%d von %d Dateien");
+        de("%d of %d MB", "%d von %d MB");
+        de("%d files", "%d Dateien");
+        de("The folder doesn't include all required files.", "Im Ordner fehlen benötigte Dateien.");
+        de("That folder's sys/boot.bin is too short, so the game can't be identified.",
+                "Die sys/boot.bin dieses Ordners ist zu kurz, daher lässt sich das Spiel nicht erkennen.");
+        de("Its sys/boot.bin is too short, so the game can't be identified.",
+                "Seine sys/boot.bin ist zu kurz, daher lässt sich das Spiel nicht erkennen.");
+        de("That is %s, not New Super Mario Bros. Wii for the USA (SMNE01) or Europe (SMNP01). This port "
+                + "runs those discs, revision 1.",
+                "Das ist %s, nicht New Super Mario Bros. Wii für die USA (SMNE01) oder Europa (SMNP01). Dieser "
+                + "Port läuft mit diesen Discs, Revision 1.");
+        de("That is New Super Mario Bros. Wii revision %d. This port runs only revision 1 (Dolphin shows it "
+                + "under Properties > Info).",
+                "Das ist New Super Mario Bros. Wii Revision %d. Dieser Port läuft nur mit Revision 1 (Dolphin "
+                + "zeigt sie unter Eigenschaften > Info).");
+
+        de("Display", "Anzeige");
+        de("Controls", "Steuerung");
+        de("Aspect Ratio", "Seitenverhältnis");
+        de("Render Resolution", "Render-Auflösung");
+        de("Performance Monitor", "Leistungsanzeige");
+        de("Spinning Coins", "Drehende Münzen");
+        de("V-Sync", "V-Sync");
+        de("Graphics Compatibility", "Grafik-Kompatibilität");
+        de("Renderer", "Renderer");
+        de("Automatic", "Automatisch");
+        de("Automatic (recommended): Vulkan, else OpenGL ES", "Automatisch (empfohlen): Vulkan, sonst OpenGL ES");
+        de("OpenGL ES 3.1+ (in a later version)", "OpenGL ES 3.1+ (in einer späteren Version)");
+        de("Auto", "Auto");
+        de("Auto (recommended): on for the GPUs that need it", "Auto (empfohlen): an für GPUs, die es brauchen");
+        de("On: always use the GPU fixes", "An: GPU-Korrekturen immer nutzen");
+        de("Off: never use them", "Aus: nie nutzen");
+        de("Original 4:3", "Original 4:3");
+        de("Fill Screen", "Bildschirm füllen");
+        de("Match screen", "Wie Bildschirm");
+        de("Touch Controls", "Touch-Steuerung");
+        de("Touch Control Opacity", "Deckkraft der Touch-Steuerung");
+        de("Tilt (turn the phone)", "Neigen (Telefon drehen)");
+        de("Shake (jolt the phone)", "Schütteln (Telefon rucken)");
+        de("Vibration", "Vibration");
+
+        de("This phone", "Dieses Telefon");
+        de("No network", "Kein Netzwerk");
+        de("Rooms on your Wi-Fi are found by themselves. Over Tailscale, PCs find every device, and devices "
+                + "that have played together find each other. To find another phone the first time, add its "
+                + "Tailscale name or address here (or it adds yours).",
+                "Räume in deinem WLAN werden von selbst gefunden. Über Tailscale finden PCs jedes Gerät, und "
+                + "Geräte, die schon zusammen gespielt haben, finden einander. Um ein anderes Telefon zum ersten "
+                + "Mal zu finden, füge hier seinen Tailscale-Namen oder seine Adresse hinzu (oder es fügt deine hinzu).");
+        de("Devices asked for rooms", "Nach Räumen gefragte Geräte");
+        de("None yet", "Noch keine");
+        de("Stop asking %s for rooms?", "%s nicht mehr nach Räumen fragen?");
+        de("Remove", "Entfernen");
+        de("Add Device…", "Gerät hinzufügen…");
+        de("Add a Device", "Ein Gerät hinzufügen");
+        de("Its Tailscale name (as in the Tailscale app) or address. It is asked for rooms from now on.",
+                "Sein Tailscale-Name (wie in der Tailscale-App) oder seine Adresse. Es wird ab jetzt nach Räumen "
+                + "gefragt.");
+        de("Add", "Hinzufügen");
+        de("e.g. s26-ultra or 100.84.140.32", "z. B. s26-ultra oder 100.84.140.32");
+
+        de("Start Menu", "Startmenü");
+        de("Leave LAN Game", "LAN-Spiel verlassen");
+        de("Quit Game", "Spiel beenden");
+        de("Back to the Game", "Zurück zum Spiel");
+        de("Connect", "Verbinden");
+        de("To install updates, let NSMBW install apps: turn on Allow from this source on the next screen, "
+                + "then come back to the game.",
+                "Um Updates zu installieren, erlaube NSMBW, Apps zu installieren: Aktiviere auf dem nächsten "
+                + "Bildschirm Dieser Quelle vertrauen und kehre dann zum Spiel zurück.");
+
+        de("Video", "Video");
+        de("Practice", "Training");
+        de("Game Speed", "Spieltempo");
+        de("Level Timer", "Level-Zeit");
+        de("Death Counter", "Verlorene Leben");
+        de("Input Display", "Eingabeanzeige");
+        de("Unlimited", "Unbegrenzt");
+        de("Player 1", "Spieler 1");
+        de("All Players", "Alle Spieler");
+        de("The game, and its sound at its own pitch, at this speed. LAN games run at 100%.",
+                "Das Spiel, und sein Ton in eigener Tonhöhe, in diesem Tempo. LAN-Spiele laufen mit 100 %.");
+        de("The course's time in game frames from each start; it stops at the goal.",
+                "Die Zeit im Level in Spielbildern ab jedem Start; sie stoppt im Ziel.");
+        de("Lives lost in this course, and since the game started.",
+                "Verlorene Leben in diesem Level und seit dem Spielstart.");
+        de("The buttons the game gets, at the bottom left.", "Die Knöpfe, die das Spiel erhält, unten links.");
+        de("Game speed and practice tools, applied when you go back to the game.",
+                "Spieltempo und Trainingshilfen, wirksam, wenn du zum Spiel zurückkehrst.");
+        de("Audio", "Audio");
+        de("Resolution", "Auflösung");
+        de("Rendered at this many lines, then scaled to the screen. Match screen: the screen's own.",
+                "Mit so vielen Zeilen gezeichnet, dann auf den Bildschirm skaliert. Wie Bildschirm: die des "
+                + "Bildschirms.");
+        de("Fill Screen: a wider view filling the whole screen. 16:9 and 4:3 add black bars.",
+                "Bildschirm füllen: eine breitere Sicht über den ganzen Bildschirm. 16:9 und 4:3 fügen schwarze "
+                + "Balken hinzu.");
+        de("Automatic: Vulkan, else OpenGL ES. Takes effect at the next start.",
+                "Automatisch: Vulkan, sonst OpenGL ES. Gilt ab dem nächsten Start.");
+        de("No tearing: frames wait for the display, the game keeps its pace.",
+                "Kein Tearing: Bilder warten auf den Bildschirm, das Spiel behält sein Tempo.");
+        de("FPS and each frame's time, top right. The slider sets its size.",
+                "FPS und die Zeit jedes Bildes, oben rechts. Der Regler bestimmt die Größe.");
+        de("Monitor Size", "Größe der Anzeige");
+        de("Animated coins and blocks. Off saves a little GPU work.",
+                "Animierte Münzen und Blöcke. Aus spart der GPU etwas Arbeit.");
+        de("Fixes for phone GPUs that scramble the game's models. Auto: on for the GPUs that need them.",
+                "Korrekturen für Telefon-GPUs, die die Modelle des Spiels verzerren. Auto: an für GPUs, die sie "
+                + "brauchen.");
+        de("Master", "Gesamt");
+        de("Music", "Musik");
+        de("Sound Effects", "Soundeffekte");
+        de("The volume of everything.", "Die Lautstärke von allem.");
+        de("The background music.", "Die Hintergrundmusik.");
+        de("Jumps, coins, enemies and the rest.", "Sprünge, Münzen, Gegner und der Rest.");
+        de("Menu Sounds", "Menütöne");
+        de("The menus' cursor, select and back sounds.", "Die Cursor-, Auswahl- und Zurück-Töne der Menüs.");
+        de("Depth Blur", "Tiefenunschärfe");
+        de("The blur and heat haze of desert, beach, water and lava areas.",
+                "Unschärfe und Hitzeflimmern in Wüste, Strand, Wasser und Lava.");
+        de("The on-screen Wii Remote. A controller hides it while you use it.",
+                "Die Wii-Fernbedienung auf dem Bildschirm. Ein Controller blendet sie aus, solange du ihn nutzt.");
+        de("How solid the on-screen remote looks.", "Wie deckend die Fernbedienung auf dem Bildschirm aussieht.");
+        de("Turning the phone tilts the Wii Remote, for the levels and platforms that use it.",
+                "Das Telefon drehen neigt die Wii-Fernbedienung, für Level und Plattformen, die das nutzen.");
+        de("A jolt of the phone shakes the Wii Remote: spin jumps and picking things up.",
+                "Ein Ruck des Telefons schüttelt die Wii-Fernbedienung: Drehsprünge und Dinge aufheben.");
+        de("A short buzz when a touch button is pressed.", "Ein kurzes Vibrieren beim Drücken eines Touch-Knopfs.");
+        de("Restart the game to play in this language.", "Starte das Spiel neu, um in dieser Sprache zu spielen.");
+        de("The game's own text needs a language pack: the start menu's language button imports one.",
+                "Die Texte des Spiels brauchen ein Sprachpaket: Die Sprach-Schaltfläche im Startmenü importiert eins.");
+        de("It has no files/rels/%s.rel.LZ: this port needs the whole disc, as Dolphin's Extract Entire Disc makes it.",
+                "Es fehlt files/rels/%s.rel.LZ: Dieser Port braucht die ganze Disc, wie Gesamte Disc extrahieren "
+                + "in Dolphin sie erstellt.");
+        de("Its files/rels/%s is changed: it isn't the original disc (a modded or repacked image?). This port runs only the unchanged disc.",
+                "Seine files/rels/%s ist verändert: Das ist nicht die Original-Disc (ein gemoddetes oder neu "
+                + "gepacktes Image?). Dieser Port läuft nur mit der unveränderten Disc.");
+        de("Gameplay", "Spiel");
+        de("Power-Up Freeze", "Verwandlungspause");
+        de("Everything stops for a moment while a player grows, shrinks or dies. Off: the level keeps moving.",
+                "Alles hält kurz an, wenn ein Spieler wächst, schrumpft oder ein Leben verliert. Aus: Der Level "
+                + "läuft weiter.");
+        de("Player Collision", "Spieler-Kollision");
+        de("Players bump into and stand on each other. Off: they pass through each other.",
+                "Spieler stoßen zusammen und stehen aufeinander. Aus: Sie gehen durcheinander hindurch.");
+        de("Online games keep the game's own rules. Takes effect at the next start.",
+                "Online-Spiele behalten die Regeln des Spiels. Gilt ab dem nächsten Start.");
+        de("No Time Limit", "Kein Zeitlimit");
+        de("Infinite Lives", "Unendlich Leben");
+        de("Delete", "Löschen");
+        de("Profiles", "Profile");
+        de("Save as a new profile", "Als neues Profil speichern");
+        de("Every button is on the screen already.", "Alle Knöpfe sind schon auf dem Bildschirm.");
+        de("D-Pad", "Steuerkreuz");
+        de("Shake", "Schütteln");
+        de("Are you sure?", "Bist du sicher?");
+        de("This will mark your save as cheated.", "Dein Spielstand wird als geschummelt markiert.");
+        de("Yes", "Ja");
+        de("No", "Nein");
+        de("Power-Up", "Power-Up");
+        de("What the Cheat button gives you.", "Was dir der Cheat-Knopf gibt.");
+        de("Cheat Button", "Cheat-Knopf");
+        de("An on-screen button that gives you the Power-Up. Edit Touch Controls moves it.",
+                "Ein Knopf auf dem Bildschirm, der dir das Power-Up gibt. Unter Touch-Steuerung bearbeiten "
+                + "lässt er sich verschieben.");
+        de("Small", "Klein");
+        de("Super Mushroom", "Superpilz");
+        de("Fire Flower", "Feuerblume");
+        de("Mini Mushroom", "Mini-Pilz");
+        de("Propeller Mushroom", "Propeller-Pilz");
+        de("Penguin Suit", "Pinguin-Anzug");
+        de("Ice Flower", "Eisblume");
+        de("Star", "Stern");
+        de("Hammer Suit", "Hammer-Anzug");
+        de("The course timer stands still: take your time.", "Die Zeit im Level steht still: Lass dir Zeit.");
+        de("A miss costs no life.", "Ein Fehler kostet kein Leben.");
+        de("These keep the game's own rules in LAN play.", "Im LAN gelten die normalen Regeln des Spiels.");
+        de("LAN Play", "LAN-Spiel");
+        de("Play with other phones and PCs on your Wi-Fi, or over Tailscale. Every player needs their own "
+                + "game and the same version of NSMBW.",
+                "Spiele mit anderen Telefonen und PCs in deinem WLAN oder über Tailscale. Jeder Spieler braucht "
+                + "sein eigenes Spiel und dieselbe Version von NSMBW.");
+        de("Create Room", "Raum erstellen");
+        de("Rooms", "Räume");
+        de("Looking for rooms…", "Suche Räume…");
+        de("Join by Address…", "Per Adresse beitreten…");
+        de("Join a Room", "Einem Raum beitreten");
+        de("The host's address, as its LAN Play shows it, or its Tailscale name.",
+                "Die Adresse des Hosts, wie sein LAN-Spiel sie zeigt, oder sein Tailscale-Name.");
+        de("Join", "Beitreten");
+        de("Can't look for rooms: %s", "Suche nach Räumen nicht möglich: %s");
+        de("Edit Touch Controls", "Touch-Steuerung bearbeiten");
+        de("Drag a control to move it. Pinch it, or tap it and use Bigger or Smaller, to resize it.",
+                "Ziehe ein Bedienelement, um es zu verschieben. Ziehe es mit zwei Fingern auf oder zu, oder "
+                + "tippe es an und nutze Größer oder Kleiner, um seine Größe zu ändern.");
+        de("Smaller", "Kleiner");
+        de("Bigger", "Größer");
+        de("Reset", "Zurücksetzen");
+        de("Newer Super Mario Bros. Wii, recompiled to run natively",
+                "Newer Super Mario Bros. Wii, neu kompiliert, um nativ zu laufen");
+        de("Newer Game Data", "Newer-Spieldaten");
+        de("1. Have your own Newer Super Mario Bros. Wii v1.30 for the USA (SMNE03) as a disc image (.iso).\n"
+                + "2. Copy it to this phone and tap Import Disc Image (.iso)… below: it's extracted here.\n\n"
+                + "Or extract it in Dolphin (Properties, Filesystem, Extract Entire Disc) and import that folder or a zip of it.",
+                "1. Halte dein eigenes Newer Super Mario Bros. Wii v1.30 für die USA (SMNE03) als Disc-Image "
+                + "(.iso) bereit.\n"
+                + "2. Kopiere es auf dieses Telefon und tippe unten auf Disc-Image importieren (.iso)…: Es wird "
+                + "hier extrahiert.\n\n"
+                + "Oder extrahiere es in Dolphin (Eigenschaften, Dateisystem, Gesamte Disc extrahieren) und "
+                + "importiere diesen Ordner oder eine ZIP-Datei davon.");
+        de("Import your own Newer Super Mario Bros. Wii v1.30 (USA, SMNE03) once: its disc image, the folder "
+                + "Dolphin's Extract Entire Disc makes from it, or a zip of that folder. Newer keeps saves of its own.",
+                "Importiere einmal dein eigenes Newer Super Mario Bros. Wii v1.30 (USA, SMNE03): sein Disc-Image, "
+                + "den Ordner, den Gesamte Disc extrahieren in Dolphin daraus erstellt, oder eine ZIP-Datei davon. "
+                + "Newer hat eigene Spielstände.");
+        de("Remove the NewerSMBW Support Module", "Das NewerSMBW-Zusatzmodul entfernen");
+        de("Remove the NewerSMBW support module? Newer's game files and saves stay; download the module again "
+                + "to play it.",
+                "Das NewerSMBW-Zusatzmodul entfernen? Spieldateien und Spielstände von Newer bleiben; lade das "
+                + "Modul erneut herunter, um es zu spielen.");
+        de("Download the NewerSMBW support module!", "Lade das NewerSMBW-Zusatzmodul herunter!");
+        de("Downloading the NewerSMBW support module", "NewerSMBW-Zusatzmodul wird heruntergeladen");
+        de("The NewerSMBW support module is installed. Import your Newer Super Mario Bros. Wii, then tap Play.",
+                "Das NewerSMBW-Zusatzmodul ist installiert. Importiere dein Newer Super Mario Bros. Wii und tippe "
+                + "dann auf Spielen.");
+        de("This build of the app comes without the NewerSMBW support module.",
+                "Diese Version der App kommt ohne das NewerSMBW-Zusatzmodul.");
+        de("Newer Super Mario Bros. Wii runs on a build of the game of its own: the support module, a separate "
+                + "download from this version's GitHub release, so the app stays small for everyone else.",
+                "Newer Super Mario Bros. Wii läuft mit einer eigenen Version des Spiels: dem Zusatzmodul, ein "
+                + "separater Download aus der GitHub-Release dieser Version, damit die App für alle anderen klein "
+                + "bleibt.");
+        de("Newer Super Mario Bros. Wii needs its support module: download it below.",
+                "Newer Super Mario Bros. Wii braucht sein Zusatzmodul: Lade es unten herunter.");
+        de("No Newer game data yet. Import its disc image, the folder Dolphin made, or a zip of it.",
+                "Noch keine Newer-Spieldaten. Importiere sein Disc-Image, den Ordner, den Dolphin erstellt hat, "
+                + "oder eine ZIP-Datei davon.");
+        de("That is another version of Newer Super Mario Bros. Wii. This port runs v1.30 for the USA.",
+                "Das ist eine andere Version von Newer Super Mario Bros. Wii. Dieser Port läuft mit v1.30 für die USA.");
+        de("That is %s, not Newer Super Mario Bros. Wii for the USA (SMNE03).",
+                "Das ist %s, nicht Newer Super Mario Bros. Wii für die USA (SMNE03).");
+        de("this version of the app has no Newer module", "diese Version der App hat kein Newer-Modul");
+        de("GitHub answered %d", "GitHub antwortete %d");
+        de("the download doesn't match this version's module",
+                "der Download passt nicht zum Modul dieser Version");
+        de("Continuing where you left off.", "Es geht da weiter, wo du aufgehört hast.");
+        de("Your saves, settings and game files are kept.",
+                "Spielstände, Einstellungen und Spieldateien bleiben erhalten.");
+        de("Update", "Aktualisieren");
+        de("Stand-ins for GPUs without dual-source blending or logic ops, such as most Mali GPUs. Auto: on "
+                + "for the GPUs that need them. Takes effect at the next start.",
+                "Ersatzlösungen für GPUs ohne Dual-Source-Blending oder Logikoperationen, etwa die meisten "
+                + "Mali-GPUs. Auto: an für GPUs, die sie brauchen. Gilt ab dem nächsten Start.");
+
+        de("Language Pack…", "Sprachpaket…");
+        de("Language Pack", "Sprachpaket");
+        de("A language pack is installed: the game's own text is in this language.",
+                "Ein Sprachpaket ist installiert: Auch die Texte des Spiels sind in dieser Sprache.");
+        de("The start menu and the port's menus are in this language. For the game's own text, import a "
+                + "language pack zip made by a translator; until then it stays English.",
+                "Das Startmenü und die Menüs des Ports sind in dieser Sprache. Für die Texte des Spiels "
+                + "importiere die ZIP-Datei eines Sprachpakets von einem Übersetzer; bis dahin bleiben sie "
+                + "Englisch.");
+        de("Replace…", "Ersetzen…");
+        de("Import Language Pack…", "Sprachpaket importieren…");
+        de("Importing the language pack", "Sprachpaket wird importiert");
+        de("That zip doesn't hold a language pack: it needs a Message folder, as in the disc's files/US/EngUS.",
+                "Diese ZIP-Datei enthält kein Sprachpaket: Sie braucht einen Message-Ordner, wie in "
+                + "files/US/EngUS der Disc.");
+        de("The language pack is installed. The game uses it the next time it starts.",
+                "Das Sprachpaket ist installiert. Das Spiel nutzt es beim nächsten Start.");
+
+        de("The game stopped", "Das Spiel wurde beendet");
+        de("New Super Mario Bros. Wii, the Rust port", "New Super Mario Bros. Wii, der Rust-Port");
+        de("Tap Play. The on-screen Wii Remote is held sideways; turn the phone to tilt and jolt it to shake. "
+                + "The Back gesture opens the game's menu.",
+                "Tippe auf Spielen. Die Wii-Fernbedienung auf dem Bildschirm wird quer gehalten; drehe das "
+                + "Telefon zum Neigen und ruck es zum Schütteln. Die Zurück-Geste öffnet das Menü des Spiels.");
+        de("16:9 and 4:3 add black bars. Fill Screen shows 16:9 in this port for now.",
+                "16:9 und 4:3 fügen schwarze Balken hinzu. Bildschirm füllen zeigt in diesem Port vorerst 16:9.");
+        de("Takes effect at the next start.", "Gilt ab dem nächsten Start.");
+        de("Reverse Tilt", "Neigung umkehren");
+        de("Tilting platforms go the way you tilt, whatever the tilt comes from.",
+                "Kippbare Plattformen neigen sich in deine Richtung, egal woher die Neigung kommt.");
     }
 }
