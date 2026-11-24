@@ -7,8 +7,9 @@
 //! decoder (so textures are decoded again in its first field) and runs every
 //! field. Decoding runs on the calling thread and the transform on its own,
 //! as in the game; per field it prints the medians over the rounds:
-//! decoding, the transform thread's busy time, and the wall time until the
-//! field's output was ready. `--inline` runs both halves on one thread and
+//! decoding (without its waits for the transform thread), the transform
+//! thread's busy time, those waits, and the wall time until the field's
+//! output was ready. `--inline` runs both halves on one thread and
 //! reports only the wall time. `--records` keeps frame-interpolation records
 //! (the desktop's default; the Android app runs without). `--digest` prints
 //! a digest of every field's vertices, indices, shading blocks and commands
@@ -64,8 +65,9 @@ fn main() {
     }
     let ram = mem.view();
     let n = cap.fields.len();
-    // Per field: decode, transform, wall (ms), one per round.
-    let mut times = vec![[Vec::new(), Vec::new(), Vec::new()]; n];
+    // Per field: decode, transform, decode's waits for the transform, wall
+    // (ms), one per round.
+    let mut times = vec![[Vec::new(), Vec::new(), Vec::new(), Vec::new()]; n];
     let (mut draws, mut gx_draws, mut vertices) = (0usize, 0u64, 0usize);
     for round in 0..rounds {
         let mut gpu = Gpu::default();
@@ -77,7 +79,7 @@ fn main() {
         let mut events = Vec::new();
         let ms = |d: Duration| d.as_secs_f64() * 1000.0;
         for (i, field) in cap.fields.iter().enumerate() {
-            let t = Instant::now();
+            let (t, w) = (Instant::now(), gpu.waited_for_transform());
             for r in field {
                 match r {
                     Rec::Data(d) => gpu.feed(d, &ram, &mut events),
@@ -86,12 +88,14 @@ fn main() {
                 events.clear();
             }
             gpu.flush_back();
-            let decode = t.elapsed();
+            let waited = gpu.waited_for_transform() - w;
+            let decode = t.elapsed().saturating_sub(waited);
             let out = gpu.take_output();
             let wall = t.elapsed();
             times[i][0].push(ms(decode));
             times[i][1].push(ms(out.busy[1]));
-            times[i][2].push(ms(wall));
+            times[i][2].push(ms(waited));
+            times[i][3].push(ms(wall));
             if round == 0 && digest {
                 let mut eat = |b: &[u8]| {
                     for c in b.chunks(8) {
@@ -126,26 +130,27 @@ fn main() {
         }
     }
     done.store(true, std::sync::atomic::Ordering::Relaxed);
-    println!("field,decode_ms,transform_ms,wall_ms");
-    let mut tot = [0.0f64; 3];
+    println!("field,decode_ms,transform_ms,decode_waits_ms,wall_ms");
+    let mut tot = [0.0f64; 4];
     for (i, t) in times.into_iter().enumerate() {
         let m = t.map(median);
-        for k in 0..3 {
+        for k in 0..4 {
             tot[k] += m[k];
         }
-        println!("{i},{:.3},{:.3},{:.3}", m[0], m[1], m[2]);
+        println!("{i},{:.3},{:.3},{:.3},{:.3}", m[0], m[1], m[2], m[3]);
     }
     let nf = n.max(1) as f64;
     if digest {
         println!("digest {sum:016x}");
     }
     println!(
-        "{n} fields, {rounds} rounds{}{}: a field (mean of medians) decode {:.2} ms, transform {:.2} ms, wall {:.2} ms; {} draws ({} before merging), {} vertices",
+        "{n} fields, {rounds} rounds{}{}: a field (mean of medians) decode {:.2} ms, transform {:.2} ms, decode waiting for the transform {:.2} ms, wall {:.2} ms; {} draws ({} before merging), {} vertices",
         if inline { ", inline" } else { "" },
         if records { ", records" } else { "" },
         tot[0] / nf,
         tot[1] / nf,
         tot[2] / nf,
+        tot[3] / nf,
         draws / n.max(1),
         gx_draws / n.max(1) as u64,
         vertices / n.max(1)

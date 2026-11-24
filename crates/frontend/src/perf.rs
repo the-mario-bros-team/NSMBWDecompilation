@@ -4,8 +4,9 @@
 //! Each field is a row of a CSV file: the game thread's time (and of it,
 //! waiting for the GX thread), the GX threads' busy time (decoding, and
 //! transforming), the render thread's time for the field, the GPU's time
-//! when the renderer measures it, the time since the field before, and the
-//! field's draws. Every window of fields, and at the end, the log gets the
+//! when the renderer measures it, the time since the field before, the GX
+//! thread's waits for room in the transform thread's queue (not counted in
+//! its decoding time), and the field's draws. Every window of fields, and at the end, the log gets the
 //! median, 99th percentile and worst of each.
 //!
 //! `--perf-skip` names draw categories to leave out, one per window in turn
@@ -103,7 +104,7 @@ struct Row {
 }
 
 /// The timed columns, in CSV order.
-const MS: [&str; 8] = ["emu", "gx_wait", "out_wait", "decode", "transform", "render", "gpu", "interval"];
+const MS: [&str; 9] = ["emu", "gx_wait", "out_wait", "decode", "transform", "render", "gpu", "interval", "decode_waits"];
 
 pub struct Perf {
     csv: Option<BufWriter<File>>,
@@ -168,7 +169,7 @@ impl Perf {
         self.last = Some(now);
         let out = &f.out;
         let draws = out.cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(_))).count() as u32;
-        let row = Row { ms: [ms(f.emu), ms(f.gx_wait), ms(f.output_wait), ms(out.busy[0]), ms(out.busy[1]), ms(render), gpu.map_or(0.0, ms), interval], draws, draw_ops: out.draw_ops, hashed: out.hashed };
+        let row = Row { ms: [ms(f.emu), ms(f.gx_wait), ms(f.output_wait), ms(out.busy[0]), ms(out.busy[1]), ms(render), gpu.map_or(0.0, ms), interval, ms(out.busy[2])], draws, draw_ops: out.draw_ops, hashed: out.hashed };
         let skip = self.skip().name();
         if let Some(w) = &mut self.csv {
             let cols: Vec<String> = row.ms.iter().map(|v| format!("{v:.3}")).collect();
@@ -227,7 +228,7 @@ mod tests {
 
     #[test]
     fn percentiles() {
-        let rows: Vec<Row> = (1..=100).map(|i| Row { ms: [i as f32, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], draws: 2, draw_ops: 3, hashed: 2048 }).collect();
+        let rows: Vec<Row> = (1..=100).map(|i| Row { ms: [i as f32, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], draws: 2, draw_ops: 3, hashed: 2048 }).collect();
         assert_eq!(summary(&rows), "emu 50.00/99.00/100.00 ms (p50/p99/worst); a field: 2 draws (3 before merging), 2 KB of textures hashed");
         assert_eq!(Skip::parse_list("none,blend").unwrap(), vec![Skip::None, Skip::Blend]);
         assert!(Skip::parse_list("bogus").is_err());

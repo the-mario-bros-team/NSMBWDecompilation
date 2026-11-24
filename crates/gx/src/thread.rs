@@ -251,12 +251,16 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
     let mut events = Vec::new();
     // Time spent decoding this field (`Output::busy`).
     let mut busy = std::time::Duration::ZERO;
+    // Of the time in `feed`, waiting for the transform thread.
+    let mut back_waits = std::time::Duration::ZERO;
     for msg in msgs {
         match msg {
             Msg::Data(bytes) => {
-                let t = std::time::Instant::now();
+                let (t, w) = (std::time::Instant::now(), gpu.waited_for_transform());
                 gpu.feed(&bytes, &ram, &mut events);
-                busy += t.elapsed();
+                let waited = gpu.waited_for_transform() - w;
+                busy += t.elapsed().saturating_sub(waited);
+                back_waits += waited;
                 events.clear();
             }
             Msg::Poke { x, y, value, z } => gpu.poke(x, y, value, z),
@@ -278,6 +282,7 @@ fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply
             Msg::TakeOutput => {
                 let mut out = gpu.take_output();
                 out.busy[0] = std::mem::take(&mut busy);
+                out.busy[2] = std::mem::take(&mut back_waits);
                 if replies.send(Reply::Output(Box::new(out))).is_err() {
                     return;
                 }

@@ -373,6 +373,8 @@ pub(crate) struct BackThread {
     /// nothing, and the page faults and heap calls for that took about a
     /// third of the decode thread on the world map.
     spares: std::sync::mpsc::Receiver<Batch>,
+    /// Time spent in sends so far: waiting for room in the queue.
+    blocked: std::cell::Cell<std::time::Duration>,
     handle: Option<std::thread::JoinHandle<()>>,
 }
 
@@ -404,11 +406,13 @@ impl BackThread {
                 }
             })
             .expect("GX transform thread");
-        Self { to: Some(to), from, spares, handle: Some(handle) }
+        Self { to: Some(to), from, spares, blocked: Default::default(), handle: Some(handle) }
     }
 
     fn send(&self, msg: Msg) {
+        let t = std::time::Instant::now();
         self.to.as_ref().expect("GX transform thread").send(msg).expect("the GX transform thread stopped");
+        self.blocked.set(self.blocked.get() + t.elapsed());
     }
 }
 
@@ -422,6 +426,14 @@ impl Drop for BackThread {
 }
 
 impl Sink {
+    /// Time spent so far waiting for room in the transform thread's queue.
+    pub fn blocked(&self) -> std::time::Duration {
+        match self {
+            Self::Local(_) => Default::default(),
+            Self::Thread(t) => t.blocked.get(),
+        }
+    }
+
     /// An empty batch to fill, with the capacity of one already applied
     /// when there is one.
     pub fn spare(&mut self) -> Batch {

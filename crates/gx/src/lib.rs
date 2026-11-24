@@ -394,9 +394,12 @@ pub struct Output {
     pub world: World,
     /// Each player's window, as last set ([`Gpu::set_views`]).
     pub views: [Option<xf::View>; 4],
-    /// Time the GX threads spent on this field: decoding (the GX thread)
-    /// and transforming (its transform thread). Zero for work done inline.
-    pub busy: [std::time::Duration; 2],
+    /// Time the GX threads spent on this field: decoding (the GX thread,
+    /// not counting its waits for the transform thread), transforming (its
+    /// transform thread), and the GX thread's waits for room in the
+    /// transform thread's queue (decoding was ahead). Zero for work done
+    /// inline.
+    pub busy: [std::time::Duration; 3],
     /// Draws the game made this field (before merging into `cmds`), and
     /// texture bytes hashed to look textures up (for `--perf`).
     pub draw_ops: u32,
@@ -582,6 +585,11 @@ impl Gpu {
     /// reused (with their capacity) for a later field.
     pub fn recycle(&mut self, old: Output) {
         self.sink.recycle(old);
+    }
+
+    /// Time spent so far waiting for room in the transform thread's queue.
+    pub fn waited_for_transform(&self) -> std::time::Duration {
+        self.sink.blocked()
     }
 
     /// Hands what was decoded so far to the transform half.
