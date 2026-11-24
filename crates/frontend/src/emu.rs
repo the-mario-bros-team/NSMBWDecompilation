@@ -169,6 +169,11 @@ pub enum ToEmu {
     /// screen (the desktop never sends it).
     #[allow(dead_code)]
     SaveState(PathBuf, Sender<Result<(), String>>),
+    /// The picture was tapped (the Android app's touch screen, off the
+    /// on-screen remote's buttons): it skips the opening cutscene or a hint
+    /// movie, as a click does (`gameplay::MovieSkip`).
+    #[allow(dead_code)]
+    Tap,
 }
 
 /// The save cards' "Cheated", in the language the Settings buttons read.
@@ -369,7 +374,7 @@ fn apply(sys: &mut System, live: &mut [Input; REMOTES], msg: ToEmu) {
                 say!("Bluetooth passthrough: {}", if held { "forgetting every paired Wii Remote" } else { "pairing: press the red SYNC button on each Wii Remote (under its battery cover)" });
             }
         }
-        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::FileBack | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) => {}
+        ToEmu::Pause(_) | ToEmu::SettingsClosed | ToEmu::Gameplay(_) | ToEmu::PowerUp(_) | ToEmu::Sound(_) | ToEmu::Volumes(_) | ToEmu::Click(_) | ToEmu::FileBack | ToEmu::Display(_) | ToEmu::TexturePack(_) | ToEmu::SaveState(..) | ToEmu::Tap => {}
     }
 }
 
@@ -696,6 +701,12 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     let mut click = None;
     let mut click_buttons = 0u16;
     let mut gameplay = crate::gameplay::Gameplay::default();
+    // Skipping the opening cutscene and the hint movies with any button, a
+    // click or a tap: a player's game (not a scripted one unless asked, nor
+    // a net game).
+    let skip_movies = session.is_none() && (script.is_empty() || force_gameplay_options);
+    let mut movie_skip = crate::gameplay::MovieSkip::default();
+    let mut tapped = false;
     let mut display = DisplayOptions { aspect: wide.unwrap_or(hle_os::display::ASPECT_16_9), ..Default::default() };
     // What the GX decoder was last told: the projections' widening and the
     // animated tiles.
@@ -721,7 +732,11 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                             sounds.push(id);
                         }
                     }
-                    ToEmu::Click(c) => click = Some(c),
+                    ToEmu::Click(c) => {
+                        click = Some(c);
+                        tapped = true;
+                    }
+                    ToEmu::Tap => tapped = true,
                     ToEmu::FileBack => {
                         if session.is_none() {
                             clicker.back(&sys);
@@ -786,6 +801,17 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         }
         let mut inputs = controls(&live, &script, index);
         inputs[0].buttons |= click_buttons;
+        if skip_movies {
+            let mut buttons = inputs.map(|i| i.buttons);
+            if let Some(line) = movie_skip.before_field(&mut sys, &mut buttons, std::mem::take(&mut tapped)) {
+                say!("field {index}: {line}");
+                // The click that skipped presses nothing afterwards.
+                click = None;
+            }
+            for (input, b) in inputs.iter_mut().zip(buttons) {
+                input.buttons = b;
+            }
+        }
         if let Some(session) = &mut session {
             // Online, this machine's player 1 controls (and `p1` presses)
             // are its own remote; the others come from the network.
@@ -871,6 +897,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             play_menu_sounds(&mut sys, &mut sounds);
             if let Some(&(_, c)) = clicks.iter().find(|c| c.0 == index) {
                 click = Some(c);
+                tapped = true;
             }
             click_buttons = clicker.field(&mut sys, click.take());
             // A game menu's Settings button: the Settings window once the

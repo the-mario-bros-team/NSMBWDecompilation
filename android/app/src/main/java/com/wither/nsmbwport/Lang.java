@@ -521,6 +521,20 @@ final class Lang {
                 + "ricompattata?). Questo port funziona solo con il disco originale.");
         // --- Settings: the Gameplay tab ---
         newer("Gameplay", "Juego", "Jeu", "Partita");
+        newer("Power-Up Freeze", "Pausa al transformarse", "Pause des transformations", "Pausa per le trasformazioni");
+        newer("Everything stops for a moment while a player grows, shrinks or dies. Off: the level keeps moving.",
+                "Todo se detiene un momento cuando un jugador crece, encoge o pierde una vida. Desactivado: el nivel sigue.",
+                "Tout s'arrête un instant quand un joueur grandit, rapetisse ou perd une vie. Désactivé : le niveau continue.",
+                "Tutto si ferma un momento quando un giocatore cresce, si rimpicciolisce o perde una vita. Disattivato: il livello continua.");
+        newer("Player Collision", "Choques entre jugadores", "Collisions entre joueurs", "Urti tra giocatori");
+        newer("Players bump into and stand on each other. Off: they pass through each other.",
+                "Los jugadores chocan y se suben unos encima de otros. Desactivado: se atraviesan.",
+                "Les joueurs se heurtent et se tiennent les uns sur les autres. Désactivé : ils se traversent.",
+                "I giocatori si urtano e salgono uno sull'altro. Disattivato: si attraversano.");
+        newer("Online games keep the game's own rules. Takes effect at the next start.",
+                "Las partidas en línea mantienen las reglas del juego. Se aplica en el próximo inicio.",
+                "Les parties en ligne gardent les règles du jeu. Prend effet au prochain démarrage.",
+                "Le partite online mantengono le regole del gioco. Ha effetto al prossimo avvio.");
         newer("No Time Limit", "Sin límite de tiempo", "Sans limite de temps", "Tempo infinito");
         newer("Infinite Lives", "Vidas infinitas", "Vies infinies", "Vite infinite");
         newer("Cancel", "Cancelar", "Annuler", "Annulla");

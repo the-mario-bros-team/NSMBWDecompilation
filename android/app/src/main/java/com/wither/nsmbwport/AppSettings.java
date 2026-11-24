@@ -74,6 +74,15 @@ final class AppSettings {
     boolean haptics() { return prefs().getBoolean("haptics", true); }
     void setHaptics(boolean on) { prefs().edit().putBoolean("haptics", on).commit(); }
 
+    /** Gameplay: everything stops for a moment while a player changes size or dies (the game's own
+     *  rule, on by default). Net games keep the game's rules. */
+    boolean powerUpFreeze() { return prefs().getBoolean("power_up_freeze", true); }
+    void setPowerUpFreeze(boolean on) { prefs().edit().putBoolean("power_up_freeze", on).commit(); }
+
+    /** Gameplay: players bump into and stand on each other (the game's own rule, on by default). */
+    boolean playerCollision() { return prefs().getBoolean("player_collision", true); }
+    void setPlayerCollision(boolean on) { prefs().edit().putBoolean("player_collision", on).commit(); }
+
     /** Open the game straight away when the app starts; the Back menu leads back to the start menu. */
     boolean skipStartMenu() { return prefs().getBoolean("skip_start_menu", false); }
     void setSkipStartMenu(boolean on) { prefs().edit().putBoolean("skip_start_menu", on).commit(); }

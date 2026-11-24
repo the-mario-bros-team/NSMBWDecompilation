@@ -33,7 +33,7 @@ import android.widget.TextView;
  */
 public final class SettingsActivity extends Activity {
     private static final String TAG = "NSMBW";
-    private static final String[] TABS = {"Video", "Controls", "Language"};
+    private static final String[] TABS = {"Video", "Controls", "Gameplay", "Language"};
     private static final String EXTRA_TAB = "tab";
 
     // Greys for the tabs not picked, and the brown edge of the arrows and checkboxes.
@@ -147,6 +147,7 @@ public final class SettingsActivity extends Activity {
 
         if (tab == 0) videoTab();
         else if (tab == 1) controlsTab();
+        else if (tab == 2) gameplayTab();
         else languageTab();
 
         final FrameLayout.LayoutParams windowParams;
@@ -213,6 +214,16 @@ public final class SettingsActivity extends Activity {
                 Lang.t("A short buzz when a touch button is pressed."),
                 () -> settings.setHaptics(!settings.haptics()));
         hint.setText(Lang.t("The on-screen Wii Remote. A controller hides it while you use it."));
+    }
+
+    private void gameplayTab() {
+        toggle(Lang.t("Power-Up Freeze"), settings.powerUpFreeze(),
+                Lang.t("Everything stops for a moment while a player grows, shrinks or dies. Off: the level keeps moving."),
+                () -> settings.setPowerUpFreeze(!settings.powerUpFreeze()));
+        toggle(Lang.t("Player Collision"), settings.playerCollision(),
+                Lang.t("Players bump into and stand on each other. Off: they pass through each other."),
+                () -> settings.setPlayerCollision(!settings.playerCollision()));
+        hint.setText(Lang.t("Online games keep the game's own rules. Takes effect at the next start."));
     }
 
     private void languageTab() {

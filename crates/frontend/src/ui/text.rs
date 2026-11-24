@@ -147,6 +147,10 @@ const TABLE: &[(&str, &str, &str)] = &[
     ("The game is saved after every course you clear, as the map's Save does.", "Le jeu est sauvegardé après chaque niveau terminé, comme avec Sauvegarder sur la carte.", "La partida se guarda tras cada nivel superado, como hace Guardar en el mapa."),
     ("The pause menu's Exit Course in every course, cleared or not.", "Quitter le niveau dans le menu pause de chaque niveau, terminé ou non.", "Salir del nivel en el menú de pausa de cada nivel, superado o no."),
     ("Player 1 picks a character too, on the game's own screen (from the next start).", "Le joueur 1 choisit aussi un personnage, sur l'écran du jeu (au prochain démarrage).", "El jugador 1 también elige personaje, en la pantalla del propio juego (desde el próximo inicio)."),
+    ("Power-Up Freeze", "Pause des transformations", "Pausa al transformarse"),
+    ("Player Collision", "Collisions entre joueurs", "Choques entre jugadores"),
+    ("Everything stops for a moment while a player grows, shrinks or dies. Off: the level keeps moving.", "Tout s'arrête un instant quand un joueur grandit, rapetisse ou perd une vie. Désactivé : le niveau continue.", "Todo se detiene un momento cuando un jugador crece, encoge o pierde una vida. Desactivado: el nivel sigue."),
+    ("Players bump into and stand on each other. Off: they pass through each other.", "Les joueurs se heurtent et se tiennent les uns sur les autres. Désactivé : ils se traversent.", "Los jugadores chocan y se suben unos encima de otros. Desactivado: se atraviesan."),
     // Language.
     ("Shows the game's text and these menus in {name}.", "Affiche les textes du jeu et ces menus en {name}.", "Muestra los textos del juego y estos menús en {name}."),
     // The Multiplayer screen (LAN Play).

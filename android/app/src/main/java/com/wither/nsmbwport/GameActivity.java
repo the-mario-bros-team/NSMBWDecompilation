@@ -67,6 +67,7 @@ public class GameActivity extends Activity
         GpuDrivers.applyToGame(this, settings.gpuCompat());
         final java.io.File restore = takeBackup();
         Native.setLoadState(restore != null ? restore.getAbsolutePath() : null);
+        Native.setGameplay(settings.powerUpFreeze(), settings.playerCollision());
         LanPlay.beforeStart(this);  // started from LAN Play: host or join
         final String error = Native.start(GameFiles.dataDir(this).getAbsolutePath(), GameFiles.gameDir(this).getAbsolutePath(),
                 settings.nativeScale(), settings.widescreen(), settings.vsync(), Lang.wiiLanguage());
@@ -339,7 +340,9 @@ public class GameActivity extends Activity
 
     /** Tapping the game's menus needs the recomp's hooks; this port takes the remote's buttons there. */
     @Override
-    public void onTap(float x, float y) {}
+    public void onTap(float x, float y) {
+        if (started) Native.tap();
+    }
 
     @Override
     public void onPointer(float x, float y, boolean held) {}
