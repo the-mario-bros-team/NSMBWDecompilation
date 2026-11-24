@@ -128,6 +128,12 @@ impl Ios {
         // system menu creates it.
         let data = nand.join(format!("title/{:08x}/{:08x}/data", title_id >> 32, title_id as u32));
         std::fs::create_dir_all(&data).map_err(|e| format!("{}: {e}", data.display()))?;
+        // A version played for the first time starts from another's save.
+        match nand::adopt_save(&nand, title_id) {
+            Ok(Some(from)) => println!("save: no save for {}, so the one {} left was copied (the saves are kept apart from now on)", game_name(title_id), game_name(from)),
+            Ok(None) => {}
+            Err(e) => eprintln!("save: copying another version's save: {e}"),
+        }
         let remotes: Vec<[u8; 6]> = (0..bt::REMOTES).map(bt::remote_address).collect();
         nand::register_wiimotes(&nand, &remotes).map_err(|e| format!("{}: {e}", nand.display()))?;
         let tmd = std::fs::read(game.join("tmd.bin")).map_err(|e| format!("tmd.bin: {e}"))?;
@@ -700,4 +706,9 @@ impl Snapshot for Ios {
         }
         guest_mem::snap!(s; self.held, self.bt);
     }
+}
+
+/// "SMNE" for title 00010000/534d4e45.
+fn game_name(title_id: u64) -> String {
+    (title_id as u32).to_be_bytes().iter().map(|&b| if b.is_ascii_graphic() { b as char } else { '?' }).collect()
 }

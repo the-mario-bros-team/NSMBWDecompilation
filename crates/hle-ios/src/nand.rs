@@ -304,9 +304,84 @@ pub fn set_language(root: &Path, language: u8) -> std::io::Result<()> {
     Ok(())
 }
 
+/// The game's save file, its first 4 bytes the disc's game ID (`SMNE`).
+const SAVE: &str = "wiimj2d.sav";
+/// The save's banner in the system menu, the same for every version; the
+/// game starts a new save without it.
+const BANNER: &str = "banner.bin";
+
+/// A title's data folder.
+fn title_data(root: &Path, title_id: u64) -> PathBuf {
+    root.join(format!("title/{:08x}/{:08x}/data", title_id >> 32, title_id as u32))
+}
+
+/// If the game whose title ID is `title_id` has no save yet, gives it a
+/// copy of the newest save another version of the same game left (the
+/// USA disc's for the European one, or the other way): the saves differ
+/// only in the game ID's last letter. Returns the title copied from.
+pub fn adopt_save(root: &Path, title_id: u64) -> std::io::Result<Option<u64>> {
+    let ours = title_data(root, title_id);
+    if ours.join(SAVE).exists() {
+        return Ok(None);
+    }
+    let Ok(titles) = std::fs::read_dir(root.join(format!("title/{:08x}", title_id >> 32))) else { return Ok(None) };
+    let mut newest: Option<(std::time::SystemTime, u64)> = None;
+    for entry in titles.flatten() {
+        let Some(low) = entry.file_name().to_str().and_then(|n| u32::from_str_radix(n, 16).ok()) else { continue };
+        let other = (title_id & !0xFFFF_FFFF) | u64::from(low);
+        // The same game (its ID's first three letters), another region.
+        if other == title_id || low >> 8 != (title_id as u32) >> 8 {
+            continue;
+        }
+        let dir = title_data(root, other);
+        let Ok(modified) = std::fs::metadata(dir.join(SAVE)).and_then(|m| m.modified()) else { continue };
+        if dir.join(BANNER).is_file() && newest.is_none_or(|(t, _)| modified > t) {
+            newest = Some((modified, other));
+        }
+    }
+    let Some((_, from)) = newest else { return Ok(None) };
+    let dir = title_data(root, from);
+    let mut save = std::fs::read(dir.join(SAVE))?;
+    if save.len() < 4 || save[..4] != (from as u32).to_be_bytes() {
+        return Ok(None);
+    }
+    save[3] = title_id as u8;
+    std::fs::create_dir_all(&ours)?;
+    std::fs::copy(dir.join(BANNER), ours.join(BANNER))?;
+    std::fs::write(ours.join(SAVE), save)?;
+    Ok(Some(from))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_new_version_adopts_the_other_ones_save() {
+        let root = std::env::temp_dir().join(format!("nsmbw-adopt-save-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        let (usa, pal) = (0x0001_0000_534d_4e45, 0x0001_0000_534d_4e50);
+        // Nothing to adopt yet.
+        assert_eq!(adopt_save(&root, pal).unwrap(), None);
+        let usa_dir = title_data(&root, usa);
+        std::fs::create_dir_all(&usa_dir).unwrap();
+        std::fs::write(usa_dir.join(SAVE), b"SMNE\x0e\0\0\0save").unwrap();
+        std::fs::write(usa_dir.join(BANNER), b"banner").unwrap();
+        // Another game's save (another ID) is never taken.
+        let other = title_data(&root, 0x0001_0000_5241_4245);
+        std::fs::create_dir_all(&other).unwrap();
+        std::fs::write(other.join(SAVE), b"RABE").unwrap();
+        std::fs::write(other.join(BANNER), b"b").unwrap();
+        assert_eq!(adopt_save(&root, pal).unwrap(), Some(usa));
+        let pal_dir = title_data(&root, pal);
+        assert_eq!(std::fs::read(pal_dir.join(SAVE)).unwrap(), b"SMNP\x0e\0\0\0save");
+        assert_eq!(std::fs::read(pal_dir.join(BANNER)).unwrap(), b"banner");
+        // Once it has its own, it keeps it.
+        std::fs::write(pal_dir.join(SAVE), b"SMNP mine").unwrap();
+        assert_eq!(adopt_save(&root, pal).unwrap(), None);
+        assert_eq!(std::fs::read(pal_dir.join(SAVE)).unwrap(), b"SMNP mine");
+        std::fs::remove_dir_all(&root).unwrap();
+    }
 
     #[test]
     fn setting_txt_round_trips() {
