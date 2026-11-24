@@ -34,8 +34,10 @@ pub enum Style {
 
 /// Output pixels per texel of the game's art.
 const SCALE: usize = 4;
-const PICTURE: &str = "/US/EngUS/Font/mj2d00_PictureFont_32_RGBA8.brfnt";
-const MESSAGE: &str = "/US/EngUS/Font/mj2d00_MessageFont_32_I4.brfnt";
+/// In the disc's English folder (`/US/EngUS/Font/`, `/EU/EngEU/Font/`, ...),
+/// or its first language's.
+const PICTURE: &str = "mj2d00_PictureFont_32_RGBA8.brfnt";
+const MESSAGE: &str = "mj2d00_MessageFont_32_I4.brfnt";
 /// The picture font's Wii Remote buttons.
 const CODE_DPAD: char = '!';
 const CODE_A: char = '"';
@@ -392,8 +394,10 @@ fn tpl(data: &[u8]) -> Option<(Key, Pixels)> {
 impl Prompts {
     /// The prompts' art from the player's disc (`None` if it is not there).
     pub fn load() -> Option<Self> {
-        let picture = FontPixels::parse(&layout::read_disc_file(PICTURE)?)?;
-        let message = FontPixels::parse(&layout::read_disc_file(MESSAGE)?)?;
+        let folders = layout::language_folders();
+        let english = folders.iter().find(|f| f.rsplit('/').next().is_some_and(|n| n.starts_with("Eng"))).or(folders.first())?;
+        let picture = FontPixels::parse(&layout::read_disc_file(&format!("{english}/Font/{PICTURE}"))?)?;
+        let message = FontPixels::parse(&layout::read_disc_file(&format!("{english}/Font/{MESSAGE}"))?)?;
         let square = Piece::load(&picture, key_caps::CODE_B, key_caps::blank_key)?;
         let round = Piece::load(&picture, key_caps::CODE_ONE, key_caps::blank_round)?;
         let (index, _, _) = picture.cell(CODE_TWO)?;

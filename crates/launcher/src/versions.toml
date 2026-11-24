@@ -13,7 +13,9 @@
 # with      files or folders the game folder must hold; without: must not hold
 # art       pictures read from the player's own game folder at run time: logo
 #           (one texture of a U8 archive), gallery (the archive's textures
-#           whose names start with prefix), background (the game's own
+#           whose names start with prefix; a path in files/US/, the USA
+#           disc's region folder, is looked for in the disc's own: files/EU/
+#           on a European one), background (the game's own
 #           course background: its models far to near, how many of their
 #           units the picture is tall, and the height at its middle) and
 #           banner (the game's Wii Menu banner, played as cover art; hide
@@ -41,7 +43,7 @@ short = "Original"
 tagline = "The original game"
 data = "."
 playable = true
-discs = [{ id = "SMNE01", revision = 1, name = "USA, revision 1" }]
+discs = [{ id = "SMNE01", revision = 1, name = "USA, revision 1" }, { id = "SMNP01", revision = 1, name = "Europe, revision 1" }]
 without = ["files/NewerRes"]
 
 [version.art]
@@ -102,7 +104,7 @@ title = "Newer Super Mario Bros. Wii"
 short = "Newer"
 tagline = "A fan-made adventure by the Newer Team"
 playable = false
-status = "The port's engine runs only the original USA disc's own code for now. Newer adds program code of its own on top of it, which the port cannot load yet."
+status = "The port's engine runs only the original discs' own code for now. Newer adds program code of its own on top of the USA one, which the port cannot load yet."
 discs = [{ id = "SMNE03", name = "Newer Super Mario Bros. Wii, USA" }]
 with = ["files/NewerRes"]
 

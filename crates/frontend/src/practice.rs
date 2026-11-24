@@ -27,28 +27,29 @@
 //! The counting only reads the game, so it runs in net games too; the
 //! counts are this machine's view of the shared game.
 
+use game_version::E1;
 use hle_os::System;
 
-const SCENE: u32 = 0x8042_8730; // dScene_c::m_nextScene, m_nowScene (halfwords)
+const SCENE: E1 = E1(0x8042_8730); // dScene_c::m_nextScene, m_nowScene (halfwords)
 const SCENE_WORLD_MAP: u16 = 3;
 const SCENE_STAGE: u16 = 5;
 const SCENE_RESTART: u16 = 6; // RESTART_CRSIN
 const SCENE_GAME_SETUP: u16 = 0xA;
 /// `m_nextScene` with no change pending (`dScene_c::setNextScene` checks for it).
 const NO_SCENE: u16 = 0x2EE;
-const STAGE_TIMER: u32 = 0x8042_A070; // dStageTimer_c::m_instance; +4 the time (seconds << 12), +12 stopped (top byte)
+const STAGE_TIMER: E1 = E1(0x8042_A070); // dStageTimer_c::m_instance; +4 the time (seconds << 12), +12 stopped (top byte)
 const TIMER_STEP: i32 = 92;
-const REST: u32 = 0x8035_4E90; // daPyMng_c::mRest[4], a count a character
-const PLAYER_MODE: u32 = 0x8035_4E70; // daPyMng_c::mPlayerMode[4], each character's power-up
-const CREATE_ITEM: u32 = 0x8035_4E80; // daPyMng_c::mCreateItem[4]
-const DEMO_MANAGER: u32 = 0x8042_9C94; // daPyDemoMng_c::mspInstance (r13 - 0x59EC)
+const REST: E1 = E1(0x8035_4E90); // daPyMng_c::mRest[4], a count a character
+const PLAYER_MODE: E1 = E1(0x8035_4E70); // daPyMng_c::mPlayerMode[4], each character's power-up
+const CREATE_ITEM: E1 = E1(0x8035_4E80); // daPyMng_c::mCreateItem[4]
+const DEMO_MANAGER: E1 = E1(0x8042_9C94); // daPyDemoMng_c::mspInstance (r13 - 0x59EC)
 const GOAL_LIST: u32 = 0x20; // its players at the goal, 4 words, -1 for none
-const INFO: u32 = 0x8042_9F7C; // dInfo_c::m_instance; its dCyuukan_c at +8
+const INFO: E1 = E1(0x8042_9F7C); // dInfo_c::m_instance; its dCyuukan_c at +8
 const CYUUKAN: u32 = 8;
-const CYUUKAN_CLEAR: u32 = 0x8008_EDB0; // dCyuukan_c::clear
-const START_GAME_INFO: u32 = 0x8031_5B90; // dInfo_c::m_startGameInfo
-const RESTART_GAME_INFO: u32 = 0x8037_3D60; // dScRestartCrsin_c::m_startGameInfo
-const SET_NEXT_SCENE: u32 = 0x8010_2260; // dScStage_c::setNextScene(scene, param, exit, fader)
+const CYUUKAN_CLEAR: E1 = E1(0x8008_EDB0); // dCyuukan_c::clear
+const START_GAME_INFO: E1 = E1(0x8031_5B90); // dInfo_c::m_startGameInfo
+const RESTART_GAME_INFO: E1 = E1(0x8037_3D60); // dScRestartCrsin_c::m_startGameInfo
+const SET_NEXT_SCENE: E1 = E1(0x8010_2260); // dScStage_c::setNextScene(scene, param, exit, fader)
 const PROFILE_OPENING_TITLE: u16 = 0x2BB; // only on the title screen (its course is a stage too)
 /// Fields the title screen's object is looked for at an attempt's start.
 const TITLE_CHECK: u32 = 60;
@@ -96,13 +97,13 @@ fn pointer(sys: &System, a: u32) -> Option<u32> {
 }
 
 fn now_scene(sys: &System) -> u16 {
-    read32(sys, SCENE).map_or(0, |w| w as u16)
+    read32(sys, SCENE.va()).map_or(0, |w| w as u16)
 }
 
 fn rests(sys: &System) -> Option<[u32; 4]> {
     let mut r = [0; 4];
     for (i, v) in r.iter_mut().enumerate() {
-        *v = read32(sys, REST + 4 * i as u32)?;
+        *v = read32(sys, REST.va() + 4 * i as u32)?;
     }
     Some(r)
 }
@@ -146,7 +147,7 @@ impl Practice {
         }
         // The clock ran a step this field (not paused, not stopped at a miss
         // or the goal; the goal's count-down into the score is no frame).
-        let timer = pointer(sys, STAGE_TIMER);
+        let timer = pointer(sys, STAGE_TIMER.va());
         if let Some(t) = timer.filter(|&t| t == self.timer) {
             let now = read32(sys, t + 4).map_or(self.time, |v| v as i32);
             if (1..=4 * TIMER_STEP).contains(&(self.time - now)) && !self.stats.goal {
@@ -154,7 +155,7 @@ impl Practice {
             }
         }
         if !self.stats.goal {
-            let manager = pointer(sys, DEMO_MANAGER);
+            let manager = pointer(sys, DEMO_MANAGER.va());
             self.stats.goal = manager.is_some_and(|m| (0..4).any(|i| read32(sys, m + GOAL_LIST + 4 * i).is_some_and(|p| p != u32::MAX)));
             if self.stats.goal {
                 log.push(format!("practice: the goal, split {} ({} frames)", time_label(self.stats.frames), self.stats.frames));
@@ -174,13 +175,13 @@ impl Practice {
     /// A new attempt: another course's deaths start at 0, and coming from
     /// the map the players' power-ups are noted for Restart Course.
     fn attempt_start(&mut self, sys: &System) {
-        let course = sys.mem.ram(START_GAME_INFO + 12, 2).map(|b| (b[0], b[1]));
+        let course = sys.mem.ram(START_GAME_INFO.va() + 12, 2).map(|b| (b[0], b[1]));
         if course != self.course {
             self.course = course;
             self.stats.course_deaths = 0;
         }
         if std::mem::take(&mut self.fresh) {
-            self.entry = sys.mem.ram(PLAYER_MODE, 16).zip(sys.mem.ram(CREATE_ITEM, 16)).map(|(m, c)| (m.try_into().unwrap(), c.try_into().unwrap()));
+            self.entry = sys.mem.ram(PLAYER_MODE.va(), 16).zip(sys.mem.ram(CREATE_ITEM.va(), 16)).map(|(m, c)| (m.try_into().unwrap(), c.try_into().unwrap()));
         }
     }
 
@@ -188,7 +189,7 @@ impl Practice {
     pub fn settle(&mut self, sys: &System) {
         let in_course = self.stats.in_course && now_scene(sys) == SCENE_STAGE;
         self.rest = if in_course { rests(sys) } else { None };
-        self.timer = if in_course { pointer(sys, STAGE_TIMER).unwrap_or(0) } else { 0 };
+        self.timer = if in_course { pointer(sys, STAGE_TIMER.va()).unwrap_or(0) } else { 0 };
         if self.timer != 0 {
             self.time = read32(sys, self.timer + 4).map_or(0, |v| v as i32);
         }
@@ -197,7 +198,7 @@ impl Practice {
     /// Restart Course (not in a net game: the caller checks). Says what
     /// happened.
     pub fn restart(&mut self, sys: &mut System) -> String {
-        let Some(w) = read32(sys, SCENE) else { return "restart: no game yet".into() };
+        let Some(w) = read32(sys, SCENE.va()) else { return "restart: no game yet".into() };
         let (next, now) = ((w >> 16) as u16, w as u16);
         if now != SCENE_STAGE || !self.stats.in_course {
             return "restart: not in a course".into();
@@ -208,24 +209,24 @@ impl Practice {
         if !sys.pause_window_closed() {
             return "restart: close the pause menu first".into();
         }
-        let Some(info) = pointer(sys, INFO) else { return "restart: no dInfo_c".into() };
-        let Some(start) = sys.mem.ram(START_GAME_INFO, 16).map(<[u8]>::to_vec) else { return "restart: no start record".into() };
-        if let Err(e) = sys.call_guest(CYUUKAN_CLEAR, &[info + CYUUKAN], &[]) {
+        let Some(info) = pointer(sys, INFO.va()) else { return "restart: no dInfo_c".into() };
+        let Some(start) = sys.mem.ram(START_GAME_INFO.va(), 16).map(<[u8]>::to_vec) else { return "restart: no start record".into() };
+        if let Err(e) = sys.call_guest(CYUUKAN_CLEAR.va(), &[info + CYUUKAN], &[]) {
             return format!("restart: {e}");
         }
         if let Some((modes, items)) = self.entry {
-            if let Some(b) = sys.mem.ram_mut(PLAYER_MODE, 16) {
+            if let Some(b) = sys.mem.ram_mut(PLAYER_MODE.va(), 16) {
                 b.copy_from_slice(&modes);
             }
-            if let Some(b) = sys.mem.ram_mut(CREATE_ITEM, 16) {
+            if let Some(b) = sys.mem.ram_mut(CREATE_ITEM.va(), 16) {
                 b.copy_from_slice(&items);
             }
         }
         // The course's start record as it was entered (not a demo: +7 is
         // `mIsDemo`).
-        let Some(b) = sys.mem.ram_mut(RESTART_GAME_INFO, 16) else { return "restart: no restart record".into() };
+        let Some(b) = sys.mem.ram_mut(RESTART_GAME_INFO.va(), 16) else { return "restart: no restart record".into() };
         b.copy_from_slice(&start);
-        match sys.call_guest(SET_NEXT_SCENE, &[u32::from(SCENE_RESTART), 0, 2, 1], &[]) {
+        match sys.call_guest(SET_NEXT_SCENE.va(), &[u32::from(SCENE_RESTART), 0, 2, 1], &[]) {
             Ok(_) => format!("restart: course {:02}-{:02} from its start (record {})", start[12] + 1, start[13] + 1, start.iter().map(|b| format!("{b:02x}")).collect::<String>()),
             Err(e) => format!("restart: {e}"),
         }

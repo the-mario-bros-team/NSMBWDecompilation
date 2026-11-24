@@ -174,6 +174,13 @@ Use your own dump. No game assets or extracted content are redistributed here.
   liblinkernsbypass, Copyright (c) 2021 Billy Laws, used under the BSD
   2-Clause License; the source and both licence texts are in
   `android/third_party/libadrenotools` (see its `NOTICE.md` there).
+- The other versions of the game (Europe, ...) find what the port names by
+  its USA address through NSMBW-Updated's address map
+  ([NSMBW-Community/NSMBW-Updated](https://github.com/NSMBW-Community/NSMBW-Updated),
+  `code/address-map.txt`), by Ninji, CLF78 and RoadrunnerWMC, Copyright (c)
+  2021 RoadrunnerWMC, used under the MIT License; the file and its notice are
+  in `crates/game-version`. Each version's Player 1 character code is
+  mkwcat's own for that version.
 - Controllers: [SDL 3](https://libsdl.org) (zlib License), through the
   `sdl3-sys` bindings (zlib License).
 - Bluetooth passthrough's USB access: [nusb](https://github.com/kevinmehall/nusb)
@@ -182,4 +189,4 @@ Use your own dump. No game assets or extracted content are redistributed here.
 
 ## License
 
-See [LICENSE](LICENSE). In short: the NSMBW Decomp project may not use any of this repository under any circumstances. Anyone else may fork it and do what they want with the fork; mods may use all of the code; a new repository that uses this code must credit NSMBWDecompilation explicitly. No game files are included: bring your own copy of New Super Mario Bros. Wii (USA, SMNE01 rev 1).
+See [LICENSE](LICENSE). In short: the NSMBW Decomp project may not use any of this repository under any circumstances. Anyone else may fork it and do what they want with the fork; mods may use all of the code; a new repository that uses this code must credit NSMBWDecompilation explicitly. No game files are included: bring your own copy of New Super Mario Bros. Wii (USA, SMNE01, or Europe, SMNP01; revision 1).

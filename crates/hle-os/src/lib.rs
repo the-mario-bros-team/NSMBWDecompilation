@@ -17,17 +17,19 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
+use game_version::{Version, E1};
 use guest_cpu::blocks::Blocks;
 use guest_cpu::{Cpu, Stop, MSR_EE, SPR_HID0, SPR_HID4};
 use guest_mem::Mem;
 use hle_ios::Ios;
 use hw::{Hw, HwPort};
 
-/// `OSLink(module, bss)` and `OSLinkFixed(module, bss)` in the USA rev 1 DOL.
-pub const OS_LINK: u32 = 0x801B_1F20;
-pub const OS_LINK_FIXED: u32 = 0x801B_1F30;
-/// Title ID of the USA release (`SMNE`).
-pub const TITLE_ID: u64 = 0x0001_0000_534D_4E45;
+// The game's addresses here and in the other modules are USA revision 1's
+// ([`E1`]); [`Addrs`] and `E1::va` give the running version's.
+
+/// `OSLink(module, bss)` and `OSLinkFixed(module, bss)`.
+pub const OS_LINK: E1 = E1(0x801B_1F20);
+pub const OS_LINK_FIXED: E1 = E1(0x801B_1F30);
 /// Cycles between hardware updates and interrupt checks. A slice ends at
 /// the first instruction after a branch once this many have run (or when
 /// the scheduler goes idle): the interpreter's blocks end at branches, and
@@ -39,8 +41,8 @@ pub const SLICE: u64 = 500;
 const PROBE: u32 = 16;
 /// Head of the scheduler's idle loop (`lwz r0,-0x4F78(r13)`; `cmpwi`; `beq`),
 /// spun with interrupts on while the run-queue bitmap is empty.
-const IDLE_LOOP: u32 = 0x801B_4FF0;
-const RUN_QUEUE_BITS: u32 = 0x8042_A708;
+const IDLE_LOOP: E1 = E1(0x801B_4FF0);
+const RUN_QUEUE_BITS: E1 = E1(0x8042_A708);
 /// Functions answered on the host with an immediate return:
 /// - the data-cache range loops (`DCInvalidateRange`, `DCFlushRange`,
 ///   `DCStoreRange`): cache operations do nothing in this emulator, and the
@@ -49,8 +51,9 @@ const RUN_QUEUE_BITS: u32 = 0x8042_A708;
 ///   and `Chorus`, stereo and Dolby Pro Logic II): their output only reaches
 ///   the speakers, which P5 adds (they will run natively then). In menus they
 ///   were over a third of guest time, and the delay on the world map 2-3%.
-/// The AXFX callbacks in [`RETURN_AT_ONCE`] lie in this range.
-const AXFX: std::ops::Range<u32> = 0x801A_3450..0x801A_9400;
+/// The first [`DC_LOOPS`] of [`RETURN_AT_ONCE`] are the cache loops, the
+/// rest the AXFX callbacks.
+const DC_LOOPS: usize = 3;
 const RETURN_AT_ONCE: [u32; 12] = [
     0x801A_C440, 0x801A_C470, 0x801A_C4A0, // DC range loops
     0x801A_3450, 0x801A_3880, 0x801A_48F0, // AXFXReverbHi
@@ -60,12 +63,12 @@ const RETURN_AT_ONCE: [u32; 12] = [
 ];
 /// fdlibm's bit-by-bit `sqrt` (`__ieee754_sqrt`), computed natively: it is
 /// correctly rounded, so `f64::sqrt` gives the same bits.
-const SQRT: u32 = 0x802E_8620;
+const SQRT: E1 = E1(0x802E_8620);
 /// MSL's `strcmp`, computed natively (the first differing bytes' difference,
 /// as unsigned chars). Scene loads compare every effect name with it.
-const STRCMP: u32 = 0x802E_1AB4;
+const STRCMP: E1 = E1(0x802E_1AB4);
 /// Its `errno` (r13 - 0x4698) and the NaN it returns for negative inputs.
-const ERRNO_OFFSET: u32 = 0x4698;
+const ERRNO: E1 = E1(0x8042_AFE8);
 const EDOM: u32 = 0x21;
 /// [`System::call_guest`]'s data, in low memory the game leaves unused
 /// (up to [`p1_character::STUBS`]), and its 64 KiB stack in MEM2 above the
@@ -78,53 +81,97 @@ const CURRENT_THREAD: u32 = 0x8000_00E4;
 const OS_THREAD_SIZE: usize = 0x318;
 /// The scheduler's hold count (r13 - 0x4F80; `OSDisableScheduler` adds
 /// one): `SelectThread` switches no thread while it is above 0.
-const RESCHEDULE: u32 = 0x8042_A700;
+const RESCHEDULE: E1 = E1(0x8042_A700);
 
-/// Every address [`System::before`] acts on (`OSLink` returns aside).
-/// Recompiled code never runs through one of these (`ppc-recomp` bakes this
-/// list in, and [`guest_cpu::recomp::Rt::new`] checks it).
-pub const SPECIAL: [u32; 44] = {
-    let mut s = [0u32; 44];
-    let mut i = 0;
-    while i < RETURN_AT_ONCE.len() {
-        s[i] = RETURN_AT_ONCE[i];
-        i += 1;
-    }
-    let rest = [SQRT, STRCMP, light_texture::DRAW_AND_CAPTURE, reverb::UPDATE_BUFFER, IDLE_LOOP, OS_LINK, OS_LINK_FIXED, p1_character::PORTRAIT, camera::BG_EXECUTE, camera::BG_EXECUTE_END];
-    let mut j = 0;
-    while j < rest.len() {
-        s[i + j] = rest[j];
-        j += 1;
-    }
-    let mut k = 0;
-    while k < menu_settings::HOOKS.len() {
-        s[i + j + k] = menu_settings::HOOKS[k];
-        k += 1;
-    }
-    let mut d = 0;
-    while d < display::HOOKS.len() {
-        s[i + j + k + d] = display::HOOKS[d];
-        d += 1;
-    }
-    s
-};
+/// The addresses the run loop checks at every block, in the version that
+/// runs: taken from their USA ones once, at boot. One the version lacks is
+/// 0, which no code runs at (its hook never acts).
+#[derive(Clone)]
+pub(crate) struct Addrs {
+    return_at_once: [u32; 12],
+    sqrt: u32,
+    strcmp: u32,
+    errno: u32,
+    update_buffer: u32,
+    idle_loop: u32,
+    run_queue_bits: u32,
+    os_link: u32,
+    os_link_fixed: u32,
+    draw_and_capture: u32,
+    bg_execute: u32,
+    bg_execute_end: u32,
+    pub(crate) menu_hooks: [u32; 18],
+    pub(crate) display_hooks: [u32; 4],
+    /// Every address [`System::before`] acts on (`OSLink` returns aside),
+    /// and a bit `(pc >> 2) & 255` set for each.
+    special: Vec<u32>,
+    filter: [u64; 4],
+}
 
-/// Bit `(pc >> 2) & 255` set for each [`SPECIAL`] address.
-const SPECIAL_FILTER: [u64; 4] = {
-    let mut f = [0u64; 4];
-    let mut i = 0;
-    while i < SPECIAL.len() {
-        let b = (SPECIAL[i] >> 2) & 255;
-        f[(b >> 6) as usize] |= 1 << (b & 63);
-        i += 1;
-    }
-    f
-};
+fn va_or_none(a: E1, missing: &mut Vec<u32>) -> u32 {
+    a.try_va().unwrap_or_else(|| {
+        missing.push(a.0);
+        0
+    })
+}
 
-#[inline(always)]
-fn may_be_special(pc: u32) -> bool {
-    let b = (pc >> 2) & 255;
-    SPECIAL_FILTER[(b >> 6) as usize] & (1 << (b & 63)) != 0
+impl Addrs {
+    fn new() -> Self {
+        let mut missing = Vec::new();
+        let mut va = |a: u32| va_or_none(E1(a), &mut missing);
+        let return_at_once = RETURN_AT_ONCE.map(&mut va);
+        let menu_hooks = menu_settings::HOOKS.map(|h| va(h.0));
+        let display_hooks = display::HOOKS.map(|h| va(h.0));
+        let mut a = Self {
+            return_at_once,
+            sqrt: va(SQRT.0),
+            strcmp: va(STRCMP.0),
+            errno: va(ERRNO.0),
+            update_buffer: va(reverb::UPDATE_BUFFER.0),
+            idle_loop: va(IDLE_LOOP.0),
+            run_queue_bits: va(RUN_QUEUE_BITS.0),
+            os_link: va(OS_LINK.0),
+            os_link_fixed: va(OS_LINK_FIXED.0),
+            draw_and_capture: va(light_texture::DRAW_AND_CAPTURE.0),
+            bg_execute: va(camera::BG_EXECUTE.0),
+            bg_execute_end: va(camera::BG_EXECUTE_END.0),
+            menu_hooks,
+            display_hooks,
+            special: Vec::new(),
+            filter: [0; 4],
+        };
+        if !missing.is_empty() {
+            let list: Vec<String> = missing.iter().map(|m| format!("{m:#010x}")).collect();
+            eprintln!("{}: no counterpart of these USA addresses, their hooks are off: {}", game_version::current().describe(), list.join(", "));
+        }
+        let mut special: Vec<u32> = a.return_at_once.to_vec();
+        special.extend([a.sqrt, a.strcmp, a.draw_and_capture, a.update_buffer, a.idle_loop, a.os_link, a.os_link_fixed, p1_character::PORTRAIT, a.bg_execute, a.bg_execute_end]);
+        special.extend(a.menu_hooks);
+        special.extend(a.display_hooks);
+        special.retain(|&x| x != 0);
+        special.sort_unstable();
+        special.dedup();
+        for &x in &special {
+            let b = (x >> 2) & 255;
+            a.filter[(b >> 6) as usize] |= 1 << (b & 63);
+        }
+        a.special = special;
+        a
+    }
+
+    #[inline(always)]
+    fn may_be_special(&self, pc: u32) -> bool {
+        let b = (pc >> 2) & 255;
+        self.filter[(b >> 6) as usize] & (1 << (b & 63)) != 0
+    }
+}
+
+/// Every address [`System::before`] acts on in the version that runs
+/// ([`game_version::set`] first). Recompiled code never runs through one of
+/// these (`ppc-recomp` bakes this list in, and
+/// [`guest_cpu::recomp::Rt::new`] checks it).
+pub fn special() -> Vec<u32> {
+    Addrs::new().special
 }
 
 /// The hooks that replace a whole function: return at once (DC loops,
@@ -133,16 +180,21 @@ fn may_be_special(pc: u32) -> bool {
 /// does not apply changes nothing, so recompiled code calls this at a call
 /// to a hook (`Rt::set_hook`) instead of unwinding to the dispatcher, and
 /// unwinds only when it declines ([`System::before`] then asks again).
-fn replace(cpu: &mut Cpu, mem: &mut Mem, pc: u32, aux_effects: bool) -> bool {
-    if RETURN_AT_ONCE.contains(&pc) && (!aux_effects || !AXFX.contains(&pc)) {
+fn replace(cpu: &mut Cpu, mem: &mut Mem, a: &Addrs, pc: u32, aux_effects: bool) -> bool {
+    if pc == 0 {
+        return false;
+    }
+    if let Some(i) = a.return_at_once.iter().position(|&r| r == pc) {
+        if !aux_effects || i < DC_LOOPS {
+            cpu.pc = cpu.lr;
+            return true;
+        }
+    }
+    if pc == a.update_buffer && aux_effects && reverb::update_buffer(mem, cpu.gpr[3], cpu.gpr[5], cpu.gpr[8]) {
         cpu.pc = cpu.lr;
         return true;
     }
-    if pc == reverb::UPDATE_BUFFER && aux_effects && reverb::update_buffer(mem, cpu.gpr[3], cpu.gpr[5], cpu.gpr[8]) {
-        cpu.pc = cpu.lr;
-        return true;
-    }
-    if pc == STRCMP {
+    if pc == a.strcmp {
         if let Some(r) = strcmp(mem, cpu.gpr[3], cpu.gpr[4]) {
             cpu.gpr[3] = r as u32;
             cpu.pc = cpu.lr;
@@ -152,8 +204,8 @@ fn replace(cpu: &mut Cpu, mem: &mut Mem, pc: u32, aux_effects: bool) -> bool {
     }
     // With the FPU off, f1 may still be another thread's: let the real
     // code run and take the FP-unavailable exception first.
-    if pc == SQRT && cpu.msr & guest_cpu::MSR_FP != 0 {
-        cpu.fpr[1][0] = sqrt(cpu, mem, cpu.fpr[1][0]);
+    if pc == a.sqrt && cpu.msr & guest_cpu::MSR_FP != 0 {
+        cpu.fpr[1][0] = sqrt(mem, a.errno, cpu.fpr[1][0]);
         cpu.pc = cpu.lr;
         return true;
     }
@@ -194,8 +246,7 @@ fn ram_from(mem: &Mem, addr: u32) -> Option<&[u8]> {
 }
 
 /// [`SQRT`]'s result, with its special cases and `errno`.
-fn sqrt(cpu: &Cpu, mem: &mut Mem, x: f64) -> f64 {
-    let errno = cpu.gpr[13].wrapping_sub(ERRNO_OFFSET);
+fn sqrt(mem: &mut Mem, errno: u32, x: f64) -> f64 {
     if !x.is_finite() {
         // NaN stays NaN, +inf stays +inf, -inf becomes NaN.
         let _ = mem.write_u32(errno, EDOM);
@@ -266,6 +317,9 @@ pub struct System {
     pub camera: camera::SharedCamera,
     /// Players joining a course in progress.
     pub joins: join::Joins,
+    /// The version that runs, and its addresses for the run loop.
+    pub version: Version,
+    addrs: Addrs,
 }
 
 /// What happens at the end of each slice ([`SLICE`]).
@@ -429,8 +483,13 @@ impl System {
         let read = |p: &str| fs::read(game.join(p)).map_err(|e| format!("{p}: {e}"));
         let (dol, boot_bin, tmd) = (read("sys/main.dol")?, read("sys/boot.bin")?, read("tmd.bin")?);
         let ios_version = tmd.get(0x18B).copied().ok_or("tmd.bin too short")? as u32;
+        // A disc of no known version (a test's, a mod's own ID) runs as the
+        // USA one.
+        let version = Version::from_boot_bin(&boot_bin).unwrap_or(Version::E1);
+        game_version::set(version);
+        let addrs = Addrs::new();
 
-        let mut ios = Ios::new(game, nand, TITLE_ID)?;
+        let mut ios = Ios::new(game, nand, version.title_id())?;
         let mut menu = menu_settings::MenuSettings::default();
         for (path, data) in mods {
             if !ios.disc.replace(&path, data) {
@@ -453,47 +512,48 @@ impl System {
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
         let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None, pending: None }));
-        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&SPECIAL), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default() })
+        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
     /// returns. Returns true when the scheduler is idle with interrupts on;
     /// the clock then jumps to the next video line and the slice should end.
     fn before(&mut self, pc: u32) -> bool {
-        if replace(&mut self.cpu, &mut self.mem, pc, self.aux_effects) || pc == STRCMP {
+        let a = &self.addrs;
+        if replace(&mut self.cpu, &mut self.mem, a, pc, self.aux_effects) || pc == a.strcmp {
             return false;
         }
         if self.display.watching() {
             self.display_return(pc);
         }
-        if menu_settings::HOOKS.contains(&pc) && self.menu_hook(pc) {
+        if self.addrs.menu_hooks.contains(&pc) && self.menu_hook(pc) {
             return false;
         }
         // A card picks its picture; the displaced instruction runs after.
         if pc == p1_character::PORTRAIT && self.p1.on {
             self.card_portrait();
         }
-        if display::HOOKS.contains(&pc) && self.display_hook(pc) {
+        if self.addrs.display_hooks.contains(&pc) && self.display_hook(pc) {
             return false;
         }
         // The run loops execute the instruction at `pc` right after this
         // (no interrupt in between), so a call the hook lets run is drawn
         // before the hook can see it again.
-        if pc == light_texture::DRAW_AND_CAPTURE && self.light_textures.skip(&self.cpu, &mut self.mem) {
+        if pc == self.addrs.draw_and_capture && self.light_textures.skip(&self.cpu, &mut self.mem) {
             self.cpu.pc = self.cpu.lr;
             return false;
         }
-        if pc == IDLE_LOOP && self.cpu.msr & MSR_EE != 0 && self.mem.read_u32(RUN_QUEUE_BITS) == Ok(0) {
+        if pc == self.addrs.idle_loop && self.cpu.msr & MSR_EE != 0 && self.mem.read_u32(self.addrs.run_queue_bits) == Ok(0) {
             let skip = hw::CYCLES_PER_LINE - self.cpu.cycles % hw::CYCLES_PER_LINE;
             self.cpu.cycles += skip;
             self.idle_cycles += skip;
             return true;
         }
-        if pc == camera::BG_EXECUTE {
+        if pc == self.addrs.bg_execute {
             self.camera.restore(&mut self.mem);
             return false;
         }
-        if pc == camera::BG_EXECUTE_END {
+        if pc == self.addrs.bg_execute_end {
             if self.joins.returned(&mut self.cpu, &mut self.mem) {
                 return false;
             }
@@ -512,7 +572,7 @@ impl System {
             }
             return false;
         }
-        if pc == OS_LINK || pc == OS_LINK_FIXED {
+        if pc == self.addrs.os_link || pc == self.addrs.os_link_fixed {
             self.link_calls.push((self.cpu.gpr[3], self.cpu.lr));
         } else if self.link_calls.last().is_some_and(|c| c.1 == pc) {
             let (header, _) = self.link_calls.pop().unwrap();
@@ -548,8 +608,8 @@ impl System {
             }),
             Box::new(move |c| leave.borrow_mut().take(c)),
         );
-        let aux_effects = self.aux_effects;
-        rt.set_hook(Box::new(move |c, m, pc| replace(c, m, pc, aux_effects)));
+        let (aux_effects, addrs) = (self.aux_effects, self.addrs.clone());
+        rt.set_hook(Box::new(move |c, m, pc| replace(c, m, &addrs, pc, aux_effects)));
         self.recomp = Some(rt);
     }
 
@@ -604,7 +664,7 @@ impl System {
                 continue;
             }
             let pc = self.cpu.pc;
-            if (!self.link_calls.is_empty() || self.display.watching() || may_be_special(pc)) && self.before(pc) {
+            if (!self.link_calls.is_empty() || self.display.watching() || self.addrs.may_be_special(pc)) && self.before(pc) {
                 // Idle: the clock jumped; end the slice here.
                 if self.finish_slice(&mut end) {
                     return Ok(());
@@ -700,12 +760,13 @@ impl System {
         if self.cpu.msr & MSR_EE == 0 && !just_taken {
             return None;
         }
-        let (thread, held) = (self.mem.read_u32(CURRENT_THREAD).ok()?, self.mem.read_u32(RESCHEDULE).ok()?);
+        let reschedule = RESCHEDULE.va();
+        let (thread, held) = (self.mem.read_u32(CURRENT_THREAD).ok()?, self.mem.read_u32(reschedule).ok()?);
         let _ = self.mem.write_u32(CURRENT_THREAD, CALL_SCRATCH);
-        let _ = self.mem.write_u32(RESCHEDULE, held.wrapping_add(1));
+        let _ = self.mem.write_u32(reschedule, held.wrapping_add(1));
         let r = self.call_guest_on(addr, args, &[0; OS_THREAD_SIZE]);
         let _ = self.mem.write_u32(CURRENT_THREAD, thread);
-        let _ = self.mem.write_u32(RESCHEDULE, held);
+        let _ = self.mem.write_u32(reschedule, held);
         Some(r)
     }
 
@@ -796,10 +857,20 @@ impl System {
 
     /// Loads a state from [`System::save_state`] into a booted system.
     pub fn load_state(&mut self, bytes: Vec<u8>) -> Result<(), String> {
+        let disc = self.mem.ram(0x8000_0000, 8).map(<[u8]>::to_vec);
         let mut s = Snap::loader(bytes);
         self.snap_all(&mut s);
         self.display.forget();
-        s.finish()
+        s.finish()?;
+        // The disc header the state's game booted from: another version's
+        // state cannot run on this one's code.
+        let state = self.mem.ram(0x8000_0000, 8).map(<[u8]>::to_vec);
+        if let (Some(d), Some(st)) = (&disc, &state) {
+            if d[..6] != st[..6] || d[7] != st[7] {
+                return Err(format!("this state is from {} revision {}, not this disc ({} revision {})", String::from_utf8_lossy(&st[..6]), st[7], String::from_utf8_lossy(&d[..6]), d[7]));
+            }
+        }
+        Ok(())
     }
 
     fn snap_all(&mut self, s: &mut Snap) {

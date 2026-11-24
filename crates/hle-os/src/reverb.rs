@@ -12,14 +12,15 @@
 //! output is not bit-identical to the interpreted callback's; every machine
 //! of an online session runs this same code, so they stay in step.
 
+use game_version::E1;
 use guest_mem::Mem;
 
-pub const UPDATE_BUFFER: u32 = 0x8026_C210;
+pub const UPDATE_BUFFER: E1 = E1(0x8026_C210);
 
 const SAMPLES: u32 = 96;
 const STATE_BYTES: usize = 0x148;
 /// The callback's float constants in `.sdata2` (read from the game).
-const CONSTANTS: u32 = 0x8042_DF3C;
+const CONSTANTS: E1 = E1(0x8042_DF3C);
 
 fn r32(mem: &Mem, a: u32) -> Option<u32> {
     mem.ram(a, 4).map(|b| u32::from_be_bytes(b.try_into().unwrap()))
@@ -235,7 +236,7 @@ pub fn update_buffer(mem: &mut Mem, this: u32, buffers: u32, output_mode: u32) -
     let (Some(active), Some(in0), Some(in1), Some(in2)) = (r32(mem, this + 0xC), r32(mem, buffers), r32(mem, buffers + 4), r32(mem, buffers + 8)) else {
         return false;
     };
-    let Some(k) = (0..4).map(|i| r32(mem, CONSTANTS + 4 * i).map(f32::from_bits)).collect::<Option<Vec<_>>>() else {
+    let Some(k) = (0..4).map(|i| r32(mem, CONSTANTS.va() + 4 * i).map(f32::from_bits)).collect::<Option<Vec<_>>>() else {
         return false;
     };
     // Off, or Dolby Pro Logic II output (its own effect): nothing to do.

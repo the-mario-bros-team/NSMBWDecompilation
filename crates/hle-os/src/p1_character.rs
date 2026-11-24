@@ -51,60 +51,28 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //! SOFTWARE.
 
+use game_version::{Version, E1};
+
 use crate::System;
 
-/// mkwcat's code for USA Rev 1, as published.
-const CODE: &str = "
-049027F8 3880FFFF 049028F8 60000000 049029A8 60000000 C2902B7C 0000000B
-7FE3FB78 3D808090 618C2BD0 7D8903A6 4E800421 3D208035 81294E60 815F0184
-808A0004 548416BA 3C848094 8084CDF0 7C092000 40820014 808A01CC 80840004
-909F01D0 48000010 814A0184 2C0A0000 4082FFD0 60000000 04902BE8 3BC00000
-C2902D58 00000002 30B7FFFF 7CA5B910 60000000 00000000 C2902D6C 00000002
-30B7FFFF 7CA5B910 60000000 00000000 C2902E14 00000005 90640294 80840184
-90640294 813F0384 3D408035 814A4E60 554A103A 7D26512E 60000000 00000000
-C2909410 00000005 80060000 5400103A 81050384 2C080003 41820008 7C882378
-7D03012E 38E50008 60000000 00000000 048EB7D8 3CA08094 048EB7E4 38A5CDF0
-04902E78 60000000 04902E84 9BBF0124 042F5FC8 00000347 042F60D0 0000036E
-042F60D8 0000036E 042F61EC 000003B5 042F61F4 000003B5 042F6308 000003FB
-042F6310 000003FB 047A1C8C 60000000 C27A1C94 00000007 4800000D 03230372
-03B903FF 7D4802A6 3D208035 81294E60 5529083C 7C8A4A2E 40820010 2C090000
-40820008 38800324 60000000 00000000 C219A974 00000002 7C0802A6 90810008
-60000000 00000000 C219AA4C 0000000A D02300BC 801D00AC 2C000000 419E003C
-80010008 2C000005 4182000C 2C000007 40820028 48000009 40000000 7C8802A6
-C0240000 38800000 3D808026 618C7420 7D8903A6 4E800421 60000000 00000000
-047B0770 60000000 C27B0778 00000004 4800000D 0356039D 03E4042A 7D4802A6
-81260000 5529083C 7C8A4A2E 60000000 C2902ED4 00000002 7C0802A6 90610008
-60000000 00000000 C2902F20 00000004 3D208035 81294E60 7C09E000 4082000C
-81210008 906901D0 81830000 60000000 028EE0D6 00000000 028EE0E2 00000000
-02902D1E 00000000 02902D22 00000000 02902D26 00000000 02902D2E 00000000
-C6902FC8 80903020 0290302E 00000000 02903032 00000000 0290303A 00000000
-027A008A 00000000 027A008E 00000000 027A0192 00000000 027A018E 00000004
-027A11F2 00000000 027A1206 00000000 027A14DA 00000000 027A14DE 00000000
-027A151A 00000000 027A152E 00000000 027A1536 00000000 027A162A 00000000
-027A162E 00000000 027A1636 00000000 027A165A 00000000 027A165E 00000000
-027A15CA 00000000 027A15CE 00000000 027A16DA 00000000 027A16DE 00000000
-027A171A 00000000 027A172E 00000000 027A1736 00000000 027A17AE 00000000
-027A17B2 00000000 047A068C 60000000 047A0694 60000000 047A069C 60000000
-04918B28 38000000 040BB164 90E30384 047A0FE8 60000000 C27A0D24 00000002
-7C0802A6 80830074 8884029A 60000000 C27A0D40 00000005 2C040000 40820018
-38600000 80010014 7C0803A6 38210010 4E800020 38800900 60000000 00000000
-C27A0D68 00000004 38600000 2C040000 41820014 80010014 7C0803A6 38210010
-4E800020 60000000 047A12A8 60000000 C28C5DFC 00000004 3D208035 81294E60
-81430004 554A073F 7D4A4A78 7D4A0034 554AD97F 60000000 04770A8C 2C030004
-047AC8CC 38000001 04918B50 60000000 0476E630 2C000004 0476EAB8 2C030004
-0476DDE8 60000000 04770988 5400173A 047709A8 60000000 047709B0 540407FE
-0476FE4C 5400173A C276FF0C 00000003 2C000000 40820008 38000004 38800000
-60000000 00000000 C276FE84 00000003 2C000000 40820008 38000004 900302E0
-60000000 00000000 C277117C 00000003 388003F2 801F02D4 2C000000 40820008
-3880031D 60000000 C2771164 00000003 388003F3 801F02D4 2C000000 40820008
-3880031E 60000000 C276FDC4 00000003 2C1F0007 40820008 38800000 7FA3EB78
-60000000 00000000 C276FDD4 00000003 2C1F0007 40820008 3BE00008 2C1F0000
-60000000 00000000 0476FD8C 7FE628AE 06933CF0 00000005 06000102 07000000
-C277359C 0000000C 2C040007 41820024 2C040008 40820048 54A0103A 7CA30214
-80A50254 880500BB 60000001 980500BB 386302A4 57E0103A 3C808094 3884F520
-7CBE0214 80A50274 38C00000 3D80800B 618C3B60 7D8903A6 4E800421 2C040004
-60000000 00000000
-";
+/// mkwcat's code for each version, as published (USA revision 1's is the
+/// one the rest of this module was written against).
+const CODES: &str = include_str!("p1_character_codes.txt");
+
+/// The code for `v`'s section of [`CODES`].
+fn code(v: Version) -> Vec<u32> {
+    let mut words = Vec::new();
+    let mut inside = false;
+    for line in CODES.lines() {
+        let line = line.trim();
+        if let Some(name) = line.strip_prefix('[').and_then(|l| l.strip_suffix(']')) {
+            inside = name == v.name();
+        } else if inside && !line.starts_with('#') {
+            words.extend(line.split_whitespace().map(|w| u32::from_str_radix(w, 16).expect("hex")));
+        }
+    }
+    words
+}
 
 /// Where the inserts go, one after another; the first is [`PORTRAIT`].
 pub const STUBS: u32 = 0x8000_1C00;
@@ -114,18 +82,21 @@ const STUBS_END: u32 = 0x8000_3000;
 /// r31 which of its two sides), before the instruction it displaced: a
 /// hook ([`crate::SPECIAL`]) that never replaces it.
 pub const PORTRAIT: u32 = STUBS;
-const PORTRAIT_SITE: u32 = 0x8077_3574;
+const PORTRAIT_SITE: E1 = E1(0x8077_3574);
 const CMPWI_R4_2: u32 = 0x2C04_0002;
 /// The insert whose `beq cr7` becomes `beq cr0` (see the module's notes).
-const CR7_SITE: u32 = 0x8019_AA4C;
+const CR7_SITE: E1 = E1(0x8019_AA4C);
 const BEQ_CR7: u32 = 0x419E_003C;
 const BEQ_CR0: u32 = 0x4182_003C;
-/// main.dol's code and data end below this; everything above is a REL's.
-const DOL_END: u32 = 0x8043_0000;
+/// main.dol's code and data end below this in every version (Korea's and
+/// Taiwan's are the longest, to 0x8043C640); the REL modules are placed
+/// from 0x806E0000.
+const DOL_END: u32 = 0x8050_0000;
 
 /// Words where the code writes, as USA revision 1 has them, checked before
 /// each part (main.dol, a REL module) is changed: a part whose words differ
-/// (another revision, a mod) is left as it is.
+/// (a mod) is left as it is. Another version has them at its own addresses
+/// ([`expected`]).
 const EXPECTED: [(u32, u32); 11] = [
     (0x800B_B164, 0x9083_0384),
     (0x8019_A974, 0x7C08_02A6),
@@ -168,13 +139,14 @@ const MARIO_TAKEN: u32 = 8;
 const SCREEN_TITLE: u32 = 0x608;
 const TITLE_PANE: &str = "T_titleNinzu_00";
 const REMOTES_PANE: &str = "N_textBase_00";
-const INFO: u32 = 0x8042_9F7C; // dInfo_c::m_instance
+const INFO: E1 = E1(0x8042_9F7C); // dInfo_c::m_instance
 const INFO_PLAYERS: u32 = 0x3CC;
 /// `nw4r::lyt::TextBox`: its text (UTF-16) and its length in characters.
 const TEXT_BUF: u32 = 0xD8;
 const TEXT_LEN: u32 = 0xFE;
 /// "Players" as the game's languages write it, and the singular.
-const PLURALS: [(&str, &str); 4] = [("Players", "Player"), ("joueurs", "joueur"), ("Jugadores", "Jugador"), ("jugadores", "jugador")];
+/// German's "Spieler" is both.
+const PLURALS: [(&str, &str); 5] = [("Players", "Player"), ("joueurs", "joueur"), ("Jugadores", "Jugador"), ("jugadores", "jugador"), ("giocatori", "giocatore")];
 
 /// One write: bytes at an address.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -187,6 +159,23 @@ fn branch(from: u32, to: u32) -> u32 {
     0x4800_0000 | (to.wrapping_sub(from) & 0x03FF_FFFC)
 }
 
+/// [`EXPECTED`] in the version that runs: each address taken there, and a
+/// relative branch (`b`, `bl`) aimed at its target's counterpart. `None`
+/// if one has no counterpart.
+fn expected() -> Option<Vec<(u32, u32)>> {
+    EXPECTED
+        .iter()
+        .map(|&(addr, word)| {
+            let at = E1(addr).try_va()?;
+            if word >> 26 == 18 && word & 2 == 0 {
+                let target = addr.wrapping_add(((word & 0x03FF_FFFC) ^ 0x0200_0000).wrapping_sub(0x0200_0000));
+                return Some((at, branch(at, E1(target).try_va()?) | word & 1));
+            }
+            Some((at, word))
+        })
+        .collect()
+}
+
 fn word_write(addr: u32, w: u32) -> Write {
     Write { addr, bytes: w.to_be_bytes().to_vec() }
 }
@@ -195,7 +184,13 @@ fn word_write(addr: u32, w: u32) -> Write {
 /// order they come, and where each insert returns (an address recompiled
 /// code must be enterable at).
 pub fn writes() -> (Vec<Write>, Vec<u32>) {
-    let words: Vec<u32> = CODE.split_whitespace().map(|w| u32::from_str_radix(w, 16).expect("hex")).collect();
+    writes_for(game_version::current())
+}
+
+/// [`writes`] for version `v`.
+pub fn writes_for(v: Version) -> (Vec<Write>, Vec<u32>) {
+    let words = code(v);
+    let (portrait_site, cr7_site) = (game_version::translate(PORTRAIT_SITE.0, v).unwrap_or(0), game_version::translate(CR7_SITE.0, v).unwrap_or(0));
     let (mut out, mut returns, mut stub) = (Vec::new(), Vec::new(), STUBS);
     let mut insert = |out: &mut Vec<Write>, site: u32, body: &[u32]| {
         out.push(word_write(site, branch(site, stub)));
@@ -207,7 +202,9 @@ pub fn writes() -> (Vec<Write>, Vec<u32>) {
         stub += 4;
         returns.push(site + 4);
     };
-    insert(&mut out, PORTRAIT_SITE, &[CMPWI_R4_2]);
+    if portrait_site != 0 {
+        insert(&mut out, portrait_site, &[CMPWI_R4_2]);
+    }
     let mut i = 0;
     while i + 1 < words.len() {
         let (head, value) = (words[i], words[i + 1]);
@@ -228,7 +225,7 @@ pub fn writes() -> (Vec<Write>, Vec<u32>) {
                 let n = value as usize * 2;
                 let mut body = words[i..i + n - 1].to_vec();
                 i += n;
-                if addr == CR7_SITE {
+                if addr == cr7_site {
                     body.iter_mut().filter(|w| **w == BEQ_CR7).for_each(|w| *w = BEQ_CR0);
                 }
                 insert(&mut out, addr, &body);
@@ -286,7 +283,11 @@ impl System {
     /// there, or what the code writes (a state saved with it applied).
     fn p1_expected(&mut self, part: impl Fn(u32) -> bool) -> bool {
         let (writes, _) = writes();
-        for &(addr, original) in EXPECTED.iter().filter(|e| part(e.0)) {
+        let Some(expected) = expected() else {
+            eprintln!("p1 character: {} lacks a word the code changes; the game is left as it is", game_version::current().describe());
+            return false;
+        };
+        for &(addr, original) in expected.iter().filter(|e| part(e.0)) {
             let now = self.mem.read_u32(addr).unwrap_or(!original);
             // Each checked word gets a whole word or more.
             let patched = writes.iter().find(|w| w.addr == addr && w.bytes.len() >= 4).map(|w| u32::from_be_bytes([w.bytes[0], w.bytes[1], w.bytes[2], w.bytes[3]]));
@@ -354,7 +355,7 @@ impl System {
             let flags = self.r8(panel + PANE_FLAGS);
             self.w8(panel + PANE_FLAGS, flags & !1);
         }
-        let info = self.r32(INFO);
+        let info = self.r32(INFO.va());
         let title = self.r32(screen + SCREEN_TITLE);
         if !crate::menu_settings::guest_ram(info) || self.r32(info + INFO_PLAYERS) != 1 || !crate::menu_settings::guest_ram(title) || self.pane_name(title) != TITLE_PANE {
             return;
@@ -433,14 +434,14 @@ mod tests {
 
     #[test]
     fn the_code_decodes_and_its_inserts_fit() {
-        let (w, returns) = writes();
+        let (w, returns) = writes_for(Version::E1);
         // 93 entries: 22 inserts (a site and its words each), plus the port's own.
         assert_eq!(returns.len(), 23);
         let stub_end = w.iter().filter(|w| (STUBS..STUBS_END).contains(&w.addr)).map(|w| w.addr + 4).max().unwrap();
         assert!(stub_end <= STUBS_END, "{stub_end:#x}");
         assert_eq!(stub_end - STUBS, 4 * (198 + 2));
         // The portrait's insert first, the cr0 fix in place.
-        assert_eq!(w[0], word_write(PORTRAIT_SITE, branch(PORTRAIT_SITE, PORTRAIT)));
+        assert_eq!(w[0], word_write(PORTRAIT_SITE.0, branch(PORTRAIT_SITE.0, PORTRAIT)));
         assert_eq!(w[1], word_write(PORTRAIT, CMPWI_R4_2));
         assert!(w.iter().any(|w| w.bytes == BEQ_CR0.to_be_bytes()) && !w.iter().any(|w| w.bytes == BEQ_CR7.to_be_bytes()));
         // The icon table's five bytes, and a halfword write.
@@ -448,5 +449,21 @@ mod tests {
         assert!(w.contains(&Write { addr: 0x807A_018E, bytes: vec![0, 4] }));
         // Every insert branches back to the word after its site.
         assert!(returns.iter().all(|&r| w.iter().any(|x| x.addr >= STUBS && x.bytes == branch(x.addr, r).to_be_bytes())));
+    }
+
+    /// mkwcat's code for each version writes where the address map takes
+    /// the USA one's writes: a check of the map (and of the codes' sections).
+    #[test]
+    fn every_version_writes_where_the_map_says() {
+        let (usa, _) = writes_for(Version::E1);
+        for v in Version::ALL {
+            let (w, _) = writes_for(v);
+            assert_eq!(w.len(), usa.len(), "{v:?}");
+            for (e, x) in usa.iter().zip(&w) {
+                let want = if (STUBS..STUBS_END).contains(&e.addr) { Some(e.addr) } else { game_version::translate(e.addr, v) };
+                assert_eq!(want, Some(x.addr), "{v:?}: {:#010x}", e.addr);
+                assert_eq!(e.bytes.len(), x.bytes.len(), "{v:?}: {:#010x}", e.addr);
+            }
+        }
     }
 }

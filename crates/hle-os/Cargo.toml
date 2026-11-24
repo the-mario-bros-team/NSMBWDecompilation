@@ -7,5 +7,6 @@ edition = "2021"
 guest-mem = { path = "../guest-mem" }
 guest-cpu = { path = "../guest-cpu" }
 hle-ios = { path = "../hle-ios" }
+game-version = { path = "../game-version" }
 hw = { path = "../hw" }
 gx = { path = "../gx" }

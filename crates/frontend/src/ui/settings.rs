@@ -303,12 +303,27 @@ impl KeySwitch {
         }
     }
 }
-// Language rows: 1-3.
-const LANGUAGES: [(&str, &str, &str); 3] = [
-    ("en", "English", "Restart the game to play in this language."),
-    ("es", "Español", "Reinicia el juego para jugar en este idioma."),
-    ("fr", "Français", "Redémarrez le jeu pour jouer dans cette langue."),
+// Language rows: 1 and on, the disc's languages among these
+// (`layout::disc_languages`): code, name, restart note, and the start of
+// the disc's language folder's name.
+const LANGUAGES: [(&str, &str, &str, &str); 5] = [
+    ("en", "English", "Restart the game to play in this language.", "Eng"),
+    ("es", "Español", "Reinicia el juego para jugar en este idioma.", "Spa"),
+    ("fr", "Français", "Redémarrez le jeu pour jouer dans cette langue.", "Fra"),
+    ("de", "Deutsch", "Starte das Spiel neu, um in dieser Sprache zu spielen.", "Ger"),
+    ("it", "Italiano", "Riavvia il gioco per giocare in questa lingua.", "Ita"),
 ];
+
+/// The languages the disc has (all of [`LANGUAGES`] if it can't tell).
+fn languages() -> Vec<(&'static str, &'static str, &'static str)> {
+    let on_disc = super::layout::disc_languages();
+    let shown: Vec<_> = LANGUAGES.iter().filter(|l| on_disc.iter().any(|d| d.starts_with(l.3))).map(|l| (l.0, l.1, l.2)).collect();
+    if shown.is_empty() {
+        LANGUAGES.iter().map(|l| (l.0, l.1, l.2)).collect()
+    } else {
+        shown
+    }
+}
 
 // Resolution choices: EFB multiples, then Native (0).
 use crate::settings::SCALES;
@@ -1499,17 +1514,20 @@ impl SettingsWindow {
     }
 
     fn draw_language(&mut self, ctx: &egui::Context, a: &Assets, c: &Canvas, s: &Settings, at_boot: &str) {
-        for (i, (code, name, _)) in LANGUAGES.iter().enumerate() {
-            let y = 78.0 - 54.0 * i as f32;
-            self.pause_button(ctx, a, c, 1 + i as i32, name, 0.0, y, 420.0, 42.0, self.cursor == 1 + i as i32, true, 30.0, s.language == *code, 0.0, true);
-            self.add_hit(0.0, y, 440.0, 52.0, 1 + i as i32, EV_CONFIRM);
+        let languages = languages();
+        // Three rows as they always were; five closer together.
+        let (step, h) = if languages.len() <= 3 { (54.0, 42.0) } else { (44.0, 36.0) };
+        for (i, (code, name, _)) in languages.iter().enumerate() {
+            let y = 78.0 - step * i as f32;
+            self.pause_button(ctx, a, c, 1 + i as i32, name, 0.0, y, 420.0, h, self.cursor == 1 + i as i32, true, 30.0, s.language == *code, 0.0, true);
+            self.add_hit(0.0, y, 440.0, step - 2.0, 1 + i as i32, EV_CONFIRM);
         }
         let row = self.cursor - 1;
-        if !(0..LANGUAGES.len() as i32).contains(&row) {
+        if !(0..languages.len() as i32).contains(&row) {
             self.help_line(a, c, Tab::Language.help(), u32::MAX);
             return;
         }
-        let (code, name, restart) = LANGUAGES[row as usize];
+        let (code, name, restart) = languages[row as usize];
         if s.language == code && code != at_boot {
             self.help_line(a, c, restart, 0xFFF0_B0FF);
         } else {
@@ -1899,7 +1917,7 @@ impl SettingsWindow {
             Tab::Keybinds => KEYS,
             Tab::Practice => PRACTICE_LAST,
             Tab::Gameplay => GAMEPLAY_LAST,
-            Tab::Language => LANGUAGES.len() as i32,
+            Tab::Language => languages().len() as i32,
             Tab::Lan => ROW_LAN_FOUND - 1 + self.lan.rooms.len().min(LAN_ROOMS_SHOWN) as i32,
             Tab::Mods => self.mods_last(),
         };
@@ -2043,8 +2061,8 @@ impl SettingsWindow {
                 }
                 changes.push(Change::Mods);
             }
-            (Tab::Language, n) if confirm && (1..=3).contains(&n) => {
-                s.language = LANGUAGES[n as usize - 1].0.into();
+            (Tab::Language, n) if confirm && (1..=languages().len() as i32).contains(&n) => {
+                s.language = languages()[n as usize - 1].0.into();
                 changes.push(Change::Language);
             }
             _ => {}

@@ -64,53 +64,54 @@
 
 use std::sync::atomic::{AtomicI8, AtomicU8, Ordering::Relaxed};
 
+use game_version::E1;
 use hle_os::System;
 
-const SCENE: u32 = 0x8042_8730; // dScene_c::m_nextScene, m_nowScene (halfwords)
-const STAGE_TIMER: u32 = 0x8042_A070; // dStageTimer_c::m_instance
-const PLAYER_TYPE: u32 = 0x8035_4E60; // daPyMng_c::mPlayerType[4]
-const PLAYER_MODE: u32 = 0x8035_4E70; // daPyMng_c::mPlayerMode[4], each character's power-up
-const CREATE_ITEM: u32 = 0x8035_4E80; // daPyMng_c::mCreateItem[4]; bit 0: a Star
-const REST: u32 = 0x8035_4E90; // daPyMng_c::mRest[4]
-const MAP_MODELS: u32 = 0x8093_CDF0; // the world map player's model of each slot
-const WM_FIGURES: u32 = 0x809A_2390; // the world map's players
+const SCENE: E1 = E1(0x8042_8730); // dScene_c::m_nextScene, m_nowScene (halfwords)
+const STAGE_TIMER: E1 = E1(0x8042_A070); // dStageTimer_c::m_instance
+const PLAYER_TYPE: E1 = E1(0x8035_4E60); // daPyMng_c::mPlayerType[4]
+const PLAYER_MODE: E1 = E1(0x8035_4E70); // daPyMng_c::mPlayerMode[4], each character's power-up
+const CREATE_ITEM: E1 = E1(0x8035_4E80); // daPyMng_c::mCreateItem[4]; bit 0: a Star
+const REST: E1 = E1(0x8035_4E90); // daPyMng_c::mRest[4]
+const MAP_MODELS: E1 = E1(0x8093_CDF0); // the world map player's model of each slot
+const WM_FIGURES: E1 = E1(0x809A_2390); // the world map's players
 const WM_FIGURES_BY_CHARACTER: u32 = 1304; // their figures, one a character
 const WM_FIGURE_MODELS: u32 = 296; // a figure's dPyMdlMng_c
-const WM_FIGURE_CHANGE: u32 = 0x808C_6DF0; // a figure's power-up and model (the Items screen's call)
-const GET_PLAYER: u32 = 0x8005_F900; // daPyMng_c::getPlayer(int)
-const CHANGE_POWER_UP: u32 = 0x8014_5AC0; // dAcPy_c::ChangePowerupWithAnimation
+const WM_FIGURE_CHANGE: E1 = E1(0x808C_6DF0); // a figure's power-up and model (the Items screen's call)
+const GET_PLAYER: E1 = E1(0x8005_F900); // daPyMng_c::getPlayer(int)
+const CHANGE_POWER_UP: E1 = E1(0x8014_5AC0); // dAcPy_c::ChangePowerupWithAnimation
 const PLAYER_VTABLE: u32 = 0x60;
 const PLAYER_SET_STAR: u32 = 0x3D8; // dAcPy_c's setStar(kind, frames) in its vtable
 const STAR_FRAMES: u32 = 0x294; // what the Star item gives
-const GAME_DISPLAY: u32 = 0x8042_A328; // dGameDisplay_c::m_instance
+const GAME_DISPLAY: E1 = E1(0x8042_A328); // dGameDisplay_c::m_instance
 const GAME_DISPLAY_TIME: u32 = 0x520; // its N_time_00 pane
 const PANE_FLAGS: u32 = 0xBB; // nw4r::lyt::Pane's flags; bit 0: visible
-const TREE_ROOT: u32 = 0x8037_7A10; // fManager_c's tree of the game's objects
+const TREE_ROOT: E1 = E1(0x8037_7A10); // fManager_c's tree of the game's objects
 const PROFILE_OPENING_TITLE: u16 = 0x2BB; // only on the title screen (its course is a stage too)
 const SCENE_WORLD_MAP: u16 = 3;
 const SCENE_STAGE: u16 = 5;
 const SCENE_GAME_SETUP: u16 = 0xA; // the save select and Select Players
 const PROFILE_FILE_SELECT: u16 = 0x2D5; // dFileSelect_c
 const FILE_SELECT_STATE: u32 = 0x238; // its current state
-const FILE_SELECT_WAIT: u32 = 0x8099_2050; // dFileSelect_c::StateID_SelectWait
+const FILE_SELECT_WAIT: E1 = E1(0x8099_2050); // dFileSelect_c::StateID_SelectWait
 const FILE_SELECT_CARDS: u32 = 0x24C; // its three files' cards
 const FILE_SELECT_CURSOR: u32 = 0x2A4; // 0-2: on a file
-const SAVE_MNG: u32 = 0x8042_A040; // dSaveMng_c::m_instance
+const SAVE_MNG: E1 = E1(0x8042_A040); // dSaveMng_c::m_instance
 const SAVE_GAMES: u32 = 0x6C0; // its three games; a game's +2 bit 0: new
 const SAVE_GAME_SIZE: u32 = 0x980;
 const SAVE_SLOT: u32 = 0x26; // the open file (a byte)
 const COURSE_FLAGS: u32 = 0x6C; // a game's goals and Star Coins: 10 worlds of 42 courses
 const COURSE_FLAG_WORDS: usize = 420;
-const EXIT_MODE: u32 = 0x8042_900C; // dScStage_c::m_exitMode: 0 the goal, 1 all lost, 2 quit
-const GAME_FLAG: u32 = 0x8042_9F80; // dInfo_c::mGameFlag
+const EXIT_MODE: E1 = E1(0x8042_900C); // dScStage_c::m_exitMode: 0 the goal, 1 all lost, 2 quit
+const GAME_FLAG: E1 = E1(0x8042_9F80); // dInfo_c::mGameFlag
 const FREE_MODE_OR_COIN_BATTLE: u32 = 1 << 5 | 1 << 6;
-const NAND_THREAD: u32 = 0x8042_9FB8; // dNandThread_c::m_instance; +0x74 a command in progress
+const NAND_THREAD: E1 = E1(0x8042_9FB8); // dNandThread_c::m_instance; +0x74 a command in progress
 const NAND_BUSY: u32 = 0x74;
-const SAVE_GAME: u32 = 0x8092_F5F0; // SaveGame(_, quick) in d_basesNP, the map's Save
+const SAVE_GAME: E1 = E1(0x8092_F5F0); // SaveGame(_, quick) in d_basesNP, the map's Save
 const SAVE_GAME_FIRST: u32 = 0x9421_FFF0; // its first word (stwu r1, -0x10(r1))
 const PROFILE_MAP_MENU: u16 = 0x2B5; // dCourseSelectMenu_c, the world map's + menu
 const MAP_MENU_STATE: u32 = 0x234;
-const MAP_MENU_CLOSED: u32 = 0x8099_15F0; // dCourseSelectMenu_c::StateID_InitWait
+const MAP_MENU_CLOSED: E1 = E1(0x8099_15F0); // dCourseSelectMenu_c::StateID_InitWait
 /// Fields on the world map before a replay that recorded nothing new is
 /// saved anyway, and before the autosave gives up.
 const AUTOSAVE_REPLAY: u32 = 5 * 60;
@@ -119,7 +120,7 @@ const PROFILE_CHARACTER_SCREEN: u16 = 0x2B6;
 /// The setup screens' first card for each player slot (d_basesNP data), in
 /// the cards' order (0 Mario, 1 Blue Toad, 2 Yellow Toad, 3 Luigi): the
 /// game's table, and each character's card.
-const CARD_STARTS: u32 = 0x8093_3D20;
+const CARD_STARTS: E1 = E1(0x8093_3D20);
 const GAME_CARD_STARTS: [u32; 4] = [0, 3, 2, 1];
 const CARD_OF_CHARACTER: [u32; 4] = [0, 3, 1, 2];
 const TIMER_STEP: i32 = 92;
@@ -146,25 +147,26 @@ pub struct Options {
 }
 
 /// A code patch: (address, USA revision 1's word, the patch's word).
-type Patch = (u32, u32, u32);
+type Patch = (E1, u32, u32);
 const NOP: u32 = 0x6000_0000;
 const LI_R3_0: u32 = 0x3860_0000;
 /// Power-up Freeze off.
 const NO_FREEZE: [Patch; 5] = [
-    (0x8014_0F84, 0x4BF0_D0CD, NOP),     // executeChangeInit: bl stopOther
-    (0x8014_0F90, 0x4BF2_9841, NOP),     // executeChangeInit: bl dAudio::pauseMove
-    (0x8014_0FD0, 0x4BF0_D071, LI_R3_0), // executeChangeInit: bl isPlayerGameStop
-    (0x8014_1438, 0x4BF0_CC09, LI_R3_0), // executeChangeNormal: bl isPlayerGameStop
-    (0x8013_D930, 0x4BF1_0721, NOP),     // stopOtherDownDemo: bl stopOther
+    (E1(0x8014_0F84), 0x4BF0_D0CD, NOP),     // executeChangeInit: bl stopOther
+    (E1(0x8014_0F90), 0x4BF2_9841, NOP),     // executeChangeInit: bl dAudio::pauseMove
+    (E1(0x8014_0FD0), 0x4BF0_D071, LI_R3_0), // executeChangeInit: bl isPlayerGameStop
+    (E1(0x8014_1438), 0x4BF0_CC09, LI_R3_0), // executeChangeNormal: bl isPlayerGameStop
+    (E1(0x8013_D930), 0x4BF1_0721, NOP),     // stopOtherDownDemo: bl stopOther
 ];
 /// Player Collision off: ccCallBack's `mr r3, r30` before checkRideActor,
 /// reached for another player's body, becomes a branch to its return.
-const NO_COLLISION: [Patch; 1] = [(0x8014_1D58, 0x7FC3_F378, 0x4800_00B8)];
+const NO_COLLISION: [Patch; 1] = [(E1(0x8014_1D58), 0x7FC3_F378, 0x4800_00B8)];
 
 /// Sets each patch's word to the patched one (`on`) or the game's own, if it
 /// holds one of the two.
 fn patch(sys: &mut System, patches: &[Patch], on: bool) {
-    for &(addr, original, patched) in patches {
+    for &(at, original, patched) in patches {
+        let (Some(addr), original, patched) = (at.try_va(), branch_at(at, original), branch_at(at, patched)) else { continue };
         let (now, want) = (read32(sys, addr), if on { patched } else { original });
         if now != Some(want) && (now == Some(original) || now == Some(patched)) {
             let _ = sys.mem.write_u32(addr, want);
@@ -172,17 +174,30 @@ fn patch(sys: &mut System, patches: &[Patch], on: bool) {
     }
 }
 
-const GAME_STOP: u32 = 0x8042_9F48; // nonzero while the game is stopped (its pause menu, a warning)
+/// `word`, an instruction at USA address `at`, for the version that runs: a
+/// relative branch (`b`, `bl`) is re-aimed at its target's address there.
+fn branch_at(at: E1, word: u32) -> u32 {
+    if word >> 26 != 18 || word & 2 != 0 {
+        return word;
+    }
+    let offset = ((word & 0x03FF_FFFC) as i32) << 6 >> 6;
+    match (at.try_va(), E1(at.0.wrapping_add(offset as u32)).try_va()) {
+        (Some(from), Some(to)) => (word & 0xFC00_0003) | (to.wrapping_sub(from) & 0x03FF_FFFC),
+        _ => word,
+    }
+}
+
+const GAME_STOP: E1 = E1(0x8042_9F48); // nonzero while the game is stopped (its pause menu, a warning)
 const SCENE_MOVIE: u16 = 8;
-const MOVIE: u32 = 0x8042_A1B8; // dScMovie_c::m_instance
+const MOVIE: E1 = E1(0x8042_A1B8); // dScMovie_c::m_instance
 const MOVIE_STATE: u32 = 0x164; // 1: playing
 const MOVIE_ID: u32 = 0x198; // 0: the opening
 const MOVIE_END: u32 = 0x19C;
 const MOVIE_STATE_END: u32 = 10;
-const GAME_MODE: u32 = 0x8031_5B98; // dInfo_c::m_startGameInfo's game mode; 4: a hint movie
+const GAME_MODE: E1 = E1(0x8031_5B98); // dInfo_c::m_startGameInfo's game mode; 4: a hint movie
 const GAME_MODE_HINT_MOVIE: u32 = 4;
-const REPLAY_PLAY: u32 = 0x8037_41D0; // dScStage_c's replay players; player 1's once the movie runs
-const SET_NEXT_SCENE: u32 = 0x8010_2260; // dScStage_c::setNextScene(scene, arg, exit, fader)
+const REPLAY_PLAY: E1 = E1(0x8037_41D0); // dScStage_c's replay players; player 1's once the movie runs
+const SET_NEXT_SCENE: E1 = E1(0x8010_2260); // dScStage_c::setNextScene(scene, arg, exit, fader)
 const SET_NEXT_SCENE_FIRST: u32 = 0x9421_FFE0;
 
 /// What can be skipped now.
@@ -221,17 +236,17 @@ impl MovieSkip {
         }
         match what {
             Skippable::Opening => {
-                let movie = pointer(sys, MOVIE)?;
+                let movie = pointer(sys, MOVIE.va())?;
                 let _ = sys.mem.write_u8(movie + MOVIE_END, 1);
                 write32(sys, movie + MOVIE_STATE, MOVIE_STATE_END);
             }
             Skippable::HintMovie => {
                 // Back to the world map (3) as the hint movie's pause
                 // menu leaves it: exit kind 2, fader 5.
-                if read32(sys, SET_NEXT_SCENE) != Some(SET_NEXT_SCENE_FIRST) {
+                if read32(sys, SET_NEXT_SCENE.va()) != Some(SET_NEXT_SCENE_FIRST) {
                     return None;
                 }
-                sys.call_guest(SET_NEXT_SCENE, &[3, 0, 2, 5], &[]).ok()?;
+                sys.call_guest(SET_NEXT_SCENE.va(), &[3, 0, 2, 5], &[]).ok()?;
             }
         }
         self.skipped = Some(scene);
@@ -240,15 +255,15 @@ impl MovieSkip {
 }
 
 fn skippable(sys: &System, scene: u16) -> Option<Skippable> {
-    if read32(sys, GAME_STOP) != Some(0) {
+    if read32(sys, GAME_STOP.va()) != Some(0) {
         return None;
     }
     match scene {
         SCENE_MOVIE => {
-            let movie = pointer(sys, MOVIE)?;
+            let movie = pointer(sys, MOVIE.va())?;
             (read32(sys, movie + MOVIE_STATE) == Some(1) && read32(sys, movie + MOVIE_ID) == Some(0)).then_some(Skippable::Opening)
         }
-        SCENE_STAGE => (read32(sys, GAME_MODE) == Some(GAME_MODE_HINT_MOVIE) && pointer(sys, REPLAY_PLAY).is_some()).then_some(Skippable::HintMovie),
+        SCENE_STAGE => (read32(sys, GAME_MODE.va()) == Some(GAME_MODE_HINT_MOVIE) && pointer(sys, REPLAY_PLAY.va()).is_some()).then_some(Skippable::HintMovie),
         _ => None,
     }
 }
@@ -354,7 +369,7 @@ fn pointer(sys: &System, a: u32) -> Option<u32> {
 impl Gameplay {
     /// After a field. Returns lines to log: a power-up given, the autosave.
     pub fn after_field(&mut self, sys: &mut System, opts: Options, cheats: &Cheats, characters: &Characters) -> Vec<String> {
-        let scene = read32(sys, SCENE).map_or(0, |w| w as u16);
+        let scene = read32(sys, SCENE.va()).map_or(0, |w| w as u16);
         patch(sys, &NO_FREEZE, opts.no_power_up_freeze);
         patch(sys, &NO_COLLISION, opts.no_player_collision);
         self.hold_timer(sys, scene, opts.no_time_limit);
@@ -389,8 +404,8 @@ impl Gameplay {
         if scene != last {
             self.watch = None;
             // The title screen's demo is a course too.
-            let cleared = last == SCENE_STAGE && scene == SCENE_WORLD_MAP && read32(sys, EXIT_MODE) == Some(0) && !has_profile(sys, PROFILE_OPENING_TITLE);
-            let story = read32(sys, GAME_FLAG).is_some_and(|f| f & FREE_MODE_OR_COIN_BATTLE == 0);
+            let cleared = last == SCENE_STAGE && scene == SCENE_WORLD_MAP && read32(sys, EXIT_MODE.va()) == Some(0) && !has_profile(sys, PROFILE_OPENING_TITLE);
+            let story = read32(sys, GAME_FLAG.va()).is_some_and(|f| f & FREE_MODE_OR_COIN_BATTLE == 0);
             if on && cleared && story {
                 self.watch = Some(Watch { fields: 0, flags: course_flags(sys), saved: false });
             }
@@ -407,14 +422,14 @@ impl Gameplay {
             return None;
         }
         // The map's menu has its own Save; and one write at a time.
-        let menu_open = find_profile(sys, PROFILE_MAP_MENU).is_some_and(|m| read32(sys, m + MAP_MENU_STATE) != Some(MAP_MENU_CLOSED));
-        let nand_busy = pointer(sys, NAND_THREAD).is_none_or(|t| read32(sys, t + NAND_BUSY) != Some(0));
-        if menu_open || nand_busy || read32(sys, SAVE_GAME) != Some(SAVE_GAME_FIRST) {
+        let menu_open = find_profile(sys, PROFILE_MAP_MENU).is_some_and(|m| read32(sys, m + MAP_MENU_STATE) != Some(MAP_MENU_CLOSED.va()));
+        let nand_busy = pointer(sys, NAND_THREAD.va()).is_none_or(|t| read32(sys, t + NAND_BUSY) != Some(0));
+        if menu_open || nand_busy || read32(sys, SAVE_GAME.va()) != Some(SAVE_GAME_FIRST) {
             return None;
         }
         // r3 unused, r4 = 0: a Save, not a Quick Save. None: not at a
         // moment the guest's threads can be touched; the next field.
-        let done = sys.call_guest_as_thread(SAVE_GAME, &[0, 0])?;
+        let done = sys.call_guest_as_thread(SAVE_GAME.va(), &[0, 0])?;
         let field = w.fields;
         if let Err(e) = done {
             self.watch = None;
@@ -434,7 +449,7 @@ impl Gameplay {
             return;
         };
         // Only while it waits for a pick: its files are loaded by then.
-        let waiting = read32(sys, screen + FILE_SELECT_STATE) == Some(FILE_SELECT_WAIT);
+        let waiting = read32(sys, screen + FILE_SELECT_STATE) == Some(FILE_SELECT_WAIT.va());
         if waiting {
             if let Some(file) = read32(sys, screen + FILE_SELECT_CURSOR).filter(|&c| c < 3) {
                 cheats.active.store(file as i8, Relaxed);
@@ -444,7 +459,7 @@ impl Gameplay {
         if (self.cards.0, self.cards.1) != (screen, id) {
             self.cards = (screen, id, [0; 3]);
         }
-        let games = pointer(sys, SAVE_MNG);
+        let games = pointer(sys, SAVE_MNG.va());
         for i in 0..3u32 {
             let new = games.and_then(|g| sys.mem.ram(g + SAVE_GAMES + SAVE_GAME_SIZE * i + 2, 1)).is_some_and(|b| b[0] & 1 != 0);
             if waiting && new {
@@ -469,7 +484,7 @@ impl Gameplay {
     }
 
     fn hold_timer(&mut self, sys: &mut System, scene: u16, on: bool) {
-        let timer = if on && scene == SCENE_STAGE { pointer(sys, STAGE_TIMER) } else { None };
+        let timer = if on && scene == SCENE_STAGE { pointer(sys, STAGE_TIMER.va()) } else { None };
         let (Some(timer), Some(time), Some(stopped)) = (timer, timer.and_then(|t| read32(sys, t + 4)), timer.and_then(|t| read32(sys, t + 12))) else {
             self.timer = 0;
             return;
@@ -486,7 +501,7 @@ impl Gameplay {
     /// No Time Limit has no time to show. Shown again if the option is turned
     /// off in the course; a new course builds its HUD anew.
     fn hide_timer(&mut self, sys: &mut System, scene: u16, on: bool) {
-        let pane = if scene == SCENE_STAGE { pointer(sys, GAME_DISPLAY).and_then(|d| pointer(sys, d + GAME_DISPLAY_TIME)) } else { None };
+        let pane = if scene == SCENE_STAGE { pointer(sys, GAME_DISPLAY.va()).and_then(|d| pointer(sys, d + GAME_DISPLAY_TIME)) } else { None };
         let Some(pane) = pane else {
             self.hidden_timer = 0;
             return;
@@ -509,7 +524,7 @@ impl Gameplay {
         }
         let mut now = [0i32; 4];
         for (i, n) in now.iter_mut().enumerate() {
-            let Some(v) = read32(sys, REST + 4 * i as u32) else {
+            let Some(v) = read32(sys, REST.va() + 4 * i as u32) else {
                 self.rest = None;
                 return false;
             };
@@ -519,7 +534,7 @@ impl Gameplay {
         if let Some(last) = self.rest {
             for i in 0..4 {
                 if now[i] == last[i] - 1 {
-                    write32(sys, REST + 4 * i as u32, last[i] as u32);
+                    write32(sys, REST.va() + 4 * i as u32, last[i] as u32);
                     now[i] = last[i];
                     given = true;
                 }
@@ -534,7 +549,7 @@ impl Gameplay {
 /// first: +4 child, +0xC next, +0 parent; +0x10 the object, whose profile is
 /// the high half of its +8 and whose unique number is its +0).
 fn find_profile(sys: &System, profile: u16) -> Option<u32> {
-    let mut node = read32(sys, TREE_ROOT).unwrap_or(0);
+    let mut node = read32(sys, TREE_ROOT.va()).unwrap_or(0);
     for _ in 0..4096 {
         if node == 0 {
             break;
@@ -581,7 +596,7 @@ fn character_pick(sys: &mut System, scene: u16, cheats: &Cheats, characters: &Ch
             }
         }
         SCENE_WORLD_MAP => {
-            if let (Some(f), Some(c)) = (file, read32(sys, PLAYER_TYPE).filter(|&t| t <= 3)) {
+            if let (Some(f), Some(c)) = (file, read32(sys, PLAYER_TYPE.va()).filter(|&t| t <= 3)) {
                 characters.0[f].store(c as u8, Relaxed);
             }
         }
@@ -593,7 +608,7 @@ fn character_pick(sys: &mut System, scene: u16, cheats: &Cheats, characters: &Ch
 /// swapped into player 1's (so no two slots start on the same card). Left
 /// alone unless it is a permutation (a mod's table, or no module yet).
 fn start_cards(sys: &mut System, character: u32) {
-    let Some(now) = sys.mem.ram(CARD_STARTS, 16).map(|b| std::array::from_fn::<u32, 4, _>(|i| u32::from_be_bytes([b[4 * i], b[4 * i + 1], b[4 * i + 2], b[4 * i + 3]]))) else { return };
+    let Some(now) = sys.mem.ram(CARD_STARTS.va(), 16).map(|b| std::array::from_fn::<u32, 4, _>(|i| u32::from_be_bytes([b[4 * i], b[4 * i + 1], b[4 * i + 2], b[4 * i + 3]]))) else { return };
     let mut sorted = now;
     sorted.sort_unstable();
     if sorted != [0, 1, 2, 3] {
@@ -606,7 +621,7 @@ fn start_cards(sys: &mut System, character: u32) {
     }
     if wanted != now {
         for (i, &w) in wanted.iter().enumerate() {
-            write32(sys, CARD_STARTS + 4 * i as u32, w);
+            write32(sys, CARD_STARTS.va() + 4 * i as u32, w);
         }
     }
 }
@@ -614,7 +629,7 @@ fn start_cards(sys: &mut System, character: u32) {
 /// FNV-1a over the open save file's course flags; 0 without a save manager
 /// or an open file.
 fn course_flags(sys: &System) -> u64 {
-    let Some(mng) = pointer(sys, SAVE_MNG) else { return 0 };
+    let Some(mng) = pointer(sys, SAVE_MNG.va()) else { return 0 };
     let slot = sys.mem.ram(mng + SAVE_SLOT, 1).map_or(3, |b| u32::from(b[0]));
     let flags = (slot < 3).then(|| sys.mem.ram(mng + SAVE_GAMES + SAVE_GAME_SIZE * slot + COURSE_FLAGS, 4 * COURSE_FLAG_WORDS)).flatten();
     flags.map_or(0, |b| b.chunks_exact(4).fold(0xCBF2_9CE4_8422_2325, |h, w| (h ^ u64::from(u32::from_be_bytes([w[0], w[1], w[2], w[3]]))).wrapping_mul(0x100_0000_01B3)))
@@ -625,32 +640,32 @@ fn give_in_course(sys: &mut System, power_up: u8) -> Option<String> {
     if has_profile(sys, PROFILE_OPENING_TITLE) {
         return None;
     }
-    let player = sys.call_guest(GET_PLAYER, &[0], &[]).ok().filter(|&p| in_ram(p))?;
+    let player = sys.call_guest(GET_PLAYER.va(), &[0], &[]).ok().filter(|&p| in_ram(p))?;
     if power_up == STAR {
         let set_star = pointer(sys, player + PLAYER_VTABLE).and_then(|v| pointer(sys, v + PLAYER_SET_STAR))?;
         sys.call_guest(set_star, &[player, 0, STAR_FRAMES], &[]).ok()?;
     } else {
-        sys.call_guest(CHANGE_POWER_UP, &[player, u32::from(power_up)], &[]).ok()?;
+        sys.call_guest(CHANGE_POWER_UP.va(), &[player, u32::from(power_up)], &[]).ok()?;
     }
     Some(format!("gameplay: player 1 gets {} in the course", POWER_UPS[power_up as usize]))
 }
 
 /// On the world map, as its Items screen does with a power-up item.
 fn give_on_map(sys: &mut System, power_up: u8) -> Option<String> {
-    let character = read32(sys, PLAYER_TYPE).filter(|&t| t <= 3)?;
+    let character = read32(sys, PLAYER_TYPE.va()).filter(|&t| t <= 3)?;
     if power_up == STAR {
         // The map's own Star item: the next course starts with one.
-        let items = read32(sys, CREATE_ITEM + 4 * character).unwrap_or(0);
-        write32(sys, CREATE_ITEM + 4 * character, items | 1);
+        let items = read32(sys, CREATE_ITEM.va() + 4 * character).unwrap_or(0);
+        write32(sys, CREATE_ITEM.va() + 4 * character, items | 1);
         return Some("gameplay: player 1 gets a Star on the world map (for the next course)".into());
     }
-    write32(sys, PLAYER_MODE + 4 * character, u32::from(power_up));
+    write32(sys, PLAYER_MODE.va() + 4 * character, u32::from(power_up));
     // Going into a course takes each figure's power-up back into
     // mPlayerMode, so the figure has to have it too (the game's own map only).
-    let ours = (0..4u32).all(|i| read32(sys, MAP_MODELS + 4 * i) == Some([0, 1, 3, 2][i as usize]));
-    let figure = pointer(sys, WM_FIGURES).and_then(|m| pointer(sys, m + WM_FIGURES_BY_CHARACTER + 4 * character)).filter(|&f| pointer(sys, f + WM_FIGURE_MODELS).is_some());
+    let ours = (0..4u32).all(|i| read32(sys, MAP_MODELS.va() + 4 * i) == Some([0, 1, 3, 2][i as usize]));
+    let figure = pointer(sys, WM_FIGURES.va()).and_then(|m| pointer(sys, m + WM_FIGURES_BY_CHARACTER + 4 * character)).filter(|&f| pointer(sys, f + WM_FIGURE_MODELS).is_some());
     if let (true, Some(figure)) = (ours, figure) {
-        let _ = sys.call_guest(WM_FIGURE_CHANGE, &[figure, u32::from(power_up)], &[]);
+        let _ = sys.call_guest(WM_FIGURE_CHANGE.va(), &[figure, u32::from(power_up)], &[]);
     }
     Some(format!("gameplay: player 1 gets {} on the world map", POWER_UPS[power_up as usize]))
 }

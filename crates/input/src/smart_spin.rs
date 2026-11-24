@@ -14,6 +14,8 @@
 
 use std::time::Duration;
 
+use game_version::E1;
+
 /// The player as the game last left them: their state's `StateID` and their
 /// last frame's vertical move (units a frame, up is positive).
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -24,9 +26,9 @@ pub struct Player {
 
 /// The air states: `dAcPy_c`'s and `daPlBase_c`'s Jump, Fall and SitJump,
 /// WallJump (kicked off a wall) and Propel (the propeller suit's flight).
-const AIR: [u32; 8] = [0x8037_5C6C, 0x8037_5CAC, 0x8037_5D6C, 0x8037_61B0, 0x8037_6230, 0x8035_429C, 0x8035_431C, 0x8035_42DC];
+const AIR: [E1; 8] = [E1(0x8037_5C6C), E1(0x8037_5CAC), E1(0x8037_5D6C), E1(0x8037_61B0), E1(0x8037_6230), E1(0x8035_429C), E1(0x8035_431C), E1(0x8035_42DC)];
 /// `daPlBase_c::StateID_JumpDai`: on a springboard.
-const SPRINGBOARD: u32 = 0x8035_44DC;
+const SPRINGBOARD: E1 = E1(0x8035_44DC);
 /// A field.
 const FRAME: f32 = 1.0 / 60.0;
 const SMALL_MARIO: f32 = 16.0;
@@ -35,11 +37,11 @@ const TWO_PULSE: Duration = Duration::from_millis(40);
 
 impl Player {
     pub fn in_air(self) -> bool {
-        AIR.contains(&self.state)
+        AIR.iter().any(|a| a.va() == self.state)
     }
 
     pub fn on_springboard(self) -> bool {
-        self.state == SPRINGBOARD
+        self.state == SPRINGBOARD.va()
     }
 }
 
@@ -160,10 +162,10 @@ mod tests {
     #[test]
     fn springboards_and_switched_off() {
         let mut s = SmartSpin::default();
-        assert!(s.update(true, true, p(SPRINGBOARD, 0.0), ms(0)).two, "on a springboard: 2");
+        assert!(s.update(true, true, p(SPRINGBOARD.0, 0.0), ms(0)).two, "on a springboard: 2");
         let mut s = SmartSpin::default();
         assert!(s.update(true, true, p(JUMP, 1.0), ms(0)).spin);
-        assert!(s.update(true, true, p(SPRINGBOARD, 0.0), ms(16)).two, "spun onto a springboard, held: 2 held");
+        assert!(s.update(true, true, p(SPRINGBOARD.0, 0.0), ms(16)).two, "spun onto a springboard, held: 2 held");
         let mut s = SmartSpin::default();
         assert_eq!(s.update(true, false, p(JUMP, 1.0), ms(0)), Space { two: true, spin: false }, "off: Space is 2");
         assert!(s.update(true, true, None, ms(16)).two, "no player: 2");

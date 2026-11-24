@@ -438,6 +438,8 @@ fn settings_label(language: &str) -> &'static str {
     match language {
         "fr" => "Paramètres",
         "es" => "Configuración",
+        "de" => "Einstellungen",
+        "it" => "Impostazioni",
         _ => "Settings",
     }
 }
@@ -445,8 +447,10 @@ fn settings_label(language: &str) -> &'static str {
 /// The console's language number (SYSCONF IPL.LNG) for a settings code.
 fn language_code(language: &str) -> u8 {
     match language {
+        "de" => 2,
         "fr" => 3,
         "es" => 4,
+        "it" => 5,
         _ => 1,
     }
 }

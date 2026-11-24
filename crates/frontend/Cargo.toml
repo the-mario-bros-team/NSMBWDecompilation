@@ -14,6 +14,7 @@ toml = "0.8"
 guest-mem = { path = "../guest-mem" }
 guest-cpu = { path = "../guest-cpu" }
 hle-os = { path = "../hle-os" }
+game-version = { path = "../game-version" }
 game-recomp = { path = "../game-recomp" }
 vk-render = { path = "../vk-render" }
 render = { path = "../render" }

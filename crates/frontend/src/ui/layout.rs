@@ -39,12 +39,47 @@ fn cstr(p: &[u8], at: usize, max: usize) -> String {
 
 /// The extracted disc (holds `files/`), set once at start.
 static DISC: OnceLock<PathBuf> = OnceLock::new();
-/// The game's language folder for fonts ("EngUS", "SpaUS", "FraUS"), first.
+/// The start of the game's language folder's name for fonts ("Eng" for
+/// `US/EngUS` or `EU/EngEU`, "Spa", "Ger", ...), whose fonts come first.
 static LANGUAGE: OnceLock<&'static str> = OnceLock::new();
 
 pub fn set_disc(game: &Path, language: &'static str) {
     let _ = DISC.set(game.to_path_buf());
     let _ = LANGUAGE.set(language);
+}
+
+/// The names of the disc's language folders ("EngUS", "GerEU", ...), found
+/// once.
+pub fn disc_languages() -> &'static [String] {
+    static FOUND: OnceLock<Vec<String>> = OnceLock::new();
+    if DISC.get().is_none() {
+        return &[];
+    }
+    FOUND.get_or_init(|| language_folders().iter().filter_map(|f| f.rsplit('/').next()).map(str::to_string).collect())
+}
+
+/// The disc's language folders as disc paths ("/US/EngUS", "/EU/GerEU",
+/// ...): the folders of its region's folder (`files/US`, `files/EU`, ...)
+/// that hold fonts. The game's language first, then English, then the rest.
+pub fn language_folders() -> Vec<String> {
+    let Some(root) = DISC.get() else { return Vec::new() };
+    let first = LANGUAGE.get().copied().unwrap_or("Eng");
+    let mut found = Vec::new();
+    for region in ["US", "EU", "JP", "KR", "TW", "CN"] {
+        let Ok(dir) = std::fs::read_dir(root.join("files").join(region)) else { continue };
+        for e in dir.flatten() {
+            let name = e.file_name().to_string_lossy().into_owned();
+            if e.path().join("Font").is_dir() && name != "HomeButton2" {
+                found.push(format!("/{region}/{name}"));
+            }
+        }
+    }
+    let rank = |f: &String| {
+        let name = f.rsplit('/').next().unwrap_or("");
+        (!name.starts_with(first), !name.starts_with("Eng"), f.clone())
+    };
+    found.sort_by_key(rank);
+    found
 }
 
 /// A file from the disc's `files/` folder, by its disc path ("/Layout/...").
@@ -447,13 +482,11 @@ pub fn load_font(ctx: &egui::Context, name: &str) -> Arc<Font> {
     if let Some(f) = cache.lock().unwrap().get(name) {
         return f.clone();
     }
-    let first = LANGUAGE.get().copied().unwrap_or("EngUS");
-    let mut folders = vec![first];
-    folders.extend(["EngUS", "SpaUS", "FraUS"].into_iter().filter(|f| *f != first));
-    let mut font = Font::load_file(ctx, &format!("/US/{}/Font/{name}", folders[0]));
+    let folders = language_folders();
+    let mut font = folders.first().map_or_else(Font::default, |f| Font::load_file(ctx, &format!("{f}/Font/{name}")));
     if font.ok {
-        for folder in &folders[1..] {
-            let other = Font::load_file(ctx, &format!("/US/{folder}/Font/{name}"));
+        for folder in folders.iter().skip(1) {
+            let other = Font::load_file(ctx, &format!("{folder}/Font/{name}"));
             if other.ok {
                 font.fallbacks.push(Arc::new(other));
             }

@@ -11,6 +11,7 @@ use std::sync::Arc;
 use std::thread::JoinHandle;
 use std::time::{Duration, Instant};
 
+use game_version::E1;
 use hle_ios::bt::{RemoteStatus, REMOTES};
 use hle_ios::wiimote::{button, Input};
 use hle_os::System;
@@ -211,12 +212,12 @@ fn cheated_word(settings: &str) -> &'static str {
 /// The Settings window's sounds, played as the game plays its menus' own:
 /// `SndAudioMgr::startSystemSe(SndAudioMgr::sInstance, id, 1)`.
 fn play_menu_sounds(sys: &mut System, sounds: &mut Vec<u32>) {
-    const SND_AUDIO_MGR: u32 = 0x8042_A488;
-    const START_SYSTEM_SE: u32 = 0x8019_5380;
-    let Ok(manager) = sys.mem.read_u32(SND_AUDIO_MGR) else { return sounds.clear() };
+    const SND_AUDIO_MGR: E1 = E1(0x8042_A488);
+    const START_SYSTEM_SE: E1 = E1(0x8019_5380);
+    let Ok(manager) = sys.mem.read_u32(SND_AUDIO_MGR.va()) else { return sounds.clear() };
     for id in sounds.drain(..) {
         if manager != 0 {
-            let _ = sys.call_guest(START_SYSTEM_SE, &[manager, id, 1], &[]);
+            let _ = sys.call_guest(START_SYSTEM_SE.va(), &[manager, id, 1], &[]);
         }
     }
 }
@@ -302,7 +303,7 @@ fn run_field(sys: &mut System) -> Result<(), String> {
 pub use hle_os::camera::player_position;
 use hle_os::camera::player_actor;
 
-/// `_SDA_BASE_` (r13) of this build.
+/// `_SDA_BASE_` (r13) of USA revision 1.
 const SDA: u32 = 0x8042_F680;
 
 fn read32(mem: &guest_mem::Mem, a: u32) -> Option<u32> {
@@ -332,21 +333,21 @@ pub struct Course {
 /// `dScene_c`'s requested scene (r13 - 0x6F50, a u16): the id waits there
 /// until the new scene exists; 7 is a course. Its argument (entrance, and
 /// area << 8) is at r13 - 0x5638.
-const SCENE_REQUEST: u32 = SDA - 0x6F50;
-const SCENE_ARGUMENT: u32 = SDA - 0x5638;
+const SCENE_REQUEST: E1 = E1(SDA - 0x6F50);
+const SCENE_ARGUMENT: E1 = E1(SDA - 0x5638);
 /// `dInfo_c::m_instance`, `dInfo_c::startGame`, and where `startGame` keeps
 /// its 16-byte record (entrance at +5, area at +6, then world and level, and
 /// the world and level shown, at +0xC..+0xF).
-const INFO: u32 = 0x8042_9F7C;
-const START_GAME: u32 = 0x800B_B780;
-const START_RECORD: u32 = 0x8031_5B90;
+const INFO: E1 = E1(0x8042_9F7C);
+const START_GAME: E1 = E1(0x800B_B780);
+const START_RECORD: E1 = E1(0x8031_5B90);
 
 /// Once the game has asked for a course (the world map's own entry: the
 /// players are set up for it), starts `c` instead: `dInfo_c::startGame`
 /// again with the game's record, changed. The scene request is already
 /// waiting, so `startGame` leaves it, and its argument is set here.
 fn switch_course(sys: &mut System, c: Course) -> Result<(), String> {
-    let mut record = sys.mem.ram(START_RECORD, 16).ok_or("course record")?.to_vec();
+    let mut record = sys.mem.ram(START_RECORD.va(), 16).ok_or("course record")?.to_vec();
     let was = (record[12], record[13]);
     record[12..16].copy_from_slice(&[c.world, c.level, c.world, c.level]);
     if let Some(e) = c.entrance {
@@ -355,12 +356,12 @@ fn switch_course(sys: &mut System, c: Course) -> Result<(), String> {
     if let Some(a) = c.area {
         record[6] = a;
     }
-    let info = sys.mem.read_u32(INFO).map_err(|_| "dInfo_c")?;
+    let info = sys.mem.read_u32(INFO.va()).map_err(|_| "dInfo_c")?;
     // As the world map does just before (d_basesNP 0x8079F790).
     let _ = sys.mem.write_u32(info + 0x50, u32::from(c.world));
     let _ = sys.mem.write_u32(info + 0x54, u32::from(c.level));
-    sys.call_guest(START_GAME, &[info, 0x8000_1800], &record)?;
-    let _ = sys.mem.write_u32(SCENE_ARGUMENT, u32::from(record[6] & 0xF) << 8 | u32::from(record[5]));
+    sys.call_guest(START_GAME.va(), &[info, 0x8000_1800], &record)?;
+    let _ = sys.mem.write_u32(SCENE_ARGUMENT.va(), u32::from(record[6] & 0xF) << 8 | u32::from(record[5]));
     println!("course: {:02}-{:02} (area {}, entrance {}) instead of {:02}-{:02}", c.world + 1, c.level + 1, record[6], record[5], was.0 + 1, was.1 + 1);
     Ok(())
 }
@@ -662,10 +663,11 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     if profile {
         sys.slices.borrow_mut().samples = Some(Default::default());
     }
-    if !interpreter && !game_recomp::FUNCTIONS.is_empty() {
-        match guest_cpu::recomp::Rt::new(&game_recomp::FUNCTIONS, &mut sys.mem, &hle_os::SPECIAL, game_recomp::SPECIAL) {
+    let (functions, generated_special) = game_recomp::code(sys.version);
+    if !interpreter && !functions.is_empty() {
+        match guest_cpu::recomp::Rt::new(functions, &mut sys.mem, &hle_os::special(), generated_special) {
             Ok(rt) => {
-                println!("recompiled code: {} functions", rt.functions());
+                println!("recompiled code: {} functions ({})", rt.functions(), sys.version.describe());
                 sys.set_recomp(rt);
             }
             Err(e) => eprintln!("recompiled code not used: {e}"),
@@ -831,7 +833,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
                 Err(e) => say_err!("{}: {e}", path.display()),
             }
         }
-        if course.is_some() && sys.mem.read_u16(SCENE_REQUEST) == Ok(7) {
+        if course.is_some() && sys.mem.read_u16(SCENE_REQUEST.va()) == Ok(7) {
             if let Err(e) = switch_course(&mut sys, course.take().unwrap()) {
                 let _ = frames.send(Err(format!("--course: {e}")));
                 break;

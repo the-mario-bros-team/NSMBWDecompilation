@@ -1,14 +1,14 @@
 //! `--check`: validates an extracted disc folder (Dolphin "Extract Entire Disc")
-//! and compares its code against the image this project analysed
-//! (`work/dol/main.elf`, `work/rels/*.rel`), whose addresses the port relies on.
+//! of a version of the game the port runs, and for the USA revision 1 disc
+//! compares its code against the image this project analysed
+//! (`work/dol/main.elf`, `work/rels/*.rel`).
 
 use std::fmt::Display;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-/// The analysed build: New Super Mario Bros. Wii, USA, disc revision 1.
-const GAME_ID: &[u8; 6] = b"SMNE01";
-const DISC_REVISION: u8 = 1;
+use game_version::Version;
+
 const WII_DISC_MAGIC: u32 = 0x5D1C_9EA3;
 const RELS: [&str; 4] = ["d_profileNP", "d_basesNP", "d_enemiesNP", "d_en_bossNP"];
 const MEM1: std::ops::Range<u32> = 0x8000_0000..0x8180_0000;
@@ -49,10 +49,12 @@ fn read(path: &Path, what: &str, r: &mut Report) -> Option<Vec<u8>> {
 pub fn check(game: &Path, work: &Path) -> bool {
     println!("game folder: {}", game.display());
     let mut r = Report::default();
-    check_boot(game, &mut r);
-    check_dol(game, work, &mut r);
+    // The analysed image is USA revision 1's: other versions' code is not
+    // compared with it.
+    let usa = check_boot(game, &mut r) == Some(Version::E1);
+    check_dol(game, Some(work).filter(|_| usa), &mut r);
     check_fst(game, &mut r);
-    check_rels(game, work, &mut r);
+    check_rels(game, Some(work).filter(|_| usa), &mut r);
     if r.failures == 0 {
         println!("result: OK");
     } else {
@@ -61,25 +63,28 @@ pub fn check(game: &Path, work: &Path) -> bool {
     r.failures == 0
 }
 
-fn check_boot(game: &Path, r: &mut Report) {
-    let Some(boot) = read(&game.join("sys/boot.bin"), "sys/boot.bin", r) else { return };
+/// The disc's version, if the port runs it.
+fn check_boot(game: &Path, r: &mut Report) -> Option<Version> {
+    let boot = read(&game.join("sys/boot.bin"), "sys/boot.bin", r)?;
     if boot.len() < 0x20 {
-        return r.fail("sys/boot.bin", "shorter than its 0x20-byte header");
+        r.fail("sys/boot.bin", "shorter than its 0x20-byte header");
+        return None;
     }
     let id = String::from_utf8_lossy(&boot[..6]).into_owned();
     let rev = boot[7];
     if be32(&boot, 0x18) != Some(WII_DISC_MAGIC) {
         r.fail("sys/boot.bin", "no Wii disc magic at 0x18");
-    } else if &boot[..6] != GAME_ID || rev != DISC_REVISION {
-        r.fail(
-            "game id",
-            format!(
-                "{id} rev {rev}; the analysed build is {} rev {DISC_REVISION}",
-                String::from_utf8_lossy(GAME_ID)
-            ),
-        );
-    } else {
-        r.ok("game id", format!("{id} rev {rev}"));
+        return None;
+    }
+    match Version::from_boot_bin(&boot) {
+        Some(v) => {
+            r.ok("game id", format!("{id} rev {rev} ({})", v.describe()));
+            Some(v)
+        }
+        None => {
+            r.fail("game id", format!("{id} rev {rev}; the port runs New Super Mario Bros. Wii: SMNE01 or SMNP01 rev 1 or 2, SMNJ01 rev 1 or 2, SMNK01, SMNW01"));
+            None
+        }
     }
 }
 
@@ -90,7 +95,8 @@ struct DolSection {
     size: u32,
 }
 
-fn check_dol(game: &Path, work: &Path, r: &mut Report) {
+/// `work`: the analysed image's folder, if the disc is the one it is of.
+fn check_dol(game: &Path, work: Option<&Path>, r: &mut Report) {
     let Some(dol) = read(&game.join("sys/main.dol"), "sys/main.dol", r) else { return };
     let Some(entry) = be32(&dol, 0xE0) else {
         return r.fail("sys/main.dol", "shorter than its 0x100-byte header");
@@ -132,6 +138,9 @@ fn check_dol(game: &Path, work: &Path, r: &mut Report) {
         format!("{} sections, entry {entry:#010x}, {} bytes", sections.len(), dol.len()),
     );
 
+    let Some(work) = work else {
+        return r.skip("code vs analysed image", "the analysed image is USA revision 1's");
+    };
     let elf_path = work.join("dol/main.elf");
     let Ok(elf) = fs::read(&elf_path) else {
         return r.skip("code vs analysed image", format!("{} not found (run from D:\\nsmbw)", elf_path.display()));
@@ -234,7 +243,7 @@ fn check_fst(game: &Path, r: &mut Report) {
     }
 }
 
-fn check_rels(game: &Path, work: &Path, r: &mut Report) {
+fn check_rels(game: &Path, work: Option<&Path>, r: &mut Report) {
     for name in RELS {
         let what = format!("rels/{name}.rel");
         let Some(packed) = read(&game.join(format!("files/rels/{name}.rel.LZ")), &what, r) else { continue };
@@ -254,6 +263,10 @@ fn check_rels(game: &Path, work: &Path, r: &mut Report) {
             continue;
         }
         let summary = format!("module {id}, {sections} sections, {} bytes", rel.len());
+        let Some(work) = work else {
+            r.ok(&what, summary);
+            continue;
+        };
         match fs::read(work.join(format!("rels/{name}.rel"))) {
             Ok(ours) if ours == rel => r.ok(&what, format!("{summary}, identical to work/rels")),
             Ok(_) => r.fail(&what, format!("{summary}, but differs from work/rels/{name}.rel")),

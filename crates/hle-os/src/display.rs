@@ -23,22 +23,24 @@
 //!   The players' own walls (`daPlBase_c::checkSideViewLemit`, which asks
 //!   for the same limits) keep the zone's edges.
 
+use game_version::E1;
+
 use crate::System;
 
 /// `EGG::DrawPathDOF::internalDraw(this, step)`, reached through the draw
 /// path's vtable.
-pub const DOF_DRAW: u32 = 0x802C_3CB0;
+pub const DOF_DRAW: E1 = E1(0x802C_3CB0);
 /// `CrapUpPositions(Point3d* out, const Point3d* in)`.
-pub const CRAP_UP_POSITIONS: u32 = 0x800B_32E0;
+pub const CRAP_UP_POSITIONS: E1 = E1(0x800B_32E0);
 /// `dBg_c::getLeftLimit` and `getRightLimit`.
-pub const LEFT_LIMIT: u32 = 0x8007_8A70;
-pub const RIGHT_LIMIT: u32 = 0x8007_8C10;
+pub const LEFT_LIMIT: E1 = E1(0x8007_8A70);
+pub const RIGHT_LIMIT: E1 = E1(0x8007_8C10);
 
 /// The hooked functions, for [`crate::SPECIAL`].
-pub const HOOKS: [u32; 4] = [DOF_DRAW, CRAP_UP_POSITIONS, LEFT_LIMIT, RIGHT_LIMIT];
+pub const HOOKS: [E1; 4] = [DOF_DRAW, CRAP_UP_POSITIONS, LEFT_LIMIT, RIGHT_LIMIT];
 
 /// Where `daPlBase_c::checkSideViewLemit` (0x80055810) gets the limits back.
-const SIDE_WALLS: [u32; 2] = [0x8005_5898, 0x8005_58C0];
+const SIDE_WALLS: [E1; 2] = [E1(0x8005_5898), E1(0x8005_58C0)];
 
 /// The game's 16:9 aspect.
 pub const ASPECT_16_9: f32 = 16.0 / 9.0;
@@ -46,24 +48,24 @@ pub const ASPECT_16_9: f32 = 16.0 / 9.0;
 // EGG::Screen: sTVModeInfo's 16:9 record {u16 width, u16 height, f32
 // scaleX, f32 scaleY}, the current TV mode, the root screen (+8 its canvas
 // width, +0x34 its flags: bit 0 rebuild), and EGG::StateGX::s_widthFb (u16).
-const TV_MODE_WIDE: u32 = 0x8035_04E0 + 0xC;
-const TV_MODE: u32 = 0x8042_AF08;
-const ROOT_SCREEN: u32 = 0x8042_AF0C;
-const FB_WIDTH: u32 = 0x8042_AF38;
+const TV_MODE_WIDE: E1 = E1(0x8035_04E0 + 0xC);
+const TV_MODE: E1 = E1(0x8042_AF08);
+const ROOT_SCREEN: E1 = E1(0x8042_AF0C);
+const FB_WIDTH: E1 = E1(0x8042_AF38);
 /// dScreen::l_ScreenSize16x9's width (f32).
-const SCREEN_SIZE_16_9: u32 = 0x8042_A058;
+const SCREEN_SIZE_16_9: E1 = E1(0x8042_A058);
 /// 608 / width (f32): the x squeeze of 16:9 layouts in the 608-unit 2D
 /// projection (d2d::Multi_c's and m2d::Simple_c's).
-const LAYOUT_SQUEEZE: [u32; 2] = [0x8042_B084, 0x8042_DC48];
+const LAYOUT_SQUEEZE: [E1; 2] = [E1(0x8042_B084), E1(0x8042_DC48)];
 /// The level camera's width, 408 (f32 constant), and mVideo's copies
 /// (l_rayoutWidth as s32, l_rayoutWidthF, l_rayoutHeightF, l_rayoutAspect).
-const STAGE_WIDTH_CONST: u32 = 0x8042_CD78;
-const STAGE_WIDTH_INT: u32 = 0x8042_A0E4;
-const STAGE_WIDTH: u32 = 0x8042_A0EC;
-const STAGE_HEIGHT: u32 = 0x8042_A0F0;
-const STAGE_ASPECT: u32 = 0x8042_A0F4;
+const STAGE_WIDTH_CONST: E1 = E1(0x8042_CD78);
+const STAGE_WIDTH_INT: E1 = E1(0x8042_A0E4);
+const STAGE_WIDTH: E1 = E1(0x8042_A0EC);
+const STAGE_HEIGHT: E1 = E1(0x8042_A0F0);
+const STAGE_ASPECT: E1 = E1(0x8042_A0F4);
 /// Columns of tiles bgTex_c::drawBuffer draws (f32, 28).
-const TILE_COLUMNS: u32 = 0x8042_BEC4;
+const TILE_COLUMNS: E1 = E1(0x8042_BEC4);
 /// The game's own sizes: its 16:9 canvas, 2D projection and tile columns.
 /// (Its level view is 408.704 units wide, taken from the game.)
 const GAME_WIDTH: u16 = 832;
@@ -72,14 +74,14 @@ const TILE_COLUMNS_BASE: f32 = 28.0;
 
 // CrapUpPositions: mVideo::m_video (its +4 width, +6 height, u16), and
 // dGameCom::GetAspectRatio (1: widescreen) with the 4:3 to 16:9 factor.
-const VIDEO: u32 = 0x8042_A480;
-const GET_ASPECT_RATIO: u32 = 0x800B_54B0;
-const ASPECT_FACTOR: u32 = 0x8042_8750;
+const VIDEO: E1 = E1(0x8042_A480);
+const GET_ASPECT_RATIO: E1 = E1(0x800B_54B0);
+const ASPECT_FACTOR: E1 = E1(0x8042_8750);
 
 // The camera limits: dBg_c's +0x90000 +0xC zoom, and the f32 1 the limits
 // divide by it.
 const BG_ZOOM: u32 = 0x9_000C;
-const ONE: u32 = 0x8042_BD18;
+const ONE: E1 = E1(0x8042_BD18);
 
 /// The display options' state on the host.
 pub struct Display {
@@ -144,7 +146,7 @@ impl System {
             return false;
         }
         let ran = match pc {
-            DOF_DRAW => {
+            _ if pc == DOF_DRAW.va() => {
                 // Step 2 (the final full-screen draw) runs as it is, with
                 // its draws dropped.
                 if self.cpu.gpr[4] & 0xFFFF == 2 && !self.display.depth_blur && self.display.dof_return.is_none() {
@@ -153,8 +155,8 @@ impl System {
                 }
                 false
             }
-            CRAP_UP_POSITIONS => self.crap_up_positions(),
-            LEFT_LIMIT | RIGHT_LIMIT => self.camera_limit(pc == RIGHT_LIMIT),
+            _ if pc == CRAP_UP_POSITIONS.va() => self.crap_up_positions(),
+            _ if pc == LEFT_LIMIT.va() || pc == RIGHT_LIMIT.va() => self.camera_limit(pc == RIGHT_LIMIT.va()),
             _ => false,
         };
         if ran {
@@ -183,14 +185,14 @@ impl System {
         }
         let out = self.cpu.gpr[3];
         let args = [out, self.cpu.gpr[4]];
-        self.call_game(CRAP_UP_POSITIONS, &args);
+        self.call_game(CRAP_UP_POSITIONS.va(), &args);
         // The game's camera, as it works it out.
-        let video = self.mem.read_u32(VIDEO).unwrap_or(0);
+        let video = self.mem.read_u32(VIDEO.va()).unwrap_or(0);
         let video = self.mem.read_u32(video).unwrap_or(0);
         let (mut width, height) = (f32::from(self.rh(video + 4)), f32::from(self.rh(video + 6)));
         let sp = self.cpu.gpr[1];
-        if self.call_nested(GET_ASPECT_RATIO, &[], sp) & 0xFF == 1 {
-            width *= self.rf(ASPECT_FACTOR);
+        if self.call_nested(GET_ASPECT_RATIO.va(), &[], sp) & 0xFF == 1 {
+            width *= self.rf(ASPECT_FACTOR.va());
         }
         let aspect = width / height;
         if height > 0.0 && aspect > 1.68 && aspect < 1.88 {
@@ -205,19 +207,19 @@ impl System {
     /// than the view is centred in it; otherwise (and for the players'
     /// walls) the game's own.
     fn camera_limit(&mut self, right: bool) -> bool {
-        if self.display.wide <= 0.0 || SIDE_WALLS.contains(&self.cpu.lr) {
+        if self.display.wide <= 0.0 || SIDE_WALLS.iter().any(|w| w.va() == self.cpu.lr) {
             return false;
         }
-        let view = self.rf(STAGE_WIDTH);
+        let view = self.rf(STAGE_WIDTH.va());
         if !(view > self.display.stage_base + 0.5) {
             return false;
         }
         let bg = self.cpu.gpr[3];
-        let own = self.call_game(if right { RIGHT_LIMIT } else { LEFT_LIMIT }, &[bg]).fpr[1][0] as f32;
-        let other = self.call_game(if right { LEFT_LIMIT } else { RIGHT_LIMIT }, &[bg]).fpr[1][0] as f32;
+        let own = self.call_game(if right { RIGHT_LIMIT.va() } else { LEFT_LIMIT.va() }, &[bg]).fpr[1][0] as f32;
+        let other = self.call_game(if right { LEFT_LIMIT.va() } else { RIGHT_LIMIT.va() }, &[bg]).fpr[1][0] as f32;
         let (left, right_edge) = if right { (other, own) } else { (own, other) };
         // The camera's width as dBg_c::calcScroll takes it: the view over the zoom.
-        let width = view * (self.rf(ONE) / self.rf(bg.wrapping_add(BG_ZOOM)));
+        let width = view * (self.rf(ONE.va()) / self.rf(bg.wrapping_add(BG_ZOOM)));
         let limit = if right_edge - left < width {
             let centre = (left + right_edge) * 0.5;
             if right {
@@ -239,42 +241,42 @@ impl System {
     /// only when the canvas is not that wide yet, so at 16:9 it never
     /// writes. Before `EGG::Screen` is set up it does nothing.
     pub fn set_screen_aspect(&mut self, aspect: f32) {
-        if self.mem.read_u32(ROOT_SCREEN).unwrap_or(0) == 0 {
+        if self.mem.read_u32(ROOT_SCREEN.va()).unwrap_or(0) == 0 {
             return;
         }
-        let width = self.rh(TV_MODE_WIDE);
+        let width = self.rh(TV_MODE_WIDE.va());
         if width == GAME_WIDTH && self.display.stage_base == 0.0 {
-            self.display.stage_base = self.rf(STAGE_WIDTH_CONST);
+            self.display.stage_base = self.rf(STAGE_WIDTH_CONST.va());
         }
         let target = if (aspect - ASPECT_16_9).abs() < 1e-4 { GAME_WIDTH } else { (f32::from(GAME_WIDTH) * aspect / ASPECT_16_9).round() as u16 };
         if width == target || width == 0 || self.display.stage_base <= 0.0 {
             return;
         }
-        let _ = self.mem.write_u16(TV_MODE_WIDE, target);
-        let fb = f32::from(self.rh(FB_WIDTH));
+        let _ = self.mem.write_u16(TV_MODE_WIDE.va(), target);
+        let fb = f32::from(self.rh(FB_WIDTH.va()));
         if fb > 0.0 {
-            self.wf(TV_MODE_WIDE + 4, fb / f32::from(target));
+            self.wf(TV_MODE_WIDE.va() + 4, fb / f32::from(target));
         }
-        self.wf(SCREEN_SIZE_16_9, f32::from(target));
+        self.wf(SCREEN_SIZE_16_9.va(), f32::from(target));
         for a in LAYOUT_SQUEEZE {
-            self.wf(a, LAYOUT_WIDTH / f32::from(target));
+            self.wf(a.va(), LAYOUT_WIDTH / f32::from(target));
         }
         let base = self.display.stage_base;
         let stage = base * f32::from(target) / f32::from(GAME_WIDTH);
-        self.wf(STAGE_WIDTH_CONST, stage);
-        self.wf(TILE_COLUMNS, (TILE_COLUMNS_BASE * stage / base).ceil());
+        self.wf(STAGE_WIDTH_CONST.va(), stage);
+        self.wf(TILE_COLUMNS.va(), (TILE_COLUMNS_BASE * stage / base).ceil());
         // mVideo's copies, once mVideo::create has taken them.
-        let stage_height = self.rf(STAGE_HEIGHT);
+        let stage_height = self.rf(STAGE_HEIGHT.va());
         if stage_height > 0.0 {
-            self.wf(STAGE_WIDTH, stage);
+            self.wf(STAGE_WIDTH.va(), stage);
             // The game keeps 408 for 408.704.
-            let _ = self.mem.write_u32(STAGE_WIDTH_INT, stage as u32);
-            self.wf(STAGE_ASPECT, stage / stage_height);
+            let _ = self.mem.write_u32(STAGE_WIDTH_INT.va(), stage as u32);
+            self.wf(STAGE_ASPECT.va(), stage / stage_height);
         }
         // What EGG::Screen::SetTVMode would do: the root screen takes the
         // record's width and is rebuilt.
-        if self.mem.read_u32(TV_MODE).unwrap_or(0) == 1 {
-            let root = self.mem.read_u32(ROOT_SCREEN).unwrap_or(0);
+        if self.mem.read_u32(TV_MODE.va()).unwrap_or(0) == 1 {
+            let root = self.mem.read_u32(ROOT_SCREEN.va()).unwrap_or(0);
             self.wf(root + 8, f32::from(target));
             let flags = self.rh(root + 0x34);
             let _ = self.mem.write_u16(root + 0x34, flags | 1);
