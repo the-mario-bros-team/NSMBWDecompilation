@@ -417,7 +417,7 @@ fn volumes(s: &Settings) -> [u32; 3] {
 }
 
 pub fn gameplay_options(s: &Settings) -> crate::gameplay::Options {
-    crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives, autosave: s.autosave, exit_course: s.exit_course, p1_character: s.p1_character }
+    crate::gameplay::Options { no_time_limit: s.no_time_limit, infinite_lives: s.infinite_lives, autosave: s.autosave, exit_course: s.exit_course, p1_character: s.p1_character, no_power_up_freeze: !s.power_up_freeze, no_player_collision: !s.player_collision }
 }
 
 /// The game menus' Settings button, in the game's language.
@@ -499,6 +499,13 @@ impl App {
         let mut menus = ui::Menus::new(&window, &self.opts.game, &self.settings.language);
         menus.set_booted_widescreen(self.booted_widescreen);
         self.menus = Some(menus);
+        // Before the game opens its save.
+        for r in crate::save_backup::backup(Path::new("saves/nand"), Path::new(crate::save_backup::DIR), std::time::SystemTime::now()) {
+            match r {
+                Ok(p) => println!("save backup: {}", p.display()),
+                Err(e) => eprintln!("save backup: {e}"),
+            }
+        }
         let settings_label = Some(settings_label(&self.settings.language).to_string());
         let emu = Emu::spawn(self.opts.game.clone(), EmuOptions { unpaced: self.opts.unpaced, settings_label, cheats: self.cheats.clone(), characters: self.characters.clone(), gameplay: gameplay_options(&self.settings), bt_passthrough: self.settings.bt_passthrough, ..self.opts.emu.clone() });
         let _ = emu.to_emu.send(ToEmu::Volumes(volumes(&self.settings)));

@@ -47,6 +47,12 @@ final class Native {
      */
     static native String setGraphics(int compat, String hookDir, String driverDir, String driverLib, String tmpDir);
 
+    /** Before start: the Gameplay options (both true: the game's own rules; net games keep those). */
+    static native void setGameplay(boolean powerUpFreeze, boolean playerCollision);
+
+    /** The game was tapped off the on-screen remote's buttons: skips the opening cutscene or a hint movie. */
+    static native void tap();
+
     /** Whether Wii Remote 1's rumble motor is on. */
     static native boolean rumble();
 

@@ -82,6 +82,14 @@ pub struct Settings {
     /// Player 1's last character on each save file (0 Mario, 1 Luigi,
     /// 2 Blue Toad, 3 Yellow Toad), where the character screen starts.
     pub file_characters: [u32; 3],
+    /// Gameplay: everything stops for a moment while a player grows,
+    /// shrinks, changes power-up or dies (the game's own rule; off, the
+    /// level keeps moving). Net games keep the game's rules.
+    pub power_up_freeze: bool,
+    /// Gameplay: players bump into and stand on each other (the game's own
+    /// rule; off, they pass through each other). Net games keep the game's
+    /// rules.
+    pub player_collision: bool,
     /// The keys for the remote's buttons (`[keyboard]`).
     pub keymap: Keymap,
     // The controls (the Keybinds tab), after WitherBlitz's
@@ -120,7 +128,7 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, motion_sensors: true, bt_passthrough: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
+        Self { fps: 60, vsync: false, fullscreen: false, scale: 2.0, widescreen: true, wide_mode: WideMode::Fill, spinning_coins: true, depth_blur: true, perf_monitor: false, battery_saver: false, efb_copies_to_ram: false, perf_size: 50, volume: [100; 4], language: "en".into(), no_time_limit: false, infinite_lives: false, power_up: 1, cheated: [false; 3], autosave: true, exit_course: true, p1_character: true, file_characters: [0; 3], power_up_freeze: true, player_collision: true, keymap: Keymap::default(), padmap: Padmap::default(), rumble: true, smart_spin: true, mouse_gyro: false, reverse_tilt: true, wii_remotes: false, motion_sensors: true, bt_passthrough: false, hd_textures: false, texture_pack: String::new(), texture_dumps: false, mods: Vec::new() }
     }
 }
 
@@ -232,6 +240,8 @@ impl Settings {
                 *c = n.clamp(0, 3) as u32;
             }
         }
+        s.power_up_freeze = flag("power_up_freeze", s.power_up_freeze);
+        s.player_collision = flag("player_collision", s.player_collision);
         s.hd_textures = flag("hd_textures", s.hd_textures);
         if let Some(p) = t.get("texture_pack").and_then(toml::Value::as_str) {
             s.texture_pack = p.into();
@@ -297,7 +307,10 @@ impl Settings {
              autosave = {}\nexit_course = {}\n\
              # Player 1 picks a character too (from the next start), and each save file's last one\n\
              # (0 Mario, 1 Luigi, 2 Blue Toad, 3 Yellow Toad).\n\
-             p1_character = {}\nfile1_character = {}\nfile2_character = {}\nfile3_character = {}\n",
+             p1_character = {}\nfile1_character = {}\nfile2_character = {}\nfile3_character = {}\n\
+             # The game's own rules (net games keep them): everything stops while a player changes size or dies;\n\
+             # players bump into and stand on each other. false: the level keeps going; players pass through each other.\n\
+             power_up_freeze = {}\nplayer_collision = {}\n",
             self.vsync,
             self.fullscreen,
             self.aspect_name(),
@@ -323,7 +336,9 @@ impl Settings {
             self.p1_character,
             self.file_characters[0],
             self.file_characters[1],
-            self.file_characters[2]
+            self.file_characters[2],
+            self.power_up_freeze,
+            self.player_collision
         );
         let mut text = text;
         let mods: Vec<String> = self.mods.iter().map(|m| toml::Value::String(m.clone()).to_string()).collect();
@@ -392,7 +407,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("nsmbw-settings-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join(FILE);
-        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0.0, widescreen: false, wide_mode: WideMode::Fill, spinning_coins: false, depth_blur: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], autosave: false, exit_course: false, p1_character: false, file_characters: [1, 3, 2], keymap: {
+        let s = Settings { fps: 0, vsync: true, fullscreen: true, scale: 0.0, widescreen: false, wide_mode: WideMode::Fill, spinning_coins: false, depth_blur: false, perf_monitor: true, battery_saver: true, efb_copies_to_ram: true, perf_size: 120, volume: [80, 70, 60, 50], language: "fr".into(), no_time_limit: true, infinite_lives: true, power_up: 7, cheated: [true, false, true], autosave: false, exit_course: false, p1_character: false, file_characters: [1, 3, 2], power_up_freeze: false, player_collision: false, keymap: {
             let mut k = Keymap::default();
             k.bind(input::keymap::JUMP, winit::keyboard::KeyCode::Backslash);
             k.bind(input::keymap::RUN, input::keymap::Key::Mouse(5));

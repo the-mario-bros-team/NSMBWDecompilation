@@ -36,6 +36,29 @@
 //!   it (the game's table of each slot's first card, the saved character's
 //!   swapped into player 1's); the screen's own tidying is hle-os's.
 //!
+//! - Power-up Freeze off (after ral1009's NSMBWiicompiled,
+//!   `nsmbw_power_up_freeze.cpp` and `nsmbw_death_freeze.cpp`): the level
+//!   keeps moving while a player grows, shrinks or changes power-up, and
+//!   while a player dies. `dAcPy_c::executeChangeInit` and
+//!   `executeChangeNormal` stop every other actor (`daPlBase_c::stopOther`,
+//!   `dAudio::pauseMove`) and return `isPlayerGameStop()`; the death demo's
+//!   `stopOtherDownDemo` calls `stopOther` too. Off, those calls are
+//!   nops and the returns 0: the game's own no-freeze path.
+//! - Player Collision off: players pass through each other.
+//!   `dAcPy_c::ccCallBack`, for another player's body, goes on to riding
+//!   (standing on a head), stomping and the side push; off, it returns
+//!   there instead. Attacks (a ground pound, picking a player up) still
+//!   reach players.
+//!   Both are code patches ([`PATCHES`]): each word is written only where
+//!   the game has USA revision 1's (or the patch's) word, so another
+//!   version or a mod is left alone, and a changed function runs
+//!   interpreted (`guest_cpu::recomp`) while it differs.
+//! - Skipping the opening cutscene and the hint movies ([`MovieSkip`],
+//!   after NSMBWiicompiled's `nsmbw_movie_skip.cpp`, which takes -): any
+//!   button newly pressed on any remote, or a click or tap on the picture,
+//!   ends the opening as its own last state does, or leaves a hint movie
+//!   for the world map as its pause menu's exit does.
+//!
 //! Net games keep the game's own rules: every machine has to run the same
 //! (Exit Course only if every player has it: `net`).
 
@@ -115,6 +138,119 @@ pub struct Options {
     pub exit_course: bool,
     /// Applied at boot only, and not in scripted, headless or net runs.
     pub p1_character: bool,
+    /// Power-up Freeze off: the level keeps moving while a player changes
+    /// size or dies.
+    pub no_power_up_freeze: bool,
+    /// Player Collision off: players pass through each other.
+    pub no_player_collision: bool,
+}
+
+/// A code patch: (address, USA revision 1's word, the patch's word).
+type Patch = (u32, u32, u32);
+const NOP: u32 = 0x6000_0000;
+const LI_R3_0: u32 = 0x3860_0000;
+/// Power-up Freeze off.
+const NO_FREEZE: [Patch; 5] = [
+    (0x8014_0F84, 0x4BF0_D0CD, NOP),     // executeChangeInit: bl stopOther
+    (0x8014_0F90, 0x4BF2_9841, NOP),     // executeChangeInit: bl dAudio::pauseMove
+    (0x8014_0FD0, 0x4BF0_D071, LI_R3_0), // executeChangeInit: bl isPlayerGameStop
+    (0x8014_1438, 0x4BF0_CC09, LI_R3_0), // executeChangeNormal: bl isPlayerGameStop
+    (0x8013_D930, 0x4BF1_0721, NOP),     // stopOtherDownDemo: bl stopOther
+];
+/// Player Collision off: ccCallBack's `mr r3, r30` before checkRideActor,
+/// reached for another player's body, becomes a branch to its return.
+const NO_COLLISION: [Patch; 1] = [(0x8014_1D58, 0x7FC3_F378, 0x4800_00B8)];
+
+/// Sets each patch's word to the patched one (`on`) or the game's own, if it
+/// holds one of the two.
+fn patch(sys: &mut System, patches: &[Patch], on: bool) {
+    for &(addr, original, patched) in patches {
+        let (now, want) = (read32(sys, addr), if on { patched } else { original });
+        if now != Some(want) && (now == Some(original) || now == Some(patched)) {
+            let _ = sys.mem.write_u32(addr, want);
+        }
+    }
+}
+
+const GAME_STOP: u32 = 0x8042_9F48; // nonzero while the game is stopped (its pause menu, a warning)
+const SCENE_MOVIE: u16 = 8;
+const MOVIE: u32 = 0x8042_A1B8; // dScMovie_c::m_instance
+const MOVIE_STATE: u32 = 0x164; // 1: playing
+const MOVIE_ID: u32 = 0x198; // 0: the opening
+const MOVIE_END: u32 = 0x19C;
+const MOVIE_STATE_END: u32 = 10;
+const GAME_MODE: u32 = 0x8031_5B98; // dInfo_c::m_startGameInfo's game mode; 4: a hint movie
+const GAME_MODE_HINT_MOVIE: u32 = 4;
+const REPLAY_PLAY: u32 = 0x8037_41D0; // dScStage_c's replay players; player 1's once the movie runs
+const SET_NEXT_SCENE: u32 = 0x8010_2260; // dScStage_c::setNextScene(scene, arg, exit, fader)
+const SET_NEXT_SCENE_FIRST: u32 = 0x9421_FFE0;
+
+/// What can be skipped now.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Skippable {
+    Opening,
+    HintMovie,
+}
+
+/// Skipping the opening cutscene and the hint movies: see the module's notes.
+#[derive(Default)]
+pub struct MovieSkip {
+    /// The remotes' buttons at the last field.
+    held: [u16; 4],
+    /// The scene skipped (so a press during the fade out does not skip again).
+    skipped: Option<u16>,
+}
+
+impl MovieSkip {
+    /// Before a field, with the buttons the remotes give the game in it and
+    /// whether the picture was clicked or tapped since the last field.
+    /// Returns a line to log once it skips. While a movie can be skipped,
+    /// the game sees no buttons (+ would open a hint movie's pause menu
+    /// as it ends).
+    pub fn before_field(&mut self, sys: &mut System, buttons: &mut [u16; 4], tapped: bool) -> Option<String> {
+        let pressed = buttons.iter().zip(self.held).any(|(&b, h)| b & !h != 0);
+        self.held = *buttons;
+        let scene = read32(sys, SCENE).map_or(0, |w| w as u16);
+        if self.skipped.is_some_and(|s| s != scene) {
+            self.skipped = None;
+        }
+        let what = skippable(sys, scene)?;
+        *buttons = [0; 4];
+        if !(pressed || tapped) || self.skipped.is_some() {
+            return None;
+        }
+        match what {
+            Skippable::Opening => {
+                let movie = pointer(sys, MOVIE)?;
+                let _ = sys.mem.write_u8(movie + MOVIE_END, 1);
+                write32(sys, movie + MOVIE_STATE, MOVIE_STATE_END);
+            }
+            Skippable::HintMovie => {
+                // Back to the world map (3) as the hint movie's pause
+                // menu leaves it: exit kind 2, fader 5.
+                if read32(sys, SET_NEXT_SCENE) != Some(SET_NEXT_SCENE_FIRST) {
+                    return None;
+                }
+                sys.call_guest(SET_NEXT_SCENE, &[3, 0, 2, 5], &[]).ok()?;
+            }
+        }
+        self.skipped = Some(scene);
+        Some(format!("skipped the {}", if what == Skippable::Opening { "opening cutscene" } else { "hint movie" }))
+    }
+}
+
+fn skippable(sys: &System, scene: u16) -> Option<Skippable> {
+    if read32(sys, GAME_STOP) != Some(0) {
+        return None;
+    }
+    match scene {
+        SCENE_MOVIE => {
+            let movie = pointer(sys, MOVIE)?;
+            (read32(sys, movie + MOVIE_STATE) == Some(1) && read32(sys, movie + MOVIE_ID) == Some(0)).then_some(Skippable::Opening)
+        }
+        SCENE_STAGE => (read32(sys, GAME_MODE) == Some(GAME_MODE_HINT_MOVIE) && pointer(sys, REPLAY_PLAY).is_some()).then_some(Skippable::HintMovie),
+        _ => None,
+    }
 }
 
 /// Player 1's last character on each save file (0-3, as
@@ -219,6 +355,8 @@ impl Gameplay {
     /// After a field. Returns lines to log: a power-up given, the autosave.
     pub fn after_field(&mut self, sys: &mut System, opts: Options, cheats: &Cheats, characters: &Characters) -> Vec<String> {
         let scene = read32(sys, SCENE).map_or(0, |w| w as u16);
+        patch(sys, &NO_FREEZE, opts.no_power_up_freeze);
+        patch(sys, &NO_COLLISION, opts.no_player_collision);
         self.hold_timer(sys, scene, opts.no_time_limit);
         self.hide_timer(sys, scene, opts.no_time_limit);
         if self.hold_lives(sys, scene, opts.infinite_lives) {

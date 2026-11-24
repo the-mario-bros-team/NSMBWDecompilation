@@ -33,6 +33,9 @@ mod gameplay;
 #[allow(dead_code)]
 #[path = "../../frontend/src/mods.rs"]
 mod mods;
+// The save's backups at each start, as on the desktop.
+#[path = "../../frontend/src/save_backup.rs"]
+mod save_backup;
 // Per-field timings: on while the app's files hold a file named `perf`
 // (its text: the draw categories to leave out in turn, if any), into
 // `perf.csv` there and logcat.
@@ -99,11 +102,16 @@ enum ToRender {
     /// Pause, after writing the game to this file (a backup in case
     /// Android ends the app while it is away); then say how that went.
     Backup(PathBuf, SyncSender<Result<(), String>>),
+    /// A tap on the game off the on-screen remote's buttons.
+    Tap,
 }
 
 /// A state file to start the game from instead of power-on (the backup of
 /// a run Android ended), set before `start`.
 static LOAD_STATE: Mutex<Option<PathBuf>> = Mutex::new(None);
+
+/// The Gameplay options (`Native.setGameplay`), set before `start`.
+static GAMEPLAY: Mutex<gameplay::Options> = Mutex::new(gameplay::Options { no_time_limit: false, infinite_lives: false, autosave: false, exit_course: false, p1_character: false, no_power_up_freeze: false, no_player_collision: false });
 
 struct Shared {
     tx: Mutex<Sender<ToRender>>,
@@ -229,6 +237,11 @@ impl Render {
                     }
                 }
             }
+            ToRender::Tap => {
+                if let Some(emu) = &self.emu {
+                    let _ = emu.to_emu.send(ToEmu::Tap);
+                }
+            }
             ToRender::Backup(path, ack) if lobby::online() => {
                 // A net game doesn't stop for a backup: the others wait for it.
                 self.paused = true;
@@ -323,7 +336,15 @@ impl Render {
             }
             Err(_) => Vec::new(),
         };
-        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, net, load_state, script, ..EmuOptions::default() });
+        // Before the game opens its save.
+        for r in save_backup::backup(Path::new("saves/nand"), Path::new(save_backup::DIR), std::time::SystemTime::now()) {
+            match r {
+                Ok(p) => println!("save backup: {}", p.display()),
+                Err(e) => eprintln!("save backup: {e}"),
+            }
+        }
+        let gameplay = *GAMEPLAY.lock().unwrap();
+        let emu = Emu::spawn(self.cfg.game.clone(), EmuOptions { audio, net, load_state, script, gameplay, ..EmuOptions::default() });
         let _ = emu.to_emu.send(ToEmu::Interpolate(false));
         if self.paused {
             let _ = emu.to_emu.send(ToEmu::Pause(true));
@@ -577,6 +598,23 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_backup<'l>(mut env: JNIE
 pub extern "system" fn Java_com_wither_nsmbwport_Native_setLoadState<'l>(mut env: JNIEnv<'l>, _: JClass<'l>, path: JString<'l>) {
     let path = if path.is_null() { None } else { java_string(&mut env, &path).ok().map(PathBuf::from) };
     *LOAD_STATE.lock().unwrap() = path;
+}
+
+/// `Native.setGameplay(powerUpFreeze, playerCollision)`: before `start`, the
+/// Gameplay options (both on: the game's own rules; a net game keeps them
+/// whatever these say).
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_setGameplay<'l>(_: JNIEnv<'l>, _: JClass<'l>, power_up_freeze: jboolean, player_collision: jboolean) {
+    let mut g = GAMEPLAY.lock().unwrap();
+    g.no_power_up_freeze = power_up_freeze == 0;
+    g.no_player_collision = player_collision == 0;
+}
+
+/// `Native.tap()`: the game was tapped off the on-screen remote's buttons
+/// (it skips the opening cutscene or a hint movie).
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_tap<'l>(_: JNIEnv<'l>, _: JClass<'l>) {
+    send(ToRender::Tap);
 }
 
 /// `Native.setGraphics(compat, hookDir, driverDir, driverLib, tmpDir)`: before

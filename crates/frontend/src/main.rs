@@ -19,6 +19,7 @@ mod overlay;
 mod perf;
 mod play;
 mod replay;
+mod save_backup;
 mod say;
 mod settings;
 mod ui;
