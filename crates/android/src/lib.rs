@@ -121,18 +121,24 @@ static LOAD_STATE: Mutex<Option<PathBuf>> = Mutex::new(None);
 
 /// The Gameplay options (`Native.setGameplay`), set before `start`.
 static GAMEPLAY: Mutex<gameplay::Options> = Mutex::new(gameplay::Options { no_time_limit: false, infinite_lives: false, autosave: false, exit_course: false, p1_character: false, no_power_up_freeze: false, no_player_collision: false });
-/// The app's Practice settings (`Native.setPractice`): the game speed
-/// (percent, 0 unlimited), the level timer, the death counter and the input
-/// display (0 off, 1 player 1, 2 every player).
+/// The app's Practice settings (`Native.setPractice`): the game speed and
+/// Fast Forward's (percent, 0 unlimited), the level timer, the death counter
+/// and the input display (0 off, 1 player 1, 2 every player).
 #[derive(Clone, Copy)]
 struct PracticeSettings {
     speed: u32,
+    fast_forward_speed: u32,
     timer: bool,
     deaths: bool,
     inputs: u32,
 }
 
-static PRACTICE: Mutex<PracticeSettings> = Mutex::new(PracticeSettings { speed: 100, timer: false, deaths: false, inputs: 0 });
+static PRACTICE: Mutex<PracticeSettings> = Mutex::new(PracticeSettings { speed: 100, fast_forward_speed: 300, timer: false, deaths: false, inputs: 0 });
+/// Fast Forward held (`Native.setFastForward`).
+static FAST_FORWARD: AtomicBool = AtomicBool::new(false);
+/// Restart Course pressed (`Native.restartCourse`), until the render thread
+/// passes it on.
+static RESTART: AtomicBool = AtomicBool::new(false);
 
 struct Shared {
     tx: Mutex<Sender<ToRender>>,
@@ -454,7 +460,8 @@ impl Render {
         let p = *PRACTICE.lock().unwrap();
         let mut out = Vec::new();
         let px = (h.min(w) / 360).clamp(1, 4);
-        let view = practice::View { stats: self.practice, speed: self.sent_speed.unwrap_or(100), fast_forward: false, timer: p.timer, deaths: p.deaths, input_display: p.inputs, inputs: &self.shown_inputs };
+        let fast_forward = !self.net_game && FAST_FORWARD.load(Ordering::Relaxed);
+        let view = practice::View { stats: self.practice, speed: self.sent_speed.unwrap_or(100), fast_forward, timer: p.timer, deaths: p.deaths, input_display: p.inputs, inputs: &self.shown_inputs };
         practice::draw(&mut out, w, h, px, &view);
         out
     }
@@ -491,12 +498,25 @@ impl Render {
                 let _ = emu.to_emu.send(ToEmu::Input(inputs));
                 self.sent = Some(inputs);
             }
-            // The game speed (a LAN game runs at 100%).
-            let speed = if self.net_game { 100 } else { PRACTICE.lock().unwrap().speed };
+            // The game speed, or Fast Forward's while it is held (a LAN game
+            // runs at 100%).
+            let p = *PRACTICE.lock().unwrap();
+            let speed = if self.net_game {
+                100
+            } else if FAST_FORWARD.load(Ordering::Relaxed) {
+                p.fast_forward_speed
+            } else {
+                p.speed
+            };
             if self.sent_speed != Some(speed) {
                 println!("game speed: {}%", speed);
                 let _ = emu.to_emu.send(ToEmu::Speed(speed));
                 self.sent_speed = Some(speed);
+            }
+            // Restart Course (the game thread ignores it in a LAN game).
+            if RESTART.swap(false, Ordering::Relaxed) {
+                println!("restart course");
+                let _ = emu.to_emu.send(ToEmu::RestartCourse);
             }
             // While paused nothing takes fields: the game thread stops at
             // its next one, its frame queue full.
@@ -712,14 +732,31 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_setGraphics<'l>(mut env:
     }
 }
 
-/// `Native.setPractice(speed, timer, deaths, inputDisplay)`: the Practice
-/// settings: the game speed in percent (0 unlimited; a LAN game runs at
-/// 100%), the level timer, the death counter, and the input display (0 off,
-/// 1 player 1, 2 every player). Any time; they apply at once.
+/// `Native.setPractice(speed, fastForwardSpeed, timer, deaths, inputDisplay)`:
+/// the Practice settings: the game speed and the speed while Fast Forward
+/// is held, in percent (0 unlimited; a LAN game runs at 100%), the level
+/// timer, the death counter, and the input display (0 off, 1 player 1, 2
+/// every player). Any time; they apply at once.
 #[no_mangle]
-pub extern "system" fn Java_com_wither_nsmbwport_Native_setPractice<'l>(_: JNIEnv<'l>, _: JClass<'l>, speed: jint, timer: jboolean, deaths: jboolean, input_display: jint) {
+pub extern "system" fn Java_com_wither_nsmbwport_Native_setPractice<'l>(_: JNIEnv<'l>, _: JClass<'l>, speed: jint, fast_forward_speed: jint, timer: jboolean, deaths: jboolean, input_display: jint) {
     let speed = u32::try_from(speed).ok().filter(|s| [50, 100, 150, 200, 300, 0].contains(s)).unwrap_or(100);
-    *PRACTICE.lock().unwrap() = PracticeSettings { speed, timer: timer != 0, deaths: deaths != 0, inputs: input_display.clamp(0, 2) as u32 };
+    let fast_forward_speed = u32::try_from(fast_forward_speed).ok().filter(|s| [150, 200, 300, 0].contains(s)).unwrap_or(300);
+    *PRACTICE.lock().unwrap() = PracticeSettings { speed, fast_forward_speed, timer: timer != 0, deaths: deaths != 0, inputs: input_display.clamp(0, 2) as u32 };
+}
+
+/// `Native.setFastForward(held)`: Fast Forward is held (the on-screen
+/// button, a controller's right stick click); the game runs at the
+/// Practice tab's Fast-Forward Speed meanwhile (not in a LAN game).
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_setFastForward<'l>(_: JNIEnv<'l>, _: JClass<'l>, held: jboolean) {
+    FAST_FORWARD.store(held != 0, Ordering::Relaxed);
+}
+
+/// `Native.restartCourse()`: Restart Course (the on-screen button, both
+/// stick clicks). The game thread ignores it in a LAN game.
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_restartCourse<'l>(_: JNIEnv<'l>, _: JClass<'l>) {
+    RESTART.store(true, Ordering::Relaxed);
 }
 
 /// `Native.rumble()`: whether Wii Remote 1's rumble motor is on.

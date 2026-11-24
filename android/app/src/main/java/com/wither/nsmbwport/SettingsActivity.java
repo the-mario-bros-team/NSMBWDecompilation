@@ -237,6 +237,15 @@ public final class SettingsActivity extends Activity {
         choice(Lang.t("Game Speed"), AppSettings.speedLabel(speeds[current]),
                 Lang.t("The game, and its sound at its own pitch, at this speed. LAN games run at 100%."),
                 step -> settings.setGameSpeed(speeds[Math.floorMod(current + step, speeds.length)]));
+        final int[] fastSpeeds = AppSettings.FAST_FORWARD_SPEEDS;
+        int fastIndex = 2;
+        for (int i = 0; i < fastSpeeds.length; ++i) {
+            if (fastSpeeds[i] == settings.fastForwardSpeed()) fastIndex = i;
+        }
+        final int fast = fastIndex;
+        choice(Lang.t("Fast-Forward Speed"), AppSettings.speedLabel(fastSpeeds[fast]),
+                Lang.t("The speed while Fast Forward is held: its on-screen button (add it in Edit Touch Controls) or a controller's right stick click. Both stick clicks restart the course."),
+                step -> settings.setFastForwardSpeed(fastSpeeds[Math.floorMod(fast + step, fastSpeeds.length)]));
         toggle(Lang.t("Level Timer"), settings.levelTimer(),
                 Lang.t("The course's time in game frames from each start; it stops at the goal."),
                 () -> settings.setLevelTimer(!settings.levelTimer()));

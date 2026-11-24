@@ -126,6 +126,8 @@ final class TouchLayoutEditor {
             case "minus": return "−";
             case "plus": return "+";
             case "home": return "Home";
+            case "fast": return Lang.t("Fast Forward");
+            case "restart": return Lang.t("Restart Course");
             default: return Lang.t("Power-Up");
         }
     }

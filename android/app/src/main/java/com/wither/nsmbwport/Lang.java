@@ -454,6 +454,18 @@ final class Lang {
         newer("Unlimited", "Ilimitada", "Illimitée", "Illimitata");
         newer("Player 1", "Jugador 1", "Joueur 1", "Giocatore 1");
         newer("All Players", "Todos los jugadores", "Tous les joueurs", "Tutti i giocatori");
+        newer("Fast Forward", "Avance rápido", "Avance rapide", "Avanti veloce");
+        newer("Restart Course", "Reiniciar el nivel", "Recommencer le niveau", "Ricomincia il livello");
+        newer("Fast-Forward Speed", "Velocidad de avance rápido", "Vitesse d'avance rapide", "Velocità di avanti veloce");
+        newer("The speed while Fast Forward is held: its on-screen button (add it in Edit Touch Controls) or a "
+                + "controller's right stick click. Both stick clicks restart the course.",
+                "La velocidad mientras se mantiene Avance rápido: su botón en pantalla (añádelo en Editar controles "
+                + "táctiles) o el clic del stick derecho de un mando. Pulsar los dos sticks reinicia el nivel.",
+                "La vitesse tant qu'Avance rapide est maintenue : son bouton à l'écran (ajoutez-le dans Modifier les "
+                + "commandes tactiles) ou le clic du stick droit d'une manette. Cliquer les deux sticks recommence le niveau.",
+                "La velocità mentre si tiene premuto Avanti veloce: il suo pulsante sullo schermo (aggiungilo in "
+                + "Modifica i controlli touch) o il clic dello stick destro di un controller. Premere entrambi gli stick "
+                + "ricomincia il livello.");
         newer("The game, and its sound at its own pitch, at this speed. LAN games run at 100%.",
                 "El juego, y su sonido con su tono propio, a esta velocidad. En red local va al 100 %.",
                 "Le jeu, et son son à sa propre hauteur, à cette vitesse. En réseau local, il tourne à 100 %.",

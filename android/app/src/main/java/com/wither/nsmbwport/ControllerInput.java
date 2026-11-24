@@ -8,7 +8,8 @@ import android.view.MotionEvent;
 /**
  * Controllers as sideways Wii Remotes, with the desktop port's Xbox-layout defaults (crates/input):
  * A jumps (2), B and X run (1), Y and the bumpers shake, Start is +, Select is -, the guide button
- * HOME; the D-pad and the left stick are the D-pad; the triggers and the right stick tilt.
+ * HOME; the D-pad and the left stick are the D-pad; the triggers and the right stick tilt. As on the
+ * PC, the right stick's click is Fast Forward while held and both sticks' clicks Restart Course.
  * Controllers take players 1-4 in the order they are first used; player 1 shares the on-screen remote.
  */
 final class ControllerInput {
@@ -20,6 +21,7 @@ final class ControllerInput {
         final int player;
         int keys;          // Wii Remote buttons held by keys
         boolean keyShake;
+        boolean thumbL, thumbR;  // the sticks' clicks (Practice)
         float x, y, hatX, hatY, rx, lt, rt;
         Pad(int player) { this.player = player; }
 
@@ -45,6 +47,15 @@ final class ControllerInput {
     /** A key event from a controller: whether it was one (and is now taken). */
     boolean onKey(KeyEvent e) {
         if (!fromController(e)) return false;
+        final int code = e.getKeyCode();
+        if (code == KeyEvent.KEYCODE_BUTTON_THUMBL || code == KeyEvent.KEYCODE_BUTTON_THUMBR) {
+            final Pad pad = pad(e.getDeviceId());
+            if (pad == null) return true;
+            final boolean down = e.getAction() == KeyEvent.ACTION_DOWN;
+            if (code == KeyEvent.KEYCODE_BUTTON_THUMBL) pad.thumbL = down;
+            else pad.thumbR = down;
+            return true;
+        }
         final int bits = keyButtons(e.getKeyCode());
         final boolean shake = keyShakes(e.getKeyCode());
         if (bits == 0 && !shake) return false;
@@ -79,6 +90,7 @@ final class ControllerInput {
             pads.put(-1 - pad.player, pad);  // keeps the player taken for when it comes back
             pad.keys = 0;
             pad.keyShake = false;
+            pad.thumbL = pad.thumbR = false;
             pad.x = pad.y = pad.hatX = pad.hatY = pad.rx = pad.lt = pad.rt = 0f;
         }
     }
@@ -89,11 +101,24 @@ final class ControllerInput {
             final Pad p = pads.valueAt(i);
             p.keys = 0;
             p.keyShake = false;
+            p.thumbL = p.thumbR = false;
             p.x = p.y = p.hatX = p.hatY = p.rx = p.lt = p.rt = 0f;
         }
     }
 
     boolean connected(int player) { return on[player]; }
+
+    /** A controller's right stick is clicked (not both sticks): Fast Forward. */
+    boolean fastForward() {
+        for (int i = 0; i < pads.size(); ++i) if (pads.valueAt(i).thumbR && !pads.valueAt(i).thumbL) return true;
+        return false;
+    }
+
+    /** A controller's sticks are both clicked: Restart Course. */
+    boolean restart() {
+        for (int i = 0; i < pads.size(); ++i) if (pads.valueAt(i).thumbR && pads.valueAt(i).thumbL) return true;
+        return false;
+    }
 
     int buttons(int player) {
         int b = 0;

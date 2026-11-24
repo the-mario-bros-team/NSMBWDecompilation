@@ -55,6 +55,11 @@ final class AppSettings {
     int gameSpeed() { return prefs().getInt("game_speed", 100); }
     void setGameSpeed(int speed) { prefs().edit().putInt("game_speed", speed).commit(); }
 
+    /** Practice: the speed while Fast Forward is held (0 unlimited), as on the PC. */
+    static final int[] FAST_FORWARD_SPEEDS = {150, 200, 300, 0};
+    int fastForwardSpeed() { return prefs().getInt("fast_forward_speed", 300); }
+    void setFastForwardSpeed(int speed) { prefs().edit().putInt("fast_forward_speed", speed).commit(); }
+
     boolean levelTimer() { return prefs().getBoolean("level_timer", false); }
     void setLevelTimer(boolean on) { prefs().edit().putBoolean("level_timer", on).commit(); }
 

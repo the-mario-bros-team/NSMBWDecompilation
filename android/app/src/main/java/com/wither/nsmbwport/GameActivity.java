@@ -37,6 +37,7 @@ public class GameActivity extends Activity
     private boolean started;
     private int touchButtons;
     private boolean touchShake, motionShake;
+    private boolean fastForwardHeld, restartHeld;  // the Practice buttons, as last sent
     private float motionTilt;
     private final Handler main = new Handler(Looper.getMainLooper());
     private AlertDialog errorDialog;
@@ -315,11 +316,20 @@ public class GameActivity extends Activity
      *  other controllers. Reverse Tilt mirrors the tilt, wherever it comes from. */
     /** The Practice settings to the game (they apply at once). */
     private void applyPractice() {
-        Native.setPractice(settings.gameSpeed(), settings.levelTimer(), settings.deathCounter(), settings.inputDisplay());
+        Native.setPractice(settings.gameSpeed(), settings.fastForwardSpeed(), settings.levelTimer(), settings.deathCounter(), settings.inputDisplay());
     }
 
     private void pushInput() {
         if (!started) return;
+        // The Practice buttons: Fast Forward while held, Restart Course once a press.
+        final boolean fast = (touchButtons & TouchControlsView.FAST) != 0 || controllers.fastForward();
+        final boolean restart = (touchButtons & TouchControlsView.RESTART) != 0 || controllers.restart();
+        if (fast != fastForwardHeld) {
+            fastForwardHeld = fast;
+            Native.setFastForward(fast);
+        }
+        if (restart && !restartHeld) Native.restartCourse();
+        restartHeld = restart;
         final float sign = settings.reverseTilt() ? -1f : 1f;
         for (int p = 0; p < ControllerInput.PLAYERS; ++p) {
             int buttons = controllers.buttons(p);

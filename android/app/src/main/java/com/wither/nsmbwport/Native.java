@@ -24,7 +24,13 @@ final class Native {
 
     /** The Practice settings: game speed in percent (0 unlimited; LAN games run at 100%), the level
      *  timer, the death counter, and the input display (0 off, 1 player 1, 2 all players). */
-    static native void setPractice(int speed, boolean timer, boolean deaths, int inputDisplay);
+    static native void setPractice(int speed, int fastForwardSpeed, boolean timer, boolean deaths, int inputDisplay);
+
+    /** Fast Forward held (the on-screen button, a controller's right stick click). */
+    static native void setFastForward(boolean held);
+
+    /** Restart Course (the on-screen button, both stick clicks); ignored in a LAN game. */
+    static native void restartCourse();
 
     /** Wii Remote player (0..3): WiiRemote button bits, shake, tilt -1..1. */
     static native void setRemote(int player, boolean connected, int buttons, boolean shake, float tilt);

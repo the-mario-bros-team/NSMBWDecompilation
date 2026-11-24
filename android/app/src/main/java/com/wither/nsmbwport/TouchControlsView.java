@@ -35,6 +35,8 @@ final class TouchControlsView extends View {
     static final int LEFT = 0x001, RIGHT = 0x002, UP = 0x004, DOWN = 0x008;
     static final int ONE = 0x010, TWO = 0x020, A = 0x040, PLUS = 0x080, MINUS = 0x100, B = 0x200, HOME = 0x400;
     private static final int SHAKE = 0x1000, MENU = 0x2000, CHEAT = 0x4000;
+    /** Practice: Fast Forward while held, Restart Course on a press (not Wii Remote buttons). */
+    static final int FAST = 0x8000, RESTART = 0x10000;
 
     private static final int MODE_BUTTONS = 1;  // the finger presses whatever button it is over
     private static final int MODE_PAD = 2;      // the finger steers the cross-pad until lifted
@@ -73,6 +75,7 @@ final class TouchControlsView extends View {
         new Button(TWO, "2", 1.4f), new Button(ONE, "1", 1.4f), new Button(A, "A", 1.25f),
         new Button(SHAKE, "SHAKE", 1.25f), new Button(MINUS, "−", 1.3f), new Button(PLUS, "+", 1.3f),
         new Button(CHEAT, "CHEAT", 1.1f), new Button(B, "B", 1.25f), new Button(HOME, "HOME", 1.3f),
+        new Button(FAST, "\u00bb", 1.25f), new Button(RESTART, "\u21ba", 1.25f),
     };
     private boolean cheatButton;  // the settings' Cheat Button: off, it's neither shown nor pressed
     private float padX, padY, padR;
@@ -191,6 +194,8 @@ final class TouchControlsView extends View {
         place(CHEAT, left + 0.10f * u, 0.10f * u, 0.075f * u);  // top left, the size of A
         place(B, w - right - 0.43f * u, 0.28f * u, 0.075f * u);
         place(HOME, w / 2f, 0.08f * u, 0.05f * u);
+        place(FAST, left + 0.10f * u, 0.30f * u, 0.06f * u);     // under the Cheat button's place
+        place(RESTART, left + 0.27f * u, 0.10f * u, 0.06f * u);  // beside it
         invalidate();
     }
 
@@ -208,11 +213,14 @@ final class TouchControlsView extends View {
     // --- the layout editor (TouchLayoutEditor): each control moved and resized by the player --------
 
     /** Saved names of the movable controls: the cross-pad, then `buttons` in order. */
-    private static final String[] KEYS = {"pad", "two", "one", "a", "shake", "minus", "plus", "cheat", "b", "home"};
+    private static final String[] KEYS = {"pad", "two", "one", "a", "shake", "minus", "plus", "cheat", "b", "home", "fast", "restart"};
     /** Which controls are on screen (the editor's Add and Delete); the Power-Up's is `cheatButton`. */
     private final boolean[] shown = new boolean[KEYS.length];
 
-    private static boolean shownByDefault(String key) { return !key.equals("b") && !key.equals("home"); }
+    /** B, Home and the Practice buttons are added in the editor when wanted. */
+    private static boolean shownByDefault(String key) {
+        return !key.equals("b") && !key.equals("home") && !key.equals("fast") && !key.equals("restart");
+    }
 
     private boolean isShown(int index) { return KEYS[index].equals("cheat") ? cheatButton : shown[index]; }
 
@@ -560,7 +568,7 @@ final class TouchControlsView extends View {
             performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         }
         if (listener != null) {
-            listener.onTouchInput(bits & 0x7FF, (bits & SHAKE) != 0);
+            listener.onTouchInput(bits & (0x7FF | FAST | RESTART), (bits & SHAKE) != 0);
         }
         invalidate();
     }
