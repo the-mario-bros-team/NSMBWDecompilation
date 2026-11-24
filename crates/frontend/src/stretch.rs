@@ -22,8 +22,9 @@ pub struct Stretch {
     input: Vec<Frame>,
     /// Where the next window is ideally taken from (in `input`).
     pos: f64,
-    /// Where the last one was taken from.
-    prev: Option<usize>,
+    /// What naturally follows the last window taken (its start plus half
+    /// a window), which the next one is matched against.
+    natural: Option<usize>,
     /// The last window's second half, for the next to overlap.
     tail: Vec<Frame>,
 }
@@ -57,8 +58,8 @@ impl Stretch {
             if ideal + reach + n > self.input.len() {
                 break;
             }
-            let start = match self.prev {
-                Some(prev) => self.best(ideal, prev + half),
+            let start = match self.natural {
+                Some(natural) => self.best(ideal, natural),
                 None => ideal,
             };
             for i in 0..half {
@@ -70,15 +71,15 @@ impl Stretch {
                 let (a, w) = (self.input[start + half + i], self.window[half + i]);
                 self.tail[i] = [a[0] * w, a[1] * w];
             }
-            self.prev = Some(start);
+            self.natural = Some(start + half);
             self.pos += half as f64 * speed;
         }
         // Drop what neither the next search nor the next continuation needs.
-        let keep = self.prev.map_or(0, |p| p + half).min((self.pos as usize).saturating_sub(reach));
+        let keep = self.natural.map_or(0, |n| n).min((self.pos as usize).saturating_sub(reach));
         if keep > 0 {
             self.input.drain(..keep);
             self.pos -= keep as f64;
-            self.prev = self.prev.map(|p| p - keep);
+            self.natural = self.natural.map(|n| n - keep);
         }
     }
 
