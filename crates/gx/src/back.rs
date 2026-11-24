@@ -354,9 +354,16 @@ enum Msg {
     TakeOutput(bool),
 }
 
+/// Messages queued for the transform thread before the first half waits:
+/// it decodes faster than the transform keeps up on slow CPUs, and with no
+/// limit a field's raw vertices (about 12 MB in World 1-1) piled up and
+/// left the caches before the transform read them (on the Switch, two
+/// fifths of the transform's time went to its first load of each vertex).
+const BACK_QUEUE: usize = 4;
+
 /// [`Back`] on its own thread.
 pub(crate) struct BackThread {
-    to: Option<std::sync::mpsc::Sender<Msg>>,
+    to: Option<std::sync::mpsc::SyncSender<Msg>>,
     from: std::sync::mpsc::Receiver<Box<Output>>,
     /// Batches applied and emptied, sent back for the first half to fill
     /// again: a fresh batch grew its vectors (a vertex is 150 bytes) from
@@ -368,7 +375,7 @@ pub(crate) struct BackThread {
 
 impl BackThread {
     pub fn spawn(mut back: Back, on_start: fn()) -> Self {
-        let (to, msgs) = std::sync::mpsc::channel::<Msg>();
+        let (to, msgs) = std::sync::mpsc::sync_channel::<Msg>(BACK_QUEUE);
         let (replies, from) = std::sync::mpsc::channel();
         let (spare, spares) = std::sync::mpsc::channel();
         let handle = std::thread::Builder::new()
