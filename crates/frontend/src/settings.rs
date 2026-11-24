@@ -124,7 +124,7 @@ pub struct Settings {
     /// Volumes in percent: master, music, sound effects, menu sounds.
     pub volume: [u32; 4],
     /// The game's language (the console's, which it reads at boot): "en",
-    /// "es" or "fr".
+    /// "es", "fr", "de" or "it".
     pub language: String,
     /// Gameplay: the course timer stands still.
     pub no_time_limit: bool,

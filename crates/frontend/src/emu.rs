@@ -206,7 +206,7 @@ fn field_period(speed: u32) -> Duration {
 
 /// The save cards' "Cheated", in the language the Settings buttons read.
 fn cheated_word(settings: &str) -> &'static str {
-    ["fr", "es"].into_iter().find(|l| crate::ui::text::tr(l, "Settings") == settings).map_or("Cheated", |l| crate::ui::text::tr(l, "Cheated"))
+    ["fr", "es", "de", "it"].into_iter().find(|l| crate::ui::text::tr(l, "Settings") == settings).map_or("Cheated", |l| crate::ui::text::tr(l, "Cheated"))
 }
 
 /// The Settings window's sounds, played as the game plays its menus' own:
