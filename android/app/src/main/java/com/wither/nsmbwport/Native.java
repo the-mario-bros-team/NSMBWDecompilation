@@ -57,6 +57,9 @@ final class Native {
      */
     static native String setGraphics(int compat, String hookDir, String driverDir, String driverLib, String tmpDir);
 
+    /** Before start: Battery Saver (30 frames a second shown, the game at full speed). */
+    static native void setBatterySaver(boolean on);
+
     /** Before start: the Gameplay options (both true: the game's own rules; net games keep those). */
     static native void setGameplay(boolean powerUpFreeze, boolean playerCollision);
 

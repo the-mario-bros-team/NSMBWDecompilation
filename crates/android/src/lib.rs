@@ -136,6 +136,8 @@ struct PracticeSettings {
 static PRACTICE: Mutex<PracticeSettings> = Mutex::new(PracticeSettings { speed: 100, fast_forward_speed: 300, timer: false, deaths: false, inputs: 0 });
 /// Fast Forward held (`Native.setFastForward`).
 static FAST_FORWARD: AtomicBool = AtomicBool::new(false);
+/// Battery Saver (`Native.setBatterySaver`): every other field is not shown.
+static BATTERY_SAVER: AtomicBool = AtomicBool::new(false);
 /// Restart Course pressed (`Native.restartCourse`), until the render thread
 /// passes it on.
 static RESTART: AtomicBool = AtomicBool::new(false);
@@ -401,6 +403,17 @@ impl Render {
     /// `present`: fields that came faster than the screen are only drawn),
     /// and sends the game what only the GPU knows.
     fn ingest(&mut self, mut f: GameFrame, present: bool) -> Result<(), String> {
+        // Battery Saver: every other field is not shown, and only partly
+        // drawn (as the desktop's): its draws up to its last EFB-to-texture
+        // copy (later fields sample the copies) and its clears and copies,
+        // not the bulk of the scene after them. Unless its EFB is read back.
+        let skip = BATTERY_SAVER.load(Ordering::Relaxed) && f.index % 2 == 1 && !f.wants_efb;
+        if skip {
+            let cmds = std::mem::take(&mut f.out.cmds);
+            let last_copy = cmds.iter().rposition(|c| matches!(c, gx::Cmd::CopyTex(_)));
+            f.out.cmds = cmds.iter().enumerate().filter(|&(i, c)| last_copy.is_some_and(|l| i <= l) || !matches!(c, gx::Cmd::Draw(_))).map(|(_, c)| *c).collect();
+        }
+        let present = present && !skip;
         let (w, h) = self.window.as_ref().filter(|_| present).map_or((0, 0), |w| (w.width().max(0) as u32, w.height().max(0) as u32));
         (self.practice, self.shown_inputs) = (f.practice, f.inputs);
         let overlay = if w > 0 && h > 0 { self.overlay(w as i32, h as i32) } else { Vec::new() };
@@ -695,6 +708,12 @@ pub extern "system" fn Java_com_wither_nsmbwport_Native_setGameplay<'l>(_: JNIEn
     let mut g = GAMEPLAY.lock().unwrap();
     g.no_power_up_freeze = power_up_freeze == 0;
     g.no_player_collision = player_collision == 0;
+}
+
+/// `Native.setBatterySaver(on)`: before start.
+#[no_mangle]
+pub extern "system" fn Java_com_wither_nsmbwport_Native_setBatterySaver<'l>(_: JNIEnv<'l>, _: JClass<'l>, on: jboolean) {
+    BATTERY_SAVER.store(on != 0, Ordering::Relaxed);
 }
 
 /// `Native.tap()`: the game was tapped off the on-screen remote's buttons

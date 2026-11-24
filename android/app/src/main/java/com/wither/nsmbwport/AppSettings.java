@@ -100,6 +100,10 @@ final class AppSettings {
 
     /** Gameplay: everything stops for a moment while a player changes size or dies (the game's own
      *  rule, on by default). Net games keep the game's rules. */
+    /** Every other field is not shown (30 frames a second), the game still running at full speed. */
+    boolean batterySaver() { return prefs().getBoolean("battery_saver", false); }
+    void setBatterySaver(boolean on) { prefs().edit().putBoolean("battery_saver", on).commit(); }
+
     boolean powerUpFreeze() { return prefs().getBoolean("power_up_freeze", true); }
     void setPowerUpFreeze(boolean on) { prefs().edit().putBoolean("power_up_freeze", on).commit(); }
 

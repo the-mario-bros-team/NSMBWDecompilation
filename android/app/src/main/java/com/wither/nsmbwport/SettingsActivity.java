@@ -178,6 +178,9 @@ public final class SettingsActivity extends Activity {
         choice(Lang.t("Resolution"), AppSettings.resolutionLabel(scales[current]),
                 Lang.t("Rendered at this many lines, then scaled to the screen. Match screen: the screen's own."),
                 step -> settings.setResolutionScale(scales[Math.floorMod(current + step, scales.length)]));
+        toggle(Lang.t("Battery Saver"), settings.batterySaver(),
+                Lang.t("Shows 30 frames a second: the game keeps its full speed, the phone draws less and lasts longer."),
+                () -> settings.setBatterySaver(!settings.batterySaver()));
         value(Lang.t("V-Sync"), Lang.t(settings.vsync() ? "On" : "Off"),
                 Lang.t("No tearing: frames wait for the display, the game keeps its pace."),
                 () -> settings.setVSync(!settings.vsync()));

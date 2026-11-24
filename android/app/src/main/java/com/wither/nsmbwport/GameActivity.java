@@ -69,6 +69,7 @@ public class GameActivity extends Activity
         final java.io.File restore = takeBackup();
         Native.setLoadState(restore != null ? restore.getAbsolutePath() : null);
         Native.setGameplay(settings.powerUpFreeze(), settings.playerCollision());
+        Native.setBatterySaver(settings.batterySaver());
         LanPlay.beforeStart(this);  // started from LAN Play: host or join
         applyPractice();
         final String error = Native.start(GameFiles.dataDir(this).getAbsolutePath(), GameFiles.gameDir(this).getAbsolutePath(),

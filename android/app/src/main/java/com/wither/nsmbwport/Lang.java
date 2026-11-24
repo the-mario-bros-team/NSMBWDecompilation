@@ -590,6 +590,11 @@ final class Lang {
         // --- Settings: the Gameplay tab ---
         newer("Gameplay", "Juego", "Jeu", "Partita");
         newer("Power-Up Freeze", "Pausa al transformarse", "Pause des transformations", "Pausa per le trasformazioni");
+        newer("Battery Saver", "Ahorro de batería", "Économie de batterie", "Risparmio batteria");
+        newer("Shows 30 frames a second: the game keeps its full speed, the phone draws less and lasts longer.",
+                "Muestra 30 fotogramas por segundo: el juego mantiene su velocidad y el teléfono dibuja menos y dura más.",
+                "Affiche 30 images par seconde : le jeu garde sa vitesse, le téléphone dessine moins et tient plus longtemps.",
+                "Mostra 30 fotogrammi al secondo: il gioco mantiene la velocità, il telefono disegna meno e dura di più.");
         newer("Everything stops for a moment while a player grows, shrinks or dies. Off: the level keeps moving.",
                 "Todo se detiene un momento cuando un jugador crece, encoge o pierde una vida. Desactivado: el nivel sigue.",
                 "Tout s'arrête un instant quand un joueur grandit, rapetisse ou perd une vie. Désactivé : le niveau continue.",
@@ -1392,6 +1397,9 @@ final class Lang {
                 + "gepacktes Image?). Dieser Port läuft nur mit der unveränderten Disc.");
         de("Gameplay", "Spiel");
         de("Power-Up Freeze", "Verwandlungspause");
+        de("Battery Saver", "Akkusparmodus");
+        de("Shows 30 frames a second: the game keeps its full speed, the phone draws less and lasts longer.",
+                "Zeigt 30 Bilder pro Sekunde: Das Spiel läuft mit voller Geschwindigkeit weiter, das Handy zeichnet weniger und hält länger durch.");
         de("Everything stops for a moment while a player grows, shrinks or dies. Off: the level keeps moving.",
                 "Alles hält kurz an, wenn ein Spieler wächst, schrumpft oder ein Leben verliert. Aus: Der Level "
                 + "läuft weiter.");
