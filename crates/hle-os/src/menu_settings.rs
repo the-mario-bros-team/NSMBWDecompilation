@@ -51,34 +51,35 @@
 //! (levels 0x20-0x22) keep the game's answer, as their window's cursor
 //! never moves in the game either.
 
+use game_version::E1;
 use guest_cpu::{MSR_EE, MSR_FP};
 
 use crate::System;
 
 /// `LytBase_c::GroupRegister(names, animations, count)`.
-const GROUP_REGISTER: u32 = 0x800C_90F0;
-const PAUSE_CURSOR_SETUP: u32 = 0x8015_AC30;
-const PAUSE_OPEN: u32 = 0x8015_AD80;
-const PAUSE_BUTTON_CHANGE: u32 = 0x8015_AE70;
-const PAUSE_HIT: u32 = 0x8015_B030;
+const GROUP_REGISTER: E1 = E1(0x800C_90F0);
+const PAUSE_CURSOR_SETUP: E1 = E1(0x8015_AC30);
+const PAUSE_OPEN: E1 = E1(0x8015_AD80);
+const PAUSE_BUTTON_CHANGE: E1 = E1(0x8015_AE70);
+const PAUSE_HIT: E1 = E1(0x8015_B030);
 /// `PauseManager_c::SelectSoundSet`, the cursor's move.
-const PAUSE_CURSOR_MOVE: u32 = 0x800D_0C00;
-const PAUSE_KEY_CHECK: u32 = 0x800D_0CB0;
-const MAP_CURSOR_SETUP: u32 = 0x8077_AD70;
-const MAP_START_WAIT: u32 = 0x8077_ADC0;
-const MAP_OPEN_END: u32 = 0x8077_AEF0;
-const MAP_BUTTON_CHANGE: u32 = 0x8077_AF10;
-const MAP_INPUT: u32 = 0x8077_B010;
-const MAP_HIT: u32 = 0x8077_B1A0;
-const MAP_HIT_WAIT: u32 = 0x8077_B1C0;
+const PAUSE_CURSOR_MOVE: E1 = E1(0x800D_0C00);
+const PAUSE_KEY_CHECK: E1 = E1(0x800D_0CB0);
+const MAP_CURSOR_SETUP: E1 = E1(0x8077_AD70);
+const MAP_START_WAIT: E1 = E1(0x8077_ADC0);
+const MAP_OPEN_END: E1 = E1(0x8077_AEF0);
+const MAP_BUTTON_CHANGE: E1 = E1(0x8077_AF10);
+const MAP_INPUT: E1 = E1(0x8077_B010);
+const MAP_HIT: E1 = E1(0x8077_B1A0);
+const MAP_HIT_WAIT: E1 = E1(0x8077_B1C0);
 /// `dFileSelect_c`: SelectWait's execute, and ButtonSelectAnimeEndWait's
 /// initialize and finalize.
-const FILE_SELECT_WAIT: u32 = 0x8078_3C10;
-const FILE_CHANGE: u32 = 0x8078_3A00;
-const FILE_CHANGE_END: u32 = 0x8078_3BB0;
+const FILE_SELECT_WAIT: E1 = E1(0x8078_3C10);
+const FILE_CHANGE: E1 = E1(0x8078_3A00);
+const FILE_CHANGE_END: E1 = E1(0x8078_3BB0);
 
 /// The hooked functions, for [`crate::SPECIAL`].
-pub const HOOKS: [u32; 18] = [
+pub const HOOKS: [E1; 18] = [
     GROUP_REGISTER,
     PAUSE_CURSOR_SETUP,
     PAUSE_OPEN,
@@ -101,7 +102,7 @@ pub const HOOKS: [u32; 18] = [
 
 /// The map menu's and the save-select screen's functions are in a module:
 /// their first words, checked before a hook acts.
-const MODULE_WORDS: [(u32, u32); 10] = [
+const MODULE_WORDS: [(E1, u32); 10] = [
     (MAP_CURSOR_SETUP, 0x8803_0274),
     (MAP_START_WAIT, 0x9421_FFF0),
     (MAP_OPEN_END, 0x3880_0000),
@@ -114,20 +115,20 @@ const MODULE_WORDS: [(u32, u32); 10] = [
     (FILE_CHANGE_END, 0x8003_02A4),
 ];
 
-const PAUSEWINDOW: u32 = 0x8042_A33C; // Pausewindow_c::m_instance
-const GAME_KEY: u32 = 0x8042_9F50; // dGameKey_c::m_instance
-const GAME_STOP: u32 = 0x8042_9F48; // dGameCom::l_gameStop
-const SND_AUDIO_MGR: u32 = 0x8042_A488; // SndAudioMgr::sInstance
-const START_GAME_INFO: u32 = 0x8031_5B90; // dInfo_c::m_startGameInfo, +0xD the level
-const START_SYSTEM_SE: u32 = 0x8019_5380;
+const PAUSEWINDOW: E1 = E1(0x8042_A33C); // Pausewindow_c::m_instance
+const GAME_KEY: E1 = E1(0x8042_9F50); // dGameKey_c::m_instance
+const GAME_STOP: E1 = E1(0x8042_9F48); // dGameCom::l_gameStop
+const SND_AUDIO_MGR: E1 = E1(0x8042_A488); // SndAudioMgr::sInstance
+const START_GAME_INFO: E1 = E1(0x8031_5B90); // dInfo_c::m_startGameInfo, +0xD the level
+const START_SYSTEM_SE: E1 = E1(0x8019_5380);
 /// `dGameCom::isNowCourseClear`: whether the pause window's Exit may be picked.
-const IS_NOW_COURSE_CLEAR: u32 = 0x800B_4DE0;
-const NOW_SCENE: u32 = 0x8042_8732; // dScene_c::m_nowScene
+const IS_NOW_COURSE_CLEAR: E1 = E1(0x800B_4DE0);
+const NOW_SCENE: E1 = E1(0x8042_8732); // dScene_c::m_nowScene
 const SCENE_STAGE: u16 = 5;
-const SELECT_CURSOR_SETUP: u32 = 0x800B_44D0; // dGameCom::SelectCursorSetup(pane, slot, bool)
-const ANIME_START: u32 = 0x800C_92F0;
-const REVERSE_ANIME_START: u32 = 0x800C_93D0;
-const ALL_ANIME_END: u32 = 0x800C_9500;
+const SELECT_CURSOR_SETUP: E1 = E1(0x800B_44D0); // dGameCom::SelectCursorSetup(pane, slot, bool)
+const ANIME_START: E1 = E1(0x800C_92F0);
+const REVERSE_ANIME_START: E1 = E1(0x800C_93D0);
+const ALL_ANIME_END: E1 = E1(0x800C_9500);
 
 // Pausewindow_c
 const LAYOUT: u32 = 0x70;
@@ -160,18 +161,18 @@ const MAP_ACTIVE: u32 = 0x26C;
 const MAP_PICKED: u32 = 0x272;
 const MAP_LOCKED: u32 = 0x273;
 const MAP_STATES: u32 = 0x208; // changeState is its vtable's +0x18
-const MAP_STATE_START_WAIT: u32 = 0x8099_15F0;
-const MAP_STATE_BUTTON_CHANGE: u32 = 0x8099_1670;
-const MAP_STATE_HIT: u32 = 0x8099_16F0;
-const MAP_STATE_EXIT: u32 = 0x8099_1730;
-const MAP_STATE_OPEN: u32 = 0x8099_1630;
+const MAP_STATE_START_WAIT: E1 = E1(0x8099_15F0);
+const MAP_STATE_BUTTON_CHANGE: E1 = E1(0x8099_1670);
+const MAP_STATE_HIT: E1 = E1(0x8099_16F0);
+const MAP_STATE_EXIT: E1 = E1(0x8099_1730);
+const MAP_STATE_OPEN: E1 = E1(0x8099_1630);
 /// Its create's tables: the group names (0x80941288 + 404) and their
 /// animations.
-const MAP_GROUP_NAMES: u32 = 0x8094_1288 + 404;
-const MAP_GROUP_ANIMS: u32 = 0x8093_3FD8;
-const MAP_CLOSE_KEY: u32 = 0x800B_53A0; // dGameCom::chkCancelButton
-const MAP_KEYS: u32 = 0x8042_A468; // its vtable's +0x20: was one of these pressed
-const MAP_PLAYER: u32 = 0x8042_A464; // the player the menu reads
+const MAP_GROUP_NAMES: E1 = E1(0x8094_1288 + 404);
+const MAP_GROUP_ANIMS: E1 = E1(0x8093_3FD8);
+const MAP_CLOSE_KEY: E1 = E1(0x800B_53A0); // dGameCom::chkCancelButton
+const MAP_KEYS: E1 = E1(0x8042_A468); // its vtable's +0x20: was one of these pressed
+const MAP_PLAYER: E1 = E1(0x8042_A464); // the player the menu reads
 const MAP_IN: u32 = 0;
 const MAP_OUT: u32 = 18;
 const MAP_GROUPS: u32 = 19;
@@ -195,8 +196,8 @@ const FILE_MULTI: u32 = 6;
 /// Fields between 2 or A on one of them and its window (the port's hit
 /// animation of the button).
 const FILE_HIT_FIELDS: u8 = 18;
-const FILE_STATE_CHANGE: u32 = 0x8099_2010; // ButtonSelectAnimeEndWait
-const FILE_STATE_RETURN_TITLE: u32 = 0x8099_20D0;
+const FILE_STATE_CHANGE: E1 = E1(0x8099_2010); // ButtonSelectAnimeEndWait
+const FILE_STATE_RETURN_TITLE: E1 = E1(0x8099_20D0);
 /// The multi-player buttons' on animations (Free-for-All, Coin Battle).
 const FILE_MULTI_ON: u32 = 0x22;
 
@@ -314,7 +315,7 @@ impl System {
         let mut n = 0;
         while self.cpu.pc != NESTED_RETURN && n < NESTED_LIMIT {
             let pc = self.cpu.pc;
-            if crate::may_be_special(pc) {
+            if self.addrs.may_be_special(pc) {
                 self.before(pc);
                 if self.cpu.pc != pc {
                     continue;
@@ -369,32 +370,32 @@ impl System {
             self.menu.bypass = None;
             return false;
         }
-        if let Some(&(_, word)) = MODULE_WORDS.iter().find(|w| w.0 == pc) {
+        if let Some(&(_, word)) = MODULE_WORDS.iter().find(|w| w.0.try_va() == Some(pc)) {
             if self.r32(pc) != word {
                 return false;
             }
         }
-        let ran = match pc {
-            GROUP_REGISTER => self.group_register(),
-            PAUSE_CURSOR_SETUP => self.pause_cursor_setup(),
-            PAUSE_OPEN => self.pause_open(),
-            PAUSE_BUTTON_CHANGE => self.pause_button_change(),
-            PAUSE_HIT => self.pause_hit(),
-            PAUSE_CURSOR_MOVE => self.pause_cursor_move(),
-            PAUSE_KEY_CHECK => self.pause_key_check(),
-            MAP_CURSOR_SETUP => self.map_cursor_setup(),
-            MAP_START_WAIT => self.map_start_wait(),
-            MAP_OPEN_END => self.map_open_end(),
-            MAP_BUTTON_CHANGE => self.map_button_change(),
-            MAP_INPUT => self.map_input(),
-            MAP_HIT => self.map_hit(),
-            MAP_HIT_WAIT => self.map_hit_wait(),
-            FILE_SELECT_WAIT => self.file_select_wait(),
-            FILE_CHANGE => self.file_change(),
-            FILE_CHANGE_END => self.file_change_end(),
-            IS_NOW_COURSE_CLEAR => self.exit_any_course(),
-            _ => false,
-        };
+        let hooks: [(E1, fn(&mut Self) -> bool); 18] = [
+            (GROUP_REGISTER, Self::group_register),
+            (PAUSE_CURSOR_SETUP, Self::pause_cursor_setup),
+            (PAUSE_OPEN, Self::pause_open),
+            (PAUSE_BUTTON_CHANGE, Self::pause_button_change),
+            (PAUSE_HIT, Self::pause_hit),
+            (PAUSE_CURSOR_MOVE, Self::pause_cursor_move),
+            (PAUSE_KEY_CHECK, Self::pause_key_check),
+            (MAP_CURSOR_SETUP, Self::map_cursor_setup),
+            (MAP_START_WAIT, Self::map_start_wait),
+            (MAP_OPEN_END, Self::map_open_end),
+            (MAP_BUTTON_CHANGE, Self::map_button_change),
+            (MAP_INPUT, Self::map_input),
+            (MAP_HIT, Self::map_hit),
+            (MAP_HIT_WAIT, Self::map_hit_wait),
+            (FILE_SELECT_WAIT, Self::file_select_wait),
+            (FILE_CHANGE, Self::file_change),
+            (FILE_CHANGE_END, Self::file_change_end),
+            (IS_NOW_COURSE_CLEAR, Self::exit_any_course),
+        ];
+        let ran = hooks.iter().find(|h| h.0.try_va() == Some(pc)).is_some_and(|h| (h.1)(self));
         if ran {
             self.cpu.pc = self.cpu.lr;
         }
@@ -452,12 +453,13 @@ impl System {
 
     /// Where main.dol's constant data holds `name` (0 if nowhere).
     fn find_string(&mut self, name: &str) -> u32 {
-        let Some(ram) = self.mem.ram(0x802E_0000, 0x6_0000) else { return 0 };
+        let from = E1(0x802E_0000).va();
+        let Some(ram) = self.mem.ram(from, 0x6_0000) else { return 0 };
         let mut needle = name.as_bytes().to_vec();
         needle.push(0);
         (1..ram.len().saturating_sub(needle.len()))
             .find(|&i| ram[i - 1] == 0 && ram[i..i + needle.len()] == needle[..])
-            .map_or(0, |i| 0x802E_0000 + i as u32)
+            .map_or(0, |i| from + i as u32)
     }
 
     fn group_names(&mut self) -> (u32, u32) {
@@ -470,15 +472,15 @@ impl System {
     }
 
     fn sound(&mut self, id: u32) {
-        let sound = self.r32(SND_AUDIO_MGR);
+        let sound = self.r32(SND_AUDIO_MGR.va());
         if sound != 0 {
-            self.call(START_SYSTEM_SE, &[sound, id, 1]);
+            self.call(START_SYSTEM_SE.va(), &[sound, id, 1]);
         }
     }
 
     /// The key trigger bits (WPAD buttons) of `player`.
     fn trigger(&mut self, player: u32) -> u32 {
-        let keys = self.r32(GAME_KEY);
+        let keys = self.r32(GAME_KEY.va());
         if player >= 4 || keys == 0 {
             return 0;
         }
@@ -495,13 +497,13 @@ impl System {
     fn group_register(&mut self) -> bool {
         let (layout, names, anims, count) = (self.cpu.gpr[3], self.cpu.gpr[4], self.cpu.gpr[5], self.cpu.gpr[6]);
         let (pause_group, map_group) = self.group_names();
-        let window = self.r32(PAUSEWINDOW);
+        let window = self.r32(PAUSEWINDOW.va());
         let (group, settings_anims) = if count == WINDOW_GROUPS && guest_ram(window) && layout == window + LAYOUT {
             // onButton, idleButton, offButon (sic), hitButton.
             (pause_group, [3, 4, 5, 6])
-        } else if count == MAP_GROUPS && names == MAP_GROUP_NAMES {
+        } else if count == MAP_GROUPS && names == MAP_GROUP_NAMES.va() {
             // Copies of Quick Save's on, idle, hit and off.
-            let a = [4, 8, 12, 16].map(|g| self.r32(MAP_GROUP_ANIMS + g * 4));
+            let a = [4, 8, 12, 16].map(|g| self.r32(MAP_GROUP_ANIMS.va() + g * 4));
             (map_group, a)
         } else {
             return false;
@@ -524,14 +526,14 @@ impl System {
             self.w32(new_names + (count + i as u32) * 4, group);
             self.w32(new_anims + (count + i as u32) * 4, a);
         }
-        self.call_original(GROUP_REGISTER, &[layout, new_names, new_anims, count + 4], frame);
+        self.call_original(GROUP_REGISTER.va(), &[layout, new_names, new_anims, count + 4], frame);
         true
     }
 
     // ------------------------------------------------------------ the pause window
 
     fn pausewindow(&mut self) -> u32 {
-        let w = self.r32(PAUSEWINDOW);
+        let w = self.r32(PAUSEWINDOW.va());
         if guest_ram(w) {
             w
         } else {
@@ -552,7 +554,7 @@ impl System {
         }
         let pane = self.pause_settings_pane(window);
         if pane != 0 {
-            self.call(SELECT_CURSOR_SETUP, &[pane, 0, 0]);
+            self.call(SELECT_CURSOR_SETUP.va(), &[pane, 0, 0]);
         }
         true
     }
@@ -563,9 +565,9 @@ impl System {
             return false;
         }
         let sp = self.cpu.gpr[1];
-        self.call_original(PAUSE_OPEN, &[window], sp);
+        self.call_original(PAUSE_OPEN.va(), &[window], sp);
         // The Settings button starts plain like the others.
-        self.call(REVERSE_ANIME_START, &[window + LAYOUT, ON[2], 0]);
+        self.call(REVERSE_ANIME_START.va(), &[window + LAYOUT, ON[2], 0]);
         if self.menu.reopening {
             self.menu.reopening = false;
             self.w32(window + NEXT_BUTTON, SETTINGS); // back from the Settings window
@@ -580,13 +582,13 @@ impl System {
         if next != SETTINGS && active != SETTINGS as i32 {
             return false;
         }
-        self.call(ALL_ANIME_END, &[window + LAYOUT]);
+        self.call(ALL_ANIME_END.va(), &[window + LAYOUT]);
         self.w8(window + IS_ANIMATING, 1);
         if active >= 0 {
-            self.call(ANIME_START, &[window + LAYOUT, OFF[(active as usize).min(2)], 0]);
+            self.call(ANIME_START.va(), &[window + LAYOUT, OFF[(active as usize).min(2)], 0]);
         }
         self.w32(window + ACTIVE_BUTTON, next);
-        self.call(ANIME_START, &[window + LAYOUT, ON[(next as usize).min(2)], 0]);
+        self.call(ANIME_START.va(), &[window + LAYOUT, ON[(next as usize).min(2)], 0]);
         true
     }
 
@@ -596,7 +598,7 @@ impl System {
             return false;
         }
         self.w8(window + IS_ANIMATING, 1);
-        self.call(ANIME_START, &[window + LAYOUT, HIT[2], 0]);
+        self.call(ANIME_START.va(), &[window + LAYOUT, HIT[2], 0]);
         true
     }
 
@@ -621,8 +623,8 @@ impl System {
             // isNowCourseClear's hook answers), and never in the map enemies'
             // ambushes (levels 0x20-0x22), whose window doesn't move in the
             // game either.
-            let level = self.r8(START_GAME_INFO + 0xD);
-            let cleared = self.call(IS_NOW_COURSE_CLEAR, &[]) != 0;
+            let level = self.r8(START_GAME_INFO.va() + 0xD);
+            let cleared = self.call(IS_NOW_COURSE_CLEAR.va(), &[]) != 0;
             if !((cleared || level == 0x23) && !(0x20..=0x22).contains(&level)) {
                 return true;
             }
@@ -651,7 +653,7 @@ impl System {
         if self.r32(manager + CURSOR) != SETTINGS {
             return false;
         }
-        let still = self.r32(GAME_STOP) & 0xFFFF_FFFA == 0 && self.r8(window + IS_ANIMATING) == 0 && self.r8(window + IS_ACTIVE) != 0;
+        let still = self.r32(GAME_STOP.va()) & 0xFFFF_FFFA == 0 && self.r8(window + IS_ANIMATING) == 0 && self.r8(window + IS_ACTIVE) != 0;
         let player = self.r32(manager + PLAYER);
         let trigger = self.trigger(player);
         // 2 or A, not +.
@@ -692,7 +694,7 @@ impl System {
     fn file_move(&mut self, this: u32, from: u32, next: u32) {
         self.w32(this + FILE_PREV, from);
         self.w32(this + FILE_CURSOR, next);
-        self.file_change_state(this, FILE_STATE_CHANGE);
+        self.file_change_state(this, FILE_STATE_CHANGE.va());
     }
 
     /// SelectWait: up from a file goes to Multiplayer; on Settings or
@@ -708,7 +710,7 @@ impl System {
         if self.file_panes(this).contains(&0) {
             return false;
         }
-        let player = self.r32(MAP_PLAYER);
+        let player = self.r32(MAP_PLAYER.va());
         let trigger = self.trigger(player);
         if !ours {
             // 0x2: up, the remote held sideways.
@@ -743,11 +745,11 @@ impl System {
             self.file_move(this, cursor, FILE_MULTI);
         } else if trigger & 0x4 != 0 && cursor == FILE_MULTI {
             self.file_move(this, cursor, FILE_SETTINGS);
-        } else if self.call(MAP_CLOSE_KEY, &[0]) != 0 {
+        } else if self.call(MAP_CLOSE_KEY.va(), &[0]) != 0 {
             self.sound(SE_BACK);
-            self.file_change_state(this, FILE_STATE_RETURN_TITLE);
+            self.file_change_state(this, FILE_STATE_RETURN_TITLE.va());
         } else {
-            let keys = self.r32(MAP_KEYS);
+            let keys = self.r32(MAP_KEYS.va());
             let vtable = self.r32(keys);
             let pressed = self.r32(vtable + 0x20);
             if self.call(pressed, &[keys, 0x900]) != 0 {
@@ -771,7 +773,7 @@ impl System {
             return false;
         }
         let layout = this + FILE_LAYOUT;
-        self.call(ALL_ANIME_END, &[layout]);
+        self.call(ALL_ANIME_END.va(), &[layout]);
         if prev < 3 {
             let card = self.r32(this + FILE_CARDS + prev * 4);
             self.w32(card + CARD_COMMAND, 4);
@@ -781,7 +783,7 @@ impl System {
             let card = self.r32(this + FILE_CARDS + next * 4);
             self.w32(card + CARD_COMMAND, 1);
         } else if !ours(next) {
-            self.call(ANIME_START, &[layout, FILE_MULTI_ON + (next - 3).min(1), 0]);
+            self.call(ANIME_START.va(), &[layout, FILE_MULTI_ON + (next - 3).min(1), 0]);
         }
         true
     }
@@ -796,7 +798,7 @@ impl System {
         }
         let pane = self.file_panes(this)[(cursor - FILE_SETTINGS) as usize];
         if pane != 0 {
-            self.call(SELECT_CURSOR_SETUP, &[pane, 1, 0]); // the screen's cursor slot
+            self.call(SELECT_CURSOR_SETUP.va(), &[pane, 1, 0]); // the screen's cursor slot
         }
         true
     }
@@ -805,7 +807,7 @@ impl System {
     /// map enemies' ambushes. The game's function only reads, so its answer
     /// is not needed when it would be replaced anyway.
     fn exit_any_course(&mut self) -> bool {
-        if !self.menu.exit_course || self.mem.read_u16(NOW_SCENE) != Ok(SCENE_STAGE) || (0x20..=0x22).contains(&self.r8(START_GAME_INFO + 0xD)) {
+        if !self.menu.exit_course || self.mem.read_u16(NOW_SCENE.va()) != Ok(SCENE_STAGE) || (0x20..=0x22).contains(&self.r8(START_GAME_INFO.va() + 0xD)) {
             return false;
         }
         self.cpu.gpr[3] = 1;
@@ -884,7 +886,7 @@ impl System {
         }
         let pane = self.map_settings_pane(menu);
         if pane != 0 {
-            self.call(SELECT_CURSOR_SETUP, &[pane, 4, 0]); // the menu's cursor slot
+            self.call(SELECT_CURSOR_SETUP.va(), &[pane, 4, 0]); // the menu's cursor slot
         }
         true
     }
@@ -897,15 +899,15 @@ impl System {
             return false;
         }
         let layout = menu + LAYOUT;
-        self.call(ALL_ANIME_END, &[layout]);
+        self.call(ALL_ANIME_END.va(), &[layout]);
         for button in 0..3 {
-            self.call(REVERSE_ANIME_START, &[layout, Self::map_on(button), 0]);
+            self.call(REVERSE_ANIME_START.va(), &[layout, Self::map_on(button), 0]);
         }
-        self.call(REVERSE_ANIME_START, &[layout, Self::map_on(MAP_SETTINGS), 0]);
-        self.call(ANIME_START, &[layout, MAP_IN, 0]);
+        self.call(REVERSE_ANIME_START.va(), &[layout, Self::map_on(MAP_SETTINGS), 0]);
+        self.call(ANIME_START.va(), &[layout, MAP_IN, 0]);
         self.w8(menu + MAP_PICKED, 0);
         self.map_show_window(menu, true);
-        self.map_change_state(menu, MAP_STATE_OPEN);
+        self.map_change_state(menu, MAP_STATE_OPEN.va());
         true
     }
 
@@ -929,13 +931,13 @@ impl System {
             return false;
         }
         let layout = menu + LAYOUT;
-        self.call(ALL_ANIME_END, &[layout]);
+        self.call(ALL_ANIME_END.va(), &[layout]);
         if active >= 0 {
             self.sound(SE_CURSOR);
-            self.call(ANIME_START, &[layout, Self::map_off(active as u32), 0]);
+            self.call(ANIME_START.va(), &[layout, Self::map_off(active as u32), 0]);
         }
         self.w32(menu + MAP_ACTIVE, next);
-        self.call(ANIME_START, &[layout, Self::map_on(next), 0]);
+        self.call(ANIME_START.va(), &[layout, Self::map_on(next), 0]);
         true
     }
 
@@ -950,27 +952,27 @@ impl System {
         if self.r8(menu + MAP_LOCKED) != 0 {
             return true;
         }
-        self.call(MAP_CURSOR_SETUP, &[menu]);
-        let player = self.r32(MAP_PLAYER);
+        self.call(MAP_CURSOR_SETUP.va(), &[menu]);
+        let player = self.r32(MAP_PLAYER.va());
         let trigger = self.trigger(player);
         if trigger & 0x3 != 0 {
             // 0x2 up, else 0x1 down (the remote held sideways).
             let next = self.r32(menu + MAP_NEXT);
             self.w32(menu + MAP_NEXT, Self::map_step(next, trigger & 0x2 == 0));
-            self.map_change_state(menu, MAP_STATE_BUTTON_CHANGE);
+            self.map_change_state(menu, MAP_STATE_BUTTON_CHANGE.va());
             return true;
         }
-        let close = trigger & 0x10 != 0 || self.call(MAP_CLOSE_KEY, &[0]) != 0;
+        let close = trigger & 0x10 != 0 || self.call(MAP_CLOSE_KEY.va(), &[0]) != 0;
         if close {
-            self.map_change_state(menu, MAP_STATE_EXIT);
+            self.map_change_state(menu, MAP_STATE_EXIT.va());
             return true;
         }
-        let keys = self.r32(MAP_KEYS);
+        let keys = self.r32(MAP_KEYS.va());
         let vtable = self.r32(keys);
         let pressed = self.r32(vtable + 0x20);
         if self.call(pressed, &[keys, 0x900]) != 0 {
             self.sound(SE_DECIDE);
-            self.map_change_state(menu, MAP_STATE_HIT);
+            self.map_change_state(menu, MAP_STATE_HIT.va());
         }
         true
     }
@@ -982,7 +984,7 @@ impl System {
             return false;
         }
         self.menu.map_settings = 0;
-        self.call(ANIME_START, &[menu + LAYOUT, Self::map_hit_anim(MAP_SETTINGS), 0]);
+        self.call(ANIME_START.va(), &[menu + LAYOUT, Self::map_hit_anim(MAP_SETTINGS), 0]);
         true
     }
 
@@ -996,8 +998,8 @@ impl System {
         let animating = self.map_animating(menu);
         match self.menu.map_settings {
             0 if !animating => {
-                self.call(ALL_ANIME_END, &[menu + LAYOUT]);
-                self.call(ANIME_START, &[menu + LAYOUT, MAP_OUT, 0]);
+                self.call(ALL_ANIME_END.va(), &[menu + LAYOUT]);
+                self.call(ANIME_START.va(), &[menu + LAYOUT, MAP_OUT, 0]);
                 self.menu.map_settings = 1;
             }
             1 if !animating => {
@@ -1009,7 +1011,7 @@ impl System {
             2 if std::mem::take(&mut self.menu.map_reopen) => {
                 self.menu.map_settings = 0;
                 self.menu.map_back = true;
-                self.map_change_state(menu, MAP_STATE_START_WAIT); // its own opening, from the next frame
+                self.map_change_state(menu, MAP_STATE_START_WAIT.va()); // its own opening, from the next frame
             }
             _ => {}
         }

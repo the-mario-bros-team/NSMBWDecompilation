@@ -7,6 +7,7 @@ description = "The recompiled guest functions ppc-recomp wrote to gen/ (docs/POR
 [dependencies]
 guest-cpu = { path = "../guest-cpu" }
 guest-mem = { path = "../guest-mem" }
+game-version = { path = "../game-version" }
 recomp-s00 = { path = "shards/s00" }
 recomp-s01 = { path = "shards/s01" }
 recomp-s02 = { path = "shards/s02" }

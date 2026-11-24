@@ -8,16 +8,17 @@ use std::fs;
 use std::path::Path;
 use std::time::Instant;
 
+use game_version::E1;
 use guest_mem::Mem;
 use hle_os::System;
 
 /// `main` (`start_main_thread` in the reconstruction, `src/engine/startup.rs`),
 /// called by `__start` at `0x800041B4` after `OSInit`.
-const MAIN: u32 = 0x800C_9F90;
+const MAIN: E1 = E1(0x800C_9F90);
 
 /// Text-output entry points whose first argument is a C string: `os_report`
 /// (`OSReport(fmt, ...)`) and `0x801AB1C0` (prints `"%s\n"` with r3).
-const REPORTS: [u32; 2] = [0x801B_B9E0, 0x801A_B1C0];
+const REPORTS: [E1; 2] = [E1(0x801B_B9E0), E1(0x801A_B1C0)];
 
 fn c_string(mem: &mut Mem, mut addr: u32) -> String {
     let mut s = Vec::new();
@@ -140,13 +141,13 @@ fn boot(game: &Path, max_steps: u64) -> Result<bool, String> {
         let r = sys.run_slice(hle_os::SLICE.min(max_steps - sys.cpu.cycles), |cpu, mem, pc| {
             recent_pcs[((base + i) % 32) as usize] = pc;
             i += 1;
-            if cpu.pc == MAIN && main_at.is_none() {
+            if cpu.pc == MAIN.va() && main_at.is_none() {
                 main_at = Some(base + i);
-                println!("  -- reached main ({MAIN:#010x}) after {} instructions", base + i);
+                println!("  -- reached main ({:#010x}) after {} instructions", MAIN.va(), base + i);
             }
             if cpu.lr == pc.wrapping_add(4) && cpu.pc != pc.wrapping_add(4) && mem.read_u32(pc).is_ok_and(|w| w >> 26 == 18 || w >> 26 == 19 || w >> 26 == 16) {
                 *called.entry(cpu.pc).or_insert(0) += 1;
-                if REPORTS.contains(&cpu.pc) {
+                if REPORTS.iter().any(|r| r.va() == cpu.pc) {
                     let text = c_string(mem, cpu.gpr[3]);
                     println!("  [report from {pc:#010x}] {}", text.trim_end());
                 }

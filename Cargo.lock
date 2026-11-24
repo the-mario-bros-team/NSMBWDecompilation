@@ -1087,6 +1087,7 @@ dependencies = [
  "egui",
  "egui-winit",
  "game-recomp",
+ "game-version",
  "guest-cpu",
  "guest-mem",
  "gx",
@@ -1131,6 +1132,7 @@ dependencies = [
 name = "game-recomp"
 version = "0.1.0"
 dependencies = [
+ "game-version",
  "guest-cpu",
  "guest-mem",
  "recomp-s00",
@@ -1150,6 +1152,10 @@ dependencies = [
  "recomp-s14",
  "recomp-s15",
 ]
+
+[[package]]
+name = "game-version"
+version = "0.1.0"
 
 [[package]]
 name = "generic-array"
@@ -1435,6 +1441,7 @@ dependencies = [
 name = "hle-os"
 version = "0.1.0"
 dependencies = [
+ "game-version",
  "guest-cpu",
  "guest-mem",
  "gx",
@@ -1446,6 +1453,7 @@ dependencies = [
 name = "hw"
 version = "0.1.0"
 dependencies = [
+ "game-version",
  "guest-mem",
  "gx",
  "hle-ios",
@@ -1509,6 +1517,7 @@ dependencies = [
 name = "input"
 version = "0.1.0"
 dependencies = [
+ "game-version",
  "hidapi",
  "hle-ios",
  "nusb",
@@ -2601,6 +2610,7 @@ dependencies = [
 name = "ppc-recomp"
 version = "0.1.0"
 dependencies = [
+ "game-version",
  "guest-cpu",
  "hle-os",
 ]

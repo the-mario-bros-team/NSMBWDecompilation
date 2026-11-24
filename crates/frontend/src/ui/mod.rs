@@ -147,9 +147,12 @@ pub struct Menus {
 impl Menus {
     pub fn new(window: &Window, game: &std::path::Path, language: &str) -> Self {
         let folder = match language {
-            "es" => "SpaUS",
-            "fr" => "FraUS",
-            _ => "EngUS",
+            "es" => "Spa",
+            "fr" => "Fra",
+            "de" => "Ger",
+            "it" => "Ita",
+            "nl" => "Ned",
+            _ => "Eng",
         };
         layout::set_disc(game, folder);
         let ctx = egui::Context::default();

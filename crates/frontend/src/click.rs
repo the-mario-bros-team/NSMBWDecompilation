@@ -29,6 +29,7 @@
 //! afresh; while anything else is under way it is ignored. Not in net
 //! games.
 
+use game_version::E1;
 use hle_ios::wiimote::button;
 use hle_os::System;
 
@@ -44,17 +45,17 @@ const SCREEN_RIGHT: u16 = button::DOWN;
 const SCREEN_UP: u16 = button::RIGHT;
 const SCREEN_DOWN: u16 = button::LEFT;
 
-const SCENE: u32 = 0x8042_8730; // dScene_c: the low half is the scene now
+const SCENE: E1 = E1(0x8042_8730); // dScene_c: the low half is the scene now
 const SCENE_STRAP: u32 = 0;
 const SCENE_WORLD_MAP: u32 = 3;
 const SCENE_STAGE: u32 = 5;
 const SCENE_MOVIE: u32 = 8;
 const SCENE_GAME_SETUP: u32 = 0xA; // the save select and Select Players
-const TREE_ROOT: u32 = 0x8037_7A10; // fManager_c's tree of the game's objects
-const DEMO_MODE: u32 = 0x8042_A204; // 3: the title's attract demo
+const TREE_ROOT: E1 = E1(0x8037_7A10); // fManager_c's tree of the game's objects
+const DEMO_MODE: E1 = E1(0x8042_A204); // 3: the title's attract demo
 /// The layouts' horizontal squeeze (608 / the canvas's width): layout x
 /// times this is a pane's x.
-const SQUEEZE: u32 = 0x8042_B084;
+const SQUEEZE: E1 = E1(0x8042_B084);
 
 const PROFILE_TITLE: u16 = 0x2BB;
 const PROFILE_FILE_SELECT: u16 = 0x2D5;
@@ -64,13 +65,13 @@ const PROFILE_MAP_MENU: u16 = 0x2B5;
 const PROFILE_SELECT_CURSOR: u16 = 0x2CF;
 
 const FILE_SELECT_STATE: u32 = 0x238;
-const FILE_SELECT_WAIT: u32 = 0x8099_2050; // dFileSelect_c::StateID_SelectWait
+const FILE_SELECT_WAIT: E1 = E1(0x8099_2050); // dFileSelect_c::StateID_SelectWait
 const FILE_SELECT_CURSOR: u32 = 0x2A4; // 0-2 files, 3 Free-for-All, 4 Coin Battle, 5 Settings, 6 Multiplayer
 const FILE_SELECT_LAYOUT: u32 = 0x74;
 const SELECT_PLAYERS_STATE: u32 = 0x9C;
 const SELECT_PLAYERS_CURSOR: u32 = 0x26C; // 0-3: 1-4 players
-const SELECT_PLAYERS_SELECT: u32 = 0x8099_54C0;
-const SELECT_PLAYERS_CHANGE: u32 = 0x8099_5480;
+const SELECT_PLAYERS_SELECT: E1 = E1(0x8099_54C0);
+const SELECT_PLAYERS_CHANGE: E1 = E1(0x8099_5480);
 const MAP_MENU_STATE: u32 = 0x234;
 const PROFILE_STAR_COINS: u16 = 0x2B4;
 const STAR_COINS_STATE: u32 = 0x434;
@@ -202,7 +203,7 @@ impl Clicker {
     /// NSMB-Wii-Recompilation's): 1, the screen's way back to the title,
     /// while it waits for a choice and nothing else is under way.
     pub fn back(&mut self, sys: &System) {
-        let waiting = scene(sys) == SCENE_GAME_SETUP && find(sys, PROFILE_FILE_SELECT).is_some_and(|fs| r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT);
+        let waiting = scene(sys) == SCENE_GAME_SETUP && find(sys, PROFILE_FILE_SELECT).is_some_and(|fs| r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT.va());
         if waiting && self.job.is_none() {
             self.job = Some(Job::Once(button::ONE));
             self.tick = 0;
@@ -259,7 +260,7 @@ pub fn save_select(sys: &mut System) -> Option<SaveSelect> {
         alpha: f32::from(alpha) / 255.0,
         cursor: ours(r32(sys, fs + FILE_SELECT_CURSOR)),
         picked: sys.menu.file_picked().and_then(ours),
-        waiting: r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT,
+        waiting: r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT.va(),
     })
 }
 
@@ -303,11 +304,11 @@ fn in_ram(a: u32) -> bool {
 }
 
 fn scene(sys: &System) -> u32 {
-    r32(sys, SCENE) & 0xFFFF
+    r32(sys, SCENE.va()) & 0xFFFF
 }
 
 fn squeeze(sys: &System) -> f32 {
-    let s = f32_at(sys, SQUEEZE);
+    let s = f32_at(sys, SQUEEZE.va());
     if (0.1..=2.0).contains(&s) {
         s
     } else {
@@ -320,7 +321,7 @@ fn squeeze(sys: &System) -> f32 {
 /// its +8).
 fn objects(sys: &System) -> Vec<(u16, u32)> {
     let mut out = Vec::new();
-    let mut node = r32(sys, TREE_ROOT);
+    let mut node = r32(sys, TREE_ROOT.va());
     for _ in 0..4096 {
         if node == 0 {
             break;
@@ -454,7 +455,7 @@ fn start(sys: &mut System, c: Click) -> Option<Job> {
     let scene = scene(sys);
     let objects = objects(sys);
     let has = |p: u16| objects.iter().any(|o| o.0 == p);
-    let attract = (scene == SCENE_STAGE && r32(sys, DEMO_MODE) == 3) || scene == SCENE_MOVIE;
+    let attract = (scene == SCENE_STAGE && r32(sys, DEMO_MODE.va()) == 3) || scene == SCENE_MOVIE;
     if scene == SCENE_STRAP || (scene == SCENE_STAGE && has(PROFILE_TITLE)) || attract {
         return Some(Job::Once(button::TWO | button::A));
     }
@@ -464,12 +465,12 @@ fn start(sys: &mut System, c: Click) -> Option<Job> {
         // The save select and Select Players while they wait for a choice
         // (the character screen's object is there all along).
         if let Some(fs) = objects.iter().find(|o| o.0 == PROFILE_FILE_SELECT).map(|o| o.1) {
-            if r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT {
+            if r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT.va() {
                 return file_select(sys, fs, c);
             }
         }
         if let Some(sp) = objects.iter().find(|o| o.0 == PROFILE_SELECT_PLAYERS).map(|o| o.1) {
-            if matches!(r32(sys, sp + SELECT_PLAYERS_STATE), SELECT_PLAYERS_SELECT | SELECT_PLAYERS_CHANGE) {
+            if [SELECT_PLAYERS_SELECT.va(), SELECT_PLAYERS_CHANGE.va()].contains(&r32(sys, sp + SELECT_PLAYERS_STATE)) {
                 return select_players(c);
             }
         }
@@ -569,9 +570,9 @@ fn world_select(sys: &System, ws: u32, state: &str, c: Click) -> Option<Job> {
 
 // ---------------------------------------------------------------- the world map
 
-const WM_MAP: u32 = 0x8042_A18C; // the world map's point data
-const WM_PLAYER: u32 = 0x8042_A1A0; // daWmPlayer_c; +0xAC its position
-const WM_CAMERA: u32 = 0x8042_A3CC; // +0xF8 camera 0
+const WM_MAP: E1 = E1(0x8042_A18C); // the world map's point data
+const WM_PLAYER: E1 = E1(0x8042_A1A0); // daWmPlayer_c; +0xAC its position
+const WM_CAMERA: E1 = E1(0x8042_A3CC); // +0xF8 camera 0
 const POINTS: usize = 192;
 const POINT_SIZE: u32 = 0x54;
 
@@ -586,7 +587,7 @@ struct Points {
 /// The current sub-map's points: +4 the name, +0xC the position, +0x18 six
 /// links (pointers into the same table).
 fn map_points(sys: &System) -> Option<Points> {
-    let map = r32(sys, WM_MAP);
+    let map = r32(sys, WM_MAP.va());
     if !in_ram(map) {
         return None;
     }
@@ -644,7 +645,7 @@ impl Points {
 }
 
 fn player_pos(sys: &System) -> Option<[f32; 3]> {
-    let player = r32(sys, WM_PLAYER);
+    let player = r32(sys, WM_PLAYER.va());
     in_ram(player).then(|| [f32_at(sys, player + 0xAC), f32_at(sys, player + 0xB0), f32_at(sys, player + 0xB4)])
 }
 
@@ -652,7 +653,7 @@ fn player_pos(sys: &System) -> Option<[f32; 3]> {
 /// its 3x4 view matrix at +0, and its projection (a 4x4 at +0x30 when
 /// +0x70 has 0x80, else from the field of view at +0xAC and aspect +0xB0).
 fn project(sys: &System, p: [f32; 3]) -> Option<(f32, f32)> {
-    let cam = r32(sys, WM_CAMERA);
+    let cam = r32(sys, WM_CAMERA.va());
     if !in_ram(cam) {
         return None;
     }
@@ -951,11 +952,11 @@ fn grid_step(sys: &mut System, screen: Grid, target: u32) -> Step {
     let (settled, cursor) = match screen {
         Grid::FileSelect => {
             let Some(fs) = find(sys, PROFILE_FILE_SELECT) else { return Step::Done };
-            (r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT, r32(sys, fs + FILE_SELECT_CURSOR))
+            (r32(sys, fs + FILE_SELECT_STATE) == FILE_SELECT_WAIT.va(), r32(sys, fs + FILE_SELECT_CURSOR))
         }
         Grid::SelectPlayers => {
             let Some(sp) = find(sys, PROFILE_SELECT_PLAYERS) else { return Step::Done };
-            (r32(sys, sp + SELECT_PLAYERS_STATE) == SELECT_PLAYERS_SELECT, r32(sys, sp + SELECT_PLAYERS_CURSOR))
+            (r32(sys, sp + SELECT_PLAYERS_STATE) == SELECT_PLAYERS_SELECT.va(), r32(sys, sp + SELECT_PLAYERS_CURSOR))
         }
     };
     if !settled {

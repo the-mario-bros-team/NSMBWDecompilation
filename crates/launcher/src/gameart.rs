@@ -87,10 +87,26 @@ pub(crate) fn parse_tpl(data: &[u8]) -> Option<Picture> {
     (rgba.len() >= width * height * 4).then_some(Picture { width, height, rgba })
 }
 
+/// `file` in `game`; one in the USA disc's region folder (`files/US/`) is
+/// taken from the disc's own (`files/EU/`, `files/JP/`, ...) if it has that
+/// folder instead.
+pub(crate) fn in_region(game: &Path, file: &str) -> std::path::PathBuf {
+    let path = game.join(file);
+    if let Some(rest) = file.strip_prefix("files/US/").filter(|_| !path.exists()) {
+        for region in ["EU", "JP", "KR", "TW"] {
+            let other = game.join("files").join(region).join(rest);
+            if other.exists() {
+                return other;
+            }
+        }
+    }
+    path
+}
+
 /// The textures of `art`'s archive in `game` that it names: the one called
 /// `name` (or the largest), or all whose names start with `prefix`.
 fn read(game: &Path, art: &ArtRef, limit: usize) -> Vec<Picture> {
-    let Ok(data) = std::fs::read(game.join(&art.archive)) else { return Vec::new() };
+    let Ok(data) = std::fs::read(in_region(game, &art.archive)) else { return Vec::new() };
     let mut textures: Vec<(String, usize, usize)> = list_u8(&data).into_iter().filter(|f| f.0.to_ascii_lowercase().ends_with(".tpl")).collect();
     if !art.prefix.is_empty() {
         textures.retain(|f| f.0.starts_with(&art.prefix));

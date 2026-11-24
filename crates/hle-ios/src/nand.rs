@@ -35,7 +35,20 @@ pub fn ensure_system_files(root: &Path) -> std::io::Result<()> {
 
 /// `setting.txt`: `KEY=VALUE\r\n` lines in 0x100 bytes, XORed with a rotating key.
 fn setting_txt() -> Vec<u8> {
-    let text = "AREA=USA\r\nMODEL=RVL-001(USA)\r\nDVD=0\r\nMPCH=0x7FFE\r\nCODE=LU\r\nSERNO=000000000\r\nVIDEO=NTSC\r\nGAME=US\r\n";
+    setting_txt_for(b'E')
+}
+
+/// [`setting_txt`] of a console of the region a game ID's fourth letter
+/// names (E USA, P Europe, J Japan, K Korea, W Taiwan; others as USA).
+fn setting_txt_for(region: u8) -> Vec<u8> {
+    let (area, code, video, game) = match region {
+        b'P' => ("EUR", "LEH", "PAL", "EU"),
+        b'J' => ("JPN", "LJ", "NTSC", "JP"),
+        b'K' => ("KOR", "LKH", "NTSC", "KR"),
+        b'W' => ("TWN", "LT", "NTSC", "JP"),
+        _ => ("USA", "LU", "NTSC", "US"),
+    };
+    let text = format!("AREA={area}\r\nMODEL=RVL-001({area})\r\nDVD=0\r\nMPCH=0x7FFE\r\nCODE={code}\r\nSERNO=000000000\r\nVIDEO={video}\r\nGAME={game}\r\n");
     let mut out = vec![0u8; 0x100];
     out[..text.len()].copy_from_slice(text.as_bytes());
     let mut key: u32 = 0x73B5_DBFA;
@@ -265,8 +278,22 @@ pub fn set_widescreen(root: &Path, widescreen: bool) -> std::io::Result<()> {
     Ok(())
 }
 
-/// Sets the console's language in SYSCONF (`IPL.LNG`: 1 English, 3 French,
-/// 4 Spanish), which the game reads at boot.
+/// Makes the console's `setting.txt` say the region of the game whose title
+/// ID is `title_id` (its last letter), as a console that plays that disc
+/// would: the game reads its area and game region from it.
+pub fn set_region(root: &Path, title_id: u64) -> std::io::Result<()> {
+    ensure_system_files(root)?;
+    let path = root.join("title/00000001/00000002/data/setting.txt");
+    let want = setting_txt_for(title_id as u8);
+    if std::fs::read(&path).ok().as_deref() != Some(&want[..]) {
+        std::fs::write(&path, want)?;
+    }
+    Ok(())
+}
+
+/// Sets the console's language in SYSCONF (`IPL.LNG`: 0 Japanese, 1
+/// English, 2 German, 3 French, 4 Spanish, 5 Italian, 6 Dutch, 8
+/// Traditional Chinese, 9 Korean), which the game reads at boot.
 pub fn set_language(root: &Path, language: u8) -> std::io::Result<()> {
     ensure_system_files(root)?;
     let path = root.join("shared2/sys/SYSCONF");
@@ -295,6 +322,10 @@ mod tests {
             .collect();
         assert!(dec.starts_with(b"AREA=USA\r\n"));
         assert_eq!(enc.len(), 0x100);
+        let pal = setting_txt_for(b'P');
+        let mut key: u32 = 0x73B5_DBFA;
+        let dec: Vec<u8> = pal.iter().map(|b| { let d = b ^ key as u8; key = key.rotate_left(1); d }).collect();
+        assert!(dec.starts_with(b"AREA=EUR\r\nMODEL=RVL-001(EUR)\r\n"));
     }
 
     #[test]

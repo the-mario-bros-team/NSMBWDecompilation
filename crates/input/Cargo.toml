@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 hle-ios = { path = "../hle-ios" }
+game-version = { path = "../game-version" }
 winit = "0.30"
 # Controllers (`pads`): SDL 3 (zlib licence), built from source and linked
 # in, with only its joystick, HIDAPI, sensor and haptic parts. It reads

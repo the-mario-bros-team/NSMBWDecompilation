@@ -211,7 +211,7 @@ impl Settings {
                 s.volume[i] = n.clamp(0, 100) as u32;
             }
         }
-        if let Some(l) = t.get("language").and_then(toml::Value::as_str).filter(|l| ["en", "es", "fr"].contains(l)) {
+        if let Some(l) = t.get("language").and_then(toml::Value::as_str).filter(|l| ["en", "es", "fr", "de", "it"].contains(l)) {
             s.language = l.into();
         }
         s.no_time_limit = flag("no_time_limit", s.no_time_limit);
@@ -287,7 +287,7 @@ impl Settings {
              perf_size = {}\n\
              # Volumes in percent.\n\
              volume = {}\nmusic_volume = {}\nsound_volume = {}\nmenu_volume = {}\n\
-             # The game's language: \"en\", \"es\" or \"fr\" (the game reads it at boot).\n\
+             # The game's language: \"en\", \"es\" or \"fr\"; the European disc also has \"de\" and \"it\" (the game reads it at boot).\n\
              language = \"{}\"\n\
              # Gameplay options (the Settings window's Gameplay tab).\n\
              no_time_limit = {}\ninfinite_lives = {}\npower_up = {}\n\

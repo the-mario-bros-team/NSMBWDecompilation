@@ -22,15 +22,16 @@
 //! `NSMBW_LIGHTTEX=off` always runs the game's code.
 
 use guest_cpu::Cpu;
+use game_version::E1;
 use guest_mem::Mem;
 
-pub const DRAW_AND_CAPTURE: u32 = 0x802C_D4B0;
+pub const DRAW_AND_CAPTURE: E1 = E1(0x802C_D4B0);
 
 /// `EGG::Frustum::sGlobalOffset` .. `EGG::StateGX::s_optimize`. Not
 /// `EGG::TextureBuffer`'s list after it: the call borrows a scratch buffer
 /// to save and restore the EFB, which turns the list round every call, and
 /// which buffer it is makes no difference.
-const STATICS: (u32, u32) = (0x8042_AEC0, 0x8042_AF58);
+const STATICS: (E1, E1) = (E1(0x8042_AEC0), E1(0x8042_AF58));
 const MAX_BLOCK: u32 = 0x10000;
 /// What is hashed of an object without a heap header.
 const UNKNOWN_BLOCK: u32 = 0x100;
@@ -99,7 +100,8 @@ fn key(mem: &Mem, manager: u32, args: [u64; 4]) -> Option<u64> {
     for a in args {
         h = mix(h, &a.to_le_bytes());
     }
-    h = mix(h, mem.ram(STATICS.0, (STATICS.1 - STATICS.0) as usize)?);
+    let (from, to) = (STATICS.0.va(), STATICS.1.va());
+    h = mix(h, mem.ram(from, (to - from) as usize)?);
     hash_object(mem, manager, &mut h)?;
     let screen = read32(mem, manager + 0xC)?;
     hash_object(mem, screen, &mut h)?;

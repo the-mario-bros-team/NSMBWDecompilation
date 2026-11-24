@@ -17,22 +17,23 @@
 
 use guest_cpu::Cpu;
 use guest_mem::snap::{Snap, Snapshot};
+use game_version::E1;
 use guest_mem::Mem;
 
 /// `daPyMng_c::create(int, mVec3_c*, int, u8)`.
-const CREATE: u32 = 0x8005_EEE0;
+const CREATE: E1 = E1(0x8005_EEE0);
 const SDA: u32 = 0x8042_F680;
 /// The game mode: 0 in a course played normally, 2 in the title's demo.
-const GAME_MODE: u32 = SDA - 0x547C;
-const PLAYER_IDS: u32 = 0x8035_4E10;
-const IN_GAME: u32 = 0x8035_4E50;
-const CHARACTER: u32 = 0x8035_4E60;
-const CHAR_FLAGS: u32 = 0x8035_4E80;
+const GAME_MODE: E1 = E1(SDA - 0x547C);
+const PLAYER_IDS: E1 = E1(0x8035_4E10);
+const IN_GAME: E1 = E1(0x8035_4E50);
+const CHARACTER: E1 = E1(0x8035_4E60);
+const CHAR_FLAGS: E1 = E1(0x8035_4E80);
 const IN_BUBBLE: u32 = 4;
 /// `dRemoconMng_c`: per remote, a `dConnect_c` whose byte at +0x54 says the
 /// remote may stay connected; in a course the game disconnects any other
 /// remote that connects (`dConnect_c::executeState_Setup`).
-const REMOCON_MNG: u32 = SDA - 0x5658;
+const REMOCON_MNG: E1 = E1(SDA - 0x5658);
 const CONNECT_ALLOWED: u32 = 0x54;
 /// The stack frame given to the call: back chain, LR save word, `pos`.
 const FRAME: u32 = 0x20;
@@ -47,7 +48,7 @@ fn read32(mem: &Mem, a: u32) -> Option<u32> {
 /// (`setBalloonInNextgoto`: demo "none" 1, type 2), which stays where it
 /// is; calling this right after makes the joiner's bubble float to the
 /// others like a revived player's.
-const BALLOON_IN_DAMAGE: u32 = 0x8013_8E60;
+const BALLOON_IN_DAMAGE: E1 = E1(0x8013_8E60);
 
 /// A call made for a join, and what to put back when it returns.
 #[derive(Clone, Copy, Default)]
@@ -99,7 +100,7 @@ impl Joins {
                 self.call = Some(c);
                 cpu.gpr[3] = actor;
                 cpu.lr = cpu.pc;
-                cpu.pc = BALLOON_IN_DAMAGE;
+                cpu.pc = BALLOON_IN_DAMAGE.va();
                 return true;
             }
         }
@@ -117,26 +118,26 @@ impl Joins {
     /// Returns the slot if the CPU now runs `daPyMng_c::create`; that remote
     /// may then connect (the caller lets it page the Wii).
     pub fn start(&mut self, cpu: &mut Cpu, mem: &mut Mem, near: Option<[f32; 2]>) -> Option<usize> {
-        if self.pending.is_empty() || read32(mem, GAME_MODE) != Some(0) {
+        if self.pending.is_empty() || read32(mem, GAME_MODE.va()) != Some(0) {
             return None;
         }
         let Some([x, y]) = near else { return None };
         // Already in the game (joined on the map with Add/Drop Players, or
         // created at the course start): nothing to do.
-        self.pending.retain(|&s| read32(mem, IN_GAME + 4 * s as u32) == Some(0) && read32(mem, PLAYER_IDS + 4 * s as u32) == Some(0));
+        self.pending.retain(|&s| read32(mem, IN_GAME.va() + 4 * s as u32) == Some(0) && read32(mem, PLAYER_IDS.va() + 4 * s as u32) == Some(0));
         let Some(slot) = self.pending.first().copied() else { return None };
         self.pending.remove(0);
         // A character no player in the game has.
-        let taken: Vec<u32> = (0..4).filter(|&j| j != slot && read32(mem, IN_GAME + 4 * j as u32).is_some_and(|v| v != 0)).filter_map(|j| read32(mem, CHARACTER + 4 * j as u32)).collect();
-        let mine = read32(mem, CHARACTER + 4 * slot as u32).filter(|c| *c < 4 && !taken.contains(c));
+        let taken: Vec<u32> = (0..4).filter(|&j| j != slot && read32(mem, IN_GAME.va() + 4 * j as u32).is_some_and(|v| v != 0)).filter_map(|j| read32(mem, CHARACTER.va() + 4 * j as u32)).collect();
+        let mine = read32(mem, CHARACTER.va() + 4 * slot as u32).filter(|c| *c < 4 && !taken.contains(c));
         let Some(ch) = mine.or_else(|| (0..4).find(|c| !taken.contains(c))) else { return None };
-        let flags = read32(mem, CHAR_FLAGS + 4 * ch).unwrap_or(0);
+        let flags = read32(mem, CHAR_FLAGS.va() + 4 * ch).unwrap_or(0);
         let r1 = cpu.gpr[1];
         let sp = r1 - FRAME;
         let ok = [
-            mem.write_u32(IN_GAME + 4 * slot as u32, 1),
-            mem.write_u32(CHARACTER + 4 * slot as u32, ch),
-            mem.write_u32(CHAR_FLAGS + 4 * ch, flags | IN_BUBBLE),
+            mem.write_u32(IN_GAME.va() + 4 * slot as u32, 1),
+            mem.write_u32(CHARACTER.va() + 4 * slot as u32, ch),
+            mem.write_u32(CHAR_FLAGS.va() + 4 * ch, flags | IN_BUBBLE),
             mem.write_u32(sp, r1),
             mem.write_u32(sp + 8, x.to_bits()),
             mem.write_u32(sp + 12, crate::camera::zone_bottom(mem).map_or(y, |b| b - 64.0).to_bits()),
@@ -145,15 +146,15 @@ impl Joins {
         if ok.iter().any(Result::is_err) {
             return None;
         }
-        self.call = Some(Call { r1, r3: cpu.gpr[3], lr: cpu.lr, step: 0, slot: slot as u32, flags_at: CHAR_FLAGS + 4 * ch, flags });
+        self.call = Some(Call { r1, r3: cpu.gpr[3], lr: cpu.lr, step: 0, slot: slot as u32, flags_at: CHAR_FLAGS.va() + 4 * ch, flags });
         cpu.gpr[1] = sp;
         cpu.gpr[3] = slot as u32;
         cpu.gpr[4] = sp + 8;
         cpu.gpr[5] = 0;
         cpu.gpr[6] = 0;
         cpu.lr = cpu.pc;
-        cpu.pc = CREATE;
-        if let Some(c) = read32(mem, REMOCON_MNG).and_then(|m| read32(mem, m + 4 + 4 * slot as u32)).filter(|&c| c >= 0x8000_0000) {
+        cpu.pc = CREATE.va();
+        if let Some(c) = read32(mem, REMOCON_MNG.va()).and_then(|m| read32(mem, m + 4 + 4 * slot as u32)).filter(|&c| c >= 0x8000_0000) {
             let _ = mem.write_u8(c + CONNECT_ALLOWED, 1);
         }
         self.joined += 1;

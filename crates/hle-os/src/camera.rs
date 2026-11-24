@@ -19,19 +19,22 @@
 //! rooms, auto-scrolling zones and other camera modes keep the game's rules.
 
 use guest_mem::snap::{Snap, Snapshot};
+use game_version::E1;
 use guest_mem::Mem;
 
 /// `dBgGm_c::execute`: its first instruction and its only `blr`.
-pub const BG_EXECUTE: u32 = 0x8015_4F60;
-pub const BG_EXECUTE_END: u32 = 0x8015_6814;
+pub const BG_EXECUTE: E1 = E1(0x8015_4F60);
+pub const BG_EXECUTE_END: E1 = E1(0x8015_6814);
 
-/// `_SDA_BASE_` (r13) of this build.
+/// `_SDA_BASE_` (r13) of USA revision 1.
 const SDA: u32 = 0x8042_F680;
 /// `dBg_c::m_bg_p` and `dBgParameter_c::ms_Instance_p`.
-const BG_PTR: u32 = SDA - 0x58B0;
-const PARAM_PTR: u32 = SDA - 0x5880;
+const BG_PTR: E1 = E1(SDA - 0x58B0);
+const PARAM_PTR: E1 = E1(SDA - 0x5880);
 /// The camera's width at zoom 1 (408.7; 224 high).
-const BASE_W: u32 = SDA - 0x5594;
+const BASE_W: E1 = E1(SDA - 0x5594);
+/// The game mode: 0 in a course played normally, 2 in the title's demo.
+const GAME_MODE: E1 = E1(SDA - 0x547C);
 
 // `dBg_c` fields (y up).
 const BG_LEFT: u32 = 0x8FE88;
@@ -84,11 +87,11 @@ pub fn player_position(mem: &Mem, i: usize) -> Option<[f32; 2]> {
 
 /// Player `i`'s actor (see [`player_position`]).
 pub fn player_actor(mem: &Mem, i: usize) -> Option<u32> {
-    let id = read32(mem, 0x8035_4E10 + 4 * i as u32)?;
+    let id = read32(mem, E1(0x8035_4E10).va() + 4 * i as u32)?;
     if id == 0 {
         return None;
     }
-    let mut node = read32(mem, 0x8037_7A70 + 8 * (id & 7))?;
+    let mut node = read32(mem, E1(0x8037_7A70).va() + 8 * (id & 7))?;
     for _ in 0..10_000 {
         if node == 0 {
             return None;
@@ -108,7 +111,7 @@ pub fn player_actor(mem: &Mem, i: usize) -> Option<u32> {
 /// placed by the camera, so the box must not follow it.
 pub fn followed_players(mem: &Mem) -> Vec<[f32; 2]> {
     (0..4)
-        .filter(|&i| read32(mem, 0x8035_4E50 + 4 * i as u32).is_some_and(|v| v != 0))
+        .filter(|&i| read32(mem, E1(0x8035_4E50).va() + 4 * i as u32).is_some_and(|v| v != 0))
         .filter_map(|i| {
             let base = player_actor(mem, i)?;
             (mem.ram(base + 0x153C, 1)?[0] != 1).then(|| player_position(mem, i)).flatten()
@@ -119,7 +122,7 @@ pub fn followed_players(mem: &Mem) -> Vec<[f32; 2]> {
 /// The bottom of the current zone (y up), where a player waiting to come
 /// back in a bubble is out of sight.
 pub fn zone_bottom(mem: &Mem) -> Option<f32> {
-    let bg = read32(mem, BG_PTR).filter(|&p| p >= 0x8000_0000)?;
+    let bg = read32(mem, BG_PTR.va()).filter(|&p| p >= 0x8000_0000)?;
     readf(mem, bg + ZONE[3])
 }
 
@@ -172,7 +175,7 @@ impl Rect {
 /// The `dBg_c` pointer and its zone's bounds (bits), which change when a
 /// scene or zone is set up.
 fn scene_key(mem: &Mem) -> Option<[u32; 5]> {
-    let bg = read32(mem, BG_PTR)?;
+    let bg = read32(mem, BG_PTR.va())?;
     Some([bg, read32(mem, bg + ZONE[0])?, read32(mem, bg + ZONE[1])?, read32(mem, bg + ZONE[2])?, read32(mem, bg + ZONE[3])?])
 }
 
@@ -236,7 +239,7 @@ impl SharedCamera {
     pub fn apply(&mut self, mem: &mut Mem) {
         self.ran = true;
         self.views = [None; 4];
-        let (Some(bg), Some(param)) = (read32(mem, BG_PTR).filter(|&p| p >= 0x8000_0000), read32(mem, PARAM_PTR).filter(|&p| p >= 0x8000_0000)) else { return };
+        let (Some(bg), Some(param)) = (read32(mem, BG_PTR.va()).filter(|&p| p >= 0x8000_0000), read32(mem, PARAM_PTR.va()).filter(|&p| p >= 0x8000_0000)) else { return };
         let Some(own) = bg_camera(mem, bg) else { return };
         // What the game draws with when there is no box (in a multiplayer
         // course `dBg_c`'s rectangle can lag behind it).
@@ -256,7 +259,7 @@ impl SharedCamera {
         let size = Rect { w: own.w, h: own.h, ..live };
         // Players' windows only in a course played normally: the title's
         // demo has four players of its own, shown as the game shows them.
-        if read32(mem, SDA - 0x547C) == Some(0) {
+        if read32(mem, GAME_MODE.va()) == Some(0) {
             self.views = std::array::from_fn(|p| self.view_for(mem, p, size, drawn, area));
         }
     }
@@ -267,7 +270,7 @@ impl SharedCamera {
     fn shared_box(&self, mem: &Mem, bg: u32, own: Rect, players: &[[f32; 2]]) -> Option<Rect> {
         // Two players or more, in a course played normally (not the title's
         // demo, mode 2).
-        if players.len() < 2 || read32(mem, SDA - 0x547C) != Some(0) {
+        if players.len() < 2 || read32(mem, GAME_MODE.va()) != Some(0) {
             return None;
         }
         let byte = |o: u32| mem.ram(bg + o, 1).map(|b| b[0]);
@@ -291,7 +294,7 @@ impl SharedCamera {
     /// (size = base ÷ zoom) agrees with the width and the height and the
     /// game draws it without stretching.
     fn write_box(&mut self, mem: &mut Mem, bg: u32, param: u32, b: Rect) {
-        let Some(base_w) = readf(mem, BASE_W) else { return };
+        let Some(base_w) = readf(mem, BASE_W.va()) else { return };
         let Some(scene) = scene_key(mem) else { return };
         self.saved_scene = scene;
         // The zoom of the box, and an activity screen that covers it.

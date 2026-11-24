@@ -22,6 +22,7 @@
 //! biquad), and added to the buses its mixer-control word selects, with
 //! per-sample volume ramps.
 
+use game_version::E1;
 use guest_mem::Mem;
 
 /// Samples per frame (3 ms at 32 kHz).
@@ -282,37 +283,40 @@ struct VoiceTags {
     /// The sound archive player's sound players and their count.
     players: u32,
     player_count: u32,
+    /// The callbacks below, at the running version's addresses.
+    callbacks: [u32; 6],
 }
 
 impl VoiceTags {
-    const AX_PB: u32 = 0x8042_A608;
-    const AX_VPB: u32 = 0x8042_A610;
-    const AX_MAX_VOICES: u32 = 0x8042_A614;
+    const AX_PB: E1 = E1(0x8042_A608);
+    const AX_VPB: E1 = E1(0x8042_A610);
+    const AX_MAX_VOICES: E1 = E1(0x8042_A614);
     const PB_SIZE: u32 = 0x140;
     const VPB_SIZE: u32 = 0x168;
     /// `AxVoice::VoiceCallback` (VPB +0x10; +0x14 the AxVoice).
-    const AX_VOICE_CALLBACK: u32 = 0x8026_26F0;
+    const AX_VOICE_CALLBACK: E1 = E1(0x8026_26F0);
     /// `Voice::AxVoiceCallbackFunc` (AxVoice +0x38; +0x3C the Voice).
-    const VOICE_AX_CALLBACK: u32 = 0x8028_1EF0;
+    const VOICE_AX_CALLBACK: E1 = E1(0x8028_1EF0);
     /// The Voice's player callback (+0x94; +0x98 its data).
-    const STRM_VOICE_CALLBACK: u32 = 0x8027_EEF0;
-    const CHANNEL_VOICE_CALLBACK: u32 = 0x8026_8910;
+    const STRM_VOICE_CALLBACK: E1 = E1(0x8027_EEF0);
+    const CHANNEL_VOICE_CALLBACK: E1 = E1(0x8026_8910);
     /// The Channel's callback (+0xC0; +0xC4 its data).
-    const WSD_CHANNEL_CALLBACK: u32 = 0x8028_5500;
-    const SEQ_CHANNEL_CALLBACK: u32 = 0x8027_3B50;
+    const WSD_CHANNEL_CALLBACK: E1 = E1(0x8028_5500);
+    const SEQ_CHANNEL_CALLBACK: E1 = E1(0x8027_3B50);
     /// `SndAudioMgr::sInstance`; +0x5BC its SoundArchivePlayer, whose +0x3C
     /// is the sound-player count and +0x40 the array (0x64 bytes each).
-    const SND_AUDIO_MGR: u32 = 0x8042_A488;
+    const SND_AUDIO_MGR: E1 = E1(0x8042_A488);
     /// Players 16-21 play music (`PLAYER_BGM_*`).
     const MUSIC_PLAYERS: std::ops::RangeInclusive<u32> = 16..=21;
 
     fn read(mem: &Mem) -> Option<Self> {
-        let manager = r32(mem, Self::SND_AUDIO_MGR);
+        let manager = r32(mem, Self::SND_AUDIO_MGR.va());
         let archive = if manager == 0 { 0 } else { r32(mem, manager + 0x5BC) };
         if archive == 0 {
             return None;
         }
-        let tags = Self { pbs: r32(mem, Self::AX_PB), vpbs: r32(mem, Self::AX_VPB), count: r32(mem, Self::AX_MAX_VOICES).min(MAX_VOICES as u32), players: r32(mem, archive + 0x40), player_count: r32(mem, archive + 0x3C) };
+        let callbacks = [Self::AX_VOICE_CALLBACK, Self::VOICE_AX_CALLBACK, Self::STRM_VOICE_CALLBACK, Self::CHANNEL_VOICE_CALLBACK, Self::WSD_CHANNEL_CALLBACK, Self::SEQ_CHANNEL_CALLBACK].map(E1::va);
+        let tags = Self { pbs: r32(mem, Self::AX_PB.va()), vpbs: r32(mem, Self::AX_VPB.va()), count: r32(mem, Self::AX_MAX_VOICES.va()).min(MAX_VOICES as u32), players: r32(mem, archive + 0x40), player_count: r32(mem, archive + 0x3C), callbacks };
         (archive != 0 && tags.vpbs != 0 && tags.players != 0).then_some(tags)
     }
 
@@ -339,11 +343,12 @@ impl VoiceTags {
     /// The sound playing on the voice at `vpb`: its id and sound player.
     fn owner(&self, mem: &Mem, vpb: u32) -> Option<(u32, u32)> {
         let nonzero = |v: u32| (v != 0).then_some(v);
-        if r32(mem, vpb + 0x10) != Self::AX_VOICE_CALLBACK {
+        let [ax_voice_callback, voice_ax_callback, strm, channel, wsd, seq] = self.callbacks;
+        if r32(mem, vpb + 0x10) != ax_voice_callback {
             return None;
         }
         let ax_voice = nonzero(r32(mem, vpb + 0x14))?;
-        if r32(mem, ax_voice + 0x38) != Self::VOICE_AX_CALLBACK {
+        if r32(mem, ax_voice + 0x38) != voice_ax_callback {
             return None;
         }
         let voice = nonzero(r32(mem, ax_voice + 0x3C))?;
@@ -351,16 +356,16 @@ impl VoiceTags {
         let player_object = match callback {
             // The data is one of the StrmPlayer's channels (+0xB58, 0x38
             // each, +4 the Voice): the one whose player then checks out.
-            Self::STRM_VOICE_CALLBACK => {
+            _ if callback == strm => {
                 return (0..8u32).find_map(|channel| {
                     let player = data.checked_sub(0xB58 + channel * 0x38)?;
                     let channels = r32(mem, player + 0x80C);
                     (channel < channels && channels <= 8 && r32(mem, data + 4) == voice).then(|| self.sound_of(mem, player)).flatten()
                 });
             }
-            Self::CHANNEL_VOICE_CALLBACK => match r32(mem, data + 0xC0) {
-                Self::WSD_CHANNEL_CALLBACK => r32(mem, data + 0xC4),
-                Self::SEQ_CHANNEL_CALLBACK => r32(mem, r32(mem, data + 0xC4) + 0xC4),
+            _ if callback == channel => match r32(mem, data + 0xC0) {
+                c if c == wsd => r32(mem, data + 0xC4),
+                c if c == seq => r32(mem, r32(mem, data + 0xC4) + 0xC4),
                 _ => return None,
             },
             _ => return None,

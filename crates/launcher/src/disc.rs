@@ -195,13 +195,15 @@ mod tests {
         assert_eq!(judge(&usa, original, &all), Ok(()));
         assert!(judge(&usa, newer, &all).unwrap_err().contains("That is New Super Mario Bros. Wii"));
 
-        // Another revision, another region, another game.
+        // The European disc too; another revision, region or game not.
+        fake_disc(&dir.join("pal"), b"SMNP01", 1);
+        assert_eq!(judge(&identify(&dir.join("pal")).unwrap(), original, &all), Ok(()));
         fake_disc(&dir.join("rev2"), b"SMNE01", 2);
         let e = judge(&identify(&dir.join("rev2")).unwrap(), original, &all).unwrap_err();
-        assert!(e.contains("revision 2") && e.contains("needs SMNE01 revision 1"), "{e}");
-        fake_disc(&dir.join("pal"), b"SMNP01", 1);
-        let e = judge(&identify(&dir.join("pal")).unwrap(), original, &all).unwrap_err();
-        assert!(e.contains("SMNP01, Europe, revision 1, not New Super Mario Bros. Wii"), "{e}");
+        assert!(e.contains("revision 2") && e.contains("needs SMNE01 revision 1 or SMNP01 revision 1"), "{e}");
+        fake_disc(&dir.join("china"), b"SMNC01", 1);
+        let e = judge(&identify(&dir.join("china")).unwrap(), original, &all).unwrap_err();
+        assert!(e.contains("SMNC01, China, revision 1, not New Super Mario Bros. Wii"), "{e}");
         fake_disc(&dir.join("kart"), b"RMCE01", 0);
         assert!(judge(&identify(&dir.join("kart")).unwrap(), original, &all).is_err());
 

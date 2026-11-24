@@ -3,8 +3,8 @@
 //! which `game-recomp` compiles into the port.
 //!
 //! ```text
-//! ppc-recomp --ram <image> --map <MAP.txt> --profile <file>... [--p1-character] [--out <dir>]
-//! ppc-recomp --empty [--out <dir>]
+//! ppc-recomp [--version <V>] --ram <image> --map <MAP.txt> --profile <file>... [--p1-character] [--out <dir>]
+//! ppc-recomp [--version <V>] --empty [--out <dir>]
 //! ```
 //!
 //! `--max <n>` keeps only the first n functions (for quick test builds).
@@ -12,6 +12,10 @@
 //! ```text
 //! ```
 //!
+//! - `--version`: the game version the image is of (`E1`, USA revision 1,
+//!   by default; `P1`, `K`, ... as `game_version::Version` names them). Its
+//!   code goes to `gen/` for E1 and `gen/<version>/` (lower case) for the
+//!   others, and is made for that version's hooks.
 //! - `--ram`: MEM1 then MEM2, from the port's `--dump-ram` (taken once the
 //!   game's REL modules are linked, so their code is in place).
 //! - `--map`: one `<address> <name>` per line, every function start (the
@@ -555,29 +559,45 @@ fn main() {
 
 fn run() -> Result<(), String> {
     let mut args = std::env::args().skip(1);
-    let (mut ram, mut map, mut profiles, mut out, mut empty, mut max, mut p1) = (None, None, Vec::new(), PathBuf::from("crates/game-recomp/gen"), false, usize::MAX, false);
+    let (mut ram, mut map, mut profiles, mut out, mut empty, mut max, mut p1) = (None, None, Vec::new(), None, false, usize::MAX, false);
+    let mut version = game_version::Version::E1;
     while let Some(a) = args.next() {
         let mut val = |n: &str| args.next().ok_or(format!("{n} needs a value"));
         match a.as_str() {
             "--ram" => ram = Some(PathBuf::from(val("--ram")?)),
             "--map" => map = Some(PathBuf::from(val("--map")?)),
             "--profile" => profiles.push(PathBuf::from(val("--profile")?)),
-            "--out" => out = PathBuf::from(val("--out")?),
+            "--out" => out = Some(PathBuf::from(val("--out")?)),
             "--empty" => empty = true,
             "--p1-character" => p1 = true,
             "--max" => max = val("--max")?.parse().map_err(|_| "--max: not a number")?,
+            "--version" => {
+                let v = val("--version")?;
+                version = game_version::Version::from_name(&v).ok_or(format!("--version: no version {v}"))?;
+            }
             _ => return Err(format!("unknown argument {a}")),
         }
     }
+    let out = out.unwrap_or_else(|| {
+        let gen = PathBuf::from("crates/game-recomp/gen");
+        if version == game_version::Version::E1 {
+            gen
+        } else {
+            gen.join(version.name().to_lowercase())
+        }
+    });
+    // Each other version's functions are in a module of the shard crates.
+    let module = if version == game_version::Version::E1 { String::new() } else { format!("{}::", version.name().to_lowercase()) };
     std::fs::create_dir_all(&out).map_err(|e| format!("{}: {e}", out.display()))?;
-    let special: BTreeSet<u32> = hle_os::SPECIAL.iter().copied().collect();
+    game_version::set(version);
+    let special: BTreeSet<u32> = hle_os::special().into_iter().collect();
     if empty {
-        return write_all(&out, &special, &[], &[], &vec![String::new(); SHARDS]);
+        return write_all(&out, &module, &special, &[], &[], &vec![String::new(); SHARDS]);
     }
     let mut ram = Ram(std::fs::read(ram.ok_or("--ram is required")?).map_err(|e| format!("RAM image: {e}"))?);
     let mut entries = Vec::new();
     if p1 {
-        let (writes, returns) = hle_os::p1_character::writes();
+        let (writes, returns) = hle_os::p1_character::writes_for(version);
         for w in &writes {
             for (i, &b) in w.bytes.iter().enumerate() {
                 ram.put(w.addr + i as u32, b);
@@ -642,12 +662,12 @@ fn run() -> Result<(), String> {
         let _ = writeln!(body, "pub static E_{:08x}: [u32; {}] = [{}];", f.start, es.len(), es.join(","));
         g.function(f, i, body);
     }
-    write_all(&out, &special, &funcs, &shard_of, &bodies)?;
+    write_all(&out, &module, &special, &funcs, &shard_of, &bodies)?;
     Ok(())
 }
 
 /// `mod.rs` (the function table and the hook list) and the shard files.
-fn write_all(out: &std::path::Path, special: &BTreeSet<u32>, funcs: &[Func], shard_of: &[usize], bodies: &[String]) -> Result<(), String> {
+fn write_all(out: &std::path::Path, module: &str, special: &BTreeSet<u32>, funcs: &[Func], shard_of: &[usize], bodies: &[String]) -> Result<(), String> {
     let write = |name: &str, text: &str| {
         let path = out.join(name);
         std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))
@@ -664,7 +684,7 @@ fn write_all(out: &std::path::Path, special: &BTreeSet<u32>, funcs: &[Func], sha
     let _ = writeln!(m, "/// The hook addresses this code was generated for.\npub const SPECIAL: &[u32] = &[{}];\n", list.join(", "));
     let _ = writeln!(m, "pub static FUNCTIONS: [FnInfo; {}] = [", funcs.len());
     for (f, &sh) in funcs.iter().zip(shard_of) {
-        let _ = writeln!(m, "    FnInfo {{ start: {0:#010x}, words: &recomp_s{1:02}::W_{0:08x}, entries: &recomp_s{1:02}::E_{0:08x}, f: recomp_s{1:02}::f_{0:08x} }},", f.start, sh);
+        let _ = writeln!(m, "    FnInfo {{ start: {0:#010x}, words: &recomp_s{1:02}::{2}W_{0:08x}, entries: &recomp_s{1:02}::{2}E_{0:08x}, f: recomp_s{1:02}::{2}f_{0:08x} }},", f.start, sh, module);
     }
     m.push_str("];\n");
     write("mod.rs", &m)

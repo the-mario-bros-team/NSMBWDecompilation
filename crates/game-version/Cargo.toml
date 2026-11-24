@@ -1,0 +1,7 @@
+[package]
+name = "game-version"
+version = "0.1.0"
+edition = "2021"
+description = "Which New Super Mario Bros. Wii disc runs, and its addresses for the USA revision 1 ones the port names"
+
+[dependencies]

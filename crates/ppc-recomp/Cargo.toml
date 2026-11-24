@@ -7,3 +7,4 @@ description = "Writes Rust for the guest functions a run executed (docs/PORT_PLA
 [dependencies]
 guest-cpu = { path = "../guest-cpu" }
 hle-os = { path = "../hle-os" }
+game-version = { path = "../game-version" }

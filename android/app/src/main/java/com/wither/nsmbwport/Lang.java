@@ -11,8 +11,8 @@ import java.util.Map;
 /**
  * The start menu's language, and the game's (the Wii's language in its SYSCONF, set at each start:
  * wiiLanguage). From NSMB-Wii-Recompilation's app, where it is the game's own Language setting. The USA disc's three languages, and
- * Italian, whose game text comes from a language pack (LauncherActivity.languagePack); English is the
- * default. Text is looked up by its English wording.
+ * Italian, whose game text comes from a language pack (LauncherActivity.languagePack) or, on the European
+ * disc, from the disc; English is the default. Text is looked up by its English wording.
  */
 final class Lang {
     static final String[] CODES = {"en", "es", "fr", "it"};
@@ -20,6 +20,8 @@ final class Lang {
     static final String[] NAMES = {"English", "Español", "Français", "Italiano"};
 
     private static int current;
+    /** The imported disc is the European one, which has Italian text (and German) of its own. */
+    private static boolean european;
     private static final Map<String, String[]> TABLE = new HashMap<>();
 
     private Lang() {}
@@ -27,12 +29,13 @@ final class Lang {
     /** Reads the game's language; call before building any text. */
     static void load(Context context) {
         current = Math.max(0, Arrays.asList(CODES).indexOf(new AppSettings(context).language()));
+        european = GameFiles.region(GameFiles.gameDir(context)) == 'P';
     }
 
     static int index() { return current; }
 
     /** Whether the disc has this language's text (the others need a language pack). */
-    static boolean onDisc(int index) { return index < 3; }
+    static boolean onDisc(int index) { return index < 3 || (european && CODES[index].equals("it")); }
 
     /** Sets the game's language (it applies the next time the game starts) and the start menu's. */
     static void set(Context context, int index) {
@@ -42,12 +45,14 @@ final class Lang {
 
     /**
      * The Wii's language code (SYSCONF IPL.LNG) for the game: 1 English, 3 French, 4 Spanish, the
-     * USA disc's three. Italian menus keep the game in English (its text would need a language pack).
+     * USA disc's three, and 5 Italian on the European disc. Otherwise Italian menus keep the game in
+     * English (its text would need a language pack).
      */
     static int wiiLanguage() {
         switch (CODES[current]) {
             case "fr": return 3;
             case "es": return 4;
+            case "it": return european ? 5 : 1;
             default: return 1;
         }
     }
@@ -170,7 +175,8 @@ final class Lang {
                 + "3. Copy that folder (or a zip of it) to this phone.\n"
                 + "4. Tap Import from Extracted Game Data Folder… or Import Game Data Zip… below and "
                 + "choose it.\n\n"
-                + "Use the USA disc, revision 1 (SMNE01): Dolphin shows the revision under Properties > Info.",
+                + "Use the USA (SMNE01) or European (SMNP01) disc, revision 1: Dolphin shows the revision under "
+                + "Properties > Info.",
                 "1. En Dolphin, en una computadora, haz clic derecho en New Super Mario Bros. Wii y elige "
                 + "Propiedades.\n"
                 + "2. Abre Sistema de archivos, haz clic derecho en el disco de arriba y elige Extraer disco "
@@ -178,8 +184,8 @@ final class Lang {
                 + "3. Copia esa carpeta (o un zip de ella) a este teléfono.\n"
                 + "4. Toca Importar desde la carpeta de datos extraídos… o Importar zip de datos del "
                 + "juego… abajo y elígela.\n\n"
-                + "Usa el disco de EE. UU., revisión 1 (SMNE01): Dolphin muestra la revisión en Propiedades > "
-                + "Información.",
+                + "Usa el disco de EE. UU. (SMNE01) o el europeo (SMNP01), revisión 1: Dolphin muestra la "
+                + "revisión en Propiedades > Información.",
                 "1. Dans Dolphin sur un ordinateur, faites un clic droit sur New Super Mario Bros. Wii et "
                 + "choisissez Propriétés.\n"
                 + "2. Ouvrez Système de fichiers, faites un clic droit sur le disque en haut et choisissez "
@@ -187,15 +193,18 @@ final class Lang {
                 + "3. Copiez ce dossier (ou un zip de celui-ci) sur ce téléphone.\n"
                 + "4. Touchez Importer depuis le dossier de données extrait… ou Importer un zip des "
                 + "données du jeu… ci-dessous et choisissez-le.\n\n"
-                + "Utilisez le disque américain, révision 1 (SMNE01) : Dolphin affiche la révision dans "
+                + "Utilisez le disque américain (SMNE01) ou européen (SMNP01), révision 1 : Dolphin affiche la révision dans "
                 + "Propriétés > Infos.");
-        put("Import your own New Super Mario Bros. Wii (USA, SMNE01) once. Easiest: the folder Dolphin's "
+        put("Import your own New Super Mario Bros. Wii (USA, SMNE01, or Europe, SMNP01) once. Easiest: the "
+                + "folder Dolphin's "
                 + "Extract Entire Disc makes (DATA, or the folder that holds it), or a zip of that folder. "
                 + "Your saves are kept.",
-                "Importa tu propio New Super Mario Bros. Wii (EE. UU., SMNE01) una vez. Lo más fácil: la "
+                "Importa tu propio New Super Mario Bros. Wii (EE. UU., SMNE01, o Europa, SMNP01) una vez. Lo "
+                + "más fácil: la "
                 + "carpeta que crea Extraer disco completo de Dolphin (DATA, o la carpeta que la contiene), o "
                 + "un zip de esa carpeta. Tus partidas se conservan.",
-                "Importez une fois votre propre New Super Mario Bros. Wii (USA, SMNE01). Le plus simple : le "
+                "Importez une fois votre propre New Super Mario Bros. Wii (USA, SMNE01, ou Europe, SMNP01). Le "
+                + "plus simple : le "
                 + "dossier créé par Extraire le disque entier de Dolphin (DATA, ou le dossier qui le contient), "
                 + "ou un zip de ce dossier. Vos sauvegardes sont conservées.");
         put("Import from Extracted Game Data Folder…", "Importar desde la carpeta de datos extraídos…",
@@ -282,16 +291,19 @@ final class Lang {
         put("Getting Started", "Primeros pasos", "Premiers pas");
         put("1. Import New Super Mario Bros. Wii", "1. Importa New Super Mario Bros. Wii",
                 "1. Importer New Super Mario Bros. Wii");
-        put("Use your own USA New Super Mario Bros. Wii (SMNE01, revision 1). Easiest: in Dolphin on a "
+        put("Use your own New Super Mario Bros. Wii for the USA (SMNE01) or Europe (SMNP01), revision 1. "
+                + "Easiest: in Dolphin on a "
                 + "computer, right-click the game, choose Properties, Filesystem, then right-click the disc and "
                 + "choose Extract Entire Disc. Copy that folder (or a zip of it) to this phone and tap Import. "
                 + "Dolphin shows the revision under Properties > Info.",
-                "Usa tu propio New Super Mario Bros. Wii de EE. UU. (SMNE01, revisión 1). Lo más fácil: en "
+                "Usa tu propio New Super Mario Bros. Wii de EE. UU. (SMNE01) o de Europa (SMNP01), revisión 1. "
+                + "Lo más fácil: en "
                 + "Dolphin, en una computadora, haz clic derecho en el juego, elige Propiedades, Sistema de "
                 + "archivos, luego haz clic derecho en el disco y elige Extraer disco completo. Copia esa "
                 + "carpeta (o un zip de ella) a este teléfono y toca Importar. Dolphin muestra la revisión en "
                 + "Propiedades > Información.",
-                "Utilisez votre propre New Super Mario Bros. Wii américain (SMNE01, révision 1). Le plus "
+                "Utilisez votre propre New Super Mario Bros. Wii américain (SMNE01) ou européen (SMNP01), "
+                + "révision 1. Le plus "
                 + "simple : dans Dolphin sur un ordinateur, faites un clic droit sur le jeu, choisissez "
                 + "Propriétés, Système de fichiers, puis faites un clic droit sur le disque et choisissez "
                 + "Extraire le disque entier. Copiez ce dossier (ou un zip de celui-ci) sur ce téléphone et "
@@ -347,12 +359,12 @@ final class Lang {
         put("Its sys/boot.bin is too short, so the game can't be identified.",
                 "Su sys/boot.bin es demasiado corto, así que no se puede identificar el juego.",
                 "Son sys/boot.bin est trop court, le jeu ne peut donc pas être identifié.");
-        put("That is %s, not New Super Mario Bros. Wii for the USA (SMNE01). This port runs only the USA disc, "
-                + "revision 1.",
-                "Eso es %s, no New Super Mario Bros. Wii de EE. UU. (SMNE01). Este port solo funciona con el "
-                + "disco de EE. UU., revisión 1.",
-                "C'est %s, pas New Super Mario Bros. Wii américain (SMNE01). Ce portage ne fonctionne qu'avec "
-                + "le disque américain, révision 1.");
+        put("That is %s, not New Super Mario Bros. Wii for the USA (SMNE01) or Europe (SMNP01). This port "
+                + "runs those discs, revision 1.",
+                "Eso es %s, no New Super Mario Bros. Wii de EE. UU. (SMNE01) ni de Europa (SMNP01). Este port "
+                + "funciona con esos discos, revisión 1.",
+                "C'est %s, pas New Super Mario Bros. Wii américain (SMNE01) ni européen (SMNP01). Ce portage "
+                + "fonctionne avec ces disques, révision 1.");
         put("That is New Super Mario Bros. Wii revision %d. This port runs only revision 1 (Dolphin shows it "
                 + "under Properties > Info).",
                 "Eso es New Super Mario Bros. Wii revisión %d. Este port solo funciona con la revisión 1 "
@@ -772,18 +784,22 @@ final class Lang {
                 + "3. Copy that folder (or a zip of it) to this phone.\n"
                 + "4. Tap Import from Extracted Game Data Folder… or Import Game Data Zip… below and "
                 + "choose it.\n\n"
-                + "Use the USA disc, revision 1 (SMNE01): Dolphin shows the revision under Properties > Info.",
+                + "Use the USA (SMNE01) or European (SMNP01) disc, revision 1: Dolphin shows the revision under "
+                + "Properties > Info.",
                 "1. In Dolphin su un computer, fai clic destro su New Super Mario Bros. Wii e scegli "
                 + "Proprietà.\n"
                 + "2. Apri Filesystem, fai clic destro sul disco in alto e scegli Estrai intero disco.\n"
                 + "3. Copia quella cartella (o un suo zip) su questo telefono.\n"
                 + "4. Tocca Importa dalla cartella dei dati estratti… o Importa zip dei dati del gioco… qui "
                 + "sotto e sceglila.\n\n"
-                + "Usa il disco USA, revisione 1 (SMNE01): Dolphin mostra la revisione in Proprietà > Info.");
-        it("Import your own New Super Mario Bros. Wii (USA, SMNE01) once. Easiest: the folder Dolphin's "
+                + "Usa il disco USA (SMNE01) o europeo (SMNP01), revisione 1: Dolphin mostra la revisione in "
+                + "Proprietà > Info.");
+        it("Import your own New Super Mario Bros. Wii (USA, SMNE01, or Europe, SMNP01) once. Easiest: the "
+                + "folder Dolphin's "
                 + "Extract Entire Disc makes (DATA, or the folder that holds it), or a zip of that folder. "
                 + "Your saves are kept.",
-                "Importa una volta il tuo New Super Mario Bros. Wii (USA, SMNE01). Il modo più semplice: la "
+                "Importa una volta il tuo New Super Mario Bros. Wii (USA, SMNE01, o Europa, SMNP01). Il modo "
+                + "più semplice: la "
                 + "cartella creata da Estrai intero disco di Dolphin (DATA, o la cartella che la contiene), "
                 + "o uno zip di quella cartella. I salvataggi vengono mantenuti.");
         it("Import from Extracted Game Data Folder…", "Importa dalla cartella dei dati estratti…");
@@ -843,11 +859,13 @@ final class Lang {
 
         it("Getting Started", "Primi passi");
         it("1. Import New Super Mario Bros. Wii", "1. Importa New Super Mario Bros. Wii");
-        it("Use your own USA New Super Mario Bros. Wii (SMNE01, revision 1). Easiest: in Dolphin on a "
+        it("Use your own New Super Mario Bros. Wii for the USA (SMNE01) or Europe (SMNP01), revision 1. "
+                + "Easiest: in Dolphin on a "
                 + "computer, right-click the game, choose Properties, Filesystem, then right-click the disc and "
                 + "choose Extract Entire Disc. Copy that folder (or a zip of it) to this phone and tap Import. "
                 + "Dolphin shows the revision under Properties > Info.",
-                "Usa il tuo New Super Mario Bros. Wii USA (SMNE01, revisione 1). Il modo più semplice: in "
+                "Usa il tuo New Super Mario Bros. Wii USA (SMNE01) o europeo (SMNP01), revisione 1. Il modo più "
+                + "semplice: in "
                 + "Dolphin su un computer, fai clic destro sul gioco, scegli Proprietà, Filesystem, poi fai "
                 + "clic destro sul disco e scegli Estrai intero disco. Copia quella cartella (o un suo zip) "
                 + "su questo telefono e tocca Importa. Dolphin mostra la revisione in Proprietà > Info.");
@@ -884,10 +902,10 @@ final class Lang {
                 + "identificato.");
         it("Its sys/boot.bin is too short, so the game can't be identified.",
                 "Il suo sys/boot.bin è troppo corto, quindi il gioco non può essere identificato.");
-        it("That is %s, not New Super Mario Bros. Wii for the USA (SMNE01). This port runs only the USA disc, "
-                + "revision 1.",
-                "Questo è %s, non New Super Mario Bros. Wii USA (SMNE01). Questo port funziona solo con il "
-                + "disco USA, revisione 1.");
+        it("That is %s, not New Super Mario Bros. Wii for the USA (SMNE01) or Europe (SMNP01). This port "
+                + "runs those discs, revision 1.",
+                "Questo è %s, non New Super Mario Bros. Wii USA (SMNE01) o europeo (SMNP01). Questo port "
+                + "funziona con quei dischi, revisione 1.");
         it("That is New Super Mario Bros. Wii revision %d. This port runs only revision 1 (Dolphin shows it "
                 + "under Properties > Info).",
                 "Questo è New Super Mario Bros. Wii revisione %d. Questo port funziona solo con la revisione 1 "

@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
  * The player's own extracted game, imported into the app's storage (files/game): checking it, and
  * importing the folder Dolphin's Extract Entire Disc makes, or a zip of it, through the system's file
  * picker. From NSMB-Wii-Recompilation's app (AppFiles and the start menu's import), for this port,
- * which runs the same disc: the USA one (SMNE01), revision 1.
+ * which runs the USA disc (SMNE01) and the European one (SMNP01), revision 1.
  */
 final class GameFiles {
     private GameFiles() {}
@@ -78,14 +78,16 @@ final class GameFiles {
      * original's code): each is the original's LZ file or, decompressed, the original's .rel.
      */
     private static final String[] MODULES = {"d_profileNP", "d_basesNP", "d_enemiesNP", "d_en_bossNP"};
-    private static final long[] MODULE_LZ_SIZES = {8791, 1190805, 779805, 229984};
-    private static final long[] MODULE_REL_SIZES = {24244, 3019336, 2137424, 605552};
+    /** The USA disc's (E) and the European disc's (P), by its game ID's fourth letter. */
+    private static final long[][] MODULE_LZ_SIZES = {{8791, 1190805, 779805, 229984}, {8789, 1190799, 779848, 230002}};
+    private static final long[][] MODULE_REL_SIZES = {{24244, 3019336, 2137424, 605552}, {24244, 3019304, 2137424, 605552}};
 
     private static String moduleProblem(File root) {
+        final int disc = region(root) == 'P' ? 1 : 0;
         for (int i = 0; i < MODULES.length; ++i) {
             final File lz = new File(root, "files/rels/" + MODULES[i] + ".rel.LZ");
             final File rel = new File(root, "files/rels/" + MODULES[i] + ".rel");
-            if (lz.length() == MODULE_LZ_SIZES[i] || rel.length() == MODULE_REL_SIZES[i]) continue;
+            if (lz.length() == MODULE_LZ_SIZES[disc][i] || rel.length() == MODULE_REL_SIZES[disc][i]) continue;
             if (!lz.isFile() && !rel.isFile()) {
                 return Lang.f("It has no files/rels/%s.rel.LZ: this port needs the whole disc, as Dolphin's "
                         + "Extract Entire Disc makes it.", MODULES[i]);
@@ -96,13 +98,24 @@ final class GameFiles {
         return null;
     }
 
+    /** The fourth letter of the game ID of the extracted disc at `root` (E USA, P Europe), or 'E'. */
+    static char region(File root) {
+        final byte[] header = new byte[8];
+        try (InputStream in = new FileInputStream(new File(root, "sys/boot.bin"))) {
+            if (readFully(in, header) == header.length) return (char) header[3];
+        } catch (IOException e) {
+            // As the USA disc.
+        }
+        return 'E';
+    }
+
     /** The first 8 bytes of sys/boot.bin name the game (6 characters) and its revision (byte 7). */
     static String headerProblem(byte[] header) {
         final String id = new String(header, 0, 6, StandardCharsets.US_ASCII);
         final int revision = header[7] & 0xFF;
-        if (!id.equals("SMNE01")) {
-            return Lang.f("That is %s, not New Super Mario Bros. Wii for the USA (SMNE01). "
-                    + "This port runs only the USA disc, revision 1.", id.trim());
+        if (!id.equals("SMNE01") && !id.equals("SMNP01")) {
+            return Lang.f("That is %s, not New Super Mario Bros. Wii for the USA (SMNE01) or Europe (SMNP01). "
+                    + "This port runs those discs, revision 1.", id.trim());
         }
         if (revision != 1) {
             return Lang.f("That is New Super Mario Bros. Wii revision %d. This port runs only "

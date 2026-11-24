@@ -123,6 +123,7 @@ impl Ios {
     /// `game` is the extracted disc, `nand` the host folder for NAND files.
     pub fn new(game: &Path, nand: PathBuf, title_id: u64) -> Result<Self, String> {
         nand::ensure_system_files(&nand).map_err(|e| format!("{}: {e}", nand.display()))?;
+        nand::set_region(&nand, title_id).map_err(|e| format!("{}: {e}", nand.display()))?;
         // The title's data directory exists once a title has run, as the
         // system menu creates it.
         let data = nand.join(format!("title/{:08x}/{:08x}/data", title_id >> 32, title_id as u32));
