@@ -99,6 +99,8 @@ empty placeholders; P0 added only `crates/frontend`.
 | `crates/hw` | Hardware registers: PI interrupt cause/mask and CPU FIFO, IPC registers, VI timing, DSP/ARAM/AI, EXI (RTC, SRAM), SI, and the CP/PE registers in front of `gx`. Added in P2; `dsp-ax` takes over its audio stub. |
 | `crates/gx` | FIFO decode, CP/XF/BP register state, vertex loader, transform and lighting (on the CPU for now), texture decoders, encoder and cache, TMEM. Outputs draw batches, EFB copies and per-draw records for frame interpolation (`interp`); reads and writes Dolphin FIFO logs (`dff`). Free of Vulkan types, so it can be unit-tested. |
 | `crates/vk-render` | `ash` + `gpu-allocator`: the TEV ubershader (WGSL, compiled by `naga`; indirect texturing, fog, Z textures, destination alpha by dual-source blending), pipelines and their on-disk cache, textures, EFB render target, the EFB copy pass (format conversion, RAM writeback, CPU peeks), XFB images, swapchain present with V-Sync on or off, an overlay, PNG screenshots, and a headless mode. |
+| `crates/render` | What every renderer shares: the `Backend` trait the frontend draws through, its types, the WGSL ubershader and copy pass, and the GX state decoding (blend keys, samplers). |
+| `crates/d3d-render` | Direct3D 12 and Direct3D 11 renderers (Windows): the same WGSL as HLSL (naga, compiled by `d3dcompiler_47`), the same design as `vk-render` (section 17). |
 | `crates/dsp-ax` | DSP mailbox model, AX microcode HLE mixer, AI output through `cpal`. |
 | `crates/input` | Keyboard and `gilrs` gamepads mapped to Wiimote state (buttons, sideways layout, shake, tilt), up to 4 players. |
 | `crates/frontend` | The binary: the game on its own thread, the `winit` window with frame pacing and interpolation, display settings (`settings.toml`, hotkeys), the performance monitor, FIFO-log replay, screenshot and trace tools. |
@@ -2267,3 +2269,69 @@ and shader patches loaded at start, all since removed):
 menus, the Power-Up button, the quick-save backup when leaving the app, and
 the in-game settings window (built on another branch; options will meet
 through a shared settings file).
+
+## 17. Direct3D 12 and Direct3D 11 renderers (2026-11-23)
+
+The Settings window's **Renderer** (Graphics tab), `renderer =` in
+`settings.toml` and `--renderer <auto|vulkan|d3d12|d3d11>` pick the
+graphics API, from the next start. **Automatic** makes the Vulkan renderer
+first (it fails without a Vulkan 1.3 device with dual-source blending and
+logic ops), then Direct3D 12, then Direct3D 11 (`frontend/src/gfx.rs`).
+Android stays Vulkan-only. `--replay` takes `--renderer` too.
+
+**Layout.** `crates/render` holds what every renderer shares: the
+`Backend` trait the frontend draws through (what `play.rs` used of
+`vk_render::Renderer`; a player's window is `new_sharing` on the main
+renderer), the types, the WGSL, and the GX state decoding. `vk-render`
+implements it unchanged. `crates/d3d-render` has `d3d12.rs` and `d3d11.rs`
+with `vk-render`'s design: one ubershader, the EFB as render targets, XFB
+images, the copy pass with readbacks, pipelines keyed by blend state, egui
+menus, one device shared by the player windows (Direct3D 11: one immediate
+context, held for a whole frame by one renderer at a time).
+
+**Shaders.** The same WGSL, turned into HLSL by naga and compiled by the
+system's `d3dcompiler_47` (shader model 5.1 for Direct3D 12, 5.0 for 11;
+about 2 s each, kept in `cache/d3d-shaders/`). Adapted as text first
+(`d3d-render/src/shaders.rs`): y negated in the vertex stage (Direct3D's
+clip space points up); the draw index from a per-instance vertex attribute
+(`SV_InstanceID` ignores the first instance); for Direct3D 11, each draw's
+eight textures and samplers at slots of their own (shader model 5.0 cannot
+index a texture array with a computed value). **fxc's optimiser is off**:
+it broke the TEV stage loop (a stage read the previous stage's colour
+combiner word, so every draw with more than one TEV stage came out wrong);
+the driver optimises the bytecode anyway.
+
+**Logic ops.** Direct3D has them on integer formats only: on this RTX 5070
+Ti both APIs report none for RGBA8 UNORM, and a Direct3D 12 pipeline asking
+for one fails. Logic-op draws write the colour as integers (`fs_logic`)
+through a UINT view of the EFB, where the device has logic ops on RGBA8 UINT
+(Direct3D 11 needs 11.1); otherwise clear and no-op are blended and the
+rest drawn as copy (`render::logic_as_blend`). New Super Mario Bros. Wii
+draws none.
+
+**Checks (2026-11-23, RTX 5070 Ti, quick build):**
+- `vk-render/tests/gx_features.rs` passes on all three
+  (`NSMBW_TEST_RENDERER=d3d12` or `d3d11`), logic-op XOR included.
+- `scripts/1-1.press`, unpaced, `--no-feedback`, shots at fields 700, 1600,
+  3000, 5500, 6400, 7000, 7600, 8200, 8800, 9150: 9 of 10 byte-identical to
+  Vulkan on both. 5500 (the World 1 map) differs in 3% of pixels by at most
+  24 (PSNR 57.8 dB), Direct3D 12 and 11 alike: at 2x a mipmapped map texture
+  comes out 1 different here and there (float rounding in the trilinear
+  lookup; fine or coarse derivatives change nothing), and EFB copies carry it
+  into later draws. At 1x the field is identical.
+- `scripts/1-1-4p.press`: all 13 shots, the three player windows' included,
+  byte-identical to Vulkan on both.
+- Debug layers (Windows' Graphics Tools; on with `NSMBW_VALIDATION`): no
+  errors through 1-1 and the 4-player run. Warnings for what is by design
+  (the second, dual-source output written when a blend state does not use
+  it; clears without a clear value; no vertex input in the full-screen
+  passes) are filtered by ID.
+- Paced (`--log-fps`, 1-1): 60 fps, game at 100%, on all three. Render
+  time per field in the course: Vulkan about 1 ms, Direct3D 11 about 0.6 ms,
+  Direct3D 12 about 1.6 ms. Direct3D 12 took 7 to 9 ms until retired
+  textures were reused: committed resources are slow to make (zeroed
+  memory), and fields make new EFB-copy targets.
+
+`NSMBW_PROBE_FIELD=<n>` (`frontend/src/probe.rs`) renders field n on
+Vulkan and on `NSMBW_PROBE_RENDERER` headless and finds the first command
+after which their EFBs or EFB copies differ; it found the fxc bug.

@@ -115,19 +115,6 @@ pub fn ubershader_wgsl(api: Api) -> Res<String> {
         s.replace_range(start..end, D3D11_SAMPLE);
     }
     s.push_str(FS_LOGIC);
-    // Debugging: a WGSL expression as the colour written.
-    if std::env::var_os("NSMBW_D3D_DEBUG").is_some() {
-        s = replace_once(&s, "            last_tex = tex;
-", "            last_tex = tex;
-            if (s == 0u) { dbg = tex; dbg2 = vec4<i32>(tevcoord, i32(st.x * 8192.0), i32(st.y * 1024.0)); }
-")?;
-        s.push_str("var<private> dbg: vec4<i32>;
-var<private> dbg2: vec4<i32>;
-");
-    }
-    if let Ok(expr) = std::env::var("NSMBW_D3D_DEBUG") {
-        s = replace_once(&s, "    o.color = vec4<f32>(colour, written);", &format!("    o.color = {expr};"))?;
-    }
     Ok(s)
 }
 

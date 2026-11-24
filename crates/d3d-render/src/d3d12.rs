@@ -80,7 +80,16 @@ struct Image {
     /// The EFB's UINT view, for logic-op draws.
     rtv_uint: Option<u32>,
     dsv: Option<u32>,
+    /// What a texture made by `Renderer::image` is: kept for another of the
+    /// same kind once retired.
+    kind: Option<ImageKind>,
 }
+
+/// Width, height, mip levels, format, render target.
+type ImageKind = (u32, u32, u32, i32, bool);
+
+/// Retired textures kept for reuse at most (`Renderer::image`).
+const POOLED: usize = 256;
 
 struct Buffer {
     res: ID3D12Resource,
@@ -629,6 +638,18 @@ impl Gpu {
             let info: Option<ID3D12InfoQueue> = if validation { device.cast().ok() } else { None };
             if let Some(info) = &info {
                 let _ = info.SetMessageCountLimit(4096);
+                // By design here: the ubershader always writes the second
+                // (dual-source) output, used only by blend states that need
+                // it; EFB clears take any value; the full-screen passes
+                // have no vertex input.
+                let mut deny = [
+                    D3D12_MESSAGE_ID_CREATEGRAPHICSPIPELINESTATE_RENDERTARGETVIEW_NOT_SET,
+                    D3D12_MESSAGE_ID_CLEARRENDERTARGETVIEW_MISMATCHINGCLEARVALUE,
+                    D3D12_MESSAGE_ID_CLEARDEPTHSTENCILVIEW_MISMATCHINGCLEARVALUE,
+                    D3D12_MESSAGE_ID_CREATEINPUTLAYOUT_EMPTY_LAYOUT,
+                ];
+                let filter = D3D12_INFO_QUEUE_FILTER { DenyList: D3D12_INFO_QUEUE_FILTER_DESC { NumIDs: deny.len() as u32, pIDList: deny.as_mut_ptr(), ..Default::default() }, ..Default::default() };
+                let _ = info.AddStorageFilterEntries(&filter);
             }
             let queue: ID3D12CommandQueue = device.CreateCommandQueue(&D3D12_COMMAND_QUEUE_DESC { Type: D3D12_COMMAND_LIST_TYPE_DIRECT, ..Default::default() })?;
 
@@ -748,6 +769,9 @@ pub struct Renderer {
     writebacks: Vec<Writeback>,
     trash_images: Vec<Image>,
     trash_buffers: Vec<Buffer>,
+    /// Retired textures by kind, for reuse, and how many there are.
+    pool: HashMap<ImageKind, Vec<Image>>,
+    pool_len: usize,
     ui: UiLayer,
     ui_frame: Option<UiFrame>,
     aspect: f32,
@@ -871,6 +895,8 @@ impl Renderer {
                 writebacks: Vec::new(),
                 trash_images: Vec::new(),
                 trash_buffers: Vec::new(),
+                pool: HashMap::new(),
+                pool_len: 0,
                 ui: UiLayer { textures: HashMap::new(), buffers: (0..FRAMES).map(|_| None).collect() },
                 ui_frame: None,
                 aspect: 16.0 / 9.0,
@@ -915,7 +941,7 @@ impl Renderer {
             let d = dsv.alloc()?;
             let dview = D3D12_DEPTH_STENCIL_VIEW_DESC { Format: DXGI_FORMAT_D32_FLOAT, ViewDimension: D3D12_DSV_DIMENSION_TEXTURE2D, ..Default::default() };
             device.CreateDepthStencilView(&res, Some(&dview), dsv.cpu(d));
-            let depth = Image { res, w, h, state: D3D12_RESOURCE_STATE_DEPTH_WRITE, srv: Some(s), rtv: None, rtv_uint: None, dsv: Some(d) };
+            let depth = Image { res, w, h, state: D3D12_RESOURCE_STATE_DEPTH_WRITE, srv: Some(s), rtv: None, rtv_uint: None, dsv: Some(d), kind: None };
             Ok((color, depth))
         }
     }
@@ -964,7 +990,27 @@ impl Renderer {
         Ok(())
     }
 
+    /// A texture: a retired one of the same kind, else a new one.
+    fn image(&mut self, w: u32, h: u32, levels: u32, format: DXGI_FORMAT, target: bool) -> Res<Image> {
+        if let Some(img) = self.pool.get_mut(&(w, h, levels, format.0, target)).and_then(Vec::pop) {
+            self.pool_len -= 1;
+            return Ok(img);
+        }
+        create_image(&self.device, &mut self.srv_heap, &mut self.rtv_heap, w, h, levels, format, target)
+    }
+
     fn destroy_image(&mut self, img: Image) {
+        // Committed resources are slow to make (zeroed memory): a field's
+        // new EFB-copy targets cost milliseconds. Retired ones are reused.
+        if let Some(kind) = img.kind {
+            // Small ones only (EFB copies, game textures): no texture
+            // pack's megabytes held for nothing.
+            if self.pool_len < POOLED && u64::from(kind.0) * u64::from(kind.1) <= 512 * 512 {
+                self.pool.entry(kind).or_default().push(img);
+                self.pool_len += 1;
+                return;
+            }
+        }
         if let Some(s) = img.srv {
             self.srv_heap.release(s);
         }
@@ -1145,7 +1191,7 @@ impl Renderer {
         let (pixels, w, h, pos) = common::ui_pixels(delta);
         let (w, h) = (w as u32, h as u32);
         if pos.is_none() {
-            let img = create_image(&self.device, &mut self.srv_heap, &mut self.rtv_heap, w, h, 1, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, false)?;
+            let img = self.image(w, h, 1, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, false)?;
             if let Some(old) = self.ui.textures.insert(id, img) {
                 self.trash_images.push(old);
             }
@@ -1226,7 +1272,7 @@ impl Renderer {
                 let res: ID3D12Resource = s.GetBuffer(i)?;
                 let slot = self.rtv_heap.alloc()?;
                 self.device.CreateRenderTargetView(&res, None, self.rtv_heap.cpu(slot));
-                self.swap_images.push(Image { res, w: desc.Width, h: desc.Height, state: D3D12_RESOURCE_STATE_PRESENT, srv: None, rtv: Some(slot), rtv_uint: None, dsv: None });
+                self.swap_images.push(Image { res, w: desc.Width, h: desc.Height, state: D3D12_RESOURCE_STATE_PRESENT, srv: None, rtv: Some(slot), rtv_uint: None, dsv: None, kind: None });
             }
         }
         self.needs_rebuild = false;
@@ -1272,7 +1318,7 @@ impl Renderer {
                     if self.textures.get(&c.id).is_some_and(|i| i.w == w && i.h == h) {
                         continue;
                     }
-                    let mut img = create_image(&self.device, &mut self.srv_heap, &mut self.rtv_heap, w, h, 1, COLOR, true)?;
+                    let mut img = self.image(w, h, 1, COLOR, true)?;
                     // Draws before the copy may sample it already.
                     transition(&list, &mut img, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
                     self.textures_epoch += 1;
@@ -1502,7 +1548,7 @@ impl Renderer {
         let staging = self.frames[f].staging.as_ref().unwrap().res.clone();
         for (id, w, h, levels, regions) in copies {
             // Render targets too: EFB copies may be patched into them.
-            let mut img = create_image(&self.device, &mut self.srv_heap, &mut self.rtv_heap, w, h, levels, COLOR, true)?;
+            let mut img = self.image(w, h, levels, COLOR, true)?;
             transition(list, &mut img, D3D12_RESOURCE_STATE_COPY_DEST);
             for (level, fp) in regions.into_iter().enumerate() {
                 copy_buffer_to_image(list, &staging, fp, &img.res, level as u32, 0, 0);
@@ -1797,7 +1843,7 @@ impl Renderer {
                             let (img, _) = self.xfbs.remove(&oldest).unwrap();
                             self.trash_images.push(img);
                         }
-                        let img = create_image(&self.device, &mut self.srv_heap, &mut self.rtv_heap, w, h, 1, COLOR, true)?;
+                        let img = self.image(w, h, 1, COLOR, true)?;
                         self.xfbs.insert(addr, (img, 0));
                     }
                     self.xfb_serial += 1;
@@ -2041,7 +2087,7 @@ fn create_efb_color(device: &ID3D12Device, srv: &mut Heap, rtv: &mut Heap, w: u3
             let d = D3D12_RENDER_TARGET_VIEW_DESC { Format: format, ViewDimension: D3D12_RTV_DIMENSION_TEXTURE2D, ..Default::default() };
             device.CreateRenderTargetView(&res, Some(&d), rtv.cpu(*v));
         }
-        Ok(Image { res, w, h, state: D3D12_RESOURCE_STATE_COMMON, srv: Some(s), rtv: Some(views[0]), rtv_uint: Some(views[1]), dsv: None })
+        Ok(Image { res, w, h, state: D3D12_RESOURCE_STATE_COMMON, srv: Some(s), rtv: Some(views[0]), rtv_uint: Some(views[1]), dsv: None, kind: None })
     }
 }
 
@@ -2073,7 +2119,7 @@ fn create_image(device: &ID3D12Device, srv: &mut Heap, rtv: &mut Heap, w: u32, h
         } else {
             None
         };
-        Ok(Image { res, w, h, state: D3D12_RESOURCE_STATE_COMMON, srv: Some(s), rtv: r, rtv_uint: None, dsv: None })
+        Ok(Image { res, w, h, state: D3D12_RESOURCE_STATE_COMMON, srv: Some(s), rtv: r, rtv_uint: None, dsv: None, kind: Some((w, h, levels, format.0, target)) })
     }
 }
 

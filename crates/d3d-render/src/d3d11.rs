@@ -280,6 +280,13 @@ impl Gpu {
             }
             let (device, context, device_name, validation): (ID3D11Device, ID3D11DeviceContext, String, bool) = chosen.ok_or("no Direct3D 11 device with feature level 11.0")?;
             let info: Option<ID3D11InfoQueue> = if validation { device.cast().ok() } else { None };
+            if let Some(info) = &info {
+                // By design here: the ubershader always writes the second
+                // (dual-source) output, used only by blend states that need it.
+                let mut deny = [D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET];
+                let filter = D3D11_INFO_QUEUE_FILTER { DenyList: D3D11_INFO_QUEUE_FILTER_DESC { NumIDs: deny.len() as u32, pIDList: deny.as_mut_ptr(), ..Default::default() }, ..Default::default() };
+                let _ = info.AddStorageFilterEntries(&filter);
+            }
             let mut options = D3D11_FEATURE_DATA_D3D11_OPTIONS::default();
             let has_options = device.CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS, (&mut options as *mut D3D11_FEATURE_DATA_D3D11_OPTIONS).cast(), std::mem::size_of_val(&options) as u32).is_ok();
             // Logic ops work on integer formats: the EFB's UINT view.
@@ -1181,7 +1188,7 @@ impl Renderer {
         unsafe {
             // The copy pass may have left the EFB bound as a texture.
             ctx.PSSetShaderResources(0, Some(&[None, None]));
-            ctx.OMSetRenderTargets(Some(&[self.efb_color.rtv.clone()]), &self.efb_depth.1);
+            ctx.OMSetRenderTargets(Some(std::slice::from_ref(&self.efb_color.rtv)), &self.efb_depth.1);
             ctx.RSSetViewports(Some(&[viewport(0.0, 0.0, self.efb_size.0 as f32, self.efb_size.1 as f32)]));
             ctx.IASetInputLayout(&g.uber_layout);
             ctx.IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -1197,6 +1204,10 @@ impl Renderer {
             let m = moves.map(|m| [Some(m[0].clone()), Some(m[1].clone()), Some(m[2].clone())]).unwrap_or([shadings.clone(), shadings.clone(), shadings.clone()]);
             ctx.VSSetShaderResources(1, Some(&m));
             ctx.PSSetShaderResources(0, Some(&[shadings]));
+            // Every sampler slot holds one: maps without a texture are not
+            // sampled, but the shader declares all eight.
+            let samplers: [Option<ID3D11SamplerState>; 8] = std::array::from_fn(|_| Some(g.bilinear.clone()));
+            ctx.PSSetSamplers(0, Some(&samplers));
         }
         Ok(())
     }
@@ -1303,7 +1314,7 @@ impl Renderer {
         if !self.efb_ready {
             unsafe {
                 ctx.ClearRenderTargetView(self.efb_color.rtv.as_ref().unwrap(), &[0.0, 0.0, 0.0, 1.0]);
-                ctx.ClearDepthStencilView(&self.efb_depth.1, D3D11_CLEAR_DEPTH.0 as u32, 1.0, 0);
+                ctx.ClearDepthStencilView(&self.efb_depth.1, D3D11_CLEAR_DEPTH.0, 1.0, 0);
             }
             self.efb_ready = true;
         }
@@ -1353,7 +1364,7 @@ impl Renderer {
                             ctx.PSSetShader(ps, None);
                             if uint != uint_bound {
                                 let rtv = if uint { &self.efb_color.rtv_uint } else { &self.efb_color.rtv };
-                                ctx.OMSetRenderTargets(Some(&[rtv.clone()]), &self.efb_depth.1);
+                                ctx.OMSetRenderTargets(Some(std::slice::from_ref(rtv)), &self.efb_depth.1);
                                 uint_bound = uint;
                             }
                         }
@@ -1404,7 +1415,7 @@ impl Renderer {
                                 ctx.ClearRenderTargetView(self.efb_color.rtv.as_ref().unwrap(), &col);
                             }
                             if let Some(z) = depth {
-                                ctx.ClearDepthStencilView(&self.efb_depth.1, D3D11_CLEAR_DEPTH.0 as u32, z, 0);
+                                ctx.ClearDepthStencilView(&self.efb_depth.1, D3D11_CLEAR_DEPTH.0, z, 0);
                             }
                         }
                     } else if color.is_some() || depth.is_some() {

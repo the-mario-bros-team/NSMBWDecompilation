@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use render::{Api, Res};
 use windows::core::PCSTR;
-use windows::Win32::Graphics::Direct3D::Fxc::{D3DCompile, D3DCOMPILE_ENABLE_STRICTNESS, D3DCOMPILE_OPTIMIZATION_LEVEL3};
+use windows::Win32::Graphics::Direct3D::Fxc::{D3DCompile, D3DCOMPILE_ENABLE_STRICTNESS, D3DCOMPILE_SKIP_OPTIMIZATION};
 use windows::Win32::Graphics::Direct3D::ID3DBlob;
 
 use crate::shaders::{self, Blob};
@@ -95,7 +95,10 @@ fn fnv(parts: &[&[u8]]) -> u64 {
 /// Compiles `entry` of `source` for `target` (vs_5_0, ps_5_1...), from the
 /// cache in `dir` when it holds this very source.
 pub fn compile(source: &str, entry: &str, target: &str, dir: Option<&Path>) -> Res<Blob> {
-    let flags = std::env::var("NSMBW_FXC_FLAGS").ok().and_then(|v| u32::from_str_radix(&v, 16).ok()).unwrap_or(D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_ENABLE_STRICTNESS);
+    // Unoptimised: fxc's optimiser breaks the ubershader's TEV loop (a
+    // stage read the stage before's colour combiner word: wrong colours in
+    // every multi-stage draw). The driver optimises the bytecode anyway.
+    let flags = D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_ENABLE_STRICTNESS;
     let key = fnv(&[source.as_bytes(), entry.as_bytes(), target.as_bytes(), &flags.to_le_bytes()]);
     let file: Option<PathBuf> = dir.map(|d| d.join(format!("{key:016x}.dxbc")));
     if let Some(code) = file.as_ref().and_then(|f| std::fs::read(f).ok()) {

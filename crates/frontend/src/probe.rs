@@ -1,6 +1,7 @@
 //! A debugging aid for the renderers: `NSMBW_PROBE_FIELD=<n>` (with
 //! `NSMBW_PROBE_RENDERER=d3d12` or `d3d11`) renders field n headless on
-//! Vulkan and on the other renderer, at native resolution, and looks for
+//! Vulkan and on the other renderer, at native resolution (or
+//! `NSMBW_PROBE_SCALE`), and looks for
 //! the first command after which their EFBs or EFB copies differ (a binary
 //! search over the field's command prefixes, each on fresh renderers).
 //! Pixel numbers past 640 x 528 are in the copies.
@@ -11,7 +12,8 @@ use crate::settings::RendererChoice;
 
 /// The EFB after the first `n` commands, and every EFB copy's texels.
 fn snapshot(choice: RendererChoice, textures: &HashMap<u32, gx::texture::NewTexture>, out: &gx::Output, n: usize) -> Result<render::EfbSnapshot, String> {
-    let opts = render::Options { scale: 1.0, vsync: false, pipeline_cache: None, efb_copies_to_ram: true };
+    let scale = std::env::var("NSMBW_PROBE_SCALE").ok().and_then(|v| v.parse().ok()).unwrap_or(1.0);
+    let opts = render::Options { scale, vsync: false, pipeline_cache: None, efb_copies_to_ram: true };
     let mut r = crate::gfx::headless(choice, opts)?;
     let o = gx::Output { vertices: out.vertices.clone(), indices: out.indices.clone(), shadings: out.shadings.clone(), cmds: out.cmds[..n].to_vec(), new_textures: textures.values().cloned().collect(), ..Default::default() };
     r.render(&o, &o.vertices, true, 0, 0, 0).map_err(|e| e.to_string())?;
