@@ -17,6 +17,7 @@ guest-mem = { path = "../guest-mem" }
 guest-cpu = { path = "../guest-cpu" }
 hle-os = { path = "../hle-os" }
 hle-ios = { path = "../hle-ios" }
+game-version = { path = "../game-version" }
 gx = { path = "../gx" }
 vk-render = { path = "../vk-render" }
 render = { path = "../render" }
