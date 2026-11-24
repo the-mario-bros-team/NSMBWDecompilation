@@ -940,7 +940,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         // again now they are done.
         sys.mem.settle();
         // Before the Gameplay options fix up lives and the clock.
-        for line in practice.count(&sys) {
+        for line in practice.count(&mut sys) {
             say!("field {index}: {line}");
         }
         // Net games keep the game's own rules.
