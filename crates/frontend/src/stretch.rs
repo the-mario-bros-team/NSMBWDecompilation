@@ -141,9 +141,13 @@ mod tests {
             for field in input.chunks(534 * 2) {
                 s.process(field, 32_000, speed, &mut out);
             }
+            // Within what is still held back (a window and the search's
+            // reach of input, up to a window of output) or a half window
+            // ahead (the first window counts from the input's start).
             let want = 32_000.0 / speed;
             let got = (out.len() / 2) as f64;
-            assert!((got - want).abs() < 1600.0, "{speed}: {got} frames for {want}");
+            let held = (1024.0 + 256.0) / speed + 1024.0;
+            assert!(got <= want + 512.0 && got > want - held, "{speed}: {got} frames for {want}");
             // No clicks: the tone's steps stay small.
             let worst = out.chunks_exact(2).collect::<Vec<_>>().windows(2).map(|w| (i32::from(w[1][0]) - i32::from(w[0][0])).abs()).max().unwrap();
             assert!(worst < 1200, "{speed}: a step of {worst}");

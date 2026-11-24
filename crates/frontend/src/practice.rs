@@ -1,11 +1,13 @@
 //! The Practice tab's tools on the game thread (USA revision 1 addresses):
 //!
-//! - Restart Course: the course starts again from its start, as the game's
-//!   own "restart this course" does (d_basesNP 0x809167D0): the restart
-//!   scene's record (`dScRestartCrsin_c::m_startGameInfo`) is the course's
-//!   start record (`dInfo_c::m_startGameInfo`) with the default entrance
-//!   (0xFF) and area 0, then `dScStage_c::setNextScene(RESTART_CRSIN, 0,
-//!   exit 2, fader 1)`. The checkpoint is cleared first
+//! - Restart Course: the course starts again from its start through the
+//!   game's restart scene, as d_basesNP 0x809167D0 does: the restart scene's
+//!   record (`dScRestartCrsin_c::m_startGameInfo`) is set, then
+//!   `dScStage_c::setNextScene(RESTART_CRSIN, 0, exit 2, fader 1)`. That
+//!   function restarts a course as a demo (the record's +7, `mIsDemo`, is 1,
+//!   and +5/+6 the default entrance 0xFF and area 0); here the record is the
+//!   course's own start record (`dInfo_c::m_startGameInfo`), as the course
+//!   was entered, so the players play it. The checkpoint is cleared first
 //!   (`dCyuukan_c::clear`), so the start is the course's own, and the
 //!   players' power-ups go back to what they had when they came in from the
 //!   map. No life is lost (no one died). Never in a net game.
@@ -16,8 +18,9 @@
 //!   list, `daPyDemoMng_c` +0x20). Game frames, not wall time, so it is the
 //!   same at any game speed or frame rate.
 //! - The death counter counts lives lost (`daPyMng_c::mRest` going down) in
-//!   a course: in this course (since it was entered from the map) and in
-//!   this session. Kept per session, in memory only: it is a practice aid
+//!   a course: in this course (since another course was last played; a miss
+//!   goes back to the world map, and the course again is the same course)
+//!   and in this session. Kept per session, in memory only: it is a practice aid
 //!   for the sitting at hand; per save file it would need its own file kept
 //!   in step with the game's copies and erases, for little use.
 //!
@@ -31,6 +34,8 @@ const SCENE_WORLD_MAP: u16 = 3;
 const SCENE_STAGE: u16 = 5;
 const SCENE_RESTART: u16 = 6; // RESTART_CRSIN
 const SCENE_GAME_SETUP: u16 = 0xA;
+/// `m_nextScene` with no change pending (`dScene_c::setNextScene` checks for it).
+const NO_SCENE: u16 = 0x2EE;
 const STAGE_TIMER: u32 = 0x8042_A070; // dStageTimer_c::m_instance; +4 the time (seconds << 12), +12 stopped (top byte)
 const TIMER_STEP: i32 = 92;
 const REST: u32 = 0x8035_4E90; // daPyMng_c::mRest[4], a count a character
@@ -45,6 +50,8 @@ const START_GAME_INFO: u32 = 0x8031_5B90; // dInfo_c::m_startGameInfo
 const RESTART_GAME_INFO: u32 = 0x8037_3D60; // dScRestartCrsin_c::m_startGameInfo
 const SET_NEXT_SCENE: u32 = 0x8010_2260; // dScStage_c::setNextScene(scene, param, exit, fader)
 const PROFILE_OPENING_TITLE: u16 = 0x2BB; // only on the title screen (its course is a stage too)
+/// Fields the title screen's object is looked for at an attempt's start.
+const TITLE_CHECK: u32 = 60;
 
 /// What the overlay shows, after each field.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
@@ -64,9 +71,14 @@ pub struct Stats {
 pub struct Practice {
     pub stats: Stats,
     last_scene: u16,
-    /// The world map (or the setup screens) since the last course: the next
-    /// course is a new one.
+    /// The world map (or the setup screens) since the last course: the
+    /// players' power-ups are taken anew at the next.
     fresh: bool,
+    /// The course (world, level) last played, for its deaths.
+    course: Option<(u8, u8)>,
+    /// Fields into this attempt while it may still turn out to be the title
+    /// screen's demo (its object comes a few fields in).
+    checking: Option<u32>,
     /// The clock and its time after the last field, as the rules left it.
     timer: u32,
     time: i32,
@@ -111,15 +123,22 @@ impl Practice {
             return log;
         }
         if last != SCENE_STAGE {
-            // An attempt starts: the title screen's demo is no course.
-            self.stats = Stats { in_course: !crate::gameplay::has_profile(sys, PROFILE_OPENING_TITLE), frames: 0, goal: false, ..self.stats };
-            if self.fresh && self.stats.in_course {
-                self.fresh = false;
-                self.stats.course_deaths = 0;
-                self.entry = sys.mem.ram(PLAYER_MODE, 16).zip(sys.mem.ram(CREATE_ITEM, 16)).map(|(m, c)| (m.try_into().unwrap(), c.try_into().unwrap()));
-            }
-            if self.stats.in_course {
-                log.push(format!("practice: a course attempt starts (lives lost in this course {}, this session {})", self.stats.course_deaths, self.stats.deaths));
+            // An attempt starts (taken as a course until the title screen's
+            // demo shows itself).
+            self.stats = Stats { in_course: true, frames: 0, goal: false, ..self.stats };
+            self.checking = Some(0);
+            self.attempt_start(sys);
+        }
+        if let Some(n) = self.checking {
+            if crate::gameplay::has_profile(sys, PROFILE_OPENING_TITLE) {
+                self.checking = None;
+                self.stats.in_course = false;
+                self.fresh = true;
+            } else if n >= TITLE_CHECK {
+                self.checking = None;
+                log.push(format!("practice: a course attempt started (lives lost in this course {}, this session {})", self.stats.course_deaths, self.stats.deaths));
+            } else {
+                self.checking = Some(n + 1);
             }
         }
         if !self.stats.in_course {
@@ -152,6 +171,19 @@ impl Practice {
         log
     }
 
+    /// A new attempt: another course's deaths start at 0, and coming from
+    /// the map the players' power-ups are noted for Restart Course.
+    fn attempt_start(&mut self, sys: &System) {
+        let course = sys.mem.ram(START_GAME_INFO + 12, 2).map(|b| (b[0], b[1]));
+        if course != self.course {
+            self.course = course;
+            self.stats.course_deaths = 0;
+        }
+        if std::mem::take(&mut self.fresh) {
+            self.entry = sys.mem.ram(PLAYER_MODE, 16).zip(sys.mem.ram(CREATE_ITEM, 16)).map(|(m, c)| (m.try_into().unwrap(), c.try_into().unwrap()));
+        }
+    }
+
     /// After the Gameplay options: the clock and lives as they leave them.
     pub fn settle(&mut self, sys: &System) {
         let in_course = self.stats.in_course && now_scene(sys) == SCENE_STAGE;
@@ -170,8 +202,8 @@ impl Practice {
         if now != SCENE_STAGE || !self.stats.in_course {
             return "restart: not in a course".into();
         }
-        if next != now {
-            return "restart: the game is already changing scenes".into();
+        if next != NO_SCENE {
+            return format!("restart: the game is already changing scenes (to {next})");
         }
         if !sys.pause_window_closed() {
             return "restart: close the pause menu first".into();
@@ -189,19 +221,12 @@ impl Practice {
                 b.copy_from_slice(&items);
             }
         }
-        // The record as the game's own restart writes it.
-        let mut record = [0u8; 16];
-        record[0..4].copy_from_slice(&start[0..4]);
-        record[4] = start[4];
-        record[5] = 0xFF;
-        record[6] = 0;
-        record[7] = 1;
-        record[8..12].copy_from_slice(&1u32.to_be_bytes());
-        record[12..16].copy_from_slice(&start[12..16]);
+        // The course's start record as it was entered (not a demo: +7 is
+        // `mIsDemo`).
         let Some(b) = sys.mem.ram_mut(RESTART_GAME_INFO, 16) else { return "restart: no restart record".into() };
-        b.copy_from_slice(&record);
+        b.copy_from_slice(&start);
         match sys.call_guest(SET_NEXT_SCENE, &[u32::from(SCENE_RESTART), 0, 2, 1], &[]) {
-            Ok(_) => format!("restart: course {:02}-{:02} from its start", start[12] + 1, start[13] + 1),
+            Ok(_) => format!("restart: course {:02}-{:02} from its start (record {})", start[12] + 1, start[13] + 1, start.iter().map(|b| format!("{b:02x}")).collect::<String>()),
             Err(e) => format!("restart: {e}"),
         }
     }
@@ -296,6 +321,7 @@ mod tests {
         assert_eq!(super::time_label(0), "0:00.00");
         assert_eq!(super::time_label(60), "0:01.00");
         assert_eq!(super::time_label(3600), "1:00.06");
-        assert_eq!(super::time_label(59_940), "16:40.00");
+        // 60000/1001 frames a second: 60,000 frames are 1001 s.
+        assert_eq!(super::time_label(60_000), "16:41.00");
     }
 }
