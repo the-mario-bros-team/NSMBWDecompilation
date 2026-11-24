@@ -281,7 +281,7 @@ impl Xf {
         let mut out = std::mem::MaybeUninit::<Vertex>::uninit();
         // SAFETY: `transform_one` writes every field of `out`.
         unsafe {
-            transform_one(self.words(), v, d, out.as_mut_ptr());
+            transform_one(self.words(), &self.words(), v, d, out.as_mut_ptr());
             out.assume_init()
         }
     }
@@ -291,13 +291,30 @@ impl Xf {
     /// coordinates (stored a float at a time) were read back with wide loads
     /// that cannot take their data from those stores, and every vertex paid
     /// a call's prologue: about 80 ns a vertex.
-    pub fn transform_into(&self, raws: &[RawVertex], d: &DrawSetup, out: &mut Vec<Vertex>) {
+    ///
+    /// `same_matrices`: every vertex uses the same position and texture
+    /// matrices (the format carries no matrix indices), so they are read
+    /// from XF memory once for the draw instead of once a vertex. The
+    /// results are the same either way.
+    pub fn transform_into(&self, raws: &[RawVertex], d: &DrawSetup, out: &mut Vec<Vertex>, same_matrices: bool) {
+        let mem = self.words();
+        match raws.first() {
+            Some(first) if same_matrices && raws.len() > 1 => {
+                let m = Hoisted::new(mem, first, d);
+                self.transform_with(raws, d, out, &m);
+            }
+            _ => self.transform_with(raws, d, out, &mem),
+        }
+    }
+
+    #[inline(always)]
+    fn transform_with(&self, raws: &[RawVertex], d: &DrawSetup, out: &mut Vec<Vertex>, m: &impl Matrices) {
         let mem = self.words();
         out.reserve(raws.len());
         let start = out.len();
         for (v, slot) in raws.iter().zip(out.spare_capacity_mut()) {
             // SAFETY: `transform_one` writes every field of the slot.
-            unsafe { transform_one(mem, v, d, slot.as_mut_ptr()) };
+            unsafe { transform_one(mem, m, v, d, slot.as_mut_ptr()) };
         }
         // SAFETY: the first `raws.len()` spare slots were written above.
         unsafe { out.set_len(start + raws.len()) };
@@ -317,22 +334,86 @@ fn row_of(mem: &[u32; 0x800], idx: usize, r: usize) -> [f32; 4] {
     std::array::from_fn(|c| f(mem[(b + c) & 0x3FF]))
 }
 
+/// Where a vertex's position, normal and texture matrices come from: XF
+/// memory, by the vertex's own indices, or read once for a whole draw.
+trait Matrices {
+    /// Row `r` of the position matrix.
+    fn pos_row(&self, v: &RawVertex, r: usize) -> [f32; 4];
+    /// The normal matrix's rows.
+    fn nrm_rows(&self, v: &RawVertex) -> [[f32; 3]; 3];
+    /// Row `r` of texgen `i`'s matrix.
+    fn tex_row(&self, v: &RawVertex, i: usize, r: usize) -> [f32; 4];
+}
+
+impl Matrices for &[u32; 0x800] {
+    #[inline(always)]
+    fn pos_row(&self, v: &RawVertex, r: usize) -> [f32; 4] {
+        row_of(self, v.pnmtx as usize, r)
+    }
+
+    #[inline(always)]
+    fn nrm_rows(&self, v: &RawVertex) -> [[f32; 3]; 3] {
+        let nb = 0x400 + (v.pnmtx as usize & 31) * 3;
+        let nrm_row = |r: usize| -> [f32; 3] { std::array::from_fn(|c| f(self[(nb + r * 3 + c) & 0x7FF])) };
+        [nrm_row(0), nrm_row(1), nrm_row(2)]
+    }
+
+    #[inline(always)]
+    fn tex_row(&self, v: &RawVertex, i: usize, r: usize) -> [f32; 4] {
+        row_of(self, v.texmtx[i] as usize, r)
+    }
+}
+
+/// A draw's matrices read once, for vertices that carry no matrix indices
+/// (all use the first vertex's, which are the defaults).
+struct Hoisted {
+    pos: [[f32; 4]; 3],
+    nrm: [[f32; 3]; 3],
+    tex: [[[f32; 4]; 3]; 8],
+}
+
+impl Hoisted {
+    fn new(mem: &[u32; 0x800], first: &RawVertex, d: &DrawSetup) -> Self {
+        let pos = std::array::from_fn(|r| mem.pos_row(first, r));
+        let nrm = if d.need_nrm_mtx { mem.nrm_rows(first) } else { [[0.0; 3]; 3] };
+        let mut tex = [[[0.0; 4]; 3]; 8];
+        for (i, t) in tex.iter_mut().enumerate().take(d.gens) {
+            *t = std::array::from_fn(|r| mem.tex_row(first, i, r));
+        }
+        Self { pos, nrm, tex }
+    }
+}
+
+impl Matrices for Hoisted {
+    #[inline(always)]
+    fn pos_row(&self, _: &RawVertex, r: usize) -> [f32; 4] {
+        self.pos[r]
+    }
+
+    #[inline(always)]
+    fn nrm_rows(&self, _: &RawVertex) -> [[f32; 3]; 3] {
+        self.nrm
+    }
+
+    #[inline(always)]
+    fn tex_row(&self, _: &RawVertex, i: usize, r: usize) -> [f32; 4] {
+        self.tex[i][r]
+    }
+}
+
 /// [`Xf::transform`] into `out`, writing every field.
 ///
 /// # Safety
 /// `out` must be valid for writes of a [`Vertex`].
 #[inline(always)]
-unsafe fn transform_one(mem: &[u32; 0x800], v: &RawVertex, d: &DrawSetup, out: *mut Vertex) {
+unsafe fn transform_one(mem: &[u32; 0x800], mats: &impl Matrices, v: &RawVertex, d: &DrawSetup, out: *mut Vertex) {
     let (screen, has_color) = (d.screen, d.has_color);
     let p = [v.pos[0], v.pos[1], v.pos[2], 1.0];
-    let pm = v.pnmtx as usize;
     let world: [f32; 3] = std::array::from_fn(|r| {
-        let row = row_of(mem, pm, r);
+        let row = mats.pos_row(v, r);
         row[0] * p[0] + row[1] * p[1] + row[2] * p[2] + row[3]
     });
-    let nb = 0x400 + (pm & 31) * 3;
-    let nrm_row = |r: usize| -> [f32; 3] { std::array::from_fn(|c| f(mem[(nb + r * 3 + c) & 0x7FF])) };
-    let n_rows = if d.need_nrm_mtx { [nrm_row(0), nrm_row(1), nrm_row(2)] } else { [[0.0; 3]; 3] };
+    let n_rows = if d.need_nrm_mtx { mats.nrm_rows(v) } else { [[0.0; 3]; 3] };
     let xform_n = |n: [f32; 3]| -> [f32; 3] { std::array::from_fn(|r| dot3(n_rows[r], n)) };
     let normal = if d.need_normal { normalize(xform_n(v.nbt[0])) } else { [0.0; 3] };
 
@@ -393,9 +474,8 @@ unsafe fn transform_one(mem: &[u32; 0x800], v: &RawVertex, d: &DrawSetup, out: *
                 [base[0] + dot3(ldir, tangent), base[1] + dot3(ldir, binormal), base[2]]
             }
             _ => {
-                let m = v.texmtx[i] as usize;
                 let d = |r: usize| {
-                    let row = row_of(mem, m, r);
+                    let row = mats.tex_row(v, i, r);
                     row[0] * src[0] + row[1] * src[1] + row[2] * src[2] + row[3] * src[3]
                 };
                 [d(0), d(1), if stq { d(2) } else { 1.0 }]
@@ -482,6 +562,54 @@ fn light_channel(d: &DrawSetup, ctl: u32, vertex: [f32; 4], c: usize, pos: [f32;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Matrices read once for a draw give the same vertices, bit for bit,
+    /// as matrices read for every vertex, with texgens from positions,
+    /// normals and texture coordinates, dual-texture post matrices and
+    /// lighting.
+    #[test]
+    fn hoisted_matrices_match() {
+        let mut xf = Xf::default();
+        for (i, w) in xf.mem.iter_mut().enumerate() {
+            *w = (((i * 37 % 101) as f32 - 50.0) / 13.0).to_bits();
+        }
+        xf.regs[0x20] = 0.01f32.to_bits();
+        xf.regs[0x22] = 0.02f32.to_bits();
+        xf.regs[0x24] = (-0.5f32).to_bits();
+        xf.regs[0x25] = 3.0f32.to_bits();
+        for (i, v) in [320.0f32, -240.0, 16_777_215.0, 662.0, 582.0, 16_777_215.0].iter().enumerate() {
+            xf.regs[0x1A + i] = v.to_bits();
+        }
+        xf.regs[0x09] = 2;
+        // Channel 0 lit by lights 0 and 1 (diffuse clamped, attenuation off).
+        xf.regs[0x0E] = 0x1 | 0x2 | (0b11 << 2) | (2 << 7);
+        xf.regs[0x10] = 0x700;
+        xf.regs[0x12] = 1;
+        xf.regs[0x18] = 3 | (6 << 6) | (9 << 12) | (12 << 18);
+        xf.regs[0x3F] = 4;
+        // Texgens: tex0 (ST), normal (STQ), position (STQ), tex1.
+        xf.regs[0x40] = 5 << 7;
+        xf.regs[0x41] = (1 << 7) | 2 | 4;
+        xf.regs[0x42] = 2 | 4;
+        xf.regs[0x43] = 6 << 7;
+        for i in 0..4 {
+            xf.regs[0x50 + i] = (3 * i as u32) | if i == 1 { 0x100 } else { 0 };
+        }
+        let (pm, tm) = xf.default_matrices();
+        let raws: Vec<RawVertex> = (0..7)
+            .map(|k| {
+                let k = k as f32;
+                RawVertex { pnmtx: pm, texmtx: tm, pos: [k, 2.0 * k - 3.0, 0.5 * k], nbt: [[0.3, k, -1.0], [0.0; 3], [0.0; 3]], color: [[0.5, 0.25, k / 8.0, 1.0], [1.0; 4]], tex: [[k / 4.0, 1.0 - k / 4.0], [k, -k], [0.0; 2], [0.0; 2], [0.0; 2], [0.0; 2], [0.0; 2], [0.0; 2]] }
+            })
+            .collect();
+        let setup = xf.setup(Screen { offset_x: 342.0, offset_y: 342.0 }, [true, false]);
+        let (mut a, mut b) = (Vec::new(), Vec::new());
+        xf.transform_into(&raws, &setup, &mut a, true);
+        xf.transform_into(&raws, &setup, &mut b, false);
+        let bits = |v: &[Vertex]| -> Vec<u32> { v.iter().flat_map(|v| v.pos.iter().chain(v.color.iter().flatten()).chain(v.tex.iter().flatten()).map(|f| f.to_bits()).collect::<Vec<_>>()).collect() };
+        assert_eq!(bits(&a), bits(&b));
+        assert!(a.iter().any(|v| v.tex[1] != [0.0; 3]) && a.iter().any(|v| v.color[0] != [0.0; 4]));
+    }
 
     #[test]
     fn ortho_identity_maps_to_efb_pixels() {

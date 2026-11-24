@@ -40,6 +40,9 @@ pub(crate) struct DrawOp {
     pub scissor: Rect,
     /// Lines and points: their width and point size (BP 0x22).
     pub line_point: u32,
+    /// The vertex format carries no matrix indices: every vertex uses the
+    /// default matrices.
+    pub same_matrices: bool,
 }
 
 /// Ops with the vertices and shading blocks they refer to.
@@ -188,10 +191,10 @@ impl Back {
         let base = self.out.vertices.len() as u32;
         verts.clear();
         if fixed {
-            self.xf.transform_into(raw, setup, &mut verts);
+            self.xf.transform_into(raw, setup, &mut verts, d.same_matrices);
         } else {
             // Triangles keep their vertices as they are: straight to the output.
-            self.xf.transform_into(raw, setup, &mut self.out.vertices);
+            self.xf.transform_into(raw, setup, &mut self.out.vertices, d.same_matrices);
         }
         model.clear();
         if self.records {

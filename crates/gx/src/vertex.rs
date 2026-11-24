@@ -168,6 +168,11 @@ impl Layout {
         self.color[i].0 != 0
     }
 
+    /// The vertices carry a position or texture matrix index.
+    pub fn has_matrix_indices(&self) -> bool {
+        self.pnmtx || self.texmtx.contains(&true)
+    }
+
     /// Reads one vertex from `data` (exactly `self.size` bytes); indexed
     /// attributes come from `arrays` (made for this layout from `mem`).
     pub fn read<'a>(&self, cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram, default_pnmtx: u8, default_texmtx: [u8; 8]) -> RawVertex {

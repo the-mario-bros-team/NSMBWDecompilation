@@ -1189,7 +1189,7 @@ impl Gpu {
             efb_alpha: self.efb_alpha(),
         };
         let scissor = self.scissor();
-        self.batch.ops.push(Op::Draw(DrawOp { op, first, n, has_color, screen, shading, raster, scissor, line_point: self.bp[0x22] }));
+        self.batch.ops.push(Op::Draw(DrawOp { op, first, n, has_color, screen, shading, raster, scissor, line_point: self.bp[0x22], same_matrices: !layout.has_matrix_indices() }));
     }
 }
 
