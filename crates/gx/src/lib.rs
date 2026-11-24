@@ -8,6 +8,7 @@
 //! interpolated matrices (`interp`).
 
 mod back;
+pub mod capture;
 pub mod dff;
 pub mod backdrop;
 pub mod interp;

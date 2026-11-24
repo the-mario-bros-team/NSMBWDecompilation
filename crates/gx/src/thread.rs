@@ -228,6 +228,23 @@ pub struct GxThread {
     handle: Option<JoinHandle<()>>,
     /// Time the game thread spent waiting for the worker.
     pub waited: std::time::Duration,
+    /// `NSMBW_GX_CAPTURE` ([`crate::capture`]).
+    capture: Option<Box<Capturing>>,
+}
+
+/// A capture being taken: the file, the fields still to start and to
+/// take, and what is taken so far.
+struct Capturing {
+    path: std::path::PathBuf,
+    /// Fields to let pass before the first one taken.
+    wait: u64,
+    left: usize,
+    /// RAM and registers are taken at the first command of the first field.
+    started: bool,
+    cap: crate::capture::Capture,
+    field: Vec<crate::capture::Rec>,
+    /// The game camera set last, which the first field starts with.
+    world: Option<crate::WorldCamera>,
 }
 
 fn worker(mut gpu: Gpu, ram: RamView, msgs: Receiver<Msg>, replies: Sender<Reply>) {
@@ -296,7 +313,8 @@ impl GxThread {
                 worker(gpu, ram, msgs, replies)
             })
             .expect("GX thread");
-        Self { scanner: Scanner::new(), batch: Vec::with_capacity(BATCH * 2), to: Some(to), from, handle: Some(handle), waited: Default::default() }
+        let capture = crate::capture::requested().map(|(path, wait, left)| Box::new(Capturing { path, wait, left, started: false, cap: Default::default(), field: Vec::new(), world: None }));
+        Self { scanner: Scanner::new(), batch: Vec::with_capacity(BATCH * 2), to: Some(to), from, handle: Some(handle), waited: Default::default(), capture }
     }
 
     fn send(&self, msg: Msg) {
@@ -306,6 +324,9 @@ impl GxThread {
     fn flush(&mut self) {
         if !self.batch.is_empty() {
             let batch = std::mem::replace(&mut self.batch, Vec::with_capacity(BATCH * 2));
+            if let Some(c) = self.capture.as_mut().filter(|c| c.started) {
+                c.field.push(crate::capture::Rec::Data(batch.clone()));
+            }
             self.send(Msg::Data(batch));
         }
     }
@@ -328,6 +349,9 @@ impl GxThread {
     }
 
     fn feed(&mut self, bytes: &[u8], mem: &Mem, events: &mut Vec<Event>) {
+        if self.capture.as_ref().is_some_and(|c| c.wait == 0 && !c.started) {
+            self.start_capture(mem);
+        }
         let before = events.len();
         let bad = self.scanner.feed(bytes, mem, &mut self.batch, events);
         if bad || self.batch.len() >= BATCH {
@@ -343,6 +367,42 @@ impl GxThread {
     fn request_output(&mut self) {
         self.flush();
         self.send(Msg::TakeOutput);
+        self.capture_field_done();
+    }
+
+    /// RAM and the decoder's registers as the first captured field starts.
+    fn start_capture(&mut self, mem: &Mem) {
+        self.flush();
+        self.send(Msg::SaveRegs);
+        let regs = match self.reply() {
+            Reply::Regs(r) => r,
+            _ => unreachable!("unrequested reply"),
+        };
+        let c = self.capture.as_mut().expect("capturing");
+        c.cap.regs = regs;
+        c.cap.mem1 = mem.ram(0x8000_0000, guest_mem::MEM1_SIZE).map(<[u8]>::to_vec).unwrap_or_default();
+        c.cap.mem2 = mem.ram(0x9000_0000, guest_mem::MEM2_SIZE).map(<[u8]>::to_vec).unwrap_or_default();
+        c.started = true;
+        c.field.push(crate::capture::Rec::World(c.world));
+        println!("gx capture: from this field, {} fields", c.left);
+    }
+
+    /// A field ends: counted towards the first captured one, or kept.
+    fn capture_field_done(&mut self) {
+        let Some(c) = self.capture.as_mut() else { return };
+        if !c.started {
+            c.wait = c.wait.saturating_sub(1);
+            return;
+        }
+        c.cap.fields.push(std::mem::take(&mut c.field));
+        c.left = c.left.saturating_sub(1);
+        if c.left == 0 {
+            let c = self.capture.take().expect("capturing");
+            match std::fs::write(&c.path, c.cap.write()) {
+                Ok(()) => println!("gx capture: {} fields written to {}", c.cap.fields.len(), c.path.display()),
+                Err(e) => eprintln!("gx capture: {}: {e}", c.path.display()),
+            }
+        }
     }
 
     fn finish_output(&mut self) -> Output {
@@ -510,6 +570,12 @@ impl GpuPort {
             Self::Inline(gpu) => gpu.set_world(camera),
             Self::Thread(t) => {
                 t.flush();
+                if let Some(c) = t.capture.as_mut() {
+                    c.world = camera;
+                    if c.started {
+                        c.field.push(crate::capture::Rec::World(camera));
+                    }
+                }
                 t.send(Msg::World(camera));
             }
         }

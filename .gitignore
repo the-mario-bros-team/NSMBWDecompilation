@@ -23,3 +23,5 @@ target/
 
 # Generated from the user's own disc by ppc-recomp (see crates/game-recomp).
 /crates/game-recomp/gen/
+# GX captures (NSMBW_GX_CAPTURE) hold game data: never commit them.
+*.gxcap
