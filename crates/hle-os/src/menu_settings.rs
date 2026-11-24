@@ -49,7 +49,8 @@
 //! through the game's own quit path (exit mode 2: nothing saved, the
 //! power-ups the course began with). The world map enemies' ambushes
 //! (levels 0x20-0x22) keep the game's answer, as their window's cursor
-//! never moves in the game either.
+//! never moves in the game either, and so does the title screen's course
+//! (01-40, level 0x27), which has no pause window but asks too.
 
 use game_version::E1;
 use guest_cpu::{MSR_EE, MSR_FP};
@@ -124,6 +125,8 @@ const START_SYSTEM_SE: E1 = E1(0x8019_5380);
 /// `dGameCom::isNowCourseClear`: whether the pause window's Exit may be picked.
 const IS_NOW_COURSE_CLEAR: E1 = E1(0x800B_4DE0);
 const NOW_SCENE: E1 = E1(0x8042_8732); // dScene_c::m_nowScene
+/// The title screen's course, 01-40 (`m_startGameInfo`'s level there).
+const TITLE_LEVEL: u8 = 0x27;
 const SCENE_STAGE: u16 = 5;
 const SELECT_CURSOR_SETUP: E1 = E1(0x800B_44D0); // dGameCom::SelectCursorSetup(pane, slot, bool)
 const ANIME_START: E1 = E1(0x800C_92F0);
@@ -804,10 +807,12 @@ impl System {
     }
 
     /// `isNowCourseClear` with Exit Course on: yes in a course, but in the
-    /// map enemies' ambushes. The game's function only reads, so its answer
-    /// is not needed when it would be replaced anyway.
+    /// map enemies' ambushes and the title screen's course. The game's
+    /// function only reads, so its answer is not needed when it would be
+    /// replaced anyway.
     fn exit_any_course(&mut self) -> bool {
-        if !self.menu.exit_course || self.mem.read_u16(NOW_SCENE.va()) != Ok(SCENE_STAGE) || (0x20..=0x22).contains(&self.r8(START_GAME_INFO.va() + 0xD)) {
+        let level = self.r8(START_GAME_INFO.va() + 0xD);
+        if !self.menu.exit_course || self.mem.read_u16(NOW_SCENE.va()) != Ok(SCENE_STAGE) || (0x20..=0x22).contains(&level) || level == TITLE_LEVEL {
             return false;
         }
         self.cpu.gpr[3] = 1;
