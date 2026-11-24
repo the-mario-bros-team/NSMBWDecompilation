@@ -225,7 +225,7 @@ impl MovieSkip {
     pub fn before_field(&mut self, sys: &mut System, buttons: &mut [u16; 4], tapped: bool) -> Option<String> {
         let pressed = buttons.iter().zip(self.held).any(|(&b, h)| b & !h != 0);
         self.held = *buttons;
-        let scene = read32(sys, SCENE).map_or(0, |w| w as u16);
+        let scene = read32(sys, SCENE.va()).map_or(0, |w| w as u16);
         if self.skipped.is_some_and(|s| s != scene) {
             self.skipped = None;
         }
