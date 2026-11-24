@@ -44,6 +44,30 @@ pub fn ubershader(names: &[&str], spirv: (u8, u8)) -> Result<(Vec<u32>, Vec<Vec<
     Ok((vs, fs))
 }
 
+/// The ubershader's fragment entry point `name` with shading words baked in
+/// (`fixed`: index, mask of the bits baked, their value): `word(i)` returns
+/// those bits as constants (and reads only the rest), so the driver can
+/// unroll the TEV loop and leave out what the draw doesn't use. The
+/// arithmetic is the ubershader's, so the pixels are the same.
+pub fn specialized(name: &str, fixed: &[(u32, u32, u32)], spirv: (u8, u8)) -> Result<Vec<u32>, String> {
+    const BODY: &str = "    return shadings[sidx].w[i >> 2u][i & 3u];";
+    let mut cases = String::new();
+    for &(i, mask, v) in fixed {
+        let v = v & mask;
+        if mask == u32::MAX {
+            cases += &format!("        case {i}u: {{ return {v}u; }}\n");
+        } else {
+            cases += &format!("        case {i}u: {{ return (shadings[sidx].w[{}u][{}u] & {}u) | {v}u; }}\n", i >> 2, i & 3, !mask);
+        }
+    }
+    let src = UBERSHADER.replacen(BODY, &format!("    switch i {{\n{cases}        default: {{ return shadings[sidx].w[i >> 2u][i & 3u]; }}\n    }}"), 1);
+    if src == UBERSHADER {
+        return Err("the ubershader's word() changed".into());
+    }
+    let (module, info) = parse(&src)?;
+    entry(&module, &info, naga::ShaderStage::Fragment, name, spirv)
+}
+
 /// The EFB copy pass.
 pub fn copy(spirv: (u8, u8)) -> Result<(Vec<u32>, Vec<u32>), String> {
     compile(COPY, spirv)
@@ -84,6 +108,16 @@ mod tests {
             let (vs, fs) = super::copy(spirv).unwrap_or_else(|e| panic!("{e}"));
             assert_eq!(vs[..2], [0x0723_0203, version]);
             assert_eq!(fs[..2], [0x0723_0203, version]);
+        }
+    }
+
+    #[test]
+    fn specialized_compiles() {
+        // Two stages, partly masked words, every fragment entry point.
+        let fixed = [(0, u32::MAX, 1 << 10), (1, u32::MAX, 0x0004_8040), (65, 0xFFFF_0000, 0x00E0_0000), (135, 0xFFF0_0000, 0)];
+        for name in super::DUAL_SOURCE.iter().chain(&super::ONE).chain(&super::ONE_BLEND) {
+            let code = super::specialized(name, &fixed, (1, 3)).unwrap_or_else(|e| panic!("{name}: {e}"));
+            assert_eq!(code[0], 0x0723_0203);
         }
     }
 }

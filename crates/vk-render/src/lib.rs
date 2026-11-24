@@ -352,6 +352,8 @@ struct CopyParams {
 #[derive(Default, Clone, Copy, Debug)]
 pub struct FrameStats {
     pub draws: u32,
+    /// Of `draws`, those drawn with a specialized pipeline.
+    pub specialized: u32,
     pub pipelines: usize,
     pub textures: usize,
     pub uploads: usize,
@@ -454,10 +456,28 @@ pub struct Renderer {
     /// queue has no timestamps.
     timer: Option<(vk::QueryPool, f32)>,
     gpu_time: Option<std::time::Duration>,
+    /// Specialized pipelines; `None` with `NSMBW_UBERSHADER` set.
+    specializer: Option<Specializer>,
+    /// This frame's baked hash of each shading block, once looked at.
+    baked_hashes: Vec<Option<u64>>,
 }
 
 fn range(aspect: vk::ImageAspectFlags, levels: u32) -> vk::ImageSubresourceRange {
     vk::ImageSubresourceRange { aspect_mask: aspect, base_mip_level: 0, level_count: levels, base_array_layer: 0, layer_count: 1 }
+}
+
+/// The fragment stage of the draw pipeline for key `key`: its module (the
+/// ubershader's) and entry point. Without dual-source blending, a pipeline
+/// that blends with the source alpha takes the stage that writes the
+/// blending alpha.
+fn fragment_stage(modules: &DrawModules, key: u32) -> (vk::ShaderModule, &'static CStr) {
+    let (blend_on, subtract) = (key & 1 != 0, key & (1 << 11) != 0);
+    let uses_src_alpha = blend_on && !subtract && [(key >> 8) & 7, (key >> 5) & 7].iter().any(|&f| f == 4 || f == 5);
+    let fs = match modules.fs_blend {
+        Some(b) if uses_src_alpha => b,
+        _ => modules.fs,
+    };
+    fs[usize::from(key & EARLY_DEPTH != 0)]
 }
 
 /// GX's cull mode (1 back, 2 front) as Vulkan's.
@@ -593,6 +613,56 @@ fn blend_key(r: &Raster) -> u32 {
 
 /// Pipeline key bit: the fragment shader leaves depth to the rasteriser.
 const EARLY_DEPTH: u32 = 1 << 17;
+
+/// Shading words a specialized fragment stage bakes in, and the bits of
+/// each that count: what shapes the TEV program (stages, orders,
+/// combiners, selectors, alpha test functions, indirect setup, Z textures,
+/// fog mode, flags). Colours, textures, sizes and fog values stay read per
+/// draw, so draws differing only in those share a pipeline.
+const BAKED: &[(usize, usize, u32)] = &[
+    (sh::GENMODE, 1, u32::MAX),
+    (sh::TREF, 8, u32::MAX),
+    (sh::ENV, 32, u32::MAX),
+    (sh::KSEL, 8, u32::MAX),
+    (sh::ALPHA_TEST, 1, 0xFFFF_0000),
+    (sh::PE_CONTROL, 1, 7),
+    (sh::CONST_ALPHA, 1, 0x100),
+    (sh::IND_CMD, 16, u32::MAX),
+    (sh::IREF, 1, u32::MAX),
+    (sh::IND_SCALE, 2, u32::MAX),
+    (sh::FOG + 3, 1, 0xFFF0_0000),
+    (sh::FOG_RANGE, 1, 0x400),
+    (sh::ZTEX + 1, 1, u32::MAX),
+    (sh::FLAGS, 1, u32::MAX),
+];
+
+/// A shading block's baked words ([`BAKED`]), in order, masked.
+fn baked(s: &[u32]) -> Vec<u32> {
+    BAKED.iter().flat_map(|&(at, n, mask)| s[at..at + n].iter().map(move |w| w & mask)).collect()
+}
+
+/// [`baked`] as `shaders::specialized` takes it.
+fn baked_fixed(values: &[u32]) -> Vec<(u32, u32, u32)> {
+    BAKED.iter().flat_map(|&(at, n, mask)| (at..at + n).map(move |i| (i as u32, mask))).zip(values).map(|((i, mask), &v)| (i, mask, v)).collect()
+}
+
+fn baked_hash(values: &[u32]) -> u64 {
+    use std::hash::{Hash, Hasher};
+    let mut h = std::collections::hash_map::DefaultHasher::new();
+    values.hash(&mut h);
+    h.finish()
+}
+
+/// Builds specialized pipelines on worker threads ([`Renderer::specialized`]).
+struct Specializer {
+    jobs: Option<std::sync::mpsc::Sender<(u32, Vec<u32>)>>,
+    built: Receiver<(u32, u64, Vec<u32>, Option<vk::Pipeline>)>,
+    workers: Vec<JoinHandle<()>>,
+    /// By (pipeline key, baked hash): the pipeline, or `None` while it is built.
+    pipelines: HashMap<(u32, u64), Option<vk::Pipeline>>,
+    /// The baked words of each built pipeline, saved for the next start.
+    words: HashMap<(u32, u64), Vec<u32>>,
+}
 
 /// Vulkan 1.1 pipeline key bits, for what can't be set per draw there: GX's
 /// cull mode (2 bits) and Z mode (5 bits: test, compare op, update).
@@ -1035,7 +1105,10 @@ impl Renderer {
                 stats: FrameStats::default(),
                 timer,
                 gpu_time: None,
+                specializer: None,
+                baked_hashes: Vec::new(),
             };
+            r.start_specializer(spirv);
             r.upload_palette()?;
             if r.pipeline_cache_path.is_some() {
                 r.start_prewarm();
@@ -1290,7 +1363,7 @@ impl Renderer {
         if let Some(&p) = self.pipelines.get(&key) {
             return Ok(p);
         }
-        let p = unsafe { Self::create_pipeline(&self.device, self.pipeline_cache, self.pipeline_layout, self.draw_modules, key)? };
+        let p = unsafe { Self::create_pipeline(&self.device, self.pipeline_cache, self.pipeline_layout, self.draw_modules, key, None)? };
         self.pipelines.insert(key, p);
         Ok(p)
     }
@@ -1298,7 +1371,9 @@ impl Renderer {
     /// The draw pipeline for blend key `key` (with [`EARLY_DEPTH`]), from the
     /// ubershader's modules. Safe on any thread: the pipeline cache is not
     /// externally synchronised.
-    unsafe fn create_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: DrawModules, key: u32) -> Result<vk::Pipeline, vk::Result> {
+    /// `fragment`: a specialized fragment module in place of the
+    /// ubershader's (for the entry point [`fragment_stage`] names).
+    unsafe fn create_pipeline(device: &Device, cache: vk::PipelineCache, layout: vk::PipelineLayout, modules: DrawModules, key: u32, fragment: Option<vk::ShaderModule>) -> Result<vk::Pipeline, vk::Result> {
         let efb_alpha = key & (1 << 16) != 0;
         let (blend_on, logic_on, subtract) = (key & 1 != 0, key & 2 != 0, key & (1 << 11) != 0);
         let mut mask = vk::ColorComponentFlags::empty();
@@ -1351,14 +1426,8 @@ impl Renderer {
                 .dst_alpha_blend_factor(dst)
                 .alpha_blend_op(vk::BlendOp::ADD);
         }
-        // Without dual-source blending, a pipeline that blends with the
-        // source alpha takes the stage that writes the blending alpha.
-        let uses_src_alpha = blend_on && !subtract && [(key >> 8) & 7, (key >> 5) & 7].iter().any(|&f| f == 4 || f == 5);
-        let fs = match modules.fs_blend {
-            Some(b) if uses_src_alpha => b,
-            _ => modules.fs,
-        };
-        let early = usize::from(key & EARLY_DEPTH != 0);
+        let (fs_module, fs_name) = fragment_stage(&modules, key);
+        let fs_module = fragment.unwrap_or(fs_module);
         let atts = [att];
 
         let binding = [vk::VertexInputBindingDescription { binding: 0, stride: VERTEX_SIZE, input_rate: vk::VertexInputRate::VERTEX }];
@@ -1400,7 +1469,7 @@ impl Renderer {
         let mut rendering = vk::PipelineRenderingCreateInfo::default().color_attachment_formats(&formats).depth_attachment_format(DEPTH_FORMAT);
         let stages = [
             vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(modules.vs).name(c"vs"),
-            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(fs[early].0).name(fs[early].1),
+            vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(fs_module).name(fs_name),
         ];
         let info = vk::GraphicsPipelineCreateInfo::default()
             .stages(&stages)
@@ -1450,7 +1519,7 @@ impl Renderer {
                             let Some(key) = queue.lock().unwrap().pop() else { break };
                             // SAFETY: the device, cache, layout and modules outlive the
                             // workers (joined first in `Drop`).
-                            if let Ok(p) = unsafe { Self::create_pipeline(&device, cache, layout, modules, key) } {
+                            if let Ok(p) = unsafe { Self::create_pipeline(&device, cache, layout, modules, key, None) } {
                                 let _ = tx.send((key, p));
                             }
                             remaining.fetch_sub(1, Ordering::Relaxed);
@@ -1536,6 +1605,106 @@ impl Renderer {
         }
         self.ui_frame = frame;
         Ok(())
+    }
+
+    /// Starts the threads that build specialized pipelines, and queues the
+    /// ones saved by earlier runs (`<pipeline cache>.spec`).
+    fn start_specializer(&mut self, spirv: (u8, u8)) {
+        if std::env::var_os("NSMBW_UBERSHADER").is_some() {
+            return;
+        }
+        let (jobs, rx) = std::sync::mpsc::channel::<(u32, Vec<u32>)>();
+        let rx = Arc::new(Mutex::new(rx));
+        let (tx, built) = std::sync::mpsc::channel();
+        // One thread on a four-core phone (the game uses the others), two on more.
+        let threads = std::thread::available_parallelism().map_or(1, |n| n.get()).saturating_sub(3).clamp(1, 2);
+        let (cache, layout, modules) = (self.pipeline_cache, self.pipeline_layout, self.draw_modules);
+        let workers = (0..threads)
+            .filter_map(|i| {
+                let (device, rx, tx) = (self.device.clone(), rx.clone(), tx.clone());
+                std::thread::Builder::new()
+                    .name(format!("specialize-{i}"))
+                    .spawn(move || loop {
+                        let Ok((key, values)) = rx.lock().unwrap().recv() else { break };
+                        let hash = baked_hash(&values);
+                        let (_, name) = fragment_stage(&modules, key);
+                        let built = shaders::specialized(name.to_str().unwrap_or("fs"), &baked_fixed(&values), spirv).ok().and_then(|code| {
+                            // SAFETY: the device, cache, layout and modules outlive
+                            // the workers (joined first in `Drop`).
+                            unsafe {
+                                let m = device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&code), None).ok()?;
+                                let p = Self::create_pipeline(&device, cache, layout, modules, key, Some(m)).ok();
+                                device.destroy_shader_module(m, None);
+                                p
+                            }
+                        });
+                        if tx.send((key, hash, values, built)).is_err() {
+                            break;
+                        }
+                    })
+                    .ok()
+            })
+            .collect();
+        let mut s = Specializer { jobs: Some(jobs), built, workers, pipelines: HashMap::new(), words: HashMap::new() };
+        if let Some(text) = self.pipeline_cache_path.as_ref().and_then(|p| std::fs::read_to_string(p.with_extension("spec")).ok()) {
+            for line in text.lines() {
+                let mut parts = line.split_whitespace();
+                let (Some(key), Some(values)) = (parts.next().and_then(|k| u32::from_str_radix(k, 16).ok()), parts.next()) else { continue };
+                let values: Vec<u32> = values.split(',').filter_map(|v| u32::from_str_radix(v, 16).ok()).collect();
+                if values.len() == BAKED.iter().map(|b| b.1).sum::<usize>() && s.pipelines.insert((key, baked_hash(&values)), None).is_none() {
+                    let _ = s.jobs.as_ref().unwrap().send((key, values));
+                }
+            }
+        }
+        self.specializer = Some(s);
+    }
+
+    /// Specialized pipelines the workers have finished, into the table.
+    fn collect_specialized(&mut self) {
+        let Some(s) = &mut self.specializer else { return };
+        let mut got = false;
+        while let Ok((key, hash, values, p)) = s.built.try_recv() {
+            got = true;
+            match p {
+                Some(p) => {
+                    s.pipelines.insert((key, hash), Some(p));
+                    s.words.insert((key, hash), values);
+                }
+                // Left to the ubershader (it stays `None`, so it isn't asked again).
+                None => eprintln!("vulkan: no specialized pipeline for {key:x}"),
+            }
+        }
+        if got && s.pipelines.values().all(Option::is_some) {
+            println!("shaders: {} specialized pipelines", s.pipelines.len());
+        }
+    }
+
+    /// The specialized pipeline for pipeline key `key` and the draw's
+    /// shading block `shading`, when it is built; else asks for it (the
+    /// draw then uses the ubershader).
+    fn specialized(&mut self, key: u32, shading: usize, out: &Output) -> Option<vk::Pipeline> {
+        let s = self.specializer.as_mut()?;
+        let block = &out.shadings.get(shading)?.0;
+        let hash = match self.baked_hashes.get(shading).copied().flatten() {
+            Some(h) => h,
+            None => {
+                let h = baked_hash(&baked(block));
+                if let Some(slot) = self.baked_hashes.get_mut(shading) {
+                    *slot = Some(h);
+                }
+                h
+            }
+        };
+        match s.pipelines.get(&(key, hash)) {
+            Some(p) => *p,
+            None => {
+                s.pipelines.insert((key, hash), None);
+                if let Some(jobs) = &s.jobs {
+                    let _ = jobs.send((key, baked(block)));
+                }
+                None
+            }
+        }
     }
 
     /// Reads the GPU time of frame slot `f`'s last submission (its fence has
@@ -2280,7 +2449,11 @@ impl Renderer {
         // world map has over 10,000 draws a frame.
         let mut state: Option<(vk::Rect2D, u32, u32)> = None;
         let mut draws = 0;
+        let mut specialized = 0;
         let legacy = self.passes.is_some();
+        self.baked_hashes.clear();
+        self.baked_hashes.resize(out.shadings.len(), None);
+        self.collect_specialized();
         for c in &out.cmds {
             match *c {
                 Cmd::Draw(d) => {
@@ -2299,7 +2472,13 @@ impl Renderer {
                     if legacy {
                         key |= d.raster.cull << CULL_SHIFT | (z & 0x1F) << ZMODE_SHIFT;
                     }
-                    let p = self.pipeline(key)?;
+                    let p = match self.specialized(key, d.shading as usize, out) {
+                        Some(p) => {
+                            specialized += 1;
+                            p
+                        }
+                        None => self.pipeline(key)?,
+                    };
                     unsafe {
                         if bound != Some(p) {
                             dev.cmd_bind_pipeline(cmd, vk::PipelineBindPoint::GRAPHICS, p);
@@ -2411,6 +2590,7 @@ impl Renderer {
             unsafe { end_pass(&dev, cmd, legacy) };
         }
         self.stats.draws = draws;
+        self.stats.specialized = specialized;
         self.stats.pipelines = self.pipelines.len();
         Ok(())
     }
@@ -2650,8 +2830,30 @@ impl Drop for Renderer {
                 }
             }
         }
+        let specialized: Vec<vk::Pipeline> = match self.specializer.take() {
+            Some(mut s) => {
+                s.jobs = None;
+                for t in s.workers.drain(..) {
+                    let _ = t.join();
+                }
+                while let Ok((key, hash, values, Some(p))) = s.built.try_recv() {
+                    s.pipelines.insert((key, hash), Some(p));
+                    s.words.insert((key, hash), values);
+                }
+                if let Some(path) = &self.pipeline_cache_path {
+                    let mut lines: Vec<String> = s.words.iter().map(|(k, v)| format!("{:x} {}", k.0, v.iter().map(|w| format!("{w:x}")).collect::<Vec<_>>().join(","))).collect();
+                    lines.sort_unstable();
+                    let _ = std::fs::write(path.with_extension("spec"), lines.join("\n"));
+                }
+                s.pipelines.into_values().flatten().collect()
+            }
+            None => Vec::new(),
+        };
         unsafe {
             let _ = wait_idle(&self.gpu);
+            for p in specialized {
+                self.device.destroy_pipeline(p, None);
+            }
             if let Some(path) = &self.pipeline_cache_path {
                 if let Ok(data) = self.device.get_pipeline_cache_data(self.pipeline_cache) {
                     let _ = std::fs::write(path, data);

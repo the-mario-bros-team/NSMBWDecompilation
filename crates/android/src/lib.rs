@@ -356,12 +356,14 @@ impl Render {
             let (n, ms) = (self.speed.1.max(1), |d: Duration| d.as_secs_f32() * 1000.0);
             let (textures, used, reserved) = r.memory();
             println!(
-                "field {}: game {:.0}% ({:.1} fields/s), emulation {:.1} ms and render {:.1} ms a field; {textures} textures, GPU memory {} MB used of {} MB",
+                "field {}: game {:.0}% ({:.1} fields/s), emulation {:.1} ms and render {:.1} ms a field; {} of {} draws specialized; {textures} textures, GPU memory {} MB used of {} MB",
                 f.index,
                 self.speed.1 as f32 / secs / 59.94 * 100.0,
                 self.speed.1 as f32 / secs,
                 ms(self.speed.2) / n as f32,
                 ms(self.speed.3) / n as f32,
+                r.stats.specialized,
+                r.stats.draws,
                 used >> 20,
                 reserved >> 20
             );
