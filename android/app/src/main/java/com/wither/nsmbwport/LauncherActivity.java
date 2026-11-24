@@ -189,7 +189,8 @@ public final class LauncherActivity extends Activity {
                 + "2. Open Filesystem, right-click the disc at the top and choose Extract Entire Disc.\n"
                 + "3. Copy that folder (or a zip of it) to this phone.\n"
                 + "4. Tap Import from Extracted Game Data Folder… or Import Game Data Zip… below and choose it.\n\n"
-                + "Use the USA disc, revision 1 (SMNE01): Dolphin shows the revision under Properties > Info."), 15);
+                + "Use the USA (SMNE01) or European (SMNP01) disc, revision 1: Dolphin shows the revision under "
+                + "Properties > Info."), 15);
         stepsText.setGravity(Gravity.START);
         stepsText.setPadding(0, dp(6), 0, dp(14));
         stepsText.setLineSpacing(dp(3), 1f);
@@ -197,7 +198,7 @@ public final class LauncherActivity extends Activity {
         steps = stepsBox;
         gameData.addView(stepsBox, matchWidth(dp(10)));
         final TextView importHelp = text(Lang.t("Import your own New Super Mario Bros. Wii "
-                + "(USA, SMNE01) once. Easiest: the folder Dolphin's Extract Entire Disc makes (DATA, or the folder "
+                + "(USA, SMNE01, or Europe, SMNP01) once. Easiest: the folder Dolphin's Extract Entire Disc makes (DATA, or the folder "
                 + "that holds it), or a zip of that folder. Your saves are kept."), 13);
         importHelp.setGravity(Gravity.START);
         importHelp.setTextColor(MUTED);
@@ -526,8 +527,8 @@ public final class LauncherActivity extends Activity {
         final LinearLayout column = new LinearLayout(this);
         column.setOrientation(LinearLayout.VERTICAL);
         column.setPadding(dp(24), dp(16), dp(24), dp(16));
-        section(column, Lang.t("1. Import New Super Mario Bros. Wii"), Lang.t("Use your own USA New Super Mario Bros. Wii "
-                + "(SMNE01, revision 1). Easiest: in Dolphin on a computer, right-click the game, choose Properties, "
+        section(column, Lang.t("1. Import New Super Mario Bros. Wii"), Lang.t("Use your own New Super Mario Bros. Wii "
+                + "for the USA (SMNE01) or Europe (SMNP01), revision 1. Easiest: in Dolphin on a computer, right-click the game, choose Properties, "
                 + "Filesystem, then right-click the disc and choose Extract Entire Disc. Copy that folder (or a zip of "
                 + "it) to this phone and tap Import. Dolphin shows the revision under Properties > Info."));
         section(column, Lang.t("2. Play"), Lang.t("Tap Play. The on-screen Wii Remote is held sideways; turn the "

@@ -9,8 +9,15 @@
 //!   course's own start record (`dInfo_c::m_startGameInfo`), as the course
 //!   was entered, so the players play it. The checkpoint is cleared first
 //!   (`dCyuukan_c::clear`), so the start is the course's own, and the
-//!   players' power-ups go back to what they had when they came in from the
-//!   map. No life is lost (no one died). Never in a net game.
+//!   players' power-ups and Star go back to what they had when they came in
+//!   from the map. The lives stay as they were at the restart (less any
+//!   lost while the picture fades out): no life is lost (no one died), and
+//!   none lost in the attempt comes back. The course being left puts back
+//!   its own copy of the players as they came in (lives, power-ups, score,
+//!   coins) as it ends, which gives back lost lives and may miss a Star
+//!   given on the way in; so the power-ups and lives are written once the
+//!   course-in scene (CRSIN) is up, before the next course makes its
+//!   players from them. Never in a net game.
 //! - The level timer counts the frames the course's clock ran
 //!   (`dStageTimer_c` steps 92 a frame while it runs), so it stops with the
 //!   game: paused, at a miss, at the goal. It starts at each attempt (a new
@@ -34,6 +41,7 @@ const SCENE: E1 = E1(0x8042_8730); // dScene_c::m_nextScene, m_nowScene (halfwor
 const SCENE_WORLD_MAP: u16 = 3;
 const SCENE_STAGE: u16 = 5;
 const SCENE_RESTART: u16 = 6; // RESTART_CRSIN
+const SCENE_COURSE_IN: u16 = 7; // CRSIN, after the restart scene
 const SCENE_GAME_SETUP: u16 = 0xA;
 /// `m_nextScene` with no change pending (`dScene_c::setNextScene` checks for it).
 const NO_SCENE: u16 = 0x2EE;
@@ -86,6 +94,15 @@ pub struct Practice {
     rest: Option<[u32; 4]>,
     /// The players' power-ups and Star when they came into this course.
     entry: Option<([u8; 16], [u8; 16])>,
+    /// A restart under way: what to write once its course-in scene is up.
+    restore: Option<Restore>,
+}
+
+/// A restart's players: their power-ups and Star as they came in, and the
+/// lives at the restart, less any lost while the course fades out.
+struct Restore {
+    entry: Option<([u8; 16], [u8; 16])>,
+    rest: Option<[u32; 4]>,
 }
 
 fn read32(sys: &System, a: u32) -> Option<u32> {
@@ -112,10 +129,31 @@ impl Practice {
     /// After a field, before the Gameplay options fix anything up (Infinite
     /// Lives gives back a life it sees lost; this must see it first).
     /// Returns lines for the log: an attempt starting, the goal, a life lost.
-    pub fn count(&mut self, sys: &System) -> Vec<String> {
+    /// Writes only a restart's players, once its course-in scene is up.
+    pub fn count(&mut self, sys: &mut System) -> Vec<String> {
         let mut log = Vec::new();
         let scene = now_scene(sys);
         let last = std::mem::replace(&mut self.last_scene, scene);
+        // A restart: once the course it left has put back its players and
+        // before the course to come makes them, the players.
+        match (scene, &mut self.restore) {
+            (_, None) | (SCENE_STAGE | SCENE_RESTART, _) => {}
+            (SCENE_COURSE_IN, Some(r)) => {
+                if let Some((modes, items)) = r.entry {
+                    if let Some(b) = sys.mem.ram_mut(PLAYER_MODE.va(), 16) {
+                        b.copy_from_slice(&modes);
+                    }
+                    if let Some(b) = sys.mem.ram_mut(CREATE_ITEM.va(), 16) {
+                        b.copy_from_slice(&items);
+                    }
+                }
+                for (i, n) in r.rest.into_iter().flatten().enumerate() {
+                    let _ = sys.mem.write_u32(REST.va() + 4 * i as u32, n);
+                }
+                self.restore = None;
+            }
+            _ => self.restore = None,
+        }
         if matches!(scene, SCENE_WORLD_MAP | SCENE_GAME_SETUP) {
             self.fresh = true;
         }
@@ -189,6 +227,13 @@ impl Practice {
     pub fn settle(&mut self, sys: &System) {
         let in_course = self.stats.in_course && now_scene(sys) == SCENE_STAGE;
         self.rest = if in_course { rests(sys) } else { None };
+        // A restart's fade-out: lives lost count, the course's own put-back
+        // at its end does not.
+        if let (Some(Restore { rest: Some(r), .. }), Some(now)) = (&mut self.restore, self.rest) {
+            for (r, n) in r.iter_mut().zip(now) {
+                *r = (*r).min(n);
+            }
+        }
         self.timer = if in_course { pointer(sys, STAGE_TIMER.va()).unwrap_or(0) } else { 0 };
         if self.timer != 0 {
             self.time = read32(sys, self.timer + 4).map_or(0, |v| v as i32);
@@ -214,20 +259,15 @@ impl Practice {
         if let Err(e) = sys.call_guest(CYUUKAN_CLEAR.va(), &[info + CYUUKAN], &[]) {
             return format!("restart: {e}");
         }
-        if let Some((modes, items)) = self.entry {
-            if let Some(b) = sys.mem.ram_mut(PLAYER_MODE.va(), 16) {
-                b.copy_from_slice(&modes);
-            }
-            if let Some(b) = sys.mem.ram_mut(CREATE_ITEM.va(), 16) {
-                b.copy_from_slice(&items);
-            }
-        }
         // The course's start record as it was entered (not a demo: +7 is
         // `mIsDemo`).
         let Some(b) = sys.mem.ram_mut(RESTART_GAME_INFO.va(), 16) else { return "restart: no restart record".into() };
         b.copy_from_slice(&start);
         match sys.call_guest(SET_NEXT_SCENE.va(), &[u32::from(SCENE_RESTART), 0, 2, 1], &[]) {
-            Ok(_) => format!("restart: course {:02}-{:02} from its start (record {})", start[12] + 1, start[13] + 1, start.iter().map(|b| format!("{b:02x}")).collect::<String>()),
+            Ok(_) => {
+                self.restore = Some(Restore { entry: self.entry, rest: rests(sys) });
+                format!("restart: course {:02}-{:02} from its start (record {})", start[12] + 1, start[13] + 1, start.iter().map(|b| format!("{b:02x}")).collect::<String>())
+            }
             Err(e) => format!("restart: {e}"),
         }
     }
