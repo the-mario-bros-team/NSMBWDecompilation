@@ -101,6 +101,45 @@ pub struct Layout {
     color: [(u32, u32); 2],
     tex: [(u32, Num); 8],
     pub size: usize,
+    /// The attributes in stream order, each at a fixed offset in the
+    /// vertex ([`Layout::read_into`]); `None` for formats it does not
+    /// cover (NBT with three indices), which take the general path.
+    plan: Option<Plan>,
+}
+
+/// Where one attribute goes in a [`RawVertex`].
+#[derive(Clone, Copy, Default)]
+enum Dst {
+    #[default]
+    Pnmtx,
+    Texmtx(u8),
+    Pos,
+    Nbt,
+    Color(u8),
+    Tex(u8),
+}
+
+/// One attribute of a vertex format, compiled.
+#[derive(Clone, Copy, Default)]
+struct Step {
+    dst: Dst,
+    /// Byte offset in the vertex.
+    at: u8,
+    /// 1 direct, 2 index8, 3 index16.
+    desc: u8,
+    array: u8,
+    /// Bytes of attribute data (direct or in the array).
+    size: u8,
+    fmt: u8,
+    count: u8,
+    scale: f32,
+}
+
+/// A vertex format's attributes, at most 1 + 8 + 1 + 1 + 2 + 8.
+#[derive(Clone, Copy)]
+struct Plan {
+    steps: [Step; 21],
+    len: u8,
 }
 
 impl Layout {
@@ -142,6 +181,7 @@ impl Layout {
             color: [(desc(lo, 13), (a >> 14) & 7), (desc(lo, 15), (a >> 18) & 7)],
             tex,
             size: 0,
+            plan: None,
         };
         let mut size = l.pnmtx as usize + l.texmtx.iter().filter(|&&t| t).count();
         size += index_size(l.pos.0, l.pos.1.size());
@@ -157,7 +197,53 @@ impl Layout {
             size += index_size(d, n.size());
         }
         l.size = size;
+        l.plan = l.compile();
         l
+    }
+
+    /// The attributes as [`Step`]s, in the order the stream has them.
+    fn compile(&self) -> Option<Plan> {
+        if self.nrm_index3 && self.nrm.0 >= 2 {
+            return None;
+        }
+        let mut p = Plan { steps: [Step::default(); 21], len: 0 };
+        let mut at = 0usize;
+        let mut push = |p: &mut Plan, step: Step, bytes: usize| {
+            p.steps[p.len as usize] = Step { at: at as u8, ..step };
+            p.len += 1;
+            at += bytes;
+        };
+        if self.pnmtx {
+            push(&mut p, Step { dst: Dst::Pnmtx, desc: 1, size: 1, ..Step::default() }, 1);
+        }
+        for i in 0..8 {
+            if self.texmtx[i] {
+                push(&mut p, Step { dst: Dst::Texmtx(i as u8), desc: 1, size: 1, ..Step::default() }, 1);
+            }
+        }
+        let num = |dst: Dst, d: u32, array: usize, n: Num| Step { dst, desc: d as u8, array: array as u8, size: n.size() as u8, fmt: n.fmt as u8, count: n.count as u8, scale: n.scale, at: 0 };
+        let (pd, pn) = self.pos;
+        if pd != 0 {
+            push(&mut p, num(Dst::Pos, pd, 0, pn), index_size(pd, pn.size()));
+        }
+        let (nd, nn) = self.nrm;
+        if nd != 0 {
+            push(&mut p, num(Dst::Nbt, nd, 1, nn), index_size(nd, nn.size()));
+        }
+        for c in 0..2 {
+            let (d, f) = self.color[c];
+            if d != 0 {
+                let step = Step { dst: Dst::Color(c as u8), desc: d as u8, array: 2 + c as u8, size: color_size(f) as u8, fmt: f as u8, ..Step::default() };
+                push(&mut p, step, index_size(d, color_size(f)));
+            }
+        }
+        for t in 0..8 {
+            let (d, n) = self.tex[t];
+            if d != 0 {
+                push(&mut p, num(Dst::Tex(t as u8), d, 4 + t, n), index_size(d, n.size()));
+            }
+        }
+        (at == self.size).then_some(p)
     }
 
     pub fn has_normal(&self) -> bool {
@@ -190,6 +276,46 @@ impl Layout {
     /// attributes the vertex has are written. Built on the stack and copied
     /// out, every vertex stalled on reading back its own fresh stores.
     pub fn read_into<'a>(&self, v: &mut RawVertex, cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram) {
+        match &self.plan {
+            Some(plan) if data.len() >= self.size => Self::read_planned(plan, v, cp, data, arrays, mem),
+            _ => self.read_general(v, cp, data, arrays, mem),
+        }
+    }
+
+    /// [`Layout::read_into`] by the compiled plan: each attribute at its
+    /// fixed offset, with the same conversions as the general path.
+    #[inline(always)]
+    fn read_planned<'a>(plan: &Plan, v: &mut RawVertex, cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram) {
+        for s in &plan.steps[..plan.len as usize] {
+            let at = s.at as usize;
+            let size = s.size as usize;
+            let b: &[u8] = match s.desc {
+                1 => &data[at..at + size],
+                d => {
+                    let idx = if d == 2 { u32::from(data[at]) } else { u32::from(u16::from_be_bytes([data[at], data[at + 1]])) };
+                    let array = s.array as usize;
+                    let off = (idx * cp.array_stride[array]) as usize;
+                    match arrays.bank[array] {
+                        Some(bank) => bank.get(off..off + size),
+                        None => mem.ram(cp.array_base[array].wrapping_add(off as u32), size),
+                    }
+                    .unwrap_or(&ZEROS[..size.min(ZEROS.len())])
+                }
+            };
+            let (fmt, count, scale) = (u32::from(s.fmt), s.count as usize, s.scale);
+            match s.dst {
+                Dst::Pnmtx => v.pnmtx = b[0] & 0x3F,
+                Dst::Texmtx(i) => v.texmtx[i as usize] = b[0] & 0x3F,
+                Dst::Pos => comps(b, fmt, scale, &mut v.pos[..count]),
+                Dst::Nbt => comps(b, fmt, scale, &mut v.nbt.as_flattened_mut()[..count]),
+                Dst::Color(c) => v.color[c as usize] = color(b, fmt),
+                Dst::Tex(t) => comps(b, fmt, scale, &mut v.tex[t as usize][..count]),
+            }
+        }
+    }
+
+    /// [`Layout::read_into`] for any format, reading the attributes in turn.
+    fn read_general<'a>(&self, v: &mut RawVertex, cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram) {
         let mut cur = Cursor { data, at: 0 };
         if self.pnmtx {
             v.pnmtx = cur.take(1).first().copied().unwrap_or(0) & 0x3F;
@@ -400,6 +526,48 @@ mod tests {
                 }
             }
         }
+    }
+
+    /// The compiled plan reads every format exactly as the general path,
+    /// bit for bit, with direct, index8 and index16 attributes, arrays in
+    /// RAM and outside it.
+    #[test]
+    fn planned_matches_general() {
+        let mut mem = Mem::new(Box::new(guest_mem::NullMmio));
+        for i in 0..0x4000u32 {
+            mem.write_u32(0x8000_1000 + 4 * i, i.wrapping_mul(0x9E37_79B9) ^ 0x5A5A_1234).unwrap();
+        }
+        let mut seed = 0x1234_5678u32;
+        let mut rnd = || {
+            seed ^= seed << 13;
+            seed ^= seed >> 17;
+            seed ^= seed << 5;
+            seed
+        };
+        let (mut planned, mut checked) = (0, 0);
+        for _ in 0..4000 {
+            let mut cp = Cp { vcd_lo: rnd() & 0x1_FFFF, vcd_hi: rnd() & 0xFFFF, ..Cp::default() };
+            cp.vat_a[0] = rnd();
+            cp.vat_b[0] = rnd();
+            cp.vat_c[0] = rnd();
+            for a in 0..16 {
+                // Most arrays in RAM; some at an unmapped base.
+                cp.array_base[a] = if rnd() % 8 == 0 { 0x0D00_0000 } else { 0x1000 + (rnd() & 0x3FFF) };
+                cp.array_stride[a] = rnd() & 0x3F;
+            }
+            let l = Layout::new(&cp, 0);
+            if l.plan.is_some() {
+                planned += 1;
+            }
+            let arrays = Arrays::new(&cp, &l, &mem);
+            let data: Vec<u8> = (0..l.size).map(|_| rnd() as u8).collect();
+            let (mut a, mut b) = (Layout::template(3, [1; 8]), Layout::template(3, [1; 8]));
+            l.read_into(&mut a, &cp, &data, &arrays, &mem);
+            l.read_general(&mut b, &cp, &data, &arrays, &mem);
+            assert_eq!(format!("{a:?}"), format!("{b:?}"), "vcd {:x}/{:x} vat {:x} {:x} {:x}", cp.vcd_lo, cp.vcd_hi, cp.vat_a[0], cp.vat_b[0], cp.vat_c[0]);
+            checked += 1;
+        }
+        assert!(planned > checked / 2, "{planned} of {checked} formats planned");
     }
 
     #[test]
