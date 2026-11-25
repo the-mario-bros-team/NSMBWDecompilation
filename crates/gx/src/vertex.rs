@@ -105,6 +105,8 @@ pub struct Layout {
     /// vertex ([`Layout::read_into`]); `None` for formats it does not
     /// cover (NBT with three indices), which take the general path.
     plan: Option<Plan>,
+    /// The plan as the renderer's vertex stage reads it (vertex pulling).
+    pull: Option<crate::pull::Format>,
 }
 
 /// Where one attribute goes in a [`RawVertex`].
@@ -182,6 +184,7 @@ impl Layout {
             tex,
             size: 0,
             plan: None,
+            pull: None,
         };
         let mut size = l.pnmtx as usize + l.texmtx.iter().filter(|&&t| t).count();
         size += index_size(l.pos.0, l.pos.1.size());
@@ -198,7 +201,56 @@ impl Layout {
         }
         l.size = size;
         l.plan = l.compile();
+        l.pull = l.plan.as_ref().map(|p| l.pull_format(p));
         l
+    }
+
+    /// `plan` as a [`crate::pull::Format`].
+    fn pull_format(&self, plan: &Plan) -> crate::pull::Format {
+        let mut f = [0u32; crate::pull::FORMAT_WORDS];
+        f[0] = self.size as u32 | u32::from(plan.len) << 8;
+        for (w, s) in f[1..].iter_mut().zip(&plan.steps[..plan.len as usize]) {
+            let (dst, idx) = match s.dst {
+                Dst::Pnmtx => (0, 0),
+                Dst::Texmtx(i) => (1, i),
+                Dst::Pos => (2, 0),
+                Dst::Nbt => (3, 0),
+                Dst::Color(c) => (4, c),
+                Dst::Tex(t) => (5, t),
+            };
+            let scale = if matches!(s.dst, Dst::Pos | Dst::Nbt | Dst::Tex(_)) { s.scale } else { 1.0 };
+            *w = crate::pull::step_word(dst, u32::from(idx), u32::from(s.at), u32::from(s.desc), u32::from(s.array), u32::from(s.fmt), u32::from(s.count), scale);
+        }
+        f
+    }
+
+    /// The format for the renderer's vertex stage, for formats with a plan.
+    pub(crate) fn pulled(&self) -> Option<&crate::pull::Format> {
+        self.pull.as_ref()
+    }
+
+    /// Per array this format indexes, over `n` vertices at `data`: the lowest
+    /// and highest index used and the attribute's size in bytes; `None` for
+    /// arrays it does not index.
+    pub(crate) fn index_ranges(&self, data: &[u8], n: usize) -> [Option<(u32, u32, u32)>; 12] {
+        let mut out = [None; 12];
+        let Some(plan) = &self.plan else { return out };
+        for s in &plan.steps[..plan.len as usize] {
+            if s.desc < 2 {
+                continue;
+            }
+            let at = s.at as usize;
+            let (mut lo, mut hi) = (u32::MAX, 0);
+            for v in data.chunks_exact(self.size.max(1)).take(n) {
+                let i = if s.desc == 2 { u32::from(v[at]) } else { u32::from(u16::from_be_bytes([v[at], v[at + 1]])) };
+                lo = lo.min(i);
+                hi = hi.max(i);
+            }
+            if lo <= hi {
+                out[s.array as usize] = Some((lo, hi, u32::from(s.size)));
+            }
+        }
+        out
     }
 
     /// The attributes as [`Step`]s, in the order the stream has them.
@@ -254,14 +306,14 @@ impl Layout {
         self.color[i].0 != 0
     }
 
+    /// The vertices carry a position matrix index.
+    pub fn has_pnmtx(&self) -> bool {
+        self.pnmtx
+    }
+
     /// The vertices carry a position or texture matrix index.
     pub fn has_matrix_indices(&self) -> bool {
         self.pnmtx || self.texmtx.contains(&true)
-    }
-
-    /// How [`Pack`] stores this format's vertices.
-    pub(crate) fn pack(&self) -> Pack {
-        Pack::new(self)
     }
 
     /// Reads one vertex from `data` (exactly `self.size` bytes); indexed
@@ -317,75 +369,6 @@ impl Layout {
                 Dst::Tex(t) => comps(b, fmt, scale, &mut v.tex[t as usize][..count]),
             }
         }
-    }
-
-    /// The vertex at `data` as [`Pack::write_into`] packs it (`pack` is this
-    /// layout's, `pm` and `tm` the default matrices), written straight into
-    /// `out` (`pack.words` words): each attribute converted as
-    /// [`Layout::read_into`] converts it, without a whole [`RawVertex`] in
-    /// between. False (nothing written) for formats without a plan.
-    #[allow(clippy::too_many_arguments)]
-    pub(crate) fn read_packed<'a>(&self, pack: &Pack, pm: u8, tm: [u8; 8], cp: &Cp, data: &'a [u8], arrays: &Arrays<'a>, mem: &'a dyn Ram, out: &mut [u32]) -> bool {
-        let Some(plan) = &self.plan else { return false };
-        if data.len() < self.size {
-            return false;
-        }
-        let mut mtx = [pm, tm[0], tm[1], tm[2], tm[3], tm[4], tm[5], tm[6], tm[7]];
-        // Steps come in the order the words go (matrix indices first).
-        let mut w = if pack.mtx { 3 } else { 0 };
-        for s in &plan.steps[..plan.len as usize] {
-            let at = s.at as usize;
-            let size = s.size as usize;
-            let b: &[u8] = match s.desc {
-                1 => &data[at..at + size],
-                d => {
-                    let idx = if d == 2 { u32::from(data[at]) } else { u32::from(u16::from_be_bytes([data[at], data[at + 1]])) };
-                    let array = s.array as usize;
-                    let off = (idx * cp.array_stride[array]) as usize;
-                    match arrays.bank[array] {
-                        Some(bank) => bank.get(off..off + size),
-                        None => mem.ram(cp.array_base[array].wrapping_add(off as u32), size),
-                    }
-                    .unwrap_or(&ZEROS[..size.min(ZEROS.len())])
-                }
-            };
-            let (fmt, count, scale) = (u32::from(s.fmt), s.count as usize, s.scale);
-            match s.dst {
-                Dst::Pnmtx => mtx[0] = b[0] & 0x3F,
-                Dst::Texmtx(i) => mtx[1 + i as usize] = b[0] & 0x3F,
-                Dst::Pos => {
-                    let mut p = [0.0f32; 3];
-                    comps(b, fmt, scale, &mut p[..count]);
-                    out[w..w + 3].copy_from_slice(&p.map(f32::to_bits));
-                    w += 3;
-                }
-                Dst::Nbt => {
-                    let mut n = [0.0f32; 9];
-                    comps(b, fmt, scale, &mut n[..count]);
-                    for (o, f) in out[w..w + count].iter_mut().zip(&n) {
-                        *o = f.to_bits();
-                    }
-                    w += count;
-                }
-                Dst::Color(_) => {
-                    out[w] = u32::from_le_bytes(color_u8(b, fmt).map(|x| x as u8));
-                    w += 1;
-                }
-                Dst::Tex(_) => {
-                    let mut t = [0.0f32; 2];
-                    comps(b, fmt, scale, &mut t[..count]);
-                    out[w] = t[0].to_bits();
-                    out[w + 1] = t[1].to_bits();
-                    w += 2;
-                }
-            }
-        }
-        if pack.mtx {
-            out[0] = u32::from_le_bytes([mtx[0], mtx[1], mtx[2], mtx[3]]);
-            out[1] = u32::from_le_bytes([mtx[4], mtx[5], mtx[6], mtx[7]]);
-            out[2] = u32::from(mtx[8]);
-        }
-        true
     }
 
     /// [`Layout::read_into`] for any format, reading the attributes in turn.
@@ -457,144 +440,6 @@ impl Layout {
     }
 }
 
-/// The attributes of a [`RawVertex`] a vertex format sets, packed into
-/// words: for draws the GPU transforms (`Output::packed`), and read back by
-/// the CPU for the rest. A whole `RawVertex` is 160 bytes, and writing a
-/// field's 76,000 of them (12 MB) took most of the decode thread's time on
-/// a phone (a Snapdragon 835 wrote them at about 1 GB/s); packed, 1-1's
-/// usual format takes 36 bytes. Colours are packed as the 8-bit components
-/// they came from (every colour format's components are integers over
-/// 255), so unpacking gives the same floats.
-///
-/// Words in order: matrix indices (3: position and texture matrices 0-2,
-/// 3-6, 7), position (3 floats), normal or NBT (3 or 9), colour 0 and 1
-/// (RGBA8, R in the low byte), then two floats per texture coordinate.
-#[derive(Clone, Copy, Debug, Default, PartialEq)]
-pub(crate) struct Pack {
-    /// Position and texture matrix indices (3 words).
-    mtx: bool,
-    pos: bool,
-    /// Normal (3 floats), NBT (9) or none.
-    nbt: u8,
-    color: [bool; 2],
-    /// One bit per texture coordinate (2 floats each).
-    tex: u8,
-    /// Words per vertex.
-    pub words: u8,
-}
-
-impl Pack {
-    fn new(l: &Layout) -> Self {
-        let mut p = Pack { mtx: l.has_matrix_indices(), pos: l.pos.0 != 0, nbt: if l.nrm.0 == 0 { 0 } else { l.nrm.1.count as u8 }, color: [l.color[0].0 != 0, l.color[1].0 != 0], tex: 0, words: 0 };
-        for t in 0..8 {
-            if l.tex[t].0 != 0 {
-                p.tex |= 1 << t;
-            }
-        }
-        p.words = (if p.mtx { 3 } else { 0 } + if p.pos { 3 } else { 0 } + p.nbt + p.color.iter().filter(|&&c| c).count() as u8 + 2 * p.tex.count_ones() as u8) as u8;
-        p
-    }
-
-    /// Appends `v`'s attributes.
-    #[inline(always)]
-    #[cfg(test)]
-    pub fn write(&self, v: &RawVertex, out: &mut Vec<u32>) {
-        let at = out.len();
-        out.resize(at + self.words as usize, 0);
-        self.write_into(v, &mut out[at..]);
-    }
-
-    /// `v`'s attributes as this format packs them, into `out` (its first
-    /// `words` words).
-    #[inline(always)]
-    pub fn write_into(&self, v: &RawVertex, out: &mut [u32]) {
-        let w = out;
-        let mut n = 0;
-        let mut put = |x: u32| {
-            w[n] = x;
-            n += 1;
-        };
-        if self.mtx {
-            let m = &v.texmtx;
-            put(u32::from_le_bytes([v.pnmtx, m[0], m[1], m[2]]));
-            put(u32::from_le_bytes([m[3], m[4], m[5], m[6]]));
-            put(u32::from(m[7]));
-        }
-        if self.pos {
-            v.pos.iter().for_each(|f| put(f.to_bits()));
-        }
-        v.nbt.as_flattened()[..self.nbt as usize].iter().for_each(|f| put(f.to_bits()));
-        for c in 0..2 {
-            if self.color[c] {
-                put(u32::from_le_bytes(v.color[c].map(|x| (x * 255.0).round() as u8)));
-            }
-        }
-        for t in 0..8 {
-            if self.tex & (1 << t) != 0 {
-                put(v.tex[t][0].to_bits());
-                put(v.tex[t][1].to_bits());
-            }
-        }
-    }
-
-    /// The format as one word for the GPU (`shader.wgsl`'s `vs_packed`):
-    /// bit 0 matrix indices, 1 position, 2-5 NBT floats (0, 3 or 9), 6 and
-    /// 7 colours, 8-15 texture coordinates, 16-23 words per vertex.
-    pub fn bits(&self) -> u32 {
-        u32::from(self.mtx) | u32::from(self.pos) << 1 | u32::from(self.nbt) << 2 | u32::from(self.color[0]) << 6 | u32::from(self.color[1]) << 7 | u32::from(self.tex) << 8 | u32::from(self.words) << 16
-    }
-
-    /// Whether the vertices carry matrix indices.
-    pub fn has_matrix_indices(&self) -> bool {
-        self.mtx
-    }
-
-    /// The format [`Pack::bits`] describes.
-    pub fn from_bits(b: u32) -> Self {
-        Pack { mtx: b & 1 != 0, pos: b & 2 != 0, nbt: ((b >> 2) & 15) as u8, color: [b & 0x40 != 0, b & 0x80 != 0], tex: (b >> 8) as u8, words: (b >> 16) as u8 }
-    }
-
-    /// Which colours the vertices carry.
-    pub fn colors(&self) -> [bool; 2] {
-        self.color
-    }
-
-    /// The vertex `w` holds, over `template` (the defaults).
-    #[inline(always)]
-    pub fn read(&self, w: &[u32], template: &RawVertex) -> RawVertex {
-        let mut v = *template;
-        let mut at = 0;
-        let mut take = || {
-            let x = w.get(at).copied().unwrap_or(0);
-            at += 1;
-            x
-        };
-        if self.mtx {
-            let [p, a, b, c] = take().to_le_bytes();
-            let [d, e, f, g] = take().to_le_bytes();
-            v.pnmtx = p;
-            v.texmtx = [a, b, c, d, e, f, g, take() as u8];
-        }
-        if self.pos {
-            v.pos = std::array::from_fn(|_| f32::from_bits(take()));
-        }
-        for f in v.nbt.as_flattened_mut()[..self.nbt as usize].iter_mut() {
-            *f = f32::from_bits(take());
-        }
-        for c in 0..2 {
-            if self.color[c] {
-                v.color[c] = take().to_le_bytes().map(|x| x as f32 / 255.0);
-            }
-        }
-        for t in 0..8 {
-            if self.tex & (1 << t) != 0 {
-                v.tex[t] = [f32::from_bits(take()), f32::from_bits(take())];
-            }
-        }
-        v
-    }
-}
-
 /// Stands in for array data outside RAM.
 static ZEROS: [u8; 64] = [0; 64];
 
@@ -661,7 +506,7 @@ impl<'a> Cursor<'a> {
 /// this runs for every attribute of every vertex, and a call to `comp` per
 /// component was most of the GX decode thread's time on the world map.
 #[inline(always)]
-fn comps(b: &[u8], fmt: u32, scale: f32, out: &mut [f32]) {
+pub(crate) fn comps(b: &[u8], fmt: u32, scale: f32, out: &mut [f32]) {
     fn each<const N: usize>(b: &[u8], scale: f32, out: &mut [f32], f: impl Fn([u8; N]) -> f32) {
         for (i, o) in out.iter_mut().enumerate() {
             *o = b.get(i * N..i * N + N).map_or(0.0, |c| f(c.try_into().unwrap())) * scale;
@@ -693,7 +538,7 @@ fn comp(b: &[u8], i: usize, fmt: u32) -> f32 {
 }
 
 /// A colour in format `fmt` (RGB565, RGB888, RGB888x, RGBA4444, RGBA6, RGBA8888).
-fn color(b: &[u8], fmt: u32) -> [f32; 4] {
+pub(crate) fn color(b: &[u8], fmt: u32) -> [f32; 4] {
     color_u8(b, fmt).map(|x| x as f32 / 255.0)
 }
 
@@ -761,7 +606,7 @@ mod tests {
             seed ^= seed << 5;
             seed
         };
-        let (mut planned, mut checked) = (0, 0);
+        let (mut planned, mut checked, mut pulled) = (0, 0, 0);
         for _ in 0..4000 {
             let mut cp = Cp { vcd_lo: rnd() & 0x1_FFFF, vcd_hi: rnd() & 0xFFFF, ..Cp::default() };
             cp.vat_a[0] = rnd();
@@ -782,30 +627,35 @@ mod tests {
             l.read_into(&mut a, &cp, &data, &arrays, &mem);
             l.read_general(&mut b, &cp, &data, &arrays, &mem);
             assert_eq!(format!("{a:?}"), format!("{b:?}"), "vcd {:x}/{:x} vat {:x} {:x} {:x}", cp.vcd_lo, cp.vcd_hi, cp.vat_a[0], cp.vat_b[0], cp.vat_c[0]);
-            // Packed and unpacked, the vertex is the same.
-            let pack = l.pack();
-            let mut words = Vec::new();
-            pack.write(&a, &mut words);
-            assert_eq!(words.len(), pack.words as usize);
-            // Packed straight from the data, it is the same words.
-            let mut direct = vec![0u32; pack.words as usize];
-            if l.read_packed(&pack, 3, [1; 8], &cp, &data, &arrays, &mem, &mut direct) {
-                assert_eq!(direct, words, "read_packed: vcd {:x}/{:x} vat {:x}", cp.vcd_lo, cp.vcd_hi, cp.vat_a[0]);
+            // Pulled (the draw's vertex bytes and arrays copied as they
+            // are) and read as the renderer reads them, it is the same.
+            if let Some(f) = l.pulled() {
+                let mut pull = data.clone();
+                let mut d = [0u32; crate::pull::DRAW_WORDS];
+                for (a, r) in l.index_ranges(&data, 1).iter().enumerate() {
+                    let Some((lo, hi, size)) = *r else { continue };
+                    let stride = cp.array_stride[a];
+                    let (start, end) = (cp.array_base[a].wrapping_add(lo * stride), cp.array_base[a].wrapping_add(hi * stride + size));
+                    // Outside RAM the renderer is not given the draw.
+                    let Some(bytes) = mem.ram(start, (end - start) as usize) else { continue };
+                    if arrays.bank[a].is_none() {
+                        continue;
+                    }
+                    d[crate::pull::DRAW_ARRAYS + a] = (pull.len() as u32).wrapping_sub(lo * stride);
+                    d[crate::pull::DRAW_STRIDES + a / 4] |= stride << (8 * (a % 4));
+                    pull.extend_from_slice(bytes);
+                }
+                let all_in_ram = l.index_ranges(&data, 1).iter().enumerate().all(|(a, r)| r.is_none() || (arrays.bank[a].is_some() && { let (lo, hi, size) = r.unwrap(); let st = cp.array_stride[a]; mem.ram(cp.array_base[a].wrapping_add(lo * st), (hi * st + size - lo * st) as usize).is_some() }));
+                if all_in_ram {
+                    let p = crate::pull::read_pulled(f, &d, &pull, 0, &Layout::template(3, [1; 8]));
+                    assert_eq!(format!("{p:?}"), format!("{a:?}"), "pulled: vcd {:x}/{:x} vat {:x} {:x} {:x}", cp.vcd_lo, cp.vcd_hi, cp.vat_a[0], cp.vat_b[0], cp.vat_c[0]);
+                    pulled += 1;
+                }
             }
-            let back = pack.read(&words, &Layout::template(3, [1; 8]));
-            assert_eq!(format!("{back:?}"), format!("{a:?}"), "packed: vcd {:x}/{:x} vat {:x}", cp.vcd_lo, cp.vcd_hi, cp.vat_a[0]);
             checked += 1;
         }
         assert!(planned > checked / 2, "{planned} of {checked} formats planned");
-    }
-
-    /// Every 8-bit colour component survives packing exactly.
-    #[test]
-    fn packed_colours_are_exact() {
-        for k in 0..=255u32 {
-            let f = k as f32 / 255.0;
-            assert_eq!(((f * 255.0).round() as u8) as f32 / 255.0, f, "{k}");
-        }
+        assert!(pulled > checked / 4, "{pulled} of {checked} formats pulled");
     }
 
     #[test]

@@ -9,6 +9,7 @@
 
 mod back;
 pub mod capture;
+pub mod pull;
 pub mod dff;
 pub mod backdrop;
 pub mod interp;
@@ -145,16 +146,13 @@ pub struct Draw {
     pub shading: u32,
     pub raster: Raster,
     pub scissor: Rect,
-    /// [`NO_STATE`]: the indices are into [`Output::vertices`]. Otherwise
-    /// the renderer transforms the vertices: the indices are word offsets
-    /// into [`Output::packed`], and this is the [`Output::states`] entry
-    /// they are transformed with. Only for a renderer that asked for them
+    /// The renderer decodes and transforms the vertices (vertex pulling,
+    /// [`pull`]): the indices are a [`Output::pull_draws`] entry (bits
+    /// 16-31) and a vertex of it (0-15). Otherwise they are into
+    /// [`Output::vertices`]. Only for a renderer that asked for them
     /// ([`Gpu::gpu_vertices`]).
-    pub state: u32,
+    pub pulled: bool,
 }
-
-/// [`Draw::state`] of a draw whose vertices are already transformed.
-pub const NO_STATE: u32 = u32::MAX;
 
 /// EFB clear (after a copy, or a CPU poke of one pixel).
 #[derive(Clone, Copy, Debug)]
@@ -387,19 +385,22 @@ pub struct Output {
     /// Each draw's vertices once, in order; [`Output::indices`] makes them
     /// triangle lists.
     pub vertices: Vec<Vertex>,
-    /// Triangle-list indices into `vertices`, or for a packed draw
-    /// ([`Draw::state`]) word offsets into `packed`. `model` and `records`
-    /// (for frame interpolation) are left empty when the frontend does not
-    /// interpolate.
+    /// Triangle-list indices into `vertices`, or for a pulled draw
+    /// ([`Draw::pulled`]) a `pull_draws` entry and vertex. `model` and
+    /// `records` (for frame interpolation) are left empty when the frontend
+    /// does not interpolate.
     pub indices: Vec<u32>,
-    /// Vertices the renderer transforms, packed ([`vertex::Pack`]: only the
-    /// attributes their format has), for draws with a [`Draw::state`].
-    pub packed: Vec<u32>,
-    /// The XF state those draws are transformed with, as blocks of words
+    /// Pulled draws ([`pull`]): their vertex bytes and the arrays they
+    /// index, as the game has them; the vertex formats; per GX draw where
+    /// its bytes and arrays are, its format and its XF state
+    /// ([`pull::DRAW_WORDS`]).
+    pub pull: Vec<u8>,
+    pub pull_formats: Vec<pull::Format>,
+    pub pull_draws: Vec<[u32; pull::DRAW_WORDS]>,
+    /// The XF state pulled draws are transformed with, as blocks of words
     /// ([`xf::block`]), and per state: its setup block's offset, its matrix
-    /// block's, the vertex format ([`vertex::Pack::bits`]) and flags
-    /// ([`xf::block::FULL`]). [`xf::transform_packed`] does on the CPU what
-    /// the renderer does with them.
+    /// block's, a spare word and flags ([`xf::block::FULL`]).
+    /// [`pull::transform_pulled`] does on the CPU what the renderer does.
     pub xf_blocks: Vec<u32>,
     pub states: Vec<[u32; 4]>,
     /// Per vertex: model-space position and position-matrix slot.
@@ -444,7 +445,13 @@ impl Output {
             hash_words(&mut h, &w);
         }
         hash_words(&mut h, &self.indices);
-        hash_words(&mut h, &self.packed);
+        for c in self.pull.chunks(4) {
+            let mut b = [0u8; 4];
+            b[..c.len()].copy_from_slice(c);
+            hash_words(&mut h, &[u32::from_le_bytes(b)]);
+        }
+        hash_words(&mut h, self.pull_formats.as_flattened());
+        hash_words(&mut h, self.pull_draws.as_flattened());
         hash_words(&mut h, &self.xf_blocks);
         hash_words(&mut h, self.states.as_flattened());
         for s in &self.shadings {
@@ -518,12 +525,14 @@ pub struct Gpu {
     /// EFB copies into part of a texture patch it ([`Cmd::Patch`]); off,
     /// the animated tiles stand still.
     pub patches: bool,
-    /// The renderer transforms vertices itself ([`Output::packed`]): set by
-    /// the frontend for a renderer that can.
+    /// The renderer decodes and transforms vertices itself (vertex pulling,
+    /// [`pull`]): set by the frontend for a renderer that can.
     pub gpu_vertices: bool,
     /// A player's window is set: its draws need transformed vertices on the
     /// CPU ([`World::apply`]).
     views_on: bool,
+    /// The field's pull buffer as sent so far ([`pull::Pulling`]).
+    pulling: pull::Pulling,
     /// Draws are dropped (switched in the command stream: Depth Blur off).
     drop_draws: bool,
     /// The shading block of the last draw, and whether anything it is built
@@ -557,6 +566,7 @@ impl Default for Gpu {
             patches: true,
             gpu_vertices: false,
             views_on: false,
+            pulling: Default::default(),
             drop_draws: false,
             last_shading: None,
             textures: texture::Cache::default(),
@@ -605,6 +615,8 @@ impl Gpu {
     /// generation, so textures are re-hashed on next use.
     pub fn take_output(&mut self) -> Output {
         self.flush_back();
+        // The next field's pull buffer starts empty.
+        self.pulling.reset();
         let mut out = self.sink.take_output(self.records_next);
         out.new_textures = std::mem::take(&mut self.textures.new);
         out.evicted = std::mem::take(&mut self.textures.evicted);
@@ -1195,27 +1207,13 @@ impl Gpu {
         let arrays = vertex::Arrays::new(&self.cp, &layout, mem);
         let chunks = data.chunks_exact(layout.size.max(1)).take(n);
         let n = chunks.len() as u32;
-        // Triangles for a renderer that transforms them go packed
-        // (`vertex::Pack`); the rest are transformed on the CPU. Frame
-        // interpolation and players' windows move vertices on the CPU.
-        let pack = (self.gpu_vertices && prim < 0xA8 && !self.records_next && !self.views_on).then(|| layout.pack()).filter(|p| p.words > 0);
-        let first = match pack {
-            Some(pack) => {
-                // Only the attributes the format has, packed straight from the
-                // data (formats without a plan: read into a copy of the
-                // template, then packed).
-                let first = self.batch.packed.len();
-                let words = pack.words as usize;
-                self.batch.packed.resize(first + n as usize * words, 0);
-                for (out, d) in self.batch.packed[first..].chunks_exact_mut(words.max(1)).zip(chunks) {
-                    if !layout.read_packed(&pack, pm, tm, &self.cp, d, &arrays, mem, out) {
-                        let mut v = vertex::Layout::template(pm, tm);
-                        layout.read_into(&mut v, &self.cp, d, &arrays, mem);
-                        pack.write_into(&v, out);
-                    }
-                }
-                first as u32
-            }
+        // Triangles for a renderer that decodes and transforms them are
+        // pulled ([`pull`]); the rest are transformed on the CPU, as are all
+        // while frame interpolation or players' windows move vertices on the
+        // CPU, formats without a plan, and arrays outside RAM.
+        let pulled = if self.gpu_vertices && prim < 0xA8 && !self.records_next && !self.views_on { self.pull_draw(&layout, data, n, pm, mem) } else { None };
+        let first = match pulled {
+            Some(_) => 0,
             None => {
                 // Each vertex is read straight into its slot, which starts as
                 // the template (defaults); see `Layout::read_into`.
@@ -1254,7 +1252,37 @@ impl Gpu {
             efb_alpha: self.efb_alpha(),
         };
         let scissor = self.scissor();
-        self.batch.ops.push(Op::Draw(DrawOp { op, first, n, has_color, screen, shading, raster, scissor, line_point: self.bp[0x22], same_matrices: !layout.has_matrix_indices(), pack }));
+        self.batch.ops.push(Op::Draw(DrawOp { op, first, n, has_color, screen, shading, raster, scissor, line_point: self.bp[0x22], same_matrices: !layout.has_matrix_indices(), pulled }));
+    }
+
+    /// A draw of `n` vertices at `data` for the renderer to decode and
+    /// transform: its bytes and the array elements it indexes copied to the
+    /// field's pull buffer (arrays once a field while unwritten). None if
+    /// it cannot be: no plan for the format, no watched RAM to read (inline
+    /// decoding), an array outside RAM, or the field's 65,536 pulled draws.
+    fn pull_draw(&mut self, layout: &Layout, data: &[u8], n: u32, pm: u8, mem: &dyn Ram) -> Option<back::PullOp> {
+        let format = layout.pulled()?;
+        let view = mem.view()?;
+        if self.pulling.draws > 0xFFFF {
+            return None;
+        }
+        let mut draw = [0u32; pull::DRAW_WORDS];
+        for (a, r) in layout.index_ranges(data, n as usize).iter().enumerate() {
+            let Some((lo, hi, size)) = *r else { continue };
+            let (base, stride) = (self.cp.array_base[a], self.cp.array_stride[a]);
+            let start = u64::from(base) + u64::from(lo) * u64::from(stride);
+            let end = u64::from(base) + u64::from(hi) * u64::from(stride) + u64::from(size);
+            if end > u64::from(u32::MAX) {
+                return None;
+            }
+            draw[pull::DRAW_ARRAYS + a] = self.pulling.array(a, base, start as u32, end as u32, view, &mut self.batch.pull)?;
+            draw[pull::DRAW_STRIDES + a / 4] |= stride << (8 * (a % 4));
+        }
+        draw[0] = self.pulling.append(&data[..n as usize * layout.size], &mut self.batch.pull);
+        draw[1] = self.pulling.format(format, &mut self.batch.pull_formats);
+        self.pulling.draws += 1;
+        let first_pnmtx = if layout.has_pnmtx() { data[0] & 0x3F } else { pm };
+        Some(back::PullOp { draw, full: layout.has_matrix_indices(), first_pnmtx })
     }
 }
 

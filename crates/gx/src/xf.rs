@@ -600,10 +600,13 @@ pub mod block {
     pub const MATRIX_WORDS: usize = 119;
     /// All of matrix memory, for vertices with matrix indices: XF words
     /// 0x000-0x0FF (position and texture matrices) and 0x400-0x467
-    /// (normal matrices).
+    /// (normal matrices), then the default matrix indices for vertices
+    /// without some of them (position, texture 0-2; texture 3-6; texture 7;
+    /// a byte each).
     pub const MEM: usize = 2;
     pub const NRM_MEM: usize = 258;
-    pub const FULL_MATRIX_WORDS: usize = 362;
+    pub const DEFAULTS: usize = 362;
+    pub const FULL_MATRIX_WORDS: usize = 365;
 
     /// A state's flags ([`crate::Output::states`] word 3): the matrix block
     /// holds all of matrix memory.
@@ -653,12 +656,13 @@ impl Xf {
     pub(crate) fn write_matrix_block(&self, screen: Screen, full: bool, out: &mut Vec<u32>) {
         let mem = self.words();
         out.extend([screen.offset_x.to_bits(), screen.offset_y.to_bits()]);
+        let (pm, tm) = self.default_matrices();
         if full {
             out.extend_from_slice(&mem[..0x100]);
             out.extend_from_slice(&mem[0x400..0x468]);
+            out.extend([u32::from_le_bytes([pm, tm[0], tm[1], tm[2]]), u32::from_le_bytes([tm[3], tm[4], tm[5], tm[6]]), u32::from(tm[7])]);
             return;
         }
-        let (pm, tm) = self.default_matrices();
         let v = RawVertex { pnmtx: pm, texmtx: tm, ..Default::default() };
         for r in 0..3 {
             out.extend(mem.pos_row(&v, r).map(f32::to_bits));
@@ -749,18 +753,28 @@ impl Matrices for BlockMatrices<'_> {
     }
 }
 
-/// What the renderer's `vs_packed` computes for the packed vertex at word
-/// `at` of `packed`, drawn with `state` (an [`crate::Output::states`]
-/// entry) over `blocks` ([`crate::Output::xf_blocks`]), on the CPU: the
-/// same as transforming it before it was packed, bit for bit.
-pub fn transform_packed(blocks: &[u32], state: [u32; 4], packed: &[u32], at: usize) -> Vertex {
-    let pack = crate::vertex::Pack::from_bits(state[2]);
+/// The default matrix indices a state's matrix block holds (all of matrix
+/// memory); zero for one with the draw's own matrices, which vertices
+/// without indices use whatever their indices.
+pub fn block_defaults(blocks: &[u32], state: [u32; 4]) -> (u8, [u8; 8]) {
+    if state[3] & block::FULL == 0 {
+        return (0, [0; 8]);
+    }
+    let d = state[1] as usize + block::DEFAULTS;
+    let ([pm, t0, t1, t2], [t3, t4, t5, t6]) = (blocks[d].to_le_bytes(), blocks[d + 1].to_le_bytes());
+    (pm, [t0, t1, t2, t3, t4, t5, t6, blocks[d + 2] as u8])
+}
+
+/// Vertex `v` (its format carrying the colours `has_color`) transformed with
+/// `state` (an [`crate::Output::states`] entry) over `blocks`
+/// ([`crate::Output::xf_blocks`]), as the renderer does: the same bits as
+/// the CPU's own transform of it.
+pub fn transform_with_blocks(blocks: &[u32], state: [u32; 4], v: &RawVertex, has_color: [bool; 2]) -> Vertex {
     let full = state[3] & block::FULL != 0;
     let setup = &blocks[state[0] as usize..state[0] as usize + block::SETUP_WORDS];
     let mb = &blocks[state[1] as usize..state[1] as usize + if full { block::FULL_MATRIX_WORDS } else { block::MATRIX_WORDS }];
     let screen = Screen { offset_x: f32::from_bits(mb[block::SCREEN]), offset_y: f32::from_bits(mb[block::SCREEN + 1]) };
-    let d = DrawSetup::from_block(setup, screen, pack.colors());
-    let v = pack.read(&packed[at..at + pack.words as usize], &RawVertex { color: [[1.0; 4]; 2], ..Default::default() });
+    let d = DrawSetup::from_block(setup, screen, has_color);
     // Emboss reads the light positions from XF memory.
     let mut mem = [0u32; 0x800];
     for l in 0..8 {
@@ -771,7 +785,7 @@ pub fn transform_packed(blocks: &[u32], state: [u32; 4], packed: &[u32], at: usi
     let mut out = std::mem::MaybeUninit::<Vertex>::uninit();
     // SAFETY: `transform_one` writes every field of `out`.
     unsafe {
-        transform_one(&mem, &BlockMatrices { b: mb, full }, &v, &d, out.as_mut_ptr());
+        transform_one(&mem, &BlockMatrices { b: mb, full }, v, &d, out.as_mut_ptr());
         out.assume_init()
     }
 }
@@ -828,8 +842,8 @@ mod tests {
         assert!(a.iter().any(|v| v.tex[1] != [0.0; 3]) && a.iter().any(|v| v.color[0] != [0.0; 4]));
     }
 
-    /// Blocks and packed vertices, transformed as the renderer does
-    /// ([`transform_packed`]), give the CPU transform's vertices bit for bit:
+    /// Vertices transformed with blocks as the renderer does
+    /// ([`transform_with_blocks`]) are the CPU transform's, bit for bit:
     /// lit channels (spot, specular and plain lights), emboss and colour
     /// texgens, per-vertex matrix indices (all of matrix memory) and NBT.
     #[test]
@@ -888,14 +902,14 @@ mod tests {
             xf.write_setup_block(&setup, &mut blocks);
             let mb = blocks.len() as u32;
             xf.write_matrix_block(screen, full, &mut blocks);
-            let pack = crate::vertex::Pack::from_bits(u32::from(full) | 2 | 9 << 2 | 0x40 | 0x80 | 0x3 << 8 | (if full { 3 } else { 0 } + 3 + 9 + 2 + 4) << 16);
-            let state = [0, mb, pack.bits(), if full { block::FULL } else { 0 }];
+            let state = [0, mb, 0, if full { block::FULL } else { 0 }];
             let mut cpu = Vec::new();
             xf.transform_into(&raws, &setup, &mut cpu, false);
+            if full {
+                assert_eq!(block_defaults(&blocks, state), (pm, tm));
+            }
             for (v, want) in raws.iter().zip(&cpu) {
-                let mut words = Vec::new();
-                pack.write(v, &mut words);
-                let got = transform_packed(&blocks, state, &words, 0);
+                let got = transform_with_blocks(&blocks, state, v, [true, true]);
                 let bits = |v: &Vertex| -> Vec<u32> { v.pos.iter().chain(v.color.iter().flatten()).chain(v.tex.iter().flatten()).map(|f| f.to_bits()).collect() };
                 assert_eq!(bits(&got), bits(want), "full {full}");
             }

@@ -2,7 +2,7 @@
 //! from the game: on the PC, or on a phone from `adb shell`.
 //!
 //!   gx_bench <capture> [--rounds <n>] [--records] [--inline] [--digest] [--heat] [--gpu-vertices]
-//!   gx_bench <capture> --check-packed
+//!   gx_bench <capture> --check-gpu
 //!
 //! Each round starts from the capture's registers and RAM with a fresh
 //! decoder (so textures are decoded again in its first field) and runs every
@@ -13,11 +13,11 @@
 //! output was ready. `--inline` runs both halves on one thread and
 //! reports only the wall time. `--records` keeps frame-interpolation records
 //! (the desktop's default; the Android app runs without). `--gpu-vertices`
-//! leaves triangles' vertices for the renderer to transform
-//! (`Output::packed`), as for the Vulkan renderer. `--check-packed` runs the
-//! capture both ways and checks every triangle of every field: packed and
-//! transformed as the renderer will (`xf::transform_packed`), it must be the
-//! same bits as transformed on the CPU. `--digest` prints
+//! leaves triangles' vertices for the renderer to decode and transform
+//! (`gx::pull`), as for the Vulkan renderer. `--check-gpu` runs the capture
+//! both ways and checks every triangle of every field: pulled and
+//! transformed as the renderer will (`pull::transform_pulled`), it must be
+//! the same bits as transformed on the CPU. `--digest` prints
 //! a digest of every field's vertices, indices, shading blocks and commands
 //! (first round only), to check that a change leaves the output alone.
 
@@ -63,8 +63,8 @@ fn main() {
     }
     let mut sum = 0xCBF2_9CE4_8422_2325u64;
     let cap = Capture::parse(&std::fs::read(path).expect("reading the capture")).expect("parsing the capture");
-    if args.iter().any(|a| a == "--check-packed") {
-        return check_packed(&cap);
+    if args.iter().any(|a| a == "--check-gpu") {
+        return check_gpu(&cap);
     }
     let mut mem = Mem::new(Box::new(NullMmio));
     if let Some(m) = mem.ram_mut(0x8000_0000, cap.mem1.len()) {
@@ -183,15 +183,15 @@ fn triangles(out: &gx::Output) -> Vec<(gx::Shading, gx::Raster, gx::Rect, [[u32;
         let gx::Cmd::Draw(d) = c else { continue };
         let idx = &out.indices[d.first as usize..(d.first + d.count) as usize];
         for t in idx.chunks_exact(3) {
-            let v: [[u32; 36]; 3] = std::array::from_fn(|k| { let i = t[k]; if d.state == gx::NO_STATE { bits(&out.vertices[i as usize]) } else { bits(&gx::xf::transform_packed(&out.xf_blocks, out.states[d.state as usize], &out.packed, i as usize)) } });
+            let v: [[u32; 36]; 3] = std::array::from_fn(|k| { let i = t[k]; if !d.pulled { bits(&out.vertices[i as usize]) } else { bits(&gx::pull::transform_pulled(out, i >> 16, i & 0xFFFF)) } });
             tris.push((out.shadings[d.shading as usize], d.raster, d.scissor, v));
         }
     }
     tris
 }
 
-/// `--check-packed`.
-fn check_packed(cap: &Capture) {
+/// `--check-gpu`.
+fn check_gpu(cap: &Capture) {
     let mut mem = Mem::new(Box::new(NullMmio));
     mem.ram_mut(0x8000_0000, cap.mem1.len()).unwrap().copy_from_slice(&cap.mem1);
     mem.ram_mut(0x9000_0000, cap.mem2.len()).unwrap().copy_from_slice(&cap.mem2);
@@ -216,11 +216,11 @@ fn check_packed(cap: &Capture) {
             }
             gpu.take_output()
         });
-        packed += outs[1].cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(d) if d.state != gx::NO_STATE)).count();
+        packed += outs[1].cmds.iter().filter(|c| matches!(c, gx::Cmd::Draw(d) if d.pulled)).count();
         let (a, b) = (triangles(&outs[0]), triangles(&outs[1]));
         tris += a.len();
         if a.len() != b.len() {
-            println!("field {i}: {} triangles on the CPU, {} packed", a.len(), b.len());
+            println!("field {i}: {} triangles on the CPU, {} pulled", a.len(), b.len());
             bad += 1;
             continue;
         }
@@ -229,7 +229,7 @@ fn check_packed(cap: &Capture) {
             println!("field {i}: triangle {k} differs (shading {}, raster {}, scissor {}, vertices {})", x.0 == y.0, x.1 == y.1, x.2 == y.2, x.3 == y.3);
             if x.3 != y.3 {
                 println!("  cpu    {:?}
-  packed {:?}", x.3.map(|v| v[..4].iter().map(|b| f32::from_bits(*b)).collect::<Vec<_>>()), y.3.map(|v| v[..4].iter().map(|b| f32::from_bits(*b)).collect::<Vec<_>>()));
+  pulled {:?}", x.3.map(|v| v[..4].iter().map(|b| f32::from_bits(*b)).collect::<Vec<_>>()), y.3.map(|v| v[..4].iter().map(|b| f32::from_bits(*b)).collect::<Vec<_>>()));
             }
             bad += 1;
         }
@@ -237,7 +237,7 @@ fn check_packed(cap: &Capture) {
             gpu.recycle(out);
         }
     }
-    println!("{} fields, {tris} triangles, {packed} packed draw commands: {bad} fields differ", cap.fields.len());
+    println!("{} fields, {tris} triangles, {packed} pulled draw commands: {bad} fields differ", cap.fields.len());
     if bad > 0 {
         std::process::exit(1);
     }

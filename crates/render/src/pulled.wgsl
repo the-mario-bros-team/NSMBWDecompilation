@@ -1,20 +1,97 @@
-// GPU vertex processing: appended to the ubershader by renderers that
-// transform vertices themselves (`gx::Output::packed`). `vs_packed` does what
+// GPU vertex processing (vertex pulling): appended to the ubershader by
+// renderers that decode and transform vertices themselves
+// (`gx::Output::pull`). `vs_pulled` reads each vertex in its GX format from
+// the draw's bytes and arrays as the game wrote them (`gx::pull`: a format
+// word per attribute; `read_pulled` is the CPU's reading), then does what
 // `gx::xf` does on the CPU (`transform_one`, `light_channel`): position and
 // normal matrices, projection and viewport, the two lighting channels and
-// texture coordinate generation, reading each vertex's attributes
-// (`gx::vertex::Pack`) and the XF state blocks (`gx::xf::block`; the offsets
-// below mirror it). `gx::xf::transform_packed` is the CPU reference.
+// texture coordinate generation, from the XF state blocks
+// (`gx::xf::block`; the offsets below mirror it).
+// `gx::pull::transform_pulled` is the CPU reference.
 
-// The draws' packed vertices; a packed draw's indices are word offsets here.
-@group(0) @binding(6) var<storage, read> pk: array<u32>;
+// The field's pulled bytes: vertices and array copies (a byte buffer).
+@group(0) @binding(6) var<storage, read> pull: array<u32>;
 // XF state blocks.
 @group(0) @binding(7) var<storage, read> xfb: array<u32>;
-// Per state: setup block offset, matrix block offset, vertex format
-// (`Pack::bits`), flags (1: the matrix block holds all of matrix memory).
+// Per state: setup block offset, matrix block offset, spare, flags (1: the
+// matrix block holds all of matrix memory).
 @group(0) @binding(8) var<storage, read> pstates: array<vec4<u32>>;
-// Per packed draw command (its instance index): shading block, state.
-@group(0) @binding(9) var<storage, read> pdraws: array<vec2<u32>>;
+// Per GX draw (`gx::pull::DRAW_WORDS` words): where its vertices start in
+// `pull`, its format, its state, spare, per array the offset of element 0,
+// the arrays' strides (a byte each).
+@group(0) @binding(9) var<storage, read> pdraws: array<u32>;
+// Vertex formats (`gx::pull::FORMAT_WORDS` words): size and attribute
+// count, then a word per attribute.
+@group(0) @binding(10) var<storage, read> pformats: array<u32>;
+
+const DRAW_WORDS: u32 = 20u;
+const DRAW_ARRAYS: u32 = 4u;
+const DRAW_STRIDES: u32 = 16u;
+const FORMAT_WORDS: u32 = 22u;
+
+fn byte(a: u32) -> u32 {
+    return (pull[a >> 2u] >> ((a & 3u) * 8u)) & 0xFFu;
+}
+
+fn be16(a: u32) -> u32 {
+    return byte(a) << 8u | byte(a + 1u);
+}
+
+fn be32(a: u32) -> u32 {
+    return byte(a) << 24u | byte(a + 1u) << 16u | byte(a + 2u) << 8u | byte(a + 3u);
+}
+
+// Component `i` at `a` in format `fmt` (u8, s8, u16, s16, f32), unscaled.
+fn comp(a: u32, fmt: u32, i: u32) -> f32 {
+    switch fmt {
+        case 0u: {
+            return f32(byte(a + i));
+        }
+        case 1u: {
+            return f32(bitcast<i32>(byte(a + i) << 24u) >> 24u);
+        }
+        case 2u: {
+            return f32(be16(a + 2u * i));
+        }
+        case 3u: {
+            return f32(bitcast<i32>(be16(a + 2u * i) << 16u) >> 16u);
+        }
+        case 4u: {
+            return bitcast<f32>(be32(a + 4u * i));
+        }
+        default: {
+            return 0.0;
+        }
+    }
+}
+
+// A colour at `a` in format `fmt` (RGB565, RGB888, RGB888x, RGBA4444,
+// RGBA6, RGBA8888), as `gx::vertex::color`.
+fn gx_color(a: u32, fmt: u32) -> vec4<f32> {
+    var c = vec4<u32>(0u);
+    switch fmt {
+        case 0u: {
+            let v = be16(a);
+            c = vec4<u32>(((v >> 11u) & 31u) * 255u / 31u, ((v >> 5u) & 63u) * 255u / 63u, (v & 31u) * 255u / 31u, 255u);
+        }
+        case 1u, 2u: {
+            c = vec4<u32>(byte(a), byte(a + 1u), byte(a + 2u), 255u);
+        }
+        case 3u: {
+            let v = be16(a);
+            c = vec4<u32>(((v >> 12u) & 15u) * 17u, ((v >> 8u) & 15u) * 17u, ((v >> 4u) & 15u) * 17u, (v & 15u) * 17u);
+        }
+        case 4u: {
+            let v = byte(a) << 16u | byte(a + 1u) << 8u | byte(a + 2u);
+            c = vec4<u32>(((v >> 18u) & 63u) * 255u / 63u, ((v >> 12u) & 63u) * 255u / 63u, ((v >> 6u) & 63u) * 255u / 63u, (v & 63u) * 255u / 63u);
+        }
+        case 5u: {
+            c = vec4<u32>(byte(a), byte(a + 1u), byte(a + 2u), byte(a + 3u));
+        }
+        default: {}
+    }
+    return vec4<f32>(c) / 255.0;
+}
 
 // Setup block (`gx::xf::block`).
 const B_PROJECTION: u32 = 0u;
@@ -39,6 +116,7 @@ const B_NRM: u32 = 14u;
 const B_TEX: u32 = 23u;
 const B_MEM: u32 = 2u;
 const B_NRM_MEM: u32 = 258u;
+const B_DEFAULTS: u32 = 362u;
 
 fn xf1(i: u32) -> f32 {
     return bitcast<f32>(xfb[i]);
@@ -50,19 +128,6 @@ fn xf3(i: u32) -> vec3<f32> {
 
 fn xf4(i: u32) -> vec4<f32> {
     return vec4<f32>(xf1(i), xf1(i + 1u), xf1(i + 2u), xf1(i + 3u));
-}
-
-fn pk1(i: u32) -> f32 {
-    return bitcast<f32>(pk[i]);
-}
-
-fn pk3(i: u32) -> vec3<f32> {
-    return vec3<f32>(pk1(i), pk1(i + 1u), pk1(i + 2u));
-}
-
-// RGBA8, R in the low byte, as `Pack::read` unpacks it.
-fn rgba8(x: u32) -> vec4<f32> {
-    return vec4<f32>(f32(x & 255u), f32((x >> 8u) & 255u), f32((x >> 16u) & 255u), f32(x >> 24u)) / 255.0;
 }
 
 // `gx::xf::normalize`: unchanged when its length is zero.
@@ -178,59 +243,92 @@ fn light_channel(sb: u32, ctl: u32, vtx: vec4<f32>, c: u32, pos: vec3<f32>, norm
 }
 
 @vertex
-fn vs_packed(@builtin(vertex_index) vi: u32, @builtin(instance_index) inst: u32) -> VOut {
-    let draw = pdraws[inst];
-    let st = pstates[draw.y];
+fn vs_pulled(@builtin(vertex_index) vi: u32, @builtin(instance_index) inst: u32) -> VOut {
+    // The index names the GX draw (high bits) and its vertex.
+    let db = (vi >> 16u) * DRAW_WORDS;
+    let k = vi & 0xFFFFu;
+    let st = pstates[pdraws[db + 2u]];
     let sb = st.x;
-    let bits = st.z;
     var m = Mats(st.y, (st.w & 1u) != 0u, 0u);
+    let fb = pdraws[db + 1u] * FORMAT_WORDS;
+    let head = pformats[fb];
+    let at = pdraws[db] + k * (head & 0xFFu);
 
-    // The vertex (`Pack::read`), over the defaults: zero, colours white.
-    var at = vi;
+    // The vertex, over the defaults: zero, colours white, the default
+    // matrices (all of matrix memory) or the draw's own.
     var texmtx = array<u32, 8>(0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u);
-    if (bits & 1u) != 0u {
-        let a = pk[at];
-        let b = pk[at + 1u];
-        m.pnmtx = a & 255u;
-        texmtx = array<u32, 8>((a >> 8u) & 255u, (a >> 16u) & 255u, a >> 24u, b & 255u, (b >> 8u) & 255u, (b >> 16u) & 255u, b >> 24u, pk[at + 2u] & 255u);
-        at += 3u;
+    if m.full {
+        let d0 = xfb[m.mb + B_DEFAULTS];
+        let d1 = xfb[m.mb + B_DEFAULTS + 1u];
+        m.pnmtx = d0 & 255u;
+        texmtx = array<u32, 8>((d0 >> 8u) & 255u, (d0 >> 16u) & 255u, d0 >> 24u, d1 & 255u, (d1 >> 8u) & 255u, (d1 >> 16u) & 255u, d1 >> 24u, xfb[m.mb + B_DEFAULTS + 2u] & 255u);
     }
     var p = vec3<f32>(0.0);
-    if (bits & 2u) != 0u {
-        p = pk3(at);
-        at += 3u;
-    }
-    let nbt = (bits >> 2u) & 15u;
-    var n0 = vec3<f32>(0.0);
-    var n1 = vec3<f32>(0.0);
-    var n2 = vec3<f32>(0.0);
-    if nbt >= 3u {
-        n0 = pk3(at);
-    }
-    if nbt >= 9u {
-        n1 = pk3(at + 3u);
-        n2 = pk3(at + 6u);
-    }
-    at += nbt;
+    var nbt = array<f32, 9>(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     var vc0 = vec4<f32>(1.0);
     var vc1 = vec4<f32>(1.0);
-    let has0 = (bits & 0x40u) != 0u;
-    let has1 = (bits & 0x80u) != 0u;
-    if has0 {
-        vc0 = rgba8(pk[at]);
-        at += 1u;
-    }
-    if has1 {
-        vc1 = rgba8(pk[at]);
-        at += 1u;
-    }
+    var has0 = false;
+    var has1 = false;
     var vt = array<vec2<f32>, 8>(vec2<f32>(0.0), vec2<f32>(0.0), vec2<f32>(0.0), vec2<f32>(0.0), vec2<f32>(0.0), vec2<f32>(0.0), vec2<f32>(0.0), vec2<f32>(0.0));
-    for (var t = 0u; t < 8u; t++) {
-        if (bits & (0x100u << t)) != 0u {
-            vt[t] = vec2<f32>(pk1(at), pk1(at + 1u));
-            at += 2u;
+    let steps = (head >> 8u) & 0xFFu;
+    for (var s = 0u; s < steps; s++) {
+        let w = pformats[fb + 1u + s];
+        let dst = w & 7u;
+        let idx = (w >> 3u) & 7u;
+        let off = (w >> 6u) & 0xFFu;
+        let desc = (w >> 14u) & 3u;
+        let arr = (w >> 16u) & 15u;
+        let fmt = (w >> 20u) & 7u;
+        let count = (w >> 23u) & 15u;
+        // 2^-shift.
+        let scale = bitcast<f32>((127u - (w >> 27u)) << 23u);
+        var src = at + off;
+        if desc >= 2u {
+            var i = byte(at + off);
+            if desc == 3u {
+                i = be16(at + off);
+            }
+            let stride = (pdraws[db + DRAW_STRIDES + arr / 4u] >> (8u * (arr % 4u))) & 0xFFu;
+            src = pdraws[db + DRAW_ARRAYS + arr] + i * stride;
+        }
+        switch dst {
+            case 0u: {
+                m.pnmtx = byte(src) & 0x3Fu;
+            }
+            case 1u: {
+                texmtx[idx] = byte(src) & 0x3Fu;
+            }
+            case 2u: {
+                for (var c = 0u; c < min(count, 3u); c++) {
+                    p[c] = comp(src, fmt, c) * scale;
+                }
+            }
+            case 3u: {
+                for (var c = 0u; c < min(count, 9u); c++) {
+                    nbt[c] = comp(src, fmt, c) * scale;
+                }
+            }
+            case 4u: {
+                if idx == 0u {
+                    vc0 = gx_color(src, fmt);
+                    has0 = true;
+                } else {
+                    vc1 = gx_color(src, fmt);
+                    has1 = true;
+                }
+            }
+            default: {
+                var t = vec2<f32>(0.0);
+                for (var c = 0u; c < min(count, 2u); c++) {
+                    t[c] = comp(src, fmt, c) * scale;
+                }
+                vt[idx] = t;
+            }
         }
     }
+    let n0 = vec3<f32>(nbt[0], nbt[1], nbt[2]);
+    let n1 = vec3<f32>(nbt[3], nbt[4], nbt[5]);
+    let n2 = vec3<f32>(nbt[6], nbt[7], nbt[8]);
 
     // Position, normal and projection.
     let r0 = pos_row(m, 0u);
@@ -379,6 +477,6 @@ fn vs_packed(@builtin(vertex_index) vi: u32, @builtin(instance_index) inst: u32)
     o.t5 = tc[5];
     o.t6 = tc[6];
     o.t7 = tc[7];
-    o.draw = draw.x;
+    o.draw = inst;
     return o;
 }

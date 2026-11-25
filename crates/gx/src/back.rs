@@ -5,9 +5,9 @@
 //!
 //! [`Gpu`]: crate::Gpu
 
-use crate::vertex::{Pack, RawVertex};
+use crate::vertex::RawVertex;
 use crate::xf::{self, Xf};
-use crate::{depth_plane, hash_words, line_quad, point_quad, screen_point, sh, Cmd, Draw, DrawRecord, Output, Raster, Rect, Shading, Vertex, EFB_HEIGHT, EFB_WIDTH, FLAG_CLEAR, FLAG_ZFREEZE, NO_STATE, NO_TEXTURE, SHADING_WORDS};
+use crate::{depth_plane, hash_words, line_quad, point_quad, screen_point, sh, Cmd, Draw, DrawRecord, Output, Raster, Rect, Shading, Vertex, EFB_HEIGHT, EFB_WIDTH, FLAG_CLEAR, FLAG_ZFREEZE, NO_TEXTURE, SHADING_WORDS};
 
 /// One step for [`Back`], in stream order.
 pub(crate) enum Op {
@@ -29,12 +29,12 @@ pub(crate) enum Op {
 /// A draw as the first half loaded it.
 pub(crate) struct DrawOp {
     pub op: u8,
-    /// Where its vertices start, and how many: in [`Batch::packed`] (in
-    /// words) when `pack` is set, else in [`Batch::raws`].
+    /// Where its vertices start in [`Batch::raws`], and how many.
     pub first: u32,
     pub n: u32,
-    /// The renderer transforms this draw's vertices, packed so.
-    pub pack: Option<Pack>,
+    /// The renderer decodes and transforms this draw's vertices (they are
+    /// not in `raws`).
+    pub pulled: Option<PullOp>,
     pub has_color: [bool; 2],
     pub screen: xf::Screen,
     /// Index in [`Batch::shadings`]; the z-freeze plane is filled in here.
@@ -48,13 +48,25 @@ pub(crate) struct DrawOp {
     pub same_matrices: bool,
 }
 
+/// A pulled draw ([`crate::pull`]) as the decode thread sent it: its
+/// [`Output::pull_draws`] entry but the state (filled in here), whether its
+/// vertices carry matrix indices, and its first vertex's position matrix.
+pub(crate) struct PullOp {
+    pub draw: [u32; crate::pull::DRAW_WORDS],
+    pub full: bool,
+    pub first_pnmtx: u8,
+}
+
 /// Ops with the vertices and shading blocks they refer to.
 #[derive(Default)]
 pub(crate) struct Batch {
     pub ops: Vec<Op>,
     pub raws: Vec<RawVertex>,
-    /// Vertices of draws the renderer transforms ([`Pack`]).
-    pub packed: Vec<u32>,
+    /// What pulled draws added to the field's [`Output::pull`] and
+    /// [`Output::pull_formats`] (appended in order, so the decode thread's
+    /// offsets hold).
+    pub pull: Vec<u8>,
+    pub pull_formats: Vec<crate::pull::Format>,
     pub shadings: Vec<Shading>,
 }
 
@@ -67,7 +79,8 @@ impl Batch {
     fn clear(&mut self) {
         self.ops.clear();
         self.raws.clear();
-        self.packed.clear();
+        self.pull.clear();
+        self.pull_formats.clear();
         self.shadings.clear();
     }
 }
@@ -95,29 +108,31 @@ pub(crate) struct Back {
     /// and in the output (when it had no z-freeze plane), so the next draw
     /// with the same block neither copies nor compares it.
     last_shading: Option<(u32, u32)>,
-    /// Packed draws (the renderer transforms them): the setup block written
+    /// Pulled draws (the renderer transforms them): the setup block written
     /// last (the XF generation it is for, its offset in
     /// [`Output::xf_blocks`]), whether matrix memory was written since the
-    /// last state, and that state (its index, vertex format, scissor
-    /// offset).
+    /// last state, and that state (its index, whether its matrix block holds
+    /// all of matrix memory, scissor offset).
     setup_block: Option<(u64, u32)>,
     matrices_changed: bool,
-    packed_state: Option<(u32, u32, xf::Screen)>,
-    /// A packed draw whose first triangle sets the z-freeze plane: its state
-    /// and the triangle's word offsets. Worked out only when a frozen draw
-    /// needs it ([`Back::resolve_plane`]).
-    plane_src: Option<(u32, [u32; 3])>,
+    pulled_state: Option<(u32, bool, xf::Screen)>,
+    /// A pulled draw whose first triangle sets the z-freeze plane: the
+    /// triangle's indices. Worked out only when a frozen draw needs it
+    /// ([`Back::resolve_plane`]).
+    plane_src: Option<[u32; 3]>,
     out: Output,
 }
 
 impl Default for Back {
     fn default() -> Self {
-        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], world_camera: None, busy: Default::default(), last_shading: None, setup_block: None, matrices_changed: true, packed_state: None, plane_src: None, out: Output::default() }
+        Self { xf: Xf::default(), records: true, setup: None, spare: None, scratch_verts: Vec::new(), scratch_model: Vec::new(), zplane: [0.0; 3], world_camera: None, busy: Default::default(), last_shading: None, setup_block: None, matrices_changed: true, pulled_state: None, plane_src: None, out: Output::default() }
     }
 }
 
 impl Back {
     pub fn apply(&mut self, batch: &Batch) {
+        self.out.pull.extend_from_slice(&batch.pull);
+        self.out.pull_formats.extend_from_slice(&batch.pull_formats);
         // Shading indices are the batch's own.
         self.last_shading = None;
         for op in &batch.ops {
@@ -151,9 +166,9 @@ impl Back {
         fresh.world.camera = self.out.world.camera;
         fresh.views = self.out.views;
         self.records = records_next;
-        // Packed states and blocks are the field's own.
+        // Pulled draws' states and blocks are the field's own.
         self.resolve_plane();
-        (self.setup_block, self.packed_state) = (None, None);
+        (self.setup_block, self.pulled_state) = (None, None);
         let mut out = std::mem::replace(&mut self.out, fresh);
         out.busy[1] = std::mem::take(&mut self.busy);
         self.last_shading = None;
@@ -162,7 +177,9 @@ impl Back {
 
     pub fn recycle(&mut self, mut old: Output) {
         old.vertices.clear();
-        old.packed.clear();
+        old.pull.clear();
+        old.pull_formats.clear();
+        old.pull_draws.clear();
         old.xf_blocks.clear();
         old.states.clear();
         old.indices.clear();
@@ -202,12 +219,12 @@ impl Back {
         self.last_shading = None;
         let raster = Raster { blend: if color_update { 8 } else { 0x10 }, zmode: 0, cull: 0, efb_alpha: true };
         let shading = self.out.shadings.len() as u32 - 1;
-        self.out.cmds.push(Cmd::Draw(Draw { first, count: 6, shading, raster, scissor: rect, state: NO_STATE }));
+        self.out.cmds.push(Cmd::Draw(Draw { first, count: 6, shading, raster, scissor: rect, pulled: false }));
     }
 
     fn draw(&mut self, d: &DrawOp, batch: &Batch) {
-        if let Some(pack) = d.pack {
-            return self.draw_packed(d, pack, batch);
+        if let Some(p) = &d.pulled {
+            return self.draw_pulled(d, p, batch);
         }
         let raw = &batch.raws[d.first as usize..(d.first + d.n) as usize];
         let gen = self.xf.setup_gen;
@@ -298,7 +315,7 @@ impl Back {
         }
         if let Some(o) = same {
             self.scratch_model = model;
-            return self.push_draw(first, count, o, d, NO_STATE);
+            return self.push_draw(first, count, o, d, false);
         }
         let mut shading = batch.shadings[d.shading as usize];
         if frozen {
@@ -319,11 +336,11 @@ impl Back {
             }
         };
         self.last_shading = (!frozen).then_some((d.shading, shading));
-        self.push_draw(first, count, shading, d, NO_STATE);
+        self.push_draw(first, count, shading, d, false);
     }
 
     /// The world draws' ranges and background layers (`Op::World`): `base`
-    /// and `count` in vertices, or words for packed draws (`ranges` false:
+    /// and `count` in vertices, or for pulled draws their index range (`ranges` false:
     /// players' windows, the only users of the ranges, take the CPU path).
     fn note_world(&mut self, d: &DrawOp, base: u32, vcount: u32, pnmtx: u8, ranges: bool) {
         if let Some(camera) = self.world_camera {
@@ -355,20 +372,17 @@ impl Back {
         }
     }
 
-    /// A draw whose vertices the renderer transforms: its packed vertices
-    /// copied to [`Output::packed`] and its indices made word offsets into
-    /// them, with the XF state as blocks ([`xf::block`]) written only when
-    /// it changed since the last such draw.
-    fn draw_packed(&mut self, d: &DrawOp, pack: Pack, batch: &Batch) {
+    /// A draw whose vertices the renderer decodes and transforms: its
+    /// [`Output::pull_draws`] entry, with the XF state as blocks
+    /// ([`xf::block`]) written only when it changed since the last such draw,
+    /// and indices naming the entry and vertex.
+    fn draw_pulled(&mut self, d: &DrawOp, p: &PullOp, batch: &Batch) {
         let gen = self.xf.setup_gen;
         if self.setup.as_ref().is_none_or(|(g, _)| *g != gen) {
             self.setup = Some((gen, self.xf.setup(d.screen, d.has_color)));
         }
-        let words = pack.words as usize;
-        let src = &batch.packed[d.first as usize..d.first as usize + d.n as usize * words];
-        let bits = pack.bits();
-        let state = match self.packed_state {
-            Some((s, b, screen)) if !self.matrices_changed && b == bits && screen == d.screen && self.setup_block.is_some_and(|(g, _)| g == gen) => s,
+        let state = match self.pulled_state {
+            Some((s, full, screen)) if !self.matrices_changed && full == p.full && screen == d.screen && self.setup_block.is_some_and(|(g, _)| g == gen) => s,
             _ => {
                 let setup_off = match self.setup_block {
                     Some((g, off)) if g == gen => off,
@@ -380,20 +394,21 @@ impl Back {
                         off
                     }
                 };
-                let full = pack.has_matrix_indices();
                 let matrix_off = self.out.xf_blocks.len() as u32;
-                self.xf.write_matrix_block(d.screen, full, &mut self.out.xf_blocks);
-                self.out.states.push([setup_off, matrix_off, bits, if full { xf::block::FULL } else { 0 }]);
+                self.xf.write_matrix_block(d.screen, p.full, &mut self.out.xf_blocks);
+                self.out.states.push([setup_off, matrix_off, 0, if p.full { xf::block::FULL } else { 0 }]);
                 self.matrices_changed = false;
                 let s = self.out.states.len() as u32 - 1;
-                self.packed_state = Some((s, bits, d.screen));
+                self.pulled_state = Some((s, p.full, d.screen));
                 s
             }
         };
-        let base = self.out.packed.len() as u32;
-        self.out.packed.extend_from_slice(src);
-        let w = words as u32;
-        let at = move |k: u32| base + k * w;
+        debug_assert!((p.draw[0] as usize) < self.out.pull.len() || d.n == 0, "pull buffer out of step with the decode thread");
+        let mut entry = p.draw;
+        entry[2] = state;
+        let r = self.out.pull_draws.len() as u32;
+        self.out.pull_draws.push(entry);
+        let at = move |k: u32| r << 16 | k;
         let first = self.out.indices.len() as u32;
         let len = d.n;
         let idx = &mut self.out.indices;
@@ -404,8 +419,7 @@ impl Back {
             _ => idx.extend((2..len).flat_map(|i| [0, i - 1, i].map(at))),
         }
         let count = self.out.indices.len() as u32 - first;
-        let pnmtx = if pack.has_matrix_indices() { src.first().map_or(0, |w| (w & 0x3F) as u8) } else { self.xf.default_matrices().0 };
-        self.note_world(d, base, len * w, pnmtx, false);
+        self.note_world(d, r << 16, len, p.first_pnmtx, false);
         if count == 0 {
             return;
         }
@@ -415,10 +429,10 @@ impl Back {
         // frozen draw takes its depth from (worked out then).
         if !frozen && count >= 3 {
             let i = &self.out.indices[first as usize..first as usize + 3];
-            self.plane_src = Some((state, [i[0], i[1], i[2]]));
+            self.plane_src = Some([i[0], i[1], i[2]]);
         }
         if let Some(o) = self.last_shading.filter(|l| l.0 == d.shading && !self.records).map(|l| l.1) {
-            return self.push_draw(first, count, o, d, state);
+            return self.push_draw(first, count, o, d, true);
         }
         let mut shading = batch.shadings[d.shading as usize];
         if frozen {
@@ -435,17 +449,15 @@ impl Back {
             }
         };
         self.last_shading = (!frozen).then_some((d.shading, shading));
-        self.push_draw(first, count, shading, d, state);
+        self.push_draw(first, count, shading, d, true);
     }
 
-    /// The z-freeze plane from the packed draw that set it last, if it was
+    /// The z-freeze plane from the pulled draw that set it last, if it was
     /// not worked out yet: its first triangle transformed as the renderer
     /// will.
     fn resolve_plane(&mut self) {
-        let Some((state, at)) = self.plane_src.take() else { return };
-        let out = &self.out;
-        let st = out.states[state as usize];
-        let t = at.map(|a| xf::transform_packed(&out.xf_blocks, st, &out.packed, a as usize));
+        let Some(at) = self.plane_src.take() else { return };
+        let t = at.map(|i| crate::pull::transform_pulled(&self.out, i >> 16, i & 0xFFFF));
         if let (Some(a), Some(b), Some(c)) = (screen_point(&t[0]), screen_point(&t[1]), screen_point(&t[2])) {
             if let Some(p) = depth_plane(a, b, c) {
                 self.zplane = p;
@@ -455,10 +467,10 @@ impl Back {
 
     /// The draw's command: merged into the last one when that has the same
     /// state and its indices end where these begin.
-    fn push_draw(&mut self, first: u32, count: u32, shading: u32, d: &DrawOp, state: u32) {
-        let draw = Draw { first, count, shading, raster: d.raster, scissor: d.scissor, state };
+    fn push_draw(&mut self, first: u32, count: u32, shading: u32, d: &DrawOp, pulled: bool) {
+        let draw = Draw { first, count, shading, raster: d.raster, scissor: d.scissor, pulled };
         if let Some(Cmd::Draw(prev)) = self.out.cmds.last_mut() {
-            if prev.shading == draw.shading && prev.raster == draw.raster && prev.scissor == draw.scissor && prev.state == draw.state && prev.first + prev.count == first {
+            if prev.shading == draw.shading && prev.raster == draw.raster && prev.scissor == draw.scissor && prev.pulled == draw.pulled && prev.first + prev.count == first {
                 prev.count += count;
                 return;
             }
