@@ -67,6 +67,7 @@
 
 use crate::platform;
 use crate::platform::{call1, call2, call3, call4, call5, call6};
+use crate::game::layouts::DActor;
 
 // ---------------------------------------------------------------------------
 // Cross-lane callees (opaque here).
@@ -3102,7 +3103,8 @@ unsafe fn actor_hit_state_step(
     // observed: `fabs f2`/`frsp f5` for |height|, `lfsx` from the ±1 table.
     let mut scale = [0.0f32; 3];
     scale[0] = (read_f32(SDA_ACTOR_SCALE_X)
-        + read_f32(SDA_ACTOR_HEIGHT_FACTOR) * read_f32(other + 0xE8).abs())
+        + read_f32(SDA_ACTOR_HEIGHT_FACTOR)
+            * DActor { addr: other as u32 }.as_d_base_actor().speed().x().abs())
         * read_f32(SDA_SIGN_TABLE + flag as usize * 4);
     scale[1] = y_scale;
     scale[2] = read_f32(SDA_ZERO_F32_B);
@@ -3132,11 +3134,8 @@ unsafe fn actor_hit_state_step(
 
     // observed: 0x20-byte stack block filled from the actor position.
     let mut position = [0u8; 0x20];
-    let _ = call2(
-        FN_8006A4B0,
-        position.as_mut_ptr() as u32,
-        (this + 0xAC) as u32,
-    );
+    let pos_ptr = DActor { addr: this as u32 }.as_d_base_actor().pos().addr;
+    let _ = call2(FN_8006A4B0, position.as_mut_ptr() as u32, pos_ptr);
     let _ = call4(
         FN_80197F00,
         platform::read_u32(SDA_ACTOR_EFFECT_HANDLE),
@@ -3187,7 +3186,7 @@ pub unsafe fn fn_8001df60(param_1: usize, param_2: usize) {
         let mut pending = true;
 
         // observed 0x8001DF94: `lbz 0x38C`; markers 1 and 2 share one body.
-        let marker = platform::read_u8(second_actor + 0x38C);
+        let marker = DActor { addr: second_actor as u32 }.kind();
         if marker == 1 || marker == 2 {
             let second_vtable = platform::read_u32(second_actor + 0x60) as usize;
             let second_name = platform::read_u32(second_vtable + 0x6C) as usize;
@@ -3200,7 +3199,7 @@ pub unsafe fn fn_8001df60(param_1: usize, param_2: usize) {
             if platform::read_u8(first_char as usize) == second_char {
                 pending = false;
             }
-        } else if (platform::read_u32(second_actor + 0x120) & 0x80) != 0 {
+        } else if (DActor { addr: second_actor as u32 }.as_d_base_actor().actor_properties() & 0x80) != 0 {
             pending = false;
         }
 
@@ -3245,11 +3244,9 @@ pub unsafe fn fn_8001df60(param_1: usize, param_2: usize) {
 pub unsafe fn fn_8001e1c0(this: usize, hit: usize) -> u32 {
     let other = platform::read_u32(hit + 4) as usize;
     // observed 0x8001E1E4..0x8001E1FC: less-than selects the `1` store.
-    let flag = if read_f32(this + 0xAC) < read_f32(other + 0xAC) {
-        1
-    } else {
-        0
-    };
+    let this_pos = DActor { addr: this as u32 }.as_d_base_actor().pos();
+    let other_pos = DActor { addr: other as u32 }.as_d_base_actor().pos();
+    let flag = if this_pos.x() < other_pos.x() { 1 } else { 0 };
     actor_hit_state_step(
         this,
         other,
