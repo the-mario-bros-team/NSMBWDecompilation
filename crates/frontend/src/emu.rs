@@ -1141,6 +1141,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     if let Some((calls, bytes)) = sys.native_memcpy_commits() {
         say!("native memcpy: committed_calls={calls} committed_bytes={bytes}");
     }
+    if sys.native_count() > 0 {
+        let (validated, failed) = sys.native_report();
+        say!(
+            "native bodies: {} switched, lockstep validated={validated} failed={failed}",
+            sys.native_count()
+        );
+    }
     totals
 }
 
