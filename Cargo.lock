@@ -1108,6 +1108,7 @@ dependencies = [
  "hle-ios",
  "hle-os",
  "input",
+ "native-hooks",
  "netplay",
  "port-update",
  "raw-window-handle",
@@ -1934,6 +1935,15 @@ dependencies = [
  "indexmap",
  "rustc-hash 1.1.0",
  "thiserror 2.0.21",
+]
+
+[[package]]
+name = "native-hooks"
+version = "0.1.0"
+dependencies = [
+ "guest-cpu",
+ "hle-os",
+ "nsmbw",
 ]
 
 [[package]]

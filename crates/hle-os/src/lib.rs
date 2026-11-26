@@ -359,9 +359,19 @@ pub struct LinkedModule {
 
 pub use guest_cpu::{GuestCallResult, RelAddress};
 
+/// A Rust body that replaces the guest function at one address.
+///
+/// It receives the incoming GPRs and FPRs, returns the value for `r3`, and
+/// must leave `cpu.pc = cpu.lr`; [`System::before`] does the return. Bodies
+/// run under `platform::with_guest_runtime`, so their guest loads, stores and
+/// calls use the same `System`.
+pub type NativeBody = unsafe fn(&mut System, &[u32; 32], &[[f64; 2]; 32]) -> u32;
+
 pub struct System {
     memcpy_validator: Option<memcpy_validation::Validator>,
     native_memcpy: Option<native_memcpy::NativeCopy>,
+    /// Opt-in Rust bodies by guest address ([`System::register_native`]).
+    native_bodies: Vec<(u32, NativeBody)>,
     pub cpu: Cpu,
     pub mem: Mem,
     pub hw: Rc<RefCell<Hw>>,
@@ -604,13 +614,49 @@ impl System {
         }
         let native_memcpy = (addrs.memcpy != 0)
             .then(|| native_memcpy::NativeCopy::new(addrs.memcpy..MEMCPY_END));
-        Ok(Self { memcpy_validator, native_memcpy, cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
+        Ok(Self { memcpy_validator, native_memcpy, native_bodies: Vec::new(), cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
+    }
+
+    /// Registers a Rust body that replaces the guest function at `addr`.
+    ///
+    /// Only interpreted code dispatches these; recompiled code uses the hooks
+    /// baked into `game-recomp`. The switch is opt-in: callers decide when to
+    /// register.
+    pub fn register_native(&mut self, addr: u32, body: NativeBody) {
+        self.native_bodies.retain(|(a, _)| *a != addr);
+        self.native_bodies.push((addr, body));
+        self.native_bodies.sort_unstable_by_key(|(a, _)| *a);
+    }
+
+    /// How many Rust bodies are registered.
+    pub fn native_count(&self) -> usize {
+        self.native_bodies.len()
+    }
+
+    #[inline]
+    fn native_body(&self, pc: u32) -> Option<NativeBody> {
+        self.native_bodies.iter().find(|(a, _)| *a == pc).map(|(_, b)| *b)
+    }
+
+    /// Runs the Rust body at `pc`, if one is registered: sets `r3` to its
+    /// result and returns to `lr`. Returns whether a body ran.
+    fn run_native(&mut self, pc: u32) -> bool {
+        let Some(body) = self.native_body(pc) else { return false };
+        let gprs = self.cpu.gpr;
+        let fprs = self.cpu.fpr;
+        let ret = unsafe { body(self, &gprs, &fprs) };
+        self.cpu.gpr[3] = ret;
+        self.cpu.pc = self.cpu.lr;
+        true
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
     /// returns. Returns true when the scheduler is idle with interrupts on;
     /// the clock then jumps to the next video line and the slice should end.
     fn before(&mut self, pc: u32) -> bool {
+        if self.run_native(pc) {
+            return false;
+        }
         let a = &self.addrs;
         if replace(&mut self.cpu, &mut self.mem, a, pc, self.aux_effects) || pc == a.strcmp {
             return false;
@@ -802,7 +848,7 @@ impl System {
             if VALIDATE_MEMCPY && pc == MEMCPY.0 {
                 self.memcpy_validator.as_mut().unwrap().begin(&self.cpu, &self.mem);
             }
-            if (!self.link_calls.is_empty() || self.display.watching() || self.addrs.may_be_special(pc)) && self.before(pc) {
+            if (!self.link_calls.is_empty() || self.display.watching() || self.addrs.may_be_special(pc) || self.native_body(pc).is_some()) && self.before(pc) {
                 // Idle: the clock jumped; end the slice here.
                 if self.finish_slice(&mut end) {
                     return Ok(());

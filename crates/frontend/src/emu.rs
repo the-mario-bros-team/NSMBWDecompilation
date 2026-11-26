@@ -644,9 +644,11 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
             return totals;
         }
     };
+    // Opt-in switch table (NSMBW_RUST_BODIES=1): Rust bodies from the
+    // reconstruction replace chosen guest functions in interpreted runs.
+    native_hooks::install(&mut sys);
     // Exit Course: a net game's as its players agreed.
-    sys.menu.exit_course = session.as_ref().map_or(gameplay_options.exit_course, |s| s.exit_course);
-    if settings_label.is_some() {
+    sys.menu.exit_course = session.as_ref().map_or(gameplay_options.exit_course, |s| s.exit_course);    if settings_label.is_some() {
         let (pause, map, files) = sys.menu.buttons;
         let yes = |b| if b { "yes" } else { "no" };
         println!("Settings buttons: pause window {}, world map menu {}, save select {}; save cards' \"Cheated\" text {}", yes(pause), yes(map), yes(files), yes(sys.menu.cheated_label));

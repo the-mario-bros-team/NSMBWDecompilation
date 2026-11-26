@@ -1,0 +1,12 @@
+[package]
+name = "native-hooks"
+version = "0.1.0"
+edition = "2021"
+
+# Opt-in switch table: guest address -> Rust body from the `nsmbw`
+# reconstruction. The body runs on the same `System` through
+# `nsmbw::platform::with_guest_runtime`.
+[dependencies]
+guest-cpu = { path = "../guest-cpu" }
+hle-os = { path = "../hle-os" }
+nsmbw = { path = "../..", features = ["guest-memory"] }

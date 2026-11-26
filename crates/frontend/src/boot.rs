@@ -117,6 +117,7 @@ pub fn run(game: &Path, max_steps: u64) -> bool {
 fn boot(game: &Path, max_steps: u64) -> Result<bool, String> {
     let names = load_names(Path::new("."));
     let mut sys = System::boot(game, "saves/nand".into())?;
+    native_hooks::install(&mut sys);
     {
         let mut hw = sys.hw.borrow_mut();
         hw.ios.trace = true;

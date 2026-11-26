@@ -17,7 +17,7 @@ guest-mem = { path = "crates/guest-mem", optional = true }
 # plain `cargo check` (and scripts/check.ps1) on the reconstruction only; build
 # the port with `cargo run -p frontend`.
 [workspace]
-members = [".", "crates/frontend", "crates/guest-mem", "crates/guest-cpu", "crates/hle-ios", "crates/hw", "crates/hle-os", "crates/gx", "crates/vk-render", "crates/render", "crates/d3d-render", "crates/input", "crates/ppc-recomp", "crates/game-recomp", "crates/game-recomp/shards/*", "crates/port-update", "crates/launcher", "crates/android", "crates/disc-image", "crates/netplay", "crates/game-version"]
+members = [".", "crates/frontend", "crates/guest-mem", "crates/guest-cpu", "crates/hle-ios", "crates/hw", "crates/hle-os", "crates/native-hooks", "crates/gx", "crates/vk-render", "crates/render", "crates/d3d-render", "crates/input", "crates/ppc-recomp", "crates/game-recomp", "crates/game-recomp/shards/*", "crates/port-update", "crates/launcher", "crates/android", "crates/disc-image", "crates/netplay", "crates/game-version"]
 default-members = ["."]
 
 [profile.release]
