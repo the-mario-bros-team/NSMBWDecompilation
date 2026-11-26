@@ -1,0 +1,20 @@
+{
+  "name": "dActorState_c",
+  "base": "dActor_c",
+  "size": 980,
+  "vptr": 96,
+  "fields": [
+    {
+      "offset": 96,
+      "size": 4,
+      "type": "vptr",
+      "name": "vtable"
+    },
+    {
+      "offset": 916,
+      "size": 64,
+      "type": "sFStateMgr_c<dActorState_c, sStateMethodUsr_FI_c>",
+      "name": "mStateMgr"
+    }
+  ]
+}

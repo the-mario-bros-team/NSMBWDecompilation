@@ -1,0 +1,80 @@
+{
+  "name": "fBase_c",
+  "base": null,
+  "size": 100,
+  "vptr": 96,
+  "fields": [
+    {
+      "offset": 0,
+      "size": 4,
+      "type": "u32",
+      "name": "mUniqueID"
+    },
+    {
+      "offset": 4,
+      "size": 4,
+      "type": "u32",
+      "name": "mParam"
+    },
+    {
+      "offset": 8,
+      "size": 2,
+      "type": "u16",
+      "name": "mProfName"
+    },
+    {
+      "offset": 10,
+      "size": 1,
+      "type": "u8",
+      "name": "mLifecycleState"
+    },
+    {
+      "offset": 11,
+      "size": 1,
+      "type": "bool",
+      "name": "mDeleteRequested"
+    },
+    {
+      "offset": 12,
+      "size": 1,
+      "type": "bool",
+      "name": "mDeferExecute"
+    },
+    {
+      "offset": 13,
+      "size": 1,
+      "type": "bool",
+      "name": "mDeferRetryCreate"
+    },
+    {
+      "offset": 14,
+      "size": 1,
+      "type": "u8",
+      "name": "mGroupType"
+    },
+    {
+      "offset": 15,
+      "size": 1,
+      "type": "u8",
+      "name": "mProcControl"
+    },
+    {
+      "offset": 16,
+      "size": 76,
+      "type": "fManager_c",
+      "name": "mMng"
+    },
+    {
+      "offset": 92,
+      "size": 4,
+      "type": "EGG::FrmHeap *",
+      "name": "mHeap"
+    },
+    {
+      "offset": 96,
+      "size": 4,
+      "type": "vptr",
+      "name": "vtable"
+    }
+  ]
+}

@@ -4,6 +4,10 @@
 //! that records where each REL module was placed.
 
 pub mod camera;
+mod memcpy_validation;
+mod native_memcpy;
+#[cfg(test)]
+mod synthetic_actor_gate;
 pub mod display;
 pub mod join;
 pub mod light_texture;
@@ -19,7 +23,7 @@ use std::rc::Rc;
 
 use game_version::{Version, E1};
 use guest_cpu::blocks::Blocks;
-use guest_cpu::{Cpu, Stop, MSR_EE, SPR_HID0, SPR_HID4};
+use guest_cpu::{Cpu, GuestRuntime, GuestWord, Stop, MSR_EE, SPR_HID0, SPR_HID4};
 use guest_mem::Mem;
 use hle_ios::Ios;
 use hw::{Hw, HwPort};
@@ -67,6 +71,10 @@ const SQRT: E1 = E1(0x802E_8620);
 /// MSL's `strcmp`, computed natively (the first differing bytes' difference,
 /// as unsigned chars). Scene loads compare every effect name with it.
 const STRCMP: E1 = E1(0x802E_1AB4);
+/// The boot library's memcpy entry in USA revision 1.
+const MEMCPY: E1 = E1(0x8000_4364);
+/// The following routine's entry in USA revision 1.
+const MEMCPY_END: u32 = 0x8000_4600;
 /// Its `errno` (r13 - 0x4698) and the NaN it returns for negative inputs.
 const ERRNO: E1 = E1(0x8042_AFE8);
 const EDOM: u32 = 0x21;
@@ -75,6 +83,9 @@ const EDOM: u32 = 0x21;
 /// game's (from 0x93400000: IOS's own memory on a real Wii, which nothing
 /// uses here).
 const CALL_SCRATCH: u32 = 0x8000_1800;
+const CALL_SCRATCH_CAPACITY: usize = 0x400;
+const CALL_STACK_ARG_CAPACITY: usize = 0x400;
+const CALL_STACK_LINKAGE: usize = 8;
 const CALL_STACK_TOP: u32 = 0x9341_0000 - 0x10;
 /// The OS's current thread (`OSGetCurrentThread`), and `OSThread`'s size.
 const CURRENT_THREAD: u32 = 0x8000_00E4;
@@ -91,6 +102,7 @@ pub(crate) struct Addrs {
     return_at_once: [u32; 12],
     sqrt: u32,
     strcmp: u32,
+    memcpy: u32,
     errno: u32,
     update_buffer: u32,
     idle_loop: u32,
@@ -117,6 +129,15 @@ fn va_or_none(a: E1, missing: &mut Vec<u32>) -> u32 {
 
 impl Addrs {
     fn new() -> Self {
+        Self::with_memcpy(std::env::var("NSMBW_RUST_MEMCPY").as_deref() == Ok("1"))
+    }
+
+    fn with_memcpy(rust_memcpy: bool) -> Self {
+        let memcpy = if rust_memcpy && game_version::current() == Version::E1 {
+            MEMCPY.0
+        } else {
+            0
+        };
         let mut missing = Vec::new();
         let mut va = |a: u32| va_or_none(E1(a), &mut missing);
         let return_at_once = RETURN_AT_ONCE.map(&mut va);
@@ -126,6 +147,7 @@ impl Addrs {
             return_at_once,
             sqrt: va(SQRT.0),
             strcmp: va(STRCMP.0),
+            memcpy,
             errno: va(ERRNO.0),
             update_buffer: va(reverb::UPDATE_BUFFER.0),
             idle_loop: va(IDLE_LOOP.0),
@@ -145,7 +167,7 @@ impl Addrs {
             eprintln!("{}: no counterpart of these USA addresses, their hooks are off: {}", game_version::current().describe(), list.join(", "));
         }
         let mut special: Vec<u32> = a.return_at_once.to_vec();
-        special.extend([a.sqrt, a.strcmp, a.draw_and_capture, a.update_buffer, a.idle_loop, a.os_link, a.os_link_fixed, p1_character::PORTRAIT, a.bg_execute, a.bg_execute_end]);
+        special.extend([a.sqrt, a.strcmp, a.memcpy, a.draw_and_capture, a.update_buffer, a.idle_loop, a.os_link, a.os_link_fixed, p1_character::PORTRAIT, a.bg_execute, a.bg_execute_end]);
         special.extend(a.menu_hooks);
         special.extend(a.display_hooks);
         special.retain(|&x| x != 0);
@@ -169,14 +191,16 @@ impl Addrs {
 /// Every address [`System::before`] acts on in the version that runs
 /// ([`game_version::set`] first). Recompiled code never runs through one of
 /// these (`ppc-recomp` bakes this list in, and
-/// [`guest_cpu::recomp::Rt::new`] checks it).
+/// [`guest_cpu::recomp::Rt::new`] checks it). The USA revision 1 memcpy
+/// experiment (`NSMBW_RUST_MEMCPY=1`) uses the interpreter dispatcher.
 pub fn special() -> Vec<u32> {
     Addrs::new().special
 }
 
 /// The hooks that replace a whole function: return at once (DC loops,
-/// AXFX callbacks), the native reverb, [`STRCMP`] and [`SQRT`]. Runs the
-/// one at `pc` if it applies, returning to `lr`; true if it ran. One that
+/// AXFX callbacks), the native reverb, [`STRCMP`], and [`SQRT`]. Runs
+/// the one at `pc` if it applies, returning to `lr`; true if
+/// it ran. One that
 /// does not apply changes nothing, so recompiled code calls this at a call
 /// to a hook (`Rt::set_hook`) instead of unwinding to the dispatcher, and
 /// unwinds only when it declines ([`System::before`] then asks again).
@@ -210,6 +234,15 @@ fn replace(cpu: &mut Cpu, mem: &mut Mem, a: &Addrs, pc: u32, aux_effects: bool) 
         return true;
     }
     false
+}
+
+/// Byte-copy candidate for the diagnostic validator.
+fn replace_memcpy(cpu: &mut Cpu, mem: &mut Mem) -> bool {
+    if !mem.copy_ram_nonoverlapping(cpu.gpr[3], cpu.gpr[4], cpu.gpr[5] as usize) {
+        return false;
+    }
+    cpu.pc = cpu.lr;
+    true
 }
 
 /// [`STRCMP`]'s result, or `None` (run the guest's own) if a string
@@ -266,6 +299,53 @@ fn be32(b: &[u8], at: usize) -> u32 {
     u32::from_be_bytes(b[at..at + 4].try_into().unwrap())
 }
 
+const MODULE_LIST_HEAD: u32 = 0x8000_30c8;
+
+fn resolve_rel_address_in_memory(
+    mem: &Mem,
+    address: RelAddress,
+    len: usize,
+    executable: bool,
+) -> Option<u32> {
+    let span = len.max(if executable { 4 } else { 1 });
+    if address.module == 0 || span > guest_mem::MEM2_SIZE {
+        return None;
+    }
+    // OSLink and OSUnlink maintain this list and the relocated section
+    // tables. Read them from RAM so loaded snapshots need no extra metadata.
+    let mut current = be32(mem.ram(MODULE_LIST_HEAD, 4)?, 0);
+    let mut previous = 0;
+    while current != 0 {
+        let header = mem.ram(current, 20)?;
+        if be32(header, 8) != previous {
+            return None;
+        }
+        if be32(header, 0) == address.module {
+            if address.section >= be32(header, 12) {
+                return None;
+            }
+            let table = be32(header, 16);
+            if table == 0 {
+                return None;
+            }
+            let entry = mem.ram(table.checked_add(address.section.checked_mul(8)?)?, 8)?;
+            let base_and_flags = be32(entry, 0);
+            let base = base_and_flags & !1;
+            if base == 0 || address.offset.checked_add(span as u32)? > be32(entry, 4) {
+                return None;
+            }
+            let resolved = base.checked_add(address.offset)?;
+            if executable && (base_and_flags & 1 == 0 || resolved % 4 != 0) {
+                return None;
+            }
+            return mem.ram(resolved, span).map(|_| resolved);
+        }
+        previous = current;
+        current = be32(header, 4);
+    }
+    None
+}
+
 /// A REL module after `OSLink` returned.
 #[derive(Debug, Clone)]
 pub struct LinkedModule {
@@ -277,7 +357,11 @@ pub struct LinkedModule {
     pub at_step: u64,
 }
 
+pub use guest_cpu::{GuestCallResult, RelAddress};
+
 pub struct System {
+    memcpy_validator: Option<memcpy_validation::Validator>,
+    native_memcpy: Option<native_memcpy::NativeCopy>,
     pub cpu: Cpu,
     pub mem: Mem,
     pub hw: Rc<RefCell<Hw>>,
@@ -512,7 +596,15 @@ impl System {
         cpu.spr[SPR_HID0] = 0x0011_C464;
         cpu.spr[SPR_HID4] = 0x8200_0000;
         let slices = Rc::new(RefCell::new(Slices { hw: hw.clone(), end: 0, until_retraces: 0, limit: 0, stop: false, interrupts: 0, decrementers: 0, samples: None, pending: None }));
-        Ok(Self { cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
+        let memcpy_validator = (version == Version::E1
+            && std::env::var("NSMBW_RUST_MEMCPY").as_deref() == Ok("validate"))
+            .then(memcpy_validation::Validator::new);
+        if memcpy_validator.is_some() {
+            eprintln!("memcpy validation enabled for eight calls using the interpreter");
+        }
+        let native_memcpy = (addrs.memcpy != 0)
+            .then(|| native_memcpy::NativeCopy::new(addrs.memcpy..MEMCPY_END));
+        Ok(Self { memcpy_validator, native_memcpy, cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
@@ -600,6 +692,9 @@ impl System {
     /// [`Slices::end_slice`], and calls the function-replacing hooks itself
     /// ([`replace`]; set `aux_effects` first).
     pub fn set_recomp(&mut self, mut rt: guest_cpu::recomp::Rt) {
+        if self.memcpy_uses_interpreter() {
+            return;
+        }
         let (slices, leave) = (self.slices.clone(), self.slices.clone());
         rt.set_slice_end(
             Box::new(move |c, m| {
@@ -638,6 +733,29 @@ impl System {
     /// `cpu.cycles` reaches `limit`, in slices ([`SLICE`]), through the
     /// decoded-block cache and recompiled code if registered.
     pub fn run_field(&mut self, limit: u64) -> Result<(), Stop> {
+        if self.memcpy_validator.is_some() {
+            self.run_field_inner::<true, false>(limit)
+        } else if self.native_memcpy.is_some() {
+            self.run_field_inner::<false, true>(limit)
+        } else {
+            self.run_field_inner::<false, false>(limit)
+        }
+    }
+
+    /// Whether the configured memcpy experiment uses the interpreter dispatcher.
+    pub fn memcpy_uses_interpreter(&self) -> bool {
+        self.memcpy_validator.is_some() || self.native_memcpy.is_some()
+    }
+
+    /// Counts only calls and bytes written by the native hook to live RAM.
+    pub fn native_memcpy_commits(&self) -> Option<(u64, u64)> {
+        self.native_memcpy.as_ref().map(native_memcpy::NativeCopy::commits)
+    }
+
+    fn run_field_inner<const VALIDATE_MEMCPY: bool, const NATIVE_MEMCPY: bool>(
+        &mut self,
+        limit: u64,
+    ) -> Result<(), Stop> {
         {
             let mut s = self.slices.borrow_mut();
             s.until_retraces = self.hw.borrow().retraces;
@@ -656,6 +774,11 @@ impl System {
         // recompiled code), so they are read back only then.
         let mut end = self.cpu.cycles + SLICE;
         loop {
+            if VALIDATE_MEMCPY {
+                if let Some(result) = self.memcpy_validator.as_mut().unwrap().finish(&self.cpu, &self.mem) {
+                    result.report();
+                }
+            }
             if after_branch && self.cpu.cycles >= end {
                 after_branch = false;
                 if self.finish_slice(&mut end) {
@@ -664,6 +787,21 @@ impl System {
                 continue;
             }
             let pc = self.cpu.pc;
+            if NATIVE_MEMCPY
+                && pc == self.addrs.memcpy
+                && self.link_calls.is_empty()
+                && !self.display.watching()
+            {
+                let native = self.native_memcpy.as_mut().unwrap();
+                if let Some(retired) = native.try_copy(&mut self.cpu, &mut self.mem, end, &self.addrs.special) {
+                    self.steps += retired;
+                    after_branch = true;
+                    continue;
+                }
+            }
+            if VALIDATE_MEMCPY && pc == MEMCPY.0 {
+                self.memcpy_validator.as_mut().unwrap().begin(&self.cpu, &self.mem);
+            }
             if (!self.link_calls.is_empty() || self.display.watching() || self.addrs.may_be_special(pc)) && self.before(pc) {
                 // Idle: the clock jumped; end the slice here.
                 if self.finish_slice(&mut end) {
@@ -716,6 +854,9 @@ impl System {
 
     /// Ends the slice; `end` becomes the next one's. True if the run is over.
     fn finish_slice(&mut self, end: &mut u64) -> bool {
+        if let Some(validator) = &mut self.memcpy_validator {
+            validator.cancel_at_slice_boundary();
+        }
         let mut s = self.slices.borrow_mut();
         s.end_slice(&mut self.cpu, &mut self.mem);
         *end = s.end;
@@ -741,7 +882,9 @@ impl System {
     /// arguments: low memory the game leaves unused (debuggers and cheat
     /// handlers live there on a real Wii).
     pub fn call_guest(&mut self, addr: u32, args: &[u32], data: &[u8]) -> Result<u32, String> {
-        self.call_guest_on(addr, args, data)
+        assert!(args.len() <= 8 && data.len() <= CALL_SCRATCH_CAPACITY);
+        self.call_guest_with_registers(addr, args, &[], data)
+            .map(|result| result.r3)
     }
 
     /// [`System::call_guest`] for a function that touches the OS's threads
@@ -764,21 +907,56 @@ impl System {
         let (thread, held) = (self.mem.read_u32(CURRENT_THREAD).ok()?, self.mem.read_u32(reschedule).ok()?);
         let _ = self.mem.write_u32(CURRENT_THREAD, CALL_SCRATCH);
         let _ = self.mem.write_u32(reschedule, held.wrapping_add(1));
-        let r = self.call_guest_on(addr, args, &[0; OS_THREAD_SIZE]);
+        let r = self.call_guest(addr, args, &[0; OS_THREAD_SIZE]);
         let _ = self.mem.write_u32(CURRENT_THREAD, thread);
         let _ = self.mem.write_u32(reschedule, held);
         Some(r)
     }
 
-    fn call_guest_on(&mut self, addr: u32, args: &[u32], data: &[u8]) -> Result<u32, String> {
+    /// Resolve a range in a live REL section. Code addresses require an
+    /// executable section and room for a full aligned PowerPC instruction.
+    pub fn resolve_rel_address(
+        &self,
+        address: RelAddress,
+        len: usize,
+        executable: bool,
+    ) -> Option<u32> {
+        resolve_rel_address_in_memory(&self.mem, address, len, executable)
+    }
+
+    /// Runs the same synchronous guest call as [`Self::call_guest`] with
+    /// register arguments for a fixed-prototype call. Integer words go to
+    /// r3–r10 and scalar floating-point values go to f1–f8. The caller lays
+    /// out register pairs. Stack arguments are unsupported.
+    pub fn call_guest_with_registers(
+        &mut self,
+        addr: u32,
+        gprs: &[u32],
+        fprs: &[f64],
+        data: &[u8],
+    ) -> Result<GuestCallResult, String> {
+        self.invoke_guest_call(addr, gprs, fprs, data, CALL_STACK_TOP)
+    }
+
+    fn invoke_guest_call(
+        &mut self,
+        addr: u32,
+        gprs: &[u32],
+        fprs: &[f64],
+        data: &[u8],
+        stack_top: u32,
+    ) -> Result<GuestCallResult, String> {
         const RETURN: u32 = CALL_SCRATCH; // never executed: the call stops there
-        assert!(args.len() <= 8 && data.len() <= 0x400);
+        if gprs.len() > 8 || fprs.len() > 8 || data.len() > CALL_SCRATCH_CAPACITY {
+            return Err("guest call exceeds the argument registers or scratch area".into());
+        }
         let saved = self.cpu.clone();
         self.mem.ram_mut(CALL_SCRATCH, data.len()).ok_or("scratch memory")?.copy_from_slice(data);
-        let _ = self.mem.write_u32(CALL_STACK_TOP, 0); // end of the back chain
-        self.cpu.gpr[1] = CALL_STACK_TOP;
-        for (i, &a) in args.iter().enumerate() {
-            self.cpu.gpr[3 + i] = a;
+        let _ = self.mem.write_u32(stack_top, 0); // end of the back chain
+        self.cpu.gpr[1] = stack_top;
+        self.cpu.gpr[3..3 + gprs.len()].copy_from_slice(gprs);
+        for (register, &value) in self.cpu.fpr[1..].iter_mut().zip(fprs) {
+            register[0] = value;
         }
         self.cpu.lr = RETURN;
         self.cpu.pc = addr;
@@ -787,7 +965,11 @@ impl System {
         for _ in 0..1000 {
             match self.run_slice(10_000, |cpu, _, _| cpu.pc != RETURN) {
                 Ok(_) if self.cpu.pc == RETURN => {
-                    result = Ok(self.cpu.gpr[3]);
+                    result = Ok(GuestCallResult {
+                        r3: self.cpu.gpr[3],
+                        r4: self.cpu.gpr[4],
+                        f1: self.cpu.fpr[1][0],
+                    });
                     break;
                 }
                 Ok(_) => {}
@@ -820,6 +1002,85 @@ impl System {
             self.p1_linked(&sections);
         }
         self.linked.push(LinkedModule { id, header, ok, sections, at_step: self.steps });
+    }
+}
+
+impl GuestRuntime for System {
+    fn memory(&mut self) -> &mut Mem {
+        &mut self.mem
+    }
+
+    fn resolve_rel_address(&self, address: RelAddress, len: usize, executable: bool) -> Option<u32> {
+        System::resolve_rel_address(self, address, len, executable)
+    }
+
+    fn call_registers(
+        &mut self,
+        addr: u32,
+        gprs: &[u32],
+        fprs: &[f64],
+    ) -> Result<GuestCallResult, String> {
+        self.call_guest_with_registers(addr, gprs, fprs, &[])
+    }
+
+    fn call_frame_with_scratch(
+        &mut self,
+        addr: u32,
+        gprs: &[GuestWord],
+        fprs: &[f64],
+        stack: &[u8],
+        scratch: &mut [u8],
+    ) -> Result<GuestCallResult, String> {
+        let len = scratch.len();
+        if gprs.len() > 8 || fprs.len() > 8 || len > CALL_SCRATCH_CAPACITY {
+            return Err("guest call exceeds the argument registers or scratch area".into());
+        }
+        if stack.len() > CALL_STACK_ARG_CAPACITY {
+            return Err("guest call exceeds the stack argument area".into());
+        }
+        let mut words = [0; 8];
+        for (word, arg) in words.iter_mut().zip(gprs) {
+            *word = match *arg {
+                GuestWord::Immediate(value) => value,
+                GuestWord::ScratchOffset(offset) if offset < len => CALL_SCRATCH + offset as u32,
+                GuestWord::ScratchOffset(_) => {
+                    return Err("guest scratch offset is outside the buffer".into());
+                }
+            };
+        }
+
+        let mut saved = [0; CALL_SCRATCH_CAPACITY];
+        let saved = &mut saved[..len];
+        saved.copy_from_slice(self.mem.ram(CALL_SCRATCH, len).ok_or("scratch memory")?);
+        let stack_top = CALL_STACK_TOP - stack.len().next_multiple_of(16) as u32;
+        let mut stack_backup = [0; CALL_STACK_ARG_CAPACITY + CALL_STACK_LINKAGE];
+        let frame_len = if stack.is_empty() {
+            0
+        } else {
+            CALL_STACK_LINKAGE + stack.len()
+        };
+        let stack_backup = &mut stack_backup[..frame_len];
+        if frame_len != 0 {
+            let frame = self
+                .mem
+                .ram_mut(stack_top, frame_len)
+                .ok_or("guest call stack")?;
+            stack_backup.copy_from_slice(frame);
+            frame[CALL_STACK_LINKAGE..].copy_from_slice(stack);
+        }
+        let result = self.invoke_guest_call(addr, &words[..gprs.len()], fprs, scratch, stack_top);
+        if frame_len != 0 {
+            self.mem
+                .ram_mut(stack_top, frame_len)
+                .ok_or("guest call stack")?
+                .copy_from_slice(stack_backup);
+        }
+        let ram = self.mem.ram_mut(CALL_SCRATCH, len).ok_or("scratch memory")?;
+        if result.is_ok() {
+            scratch.copy_from_slice(ram);
+        }
+        ram.copy_from_slice(saved);
+        result
     }
 }
 
@@ -883,5 +1144,159 @@ impl System {
             guest_mem::snap!(s; self.linked, self.link_calls, self.steps, sl.interrupts, sl.decrementers, self.idle_cycles, self.light_textures, self.camera, self.joins);
         }
         s.tag(b"END ");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn native_memcpy_dispatches_for_disjoint_ram_and_declines_aliases() {
+        let addrs = Addrs::with_memcpy(true);
+        let entry = 0x8000_4364;
+        assert!(addrs.special.contains(&entry));
+        assert!(addrs.may_be_special(entry));
+        assert!(!Addrs::with_memcpy(false).special.contains(&entry));
+
+        let mut cpu = Cpu::new();
+        let mut mem = Mem::new(Box::new(guest_mem::NullMmio));
+        let mut rt =
+            guest_cpu::recomp::Rt::new(&[], &mut mem, &addrs.special, &addrs.special).unwrap();
+        let special = addrs.special.clone();
+        rt.set_hook(Box::new(move |c, m, pc| replace(c, m, &addrs, pc, true)));
+
+        let src = 0x8000_2000;
+        let dst = 0x8000_2010;
+        mem.write_u32(src, 0x1122_3344).unwrap();
+        cpu.pc = entry;
+        cpu.lr = 0x8000_1000;
+        cpu.gpr[3] = dst;
+        cpu.gpr[4] = src;
+        cpu.gpr[5] = 4;
+
+        assert!(!rt.hook(&mut cpu, &mut mem, entry));
+        assert_eq!(mem.read_u32(dst), Ok(0));
+        assert_eq!(cpu.pc, entry);
+        // lwz r6,0(r4); stw r6,0(r3); blr.
+        mem.write_u32(entry, (32 << 26) | (6 << 21) | (4 << 16)).unwrap();
+        mem.write_u32(entry + 4, (36 << 26) | (6 << 21) | (3 << 16)).unwrap();
+        mem.write_u32(entry + 8, 0x4e80_0020).unwrap();
+        let mut native = native_memcpy::NativeCopy::new(entry..entry + 12);
+        assert_eq!(native.try_copy(&mut cpu, &mut mem, 3, &special), Some(3));
+        assert_eq!(mem.read_u32(dst), Ok(0x1122_3344));
+        assert_eq!(cpu.gpr[3], dst);
+        assert_eq!(cpu.pc, cpu.lr);
+
+        cpu.pc = entry;
+        cpu.gpr[3] = src + 1;
+        cpu.gpr[4] = 0xc000_2000;
+        assert_eq!(native.try_copy(&mut cpu, &mut mem, 20, &special), None);
+        assert_eq!(cpu.pc, entry);
+        assert_eq!(cpu.gpr[3], src + 1);
+        assert_eq!(mem.read_u32(src), Ok(0x1122_3344));
+    }
+
+    #[test]
+    fn rel_address_uses_original_section_indices_and_live_module_membership() {
+        let mut mem = Mem::new(Box::new(guest_mem::NullMmio));
+        let first = 0x8000_9000;
+        let module = 0x8000_9100;
+        let table = 0x8000_a000;
+        let code = 0x8000_b000;
+        let data = 0x9000_c000;
+
+        mem.write_u32(0x8000_30c8, first).unwrap();
+        mem.write_u32(first, 3).unwrap();
+        mem.write_u32(first + 4, module).unwrap();
+        mem.write_u32(module, 7).unwrap();
+        mem.write_u32(module + 8, first).unwrap();
+        mem.write_u32(module + 12, 4).unwrap();
+        mem.write_u32(module + 16, table).unwrap();
+        // Section 0 and section 2 are empty. Indices 1 and 3 are stable.
+        mem.write_u32(table + 8, code | 1).unwrap();
+        mem.write_u32(table + 12, 16).unwrap();
+        mem.write_u32(table + 24, data).unwrap();
+        mem.write_u32(table + 28, 32).unwrap();
+
+        let addr = RelAddress {
+            module: 7,
+            section: 1,
+            offset: 12,
+        };
+        assert_eq!(
+            resolve_rel_address_in_memory(&mem, addr, 4, true),
+            Some(code + 12)
+        );
+        assert_eq!(resolve_rel_address_in_memory(&mem, addr, 5, true), None);
+        assert_eq!(
+            resolve_rel_address_in_memory(&mem, RelAddress { offset: 1, ..addr }, 4, true),
+            None
+        );
+        assert_eq!(
+            resolve_rel_address_in_memory(&mem, RelAddress { section: 2, ..addr }, 1, false),
+            None
+        );
+        let data_addr = RelAddress {
+            section: 3,
+            offset: 31,
+            ..addr
+        };
+        assert_eq!(
+            resolve_rel_address_in_memory(&mem, data_addr, 0, false),
+            Some(data + 31)
+        );
+        assert_eq!(
+            resolve_rel_address_in_memory(&mem, data_addr, 2, false),
+            None
+        );
+        assert_eq!(
+            resolve_rel_address_in_memory(
+                &mem,
+                RelAddress {
+                    offset: 0,
+                    ..data_addr
+                },
+                4,
+                true
+            ),
+            None
+        );
+        assert_eq!(
+            resolve_rel_address_in_memory(
+                &mem,
+                RelAddress {
+                    section: u32::MAX,
+                    ..addr
+                },
+                1,
+                false
+            ),
+            None
+        );
+
+        // Detaching the module leaves its bytes in RAM but removes its address.
+        mem.write_u32(first + 4, 0).unwrap();
+        assert_eq!(resolve_rel_address_in_memory(&mem, addr, 4, true), None);
+    }
+
+    #[test]
+    fn rel_address_declines_invalid_list_and_section_pointers() {
+        let mut mem = Mem::new(Box::new(guest_mem::NullMmio));
+        let module = 0x8000_9100;
+        let address = RelAddress {
+            module: 7,
+            section: 0,
+            offset: 0,
+        };
+        mem.write_u32(0x8000_30c8, module).unwrap();
+        mem.write_u32(module, 7).unwrap();
+        mem.write_u32(module + 12, 1).unwrap();
+        mem.write_u32(module + 16, 0xcc00_0000).unwrap();
+        assert_eq!(resolve_rel_address_in_memory(&mem, address, 4, false), None);
+
+        mem.write_u32(module, 6).unwrap();
+        mem.write_u32(module + 4, module).unwrap();
+        assert_eq!(resolve_rel_address_in_memory(&mem, address, 4, false), None);
     }
 }

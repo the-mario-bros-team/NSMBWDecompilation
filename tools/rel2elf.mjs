@@ -8,6 +8,8 @@
 // Usage:
 //   node tools/rel2elf.mjs --all
 //   node tools/rel2elf.mjs <module.rel> [out.elf]
+//   node tools/rel2elf.mjs --resolve-address <summary.json> <0xaddress>...
+//   node tools/rel2elf.mjs --address-layout <module.rel|module.rel.LZ>...
 //
 // --all converts the four NSMBW RELs in work/rels/ and writes
 // work/rels/elf/summary.json.  A single-file conversion prints its JSON
@@ -16,6 +18,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { decodeLz11 } from './lz11.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -616,6 +619,24 @@ function congruentFileOffset(cursor, vaddr, alignment) {
   return cursor + skew;
 }
 
+function describeSections(mod) {
+  return mod.sections
+    .filter((section) => section.size > 0)
+    .map((section) => {
+      const isBss = section.isBss;
+      const size = isBss ? mod.bss.size : section.size;
+      return {
+        index: section.index,
+        role: sectionRole(section),
+        fileOffset: isBss ? 0 : section.offset,
+        size,
+        executable: section.executable,
+        canonicalOffset: section.canonicalOffset,
+        vaddr: hex(mod.base + section.canonicalOffset),
+      };
+    });
+}
+
 function buildElf(relBuffer, { input, output, name }) {
   const mod = parseRel(relBuffer, input || name || '<buffer>');
   const def = CANONICAL_MODULES[mod.header.moduleId];
@@ -753,21 +774,7 @@ function buildElf(relBuffer, { input, output, name }) {
   const relocations = applyRelocations(elf, mod);
 
   // Summary-facing section list.  Empty/null sections are counted separately.
-  const sections = mod.sections
-    .filter((section) => section.size > 0)
-    .map((section) => {
-      const isBss = section.isBss;
-      const size = isBss ? mod.bss.size : section.size;
-      return {
-        index: section.index,
-        role: sectionRole(section),
-        fileOffset: isBss ? 0 : section.offset,
-        size,
-        executable: section.executable,
-        canonicalOffset: section.canonicalOffset,
-        vaddr: hex(mod.base + section.canonicalOffset),
-      };
-    });
+  const sections = describeSections(mod);
   const emptySections = mod.sections
     .filter((section) => section.index !== 0 && !section.isBss && section.size === 0)
     .map((section) => section.index);
@@ -1040,14 +1047,118 @@ function crossModuleRanges(modules) {
   };
 }
 
+function addressLayout(paths) {
+  const ids = new Set();
+  const ranges = [];
+  const modules = paths.map((input) => {
+    const source = fs.readFileSync(input);
+    const mod = parseRel(/\.lz$/i.test(input) ? decodeLz11(source) : source, input);
+    const moduleId = mod.header.moduleId;
+    const def = CANONICAL_MODULES[moduleId];
+    if (!def) throw new Error(`${input}: module id ${moduleId} has no canonical base`);
+    if (ids.has(moduleId)) throw new Error(`module ${moduleId} was supplied twice`);
+    ids.add(moduleId);
+    mod.base = def.base;
+    const sections = describeSections(mod);
+    for (const section of sections) {
+      if (section.index === 0 || section.size === 0) continue;
+      const start = mod.base + section.canonicalOffset;
+      const end = start + section.size;
+      if (end > 0x1_0000_0000) {
+        throw new Error(`module ${moduleId} section ${section.index} overflows the address space`);
+      }
+      ranges.push({ start, end, moduleId, section: section.index });
+    }
+    return { name: def.name, moduleId, base: hex(mod.base), sections, warnings: mod.warnings };
+  });
+  ranges.sort((a, b) => a.start - b.start);
+  for (let i = 1; i < ranges.length; i++) {
+    const previous = ranges[i - 1];
+    const current = ranges[i];
+    if (previous.end > current.start) {
+      throw new Error(
+        `module ${previous.moduleId} section ${previous.section} overlaps ` +
+        `module ${current.moduleId} section ${current.section}`,
+      );
+    }
+  }
+  return { format: 'REL address layout', modules, validation: { ok: true } };
+}
+
+function resolveAnalysisAddresses(summary, addresses) {
+  if (summary?.validation?.ok !== true) {
+    throw new Error('expected a validated rel2elf summary');
+  }
+  const sections = (summary.modules ?? [summary]).flatMap((module) =>
+    module.sections
+      .filter((section) => section.index !== 0 && section.size > 0)
+      .map((section) => ({
+        module: module.moduleId,
+        section: section.index,
+        start: Number(section.vaddr),
+        size: section.size,
+        executable: section.executable,
+      })),
+  );
+
+  return addresses.map((input) => {
+    if (!/^0x[0-9a-f]{1,8}$/i.test(input)) {
+      throw new Error(`invalid 32-bit hexadecimal address: ${input}`);
+    }
+    const address = Number(input);
+    const matches = sections.filter(({ start, size }) =>
+      address >= start && address - start < size,
+    );
+    if (matches.length !== 1) {
+      throw new Error(`${hex(address)} matches ${matches.length} REL sections`);
+    }
+    const [{ module, section, start, executable }] = matches;
+    return { address: hex(address), module, section, offset: address - start, executable };
+  });
+}
+
 function main() {
   const args = process.argv.slice(2);
   if (args[0] === '--help' || args[0] === '-h') {
     console.log(
       'usage:\n' +
       '  node tools/rel2elf.mjs --all\n' +
-      '  node tools/rel2elf.mjs <module.rel> [out.elf]',
+      '  node tools/rel2elf.mjs <module.rel> [out.elf]\n' +
+      '  node tools/rel2elf.mjs --resolve-address <summary.json> <0xaddress>...\n' +
+      '  node tools/rel2elf.mjs --address-layout <module.rel|module.rel.LZ>...',
     );
+    return;
+  }
+
+  if (args[0] === '--address-layout') {
+    if (args.length < 2) {
+      console.error('usage: node tools/rel2elf.mjs --address-layout <module.rel|module.rel.LZ>...');
+      process.exitCode = 2;
+      return;
+    }
+    try {
+      console.log(JSON.stringify(addressLayout(args.slice(1)), null, 2));
+    } catch (error) {
+      console.error(`rel2elf: ${error.message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (args[0] === '--resolve-address') {
+    const [, summaryPath, ...addresses] = args;
+    if (!summaryPath || addresses.length === 0) {
+      console.error('usage: node tools/rel2elf.mjs --resolve-address <summary.json> <0xaddress>...');
+      process.exitCode = 2;
+      return;
+    }
+    try {
+      const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+      console.log(JSON.stringify(resolveAnalysisAddresses(summary, addresses), null, 2));
+    } catch (error) {
+      console.error(`rel2elf: ${error.message}`);
+      process.exitCode = 1;
+    }
     return;
   }
 

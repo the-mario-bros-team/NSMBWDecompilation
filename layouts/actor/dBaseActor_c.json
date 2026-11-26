@@ -1,0 +1,134 @@
+{
+  "name": "dBaseActor_c",
+  "base": "dBase_c",
+  "size": 296,
+  "vptr": 96,
+  "fields": [
+    {
+      "offset": 96,
+      "size": 4,
+      "type": "vptr",
+      "name": "vtable"
+    },
+    {
+      "offset": 112,
+      "size": 12,
+      "type": "fLiNdBaLink_c",
+      "name": "mLinkActor"
+    },
+    {
+      "offset": 124,
+      "size": 48,
+      "type": "mMtx_c",
+      "name": "mMatrix"
+    },
+    {
+      "offset": 172,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mPos"
+    },
+    {
+      "offset": 184,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mLastPos"
+    },
+    {
+      "offset": 196,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mPosDelta"
+    },
+    {
+      "offset": 208,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mCenterOffs"
+    },
+    {
+      "offset": 220,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mScale"
+    },
+    {
+      "offset": 232,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mSpeed"
+    },
+    {
+      "offset": 244,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mSpeedMax"
+    },
+    {
+      "offset": 256,
+      "size": 6,
+      "type": "mAng3_c",
+      "name": "mAngle"
+    },
+    {
+      "offset": 262,
+      "size": 6,
+      "type": "mAng3_c",
+      "name": "mAngle3D"
+    },
+    {
+      "offset": 268,
+      "size": 4,
+      "type": "f32",
+      "name": "mSpeedF"
+    },
+    {
+      "offset": 272,
+      "size": 4,
+      "type": "f32",
+      "name": "mMaxSpeedF"
+    },
+    {
+      "offset": 276,
+      "size": 4,
+      "type": "f32",
+      "name": "mAccelY"
+    },
+    {
+      "offset": 280,
+      "size": 4,
+      "type": "f32",
+      "name": "mMaxFallSpeed"
+    },
+    {
+      "offset": 284,
+      "size": 4,
+      "type": "f32",
+      "name": "mAccelF"
+    },
+    {
+      "offset": 288,
+      "size": 4,
+      "type": "u32",
+      "name": "mActorProperties"
+    },
+    {
+      "offset": 292,
+      "size": 1,
+      "type": "bool",
+      "name": "mVisible"
+    },
+    {
+      "offset": 293,
+      "size": 1,
+      "type": "u8",
+      "name": "m_125"
+    },
+    {
+      "offset": 294,
+      "size": 2,
+      "type": "pad",
+      "name": "padding"
+    }
+  ]
+}

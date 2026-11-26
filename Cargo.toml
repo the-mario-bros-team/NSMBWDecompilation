@@ -6,6 +6,13 @@ edition = "2021"
 [lib]
 path = "src/lib.rs"
 
+[features]
+guest-memory = ["dep:guest-cpu", "dep:guest-mem"]
+
+[dependencies]
+guest-cpu = { path = "crates/guest-cpu", optional = true }
+guest-mem = { path = "crates/guest-mem", optional = true }
+
 # The port (docs/PORT_PLAN.md) lives under crates/. `default-members` keeps a
 # plain `cargo check` (and scripts/check.ps1) on the reconstruction only; build
 # the port with `cargo run -p frontend`.

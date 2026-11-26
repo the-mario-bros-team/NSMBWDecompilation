@@ -1,0 +1,308 @@
+{
+  "name": "dActor_c",
+  "base": "dBaseActor_c",
+  "size": 916,
+  "vptr": 96,
+  "fields": [
+    {
+      "offset": 296,
+      "size": 4,
+      "type": "int",
+      "name": "mCarryingPlayerID"
+    },
+    {
+      "offset": 300,
+      "size": 4,
+      "type": "u32",
+      "name": "mCarryingFlags"
+    },
+    {
+      "offset": 304,
+      "size": 1,
+      "type": "u8",
+      "name": "mCarryingDirection"
+    },
+    {
+      "offset": 305,
+      "size": 3,
+      "type": "pad",
+      "name": "padding"
+    },
+    {
+      "offset": 308,
+      "size": 4,
+      "type": "u32",
+      "name": "mComboCount"
+    },
+    {
+      "offset": 312,
+      "size": 4,
+      "type": "u32",
+      "name": "m_138"
+    },
+    {
+      "offset": 316,
+      "size": 4,
+      "type": "u32",
+      "name": "m_13C"
+    },
+    {
+      "offset": 320,
+      "size": 4,
+      "type": "f32",
+      "name": "m_140"
+    },
+    {
+      "offset": 324,
+      "size": 4,
+      "type": "u32",
+      "name": "m_144"
+    },
+    {
+      "offset": 328,
+      "size": 164,
+      "type": "dCc_c",
+      "name": "mCollisionCheck"
+    },
+    {
+      "offset": 492,
+      "size": 240,
+      "type": "dBc_c",
+      "name": "mBgCheck"
+    },
+    {
+      "offset": 732,
+      "size": 52,
+      "type": "dRc_c",
+      "name": "mRideCheck"
+    },
+    {
+      "offset": 784,
+      "size": 8,
+      "type": "mVec2_c",
+      "name": "m_310"
+    },
+    {
+      "offset": 792,
+      "size": 8,
+      "type": "mVec2_c",
+      "name": "mVisibleAreaSize"
+    },
+    {
+      "offset": 800,
+      "size": 8,
+      "type": "mVec2_c",
+      "name": "mVisibleAreaOffset"
+    },
+    {
+      "offset": 808,
+      "size": 8,
+      "type": "mVec2_c",
+      "name": "m_328"
+    },
+    {
+      "offset": 816,
+      "size": 8,
+      "type": "mVec2_c",
+      "name": "mMaxBoundDistance"
+    },
+    {
+      "offset": 824,
+      "size": 4,
+      "type": "f32",
+      "name": "mDestroyBoundDistanceTop"
+    },
+    {
+      "offset": 828,
+      "size": 4,
+      "type": "f32",
+      "name": "mDestroyBoundDistanceBottom"
+    },
+    {
+      "offset": 832,
+      "size": 4,
+      "type": "f32",
+      "name": "mDestroyBoundDistanceLeft"
+    },
+    {
+      "offset": 836,
+      "size": 4,
+      "type": "f32",
+      "name": "mDestroyBoundDistanceRight"
+    },
+    {
+      "offset": 840,
+      "size": 1,
+      "type": "u8",
+      "name": "mDirection"
+    },
+    {
+      "offset": 841,
+      "size": 1,
+      "type": "u8",
+      "name": "mZoneID"
+    },
+    {
+      "offset": 842,
+      "size": 1,
+      "type": "u8",
+      "name": "m_34A"
+    },
+    {
+      "offset": 843,
+      "size": 1,
+      "type": "pad",
+      "name": "padding"
+    },
+    {
+      "offset": 844,
+      "size": 4,
+      "type": "u8 *",
+      "name": "mpByteStorage"
+    },
+    {
+      "offset": 848,
+      "size": 4,
+      "type": "u16 *",
+      "name": "mpShortStorage"
+    },
+    {
+      "offset": 852,
+      "size": 2,
+      "type": "u8[2]",
+      "name": "mEventNums"
+    },
+    {
+      "offset": 854,
+      "size": 2,
+      "type": "pad",
+      "name": "padding"
+    },
+    {
+      "offset": 856,
+      "size": 8,
+      "type": "u64",
+      "name": "mEventMask"
+    },
+    {
+      "offset": 864,
+      "size": 4,
+      "type": "u32",
+      "name": "m_360"
+    },
+    {
+      "offset": 868,
+      "size": 2,
+      "type": "u16",
+      "name": "mSpawnInfoFlags"
+    },
+    {
+      "offset": 870,
+      "size": 1,
+      "type": "bool",
+      "name": "mKillIfDisabled"
+    },
+    {
+      "offset": 871,
+      "size": 1,
+      "type": "pad",
+      "name": "padding"
+    },
+    {
+      "offset": 872,
+      "size": 4,
+      "type": "u32",
+      "name": "mEaterActorID"
+    },
+    {
+      "offset": 876,
+      "size": 1,
+      "type": "u8",
+      "name": "mEatState"
+    },
+    {
+      "offset": 877,
+      "size": 1,
+      "type": "u8",
+      "name": "mEatSpitType"
+    },
+    {
+      "offset": 878,
+      "size": 2,
+      "type": "pad",
+      "name": "padding"
+    },
+    {
+      "offset": 880,
+      "size": 12,
+      "type": "mVec3_c",
+      "name": "mScaleBeforeBeingEaten"
+    },
+    {
+      "offset": 892,
+      "size": 4,
+      "type": "u32",
+      "name": "mScoreType"
+    },
+    {
+      "offset": 896,
+      "size": 4,
+      "type": "u32",
+      "name": "mLookAtMode"
+    },
+    {
+      "offset": 900,
+      "size": 4,
+      "type": "u32",
+      "name": "m_384"
+    },
+    {
+      "offset": 904,
+      "size": 4,
+      "type": "dPropelParts_c *",
+      "name": "mpCarryPropelActor"
+    },
+    {
+      "offset": 908,
+      "size": 1,
+      "type": "u8",
+      "name": "mKind"
+    },
+    {
+      "offset": 909,
+      "size": 1,
+      "type": "s8",
+      "name": "mPlayerNo"
+    },
+    {
+      "offset": 910,
+      "size": 1,
+      "type": "u8",
+      "name": "mDisableMask"
+    },
+    {
+      "offset": 911,
+      "size": 1,
+      "type": "u8",
+      "name": "mLayerID"
+    },
+    {
+      "offset": 912,
+      "size": 1,
+      "type": "bool",
+      "name": "mDeleteForever"
+    },
+    {
+      "offset": 913,
+      "size": 1,
+      "type": "bool",
+      "name": "mAppearsOnBackfence"
+    },
+    {
+      "offset": 914,
+      "size": 2,
+      "type": "u8[2]",
+      "name": "m_392"
+    }
+  ]
+}

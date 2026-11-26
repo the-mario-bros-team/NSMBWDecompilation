@@ -51,6 +51,14 @@ workspace are synthetic analysis slots, not loader output.
 `Relocate` (`0x801B1960`) is the per-importer relocation helper; `Undo`
 (`0x801B1F50`) is its inverse. Do not label either one `OSLink`/`OSUnlink`.
 
+## Address lookup
+
+Use `node tools/rel2elf.mjs --address-layout <module.rel|module.rel.LZ>...`
+to print validated section metadata as JSON. Save the JSON and pass it to
+`node tools/rel2elf.mjs --resolve-address <summary.json> <0xaddress>...`
+to recover module IDs, original section indices, and section-relative offsets.
+The lookup rejects addresses outside the sections and ambiguous ranges.
+
 ## Converted images
 
 `tools/rel2elf.mjs` now produces analysis-ready ELF32 BE `EM_PPC` images:

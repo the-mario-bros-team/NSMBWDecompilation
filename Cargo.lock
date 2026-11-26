@@ -2055,6 +2055,10 @@ dependencies = [
 [[package]]
 name = "nsmbw"
 version = "0.1.0"
+dependencies = [
+ "guest-cpu",
+ "guest-mem",
+]
 
 [[package]]
 name = "nsmbw-android"

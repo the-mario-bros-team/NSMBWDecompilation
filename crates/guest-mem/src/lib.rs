@@ -470,6 +470,41 @@ impl Mem {
         }
     }
 
+    /// Whether a nonempty RAM range has neither watched nor decoded-code pages.
+    pub fn is_untracked_ram_range(&self, addr: u32, len: usize) -> bool {
+        if len == 0 || len > MEM2_SIZE {
+            return false;
+        }
+        let Some(Loc::Ram(off)) = locate(addr, len) else {
+            return false;
+        };
+        let first = off >> CODE_PAGE_SHIFT;
+        let last = (off + len - 1) >> CODE_PAGE_SHIFT;
+        self.flags[first..=last].iter().all(|f| f.load(Ordering::Relaxed) == 0)
+    }
+
+    /// Copies two disjoint RAM ranges, tracking writes across the destination.
+    ///
+    /// Returns false without touching memory if a range overlaps, crosses a
+    /// bank boundary, or is outside RAM. An empty copy always succeeds.
+    pub fn copy_ram_nonoverlapping(&mut self, dst: u32, src: u32, len: usize) -> bool {
+        if len == 0 {
+            return true;
+        }
+        if len > MEM2_SIZE {
+            return false;
+        }
+        let (Some(Loc::Ram(dst)), Some(Loc::Ram(src))) = (locate(dst, len), locate(src, len)) else {
+            return false;
+        };
+        if src < dst + len && dst < src + len {
+            return false;
+        }
+        self.ram.copy_within(src..src + len, dst);
+        self.wrote_flagged(dst, len, false);
+        true
+    }
+
     #[inline(always)]
     fn read_n<const N: usize>(&mut self, addr: u32) -> Result<[u8; N], Fault> {
         match self.fast(addr, N) {
@@ -602,6 +637,39 @@ mod tests {
         m.ram_mut(0x0000_0000, 0x1000).unwrap()[0] = 1;
         assert_eq!(m.code_gen(p), g + 3);
         assert_ne!(m.code_epoch(), e);
+    }
+
+    #[test]
+    fn copy_ram_tracks_writes_to_interior_code_pages() {
+        let mut m = Mem::new(Box::new(NullMmio));
+        let src = 0x9000_0000;
+        let dst = 0xc000_2000;
+        let data = m.ram_mut(src, 0x2010).unwrap();
+        data[0] = 0x12;
+        data[0x1001] = 0x34;
+        data[0x200f] = 0x56;
+        let (page, _) = m.mark_code(0x8000_3000, 4).unwrap();
+        let generation = m.code_gen(page);
+
+        assert!(m.copy_ram_nonoverlapping(dst, src, 0x2010));
+        assert_eq!(m.read_u8(0x8000_2000), Ok(0x12));
+        assert_eq!(m.read_u8(0x8000_3001), Ok(0x34));
+        assert_eq!(m.read_u8(0x8000_400f), Ok(0x56));
+        assert_eq!(m.code_gen(page), generation + 1);
+    }
+
+    #[test]
+    fn copy_ram_declines_aliases_and_invalid_ranges_without_writing() {
+        let mut m = Mem::new(Box::new(NullMmio));
+        let addr = 0x8000_1000;
+        m.write_u32(addr, 0x1122_3344).unwrap();
+
+        assert!(!m.copy_ram_nonoverlapping(addr + 1, 0xc000_1000, 3));
+        assert!(!m.copy_ram_nonoverlapping(addr, 0xcc00_0000, 4));
+        assert!(!m.copy_ram_nonoverlapping(addr, 0x817f_ffff, 4));
+        assert!(!m.copy_ram_nonoverlapping(addr + 4, addr, usize::MAX));
+        assert!(m.copy_ram_nonoverlapping(u32::MAX, u32::MAX, 0));
+        assert_eq!(m.read_u32(addr), Ok(0x1122_3344));
     }
 
     #[test]

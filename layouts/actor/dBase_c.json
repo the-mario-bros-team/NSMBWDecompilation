@@ -1,0 +1,32 @@
+{
+  "name": "dBase_c",
+  "base": "fBase_c",
+  "size": 112,
+  "vptr": 96,
+  "fields": [
+    {
+      "offset": 96,
+      "size": 4,
+      "type": "vptr",
+      "name": "vtable"
+    },
+    {
+      "offset": 100,
+      "size": 4,
+      "type": "cOwnerSetMg_c",
+      "name": "mOwnerSet"
+    },
+    {
+      "offset": 104,
+      "size": 4,
+      "type": "const char *",
+      "name": "mpKindString"
+    },
+    {
+      "offset": 108,
+      "size": 4,
+      "type": "const char *",
+      "name": "mpNameString"
+    }
+  ]
+}

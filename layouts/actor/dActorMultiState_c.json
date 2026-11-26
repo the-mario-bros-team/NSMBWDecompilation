@@ -1,0 +1,14 @@
+{
+  "name": "dActorMultiState_c",
+  "base": "dActor_c",
+  "size": 1044,
+  "vptr": 96,
+  "fields": [
+    {
+      "offset": 916,
+      "size": 128,
+      "type": "sFStateStateMgr_c<dActorMultiState_c, sStateMethodUsr_FI_c, sStateMethodUsr_FI_c>",
+      "name": "mStateMgr"
+    }
+  ]
+}

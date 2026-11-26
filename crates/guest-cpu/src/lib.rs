@@ -12,6 +12,54 @@ pub mod recomp;
 
 use guest_mem::{Fault, Mem};
 
+/// Guest return registers captured by a synchronous PowerPC call.
+#[derive(Clone, Copy, Debug)]
+pub struct GuestCallResult {
+    pub r3: u32,
+    pub r4: u32,
+    pub f1: f64,
+}
+
+/// A location in the original section table of a linked REL module.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct RelAddress {
+    pub module: u32,
+    pub section: u32,
+    pub offset: u32,
+}
+
+/// One general-purpose argument to a guest call with a scratch buffer.
+#[derive(Clone, Copy, Debug)]
+pub enum GuestWord {
+    Immediate(u32),
+    /// A guest pointer to a byte within the buffer for this call.
+    ScratchOffset(usize),
+}
+
+/// A CPU runtime and the memory used by its synchronous register calls.
+pub trait GuestRuntime {
+    fn memory(&mut self) -> &mut Mem;
+
+    fn resolve_rel_address(&self, address: RelAddress, len: usize, executable: bool) -> Option<u32>;
+
+    fn call_registers(
+        &mut self,
+        addr: u32,
+        gprs: &[u32],
+        fprs: &[f64],
+    ) -> Result<GuestCallResult, String>;
+
+    /// Calls with outgoing stack argument bytes and a temporary guest buffer.
+    fn call_frame_with_scratch(
+        &mut self,
+        addr: u32,
+        gprs: &[GuestWord],
+        fprs: &[f64],
+        stack: &[u8],
+        scratch: &mut [u8],
+    ) -> Result<GuestCallResult, String>;
+}
+
 pub const SPR_XER: usize = 1;
 pub const SPR_LR: usize = 8;
 pub const SPR_CTR: usize = 9;

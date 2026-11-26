@@ -8,6 +8,7 @@
 //! translation pass. [`actors`] holds actor-specific modules.
 
 pub mod actor;
+pub mod layouts;
 pub mod stage;
 pub mod player;
 pub mod path;

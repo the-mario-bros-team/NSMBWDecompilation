@@ -668,7 +668,7 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
         sys.slices.borrow_mut().samples = Some(Default::default());
     }
     let (functions, generated_special) = game_recomp::code(sys.version);
-    if !interpreter && !functions.is_empty() {
+    if !interpreter && !sys.memcpy_uses_interpreter() && !functions.is_empty() {
         match guest_cpu::recomp::Rt::new(functions, &mut sys.mem, &hle_os::special(), generated_special) {
             Ok(rt) => {
                 println!("recompiled code: {} functions ({})", rt.functions(), sys.version.describe());
@@ -1136,6 +1136,9 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     }
     totals.thread_cpu = crate::win::thread_cpu_time() - cpu_at_start;
     totals.texture_pack = pack_stats;
+    if let Some((calls, bytes)) = sys.native_memcpy_commits() {
+        say!("native memcpy: committed_calls={calls} committed_bytes={bytes}");
+    }
     totals
 }
 

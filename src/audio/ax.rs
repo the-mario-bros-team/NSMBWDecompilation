@@ -15479,8 +15479,21 @@ const FN_801AC740: usize = 0x801A_C740;
 ///
 /// # Confidence
 /// high - the export is a single `sync`.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9c90() {
     core::arch::asm!("sync");
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9c90() {
+    panic!("fn_801a9c90 requires native PowerPC support");
 }
 
 /// Decodes the two 32-bit RTC counter words into the 8-byte timestamp record.
@@ -17888,9 +17901,22 @@ pub unsafe fn fn_801a9b00(out_alloc: u32, out_free: u32) {
 /// # Confidence
 /// high - Ghidra prints an empty body, but the eight bytes at the cited address
 /// are exactly `mtspr 22,r3; blr`, so the effect is the register write.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9b80(value: u32) {
     // observed: 0x7C7603A6 = mtspr 22 (DEC), r3.
     core::arch::asm!("mtspr 22, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9b80(_value: u32) {
+    panic!("fn_801a9b80 requires native PowerPC support");
 }
 
 /// Reads the FPU status and control register into the return word.
@@ -17916,6 +17942,7 @@ pub unsafe fn fn_801a9b80(value: u32) {
 /// high - the bytes are `stwu`, `stfd`, `mffs f31`, `stfd`, `lfd`,
 /// `lwz r3,0xC(r1)`, `addi`, `blr`, and Ghidra's return expression packs the
 /// same FPSCR bit fields.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9c20() -> u32 {
     let mut slot: u64 = 0;
     // observed: 0xFFE0048E = mffs f31, 0xDBE10008 = stfd f31,8(r1); the FPSCR
@@ -17927,6 +17954,18 @@ pub unsafe fn fn_801a9c20() -> u32 {
         options(nostack),
     );
     slot as u32
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9c20() -> u32 {
+    panic!("fn_801a9c20 requires native PowerPC support");
 }
 
 /// Writes the 32-bit FPSCR image supplied in `value`.
@@ -17950,6 +17989,7 @@ pub unsafe fn fn_801a9c20() -> u32 {
 /// # Confidence
 /// high - the bytes are `stwu`, `stfd`, `li r4,0`, `stw r4,8(r1)`,
 /// `stw r3,0xC(r1)`, `lfd`, `mtfsf 255,f31`, `lfd`, `addi`, `blr`.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9c40(value: u32) {
     let mut slot: u64 = value as u64;
     // observed: 0xFDFEFD8E = mtfsf 255,f31 (XO 711); the all-fields form takes
@@ -17960,6 +18000,18 @@ pub unsafe fn fn_801a9c40(value: u32) {
         in(reg) &mut slot as *mut u64,
         options(nostack),
     );
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9c40(_value: u32) {
+    panic!("fn_801a9c40 requires native PowerPC support");
 }
 
 /// Writes `r3` into special-purpose register 921.
@@ -17984,10 +18036,23 @@ pub unsafe fn fn_801a9c40(value: u32) {
 /// medium - the bytes are `mtspr 921,r3; blr`, but SPR 921 is outside the
 /// standard PowerPC map (HID2 is 920, GQR0..7 are 912..919), so the register
 /// name is left as `// unknown:` and only the write is asserted.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9ca0(value: u32) {
     // observed: 0x7C79E3A6 = mtspr 921, r3. unknown: SPR 921 has no documented
     // Broadway mnemonic in this tree.
     core::arch::asm!("mtspr 921, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9ca0(_value: u32) {
+    panic!("fn_801a9ca0 requires native PowerPC support");
 }
 
 /// Returns the console model code for the running board.
@@ -21966,12 +22031,25 @@ const FN_801AC5A0: usize = 0x801A_C5A0;
 /// medium - the arithmetic and both `mtspr` operands are literal in the raw
 /// words, but the purpose of SPR 922/923 and the exact meaning of `control`
 /// are unknown.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801ac710(first: u32, second: u32, control: u32) {
     // observed: 0x7CDAE3A6 / 0x7CDBE3A6 = mtspr 922,r6 / mtspr 923,r6.
     let upper = ((control >> 2) & 0x1F) | (second & 0x1FFF_FFFF);
     let lower = (control.wrapping_shl(2) & 0xC) | first | 0x12;
     core::arch::asm!("mtspr 922, {0}", in(reg) upper as usize, options(nostack));
     core::arch::asm!("mtspr 923, {0}", in(reg) lower as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801ac710(_first: u32, _second: u32, _control: u32) {
+    panic!("fn_801ac710 requires native PowerPC support");
 }
 
 /// Writes the SPR 922/923 descriptor pair with the `0x02` command word.
@@ -22012,12 +22090,25 @@ pub unsafe fn fn_801ac710(first: u32, second: u32, control: u32) {
 /// # Confidence
 /// medium - the arithmetic and both `mtspr` operands are literal in the raw
 /// words; only the register roles are unknown.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801ac740(first: u32, second: u32, control: u32) {
     // observed: the same pair as fn_801ac710 with r3/r4 swapped and 0x02.
     let upper = ((control >> 2) & 0x1F) | (first & 0x1FFF_FFFF);
     let lower = (control.wrapping_shl(2) & 0xC) | second | 0x02;
     core::arch::asm!("mtspr 922, {0}", in(reg) upper as usize, options(nostack));
     core::arch::asm!("mtspr 923, {0}", in(reg) lower as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801ac740(_first: u32, _second: u32, _control: u32) {
+    panic!("fn_801ac740 requires native PowerPC support");
 }
 
 /// Snapshots the live general-purpose registers into an `OSContext` block.
@@ -22060,6 +22151,7 @@ pub unsafe fn fn_801ac740(first: u32, second: u32, control: u32) {
 /// (`0xBDA30034`, `0x7C11E2A6`..`0x7C17E2A6`, `0x7C000026`, `0x7C0802A6`,
 /// `0x7C0000A6`, `0x7C0902A6`, `0x7C0102A6`) confirm the order and the
 /// register numbers. The final `li r3,0` is the Rust return value.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801acdb0(context: usize) -> u32 {
     // observed: 0xBDA30034 = stmw r13,0x34(r3); 0x7C11E2A6.. read SPR
     // 913..919 = GQR1..GQR7 with r0 as the scratch register.
@@ -22100,6 +22192,18 @@ pub unsafe fn fn_801acdb0(context: usize) -> u32 {
     0
 }
 
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801acdb0(_context: usize) -> u32 {
+    panic!("fn_801acdb0 requires native PowerPC support");
+}
+
 /// Returns the stack pointer of the calling frame.
 ///
 /// The eight bytes are `0x7C230B78` (`mr r3,r1`) and `blr`; Ghidra prints the
@@ -22125,11 +22229,24 @@ pub unsafe fn fn_801acdb0(context: usize) -> u32 {
 /// # Confidence
 /// high - the raw word is a literal `mr r3,r1` and the export names the same
 /// stack address.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801acf10() -> usize {
     let sp: usize;
     // observed: 0x7C230B78 = mr r3,r1.
     core::arch::asm!("mr {}, 1", out(reg) sp, options(nostack));
     sp
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801acf10() -> usize {
+    panic!("fn_801acf10 requires native PowerPC support");
 }
 
 /// Runs `callback` on an alternate stack, then restores the caller's stack.
@@ -22167,6 +22284,7 @@ pub unsafe fn fn_801acf10() -> usize {
 /// `0x7C6803A6`, `0x4E800021`, `0x80A10000`, `0x80050004`, `0x7C0803A6`,
 /// `0x7CA12B78`, `0x4E800020`) decode to the sequence above and the one call
 /// site passes `(callback, stack)` in that order.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801acf20(callback: usize, stack: usize) {
     // observed: 0x94A4FFF8 = stwu r5,-8(r4) with r5 = old r1, then mr r1,r4.
     core::arch::asm!(
@@ -22185,6 +22303,18 @@ pub unsafe fn fn_801acf20(callback: usize, stack: usize) {
         callback = in(reg) callback,
         clobber_abi("C"),
     );
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801acf20(_callback: usize, _stack: usize) {
+    panic!("fn_801acf20 requires native PowerPC support");
 }
 
 /// Same stack switch as [`fn_801acf20`], with the operands in `r7` and `r8`.
@@ -22219,6 +22349,7 @@ pub unsafe fn fn_801acf20(callback: usize, stack: usize) {
 /// `0x9528FFF8` = `stwu r9,-8(r8)`, `0x7CE803A6` = `mtspr 8,r7`), but the
 /// `r7`/`r8` entry convention cannot be produced by a Rust call, so the
 /// argument placement is reconstructed rather than observed.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801acf50(callback: usize, stack: usize) {
     // observed: 0x7C290B78 = mr r9,r1; 0x9528FFF8 = stwu r9,-8(r8);
     // 0x7D014378 = mr r1,r8; 0x90090004 = stw r0,4(r9).
@@ -22241,6 +22372,18 @@ pub unsafe fn fn_801acf50(callback: usize, stack: usize) {
         stack = in(reg) stack,
         clobber_abi("C"),
     );
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801acf50(_callback: usize, _stack: usize) {
+    panic!("fn_801acf50 requires native PowerPC support");
 }
 
 /// Enables the instruction cache, synchronises, and jumps to `target`.
@@ -22277,6 +22420,7 @@ pub unsafe fn fn_801acf50(callback: usize, stack: usize) {
 /// `0x7C0004AC`, `0x4C00012C`, `0x7FE903A6`, `0x4E800420`) decode exactly, but
 /// a `bctr` tail jump is modelled as a normal call, so the trailing frame and
 /// the register state at the jump are not reproduced.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801ae050(target: usize) {
     // observed: 0x4BFFE53D = bl 0x801AC5A0; 0x7C0004AC = sync;
     // 0x4C00012C = isync; 0x7FE903A6 = mtspr 9,r31; 0x4E800420 = bctr.
@@ -22286,6 +22430,18 @@ pub unsafe fn fn_801ae050(target: usize) {
     // (its `HID0 | 0x800` result); a Rust `call0` cannot forward that value, so
     // the target is entered with the no-argument convention the export shows.
     platform::call0(target);
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801ae050(_target: usize) {
+    panic!("fn_801ae050 requires native PowerPC support");
 }
 
 // ===========================================================================
@@ -24737,6 +24893,7 @@ fn clamp_band(value: f32, upper: f32, lower: f32) -> f32 {
 /// medium - the layout and the 32+32 slot streams are literal, but the paired
 /// single loads cannot be expressed without the GQR/PS convention and Ghidra
 /// leaves the register file unnamed.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801acad0(context: usize) {
     if read_u16(context + 0x1A2) & 1 == 0 {
         return;
@@ -24813,6 +24970,18 @@ pub unsafe fn fn_801acad0(context: usize) {
     );
 }
 
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801acad0(_context: usize) {
+    panic!("fn_801acad0 requires native PowerPC support");
+}
+
 /// Saves the live FPU state into one `OSContext` block.
 ///
 /// Sets the "FPU state valid" bit in `+0x1A2`, stores the 32 doubles into
@@ -24844,6 +25013,7 @@ pub unsafe fn fn_801acad0(context: usize) {
 /// # Confidence
 /// medium - the whole store sequence and its offsets are literal; only the
 /// paired-single store form and the base-register identity are reconstructed.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801acc00(context: usize) {
     write_u16(context + 0x1A2, read_u16(context + 0x1A2) | 1);
     core::arch::asm!(
@@ -24919,6 +25089,18 @@ pub unsafe fn fn_801acc00(context: usize) {
     );
 }
 
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801acc00(_context: usize) {
+    panic!("fn_801acc00 requires native PowerPC support");
+}
+
 /// Saves the FPU state after forcing MSR[FP] on.
 ///
 /// This is the variant the exception path uses: `mfmsr` / `ori 0x2000` /
@@ -24947,6 +25129,7 @@ pub unsafe fn fn_801acc00(context: usize) {
 /// # Confidence
 /// medium - the MSR prefix and the store stream are literal; the paired-single
 /// form and the base-register identity are reconstructed as in the save body.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801ad3b0(context: usize) {
     let msr: usize;
     core::arch::asm!("mfmsr {0}", out(reg) msr, options(nostack));
@@ -25027,6 +25210,18 @@ pub unsafe fn fn_801ad3b0(context: usize) {
         ctx = in(reg) context,
         options(nostack),
     );
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801ad3b0(_context: usize) {
+    panic!("fn_801ad3b0 requires native PowerPC support");
 }
 
 /// Runs the first-stage `OSExec` loader: pick a boot image and read it in.
@@ -25750,9 +25945,22 @@ pub unsafe fn fn_801af7c0() {
 /// are `0xFFA0004C` (`mtfsb1 29`: opcode 63, XO 38, BT 29) followed by
 /// `0x4E800020` (`blr`), so the FPSCR write is the whole effect. This is the
 /// only `mtfsb1 29` in the image, so there is no shared helper to call.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9ce0() {
     // observed: 0xFFA0004C = mtfsb1 29; 0x4E800020 = blr.
     core::arch::asm!("mtfsb1 29", options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9ce0() {
+    panic!("fn_801a9ce0 requires native PowerPC support");
 }
 
 // ===========================================================================
@@ -25790,9 +25998,22 @@ pub unsafe fn fn_801a9ce0() {
 /// high - Ghidra prints an empty body, but the eight bytes at the cited address
 /// are `0x7C78EBA6` (`mtspr 952, r3`) followed by `0x4E800020` (`blr`), so the
 /// register write is the whole effect.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9bc0(value: u32) {
     // observed: 0x7C78EBA6 = mtspr 952 (MMCR0), r3.
     core::arch::asm!("mtspr 952, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9bc0(_value: u32) {
+    panic!("fn_801a9bc0 requires native PowerPC support");
 }
 
 /// Writes monitor mode control register MMCR1 (SPR 956).
@@ -25818,9 +26039,22 @@ pub unsafe fn fn_801a9bc0(value: u32) {
 /// # Confidence
 /// high - Ghidra prints an empty body, but the eight bytes at the cited address
 /// are `0x7C7CEBA6` (`mtspr 956, r3`) followed by `0x4E800020` (`blr`).
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9bd0(value: u32) {
     // observed: 0x7C7CEBA6 = mtspr 956 (MMCR1), r3.
     core::arch::asm!("mtspr 956, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9bd0(_value: u32) {
+    panic!("fn_801a9bd0 requires native PowerPC support");
 }
 
 /// Writes performance-monitor counter PMC1 (SPR 953).
@@ -25845,9 +26079,22 @@ pub unsafe fn fn_801a9bd0(value: u32) {
 /// # Confidence
 /// high - Ghidra prints an empty body, but the eight bytes at the cited address
 /// are `0x7C79EBA6` (`mtspr 953, r3`) followed by `0x4E800020` (`blr`).
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9be0(value: u32) {
     // observed: 0x7C79EBA6 = mtspr 953 (PMC1), r3.
     core::arch::asm!("mtspr 953, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9be0(_value: u32) {
+    panic!("fn_801a9be0 requires native PowerPC support");
 }
 
 /// Writes performance-monitor counter PMC2 (SPR 954).
@@ -25871,9 +26118,22 @@ pub unsafe fn fn_801a9be0(value: u32) {
 /// # Confidence
 /// high - Ghidra prints an empty body, but the eight bytes at the cited address
 /// are `0x7C7AEBA6` (`mtspr 954, r3`) followed by `0x4E800020` (`blr`).
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9bf0(value: u32) {
     // observed: 0x7C7AEBA6 = mtspr 954 (PMC2), r3.
     core::arch::asm!("mtspr 954, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9bf0(_value: u32) {
+    panic!("fn_801a9bf0 requires native PowerPC support");
 }
 
 /// Writes performance-monitor counter PMC3 (SPR 957).
@@ -25897,9 +26157,22 @@ pub unsafe fn fn_801a9bf0(value: u32) {
 /// # Confidence
 /// high - Ghidra prints an empty body, but the eight bytes at the cited address
 /// are `0x7C7DEBA6` (`mtspr 957, r3`) followed by `0x4E800020` (`blr`).
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9c00(value: u32) {
     // observed: 0x7C7DEBA6 = mtspr 957 (PMC3), r3.
     core::arch::asm!("mtspr 957, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9c00(_value: u32) {
+    panic!("fn_801a9c00 requires native PowerPC support");
 }
 
 /// Writes performance-monitor counter PMC4 (SPR 958).
@@ -25923,9 +26196,22 @@ pub unsafe fn fn_801a9c00(value: u32) {
 /// # Confidence
 /// high - Ghidra prints an empty body, but the eight bytes at the cited address
 /// are `0x7C7EEBA6` (`mtspr 958, r3`) followed by `0x4E800020` (`blr`).
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_801a9c10(value: u32) {
     // observed: 0x7C7EEBA6 = mtspr 958 (PMC4), r3.
     core::arch::asm!("mtspr 958, {0}", in(reg) value as usize, options(nostack));
+}
+
+/// Host entry for the PowerPC-only routine.
+///
+/// # Original
+/// See the PowerPC definition above.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_801a9c10(_value: u32) {
+    panic!("fn_801a9c10 requires native PowerPC support");
 }
 
 // ===========================================================================

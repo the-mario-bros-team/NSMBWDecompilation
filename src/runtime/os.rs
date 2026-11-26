@@ -268,6 +268,10 @@
 use crate::platform:: {
     call0, call1, call2, call3, call4, call5, call6, call7, call_u64, read_f32, read_i32, read_u8, read_u16, read_u32, write_f32, write_u8, write_u16, write_u32,
 };
+#[cfg(feature = "guest-memory")]
+use crate::platform::{call_frame_with_scratch, call_registers, call_registers_with_scratch};
+#[cfg(feature = "guest-memory")]
+use guest_cpu::GuestWord::{Immediate, ScratchOffset};
 
 // ---------------------------------------------------------------------------
 // Small-data (SDA) addressing
@@ -359,10 +363,17 @@ pub const SDA2_BASE: usize = 0x8043_3080;
 /// `u32 f(void)`.
 ///
 /// # Confidence
-/// high - a direct `extern "C"` call through the address.
+/// high - the target ABI returns the result in `r3`.
 #[inline]pub unsafe fn call0_ret(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
-    f()
+    #[cfg(feature = "guest-memory")]
+    {
+        call_registers(addr, &[], &[]).expect("guest call failed").r3
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+        f()
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -541,8 +552,7 @@ pub unsafe fn enable_interrupts() {
 /// # Confidence
 /// high - the retry loop proves the value is the 64-bit time base.
 pub unsafe fn read_time_base() -> u64 {
-    let f: extern "C" fn() -> u64 = core::mem::transmute(0x801b_5f80usize);
-    f()
+    call_u64(0x801b_5f80)
 }
 
 /// Returns the OS monotonic clock: time base plus a 64-bit boot offset.
@@ -6196,14 +6206,8 @@ pub unsafe fn fn_801b0d60(buf: usize) -> u32 {
 /// high - the two divisions by the stride fields are literal.
 pub unsafe fn fn_801b0f40(value: u32, out_addr: usize, out_x: usize, out_y: usize, out_pixel: usize) {
     let mode = wave38_text_mode_ensure();
-    let mut font: u32 = 0;
-    let mut index: i32 = 0;
-    {
-        let decoder = read_u32(sda(WAVE38_DECODER_FN)) as usize;
-// Dispatch through the address to preserve the indirect call shape.
-        let _ = core::mem::transmute::<usize, extern "C" fn(u32, u32, *mut u32, *mut i32)>(decoder)(mode,
-            value, &mut font as *mut u32, &mut index as *mut i32, );
-    }
+    let decoder = read_u32(sda(WAVE38_DECODER_FN)) as usize;
+    let (font, index) = decode_font_word(decoder, mode, value);
     let cols = read_u16(font as usize + 0x1a) as u32;
     let rows = read_u16(font as usize + 0x1c) as u32;
     let stride = cols.wrapping_mul(rows) as i32;
@@ -6242,14 +6246,39 @@ pub unsafe fn fn_801b0f40(value: u32, out_addr: usize, out_x: usize, out_y: usiz
 /// high - the decoder call and the `+0x22` pixel fetch are literal.
 pub unsafe fn fn_801b1090(value: u32, out_pixel: usize) {
     let mode = wave38_text_mode_ensure();
-    let mut font: u32 = 0;
-    let mut index: i32 = 0;
     let decoder = read_u32(sda(WAVE38_DECODER_FN)) as usize;
-    let _ = core::mem::transmute::<usize, extern "C" fn(u32, u32, *mut u32, *mut i32)>(decoder)(mode,
-        value, &mut font as *mut u32, &mut index as *mut i32, );
+    let (font, index) = decode_font_word(decoder, mode, value);
     if out_pixel != 0 {
         let off = read_u16(font as usize + 0x22) as u32;
         write_u32(out_pixel, read_u8(index as usize + font as usize + off as usize) as u32);
+    }
+}
+
+/// Calls the text decoder and returns its font pointer and signed cell index.
+unsafe fn decode_font_word(decoder: usize, mode: u32, value: u32) -> (u32, i32) {
+    #[cfg(feature = "guest-memory")]
+    {
+        let mut scratch = [0; 8];
+        call_registers_with_scratch(
+            decoder,
+            &[Immediate(mode), Immediate(value), ScratchOffset(0), ScratchOffset(4)],
+            &[],
+            &mut scratch,
+        )
+        .expect("guest call failed");
+        let (font, index) = scratch.split_at(4);
+        (
+            u32::from_be_bytes(font.try_into().unwrap()),
+            i32::from_be_bytes(index.try_into().unwrap()),
+        )
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let mut font = 0u32;
+        let mut index = 0i32;
+        let f: extern "C" fn(u32, u32, *mut u32, *mut i32) = core::mem::transmute(decoder);
+        f(mode, value, &mut font, &mut index);
+        (font, index)
     }
 }
 
@@ -7792,10 +7821,30 @@ pub unsafe fn fn_8025f3b0(holder: usize) {
             );
     }
 // observed: a one-word stack scratch seeded from block + 0x14.
-    let mut scratch = [read_u32(block + 0x14)];
-    let call: extern "C" fn(f64, f64, f64, f64, u32, u32) -> u32 = core::mem::transmute(0x801c_8920usize);
-    call(read_f32(block + 0x04) as f64, read_f32(block + 0x08) as f64, read_f32(block + 0x0c) as f64,
-        read_f32(block + 0x10) as f64, read_u32(block), scratch.as_mut_ptr() as u32, );
+    let initial = read_u32(block + 0x14);
+    let floats = [
+        read_f32(block + 4) as f64,
+        read_f32(block + 8) as f64,
+        read_f32(block + 0x0c) as f64,
+        read_f32(block + 0x10) as f64,
+    ];
+    let flags = read_u32(block);
+    #[cfg(feature = "guest-memory")]
+    call_registers_with_scratch(
+        0x801c_8920,
+        &[Immediate(flags), ScratchOffset(0)],
+        &floats,
+        &mut initial.to_be_bytes(),
+    )
+    .expect("guest call failed");
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let mut scratch = [initial];
+        let call: extern "C" fn(f64, f64, f64, f64, u32, u32) -> u32 =
+            core::mem::transmute(0x801c_8920usize);
+        let [a, b, c, d] = floats;
+        call(a, b, c, d, flags, scratch.as_mut_ptr() as u32);
+    }
 }
 
 /// Clears the state word and resets the `0x40`-byte slice behind it.
@@ -8231,8 +8280,16 @@ pub unsafe fn fn_8025fdc0(row: usize, value: i32) -> u32 {
 /// `addr` must point to a function with this ABI.
 unsafe fn call8(addr: usize, a: u32, b: u32, c: u32, d: u32, e: u32, f: u32, g: u32, h: u32,
     ) -> u32 {
-    let function: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
-    function(a, b, c, d, e, f, g, h)
+    #[cfg(feature = "guest-memory")]
+    {
+        call_registers(addr, &[a, b, c, d, e, f, g, h], &[]).expect("guest call failed").r3
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let function: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
+            core::mem::transmute(addr);
+        function(a, b, c, d, e, f, g, h)
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -12829,8 +12886,16 @@ const SDA2_UNIFORM_SCALE: isize = -0x49a8;
 /// `addr` must be the entry point of a routine with that exact prototype and
 /// `out` must be a writable 3x4 matrix.
 #[inline]unsafe fn wave91_matrix_f64x4_ptr(addr: usize, a: f64, b: f64, c: f64, d: f64, out: usize) {
-    let kernel: extern "C" fn(f64, f64, f64, f64, usize) = core::mem::transmute(addr);
-    kernel(a, b, c, d, out);
+    #[cfg(feature = "guest-memory")]
+    {
+        let out = u32::try_from(out).expect("guest output address is wider than 32 bits");
+        call_registers(addr, &[out], &[a, b, c, d]).expect("guest call failed");
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let kernel: extern "C" fn(f64, f64, f64, f64, usize) = core::mem::transmute(addr);
+        kernel(a, b, c, d, out);
+    }
 }
 
 /// Models one `six doubles, float*` matrix kernel (`0x801C11C0`, `0x801C1350`,
@@ -12843,8 +12908,16 @@ const SDA2_UNIFORM_SCALE: isize = -0x49a8;
 /// `addr` must be the entry point of a routine with that exact prototype.
 #[inline]unsafe fn wave91_matrix_f64x6_ptr(addr: usize, a: f64, b: f64, c: f64, d: f64, e: f64,
     f: f64, out: usize,) {
-    let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64, usize) = core::mem::transmute(addr);
-    kernel(a, b, c, d, e, f, out);
+    #[cfg(feature = "guest-memory")]
+    {
+        let out = u32::try_from(out).expect("guest output address is wider than 32 bits");
+        call_registers(addr, &[out], &[a, b, c, d, e, f]).expect("guest call failed");
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64, usize) = core::mem::transmute(addr);
+        kernel(a, b, c, d, e, f, out);
+    }
 }
 
 /// Models one `eight doubles, float*` matrix kernel (`0x801C0F20`,
@@ -12857,8 +12930,17 @@ const SDA2_UNIFORM_SCALE: isize = -0x49a8;
 /// `addr` must be the entry point of a routine with that exact prototype.
 #[inline]unsafe fn wave91_matrix_f64x8_ptr(addr: usize, a: f64, b: f64, c: f64, d: f64, e: f64,
     f: f64, g: f64, h: f64, out: usize,) {
-    let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64, f64, f64, usize) = core::mem::transmute(addr);
-    kernel(a, b, c, d, e, f, g, h, out);
+    #[cfg(feature = "guest-memory")]
+    {
+        let out = u32::try_from(out).expect("guest output address is wider than 32 bits");
+        call_registers(addr, &[out], &[a, b, c, d, e, f, g, h]).expect("guest call failed");
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64, f64, f64, usize) =
+            core::mem::transmute(addr);
+        kernel(a, b, c, d, e, f, g, h, out);
+    }
 }
 
 /// Models the `six doubles` no-result kernel `0x801C9C10`.
@@ -12870,8 +12952,15 @@ const SDA2_UNIFORM_SCALE: isize = -0x49a8;
 /// `addr` must be the entry point of a routine with that exact prototype.
 #[inline]unsafe fn wave91_matrix_f64x6(addr: usize, a: f64, b: f64, c: f64, d: f64, e: f64,
     f: f64) {
-    let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64) = core::mem::transmute(addr);
-    kernel(a, b, c, d, e, f);
+    #[cfg(feature = "guest-memory")]
+    {
+        call_registers(addr, &[], &[a, b, c, d, e, f]).expect("guest call failed");
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64) = core::mem::transmute(addr);
+        kernel(a, b, c, d, e, f);
+    }
 }
 
 /// Models the `six doubles, int` kernel `0x801C9BD0`.
@@ -12883,8 +12972,15 @@ const SDA2_UNIFORM_SCALE: isize = -0x49a8;
 /// `addr` must be the entry point of a routine with that exact prototype.
 #[inline]unsafe fn wave91_matrix_f64x6_flag(addr: usize, a: f64, b: f64, c: f64, d: f64, e: f64,
     f: f64, flag: i32,) {
-    let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64, i32) = core::mem::transmute(addr);
-    kernel(a, b, c, d, e, f, flag);
+    #[cfg(feature = "guest-memory")]
+    {
+        call_registers(addr, &[flag as u32], &[a, b, c, d, e, f]).expect("guest call failed");
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let kernel: extern "C" fn(f64, f64, f64, f64, f64, f64, i32) = core::mem::transmute(addr);
+        kernel(a, b, c, d, e, f, flag);
+    }
 }
 
 /// Converts one `u32` to `f32` with the `0x4330_0000` bias idiom the export uses.
@@ -14195,8 +14291,16 @@ const WAVE92_RANGE_BIAS: isize = -0x4ab0;
 /// `addr` must be the entry point of a routine with that prototype and `out`
 /// must be a writable 3x3 matrix.
 #[inline]unsafe fn wave92_kernel_f64x3_ptr(addr: usize, a: f64, b: f64, c: f64, out: usize) {
-    let kernel: extern "C" fn(f64, f64, f64, usize) = core::mem::transmute(addr);
-    kernel(a, b, c, out);
+    #[cfg(feature = "guest-memory")]
+    {
+        let out = u32::try_from(out).expect("guest output address is wider than 32 bits");
+        call_registers(addr, &[out], &[a, b, c]).expect("guest call failed");
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let kernel: extern "C" fn(f64, f64, f64, usize) = core::mem::transmute(addr);
+        kernel(a, b, c, out);
+    }
 }
 
 /// Packs the five bytes at [`WAVE92_STATE_FIELDS`] into the command word the
@@ -19096,15 +19200,38 @@ pub unsafe fn fn_8024d2c0(slot: u32) {
     let latch = read_u32(WAVE96_SLOT_LATCH);
     if latch & 1 == 0 || latch & 2 == 0 || slot != read_u32(WAVE96_SLOT_INDEX) {
         if slot < 0x20 {
-            let mut scratch = [0u32; 4];
-            call2(0x8025_f2b0, scratch.as_mut_ptr() as u32, (WAVE96_SLOT_CACHE + slot as usize * 0x30) as u32,
-                );
+            let cache = (WAVE96_SLOT_CACHE + slot as usize * 0x30) as u32;
+            #[cfg(feature = "guest-memory")]
+            call_registers_with_scratch(
+                0x8025_f2b0,
+                &[ScratchOffset(0), Immediate(cache)],
+                &[],
+                &mut [0; 16],
+            )
+            .expect("guest call failed");
+            #[cfg(not(feature = "guest-memory"))]
+            {
+                let mut scratch = [0u32; 4];
+                call2(0x8025_f2b0, scratch.as_mut_ptr() as u32, cache);
+            }
             call0(0x8025_f3b0);
         } else {
             let neutral = read_f32(sda2(WAVE96_NEUTRAL_ZERO)) as f64;
-            let mut mode = 0u32;
-            let clear: extern "C" fn(f64, f64, f64, f64, u32, usize) = core::mem::transmute(0x801c_8920usize);
-            clear(neutral, neutral, neutral, neutral, 0, &mut mode as *mut u32 as usize);
+            #[cfg(feature = "guest-memory")]
+            call_registers_with_scratch(
+                0x801c_8920,
+                &[Immediate(0), ScratchOffset(0)],
+                &[neutral; 4],
+                &mut [0; 4],
+            )
+            .expect("guest call failed");
+            #[cfg(not(feature = "guest-memory"))]
+            {
+                let mut mode = 0u32;
+                let clear: extern "C" fn(f64, f64, f64, f64, u32, usize) =
+                    core::mem::transmute(0x801c_8920usize);
+                clear(neutral, neutral, neutral, neutral, 0, &mut mode as *mut u32 as usize);
+            }
         }
         write_u32(WAVE96_SLOT_LATCH, latch | 3);
         write_u32(WAVE96_SLOT_INDEX, slot);
@@ -19285,11 +19412,30 @@ const WAVE97_NODE_VTABLE: usize = 0x8034_e980;
 /// # Safety
 /// `0x80237CA0` must be the sine entry point.
 #[inline]unsafe fn wave97_sincos(angle: f64) -> (f32, f32) {
-    let mut sin = 0.0f32;
-    let mut cos = 0.0f32;
-    let f: extern "C" fn(f64, *mut f32, *mut f32) = core::mem::transmute(0x8023_7ca0usize);
-    f(angle, &mut sin as *mut f32, &mut cos as *mut f32);
-    (sin, cos)
+    #[cfg(feature = "guest-memory")]
+    {
+        let mut scratch = [0; 8];
+        call_registers_with_scratch(
+            0x8023_7ca0,
+            &[ScratchOffset(0), ScratchOffset(4)],
+            &[angle],
+            &mut scratch,
+        )
+        .expect("guest call failed");
+        let [s0, s1, s2, s3, c0, c1, c2, c3] = scratch;
+        (
+            f32::from_be_bytes([s0, s1, s2, s3]),
+            f32::from_be_bytes([c0, c1, c2, c3]),
+        )
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let mut sin = 0.0f32;
+        let mut cos = 0.0f32;
+        let f: extern "C" fn(f64, *mut f32, *mut f32) = core::mem::transmute(0x8023_7ca0usize);
+        f(angle, &mut sin as *mut f32, &mut cos as *mut f32);
+        (sin, cos)
+    }
 }
 
 /// Models `float f(const u32 *src, u32 slot, u32 stride, u32 index)` - the
@@ -20784,11 +20930,47 @@ pub unsafe fn fn_8025a380(_param_1: u32, _param_2: u32, record: u32, instances: 
         allocated.wrapping_add(texcoord)
     };
     let record_word = read_u32(record as usize);
-    let mut arguments = [record_word];
-    let make: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32 = core::mem::transmute(0x8025_c030usize);
-    let object = make(allocated, heap, arguments.as_mut_ptr() as u32, allocated.wrapping_add(0x140),
-    allocated.wrapping_add(matrix), allocated.wrapping_add(second_array), second_ptr, extra_ptr,
-        count, vertices, );
+    #[cfg(feature = "guest-memory")]
+    {
+        let mut stack = [0; 8];
+        stack[..4].copy_from_slice(&count.to_be_bytes());
+        stack[4..].copy_from_slice(&vertices.to_be_bytes());
+        call_frame_with_scratch(
+            0x8025_c030,
+            &[
+                Immediate(allocated),
+                Immediate(heap),
+                ScratchOffset(0),
+                Immediate(allocated.wrapping_add(0x140)),
+                Immediate(allocated.wrapping_add(matrix)),
+                Immediate(allocated.wrapping_add(second_array)),
+                Immediate(second_ptr),
+                Immediate(extra_ptr),
+            ],
+            &[],
+            &stack,
+            &mut record_word.to_be_bytes(),
+        )
+        .expect("guest call failed");
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let mut arguments = [record_word];
+        let make: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
+            core::mem::transmute(0x8025_c030usize);
+        make(
+            allocated,
+            heap,
+            arguments.as_mut_ptr() as u32,
+            allocated.wrapping_add(0x140),
+            allocated.wrapping_add(matrix),
+            allocated.wrapping_add(second_array),
+            second_ptr,
+            extra_ptr,
+            count,
+            vertices,
+        );
+    }
 }
 
 /// Reports one transformed sub-node of the current render object.
@@ -21014,8 +21196,7 @@ const W98_SI_COUNTER: usize = 0x8000_30c0;
 /// `addr` must be a callable address with eight word arguments.
 #[inline]#[allow(clippy::too_many_arguments)]unsafe fn wave98_call8(addr: usize, a: u32, b: u32,
     c: u32, d: u32, e: u32, f: u32, g: u32, h: u32,) -> u32 {
-    let fp: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
-    fp(a, b, c, d, e, f, g, h)
+    call8(addr, a, b, c, d, e, f, g, h)
 }
 
 /// Calls a three-word function that returns a 64-bit mask.
@@ -23043,13 +23224,12 @@ const W100_LENGTH_FLOOR: isize = -0x49b8;
 /// Calls a one-argument routine that returns `r3`.
 ///
 /// # Original
-/// Host-side helper; [`crate::platform`] only exposes `call1` for `()`.
+/// Host-side helper for an indirect call returning one integer word.
 ///
 /// # Safety
 /// `addr` must be a callable address taking one word.
 #[inline]unsafe fn wave100_call1_ret(addr: usize, a: u32) -> u32 {
-    let f: extern "C" fn(u32) -> u32 = core::mem::transmute(addr);
-    f(a)
+    call1(addr, a)
 }
 
 /// Calls a two-argument routine that returns `r3`.
@@ -23057,8 +23237,7 @@ const W100_LENGTH_FLOOR: isize = -0x49b8;
 /// # Safety
 /// `addr` must be a callable address taking two words.
 #[inline]unsafe fn wave100_call2_ret(addr: usize, a: u32, b: u32) -> u32 {
-    let f: extern "C" fn(u32, u32) -> u32 = core::mem::transmute(addr);
-    f(a, b)
+    call2(addr, a, b)
 }
 
 /// Calls a three-argument routine that returns `r3`.
@@ -23066,8 +23245,7 @@ const W100_LENGTH_FLOOR: isize = -0x49b8;
 /// # Safety
 /// `addr` must be a callable address taking three words.
 #[inline]unsafe fn wave100_call3_ret(addr: usize, a: u32, b: u32, c: u32) -> u32 {
-    let f: extern "C" fn(u32, u32, u32) -> u32 = core::mem::transmute(addr);
-    f(a, b, c)
+    call3(addr, a, b, c)
 }
 
 /// Resolves all unresolved `u16` keys of one object and reports the result.

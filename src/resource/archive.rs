@@ -32572,6 +32572,7 @@ pub unsafe fn fn_802c22c0(descriptor: u32, map: u32) {
 /// count table offsets are all literal; the roles of `0x801C9470`/`0x801C9530`
 /// (capture start/finish) and of the matrix helpers are `// inferred:` from
 /// their arguments.
+#[cfg(target_arch = "powerpc")]
 pub unsafe fn fn_802c2700(heap: u32) {
     // observed: mtspr 914..917 (GQR2..GQR5) with the paired-u8/u16/s16/u16
     // quantisation words. No reader exists in this body; see the doc block.
@@ -32865,6 +32866,18 @@ pub unsafe fn fn_802c2700(heap: u32) {
         G_CAPTURE_READY_D,
         platform::read_u32(G_CAPTURE_READY_D) | 1,
     );
+}
+
+/// Host entry for the PowerPC-only capture routine.
+///
+/// # Original
+/// The PowerPC implementation at `0x802C2700` writes GQR2 through GQR5.
+///
+/// # Safety
+/// This entry always panics on non-PowerPC targets.
+#[cfg(not(target_arch = "powerpc"))]
+pub unsafe fn fn_802c2700(_heap: u32) {
+    panic!("fn_802c2700 requires PowerPC guest register access");
 }
 
 /// `0x802C3050` - set the cull mode and the fog/colour mode from one flag.

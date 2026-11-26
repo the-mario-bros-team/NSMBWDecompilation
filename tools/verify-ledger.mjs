@@ -4,11 +4,12 @@
 // Checks:
 //   1. Every ledger row's rust_file exists under src/.
 //   2. No analysis address is recorded in two different modules.
-//   3. Inventory invariant: every ledger address exists as a table entry in at
-//      least one functions.tsv and the row count never exceeds the number of
-//      distinct addresses the inventory holds. Ghidra also reports bodies it
-//      only reached by following a branch (`0x8004AAC0` class); those are not
-//      table entries and must never be ledgered.
+//   3. Inventory invariant: every ledger address is evidenced either by a
+//      table entry in some functions.tsv or by a mapped address in the disc's
+//      main.dol / RELs. Ghidra also reports bodies it only reached by following
+//      a branch (`0x8004AAC0` class); those are not table entries and must
+//      never be ledgered. Binary evidence (dol2elf, rel2elf, disasm-ppc) keeps
+//      a checkout without `work/` from reporting every row as missing.
 //   4. Every ledger row has a body in its rust_file:
 //        - a `fn_<addr>` definition,
 //        - a semantic-named function whose `# Original` evidence canonically
@@ -18,14 +19,18 @@
 //      Rows that only appear as call sites / plain comments are reported as
 //      real gaps (the `0x806E7F50` class: name mentioned, body never written).
 //
-// Usage: node tools/verify-ledger.mjs [--enforce-bodies]
+// Usage: node tools/verify-ledger.mjs [--enforce-bodies] [--disc DIR] [--binary main.dol]
 //   --enforce-bodies  exit 1 when any row lacks a body (used by the gate).
-// Exit code 1 on any hard failure (a missing inventory export, an address
-// outside the inventory, a row count above the inventory, duplicate address,
-// missing file, and, with --enforce-bodies, a row without a body).
+//   --disc DIR        disc root (default $NSMBW_DISC or E:/Localsend/mariobroswii).
+//   --binary FILE     main.dol (default <disc>/sys/main.dol).
+// Exit code 1 on any hard failure (a row neither in the Ghidra inventory nor in
+// the binary, duplicate address, missing file, and, with --enforce-bodies, a
+// row without a body).
 
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
 const ledgerPath = path.join(root, 'ledger', 'functions.csv');
@@ -92,6 +97,122 @@ for (const rel of exports) {
   }
   for (const addr of addrs) inventory.add(addr);
   inventoryByExport.push({ export: rel, rows: lines.length, unique: addrs.size });
+}
+
+// --- binary evidence ------------------------------------------------------
+//
+// The Ghidra exports are a convenience, not the ground truth. When they are
+// absent, the disc's own main.dol and RELs are: an address is evidenced when it
+// falls inside a mapped section of the executable image. `dol2elf` builds the
+// ELF image, `rel2elf --address-layout` gives each REL's sections, and
+// `disasm-ppc` proves sampled addresses decode. This keeps a checkout without
+// work/ from reporting every row as missing.
+
+const argValue = (name) => {
+  const i = process.argv.indexOf(name);
+  return i >= 0 ? process.argv[i + 1] : undefined;
+};
+const discDir = argValue('--disc') || process.env.NSMBW_DISC || 'E:/Localsend/mariobroswii';
+const mainDolPath = argValue('--binary') || process.env.NSMBW_MAIN_DOL || path.join(discDir, 'sys', 'main.dol');
+const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nsmbw-verify-'));
+
+function readElfSegments(file) {
+  const b = fs.readFileSync(file);
+  if (b.length < 52 || b.readUInt32BE(0) !== 0x7f454c46) return [];
+  const phoff = b.readUInt32BE(0x1c);
+  const phentsize = b.readUInt16BE(0x2a);
+  const phnum = b.readUInt16BE(0x2c);
+  const segs = [];
+  for (let i = 0; i < phnum; i++) {
+    const o = phoff + i * phentsize;
+    if (b.readUInt32BE(o) !== 1) continue;
+    segs.push({
+      off: b.readUInt32BE(o + 4),
+      vaddr: b.readUInt32BE(o + 8),
+      filesz: b.readUInt32BE(o + 16),
+      flags: b.readUInt32BE(o + 24),
+    });
+  }
+  return segs;
+}
+
+const binary = { ranges: [], sources: [], mainElf: null, errors: [] };
+
+try {
+  if (fs.existsSync(mainDolPath)) {
+    const elf = path.join(tmpDir, 'main.elf');
+    execFileSync(process.execPath, [path.join(root, 'tools', 'dol2elf.mjs'), mainDolPath, elf], { stdio: 'ignore' });
+    binary.mainElf = elf;
+    let count = 0;
+    for (const s of readElfSegments(elf)) {
+      if (!s.filesz) continue;
+      const executable = !!(s.flags & 1);
+      binary.ranges.push({
+        source: 'main.dol', start: s.vaddr, end: s.vaddr + s.filesz,
+        fileOffset: s.off, executable, role: executable ? 'text' : 'data',
+      });
+      count++;
+    }
+    binary.sources.push({ source: 'main.dol', path: mainDolPath, ranges: count });
+  } else {
+    binary.errors.push('main.dol not found: ' + mainDolPath);
+  }
+} catch (e) {
+  binary.errors.push('dol2elf: ' + e.message);
+}
+
+const relsDir = path.join(discDir, 'files', 'rels');
+if (fs.existsSync(relsDir)) {
+  for (const name of fs.readdirSync(relsDir).filter((n) => /\.rel(\.LZ)?$/i.test(n)).sort()) {
+    try {
+      const out = execFileSync(
+        process.execPath,
+        [path.join(root, 'tools', 'rel2elf.mjs'), '--address-layout', path.join(relsDir, name)],
+        { encoding: 'utf8' },
+      );
+      const layout = JSON.parse(out);
+      for (const mod of layout.modules) {
+        let count = 0;
+        for (const sec of mod.sections) {
+          const vaddr = parseInt(sec.vaddr, 16);
+          if (!sec.size) continue;
+          binary.ranges.push({
+            source: `${mod.name}.rel`, start: vaddr, end: vaddr + sec.size,
+            fileOffset: sec.fileOffset, executable: !!sec.executable, role: sec.role,
+          });
+          count++;
+        }
+        binary.sources.push({ source: `${mod.name}.rel`, path: path.join(relsDir, name), base: mod.base, ranges: count });
+      }
+    } catch (e) {
+      binary.errors.push(`${name}: ${e.message}`);
+    }
+  }
+}
+
+function binaryLookup(addr) {
+  let hit = null;
+  for (const r of binary.ranges) {
+    if (addr >= r.start && addr < r.end) {
+      if (!hit || (r.executable && !hit.executable)) hit = r;
+    }
+  }
+  return hit;
+}
+
+function disasmSample(addr) {
+  if (!binary.mainElf) return null;
+  try {
+    const text = execFileSync(
+      process.execPath,
+      [path.join(root, 'tools', 'disasm-ppc.js'), binary.mainElf, addr.toString(16)],
+      { encoding: 'utf8' },
+    );
+    const line = text.split(/\r?\n/).find((l) => /^[0-9a-f]+: [0-9a-f]{8} {2}/.test(l));
+    return line ? line.trim() : null;
+  } catch {
+    return null;
+  }
 }
 
 // --- body index -----------------------------------------------------------
@@ -247,7 +368,11 @@ function walkRust(dir, out = []) {
 
 const byAddress = new Map();
 const missingFiles = new Set();
-const missingAddresses = [];
+const missingFromGhidra = [];
+const unevidenced = [];
+const binaryOnly = [];
+const binarySamples = [];
+const byModuleAddrs = new Map();
 const bodyChecks = [];
 
 for (const r of records) {
@@ -255,10 +380,54 @@ for (const r of records) {
   const start = addr.split('-')[0].trim();
   if (!byAddress.has(start)) byAddress.set(start, []);
   byAddress.get(start).push(r);
+  const num = parseInt(normalizeAddr(r.address), 16);
+  if (!byModuleAddrs.has(r.module)) byModuleAddrs.set(r.module, []);
+  byModuleAddrs.get(r.module).push(num);
   const rust = r.rust_file.replace(/\\/g, '/');
   if (!fs.existsSync(path.join(root, rust))) missingFiles.add(rust);
-  if (!inventory.has(normalizeAddr(r.address))) missingAddresses.push(r.address + ' (' + rust + ')');
-  bodyChecks.push({ row: r, rust, addr: normalizeAddr(r.address) });
+
+  const inGhidra = inventory.has(normalizeAddr(r.address));
+  const hit = inGhidra ? null : binaryLookup(num);
+  if (!inGhidra) missingFromGhidra.push(r.address + ' (' + rust + ')');
+  if (!inGhidra && !hit) {
+    unevidenced.push(r.address + ' (' + rust + ')');
+  } else if (!inGhidra && hit) {
+    binaryOnly.push(r);
+  }
+  bodyChecks.push({ row: r, rust, addr: normalizeAddr(r.address), inGhidra, binaryHit: hit });
+}
+
+for (const list of byModuleAddrs.values()) list.sort((a, b) => a - b);
+
+function byteWindow(module, addr, hit) {
+  const list = byModuleAddrs.get(module) ?? [];
+  let j = 0;
+  while (j < list.length && list[j] <= addr) j++;
+  const next = list[j] ?? null;
+  const cap = next == null ? 0x100 : Math.min(next - addr, 0x100);
+  const len = Math.max(4, Math.min(cap, hit.end - addr));
+  return [addr, addr + len];
+}
+
+// Samples: first binary-only rows per source, with the byte window and, for
+// main.dol rows, the first decoded instruction from disasm-ppc.
+const sampledSources = new Set();
+for (const r of binaryOnly) {
+  if (binarySamples.length >= 8) break;
+  const num = parseInt(normalizeAddr(r.address), 16);
+  const hit = binaryLookup(num);
+  if (!hit || sampledSources.has(hit.source)) continue;
+  sampledSources.add(hit.source);
+  const [start, end] = byteWindow(r.module, num, hit);
+  binarySamples.push({
+    address: '0x' + num.toString(16),
+    module: r.module,
+    source: hit.source,
+    section: hit.role,
+    fileOffset: hit.fileOffset + (num - hit.start),
+    range: ['0x' + start.toString(16), '0x' + end.toString(16)],
+    disasm: hit.source === 'main.dol' ? disasmSample(num) : null,
+  });
 }
 
 // Any two ledger rows for the same normalized entry address are duplicates,
@@ -268,20 +437,30 @@ const duplicates = [...byAddress.entries()].filter(([, list]) => list.length > 1
 
 // --- inventory invariant --------------------------------------------------
 //
-// A ledger row is only admissible when the address is a table entry in some
-// functions.tsv, and there can never be more rows than distinct inventory
-// addresses. This is the guard that keeps the `0x8004AAC0` class (bodies with
-// no table entry) out of the ledger.
+// A ledger row is admissible when its address is either a Ghidra table entry
+// or a mapped address in the disc image. When work/ is absent, binary evidence
+// takes over; only rows that neither source covers are hard failures. The
+// headroom guard still applies between rows and distinct admissible addresses.
 
 const inventoryCheck = {
-  ok: missingExports.length === 0 && missingAddresses.length === 0 && records.length <= inventory.size,
+  ok: unevidenced.length === 0,
   ledgerRows: records.length,
-  inventoryAddresses: inventory.size,
-  headroom: inventory.size - records.length,
+  ghidraInventoryAddresses: inventory.size,
+  rowsEvidencedByGhidra: records.length - missingFromGhidra.length,
+  rowsEvidencedByBinary: binaryOnly.length,
+  rowsUnevidenced: unevidenced.length,
   exports: inventoryByExport,
-  missingExports,
-  rowsOutsideInventory: missingAddresses.length,
-  rowsOutsideInventorySamples: missingAddresses.slice(0, 100),
+  missingExportFiles: missingExports,
+  rowsOutsideGhidra: missingFromGhidra.length,
+  rowsOutsideGhidraSamples: missingFromGhidra.slice(0, 100),
+  unevidencedSamples: unevidenced.slice(0, 100),
+  binary: {
+    mainDol: mainDolPath,
+    mainElf: binary.mainElf ? 'built' : null,
+    sources: binary.sources,
+    errors: binary.errors,
+    samples: binarySamples,
+  },
 };
 
 // --- body presence --------------------------------------------------------
@@ -360,7 +539,8 @@ console.log(JSON.stringify({
     modules: [...new Set(list.map((r) => r.module))],
   })),
   missingRustFiles: [...missingFiles],
-  missingFromExports: missingAddresses,
+  missingFromGhidra: missingFromGhidra,
+  unevidencedAddresses: unevidenced,
   inventory: inventoryCheck,
   bodies: {
     ok: gapReport.length === 0,

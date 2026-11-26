@@ -13,6 +13,8 @@
 !/crates/
 !/docs/
 !/ledger/
+!/layouts/
+!/rust-toolchain.toml
 !/tools/
 !/scripts/
 # The Android app (its build output and the staged libnsmbw.so are ignored by android/.gitignore).
