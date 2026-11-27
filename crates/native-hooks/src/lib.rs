@@ -25,20 +25,27 @@ unsafe fn f_base_ctor(
         as u32
 }
 
-/// Registers the switched bodies when `NSMBW_RUST_BODIES=1` (lockstep:
-/// the original runs, the body is validated against it) or `=direct` (run
-/// the body instead); otherwise does nothing, so the default port is
-/// unchanged.
+/// Registers the switched bodies when `NSMBW_RUST_BODIES` is `1` (lockstep:
+/// the original runs, the body is validated against it), `accounted` (the body
+/// runs, cycles come from the shadow original) or `direct` (the body runs with
+/// no accounting). `NSMBW_RUST_BODIES_VALIDATE` sets how many calls are
+/// validated/accounted (default 16). Otherwise does nothing, so the default
+/// port is unchanged.
 pub fn install(system: &mut System) {
     let mode = std::env::var("NSMBW_RUST_BODIES").unwrap_or_default();
-    if mode != "1" && mode != "direct" {
-        return;
+    let budget = std::env::var("NSMBW_RUST_BODIES_VALIDATE")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(16);
+    match mode.as_str() {
+        "1" => system.set_native_lockstep(true, budget),
+        "accounted" => system.set_native_accounted(true, budget),
+        "direct" => system.set_native_lockstep(false, 0),
+        _ => return,
     }
-    system.set_native_lockstep(mode == "1", 16);
     system.register_native(0x8016_1AD0, f_base_ctor);
     eprintln!(
-        "rust bodies: {} switched in {} mode (0x80161AD0 fBase_c::__ct)",
+        "rust bodies: {} switched in {mode} mode (0x80161AD0 fBase_c::__ct, budget {budget})",
         system.native_count(),
-        if mode == "1" { "lockstep" } else { "direct" },
     );
 }

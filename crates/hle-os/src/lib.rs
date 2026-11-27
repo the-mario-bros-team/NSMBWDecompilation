@@ -435,6 +435,21 @@ impl ShadowRuntime {
         self.cpu = saved;
         Ok(result)
     }
+
+    /// Runs the guest function at `entry` on the shadow until it returns to
+    /// `return_to`; returns the instruction count it executed.
+    fn run_function(&mut self, entry: u32, return_to: u32, max_steps: u64) -> Option<u64> {
+        self.cpu.pc = entry;
+        let mut steps = 0u64;
+        while self.cpu.pc != return_to {
+            let (n, _) = self.cpu.run_block(&mut self.mem, &mut self.blocks).ok()?;
+            steps += u64::from(n);
+            if steps > max_steps {
+                return None;
+            }
+        }
+        Some(steps)
+    }
 }
 
 impl GuestRuntime for ShadowRuntime {
@@ -442,8 +457,8 @@ impl GuestRuntime for ShadowRuntime {
         &mut self.mem
     }
 
-    fn resolve_rel_address(&self, _address: guest_cpu::RelAddress, _len: usize, _executable: bool) -> Option<u32> {
-        None
+    fn resolve_rel_address(&self, address: guest_cpu::RelAddress, len: usize, executable: bool) -> Option<u32> {
+        resolve_rel_address_in_memory(&self.mem, address, len, executable)
     }
 
     fn call_registers(&mut self, addr: u32, gprs: &[u32], fprs: &[f64]) -> Result<GuestCallResult, String> {
@@ -485,6 +500,38 @@ fn first_ram_difference(a: &Mem, b: &Mem, ignore: &[(u32, u32)]) -> Option<u32> 
     None
 }
 
+fn ignore_ranges(entry_sp: u32, return_sp: u32) -> [(u32, u32); 5] {
+    [
+        (entry_sp.saturating_sub(0x4000), entry_sp.saturating_add(0x1000)),
+        (return_sp.saturating_sub(0x4000), return_sp.saturating_add(0x1000)),
+        (CALL_STACK_TOP.saturating_sub(0x8000), CALL_STACK_TOP.saturating_add(0x1000)),
+        (CALL_SCRATCH.saturating_sub(0x1000), CALL_SCRATCH.saturating_add(0x1000)),
+        (CURRENT_THREAD, CURRENT_THREAD.saturating_add(0x10)),
+    ]
+}
+
+fn copy_all_ram(src: &Mem, dst: &mut Mem) {
+    for (base, len) in RAM_REGIONS {
+        if let (Some(s), Some(d)) = (src.ram(base, len), dst.ram_mut(base, len)) {
+            d.copy_from_slice(s);
+        }
+    }
+}
+
+fn copy_ranges(src: &Mem, dst: &mut Mem, ranges: &[(u32, u32)]) {
+    for &(lo, hi) in ranges {
+        for (base, len) in RAM_REGIONS {
+            let start = base.max(lo);
+            let end = (base + len as u32).min(hi);
+            if start < end {
+                if let (Some(s), Some(d)) = (src.ram(start, (end - start) as usize), dst.ram_mut(start, (end - start) as usize)) {
+                    d.copy_from_slice(s);
+                }
+            }
+        }
+    }
+}
+
 pub struct System {
     memcpy_validator: Option<memcpy_validation::Validator>,
     native_memcpy: Option<native_memcpy::NativeCopy>,
@@ -493,6 +540,9 @@ pub struct System {
     /// Run the original guest function first and validate the body against it
     /// (lockstep), instead of replacing it directly.
     native_lockstep: bool,
+    /// Accounted replacement: run the body on live state and take cycles from
+    /// the shadow original.
+    native_accounted: bool,
     /// Set while a body runs, so its guest calls do not re-enter a body.
     in_native: bool,
     /// Remaining calls to validate in full (the shadow RAM copy is expensive).
@@ -747,7 +797,7 @@ impl System {
         }
         let native_memcpy = (addrs.memcpy != 0)
             .then(|| native_memcpy::NativeCopy::new(addrs.memcpy..MEMCPY_END));
-        Ok(Self { memcpy_validator, native_memcpy, native_bodies: Vec::new(), native_lockstep: false, in_native: false, native_budget: 0, native_pending: None, native_shadow: None, native_validated: 0, native_failed: 0, cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
+        Ok(Self { memcpy_validator, native_memcpy, native_bodies: Vec::new(), native_lockstep: false, native_accounted: false, in_native: false, native_budget: 0, native_pending: None, native_shadow: None, native_validated: 0, native_failed: 0, cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
     }
 
     /// Registers a Rust body that replaces the guest function at `addr`.
@@ -765,6 +815,15 @@ impl System {
     /// first `budget` switched calls, and keep the original's state.
     pub fn set_native_lockstep(&mut self, on: bool, budget: u32) {
         self.native_lockstep = on;
+        self.native_accounted = false;
+        self.native_budget = if on { budget } else { 0 };
+    }
+
+    /// Accounted replacement: run the body on live state and take the exact
+    /// CPU/cycles from the original run on the shadow, for `budget` calls.
+    pub fn set_native_accounted(&mut self, on: bool, budget: u32) {
+        self.native_accounted = on;
+        self.native_lockstep = false;
         self.native_budget = if on { budget } else { 0 };
     }
 
@@ -786,6 +845,16 @@ impl System {
     /// Runs the Rust body at `pc`, if one is registered: sets `r3` to its
     /// result and returns to `lr`. Returns whether a body ran.
     fn run_native(&mut self, pc: u32) -> bool {
+        if self.in_native {
+            return false;
+        }
+        if self.native_accounted {
+            if self.native_budget == 0 {
+                return false;
+            }
+            let Some(body) = self.native_body(pc) else { return false };
+            return self.accounted(pc, body);
+        }
         if self.native_lockstep {
             // The original always runs; the body is checked on a shadow.
             if let Some(pending) = self.native_pending.as_ref() {
@@ -858,6 +927,55 @@ impl System {
                 );
             }
         }
+    }
+
+    /// Accounted replacement: run the original on the shadow for its exact
+    /// CPU and cycles, run the body on the live pre-call state, and commit.
+    /// If RAM differs outside the stack/scratch windows, the original's RAM
+    /// is restored and the comparison counts as a failure.
+    fn accounted(&mut self, pc: u32, body: NativeBody) -> bool {
+        let return_to = self.cpu.lr & !3;
+        if return_to == 0 || return_to == pc {
+            return false;
+        }
+        let pre_cpu = self.cpu.clone();
+        let mut shadow = self.native_shadow.take().unwrap_or_else(ShadowRuntime::new);
+        if !shadow.load(&pre_cpu, &self.mem) {
+            self.native_shadow = Some(shadow);
+            return false;
+        }
+        let Some(shadow_steps) = shadow.run_function(pc, return_to, 1_000_000) else {
+            self.native_shadow = Some(shadow);
+            return false;
+        };
+        let shadow_cpu = shadow.cpu.clone();
+        let ignore = ignore_ranges(pre_cpu.gpr[1], shadow_cpu.gpr[1]);
+        let saved_steps = self.steps;
+        self.in_native = true;
+        let r3 = unsafe { body(self, &pre_cpu.gpr, &pre_cpu.fpr) };
+        self.in_native = false;
+        let diff = first_ram_difference(&self.mem, &shadow.mem, &ignore);
+        if diff.is_none() && r3 == shadow_cpu.gpr[3] {
+            // The body's RAM is byte-identical; take the original's stack and
+            // scratch so the full-RAM hash is exactly the original's.
+            copy_ranges(&shadow.mem, &mut self.mem, &ignore);
+            self.native_validated += 1;
+        } else {
+            copy_all_ram(&shadow.mem, &mut self.mem);
+            self.native_failed += 1;
+            if self.native_failed <= 3 {
+                eprintln!(
+                    "native accounted mismatch at {pc:#010x}: first_diff={diff:?} r3 body={r3:#010x} orig={:#010x}",
+                    shadow_cpu.gpr[3],
+                );
+            }
+        }
+        self.cpu = shadow_cpu;
+        self.cpu.pc = return_to;
+        self.steps = saved_steps + shadow_steps;
+        self.native_budget -= 1;
+        self.native_shadow = Some(shadow);
+        true
     }
 
     /// Bookkeeping before the instruction at `pc`: `OSLink` calls and
@@ -1182,7 +1300,7 @@ impl System {
 
     /// Runs the same synchronous guest call as [`Self::call_guest`] with
     /// register arguments for a fixed-prototype call. Integer words go to
-    /// r3â€“r10 and scalar floating-point values go to f1â€“f8. The caller lays
+    /// r3ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“r10 and scalar floating-point values go to f1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“f8. The caller lays
     /// out register pairs. Stack arguments are unsupported.
     pub fn call_guest_with_registers(
         &mut self,
