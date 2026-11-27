@@ -45,11 +45,60 @@ unsafe fn d_actor_pre_draw(
     nsmbw::platform::with_guest_runtime(runtime, || nsmbw::game::player::fn_80064540(this))
 }
 
+/// `dBaseActor_c`'s movement functions (`calcSpeed` and family): `this` only.
+macro_rules! this_only {
+    ($($name:ident => $body:path),* $(,)?) => {$(
+        unsafe fn $name(
+            runtime: &mut (dyn GuestRuntime + 'static),
+            gprs: &[u32; 32],
+            _fprs: &[[f64; 2]; 32],
+        ) -> u32 {
+            let this = gprs[3] as usize;
+            nsmbw::platform::with_guest_runtime(runtime, || $body(this));
+            0
+        }
+    )*};
+}
+
+this_only! {
+    d_base_actor_calc_speed => nsmbw::game::player::fn_8006cc00,
+    d_base_actor_pos_move => nsmbw::game::player::fn_8006cd40,
+    d_base_actor_calc_speed_xy => nsmbw::game::player::fn_8006cd50,
+    d_base_actor_calc_speed_x => nsmbw::game::player::fn_8006cd90,
+    d_base_actor_calc_speed_y => nsmbw::game::player::fn_8006cde0,
+    d_base_actor_calc_speed_f => nsmbw::game::player::fn_8006ce10,
+    d_base_actor_calc_fall_speed => nsmbw::game::player::fn_8006ce70,
+}
+
+/// `dBaseActor_c::posMove(mVec3_c&)` (`0x8006CD00`): `this` and the step.
+unsafe fn d_base_actor_pos_move_by(
+    runtime: &mut (dyn GuestRuntime + 'static),
+    gprs: &[u32; 32],
+    _fprs: &[[f64; 2]; 32],
+) -> u32 {
+    let (this, delta) = (gprs[3] as usize, gprs[4] as usize);
+    nsmbw::platform::with_guest_runtime(runtime, || nsmbw::game::player::fn_8006cd00(this, delta));
+    0
+}
+
+/// `dBaseActor_c::getCenterPos() const` (`0x8006CED0`): returns a `mVec3_c`
+/// by value, so `r3` is the result's address and `r4` is `this`.
+unsafe fn d_base_actor_get_center_pos(
+    runtime: &mut (dyn GuestRuntime + 'static),
+    gprs: &[u32; 32],
+    _fprs: &[[f64; 2]; 32],
+) -> u32 {
+    let (out, this) = (gprs[3] as usize, gprs[4] as usize);
+    nsmbw::platform::with_guest_runtime(runtime, || nsmbw::game::player::fn_8006ced0(out, this));
+    0
+}
+
 /// Registers the switched bodies when `NSMBW_RUST_BODIES` is `1` (lockstep:
 /// the original runs, the body is validated against it), `accounted` (the body
 /// runs, cycles come from the shadow original) or `direct` (the body runs with
 /// no accounting). `NSMBW_RUST_BODIES_VALIDATE` sets how many calls are
-/// validated/accounted (default 16). Otherwise does nothing, so the default
+/// validated per body in lockstep, or accounted in all (default 16). Otherwise
+/// does nothing, so the default
 /// port is unchanged.
 pub fn install(system: &mut System) {
     let mode = std::env::var("NSMBW_RUST_BODIES").unwrap_or_default();
@@ -66,6 +115,16 @@ pub fn install(system: &mut System) {
     system.register_native(0x8016_1AD0, f_base_ctor);
     system.register_native(0x8006_43F0, d_actor_pre_execute);
     system.register_native(0x8006_4540, d_actor_pre_draw);
+    // Functions that return nothing: their checks compare RAM, not r3.
+    system.register_native_void(0x8006_CC00, d_base_actor_calc_speed);
+    system.register_native_void(0x8006_CD00, d_base_actor_pos_move_by);
+    system.register_native_void(0x8006_CD40, d_base_actor_pos_move);
+    system.register_native_void(0x8006_CD50, d_base_actor_calc_speed_xy);
+    system.register_native_void(0x8006_CD90, d_base_actor_calc_speed_x);
+    system.register_native_void(0x8006_CDE0, d_base_actor_calc_speed_y);
+    system.register_native_void(0x8006_CE10, d_base_actor_calc_speed_f);
+    system.register_native_void(0x8006_CE70, d_base_actor_calc_fall_speed);
+    system.register_native_void(0x8006_CED0, d_base_actor_get_center_pos);
     let set = std::env::var("NSMBW_RUST_BODIES_SET").unwrap_or_default();
     if !set.is_empty() {
         let wanted = |addr: u32| {
@@ -76,7 +135,7 @@ pub fn install(system: &mut System) {
         system.retain_native(|addr| wanted(addr));
     }
     eprintln!(
-        "rust bodies: {} switched in {mode} mode (fBase_c::__ct, dActor_c::preExecute, budget {budget})",
+        "rust bodies: {} switched in {mode} mode (budget {budget} per body)",
         system.native_count(),
     );
 }

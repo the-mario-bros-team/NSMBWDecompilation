@@ -655,7 +655,7 @@ use crate::game::bases::{
     Descriptor,
 };
 use crate::platform::{self, call4, call5, call6, call7, call_u64};
-use crate::game::layouts::DActor;
+use crate::game::layouts::{DActor, DBaseActor, Vec3};
 
 // ===========================================================================
 // Absolute addresses and field offsets used by the player table.
@@ -26809,8 +26809,23 @@ unsafe fn w103_call_f64_f64_u32_u32_u32(
 /// # Safety
 /// `addr` must be `0x80237BD0` or `0x80237C40`.
 unsafe fn w103_sin_cos(addr: usize, angle_256: f32) -> f32 {
-    let function: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
-    function(angle_256 as f64) as f32
+    w103_sin_cos_f1(addr, angle_256) as f32
+}
+
+/// `SinFIdx`/`CosFIdx` with the result as the guest leaves it in f1 (double
+/// precision: callers that feed it to `fmuls` must not round it first).
+unsafe fn w103_sin_cos_f1(addr: usize, angle_256: f32) -> f64 {
+    // With guest memory, the guest function runs on the guest CPU (f1 in, f1
+    // out); a host call to a guest address would crash.
+    #[cfg(feature = "guest-memory")]
+    {
+        platform::call_registers(addr, &[], &[f64::from(angle_256)]).expect("SinFIdx/CosFIdx call").f1
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let function: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+        function(angle_256 as f64)
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -34276,8 +34291,17 @@ const W211A_SCALE: usize = 0xDC;
 /// `addr` must be a live function with that ABI.
 #[inline]
 unsafe fn w211a_call_3f_1u(addr: usize, f: f32, g: f32, h: f32, a: u32) -> u32 {
-    let function: extern "C" fn(f32, f32, f32, u32) -> u32 = core::mem::transmute(addr);
-    function(f, g, h, a)
+    #[cfg(feature = "guest-memory")]
+    {
+        platform::call_registers(addr, &[a], &[f64::from(f), f64::from(g), f64::from(h)])
+            .expect("guest call (3 floats, 1 word)")
+            .r3
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let function: extern "C" fn(f32, f32, f32, u32) -> u32 = core::mem::transmute(addr);
+        function(f, g, h, a)
+    }
 }
 
 /// Dispatches class vtable slot `slot` of `object`: `(*(object + 0x60))[slot]`.
@@ -35517,14 +35541,14 @@ pub unsafe fn fn_800643f0(this: usize) -> u32 {
     if crate::game::stage::fn_800b3b50(0xFFFF_FFFF) != 0 {
         return 0;
     }
-    if platform::read_u8(U8_80429CFA_B) & actor.disable_mask() != 0 {
+    if platform::read_u8(U8_80429CFA_B) & actor.exec_stop_mask() != 0 {
         return 0;
     }
 
-    crate::engine::display::fn_800d9ac0(actor.ride_check_addr() as usize);
+    crate::engine::display::fn_800d9ac0(actor.rc_addr() as usize);
 
-    if actor.kill_if_disabled() {
-        actor.set_kill_if_disabled(false);
+    if actor.block_hit_pending() {
+        actor.set_block_hit_pending(false);
         let vtable = platform::read_u32(this + 0x60) as usize;
         let method = platform::read_u32(vtable + 0x64) as usize;
         platform::call1(method, this as u32);
@@ -35646,11 +35670,11 @@ pub unsafe fn fn_80064540(this: usize) -> u32 {
         return 0;
     }
 
-    if actor.eat_state() == 2 {
+    if actor.unk_36c() == 2 {
         return 0;
     }
 
-    if actor.as_d_base_actor().actor_properties() & 2 == 0 {
+    if actor.as_d_base_actor().flags_120() & 2 == 0 {
         return 1;
     }
 
@@ -47282,21 +47306,26 @@ const FN_8016EDD0_B: usize = 0x8016_EDD0;
 /// is read as the plain `(s16) -> f32` conversion that Ghidra's quantised
 /// decomposition describes. All offsets, constants and stores are literal.
 pub unsafe fn fn_8006cc00(object: usize) {
-    let heading = (platform::read_u16(object + 0x108) as i16) as f32
-        * read_f32(F32_ANGLE_UNIT_8042BC38_B);
-    let sine = w103_sin_cos(W103_SIN_80237BD0, heading);
-    let cosine = w103_sin_cos(W103_COS_80237C40, heading);
+    let actor = DBaseActor { addr: object as u32 };
+    // observed: `psq_l` through GQR3, which the game sets to 0x00050005 (u16,
+    // as OSInitFastCast does): the angle is read unsigned, so 0x80BC is
+    // 32956.0, not -32580.0. The table lookup rounds differently for the two.
+    let heading = actor.move_angle().y() as u16 as f32 * read_f32(F32_ANGLE_UNIT_8042BC38_B);
+    // observed: sine and cosine stay double in f31/f1; each product is one
+    // `fmuls` (forward speed times the 25-bit multiplier), rounded once.
+    let sine = w103_sin_cos_f1(W103_SIN_80237BD0, heading);
+    let cosine = w103_sin_cos_f1(W103_COS_80237C40, heading);
 
-    let mut vertical = read_f32(object + 0xEC) + read_f32(object + 0x114);
-    let floor = read_f32(object + 0x118);
+    let mut vertical = platform::fadds(actor.speed().y().into(), actor.gravity().into());
+    let floor = actor.fall_speed_limit();
     if vertical < floor {
         vertical = floor;
     }
-    let speed = read_f32(object + 0x10C);
+    let speed = f64::from(actor.forward_speed());
 
-    write_f32(object + 0xEC, vertical);
-    write_f32(object + 0xF0, speed * cosine);
-    write_f32(object + 0xE8, speed * sine);
+    actor.speed().set_y(vertical);
+    actor.speed().set_z(platform::fmuls(speed, cosine));
+    actor.speed().set_x(platform::fmuls(speed, sine));
 }
 
 // ---------------------------------------------------------------------------
@@ -47377,9 +47406,11 @@ pub unsafe fn fn_8006ccb0(object: usize) {
 /// # Confidence
 /// high - three load/add/store sequences, every offset literal.
 pub unsafe fn fn_8006cd00(object: usize, delta: usize) {
-    write_f32(object + 0xAC, read_f32(object + 0xAC) + read_f32(delta));
-    write_f32(object + 0xB0, read_f32(object + 0xB0) + read_f32(delta + 4));
-    write_f32(object + 0xB4, read_f32(object + 0xB4) + read_f32(delta + 8));
+    let pos = DBaseActor { addr: object as u32 }.pos();
+    let delta = Vec3 { addr: delta as u32 };
+    pos.set_x(pos.x() + delta.x());
+    pos.set_y(pos.y() + delta.y());
+    pos.set_z(pos.z() + delta.z());
 }
 
 // ---------------------------------------------------------------------------
@@ -47410,7 +47441,7 @@ pub unsafe fn fn_8006cd00(object: usize, delta: usize) {
 /// # Confidence
 /// high - the tail call and its argument are literal.
 pub unsafe fn fn_8006cd40(object: usize) {
-    fn_8006cd00(object, object + 0xE8);
+    fn_8006cd00(object, DBaseActor { addr: object as u32 }.speed().addr as usize);
 }
 
 // ---------------------------------------------------------------------------
@@ -47448,8 +47479,9 @@ pub unsafe fn fn_8006cd40(object: usize) {
 /// # Confidence
 /// high - the call order, the copied word and the one store are literal.
 pub unsafe fn fn_8006cd50(object: usize) {
+    let actor = DBaseActor { addr: object as u32 };
     fn_8006ce10(object);
-    write_f32(object + 0xE8, read_f32(object + 0x10C));
+    actor.speed().set_x(actor.forward_speed());
     fn_8006ce70(object);
 }
 
@@ -47483,9 +47515,10 @@ pub unsafe fn fn_8006cd50(object: usize) {
 /// high - the two comparison/branch pairs and the `fadds`/`fsubs` halves are
 /// literal in `main.elf`; only the field's plain-English name is inferred.
 pub unsafe fn fn_8006cd90(object: usize) {
-    let step = read_f32(object + 0x11C);
-    let reference = read_f32(object + 0xF4);
-    let mut value = read_f32(object + 0xE8);
+    let actor = DBaseActor { addr: object as u32 };
+    let step = actor.accel();
+    let reference = actor.speed_target().x();
+    let mut value = actor.speed().x();
 
     if reference < value {
         value -= step;
@@ -47499,7 +47532,7 @@ pub unsafe fn fn_8006cd90(object: usize) {
         }
     }
 
-    write_f32(object + 0xE8, value);
+    actor.speed().set_x(value);
 }
 
 // ---------------------------------------------------------------------------
@@ -47534,12 +47567,13 @@ pub unsafe fn fn_8006cd90(object: usize) {
 /// # Confidence
 /// high - `fadds`, one `fcmpu` and one conditional `fmr`, all literal.
 pub unsafe fn fn_8006cde0(object: usize) {
-    let mut value = read_f32(object + 0xEC) + read_f32(object + 0x114);
-    let floor = read_f32(object + 0xF8);
+    let actor = DBaseActor { addr: object as u32 };
+    let mut value = actor.speed().y() + actor.gravity();
+    let floor = actor.speed_target().y();
     if value < floor {
         value = floor;
     }
-    write_f32(object + 0xEC, value);
+    actor.speed().set_y(value);
 }
 
 // ---------------------------------------------------------------------------
@@ -47572,16 +47606,17 @@ pub unsafe fn fn_8006cde0(object: usize) {
 /// high - the mirror-image `fadds`/`fsubs` halves, the redundant `bclr 4,1`
 /// guard at `0x8006CE40` and the two clamps are literal.
 pub unsafe fn fn_8006ce10(object: usize) {
-    let step = read_f32(object + 0x11C);
-    let target = read_f32(object + 0x110);
-    let mut value = read_f32(object + 0x10C);
+    let actor = DBaseActor { addr: object as u32 };
+    let step = actor.accel();
+    let target = actor.forward_speed_target();
+    let mut value = actor.forward_speed();
 
     if value < target {
         value += step;
         if target < value {
             value = target;
         }
-        write_f32(object + 0x10C, value);
+        actor.set_forward_speed(value);
         return;
     }
     if target < value {
@@ -47589,7 +47624,7 @@ pub unsafe fn fn_8006ce10(object: usize) {
         if value < target {
             value = target;
         }
-        write_f32(object + 0x10C, value);
+        actor.set_forward_speed(value);
     }
 }
 
@@ -47628,16 +47663,17 @@ pub unsafe fn fn_8006ce10(object: usize) {
 /// `main.elf` (`fsubs` at `0x8006CE84`, `fadds` at `0x8006CEA8`) and agree
 /// with the Ghidra C; only the field name is inferred.
 pub unsafe fn fn_8006ce70(object: usize) {
-    let step = read_f32(object + 0x114);
-    let reference = read_f32(object + 0x118);
-    let mut value = read_f32(object + 0xEC);
+    let actor = DBaseActor { addr: object as u32 };
+    let step = actor.gravity();
+    let reference = actor.fall_speed_limit();
+    let mut value = actor.speed().y();
 
     if value < reference {
         value -= step;
         if reference < value {
             value = reference;
         }
-        write_f32(object + 0xEC, value);
+        actor.speed().set_y(value);
         return;
     }
     if reference < value {
@@ -47645,7 +47681,7 @@ pub unsafe fn fn_8006ce70(object: usize) {
         if value < reference {
             value = reference;
         }
-        write_f32(object + 0xEC, value);
+        actor.speed().set_y(value);
     }
 }
 
@@ -47742,10 +47778,13 @@ const W214C_SDA_TILE_80429DD0: usize = 0x8042_9DD0;
 /// triplet is the object position and the second a per-frame offset, because
 /// the same `+0xAC` triplet is the position vector the actor cluster reads.
 pub unsafe fn fn_8006ced0(out: usize, src: usize) {
-    // observed: the image stores z (0xB4+0xD8), then y, then x.
-    write_f32(out + 0x08, read_f32(src + 0xB4) + read_f32(src + 0xD8));
-    write_f32(out + 0x04, read_f32(src + 0xB0) + read_f32(src + 0xD4));
-    write_f32(out + 0x00, read_f32(src + 0xAC) + read_f32(src + 0xD0));
+    // observed: the image stores z, then y, then x.
+    let actor = DBaseActor { addr: src as u32 };
+    let (pos, offset) = (actor.pos(), actor.center_offset());
+    let out = Vec3 { addr: out as u32 };
+    out.set_z(pos.z() + offset.z());
+    out.set_y(pos.y() + offset.y());
+    out.set_x(pos.x() + offset.x());
 }
 
 // ---------------------------------------------------------------------------

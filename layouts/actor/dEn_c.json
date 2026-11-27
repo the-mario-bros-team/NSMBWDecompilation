@@ -14,97 +14,97 @@
       "offset": 1044,
       "size": 32,
       "type": "dDeathInfo_c",
-      "name": "mDeathInfo"
+      "name": "death_info"
     },
     {
       "offset": 1076,
       "size": 4,
       "type": "u32",
-      "name": "mCcValue"
+      "name": "unk_434"
     },
     {
       "offset": 1080,
       "size": 2,
       "type": "u16",
-      "name": "m_24"
+      "name": "unk_438"
     },
     {
       "offset": 1082,
       "size": 6,
       "type": "u8[6]",
-      "name": "mPad1"
+      "name": "unk_43a"
     },
     {
       "offset": 1088,
       "size": 12,
       "type": "mVec3_c",
-      "name": "mFootPush"
+      "name": "unk_440"
     },
     {
       "offset": 1100,
       "size": 12,
       "type": "mVec3_c",
-      "name": "mFootPush2"
+      "name": "unk_44c"
     },
     {
       "offset": 1112,
       "size": 1,
       "type": "u8",
-      "name": "mDeathFallDirection"
+      "name": "unk_458"
     },
     {
       "offset": 1113,
       "size": 1,
       "type": "u8",
-      "name": "mIceDeathDirection"
+      "name": "unk_459"
     },
     {
       "offset": 1114,
       "size": 1,
       "type": "bool",
-      "name": "mKilled"
+      "name": "unk_45a"
     },
     {
       "offset": 1115,
       "size": 1,
       "type": "u8",
-      "name": "mPad2"
+      "name": "unk_45b"
     },
     {
       "offset": 1116,
       "size": 1,
       "type": "bool",
-      "name": "mFootAttr3"
+      "name": "unk_45c"
     },
     {
       "offset": 1117,
       "size": 1,
       "type": "bool",
-      "name": "mInLiquid"
+      "name": "unk_45d"
     },
     {
       "offset": 1118,
       "size": 1,
       "type": "bool",
-      "name": "mFootAttr1"
+      "name": "unk_45e"
     },
     {
       "offset": 1119,
       "size": 5,
       "type": "u8[5]",
-      "name": "mPad3"
+      "name": "unk_45f"
     },
     {
       "offset": 1124,
       "size": 24,
       "type": "dEnBoyoMng_c",
-      "name": "mBoyoMng"
+      "name": "boyo_mng"
     },
     {
       "offset": 1148,
       "size": null,
       "type": "dIceMng_c",
-      "name": "mIceMng"
+      "name": "ice_mng"
     }
   ]
 }

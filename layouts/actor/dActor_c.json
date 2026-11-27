@@ -8,19 +8,19 @@
       "offset": 296,
       "size": 4,
       "type": "int",
-      "name": "mCarryingPlayerID"
+      "name": "unk_128"
     },
     {
       "offset": 300,
       "size": 4,
       "type": "u32",
-      "name": "mCarryingFlags"
+      "name": "unk_12c"
     },
     {
       "offset": 304,
       "size": 1,
       "type": "u8",
-      "name": "mCarryingDirection"
+      "name": "unk_130"
     },
     {
       "offset": 305,
@@ -32,121 +32,121 @@
       "offset": 308,
       "size": 4,
       "type": "u32",
-      "name": "mComboCount"
+      "name": "unk_134"
     },
     {
       "offset": 312,
       "size": 4,
       "type": "u32",
-      "name": "m_138"
+      "name": "unk_138"
     },
     {
       "offset": 316,
       "size": 4,
       "type": "u32",
-      "name": "m_13C"
+      "name": "unk_13c"
     },
     {
       "offset": 320,
       "size": 4,
       "type": "f32",
-      "name": "m_140"
+      "name": "unk_140"
     },
     {
       "offset": 324,
       "size": 4,
       "type": "u32",
-      "name": "m_144"
+      "name": "unk_144"
     },
     {
       "offset": 328,
       "size": 164,
       "type": "dCc_c",
-      "name": "mCollisionCheck"
+      "name": "cc"
     },
     {
       "offset": 492,
       "size": 240,
       "type": "dBc_c",
-      "name": "mBgCheck"
+      "name": "bc"
     },
     {
       "offset": 732,
       "size": 52,
       "type": "dRc_c",
-      "name": "mRideCheck"
+      "name": "rc"
     },
     {
       "offset": 784,
       "size": 8,
       "type": "mVec2_c",
-      "name": "m_310"
+      "name": "unk_310"
     },
     {
       "offset": 792,
       "size": 8,
       "type": "mVec2_c",
-      "name": "mVisibleAreaSize"
+      "name": "unk_318"
     },
     {
       "offset": 800,
       "size": 8,
       "type": "mVec2_c",
-      "name": "mVisibleAreaOffset"
+      "name": "unk_320"
     },
     {
       "offset": 808,
       "size": 8,
       "type": "mVec2_c",
-      "name": "m_328"
+      "name": "unk_328"
     },
     {
       "offset": 816,
       "size": 8,
       "type": "mVec2_c",
-      "name": "mMaxBoundDistance"
+      "name": "unk_330"
     },
     {
       "offset": 824,
       "size": 4,
       "type": "f32",
-      "name": "mDestroyBoundDistanceTop"
+      "name": "unk_338"
     },
     {
       "offset": 828,
       "size": 4,
       "type": "f32",
-      "name": "mDestroyBoundDistanceBottom"
+      "name": "unk_33c"
     },
     {
       "offset": 832,
       "size": 4,
       "type": "f32",
-      "name": "mDestroyBoundDistanceLeft"
+      "name": "unk_340"
     },
     {
       "offset": 836,
       "size": 4,
       "type": "f32",
-      "name": "mDestroyBoundDistanceRight"
+      "name": "unk_344"
     },
     {
       "offset": 840,
       "size": 1,
       "type": "u8",
-      "name": "mDirection"
+      "name": "unk_348"
     },
     {
       "offset": 841,
       "size": 1,
       "type": "u8",
-      "name": "mZoneID"
+      "name": "unk_349"
     },
     {
       "offset": 842,
       "size": 1,
       "type": "u8",
-      "name": "m_34A"
+      "name": "unk_34a"
     },
     {
       "offset": 843,
@@ -158,19 +158,19 @@
       "offset": 844,
       "size": 4,
       "type": "u8 *",
-      "name": "mpByteStorage"
+      "name": "unk_34c"
     },
     {
       "offset": 848,
       "size": 4,
       "type": "u16 *",
-      "name": "mpShortStorage"
+      "name": "unk_350"
     },
     {
       "offset": 852,
       "size": 2,
       "type": "u8[2]",
-      "name": "mEventNums"
+      "name": "unk_354"
     },
     {
       "offset": 854,
@@ -182,25 +182,25 @@
       "offset": 856,
       "size": 8,
       "type": "u64",
-      "name": "mEventMask"
+      "name": "unk_358"
     },
     {
       "offset": 864,
       "size": 4,
       "type": "u32",
-      "name": "m_360"
+      "name": "unk_360"
     },
     {
       "offset": 868,
       "size": 2,
       "type": "u16",
-      "name": "mSpawnInfoFlags"
+      "name": "unk_364"
     },
     {
       "offset": 870,
       "size": 1,
       "type": "bool",
-      "name": "mKillIfDisabled"
+      "name": "block_hit_pending"
     },
     {
       "offset": 871,
@@ -212,19 +212,19 @@
       "offset": 872,
       "size": 4,
       "type": "u32",
-      "name": "mEaterActorID"
+      "name": "unk_368"
     },
     {
       "offset": 876,
       "size": 1,
       "type": "u8",
-      "name": "mEatState"
+      "name": "unk_36c"
     },
     {
       "offset": 877,
       "size": 1,
       "type": "u8",
-      "name": "mEatSpitType"
+      "name": "unk_36d"
     },
     {
       "offset": 878,
@@ -236,73 +236,73 @@
       "offset": 880,
       "size": 12,
       "type": "mVec3_c",
-      "name": "mScaleBeforeBeingEaten"
+      "name": "unk_370"
     },
     {
       "offset": 892,
       "size": 4,
       "type": "u32",
-      "name": "mScoreType"
+      "name": "unk_37c"
     },
     {
       "offset": 896,
       "size": 4,
       "type": "u32",
-      "name": "mLookAtMode"
+      "name": "unk_380"
     },
     {
       "offset": 900,
       "size": 4,
       "type": "u32",
-      "name": "m_384"
+      "name": "unk_384"
     },
     {
       "offset": 904,
       "size": 4,
       "type": "dPropelParts_c *",
-      "name": "mpCarryPropelActor"
+      "name": "unk_388"
     },
     {
       "offset": 908,
       "size": 1,
       "type": "u8",
-      "name": "mKind"
+      "name": "kind"
     },
     {
       "offset": 909,
       "size": 1,
       "type": "s8",
-      "name": "mPlayerNo"
+      "name": "unk_38d"
     },
     {
       "offset": 910,
       "size": 1,
       "type": "u8",
-      "name": "mDisableMask"
+      "name": "exec_stop_mask"
     },
     {
       "offset": 911,
       "size": 1,
       "type": "u8",
-      "name": "mLayerID"
+      "name": "unk_38f"
     },
     {
       "offset": 912,
       "size": 1,
       "type": "bool",
-      "name": "mDeleteForever"
+      "name": "unk_390"
     },
     {
       "offset": 913,
       "size": 1,
       "type": "bool",
-      "name": "mAppearsOnBackfence"
+      "name": "unk_391"
     },
     {
       "offset": 914,
       "size": 2,
       "type": "u8[2]",
-      "name": "m_392"
+      "name": "unk_392"
     }
   ]
 }

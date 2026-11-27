@@ -14,7 +14,7 @@
       "offset": 916,
       "size": 64,
       "type": "sFStateMgr_c<dActorState_c, sStateMethodUsr_FI_c>",
-      "name": "mStateMgr"
+      "name": "state_mgr"
     }
   ]
 }

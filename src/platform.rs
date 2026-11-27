@@ -10,6 +10,39 @@
 //! `with_guest_runtime`. A `with_guest_memory` scope supports memory access alone.
 //! The legacy helpers panic on missing scopes, invalid addresses, and guest faults.
 
+/// Broadway's single-precision multiply (`fmuls`, `ps_mul`): the multiplier
+/// (frC) keeps only 25 significant bits, the product is rounded to single.
+/// Matches `guest_cpu::fp` (`force25`, `round_single`), which is the oracle.
+///
+/// # Original
+/// Host-side helper; no binary address.
+///
+/// # Confidence
+/// high - same arithmetic as the interpreter's `fp_single`.
+#[inline]
+pub fn fmuls(a: f64, c: f64) -> f32 {
+    let c = if c.is_finite() {
+        let b = c.to_bits();
+        f64::from_bits((b & 0xFFFF_FFFF_F800_0000).wrapping_add(b & 0x0800_0000))
+    } else {
+        c
+    };
+    (a * c) as f32
+}
+
+/// Broadway's single-precision add (`fadds`): the double sum, rounded once
+/// to single, as the interpreter does it.
+///
+/// # Original
+/// Host-side helper; no binary address.
+///
+/// # Confidence
+/// high - same arithmetic as the interpreter's `fp_single`.
+#[inline]
+pub fn fadds(a: f64, b: f64) -> f32 {
+    (a + b) as f32
+}
+
 #[cfg(feature = "guest-memory")]
 extern crate std;
 

@@ -14,19 +14,19 @@
       "offset": 100,
       "size": 4,
       "type": "cOwnerSetMg_c",
-      "name": "mOwnerSet"
+      "name": "owner_set"
     },
     {
       "offset": 104,
       "size": 4,
       "type": "const char *",
-      "name": "mpKindString"
+      "name": "kind_string"
     },
     {
       "offset": 108,
       "size": 4,
       "type": "const char *",
-      "name": "mpNameString"
+      "name": "profile_name_string"
     }
   ]
 }

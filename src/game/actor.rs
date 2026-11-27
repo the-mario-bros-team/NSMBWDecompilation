@@ -3199,7 +3199,7 @@ pub unsafe fn fn_8001df60(param_1: usize, param_2: usize) {
             if platform::read_u8(first_char as usize) == second_char {
                 pending = false;
             }
-        } else if (DActor { addr: second_actor as u32 }.as_d_base_actor().actor_properties() & 0x80) != 0 {
+        } else if (DActor { addr: second_actor as u32 }.as_d_base_actor().flags_120() & 0x80) != 0 {
             pending = false;
         }
 

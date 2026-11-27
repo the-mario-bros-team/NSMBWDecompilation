@@ -69,125 +69,125 @@ impl DActor {
     pub const OFFSET_VPTR: usize = 0x60;
     #[inline] pub fn addr(&self) -> u32 { self.addr }
     #[inline] pub fn as_d_base_actor(&self) -> DBaseActor { DBaseActor { addr: self.addr } }
-    pub const OFFSET_CARRYING_PLAYER_ID: usize = 0x128;
-    #[inline] pub fn carrying_player_id_addr(&self) -> u32 { self.addr + Self::OFFSET_CARRYING_PLAYER_ID as u32 }
-    pub const OFFSET_CARRYING_FLAGS: usize = 0x12c;
-    #[inline] pub unsafe fn carrying_flags(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_CARRYING_FLAGS) }
-    #[inline] pub unsafe fn set_carrying_flags(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_CARRYING_FLAGS, v) }
-    pub const OFFSET_CARRYING_DIRECTION: usize = 0x130;
-    #[inline] pub unsafe fn carrying_direction(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_CARRYING_DIRECTION) }
-    #[inline] pub unsafe fn set_carrying_direction(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_CARRYING_DIRECTION, v) }
-    pub const OFFSET_COMBO_COUNT: usize = 0x134;
-    #[inline] pub unsafe fn combo_count(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_COMBO_COUNT) }
-    #[inline] pub unsafe fn set_combo_count(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_COMBO_COUNT, v) }
-    pub const OFFSET__138: usize = 0x138;
-    #[inline] pub unsafe fn _138(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET__138) }
-    #[inline] pub unsafe fn set__138(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET__138, v) }
-    pub const OFFSET__13_C: usize = 0x13c;
-    #[inline] pub unsafe fn _13_c(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET__13_C) }
-    #[inline] pub unsafe fn set__13_c(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET__13_C, v) }
-    pub const OFFSET__140: usize = 0x140;
-    #[inline] pub unsafe fn _140(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET__140) }
-    #[inline] pub unsafe fn set__140(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET__140, v) }
-    pub const OFFSET__144: usize = 0x144;
-    #[inline] pub unsafe fn _144(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET__144) }
-    #[inline] pub unsafe fn set__144(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET__144, v) }
-    pub const OFFSET_COLLISION_CHECK: usize = 0x148;
-    #[inline] pub fn collision_check_addr(&self) -> u32 { self.addr + Self::OFFSET_COLLISION_CHECK as u32 }
-    pub const OFFSET_BG_CHECK: usize = 0x1ec;
-    #[inline] pub fn bg_check_addr(&self) -> u32 { self.addr + Self::OFFSET_BG_CHECK as u32 }
-    pub const OFFSET_RIDE_CHECK: usize = 0x2dc;
-    #[inline] pub fn ride_check_addr(&self) -> u32 { self.addr + Self::OFFSET_RIDE_CHECK as u32 }
-    pub const OFFSET__310: usize = 0x310;
-    #[inline] pub fn _310(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET__310 as u32 } }
-    pub const OFFSET_VISIBLE_AREA_SIZE: usize = 0x318;
-    #[inline] pub fn visible_area_size(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_VISIBLE_AREA_SIZE as u32 } }
-    pub const OFFSET_VISIBLE_AREA_OFFSET: usize = 0x320;
-    #[inline] pub fn visible_area_offset(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_VISIBLE_AREA_OFFSET as u32 } }
-    pub const OFFSET__328: usize = 0x328;
-    #[inline] pub fn _328(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET__328 as u32 } }
-    pub const OFFSET_MAX_BOUND_DISTANCE: usize = 0x330;
-    #[inline] pub fn max_bound_distance(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_MAX_BOUND_DISTANCE as u32 } }
-    pub const OFFSET_DESTROY_BOUND_DISTANCE_TOP: usize = 0x338;
-    #[inline] pub unsafe fn destroy_bound_distance_top(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_TOP) }
-    #[inline] pub unsafe fn set_destroy_bound_distance_top(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_TOP, v) }
-    pub const OFFSET_DESTROY_BOUND_DISTANCE_BOTTOM: usize = 0x33c;
-    #[inline] pub unsafe fn destroy_bound_distance_bottom(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_BOTTOM) }
-    #[inline] pub unsafe fn set_destroy_bound_distance_bottom(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_BOTTOM, v) }
-    pub const OFFSET_DESTROY_BOUND_DISTANCE_LEFT: usize = 0x340;
-    #[inline] pub unsafe fn destroy_bound_distance_left(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_LEFT) }
-    #[inline] pub unsafe fn set_destroy_bound_distance_left(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_LEFT, v) }
-    pub const OFFSET_DESTROY_BOUND_DISTANCE_RIGHT: usize = 0x344;
-    #[inline] pub unsafe fn destroy_bound_distance_right(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_RIGHT) }
-    #[inline] pub unsafe fn set_destroy_bound_distance_right(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_DESTROY_BOUND_DISTANCE_RIGHT, v) }
-    pub const OFFSET_DIRECTION: usize = 0x348;
-    #[inline] pub unsafe fn direction(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_DIRECTION) }
-    #[inline] pub unsafe fn set_direction(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_DIRECTION, v) }
-    pub const OFFSET_ZONE_ID: usize = 0x349;
-    #[inline] pub unsafe fn zone_id(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_ZONE_ID) }
-    #[inline] pub unsafe fn set_zone_id(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_ZONE_ID, v) }
-    pub const OFFSET__34_A: usize = 0x34a;
-    #[inline] pub unsafe fn _34_a(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET__34_A) }
-    #[inline] pub unsafe fn set__34_a(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET__34_A, v) }
-    pub const OFFSET_P_BYTE_STORAGE: usize = 0x34c;
-    #[inline] pub fn p_byte_storage(&self) -> u32 { self.addr + Self::OFFSET_P_BYTE_STORAGE as u32 }
-    pub const OFFSET_P_SHORT_STORAGE: usize = 0x350;
-    #[inline] pub fn p_short_storage(&self) -> u32 { self.addr + Self::OFFSET_P_SHORT_STORAGE as u32 }
-    pub const OFFSET_EVENT_NUMS: usize = 0x354;
-    #[inline] pub fn event_nums_addr(&self) -> u32 { self.addr + Self::OFFSET_EVENT_NUMS as u32 }
-    pub const OFFSET_EVENT_MASK: usize = 0x358;
-    #[inline] pub fn event_mask_addr(&self) -> u32 { self.addr + Self::OFFSET_EVENT_MASK as u32 }
-    pub const OFFSET__360: usize = 0x360;
-    #[inline] pub unsafe fn _360(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET__360) }
-    #[inline] pub unsafe fn set__360(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET__360, v) }
-    pub const OFFSET_SPAWN_INFO_FLAGS: usize = 0x364;
-    #[inline] pub unsafe fn spawn_info_flags(&self) -> u16 { platform::read_u16(self.addr as usize + Self::OFFSET_SPAWN_INFO_FLAGS) }
-    #[inline] pub unsafe fn set_spawn_info_flags(&self, v: u16) { platform::write_u16(self.addr as usize + Self::OFFSET_SPAWN_INFO_FLAGS, v) }
-    pub const OFFSET_KILL_IF_DISABLED: usize = 0x366;
-    #[inline] pub unsafe fn kill_if_disabled(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_KILL_IF_DISABLED) != 0 }
-    #[inline] pub unsafe fn set_kill_if_disabled(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_KILL_IF_DISABLED, if v { 1 } else { 0 }) }
-    pub const OFFSET_EATER_ACTOR_ID: usize = 0x368;
-    #[inline] pub unsafe fn eater_actor_id(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_EATER_ACTOR_ID) }
-    #[inline] pub unsafe fn set_eater_actor_id(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_EATER_ACTOR_ID, v) }
-    pub const OFFSET_EAT_STATE: usize = 0x36c;
-    #[inline] pub unsafe fn eat_state(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_EAT_STATE) }
-    #[inline] pub unsafe fn set_eat_state(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_EAT_STATE, v) }
-    pub const OFFSET_EAT_SPIT_TYPE: usize = 0x36d;
-    #[inline] pub unsafe fn eat_spit_type(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_EAT_SPIT_TYPE) }
-    #[inline] pub unsafe fn set_eat_spit_type(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_EAT_SPIT_TYPE, v) }
-    pub const OFFSET_SCALE_BEFORE_BEING_EATEN: usize = 0x370;
-    #[inline] pub fn scale_before_being_eaten(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_SCALE_BEFORE_BEING_EATEN as u32 } }
-    pub const OFFSET_SCORE_TYPE: usize = 0x37c;
-    #[inline] pub unsafe fn score_type(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_SCORE_TYPE) }
-    #[inline] pub unsafe fn set_score_type(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_SCORE_TYPE, v) }
-    pub const OFFSET_LOOK_AT_MODE: usize = 0x380;
-    #[inline] pub unsafe fn look_at_mode(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_LOOK_AT_MODE) }
-    #[inline] pub unsafe fn set_look_at_mode(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_LOOK_AT_MODE, v) }
-    pub const OFFSET__384: usize = 0x384;
-    #[inline] pub unsafe fn _384(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET__384) }
-    #[inline] pub unsafe fn set__384(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET__384, v) }
-    pub const OFFSET_P_CARRY_PROPEL_ACTOR: usize = 0x388;
-    #[inline] pub fn p_carry_propel_actor(&self) -> u32 { self.addr + Self::OFFSET_P_CARRY_PROPEL_ACTOR as u32 }
+    pub const OFFSET_UNK_128: usize = 0x128;
+    #[inline] pub fn unk_128_addr(&self) -> u32 { self.addr + Self::OFFSET_UNK_128 as u32 }
+    pub const OFFSET_UNK_12C: usize = 0x12c;
+    #[inline] pub unsafe fn unk_12c(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_12C) }
+    #[inline] pub unsafe fn set_unk_12c(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_12C, v) }
+    pub const OFFSET_UNK_130: usize = 0x130;
+    #[inline] pub unsafe fn unk_130(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_130) }
+    #[inline] pub unsafe fn set_unk_130(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_130, v) }
+    pub const OFFSET_UNK_134: usize = 0x134;
+    #[inline] pub unsafe fn unk_134(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_134) }
+    #[inline] pub unsafe fn set_unk_134(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_134, v) }
+    pub const OFFSET_UNK_138: usize = 0x138;
+    #[inline] pub unsafe fn unk_138(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_138) }
+    #[inline] pub unsafe fn set_unk_138(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_138, v) }
+    pub const OFFSET_UNK_13C: usize = 0x13c;
+    #[inline] pub unsafe fn unk_13c(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_13C) }
+    #[inline] pub unsafe fn set_unk_13c(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_13C, v) }
+    pub const OFFSET_UNK_140: usize = 0x140;
+    #[inline] pub unsafe fn unk_140(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_UNK_140) }
+    #[inline] pub unsafe fn set_unk_140(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_UNK_140, v) }
+    pub const OFFSET_UNK_144: usize = 0x144;
+    #[inline] pub unsafe fn unk_144(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_144) }
+    #[inline] pub unsafe fn set_unk_144(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_144, v) }
+    pub const OFFSET_CC: usize = 0x148;
+    #[inline] pub fn cc_addr(&self) -> u32 { self.addr + Self::OFFSET_CC as u32 }
+    pub const OFFSET_BC: usize = 0x1ec;
+    #[inline] pub fn bc_addr(&self) -> u32 { self.addr + Self::OFFSET_BC as u32 }
+    pub const OFFSET_RC: usize = 0x2dc;
+    #[inline] pub fn rc_addr(&self) -> u32 { self.addr + Self::OFFSET_RC as u32 }
+    pub const OFFSET_UNK_310: usize = 0x310;
+    #[inline] pub fn unk_310(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_UNK_310 as u32 } }
+    pub const OFFSET_UNK_318: usize = 0x318;
+    #[inline] pub fn unk_318(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_UNK_318 as u32 } }
+    pub const OFFSET_UNK_320: usize = 0x320;
+    #[inline] pub fn unk_320(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_UNK_320 as u32 } }
+    pub const OFFSET_UNK_328: usize = 0x328;
+    #[inline] pub fn unk_328(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_UNK_328 as u32 } }
+    pub const OFFSET_UNK_330: usize = 0x330;
+    #[inline] pub fn unk_330(&self) -> Vec2 { Vec2 { addr: self.addr + Self::OFFSET_UNK_330 as u32 } }
+    pub const OFFSET_UNK_338: usize = 0x338;
+    #[inline] pub unsafe fn unk_338(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_UNK_338) }
+    #[inline] pub unsafe fn set_unk_338(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_UNK_338, v) }
+    pub const OFFSET_UNK_33C: usize = 0x33c;
+    #[inline] pub unsafe fn unk_33c(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_UNK_33C) }
+    #[inline] pub unsafe fn set_unk_33c(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_UNK_33C, v) }
+    pub const OFFSET_UNK_340: usize = 0x340;
+    #[inline] pub unsafe fn unk_340(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_UNK_340) }
+    #[inline] pub unsafe fn set_unk_340(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_UNK_340, v) }
+    pub const OFFSET_UNK_344: usize = 0x344;
+    #[inline] pub unsafe fn unk_344(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_UNK_344) }
+    #[inline] pub unsafe fn set_unk_344(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_UNK_344, v) }
+    pub const OFFSET_UNK_348: usize = 0x348;
+    #[inline] pub unsafe fn unk_348(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_348) }
+    #[inline] pub unsafe fn set_unk_348(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_348, v) }
+    pub const OFFSET_UNK_349: usize = 0x349;
+    #[inline] pub unsafe fn unk_349(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_349) }
+    #[inline] pub unsafe fn set_unk_349(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_349, v) }
+    pub const OFFSET_UNK_34A: usize = 0x34a;
+    #[inline] pub unsafe fn unk_34a(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_34A) }
+    #[inline] pub unsafe fn set_unk_34a(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_34A, v) }
+    pub const OFFSET_UNK_34C: usize = 0x34c;
+    #[inline] pub fn unk_34c(&self) -> u32 { self.addr + Self::OFFSET_UNK_34C as u32 }
+    pub const OFFSET_UNK_350: usize = 0x350;
+    #[inline] pub fn unk_350(&self) -> u32 { self.addr + Self::OFFSET_UNK_350 as u32 }
+    pub const OFFSET_UNK_354: usize = 0x354;
+    #[inline] pub fn unk_354_addr(&self) -> u32 { self.addr + Self::OFFSET_UNK_354 as u32 }
+    pub const OFFSET_UNK_358: usize = 0x358;
+    #[inline] pub fn unk_358_addr(&self) -> u32 { self.addr + Self::OFFSET_UNK_358 as u32 }
+    pub const OFFSET_UNK_360: usize = 0x360;
+    #[inline] pub unsafe fn unk_360(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_360) }
+    #[inline] pub unsafe fn set_unk_360(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_360, v) }
+    pub const OFFSET_UNK_364: usize = 0x364;
+    #[inline] pub unsafe fn unk_364(&self) -> u16 { platform::read_u16(self.addr as usize + Self::OFFSET_UNK_364) }
+    #[inline] pub unsafe fn set_unk_364(&self, v: u16) { platform::write_u16(self.addr as usize + Self::OFFSET_UNK_364, v) }
+    pub const OFFSET_BLOCK_HIT_PENDING: usize = 0x366;
+    #[inline] pub unsafe fn block_hit_pending(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_BLOCK_HIT_PENDING) != 0 }
+    #[inline] pub unsafe fn set_block_hit_pending(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_BLOCK_HIT_PENDING, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_368: usize = 0x368;
+    #[inline] pub unsafe fn unk_368(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_368) }
+    #[inline] pub unsafe fn set_unk_368(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_368, v) }
+    pub const OFFSET_UNK_36C: usize = 0x36c;
+    #[inline] pub unsafe fn unk_36c(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_36C) }
+    #[inline] pub unsafe fn set_unk_36c(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_36C, v) }
+    pub const OFFSET_UNK_36D: usize = 0x36d;
+    #[inline] pub unsafe fn unk_36d(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_36D) }
+    #[inline] pub unsafe fn set_unk_36d(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_36D, v) }
+    pub const OFFSET_UNK_370: usize = 0x370;
+    #[inline] pub fn unk_370(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_370 as u32 } }
+    pub const OFFSET_UNK_37C: usize = 0x37c;
+    #[inline] pub unsafe fn unk_37c(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_37C) }
+    #[inline] pub unsafe fn set_unk_37c(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_37C, v) }
+    pub const OFFSET_UNK_380: usize = 0x380;
+    #[inline] pub unsafe fn unk_380(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_380) }
+    #[inline] pub unsafe fn set_unk_380(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_380, v) }
+    pub const OFFSET_UNK_384: usize = 0x384;
+    #[inline] pub unsafe fn unk_384(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_384) }
+    #[inline] pub unsafe fn set_unk_384(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_384, v) }
+    pub const OFFSET_UNK_388: usize = 0x388;
+    #[inline] pub fn unk_388(&self) -> u32 { self.addr + Self::OFFSET_UNK_388 as u32 }
     pub const OFFSET_KIND: usize = 0x38c;
     #[inline] pub unsafe fn kind(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_KIND) }
     #[inline] pub unsafe fn set_kind(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_KIND, v) }
-    pub const OFFSET_PLAYER_NO: usize = 0x38d;
-    #[inline] pub unsafe fn player_no(&self) -> i8 { platform::read_u8(self.addr as usize + Self::OFFSET_PLAYER_NO) as i8 }
-    #[inline] pub unsafe fn set_player_no(&self, v: i8) { platform::write_u8(self.addr as usize + Self::OFFSET_PLAYER_NO, v as u8) }
-    pub const OFFSET_DISABLE_MASK: usize = 0x38e;
-    #[inline] pub unsafe fn disable_mask(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_DISABLE_MASK) }
-    #[inline] pub unsafe fn set_disable_mask(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_DISABLE_MASK, v) }
-    pub const OFFSET_LAYER_ID: usize = 0x38f;
-    #[inline] pub unsafe fn layer_id(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_LAYER_ID) }
-    #[inline] pub unsafe fn set_layer_id(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_LAYER_ID, v) }
-    pub const OFFSET_DELETE_FOREVER: usize = 0x390;
-    #[inline] pub unsafe fn delete_forever(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_DELETE_FOREVER) != 0 }
-    #[inline] pub unsafe fn set_delete_forever(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_DELETE_FOREVER, if v { 1 } else { 0 }) }
-    pub const OFFSET_APPEARS_ON_BACKFENCE: usize = 0x391;
-    #[inline] pub unsafe fn appears_on_backfence(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_APPEARS_ON_BACKFENCE) != 0 }
-    #[inline] pub unsafe fn set_appears_on_backfence(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_APPEARS_ON_BACKFENCE, if v { 1 } else { 0 }) }
-    pub const OFFSET__392: usize = 0x392;
-    #[inline] pub fn _392_addr(&self) -> u32 { self.addr + Self::OFFSET__392 as u32 }
+    pub const OFFSET_UNK_38D: usize = 0x38d;
+    #[inline] pub unsafe fn unk_38d(&self) -> i8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_38D) as i8 }
+    #[inline] pub unsafe fn set_unk_38d(&self, v: i8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_38D, v as u8) }
+    pub const OFFSET_EXEC_STOP_MASK: usize = 0x38e;
+    #[inline] pub unsafe fn exec_stop_mask(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_EXEC_STOP_MASK) }
+    #[inline] pub unsafe fn set_exec_stop_mask(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_EXEC_STOP_MASK, v) }
+    pub const OFFSET_UNK_38F: usize = 0x38f;
+    #[inline] pub unsafe fn unk_38f(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_38F) }
+    #[inline] pub unsafe fn set_unk_38f(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_38F, v) }
+    pub const OFFSET_UNK_390: usize = 0x390;
+    #[inline] pub unsafe fn unk_390(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_390) != 0 }
+    #[inline] pub unsafe fn set_unk_390(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_390, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_391: usize = 0x391;
+    #[inline] pub unsafe fn unk_391(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_391) != 0 }
+    #[inline] pub unsafe fn set_unk_391(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_391, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_392: usize = 0x392;
+    #[inline] pub fn unk_392_addr(&self) -> u32 { self.addr + Self::OFFSET_UNK_392 as u32 }
 }
 
 /// `dBaseActor_c` : `dBase_c`
@@ -198,52 +198,52 @@ impl DBaseActor {
     pub const OFFSET_VPTR: usize = 0x60;
     #[inline] pub fn addr(&self) -> u32 { self.addr }
     #[inline] pub fn as_d_base(&self) -> DBase { DBase { addr: self.addr } }
-    pub const OFFSET_LINK_ACTOR: usize = 0x70;
-    #[inline] pub fn link_actor_addr(&self) -> u32 { self.addr + Self::OFFSET_LINK_ACTOR as u32 }
+    pub const OFFSET_ACTOR_LINK: usize = 0x70;
+    #[inline] pub fn actor_link_addr(&self) -> u32 { self.addr + Self::OFFSET_ACTOR_LINK as u32 }
     pub const OFFSET_MATRIX: usize = 0x7c;
     #[inline] pub fn matrix_addr(&self) -> u32 { self.addr + Self::OFFSET_MATRIX as u32 }
     pub const OFFSET_POS: usize = 0xac;
     #[inline] pub fn pos(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_POS as u32 } }
-    pub const OFFSET_LAST_POS: usize = 0xb8;
-    #[inline] pub fn last_pos(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_LAST_POS as u32 } }
-    pub const OFFSET_POS_DELTA: usize = 0xc4;
-    #[inline] pub fn pos_delta(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_POS_DELTA as u32 } }
-    pub const OFFSET_CENTER_OFFS: usize = 0xd0;
-    #[inline] pub fn center_offs(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_CENTER_OFFS as u32 } }
-    pub const OFFSET_SCALE: usize = 0xdc;
-    #[inline] pub fn scale(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_SCALE as u32 } }
+    pub const OFFSET_UNK_B8: usize = 0xb8;
+    #[inline] pub fn unk_b8(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_B8 as u32 } }
+    pub const OFFSET_UNK_C4: usize = 0xc4;
+    #[inline] pub fn unk_c4(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_C4 as u32 } }
+    pub const OFFSET_CENTER_OFFSET: usize = 0xd0;
+    #[inline] pub fn center_offset(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_CENTER_OFFSET as u32 } }
+    pub const OFFSET_UNK_DC: usize = 0xdc;
+    #[inline] pub fn unk_dc(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_DC as u32 } }
     pub const OFFSET_SPEED: usize = 0xe8;
     #[inline] pub fn speed(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_SPEED as u32 } }
-    pub const OFFSET_SPEED_MAX: usize = 0xf4;
-    #[inline] pub fn speed_max(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_SPEED_MAX as u32 } }
+    pub const OFFSET_SPEED_TARGET: usize = 0xf4;
+    #[inline] pub fn speed_target(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_SPEED_TARGET as u32 } }
     pub const OFFSET_ANGLE: usize = 0x100;
     #[inline] pub fn angle(&self) -> Ang3 { Ang3 { addr: self.addr + Self::OFFSET_ANGLE as u32 } }
-    pub const OFFSET_ANGLE3_D: usize = 0x106;
-    #[inline] pub fn angle3_d(&self) -> Ang3 { Ang3 { addr: self.addr + Self::OFFSET_ANGLE3_D as u32 } }
-    pub const OFFSET_SPEED_F: usize = 0x10c;
-    #[inline] pub unsafe fn speed_f(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_SPEED_F) }
-    #[inline] pub unsafe fn set_speed_f(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_SPEED_F, v) }
-    pub const OFFSET_MAX_SPEED_F: usize = 0x110;
-    #[inline] pub unsafe fn max_speed_f(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_MAX_SPEED_F) }
-    #[inline] pub unsafe fn set_max_speed_f(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_MAX_SPEED_F, v) }
-    pub const OFFSET_ACCEL_Y: usize = 0x114;
-    #[inline] pub unsafe fn accel_y(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_ACCEL_Y) }
-    #[inline] pub unsafe fn set_accel_y(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_ACCEL_Y, v) }
-    pub const OFFSET_MAX_FALL_SPEED: usize = 0x118;
-    #[inline] pub unsafe fn max_fall_speed(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_MAX_FALL_SPEED) }
-    #[inline] pub unsafe fn set_max_fall_speed(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_MAX_FALL_SPEED, v) }
-    pub const OFFSET_ACCEL_F: usize = 0x11c;
-    #[inline] pub unsafe fn accel_f(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_ACCEL_F) }
-    #[inline] pub unsafe fn set_accel_f(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_ACCEL_F, v) }
-    pub const OFFSET_ACTOR_PROPERTIES: usize = 0x120;
-    #[inline] pub unsafe fn actor_properties(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_ACTOR_PROPERTIES) }
-    #[inline] pub unsafe fn set_actor_properties(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_ACTOR_PROPERTIES, v) }
-    pub const OFFSET_VISIBLE: usize = 0x124;
-    #[inline] pub unsafe fn visible(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_VISIBLE) != 0 }
-    #[inline] pub unsafe fn set_visible(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_VISIBLE, if v { 1 } else { 0 }) }
-    pub const OFFSET__125: usize = 0x125;
-    #[inline] pub unsafe fn _125(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET__125) }
-    #[inline] pub unsafe fn set__125(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET__125, v) }
+    pub const OFFSET_MOVE_ANGLE: usize = 0x106;
+    #[inline] pub fn move_angle(&self) -> Ang3 { Ang3 { addr: self.addr + Self::OFFSET_MOVE_ANGLE as u32 } }
+    pub const OFFSET_FORWARD_SPEED: usize = 0x10c;
+    #[inline] pub unsafe fn forward_speed(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_FORWARD_SPEED) }
+    #[inline] pub unsafe fn set_forward_speed(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_FORWARD_SPEED, v) }
+    pub const OFFSET_FORWARD_SPEED_TARGET: usize = 0x110;
+    #[inline] pub unsafe fn forward_speed_target(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_FORWARD_SPEED_TARGET) }
+    #[inline] pub unsafe fn set_forward_speed_target(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_FORWARD_SPEED_TARGET, v) }
+    pub const OFFSET_GRAVITY: usize = 0x114;
+    #[inline] pub unsafe fn gravity(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_GRAVITY) }
+    #[inline] pub unsafe fn set_gravity(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_GRAVITY, v) }
+    pub const OFFSET_FALL_SPEED_LIMIT: usize = 0x118;
+    #[inline] pub unsafe fn fall_speed_limit(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_FALL_SPEED_LIMIT) }
+    #[inline] pub unsafe fn set_fall_speed_limit(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_FALL_SPEED_LIMIT, v) }
+    pub const OFFSET_ACCEL: usize = 0x11c;
+    #[inline] pub unsafe fn accel(&self) -> f32 { platform::read_f32(self.addr as usize + Self::OFFSET_ACCEL) }
+    #[inline] pub unsafe fn set_accel(&self, v: f32) { platform::write_f32(self.addr as usize + Self::OFFSET_ACCEL, v) }
+    pub const OFFSET_FLAGS_120: usize = 0x120;
+    #[inline] pub unsafe fn flags_120(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_FLAGS_120) }
+    #[inline] pub unsafe fn set_flags_120(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_FLAGS_120, v) }
+    pub const OFFSET_UNK_124: usize = 0x124;
+    #[inline] pub unsafe fn unk_124(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_124) != 0 }
+    #[inline] pub unsafe fn set_unk_124(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_124, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_125: usize = 0x125;
+    #[inline] pub unsafe fn unk_125(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_125) }
+    #[inline] pub unsafe fn set_unk_125(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_125, v) }
 }
 
 /// `dBase_c` : `fBase_c`
@@ -256,10 +256,10 @@ impl DBase {
     #[inline] pub fn as_f_base(&self) -> FBase { FBase { addr: self.addr } }
     pub const OFFSET_OWNER_SET: usize = 0x64;
     #[inline] pub fn owner_set_addr(&self) -> u32 { self.addr + Self::OFFSET_OWNER_SET as u32 }
-    pub const OFFSET_P_KIND_STRING: usize = 0x68;
-    #[inline] pub fn p_kind_string(&self) -> u32 { self.addr + Self::OFFSET_P_KIND_STRING as u32 }
-    pub const OFFSET_P_NAME_STRING: usize = 0x6c;
-    #[inline] pub fn p_name_string(&self) -> u32 { self.addr + Self::OFFSET_P_NAME_STRING as u32 }
+    pub const OFFSET_KIND_STRING: usize = 0x68;
+    #[inline] pub fn kind_string(&self) -> u32 { self.addr + Self::OFFSET_KIND_STRING as u32 }
+    pub const OFFSET_PROFILE_NAME_STRING: usize = 0x6c;
+    #[inline] pub fn profile_name_string(&self) -> u32 { self.addr + Self::OFFSET_PROFILE_NAME_STRING as u32 }
 }
 
 /// `dEn_c` : `dActorMultiState_c`
@@ -271,41 +271,41 @@ impl DEn {
     #[inline] pub fn as_d_actor_multi_state(&self) -> DActorMultiState { DActorMultiState { addr: self.addr } }
     pub const OFFSET_DEATH_INFO: usize = 0x414;
     #[inline] pub fn death_info_addr(&self) -> u32 { self.addr + Self::OFFSET_DEATH_INFO as u32 }
-    pub const OFFSET_CC_VALUE: usize = 0x434;
-    #[inline] pub unsafe fn cc_value(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_CC_VALUE) }
-    #[inline] pub unsafe fn set_cc_value(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_CC_VALUE, v) }
-    pub const OFFSET__24: usize = 0x438;
-    #[inline] pub unsafe fn _24(&self) -> u16 { platform::read_u16(self.addr as usize + Self::OFFSET__24) }
-    #[inline] pub unsafe fn set__24(&self, v: u16) { platform::write_u16(self.addr as usize + Self::OFFSET__24, v) }
-    pub const OFFSET_PAD1: usize = 0x43a;
-    #[inline] pub fn pad1_addr(&self) -> u32 { self.addr + Self::OFFSET_PAD1 as u32 }
-    pub const OFFSET_FOOT_PUSH: usize = 0x440;
-    #[inline] pub fn foot_push(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_FOOT_PUSH as u32 } }
-    pub const OFFSET_FOOT_PUSH2: usize = 0x44c;
-    #[inline] pub fn foot_push2(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_FOOT_PUSH2 as u32 } }
-    pub const OFFSET_DEATH_FALL_DIRECTION: usize = 0x458;
-    #[inline] pub unsafe fn death_fall_direction(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_DEATH_FALL_DIRECTION) }
-    #[inline] pub unsafe fn set_death_fall_direction(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_DEATH_FALL_DIRECTION, v) }
-    pub const OFFSET_ICE_DEATH_DIRECTION: usize = 0x459;
-    #[inline] pub unsafe fn ice_death_direction(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_ICE_DEATH_DIRECTION) }
-    #[inline] pub unsafe fn set_ice_death_direction(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_ICE_DEATH_DIRECTION, v) }
-    pub const OFFSET_KILLED: usize = 0x45a;
-    #[inline] pub unsafe fn killed(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_KILLED) != 0 }
-    #[inline] pub unsafe fn set_killed(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_KILLED, if v { 1 } else { 0 }) }
-    pub const OFFSET_PAD2: usize = 0x45b;
-    #[inline] pub unsafe fn pad2(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_PAD2) }
-    #[inline] pub unsafe fn set_pad2(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_PAD2, v) }
-    pub const OFFSET_FOOT_ATTR3: usize = 0x45c;
-    #[inline] pub unsafe fn foot_attr3(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_FOOT_ATTR3) != 0 }
-    #[inline] pub unsafe fn set_foot_attr3(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_FOOT_ATTR3, if v { 1 } else { 0 }) }
-    pub const OFFSET_IN_LIQUID: usize = 0x45d;
-    #[inline] pub unsafe fn in_liquid(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_IN_LIQUID) != 0 }
-    #[inline] pub unsafe fn set_in_liquid(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_IN_LIQUID, if v { 1 } else { 0 }) }
-    pub const OFFSET_FOOT_ATTR1: usize = 0x45e;
-    #[inline] pub unsafe fn foot_attr1(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_FOOT_ATTR1) != 0 }
-    #[inline] pub unsafe fn set_foot_attr1(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_FOOT_ATTR1, if v { 1 } else { 0 }) }
-    pub const OFFSET_PAD3: usize = 0x45f;
-    #[inline] pub fn pad3_addr(&self) -> u32 { self.addr + Self::OFFSET_PAD3 as u32 }
+    pub const OFFSET_UNK_434: usize = 0x434;
+    #[inline] pub unsafe fn unk_434(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNK_434) }
+    #[inline] pub unsafe fn set_unk_434(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNK_434, v) }
+    pub const OFFSET_UNK_438: usize = 0x438;
+    #[inline] pub unsafe fn unk_438(&self) -> u16 { platform::read_u16(self.addr as usize + Self::OFFSET_UNK_438) }
+    #[inline] pub unsafe fn set_unk_438(&self, v: u16) { platform::write_u16(self.addr as usize + Self::OFFSET_UNK_438, v) }
+    pub const OFFSET_UNK_43A: usize = 0x43a;
+    #[inline] pub fn unk_43a_addr(&self) -> u32 { self.addr + Self::OFFSET_UNK_43A as u32 }
+    pub const OFFSET_UNK_440: usize = 0x440;
+    #[inline] pub fn unk_440(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_440 as u32 } }
+    pub const OFFSET_UNK_44C: usize = 0x44c;
+    #[inline] pub fn unk_44c(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_44C as u32 } }
+    pub const OFFSET_UNK_458: usize = 0x458;
+    #[inline] pub unsafe fn unk_458(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_458) }
+    #[inline] pub unsafe fn set_unk_458(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_458, v) }
+    pub const OFFSET_UNK_459: usize = 0x459;
+    #[inline] pub unsafe fn unk_459(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_459) }
+    #[inline] pub unsafe fn set_unk_459(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_459, v) }
+    pub const OFFSET_UNK_45A: usize = 0x45a;
+    #[inline] pub unsafe fn unk_45a(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45A) != 0 }
+    #[inline] pub unsafe fn set_unk_45a(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45A, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_45B: usize = 0x45b;
+    #[inline] pub unsafe fn unk_45b(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45B) }
+    #[inline] pub unsafe fn set_unk_45b(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45B, v) }
+    pub const OFFSET_UNK_45C: usize = 0x45c;
+    #[inline] pub unsafe fn unk_45c(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45C) != 0 }
+    #[inline] pub unsafe fn set_unk_45c(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45C, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_45D: usize = 0x45d;
+    #[inline] pub unsafe fn unk_45d(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45D) != 0 }
+    #[inline] pub unsafe fn set_unk_45d(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45D, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_45E: usize = 0x45e;
+    #[inline] pub unsafe fn unk_45e(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45E) != 0 }
+    #[inline] pub unsafe fn set_unk_45e(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45E, if v { 1 } else { 0 }) }
+    pub const OFFSET_UNK_45F: usize = 0x45f;
+    #[inline] pub fn unk_45f_addr(&self) -> u32 { self.addr + Self::OFFSET_UNK_45F as u32 }
     pub const OFFSET_BOYO_MNG: usize = 0x464;
     #[inline] pub fn boyo_mng_addr(&self) -> u32 { self.addr + Self::OFFSET_BOYO_MNG as u32 }
     pub const OFFSET_ICE_MNG: usize = 0x47c;
@@ -319,35 +319,35 @@ impl FBase {
     pub const SIZE: usize = 0x64;
     pub const OFFSET_VPTR: usize = 0x60;
     #[inline] pub fn addr(&self) -> u32 { self.addr }
-    pub const OFFSET_UNIQUE_ID: usize = 0x0;
-    #[inline] pub unsafe fn unique_id(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_UNIQUE_ID) }
-    #[inline] pub unsafe fn set_unique_id(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_UNIQUE_ID, v) }
-    pub const OFFSET_PARAM: usize = 0x4;
-    #[inline] pub unsafe fn param(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_PARAM) }
-    #[inline] pub unsafe fn set_param(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_PARAM, v) }
-    pub const OFFSET_PROF_NAME: usize = 0x8;
-    #[inline] pub unsafe fn prof_name(&self) -> u16 { platform::read_u16(self.addr as usize + Self::OFFSET_PROF_NAME) }
-    #[inline] pub unsafe fn set_prof_name(&self, v: u16) { platform::write_u16(self.addr as usize + Self::OFFSET_PROF_NAME, v) }
+    pub const OFFSET_ID: usize = 0x0;
+    #[inline] pub unsafe fn id(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_ID) }
+    #[inline] pub unsafe fn set_id(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_ID, v) }
+    pub const OFFSET_PARAMS: usize = 0x4;
+    #[inline] pub unsafe fn params(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_PARAMS) }
+    #[inline] pub unsafe fn set_params(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_PARAMS, v) }
+    pub const OFFSET_PROFILE_NAME: usize = 0x8;
+    #[inline] pub unsafe fn profile_name(&self) -> u16 { platform::read_u16(self.addr as usize + Self::OFFSET_PROFILE_NAME) }
+    #[inline] pub unsafe fn set_profile_name(&self, v: u16) { platform::write_u16(self.addr as usize + Self::OFFSET_PROFILE_NAME, v) }
     pub const OFFSET_LIFECYCLE_STATE: usize = 0xa;
     #[inline] pub unsafe fn lifecycle_state(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_LIFECYCLE_STATE) }
     #[inline] pub unsafe fn set_lifecycle_state(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_LIFECYCLE_STATE, v) }
-    pub const OFFSET_DELETE_REQUESTED: usize = 0xb;
-    #[inline] pub unsafe fn delete_requested(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_DELETE_REQUESTED) != 0 }
-    #[inline] pub unsafe fn set_delete_requested(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_DELETE_REQUESTED, if v { 1 } else { 0 }) }
-    pub const OFFSET_DEFER_EXECUTE: usize = 0xc;
-    #[inline] pub unsafe fn defer_execute(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_DEFER_EXECUTE) != 0 }
-    #[inline] pub unsafe fn set_defer_execute(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_DEFER_EXECUTE, if v { 1 } else { 0 }) }
-    pub const OFFSET_DEFER_RETRY_CREATE: usize = 0xd;
-    #[inline] pub unsafe fn defer_retry_create(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_DEFER_RETRY_CREATE) != 0 }
-    #[inline] pub unsafe fn set_defer_retry_create(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_DEFER_RETRY_CREATE, if v { 1 } else { 0 }) }
+    pub const OFFSET_DELETE_REQUEST: usize = 0xb;
+    #[inline] pub unsafe fn delete_request(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_DELETE_REQUEST) != 0 }
+    #[inline] pub unsafe fn set_delete_request(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_DELETE_REQUEST, if v { 1 } else { 0 }) }
+    pub const OFFSET_UPDATE_REQUEST: usize = 0xc;
+    #[inline] pub unsafe fn update_request(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UPDATE_REQUEST) != 0 }
+    #[inline] pub unsafe fn set_update_request(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UPDATE_REQUEST, if v { 1 } else { 0 }) }
+    pub const OFFSET_CREATE_REQUEST: usize = 0xd;
+    #[inline] pub unsafe fn create_request(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_CREATE_REQUEST) != 0 }
+    #[inline] pub unsafe fn set_create_request(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_CREATE_REQUEST, if v { 1 } else { 0 }) }
     pub const OFFSET_GROUP_TYPE: usize = 0xe;
     #[inline] pub unsafe fn group_type(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_GROUP_TYPE) }
     #[inline] pub unsafe fn set_group_type(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_GROUP_TYPE, v) }
     pub const OFFSET_PROC_CONTROL: usize = 0xf;
     #[inline] pub unsafe fn proc_control(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_PROC_CONTROL) }
     #[inline] pub unsafe fn set_proc_control(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_PROC_CONTROL, v) }
-    pub const OFFSET_MNG: usize = 0x10;
-    #[inline] pub fn mng_addr(&self) -> u32 { self.addr + Self::OFFSET_MNG as u32 }
+    pub const OFFSET_MANAGER: usize = 0x10;
+    #[inline] pub fn manager_addr(&self) -> u32 { self.addr + Self::OFFSET_MANAGER as u32 }
     pub const OFFSET_HEAP: usize = 0x5c;
     #[inline] pub fn heap(&self) -> u32 { self.addr + Self::OFFSET_HEAP as u32 }
 }
@@ -371,101 +371,101 @@ mod tests {
     #[test]
     fn d_actor_c_layout() {
         assert_eq!(DActor::SIZE, 0x394);
-        assert_eq!(DActor::OFFSET_CARRYING_PLAYER_ID, 0x128);
-        assert_eq!(DActor::OFFSET_CARRYING_FLAGS, 0x12c);
-        assert_eq!(DActor::OFFSET_CARRYING_DIRECTION, 0x130);
-        assert_eq!(DActor::OFFSET_COMBO_COUNT, 0x134);
-        assert_eq!(DActor::OFFSET__138, 0x138);
-        assert_eq!(DActor::OFFSET__13_C, 0x13c);
-        assert_eq!(DActor::OFFSET__140, 0x140);
-        assert_eq!(DActor::OFFSET__144, 0x144);
-        assert_eq!(DActor::OFFSET_COLLISION_CHECK, 0x148);
-        assert_eq!(DActor::OFFSET_BG_CHECK, 0x1ec);
-        assert_eq!(DActor::OFFSET_RIDE_CHECK, 0x2dc);
-        assert_eq!(DActor::OFFSET__310, 0x310);
-        assert_eq!(DActor::OFFSET_VISIBLE_AREA_SIZE, 0x318);
-        assert_eq!(DActor::OFFSET_VISIBLE_AREA_OFFSET, 0x320);
-        assert_eq!(DActor::OFFSET__328, 0x328);
-        assert_eq!(DActor::OFFSET_MAX_BOUND_DISTANCE, 0x330);
-        assert_eq!(DActor::OFFSET_DESTROY_BOUND_DISTANCE_TOP, 0x338);
-        assert_eq!(DActor::OFFSET_DESTROY_BOUND_DISTANCE_BOTTOM, 0x33c);
-        assert_eq!(DActor::OFFSET_DESTROY_BOUND_DISTANCE_LEFT, 0x340);
-        assert_eq!(DActor::OFFSET_DESTROY_BOUND_DISTANCE_RIGHT, 0x344);
-        assert_eq!(DActor::OFFSET_DIRECTION, 0x348);
-        assert_eq!(DActor::OFFSET_ZONE_ID, 0x349);
-        assert_eq!(DActor::OFFSET__34_A, 0x34a);
-        assert_eq!(DActor::OFFSET_P_BYTE_STORAGE, 0x34c);
-        assert_eq!(DActor::OFFSET_P_SHORT_STORAGE, 0x350);
-        assert_eq!(DActor::OFFSET_EVENT_NUMS, 0x354);
-        assert_eq!(DActor::OFFSET_EVENT_MASK, 0x358);
-        assert_eq!(DActor::OFFSET__360, 0x360);
-        assert_eq!(DActor::OFFSET_SPAWN_INFO_FLAGS, 0x364);
-        assert_eq!(DActor::OFFSET_KILL_IF_DISABLED, 0x366);
-        assert_eq!(DActor::OFFSET_EATER_ACTOR_ID, 0x368);
-        assert_eq!(DActor::OFFSET_EAT_STATE, 0x36c);
-        assert_eq!(DActor::OFFSET_EAT_SPIT_TYPE, 0x36d);
-        assert_eq!(DActor::OFFSET_SCALE_BEFORE_BEING_EATEN, 0x370);
-        assert_eq!(DActor::OFFSET_SCORE_TYPE, 0x37c);
-        assert_eq!(DActor::OFFSET_LOOK_AT_MODE, 0x380);
-        assert_eq!(DActor::OFFSET__384, 0x384);
-        assert_eq!(DActor::OFFSET_P_CARRY_PROPEL_ACTOR, 0x388);
+        assert_eq!(DActor::OFFSET_UNK_128, 0x128);
+        assert_eq!(DActor::OFFSET_UNK_12C, 0x12c);
+        assert_eq!(DActor::OFFSET_UNK_130, 0x130);
+        assert_eq!(DActor::OFFSET_UNK_134, 0x134);
+        assert_eq!(DActor::OFFSET_UNK_138, 0x138);
+        assert_eq!(DActor::OFFSET_UNK_13C, 0x13c);
+        assert_eq!(DActor::OFFSET_UNK_140, 0x140);
+        assert_eq!(DActor::OFFSET_UNK_144, 0x144);
+        assert_eq!(DActor::OFFSET_CC, 0x148);
+        assert_eq!(DActor::OFFSET_BC, 0x1ec);
+        assert_eq!(DActor::OFFSET_RC, 0x2dc);
+        assert_eq!(DActor::OFFSET_UNK_310, 0x310);
+        assert_eq!(DActor::OFFSET_UNK_318, 0x318);
+        assert_eq!(DActor::OFFSET_UNK_320, 0x320);
+        assert_eq!(DActor::OFFSET_UNK_328, 0x328);
+        assert_eq!(DActor::OFFSET_UNK_330, 0x330);
+        assert_eq!(DActor::OFFSET_UNK_338, 0x338);
+        assert_eq!(DActor::OFFSET_UNK_33C, 0x33c);
+        assert_eq!(DActor::OFFSET_UNK_340, 0x340);
+        assert_eq!(DActor::OFFSET_UNK_344, 0x344);
+        assert_eq!(DActor::OFFSET_UNK_348, 0x348);
+        assert_eq!(DActor::OFFSET_UNK_349, 0x349);
+        assert_eq!(DActor::OFFSET_UNK_34A, 0x34a);
+        assert_eq!(DActor::OFFSET_UNK_34C, 0x34c);
+        assert_eq!(DActor::OFFSET_UNK_350, 0x350);
+        assert_eq!(DActor::OFFSET_UNK_354, 0x354);
+        assert_eq!(DActor::OFFSET_UNK_358, 0x358);
+        assert_eq!(DActor::OFFSET_UNK_360, 0x360);
+        assert_eq!(DActor::OFFSET_UNK_364, 0x364);
+        assert_eq!(DActor::OFFSET_BLOCK_HIT_PENDING, 0x366);
+        assert_eq!(DActor::OFFSET_UNK_368, 0x368);
+        assert_eq!(DActor::OFFSET_UNK_36C, 0x36c);
+        assert_eq!(DActor::OFFSET_UNK_36D, 0x36d);
+        assert_eq!(DActor::OFFSET_UNK_370, 0x370);
+        assert_eq!(DActor::OFFSET_UNK_37C, 0x37c);
+        assert_eq!(DActor::OFFSET_UNK_380, 0x380);
+        assert_eq!(DActor::OFFSET_UNK_384, 0x384);
+        assert_eq!(DActor::OFFSET_UNK_388, 0x388);
         assert_eq!(DActor::OFFSET_KIND, 0x38c);
-        assert_eq!(DActor::OFFSET_PLAYER_NO, 0x38d);
-        assert_eq!(DActor::OFFSET_DISABLE_MASK, 0x38e);
-        assert_eq!(DActor::OFFSET_LAYER_ID, 0x38f);
-        assert_eq!(DActor::OFFSET_DELETE_FOREVER, 0x390);
-        assert_eq!(DActor::OFFSET_APPEARS_ON_BACKFENCE, 0x391);
-        assert_eq!(DActor::OFFSET__392, 0x392);
+        assert_eq!(DActor::OFFSET_UNK_38D, 0x38d);
+        assert_eq!(DActor::OFFSET_EXEC_STOP_MASK, 0x38e);
+        assert_eq!(DActor::OFFSET_UNK_38F, 0x38f);
+        assert_eq!(DActor::OFFSET_UNK_390, 0x390);
+        assert_eq!(DActor::OFFSET_UNK_391, 0x391);
+        assert_eq!(DActor::OFFSET_UNK_392, 0x392);
     }
 
     #[test]
     fn d_base_actor_c_layout() {
         assert_eq!(DBaseActor::SIZE, 0x128);
-        assert_eq!(DBaseActor::OFFSET_LINK_ACTOR, 0x70);
+        assert_eq!(DBaseActor::OFFSET_ACTOR_LINK, 0x70);
         assert_eq!(DBaseActor::OFFSET_MATRIX, 0x7c);
         assert_eq!(DBaseActor::OFFSET_POS, 0xac);
-        assert_eq!(DBaseActor::OFFSET_LAST_POS, 0xb8);
-        assert_eq!(DBaseActor::OFFSET_POS_DELTA, 0xc4);
-        assert_eq!(DBaseActor::OFFSET_CENTER_OFFS, 0xd0);
-        assert_eq!(DBaseActor::OFFSET_SCALE, 0xdc);
+        assert_eq!(DBaseActor::OFFSET_UNK_B8, 0xb8);
+        assert_eq!(DBaseActor::OFFSET_UNK_C4, 0xc4);
+        assert_eq!(DBaseActor::OFFSET_CENTER_OFFSET, 0xd0);
+        assert_eq!(DBaseActor::OFFSET_UNK_DC, 0xdc);
         assert_eq!(DBaseActor::OFFSET_SPEED, 0xe8);
-        assert_eq!(DBaseActor::OFFSET_SPEED_MAX, 0xf4);
+        assert_eq!(DBaseActor::OFFSET_SPEED_TARGET, 0xf4);
         assert_eq!(DBaseActor::OFFSET_ANGLE, 0x100);
-        assert_eq!(DBaseActor::OFFSET_ANGLE3_D, 0x106);
-        assert_eq!(DBaseActor::OFFSET_SPEED_F, 0x10c);
-        assert_eq!(DBaseActor::OFFSET_MAX_SPEED_F, 0x110);
-        assert_eq!(DBaseActor::OFFSET_ACCEL_Y, 0x114);
-        assert_eq!(DBaseActor::OFFSET_MAX_FALL_SPEED, 0x118);
-        assert_eq!(DBaseActor::OFFSET_ACCEL_F, 0x11c);
-        assert_eq!(DBaseActor::OFFSET_ACTOR_PROPERTIES, 0x120);
-        assert_eq!(DBaseActor::OFFSET_VISIBLE, 0x124);
-        assert_eq!(DBaseActor::OFFSET__125, 0x125);
+        assert_eq!(DBaseActor::OFFSET_MOVE_ANGLE, 0x106);
+        assert_eq!(DBaseActor::OFFSET_FORWARD_SPEED, 0x10c);
+        assert_eq!(DBaseActor::OFFSET_FORWARD_SPEED_TARGET, 0x110);
+        assert_eq!(DBaseActor::OFFSET_GRAVITY, 0x114);
+        assert_eq!(DBaseActor::OFFSET_FALL_SPEED_LIMIT, 0x118);
+        assert_eq!(DBaseActor::OFFSET_ACCEL, 0x11c);
+        assert_eq!(DBaseActor::OFFSET_FLAGS_120, 0x120);
+        assert_eq!(DBaseActor::OFFSET_UNK_124, 0x124);
+        assert_eq!(DBaseActor::OFFSET_UNK_125, 0x125);
     }
 
     #[test]
     fn d_base_c_layout() {
         assert_eq!(DBase::SIZE, 0x70);
         assert_eq!(DBase::OFFSET_OWNER_SET, 0x64);
-        assert_eq!(DBase::OFFSET_P_KIND_STRING, 0x68);
-        assert_eq!(DBase::OFFSET_P_NAME_STRING, 0x6c);
+        assert_eq!(DBase::OFFSET_KIND_STRING, 0x68);
+        assert_eq!(DBase::OFFSET_PROFILE_NAME_STRING, 0x6c);
     }
 
     #[test]
     fn d_en_c_layout() {
         assert_eq!(DEn::OFFSET_DEATH_INFO, 0x414);
-        assert_eq!(DEn::OFFSET_CC_VALUE, 0x434);
-        assert_eq!(DEn::OFFSET__24, 0x438);
-        assert_eq!(DEn::OFFSET_PAD1, 0x43a);
-        assert_eq!(DEn::OFFSET_FOOT_PUSH, 0x440);
-        assert_eq!(DEn::OFFSET_FOOT_PUSH2, 0x44c);
-        assert_eq!(DEn::OFFSET_DEATH_FALL_DIRECTION, 0x458);
-        assert_eq!(DEn::OFFSET_ICE_DEATH_DIRECTION, 0x459);
-        assert_eq!(DEn::OFFSET_KILLED, 0x45a);
-        assert_eq!(DEn::OFFSET_PAD2, 0x45b);
-        assert_eq!(DEn::OFFSET_FOOT_ATTR3, 0x45c);
-        assert_eq!(DEn::OFFSET_IN_LIQUID, 0x45d);
-        assert_eq!(DEn::OFFSET_FOOT_ATTR1, 0x45e);
-        assert_eq!(DEn::OFFSET_PAD3, 0x45f);
+        assert_eq!(DEn::OFFSET_UNK_434, 0x434);
+        assert_eq!(DEn::OFFSET_UNK_438, 0x438);
+        assert_eq!(DEn::OFFSET_UNK_43A, 0x43a);
+        assert_eq!(DEn::OFFSET_UNK_440, 0x440);
+        assert_eq!(DEn::OFFSET_UNK_44C, 0x44c);
+        assert_eq!(DEn::OFFSET_UNK_458, 0x458);
+        assert_eq!(DEn::OFFSET_UNK_459, 0x459);
+        assert_eq!(DEn::OFFSET_UNK_45A, 0x45a);
+        assert_eq!(DEn::OFFSET_UNK_45B, 0x45b);
+        assert_eq!(DEn::OFFSET_UNK_45C, 0x45c);
+        assert_eq!(DEn::OFFSET_UNK_45D, 0x45d);
+        assert_eq!(DEn::OFFSET_UNK_45E, 0x45e);
+        assert_eq!(DEn::OFFSET_UNK_45F, 0x45f);
         assert_eq!(DEn::OFFSET_BOYO_MNG, 0x464);
         assert_eq!(DEn::OFFSET_ICE_MNG, 0x47c);
     }
@@ -473,16 +473,16 @@ mod tests {
     #[test]
     fn f_base_c_layout() {
         assert_eq!(FBase::SIZE, 0x64);
-        assert_eq!(FBase::OFFSET_UNIQUE_ID, 0x0);
-        assert_eq!(FBase::OFFSET_PARAM, 0x4);
-        assert_eq!(FBase::OFFSET_PROF_NAME, 0x8);
+        assert_eq!(FBase::OFFSET_ID, 0x0);
+        assert_eq!(FBase::OFFSET_PARAMS, 0x4);
+        assert_eq!(FBase::OFFSET_PROFILE_NAME, 0x8);
         assert_eq!(FBase::OFFSET_LIFECYCLE_STATE, 0xa);
-        assert_eq!(FBase::OFFSET_DELETE_REQUESTED, 0xb);
-        assert_eq!(FBase::OFFSET_DEFER_EXECUTE, 0xc);
-        assert_eq!(FBase::OFFSET_DEFER_RETRY_CREATE, 0xd);
+        assert_eq!(FBase::OFFSET_DELETE_REQUEST, 0xb);
+        assert_eq!(FBase::OFFSET_UPDATE_REQUEST, 0xc);
+        assert_eq!(FBase::OFFSET_CREATE_REQUEST, 0xd);
         assert_eq!(FBase::OFFSET_GROUP_TYPE, 0xe);
         assert_eq!(FBase::OFFSET_PROC_CONTROL, 0xf);
-        assert_eq!(FBase::OFFSET_MNG, 0x10);
+        assert_eq!(FBase::OFFSET_MANAGER, 0x10);
         assert_eq!(FBase::OFFSET_HEAP, 0x5c);
     }
 }

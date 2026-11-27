@@ -8,67 +8,67 @@
       "offset": 0,
       "size": 4,
       "type": "u32",
-      "name": "mUniqueID"
+      "name": "id"
     },
     {
       "offset": 4,
       "size": 4,
       "type": "u32",
-      "name": "mParam"
+      "name": "params"
     },
     {
       "offset": 8,
       "size": 2,
       "type": "u16",
-      "name": "mProfName"
+      "name": "profile_name"
     },
     {
       "offset": 10,
       "size": 1,
       "type": "u8",
-      "name": "mLifecycleState"
+      "name": "lifecycle_state"
     },
     {
       "offset": 11,
       "size": 1,
       "type": "bool",
-      "name": "mDeleteRequested"
+      "name": "delete_request"
     },
     {
       "offset": 12,
       "size": 1,
       "type": "bool",
-      "name": "mDeferExecute"
+      "name": "update_request"
     },
     {
       "offset": 13,
       "size": 1,
       "type": "bool",
-      "name": "mDeferRetryCreate"
+      "name": "create_request"
     },
     {
       "offset": 14,
       "size": 1,
       "type": "u8",
-      "name": "mGroupType"
+      "name": "group_type"
     },
     {
       "offset": 15,
       "size": 1,
       "type": "u8",
-      "name": "mProcControl"
+      "name": "proc_control"
     },
     {
       "offset": 16,
       "size": 76,
       "type": "fManager_c",
-      "name": "mMng"
+      "name": "manager"
     },
     {
       "offset": 92,
       "size": 4,
       "type": "EGG::FrmHeap *",
-      "name": "mHeap"
+      "name": "heap"
     },
     {
       "offset": 96,
