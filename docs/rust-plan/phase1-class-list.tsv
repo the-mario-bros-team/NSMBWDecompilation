@@ -1,0 +1,1247 @@
+class	namespace	simpleName	methodCount	resolvedNames	unresolvedNames	modules	sampleAddresses
+dAcPy_c		dAcPy_c	397	397	0	main	"0x80126630,0x801266b0,0x801268f0"
+daPlBase_c		daPlBase_c	260	259	1	main	"0x800460d0,0x800467c0,0x80046a50"
+dBc_c		dBc_c	108	106	2	main	"0x8006cf40,0x8006cfa0,0x8006cfe0"
+daYoshi_c		daYoshi_c	99	97	2	main	"0x801501b0,0x801502e0,0x801504d0"
+dLineMng_c		dLineMng_c	92	92	0	main	"0x800c0d70,0x800c10f0,0x800c1230"
+daIce_c		daIce_c	82	82	0	main	"0x8011b770,0x8011b9f0,0x8011bda0"
+dBg_c		dBg_c	66	66	0	main	"0x80076fd0,0x80077020,0x80077060"
+SndAudioMgr		SndAudioMgr	64	64	0	main	"0x80194da0,0x80194df0,0x80194e30"
+dFileSelect_c		dFileSelect_c	59	59	0	d_basesNP	"0x80615460,0x80615f00,0x80616110"
+daPyMng_c		daPyMng_c	57	57	0	main	"0x8005e9a0,0x8005ea60,0x8005ece0"
+dEn_c		dEn_c	55	55	0	main	"0x80094e80,0x80095130,0x800951d0"
+dWmMapModel_c		dWmMapModel_c	47	47	0	main	"0x800ee610,0x800ee850,0x800ee930"
+daPyDemoMng_c		daPyDemoMng_c	46	46	0	main	"0x8005b3a0,0x8005b3e0,0x8005b430"
+dCourseSelectGuide_c		dCourseSelectGuide_c	44	44	0	main	"0x8000fc30,0x800105c0,0x800108c0"
+dAcPyKey_c		dAcPyKey_c	44	44	0	main	"0x8005dfd0,0x8005dff0,0x8005e030"
+daEnHatenaBalloon_c		daEnHatenaBalloon_c	43	43	0	main	"0x801102d0,0x80110b10,0x80110b60"
+nw4r::snd::detail::Voice	nw4r::snd::detail	Voice	43	43	0	main	"0x80280660,0x802807e0,0x80280870"
+dReset::Manage_c	dReset	Manage_c	42	42	0	main	"0x80107f10,0x80107ec0,0x80107f20"
+daEnItem_c		daEnItem_c	41	41	0	d_enemiesNP	"0x80a855a0,0x80a85650,0x80a85d20"
+nw4r::snd::detail::BasicSound	nw4r::snd::detail	BasicSound	41	41	0	main	"0x80265ff0,0x802660d0,0x80266230"
+dActor_c		dActor_c	38	38	0	main	"0x80064110,0x800642b0,0x80064380"
+dMj2dGame_c		dMj2dGame_c	37	37	0	main	"0x800e0290,0x800cded0,0x800ce020"
+dScBoot_c		dScBoot_c	37	37	0	main	"0x8015c4c0,0x8015c680,0x8015ca50"
+EGG::ExEffectParam	EGG	ExEffectParam	37	37	0	main	"0x802dbb70,0x802dbc20,0x802dbc90"
+SndSceneMgr		SndSceneMgr	36	35	1	main	"0x8019b440,0x8019b490,0x8019b4a0"
+TagProcessor_c		TagProcessor_c	36	36	0	main	"0x800e5400,0x800e5480,0x800e54e0"
+dCharacterChangeSelectBase_c		dCharacterChangeSelectBase_c	35	35	0	d_basesNP	"0x80601d80,0x806023c0,0x80602460"
+dMultiCourseSelect_c		dMultiCourseSelect_c	33	33	0	d_basesNP	"0x8062b2d0,0x8062ba50,0x8062c0b0"
+daFarBG_c		daFarBG_c	32	32	0	main	"0x80115d10,0x80116050,0x80116110"
+nw4r::snd::SoundArchive	nw4r::snd	SoundArchive	30	30	0	main	"0x80275640,0x80275670,0x802756b0"
+daWmPlayer_c		daWmPlayer_c	30	30	0	"main,d_basesNP"	"0x80100900,0x80100940,0x80101070"
+nw4r::snd::detail::AxVoice	nw4r::snd::detail	AxVoice	29	29	0	main	"0x80261d60,0x80261db0,0x80261df0"
+daEnGesso_c		daEnGesso_c	28	28	0	d_enemiesNP	"0x80a62750,0x80a627f0,0x80a628f0"
+dEnTorideKokoopa_c		dEnTorideKokoopa_c	28	28	0	main	"0x800a9440,0x800a9550,0x800a99d0"
+nw4r::g3d::ResMdl	nw4r::g3d	ResMdl	28	28	0	main	"0x8023b1b0,0x8023b200,0x8023b250"
+daEnBlockMain_c		daEnBlockMain_c	28	28	0	main	"0x80020910,0x80020aa0,0x80020bf0"
+daEnShell_c		daEnShell_c	28	28	0	main	"0x80038080,0x800381b0,0x80038360"
+dMiniGameWire_c		dMiniGameWire_c	27	27	0	d_basesNP	"0x806203d0,0x806207a0,0x80620c30"
+dNumberOfPeopleChange_c		dNumberOfPeopleChange_c	27	27	0	d_basesNP	"0x80631fe0,0x80632650,0x80632950"
+fBase_c		fBase_c	27	27	0	main	"0x80161ad0,0x80161c40,0x80161cc0"
+nw4r::g3d::G3DState	nw4r::g3d	G3DState	27	27	0	main	"0x8024d390,0x8024b6b0,0x8024b720"
+homebutton::HomeButton	homebutton	HomeButton	27	27	0	main	"0x80176410,0x80176610,0x80176740"
+dWarningManager_c		dWarningManager_c	26	26	0	"main,d_basesNP"	"0x8015bce0,0x8015d080,0x80600510"
+nw4hbm::ut::CharWriter	nw4hbm::ut	CharWriter	26	26	0	main	"0x80188a00,0x80188d90,0x80188dd0"
+dCsvData_c		dCsvData_c	25	25	0	main	"0x800f35e0,0x800f39d0,0x800f3e20"
+dHbm::Manage_c	dHbm	Manage_c	25	25	0	main	"0x80109340,0x801092f0,0x80109350"
+daEnBomhei_c		daEnBomhei_c	25	25	0	d_enemiesNP	"0x80a285d0,0x80a28760,0x80a28860"
+dBg_ctr_c		dBg_ctr_c	25	25	0	main	"0x8007f7a0,0x8007f810,0x8007f8a0"
+dCdFile_c		dCdFile_c	25	25	0	main	"0x8008dff0,0x8008e530,0x8008e560"
+nw4r::snd::detail::SoundArchiveFileReader	nw4r::snd::detail	SoundArchiveFileReader	24	24	0	main	"0x80275d40,0x80275d70,0x80275e20"
+nw4r::snd::detail::StrmPlayer	nw4r::snd::detail	StrmPlayer	24	24	0	main	"0x8027c7c0,0x8027c970,0x8027ca70"
+dPlayerMdl_c		dPlayerMdl_c	24	24	0	main	"0x800d2dd0,0x800d30e0,0x800d3280"
+dPyMdlBase_c		dPyMdlBase_c	24	24	0	main	"0x800d5330,0x800d54e0,0x800d5580"
+dPointResultMulti_c		dPointResultMulti_c	24	24	0	d_basesNP	"0x8063b370,0x8063c440,0x8063c520"
+dEnBossKoopaJrBase_c		dEnBossKoopaJrBase_c	24	24	0	main	"0x8009af40,0x8009b070,0x8009b540"
+EGG::DrawGX	EGG	DrawGX	24	24	0	main	"0x802c1710,0x802c17c0,0x802c17d0"
+nw4r::g3d::Camera	nw4r::g3d	Camera	24	24	0	main	"0x80253c30,0x80253e60,0x802537d0"
+EGG::StateGX	EGG	StateGX	24	24	0	main	"0x802d2610,0x802d2730,0x802d2800"
+LytBase_c		LytBase_c	23	22	1	main	"0x800c8950,0x800c89a0,0x800c8a90"
+nw4r::lyt::Material	nw4r::lyt	Material	23	23	0	main	"0x802b20b0,0x802b2b50,0x802b2bc0"
+nw4hbm::ut::TextWriterBase<wchar_t>	nw4hbm::ut	TextWriterBase<wchar_t>	23	23	0	main	"0x8018e500,0x8018e560,0x8018e660"
+homebutton::Controller	homebutton	Controller	23	23	0	main	"0x80172ea0,0x80172fb0,0x801730c0"
+nw4r::snd::detail::SeqPlayer	nw4r::snd::detail	SeqPlayer	22	22	0	main	"0x80270e60,0x80270eb0,0x80271000"
+dCourseSelectManager_c		dCourseSelectManager_c	22	22	0	d_basesNP	"0x807c19d0,0x807c2070,0x807c21b0"
+daEnCoin_c		daEnCoin_c	22	22	0	d_enemiesNP	"0x80a3fb80,0x80a3fc20,0x80a3fcc0"
+dBaseActor_c		dBaseActor_c	22	22	0	main	"0x8006c6d0,0x8006c7f0,0x8006c870"
+daMask_c		daMask_c	22	22	0	main	"0x801250d0,0x80125140,0x80125210"
+dGameDisplay_c		dGameDisplay_c	21	21	0	main	"0x80157710,0x80158100,0x801582b0"
+dContinue_c		dContinue_c	21	21	0	d_basesNP	"0x80609f90,0x8060a350,0x8060a5a0"
+dStockItem_c		dStockItem_c	21	21	0	d_basesNP	"0x80641d20,0x80642250,0x80642510"
+nw4r::snd::SoundArchivePlayer	nw4r::snd	SoundArchivePlayer	20	20	0	main	"0x802776b0,0x802779d0,0x80277a90"
+dWarningErrorInfo_c		dWarningErrorInfo_c	20	20	0	main	"0x80017170,0x80017bb0,0x80017d00"
+dMiniGameCannon_c		dMiniGameCannon_c	20	20	0	d_basesNP	"0x8061e610,0x8061e980,0x8061ebd0"
+dPointResultDateFile_c		dPointResultDateFile_c	20	20	0	d_basesNP	"0x80636900,0x80637cb0,0x80637d20"
+daEnFireSnake_c		daEnFireSnake_c	20	20	0	d_enemiesNP	"0x80a58a30,0x80a58c80,0x80a58d70"
+dEnJrClownBase_c		dEnJrClownBase_c	20	20	0	main	"0x800a2f40,0x800a3100,0x800a3ae0"
+daEnTogezoBase_c		daEnTogezoBase_c	20	20	0	main	"0x8003dbd0,0x8003dcd0,0x8003dfd0"
+SndBgmMgr		SndBgmMgr	19	19	0	main	"0x8019ddd0,0x8019de20,0x8019de30"
+dWmEnemy_c		dWmEnemy_c	19	19	0	main	"0x800f78e0,0x800f7970,0x800f7a20"
+dScStage_c		dScStage_c	19	19	0	"main,d_basesNP"	"0x80101950,0x80101960,0x80101bc0"
+dInfo_c		dInfo_c	19	18	1	"d_basesNP,main"	"0x80614d40,0x800b2350,0x800b2360"
+dCc_c		dCc_c	19	19	0	main	"0x8008c200,0x8008c260,0x8008c2c0"
+dfukidashiInfo_c		dfukidashiInfo_c	19	19	0	main	"0x800b14e0,0x800b16e0,0x800b1760"
+daIceBall_c		daIceBall_c	19	19	0	main	"0x80123740,0x801237f0,0x801238b0"
+nw4r::snd::detail::AxManager	nw4r::snd::detail	AxManager	19	19	0	main	"0x802605d0,0x80260860,0x802608d0"
+EGG::Screen	EGG	Screen	19	19	0	main	"0x802d0ae0,0x802d0cc0,0x802d0d90"
+EGG::ArcPlayer	EGG	ArcPlayer	19	19	0	main	"0x802d3810,0x802d38a0,0x802d3920"
+daEnObjCoinBlock_c		daEnObjCoinBlock_c	19	19	0	main	"0x80036930,0x800369d0,0x80036a70"
+dYoshiMdl_c		dYoshiMdl_c	18	18	0	main	"0x800fe1d0,0x800fe2e0,0x800fe400"
+dWorldSelect_c		dWorldSelect_c	18	18	0	d_basesNP	"0x807bb1c0,0x807bb840,0x807bb870"
+daEnRemoconCannon_c		daEnRemoconCannon_c	18	18	0	d_enemiesNP	"0x80af2400,0x80af2810,0x80af2bf0"
+EGG::Frustum	EGG	Frustum	18	18	0	main	"0x802c6a30,0x802c6aa0,0x802c6ae0"
+nw4r::snd::detail::SeqTrack	nw4r::snd::detail	SeqTrack	17	17	0	main	"0x80272d80,0x80272d90,0x80272e30"
+nw4r::snd::SoundPlayer	nw4r::snd	SoundPlayer	17	17	0	main	"0x8027a560,0x8027a670,0x8027a750"
+dIceMng_c		dIceMng_c	17	17	0	main	"0x800b8440,0x800b84e0,0x800b8550"
+EGG::LightObject	EGG	LightObject	17	17	0	main	"0x802c83d0,0x802c9a30,0x802c9af0"
+dRc_c		dRc_c	16	16	0	main	"0x800d9860,0x800d9880,0x800d98c0"
+dModelPlayManager_c		dModelPlayManager_c	16	16	0	d_basesNP	"0x80627c40,0x80628a00,0x80628ea0"
+dStaffCreditScore_c		dStaffCreditScore_c	16	16	0	d_basesNP	"0x80640480,0x80640890,0x80640ac0"
+m3d::anmTexSrt_c	m3d	anmTexSrt_c	16	16	0	"d_basesNP,main"	"0x806f3010,0x80167340,0x80167420"
+da2DPlayer_c		da2DPlayer_c	16	16	0	d_basesNP	"0x80757ab0,0x80758010,0x80758310"
+dScGameSetup_c		dScGameSetup_c	16	16	0	d_basesNP	"0x807aa9a0,0x807aadd0,0x807ab010"
+daEnHimanBros_c		daEnHimanBros_c	16	16	0	d_enemiesNP	"0x80a74600,0x80a746e0,0x80a748c0"
+dActorMng_c		dActorMng_c	16	16	0	main	"0x80066420,0x80066490,0x800664f0"
+dIggyWanKusari_c		dIggyWanKusari_c	16	16	0	main	"0x800b90c0,0x800b9170,0x800b91d0"
+daEnemyIce_c		daEnemyIce_c	16	16	0	main	"0x80114ba0,0x80114c40,0x80114ed0"
+nw4r::ef::DrawSmoothStripeStrategy	nw4r::ef	DrawSmoothStripeStrategy	16	16	0	main	"0x802a6470,0x802a64b0,0x802a6850"
+nw4r::g3d::ScnMdlSimple	nw4r::g3d	ScnMdlSimple	16	16	0	main	"0x8025bef0,0x8025bf30,0x8025bfe0"
+daEnDoor_c		daEnDoor_c	16	16	0	main	"0x8002ab40,0x8002aba0,0x8002ac00"
+dSmallScore_c		dSmallScore_c	15	15	0	main	"0x800156b0,0x80015c10,0x80014f10"
+daGabonRock_c		daGabonRock_c	15	15	0	d_basesNP	"0x8068c820,0x8068c8b0,0x8068c940"
+dNandThread_c		dNandThread_c	15	15	0	main	"0x800cec10,0x800cedb0,0x800cee20"
+m3d::anmMatClr_c	m3d	anmMatClr_c	15	15	0	main	"0x80092970,0x80165b50,0x80165c30"
+dWmSeManager_c		dWmSeManager_c	15	15	0	main	"0x80103f10,0x801040d0,0x80104140"
+EGG::CoreController	EGG	CoreController	15	15	0	main	"0x802bc7a0,0x802bc800,0x802bc8c0"
+dRes_c		dRes_c	15	15	0	main	"0x800df180,0x800df570,0x800df640"
+nw4r::ut::TextWriterBase<char>	nw4r::ut	TextWriterBase<char>	15	15	0	main	"0x80230280,0x8022dde0,0x8022de40"
+daEnLkuriboBase_c		daEnLkuriboBase_c	15	15	0	main	"0x80033310,0x800334f0,0x80033650"
+dMultiCourseSelectContents_c		dMultiCourseSelectContents_c	14	14	0	d_basesNP	"0x8062fef0,0x80630f40,0x806310a0"
+daObjIggyWanwan_c		daObjIggyWanwan_c	14	14	0	d_basesNP	"0x8070cda0,0x8070ceb0,0x8070cf90"
+daWarpCannon_c		daWarpCannon_c	14	14	0	d_basesNP	"0x8074fa80,0x8074fb70,0x8074fc20"
+daWmSubPlayer_c		daWmSubPlayer_c	14	14	0	d_basesNP	"0x8077e150,0x807805c0,0x80780a40"
+daEnAkoya_c		daEnAkoya_c	14	14	0	d_enemiesNP	"0x80a019c0,0x80a01a90,0x80a01d50"
+daEnMistMan_c		daEnMistMan_c	14	14	0	d_enemiesNP	"0x80ac9380,0x80ac93e0,0x80ac9540"
+daEnPuku_c		daEnPuku_c	14	14	0	d_enemiesNP	"0x80ae7f10,0x80ae8140,0x80ae8440"
+daEnWanWan_c		daEnWanWan_c	14	14	0	d_enemiesNP	"0x80b1ddb0,0x80b1ded0,0x80b1dfe0"
+dBase_c		dBase_c	14	14	0	main	"0x8006c420,0x8006c490,0x8006c500"
+dBgUnit_c		dBgUnit_c	14	14	0	main	"0x80083560,0x80083660,0x800837d0"
+nw4r::ef::Emitter	nw4r::ef	Emitter	14	14	0	main	"0x80287130,0x80287190,0x802871d0"
+nw4r::ut::CharWriter	nw4r::ut	CharWriter	14	14	0	main	"0x8022c600,0x8022c980,0x8022c9c0"
+EGG::MsgRes	EGG	MsgRes	14	14	0	main	"0x802d7680,0x802d77e0,0x802d7820"
+daEnDpakkunBase_c		daEnDpakkunBase_c	14	14	0	main	"0x800282e0,0x8002cd10,0x8002cd70"
+daEnJimenPakkunBase_c		daEnJimenPakkunBase_c	14	14	0	main	"0x8002f0e0,0x8002f3f0,0x8002f540"
+nw4hbm::ut::TextWriterBase<char>	nw4hbm::ut	TextWriterBase<char>	14	14	0	main	"0x8018bca0,0x8018bd80,0x8018c3b0"
+homebutton::RemoteSpk	homebutton	RemoteSpk	14	14	0	main	"0x80173a30,0x80173ca0,0x80173cd0"
+Pausewindow_c		Pausewindow_c	13	13	0	main	"0x8015a370,0x8015a8d0,0x8015a910"
+dPanelObjList_c		dPanelObjList_c	13	13	0	main	"0x800145f0,0x80014640,0x800146b0"
+dSelectPlayer_c		dSelectPlayer_c	13	13	0	d_basesNP	"0x8063e7c0,0x8063eaf0,0x8063ee20"
+daKoopaJrForCastleDemo_c		daKoopaJrForCastleDemo_c	13	13	0	d_basesNP	"0x806bc640,0x806bcc20,0x806bccf0"
+dScCrsin_c		dScCrsin_c	13	13	0	d_basesNP	"0x807b15d0,0x807b1ee0,0x807b1f40"
+daEnBossCastleIggy_c		daEnBossCastleIggy_c	13	13	0	d_en_bossNP	"0x80c00b30,0x80c013e0,0x80c01440"
+daEnChoropu_c		daEnChoropu_c	13	13	0	d_enemiesNP	"0x80a36b10,0x80a36b90,0x80a36c10"
+daEnCrasher_c		daEnCrasher_c	13	13	0	d_enemiesNP	"0x80a48b20,0x80a48ba0,0x80a48e40"
+daEnManholeChoropu_c		daEnManholeChoropu_c	13	13	0	d_enemiesNP	"0x80abe790,0x80abe840,0x80abe8b0"
+dBgTexMng_c		dBgTexMng_c	13	12	1	main	"0x80083490,0x80087380,0x80087410"
+nw4r::ef::Effect	nw4r::ef	Effect	13	13	0	main	"0x80285810,0x80285880,0x802858e0"
+nw4r::ef::ParticleManager	nw4r::ef	ParticleManager	13	13	0	main	"0x80292810,0x80292920,0x802929d0"
+EGG::Archive	EGG	Archive	13	12	1	main	"0x802b7830,0x802b78a0,0x802b7380"
+EGG::Heap	EGG	Heap	13	13	0	main	"0x802b8b40,0x802b8b80,0x802b8c20"
+nw4r::ut::TextWriterBase<wchar_t>	nw4r::ut	TextWriterBase<wchar_t>	13	13	0	main	"0x80230780,0x802307e0,0x802308d0"
+nw4r::g3d::ResFile	nw4r::g3d	ResFile	13	13	0	main	"0x80239e30,0x80239ea0,0x80239f20"
+m3d::anmTexPat_c	m3d	anmTexPat_c	13	13	0	main	"0x80166750,0x80166830,0x80166a70"
+m3d::bmdl_c	m3d	bmdl_c	13	13	0	main	"0x80168100,0x80168180,0x80168230"
+EGG::AudioRmtSpeakerMgr	EGG	AudioRmtSpeakerMgr	13	13	0	main	"0x802d66b0,0x802d6740,0x802d67d0"
+nw4r::g3d::LightObj	nw4r::g3d	LightObj	13	13	0	main	"0x8024b090,0x8025f420,0x8025f440"
+nw4r::g3d::ScnObj	nw4r::g3d	ScnObj	13	13	0	main	"0x802570e0,0x80257100,0x802571f0"
+nw4r::g3d::ScnRoot	nw4r::g3d	ScnRoot	13	13	0	main	"0x802589e0,0x80258bd0,0x80258c30"
+dWarningBattery_c		dWarningBattery_c	13	13	0	main	"0x80015d60,0x80015f90,0x80016020"
+nw4hbm::lyt::Pane	nw4hbm::lyt	Pane	13	13	0	main	"0x801836b0,0x801837d0,0x80183910"
+dSaveMng_c		dSaveMng_c	12	12	0	main	"0x800e0180,0x800e01d0,0x800e02d0"
+Util::dDisp_c	Util	dDisp_c	12	12	0	main	"0x800e7ba0,0x800e7c70,0x800e7de0"
+dWmDemoActor_c		dWmDemoActor_c	12	12	0	main	"0x800f6110,0x800f6320,0x800f6390"
+dWarningOther_c		dWarningOther_c	12	12	0	main	"0x80019990,0x80019c10,0x80019b90"
+daBullet_c		daBullet_c	12	12	0	main	"0x8001df60,0x8001e0b0,0x8001e100"
+dCollectionCoin_c		dCollectionCoin_c	12	12	0	d_basesNP	"0x806068e0,0x80607680,0x80607740"
+dDateFile_c		dDateFile_c	12	12	0	d_basesNP	"0x8060f490,0x8060fce0,0x8060fe20"
+daMiniGameGunBatteryMgrObj_c		daMiniGameGunBatteryMgrObj_c	12	12	0	d_basesNP	"0x806f8b90,0x806f8dd0,0x806f8eb0"
+daObjMorton_c		daObjMorton_c	12	12	0	d_basesNP	"0x80715840,0x80716240,0x807162e0"
+daPowBlock_c		daPowBlock_c	12	12	0	d_basesNP	"0x80724b60,0x80724c00,0x80724c80"
+daSlideBlock_c		daSlideBlock_c	12	12	0	d_basesNP	"0x80738f00,0x80738ff0,0x80739080"
+dOtasukeInfo_c		dOtasukeInfo_c	12	12	0	d_basesNP	"0x807a8a90,0x807a9220,0x807a9310"
+daEnCrow_c		daEnCrow_c	12	12	0	d_enemiesNP	"0x80a4b230,0x80a4b2b0,0x80a4b3b0"
+daEnGakeNoko_c		daEnGakeNoko_c	12	12	0	d_enemiesNP	"0x80a60000,0x80a600b0,0x80a601a0"
+daEnKanon_c		daEnKanon_c	12	12	0	d_enemiesNP	"0x80aa04c0,0x80aa0530,0x80aa0700"
+daEnSlipPenguin2_c		daEnSlipPenguin2_c	12	12	0	d_enemiesNP	"0x80b01db0,0x80b01e70,0x80b01f20"
+dActorCreateMng_c		dActorCreateMng_c	12	12	0	main	"0x80068070,0x800680a0,0x80068310"
+dScene_c		dScene_c	12	12	0	main	"0x800e19b0,0x800e1a20,0x800e1aa0"
+EffectManager_c		EffectManager_c	12	12	0	main	"0x800931f0,0x800933c0,0x80093530"
+dEnemyMng_c		dEnemyMng_c	12	12	0	main	"0x800a74c0,0x800a7540,0x800a7550"
+nw4r::ef::EffectSystem	nw4r::ef	EffectSystem	12	12	0	main	"0x802865a0,0x80286630,0x80286640"
+nw4r::ef::DrawStrategyImpl	nw4r::ef	DrawStrategyImpl	12	12	0	main	"0x8029b290,0x8029b340,0x8029b420"
+nw4r::lyt::Pane	nw4r::lyt	Pane	12	12	0	main	"0x802ab550,0x802ab680,0x802ab7c0"
+nw4r::snd::detail::Channel	nw4r::snd::detail	Channel	12	12	0	main	"0x80267e30,0x80267f40,0x80268620"
+EGG::CpuTexture	EGG	CpuTexture	12	12	0	main	"0x802c0a30,0x802c0a80,0x802c0ac0"
+m3d::scnLeaf_c	m3d	scnLeaf_c	12	12	0	main	"0x8016a010,0x8016a030,0x8016a090"
+EGG::EffectManager	EGG	EffectManager	12	12	0	main	"0x802d8de0,0x802d8e70,0x802d94d0"
+daEnBrosBase_c		daEnBrosBase_c	12	12	0	main	"0x80023f80,0x80024150,0x80024190"
+nw4hbm::lyt::Material	nw4hbm::lyt	Material	12	12	0	main	"0x80180780,0x801819c0,0x80182060"
+nw4r::snd::RemoteSpeaker	nw4r::snd	RemoteSpeaker	11	11	0	main	"0x80270310,0x80270920,0x80270120"
+nw4r::snd::detail::SeqSound	nw4r::snd::detail	SeqSound	11	11	0	main	"0x802723a0,0x802724e0,0x80272560"
+dPSwManager_c		dPSwManager_c	11	11	0	main	"0x800d85d0,0x800d85f0,0x800d8640"
+dSys_c		dSys_c	11	11	0	main	"0x800e4660,0x800e4680,0x800e46e0"
+dWanKusari_c		dWanKusari_c	11	11	0	main	"0x800e8ba0,0x800e8cc0,0x800e8dc0"
+dWmMapExRouteAnim_c		dWmMapExRouteAnim_c	11	11	0	main	"0x800f1940,0x800f1980,0x800f1a00"
+dWmMapExAnimInfo_c		dWmMapExAnimInfo_c	11	11	0	main	"0x800f1bf0,0x800f1c60,0x800f1d10"
+dWarningNunchuk_c		dWarningNunchuk_c	11	11	0	main	"0x80018ea0,0x80019080,0x800190f0"
+dLetterWindow_c		dLetterWindow_c	11	11	0	d_basesNP	"0x8061c560,0x8061cae0,0x8061cbd0"
+dModelPlayArrow_c		dModelPlayArrow_c	11	11	0	d_basesNP	"0x806240a0,0x80624790,0x80624810"
+daElasticKinoko_c		daElasticKinoko_c	11	11	0	d_basesNP	"0x80678a10,0x80678b20,0x80678bb0"
+daJrClownB_c		daJrClownB_c	11	11	0	d_basesNP	"0x806992e0,0x8069ace0,0x8069b200"
+daMiniGameWireMeshMgrObj_c		daMiniGameWireMeshMgrObj_c	11	11	0	d_basesNP	"0x806fd510,0x806fd820,0x806fdbb0"
+daWmSandPillar_c		daWmSandPillar_c	11	11	0	d_basesNP	"0x807777b0,0x80777fe0,0x80778100"
+daYoshiEgg_c		daYoshiEgg_c	11	11	0	d_basesNP	"0x807a3d00,0x807a3ec0,0x807a3f90"
+daEnHnswich_c		daEnHnswich_c	11	11	0	d_enemiesNP	"0x80a77ec0,0x80a77f50,0x80a78220"
+daEnJugem_c		daEnJugem_c	11	11	0	d_enemiesNP	"0x80a92450,0x80a925c0,0x80a92710"
+daEnKeronpa_c		daEnKeronpa_c	11	11	0	d_enemiesNP	"0x80aa49a0,0x80aa4db0,0x80aa4f00"
+daEnNoko_c		daEnNoko_c	11	11	0	d_enemiesNP	"0x80ad10a0,0x80ad1240,0x80ad1490"
+dBgGlobal_c		dBgGlobal_c	11	11	0	main	"0x80081070,0x800813f0,0x80081410"
+dEnBoss_c		dEnBoss_c	11	11	0	main	"0x800983c0,0x800985b0,0x80098700"
+d2d::Multi_c	d2d	Multi_c	11	11	0	main	"0x80006cd0,0x80006e30,0x80006ea0"
+nw4r::ef::DrawStripeStrategy	nw4r::ef	DrawStripeStrategy	11	11	0	main	"0x802a2da0,0x802a2de0,0x802a3130"
+nw4r::lyt::res::MaterialResourceNum	nw4r::lyt::res	MaterialResourceNum	11	11	0	main	"0x802b2760,0x802b2770,0x802b2780"
+EGG::PostEffectBase	EGG	PostEffectBase	11	11	0	main	"0x802c3570,0x802ce740,0x802ce850"
+EGG::LightTextureManager	EGG	LightTextureManager	11	11	0	main	"0x802cce10,0x802cd050,0x802cd160"
+dWarningYoKo_c		dWarningYoKo_c	11	11	0	main	"0x8001a6b0,0x8001a8b0,0x8001a930"
+daEnBigPile_c		daEnBigPile_c	11	11	0	main	"0x8001fa70,0x8001fd40,0x8001ff90"
+dWmConnect_c		dWmConnect_c	10	10	0	"main,d_basesNP"	"0x800f2bc0,0x800f2df0,0x800f2eb0"
+daWmMap_c		daWmMap_c	10	10	0	"main,d_basesNP"	"0x80100270,0x801002c0,0x801002f0"
+dCourseSelectMenu_c		dCourseSelectMenu_c	10	10	0	d_basesNP	"0x8060d100,0x8060d4f0,0x8060d740"
+dModelPlayBase_c		dModelPlayBase_c	10	10	0	d_basesNP	"0x806254b0,0x80625bf0,0x80625c70"
+daBGpolygon_c		daBGpolygon_c	10	10	0	d_basesNP	"0x806488e0,0x80648aa0,0x80648cb0"
+daLemmyBall_c		daLemmyBall_c	10	10	0	d_basesNP	"0x806c43d0,0x806c4460,0x806c44d0"
+daYoganIntermittent_c		daYoganIntermittent_c	10	10	0	d_basesNP	"0x807a2530,0x807a25a0,0x807a2630"
+daEnBossCastleMorton_c		daEnBossCastleMorton_c	10	10	0	d_en_bossNP	"0x80c0e380,0x80c0ee40,0x80c0f3d0"
+daEnBigIcicle_c		daEnBigIcicle_c	10	10	0	d_enemiesNP	"0x80a12420,0x80a124d0,0x80a12520"
+daEnDosun_c		daEnDosun_c	10	10	0	d_enemiesNP	"0x80a53710,0x80a53850,0x80a539c0"
+daEnIgaKuribo_c		daEnIgaKuribo_c	10	10	0	d_enemiesNP	"0x80a808d0,0x80a809f0,0x80a80a60"
+daEnKopone_c		daEnKopone_c	10	10	0	d_enemiesNP	"0x80ab2050,0x80ab21d0,0x80ab2280"
+daEnPolter_c		daEnPolter_c	10	10	0	d_enemiesNP	"0x80ae4530,0x80ae4600,0x80ae4680"
+daEnSanboEl_c		daEnSanboEl_c	10	10	0	d_enemiesNP	"0x80afd910,0x80afdac0,0x80afdca0"
+dBgParameter_c		dBgParameter_c	10	10	0	main	"0x80081d20,0x80081f40,0x80082050"
+dMultiMng_c		dMultiMng_c	10	10	0	main	"0x800ce800,0x800ce820,0x800ce860"
+daPlyIce_c		daPlyIce_c	10	10	0	main	"0x8014a960,0x8014aaf0,0x8014ac10"
+nw4r::snd::detail::VoiceManager	nw4r::snd::detail	VoiceManager	10	10	0	main	"0x80282ef0,0x80282f70,0x80282fe0"
+nw4r::ef::Resource	nw4r::ef	Resource	10	10	0	main	"0x80294b20,0x80294f50,0x80294fd0"
+nw4r::snd::detail::EnvGenerator	nw4r::snd::detail	EnvGenerator	10	10	0	main	"0x80269660,0x802696b0,0x802696f0"
+EGG::LightTexture	EGG	LightTexture	10	10	0	main	"0x802cb930,0x802cbb90,0x802cbe20"
+mMtx_c		mMtx_c	10	10	0	main	"0x8016eba0,0x8016ebf0,0x8016ed10"
+nw4r::snd::detail::TaskManager	nw4r::snd::detail	TaskManager	9	9	0	main	"0x8027fdd0,0x8027fe70,0x8027ff60"
+dPyMdlMng_c		dPyMdlMng_c	9	9	0	main	"0x800d6cc0,0x800d6d10,0x800d6df0"
+dScWMap_c		dScWMap_c	9	9	0	"main,d_basesNP"	"0x80102750,0x80102790,0x801027c0"
+dEasyPairing_c		dEasyPairing_c	9	9	0	d_basesNP	"0x80612ba0,0x80613380,0x80613530"
+dEventOpeningTitle_c		dEventOpeningTitle_c	9	9	0	d_basesNP	"0x80614330,0x80614680,0x806149a0"
+daBombJrC_c		daBombJrC_c	9	9	0	d_basesNP	"0x80656f60,0x80658080,0x80658140"
+daCastleLemmyBall_c		daCastleLemmyBall_c	9	9	0	d_basesNP	"0x80671510,0x80671620,0x80671740"
+daChukanPoint_c		daChukanPoint_c	9	9	0	d_basesNP	"0x80675090,0x80675790,0x80675820"
+daJrClownC_c		daJrClownC_c	9	9	0	d_basesNP	"0x8069dbc0,0x8069f080,0x8069f560"
+daKazanMgr_c		daKazanMgr_c	9	9	0	d_basesNP	"0x806b07e0,0x806b0870,0x806b0900"
+daStrongBox_c		daStrongBox_c	9	9	0	d_basesNP	"0x8073db80,0x8073dc50,0x8073de60"
+daEnBasa_c		daEnBasa_c	9	9	0	d_enemiesNP	"0x80a0b910,0x80a0ba80,0x80a0bbe0"
+daEnKuribo_c		daEnKuribo_c	9	9	0	d_enemiesNP	"0x80ab3ae0,0x80ab3b40,0x80ab3c90"
+daEnMechaKoopa_c		daEnMechaKoopa_c	9	9	0	d_enemiesNP	"0x80ac2dc0,0x80ac2e70,0x80ac3020"
+daEnWalkPakkun_c		daEnWalkPakkun_c	9	9	0	d_enemiesNP	"0x80b1b110,0x80b1b230,0x80b1b3f0"
+daRotObjsBase_c		daRotObjsBase_c	9	9	0	main	"0x800622a0,0x80062320,0x80062380"
+dEffActorMng_c		dEffActorMng_c	9	9	0	main	"0x80092310,0x80092480,0x800924e0"
+m2d::AnmResV2_c	m2d	AnmResV2_c	9	9	0	main	"0x800c9060,0x800c90b0,0x80163e60"
+dMessage_c		dMessage_c	9	9	0	main	"0x800cda70,0x800cdab0,0x800cdb30"
+daFireBall_Player_c		daFireBall_Player_c	9	9	0	main	"0x8011a680,0x8011a800,0x8011a8b0"
+nw4r::snd::detail::WsdPlayer	nw4r::snd::detail	WsdPlayer	9	9	0	main	"0x802845e0,0x80284650,0x80284700"
+nw4r::snd::detail::BasicPlayer	nw4r::snd::detail	BasicPlayer	9	9	0	main	"0x80265e80,0x80265f40,0x80265f50"
+nw4r::lyt::AnimResource	nw4r::lyt	AnimResource	9	9	0	main	"0x802b5af0,0x802b5b10,0x802b5c20"
+EGG::LightManager	EGG	LightManager	9	9	0	main	"0x802c81f0,0x802c8450,0x802c84f0"
+EGG::ModelEx	EGG	ModelEx	9	9	0	main	"0x802cdd00,0x802cded0,0x802cdf40"
+nw4r::db::DbgPrintBase<char>	nw4r::db	DbgPrintBase<char>	9	9	0	main	"0x80235fe0,0x80236230,0x80236350"
+nw4r::db::DbgPrintBase<wchar_t>	nw4r::db	DbgPrintBase<wchar_t>	9	9	0	main	"0x80236d70,0x80236fc0,0x802370e0"
+EGG::Effect	EGG	Effect	9	9	0	main	"0x802d7aa0,0x802d7b20,0x802d7c50"
+nw4r::g3d::ResAnmScn	nw4r::g3d	ResAnmScn	9	9	0	main	"0x802422a0,0x80242300,0x80242360"
+nw4r::snd::SoundHeap	nw4r::snd	SoundHeap	8	8	0	main	"0x8027a250,0x8027a2a0,0x8027a310"
+nw4r::snd::detail::SoundThread	nw4r::snd::detail	SoundThread	8	8	0	main	"0x8027b5f0,0x8027b6b0,0x8027b720"
+PauseManager_c		PauseManager_c	8	8	0	main	"0x800d0b20,0x800d0b50,0x800d0b60"
+dPc_c		dPc_c	8	8	0	main	"0x800d1500,0x800d1510,0x800d1640"
+dRemoconMng_c::dConnect_c::dExtension_c	dRemoconMng_c::dConnect_c	dExtension_c	8	8	0	main	"0x800dc270,0x800dca20,0x800dcb70"
+dRemoconMng_c::dConnect_c	dRemoconMng_c	dConnect_c	8	8	0	main	"0x800dc570,0x800dc6f0,0x800dc820"
+dBgGm_c		dBgGm_c	8	8	0	main	"0x80154740,0x801548a0,0x80154a70"
+dCharacterChangeSelectArrow_c		dCharacterChangeSelectArrow_c	8	8	0	d_basesNP	"0x80601010,0x806010f0,0x80601210"
+dModeSelect_c		dModeSelect_c	8	8	0	d_basesNP	"0x80622e00,0x806234d0,0x80623530"
+daCastleBossKey_c		daCastleBossKey_c	8	8	0	d_basesNP	"0x8066bf80,0x8066c7f0,0x8066c870"
+daFooBall_c		daFooBall_c	8	8	0	d_basesNP	"0x80688990,0x80688a40,0x80688ba0"
+daIntermittent_c		daIntermittent_c	8	8	0	d_basesNP	"0x80695830,0x80695990,0x80695a20"
+daJrClownForPlayer_c		daJrClownForPlayer_c	8	8	0	d_basesNP	"0x806a2e00,0x806a2ec0,0x806a3700"
+daObjKameck_c		daObjKameck_c	8	8	0	d_basesNP	"0x80710520,0x807105c0,0x80710690"
+daPropBlock_c		daPropBlock_c	8	8	0	d_basesNP	"0x807262f0,0x807274d0,0x80727670"
+dScWorld9DeMo_c		dScWorld9DeMo_c	8	8	0	d_basesNP	"0x807af9c0,0x807afef0,0x807aff90"
+daEnBossCastleLudwig_c		daEnBossCastleLudwig_c	8	8	0	d_en_bossNP	"0x80c0b810,0x80c0b900,0x80c0b9e0"
+daEnBossLudwig_c		daEnBossLudwig_c	8	8	0	d_en_bossNP	"0x80c3e5f0,0x80c3e970,0x80c3f840"
+daEnGabon_c		daEnGabon_c	8	8	0	d_enemiesNP	"0x80a5e360,0x80a5e3e0,0x80a5e590"
+daEnGlpole_c		daEnGlpole_c	8	8	0	d_enemiesNP	"0x80a66a70,0x80a67a60,0x80a67d50"
+daEnHanachan_c		daEnHanachan_c	8	8	0	d_enemiesNP	"0x80a71aa0,0x80a71c60,0x80a71d60"
+daEnIcicle_c		daEnIcicle_c	8	8	0	d_enemiesNP	"0x80a7e8e0,0x80a7e960,0x80a7e9b0"
+daEnMouse_c		daEnMouse_c	8	8	0	d_enemiesNP	"0x80acc4b0,0x80acc520,0x80acc740"
+dBgActorManager_c		dBgActorManager_c	8	8	0	main	"0x8007e180,0x8007e1d0,0x8007e2c0"
+mEf::levelEffect_c	mEf	levelEffect_c	8	8	0	main	"0x800a8ab0,0x80025f60,0x8016d180"
+dGameKeyCore_c		dGameKeyCore_c	8	8	0	main	"0x800b5b00,0x800b5b90,0x800b5c50"
+nw4r::snd::detail::Util	nw4r::snd::detail	Util	8	8	0	main	"0x802835b0,0x80283760,0x802837c0"
+nw4r::snd::detail::AxVoiceManager	nw4r::snd::detail	AxVoiceManager	8	8	0	main	"0x80264ae0,0x80264b70,0x80264c00"
+nw4r::snd::detail::FrameHeap	nw4r::snd::detail	FrameHeap	8	8	0	main	"0x80269ee0,0x80269f00,0x8026a010"
+EGG::ExpHeap	EGG	ExpHeap	8	8	0	main	"0x802b92a0,0x802b9360,0x802b9430"
+EGG::DrawPathDOF	EGG	DrawPathDOF	8	8	0	main	"0x802c3630,0x802c3790,0x802c38e0"
+m3d::banm_c	m3d	banm_c	8	8	0	main	"0x80167ec0,0x80167f30,0x80167fa0"
+m3d::mdl_c::mdlCallback_c	m3d::mdl_c	mdlCallback_c	8	8	0	main	"0x80169560,0x801695c0,0x80169600"
+mDvd_param_c		mDvd_param_c	8	8	0	main	"0x8016b540,0x8016b590,0x8016b5a0"
+EGG::Thread	EGG	Thread	8	8	0	main	"0x802ba3b0,0x802ba480,0x802ba500"
+nw4r::ut::DvdFileStream	nw4r::ut	DvdFileStream	8	8	0	main	"0x80229f30,0x80229ff0,0x8022a120"
+nw4r::ut::NandFileStream	nw4r::ut	NandFileStream	8	8	0	main	"0x8022a9f0,0x8022aa60,0x8022aad0"
+nw4r::g3d::ScnMdl::CopiedMatAccess	nw4r::g3d::ScnMdl	CopiedMatAccess	8	8	0	main	"0x8025c420,0x8025c470,0x8025c4c0"
+daEnDfpakkun_c		daEnDfpakkun_c	8	8	0	main	"0x800281c0,0x800286f0,0x80028780"
+nw4r::snd::detail::PlayerHeap	nw4r::snd::detail	PlayerHeap	7	7	0	main	"0x802700f0,0x80270100,0x80270110"
+nw4r::snd::Sound3DCalculator	nw4r::snd	Sound3DCalculator	7	7	0	main	"0x802741e0,0x80274320,0x80274480"
+m3d::anmChr_c	m3d	anmChr_c	7	7	0	"main,d_basesNP"	"0x800d54a0,0x806f0060,0x801650d0"
+dfukidashiManager_c		dfukidashiManager_c	7	7	0	main	"0x80156ed0,0x80157060,0x80157120"
+dScoreMng_c		dScoreMng_c	7	7	0	main	"0x800e1f80,0x800e20a0,0x800e24b0"
+dWmEnPath_c		dWmEnPath_c	7	7	0	main	"0x800f7020,0x800f71a0,0x800f71c0"
+dDvdErr_c		dDvdErr_c	7	7	0	main	"0x80107850,0x80107360,0x801073b0"
+dCourseTimeUp_c		dCourseTimeUp_c	7	7	0	d_basesNP	"0x8060e4b0,0x8060eb50,0x8060ec00"
+dGameOver_c		dGameOver_c	7	7	0	d_basesNP	"0x8061aec0,0x8061b630,0x8061b6d0"
+daBgmInterlockingDummyBlock_c		daBgmInterlockingDummyBlock_c	7	7	0	d_basesNP	"0x8064ed70,0x8064eeb0,0x8064f0a0"
+daLightBlock_c		daLightBlock_c	7	7	0	d_basesNP	"0x806e8c40,0x806e8de0,0x806e8e30"
+daMiniGameWireMesh_c		daMiniGameWireMesh_c	7	7	0	d_basesNP	"0x806fb130,0x806fb880,0x806fb910"
+daEnBossCastleLemmy_c		daEnBossCastleLemmy_c	7	7	0	d_en_bossNP	"0x80c07990,0x80c07a80,0x80c07b90"
+daEnBossKoopaJrB_c		daEnBossKoopaJrB_c	7	7	0	d_en_bossNP	"0x80c30150,0x80c30c30,0x80c30d10"
+daEnBarrel_c		daEnBarrel_c	7	7	0	d_enemiesNP	"0x80a08ff0,0x80a090a0,0x80a091b0"
+daEnChochinAnkoh_c		daEnChochinAnkoh_c	7	7	0	d_enemiesNP	"0x80a33b20,0x80a33bd0,0x80a33c70"
+daEnJellyFish_c		daEnJellyFish_c	7	7	0	d_enemiesNP	"0x80a8cc20,0x80a8ccd0,0x80a8cf60"
+daEnJumpdai_c		daEnJumpdai_c	7	7	0	d_enemiesNP	"0x80a95d90,0x80a969c0,0x80a97370"
+daEnJumpPuku_c		daEnJumpPuku_c	7	7	0	d_enemiesNP	"0x80a990f0,0x80a991f0,0x80a99360"
+daEnPata_c		daEnPata_c	7	7	0	d_enemiesNP	"0x80ae25e0,0x80ae26c0,0x80ae2800"
+daEnSnakeBlock_c		daEnSnakeBlock_c	7	7	0	d_enemiesNP	"0x80b05740,0x80b058a0,0x80b05a80"
+daEnWaterPakkun_c		daEnWaterPakkun_c	7	7	0	d_enemiesNP	"0x80b23960,0x80b23ab0,0x80b23be0"
+nw4r::g3d::ScnGroup	nw4r::g3d	ScnGroup	7	7	0	main	"0x8000f800,0x80257e60,0x80257fc0"
+daLiftRemoconMain_c		daLiftRemoconMain_c	7	7	0	main	"0x80043cd0,0x80043da0,0x80043e60"
+daSpinChildBase_c		daSpinChildBase_c	7	7	0	main	"0x80046070,0x80063820,0x80063880"
+dBgActorManager_c::BgObj_c	dBgActorManager_c	BgObj_c	7	7	0	main	"0x8007ea30,0x8007ea50,0x8007ea60"
+bgTex_c		bgTex_c	7	7	0	main	"0x80082310,0x80082410,0x80082560"
+dCaptureCoin_c		dCaptureCoin_c	7	7	0	main	"0x8008a6d0,0x8008a780,0x8008a8e0"
+dEffIceFrag_c		dEffIceFrag_c	7	7	0	main	"0x80091100,0x800912a0,0x800913a0"
+dEnCombo_c		dEnCombo_c	7	7	0	main	"0x8009f5f0,0x8009f630,0x8009f690"
+dIggyWanKusariPiece_c		dIggyWanKusariPiece_c	7	7	0	main	"0x800babb0,0x800bacd0,0x800badc0"
+dMaskMng_c		dMaskMng_c	7	7	0	main	"0x800cd390,0x800cd3e0,0x800cd470"
+dGoalManager_c		dGoalManager_c	7	7	0	main	"0x8010af70,0x8010b1f0,0x8010b2c0"
+m2d::Simple_c	m2d	Simple_c	7	7	0	main	"0x8010f470,0x801638e0,0x80163a60"
+nw4r::lyt::TextBox	nw4r::lyt	TextBox	7	7	0	main	"0x802adea0,0x802aeda0,0x802aee70"
+nw4r::snd::FxChorusDpl2	nw4r::snd	FxChorusDpl2	7	7	0	main	"0x8026ab10,0x8026aba0,0x8026ac10"
+nw4r::snd::FxDelayDpl2	nw4r::snd	FxDelayDpl2	7	7	0	main	"0x8026b640,0x8026b6d0,0x8026b740"
+nw4r::snd::FxReverbHiDpl2	nw4r::snd	FxReverbHiDpl2	7	7	0	main	"0x8026c2f0,0x8026c3c0,0x8026c430"
+nw4r::snd::FxReverbStdDpl2	nw4r::snd	FxReverbStdDpl2	7	7	0	main	"0x8026d0b0,0x8026d180,0x8026d1f0"
+nw4r::snd::NandSoundArchive	nw4r::snd	NandSoundArchive	7	7	0	main	"0x8026f690,0x8026f6e0,0x8026f770"
+EGG::DvdFile	EGG	DvdFile	7	7	0	main	"0x802b7ac0,0x802b7b00,0x802b7b50"
+EGG::CoreControllerMgr	EGG	CoreControllerMgr	7	7	0	main	"0x802bd310,0x802bd360,0x802bd370"
+EGG::ControllerRumbleMgr	EGG	ControllerRumbleMgr	7	7	0	main	"0x802bdd00,0x802bdd60,0x802bddf0"
+nw4r::g3d::ResShp	nw4r::g3d	ResShp	7	7	0	main	"0x8023c100,0x8023c150,0x8023c1b0"
+nw4r::g3d::ResMatTevColor	nw4r::g3d	ResMatTevColor	7	7	0	main	"0x8023ca80,0x8023cb30,0x8023cba0"
+m3d::calcRatio_c	m3d	calcRatio_c	7	7	0	main	"0x80168b40,0x80168b80,0x80168b90"
+mHeapAllocator_c		mHeapAllocator_c	7	7	0	main	"0x8016a740,0x8016a780,0x8016a7f0"
+mDvd_command_c		mDvd_command_c	7	7	0	main	"0x8016b440,0x8016b4a0,0x8016b4b0"
+mEf::effect_c	mEf	effect_c	7	7	0	main	"0x8016cab0,0x8016cd40,0x8016cea0"
+mFaderBase_c		mFaderBase_c	7	7	0	main	"0x8016dca0,0x8016dce0,0x8016dc00"
+mPrint::MyPrintBase<wchar_t>	mPrint	MyPrintBase<wchar_t>	7	7	0	main	"0x8016ff60,0x8016ffc0,0x80170110"
+nw4r::ut::LC	nw4r::ut	LC	7	7	0	main	"0x8022b230,0x8022b290,0x8022b310"
+EGG::StateEfb	EGG	StateEfb	7	7	0	main	"0x802d1da0,0x802d1e20,0x802d21f0"
+EGG::TextureBuffer	EGG	TextureBuffer	7	7	0	main	"0x802d32a0,0x802d32f0,0x802d3370"
+EGG::ExEmitter	EGG	ExEmitter	7	7	0	main	"0x802da970,0x802da9c0,0x802dad00"
+daEnKuriboBase_c		daEnKuriboBase_c	7	7	0	main	"0x800319a0,0x80031a30,0x80031b30"
+SndObjctPly		SndObjctPly	6	6	0	main	"0x8019a310,0x8019a490,0x8019a6d0"
+Snd2DCalc		Snd2DCalc	6	5	1	main	"0x8019ec90,0x8019eca0,0x8019ece0"
+nw4r::snd::detail::StrmFileLoader	nw4r::snd::detail	StrmFileLoader	6	6	0	main	"0x8027c210,0x8027c3e0,0x8027c430"
+nw4r::snd::detail::StrmSound	nw4r::snd::detail	StrmSound	6	6	0	main	"0x8027f450,0x8027f650,0x8027f6d0"
+dPosGoAndComeExeFrm_c		dPosGoAndComeExeFrm_c	6	6	0	main	"0x800d7350,0x800d7480,0x800d74c0"
+dPropelParts_c		dPropelParts_c	6	6	0	main	"0x800d81e0,0x800d8280,0x800d82a0"
+dQuake_c		dQuake_c	6	6	0	main	"0x800d8850,0x800d8b00,0x800d8bb0"
+dWanKusariPiece_c		dWanKusariPiece_c	6	6	0	main	"0x800ea630,0x800ea6d0,0x800ea6f0"
+dWaterDraw_c		dWaterDraw_c	6	6	0	main	"0x800ead90,0x800eae90,0x800eaf90"
+dCsSeqMng_c		dCsSeqMng_c	6	5	1	"main,d_basesNP"	"0x801015a0,0x801015e0,0x801016b0"
+dDrawGame_c		dDrawGame_c	6	6	0	d_basesNP	"0x80611e00,0x80612310,0x806123a0"
+dTheEnd_c		dTheEnd_c	6	6	0	d_basesNP	"0x80644ef0,0x806453e0,0x80645480"
+dTimeUp_c		dTimeUp_c	6	6	0	d_basesNP	"0x80645c80,0x80646180,0x80646240"
+daBlockTaru_c		daBlockTaru_c	6	6	0	d_basesNP	"0x806551d0,0x80655270,0x80655300"
+daFlagObj_c		daFlagObj_c	6	6	0	d_basesNP	"0x8067de40,0x8067dfd0,0x8067e160"
+daNiceBoat_c		daNiceBoat_c	6	6	0	d_basesNP	"0x80703a40,0x80703dc0,0x80704630"
+daPeachForAirshipDemo_c		daPeachForAirshipDemo_c	6	6	0	d_basesNP	"0x80721030,0x80721b20,0x80721d10"
+daRemoLineLift_c		daRemoLineLift_c	6	6	0	d_basesNP	"0x807293f0,0x80729490,0x807295c0"
+dScMulti_c		dScMulti_c	6	6	0	d_basesNP	"0x807ad000,0x807ad420,0x807ad4f0"
+daEnBossIggy_c		daEnBossIggy_c	6	6	0	d_en_bossNP	"0x80c198b0,0x80c19f50,0x80c1a0d0"
+daEnBossLemmy_c		daEnBossLemmy_c	6	6	0	d_en_bossNP	"0x80c396e0,0x80c399b0,0x80c39eb0"
+daEnBuku_c		daEnBuku_c	6	6	0	d_enemiesNP	"0x80a04ca0,0x80a04d10,0x80a04ea0"
+daEnMet_c		daEnMet_c	6	6	0	d_enemiesNP	"0x80ac5650,0x80ac57e0,0x80ac5960"
+daEnNetNokoUD_c		daEnNetNokoUD_c	6	6	0	d_enemiesNP	"0x80ace900,0x80acea40,0x80aceb70"
+daEnPairObjChild_c		daEnPairObjChild_c	6	6	0	d_enemiesNP	"0x80adab80,0x80adac20,0x80adad80"
+daEnSanbo_c		daEnSanbo_c	6	6	0	d_enemiesNP	"0x80afbbe0,0x80afbd00,0x80afbeb0"
+daEnTeresa_c		daEnTeresa_c	6	6	0	d_enemiesNP	"0x80b0daf0,0x80b0db50,0x80b0db90"
+daEnTogeMet_c		daEnTogeMet_c	6	6	0	d_enemiesNP	"0x80b11bf0,0x80b11cf0,0x80b11ec0"
+daLightBase_c		daLightBase_c	6	6	0	main	"0x80061540,0x80061590,0x800616a0"
+dDvd::loader_c	dDvd	loader_c	6	6	0	main	"0x8008f140,0x8008f170,0x8008f1b0"
+dEffWanChain_c		dEffWanChain_c	6	6	0	main	"0x800919a0,0x80091a80,0x80091ba0"
+dFader_c		dFader_c	6	6	0	main	"0x800b0a20,0x800b0a90,0x800b0b00"
+dFontMng_c		dFontMng_c	6	6	0	main	"0x800b11d0,0x800b1250,0x800b12d0"
+dIceEfMaker_c		dIceEfMaker_c	6	6	0	main	"0x800b80e0,0x800b8110,0x800b81b0"
+m2d::FrameCtrl_c	m2d	FrameCtrl_c	6	6	0	main	"0x800c91f0,0x801636c0,0x80163760"
+TextWriter		TextWriter	6	6	0	main	"0x80106ee0,0x80106fa0,0x80106fc0"
+d2d::ResAccMultLoader_c	d2d	ResAccMultLoader_c	6	6	0	main	"0x80006aa0,0x80006af0,0x80006b60"
+nw4r::ef::Particle	nw4r::ef	Particle	6	6	0	main	"0x802919a0,0x802919b0,0x802925d0"
+nw4r::math::VEC3	nw4r::math	VEC3	6	6	0	main	"0x8029f5e0,0x802a0870,0x802a0890"
+nw4r::lyt::Layout	nw4r::lyt	Layout	6	6	0	main	"0x802acb40,0x802acb80,0x802ad000"
+nw4r::snd::detail::AxVoiceParamBlock	nw4r::snd::detail	AxVoiceParamBlock	6	6	0	main	"0x80264220,0x802643d0,0x80264400"
+nw4r::snd::detail::DisposeCallbackManager	nw4r::snd::detail	DisposeCallbackManager	6	6	0	main	"0x80268c60,0x80268cf0,0x80268d50"
+nw4r::snd::DvdSoundArchive	nw4r::snd	DvdSoundArchive	6	6	0	main	"0x80268ff0,0x80269040,0x802690d0"
+nw4r::snd::detail::ExternalSoundPlayer	nw4r::snd::detail	ExternalSoundPlayer	6	6	0	main	"0x80269a50,0x80269af0,0x80269b50"
+EGG::PerspectiveData	EGG	PerspectiveData	6	6	0	main	"0x802bf930,0x802bf9b0,0x802bf9c0"
+EGG::Viewport	EGG	Viewport	6	6	0	main	"0x802bff30,0x802bff70,0x802c0010"
+EGG::IScnProc	EGG	IScnProc	6	6	0	main	"0x802c7e30,0x802c7ef0,0x802c8000"
+EGG::PostEffectMaskDOF	EGG	PostEffectMaskDOF	6	6	0	main	"0x802cfba0,0x802cfd00,0x802d0030"
+nw4r::g3d::ResDic	nw4r::g3d	ResDic	6	6	0	main	"0x80239a80,0x80239b60,0x80239c40"
+nw4r::g3d::ResMat	nw4r::g3d	ResMat	6	6	0	main	"0x8023ca40,0x8023cae0,0x8023e250"
+nw4r::g3d::ResMatIndMtxAndScale	nw4r::g3d	ResMatIndMtxAndScale	6	6	0	main	"0x8023caa0,0x8023cbe0,0x8023d5b0"
+nw4r::g3d::ResMatMisc	nw4r::g3d	ResMatMisc	6	6	0	main	"0x8023d100,0x8023d120,0x8023d150"
+m3d::fanm_c	m3d	fanm_c	6	6	0	main	"0x80168d10,0x80168d80,0x80168f10"
+mPrint::MyPrintBase<char>	mPrint	MyPrintBase<char>	6	6	0	main	"0x8016f7d0,0x8016f830,0x8016fa10"
+nw4r::ut::detail::ResFontBase	nw4r::ut::detail	ResFontBase	6	6	0	main	"0x8022bb80,0x8022bbe0,0x8022bc20"
+EGG::AudioFxMgr	EGG	AudioFxMgr	6	6	0	main	"0x802d4f00,0x802d4f60,0x802d4fd0"
+EGG::SimpleAudioMgr	EGG	SimpleAudioMgr	6	6	0	main	"0x802d6210,0x802d6350,0x802d6400"
+EGG::Exception	EGG	Exception	6	6	0	main	"0x802d7170,0x802d71f0,0x802d7410"
+MemoryManager		MemoryManager	6	6	0	main	"0x802d9380,0x802d9b40,0x802d9cb0"
+EGG::ExOneEmitter	EGG	ExOneEmitter	6	6	0	main	"0x802db6c0,0x802db710,0x802db750"
+nw4r::g3d::ChrAnmResult	nw4r::g3d	ChrAnmResult	6	6	0	main	"0x80241710,0x802418b0,0x802418f0"
+nw4r::g3d::ScnMdl	nw4r::g3d	ScnMdl	6	6	0	main	"0x8025ca20,0x8025d5b0,0x8025e060"
+dWipeCircle_c		dWipeCircle_c	6	6	0	main	"0x8001b3a0,0x8001b470,0x8001b580"
+nw4hbm::ut::detail::ResFontBase	nw4hbm::ut::detail	ResFontBase	6	6	0	main	"0x8018aa30,0x8018aa80,0x8018aac0"
+nw4r::snd::Sound3DListener	nw4r::snd	Sound3DListener	5	5	0	main	"0x80275040,0x802750c0,0x802750d0"
+nw4r::snd::SoundSystem	nw4r::snd	SoundSystem	5	5	0	main	"0x8027b290,0x8027b2e0,0x8027b360"
+LytTextBox_c		LytTextBox_c	5	5	0	main	"0x800c9b00,0x800c9a60,0x800c9b50"
+dRail_c		dRail_c	5	5	0	main	"0x800d9290,0x800d9370,0x800d9560"
+dSpline_c		dSpline_c	5	5	0	main	"0x800e2ad0,0x800e2c70,0x800e2d00"
+dPanelObjMgr_c		dPanelObjMgr_c	5	5	0	main	"0x80014820,0x80014860,0x800148b0"
+dDemoMessage_c		dDemoMessage_c	5	5	0	d_basesNP	"0x80610f40,0x806114a0,0x806115f0"
+dMessageWindow_c		dMessageWindow_c	5	5	0	d_basesNP	"0x8061d6e0,0x8061dc70,0x8061de40"
+daBoomerang_c		daBoomerang_c	5	5	0	d_basesNP	"0x806599d0,0x80659b60,0x80659d30"
+daCastleKokoopaDemo1st_c		daCastleKokoopaDemo1st_c	5	5	0	d_basesNP	"0x8066ddc0,0x8066e0c0,0x8066e2a0"
+daLiftRideVMove_c		daLiftRideVMove_c	5	5	0	d_basesNP	"0x806d7b00,0x806d7b70,0x806d7be0"
+daLiftScales_c		daLiftScales_c	5	5	0	d_basesNP	"0x806da220,0x806da2e0,0x806da410"
+daLiftScalesStep_c		daLiftScalesStep_c	5	5	0	d_basesNP	"0x806db0e0,0x806dbae0,0x806dbb20"
+daLiftZenShiro_c		daLiftZenShiro_c	5	5	0	d_basesNP	"0x806e6450,0x806e64d0,0x806e6530"
+daLineTrain_c		daLineTrain_c	5	5	0	d_basesNP	"0x806ed310,0x806edcd0,0x806edd80"
+daNeedleForKoopaJrB_c		daNeedleForKoopaJrB_c	5	5	0	d_basesNP	"0x806ffb50,0x80700320,0x807003c0"
+daObjLudwig_c		daObjLudwig_c	5	5	0	d_basesNP	"0x807144c0,0x80714fd0,0x80715070"
+daObjWendy_c		daObjWendy_c	5	5	0	d_basesNP	"0x8071d500,0x8071dbf0,0x8071dcc0"
+daTarzanIvy_c		daTarzanIvy_c	5	5	0	d_basesNP	"0x80740c70,0x80740c90,0x80740f20"
+daEnBossKoopaJrC_c		daEnBossKoopaJrC_c	5	5	0	d_en_bossNP	"0x80c32380,0x80c34130,0x80c34220"
+daEnBossMorton_c		daEnBossMorton_c	5	5	0	d_en_bossNP	"0x80c44110,0x80c44570,0x80c446f0"
+daEnBossRoy_c		daEnBossRoy_c	5	5	0	d_en_bossNP	"0x80c47e20,0x80c47fc0,0x80c48390"
+daEnBossWendy_c		daEnBossWendy_c	5	5	0	d_en_bossNP	"0x80c4b9f0,0x80c4bbf0,0x80c4c160"
+daEnBeansKuribo_c		daEnBeansKuribo_c	5	5	0	d_enemiesNP	"0x80a0e190,0x80a0e220,0x80a0e3b0"
+daEnIbaramushi_c		daEnIbaramushi_c	5	5	0	d_enemiesNP	"0x80a7bb00,0x80a7bbf0,0x80a7bd30"
+daEnIgaPuku_c		daEnIgaPuku_c	5	5	0	d_enemiesNP	"0x80a82d30,0x80a82f20,0x80a82ff0"
+daEnKanibo_c		daEnKanibo_c	5	5	0	d_enemiesNP	"0x80a9c860,0x80a9c9a0,0x80a9cae0"
+daEnKanonHead_c		daEnKanonHead_c	5	5	0	d_enemiesNP	"0x80aa28c0,0x80aa29b0,0x80aa2a80"
+daEnKiller_c		daEnKiller_c	5	5	0	d_enemiesNP	"0x80aa9790,0x80aa9900,0x80aa9ae0"
+daEnKild_c		daEnKild_c	5	5	0	d_enemiesNP	"0x80aad770,0x80aad7c0,0x80aad840"
+daEnLandBarrel_c		daEnLandBarrel_c	5	5	0	d_enemiesNP	"0x80ab5f20,0x80ab6020,0x80ab60a0"
+daEnParaBomhei_c		daEnParaBomhei_c	5	5	0	d_enemiesNP	"0x80adc920,0x80adca00,0x80adcb00"
+daEnRedRing_c		daEnRedRing_c	5	5	0	d_enemiesNP	"0x80af01e0,0x80af03a0,0x80af0440"
+daEnStarCoin_c		daEnStarCoin_c	5	5	0	d_enemiesNP	"0x80b07ce0,0x80b07d70,0x80b07ed0"
+daEnUnizoo_c		daEnUnizoo_c	5	5	0	d_enemiesNP	"0x80b177e0,0x80b17860,0x80b178b0"
+d3d::rtexQuadManyTwin_c	d3d	rtexQuadManyTwin_c	5	5	0	main	"0x8000d0a0,0x8000b370,0x8000c5c0"
+daFireBall_Base_c		daFireBall_Base_c	5	5	0	main	"0x80040de0,0x80040e70,0x80040ec0"
+daSinkDokan_c		daSinkDokan_c	5	5	0	main	"0x80062f00,0x800630b0,0x80063200"
+dAttention_c		dAttention_c	5	5	0	main	"0x800690f0,0x80069110,0x80069240"
+m3d::capture_c	m3d	capture_c	5	5	0	main	"0x80088fd0,0x80169290,0x801693a0"
+dCaptureMng_c		dCaptureMng_c	5	5	0	main	"0x80089150,0x80089210,0x800892f0"
+dCyuukan_c		dCyuukan_c	5	5	0	main	"0x8008ed70,0x8008edb0,0x8008ee00"
+dEffBigBlockFrag_c		dEffBigBlockFrag_c	5	5	0	main	"0x80090230,0x80090440,0x80090590"
+daLiftAllHitDraw_c		daLiftAllHitDraw_c	5	5	0	main	"0x800bd7a0,0x800bd970,0x800be000"
+daLiftNormalModelDraw_c		daLiftNormalModelDraw_c	5	5	0	main	"0x800c0310,0x800c0440,0x800c0540"
+dMask_c		dMask_c	5	5	0	main	"0x800cb470,0x800cb5b0,0x800cb5d0"
+dMj2dHeader_c		dMj2dHeader_c	5	5	0	main	"0x800ce570,0x800ce580,0x800ce5f0"
+dNext_c		dNext_c	5	5	0	main	"0x800cfbf0,0x800cfc10,0x800cfca0"
+dWmEffectManager_c		dWmEffectManager_c	5	5	0	main	"0x80103150,0x80103220,0x80103390"
+dWmSpline_c		dWmSpline_c	5	5	0	main	"0x80106620,0x801068b0,0x80106b10"
+dSelectCursor_c		dSelectCursor_c	5	5	0	main	"0x8010c050,0x8010c510,0x8010c780"
+nw4r::snd::detail::WaveSound	nw4r::snd::detail	WaveSound	5	5	0	main	"0x80283e10,0x80283ec0,0x80283f60"
+nw4r::ef::HandleBase	nw4r::ef	HandleBase	5	5	0	main	"0x80296750,0x80296760,0x80296780"
+nw4r::ef::DrawDirectionalStrategy	nw4r::ef	DrawDirectionalStrategy	5	5	0	main	"0x8029f460,0x8029f900,0x802a1090"
+nw4r::snd::detail::BankFileReader	nw4r::snd::detail	BankFileReader	5	5	0	main	"0x802656f0,0x80265780,0x80265890"
+nw4r::snd::detail::ChannelManager	nw4r::snd::detail	ChannelManager	5	5	0	main	"0x80267c40,0x80267cc0,0x80267d20"
+nw4r::snd::FxChorus	nw4r::snd	FxChorus	5	5	0	main	"0x8026a670,0x8026a700,0x8026a740"
+nw4r::snd::FxDelay	nw4r::snd	FxDelay	5	5	0	main	"0x8026b160,0x8026b1f0,0x8026b230"
+nw4r::snd::FxReverbHi	nw4r::snd	FxReverbHi	5	5	0	main	"0x8026bcf0,0x8026bdc0,0x8026be00"
+nw4r::snd::FxReverbStd	nw4r::snd	FxReverbStd	5	5	0	main	"0x8026cae0,0x8026cbb0,0x8026cbf0"
+nw4r::snd::MemorySoundArchive	nw4r::snd	MemorySoundArchive	5	5	0	main	"0x8026dd60,0x8026ddb0,0x8026de10"
+nw4r::lyt::TexMap	nw4r::lyt	TexMap	5	5	0	main	"0x802b2810,0x802b2850,0x802b4b50"
+nw4r::lyt::detail::TexCoordAry	nw4r::lyt::detail	TexCoordAry	5	5	0	main	"0x802b6840,0x802b6860,0x802b68b0"
+EGG::AsyncDisplay	EGG	AsyncDisplay	5	5	0	main	"0x802bb580,0x802bb600,0x802bb840"
+EGG::Video	EGG	Video	5	5	0	main	"0x802bbdd0,0x802bbe30,0x802bbf40"
+EGG::ControllerRumbleUnit	EGG	ControllerRumbleUnit	5	5	0	main	"0x802bdb40,0x802bdb70,0x802bdbd0"
+EGG::IBinary<EGG::Fog>	EGG::IBinary<EGG	Fog>	5	5	0	main	"0x802c6020,0x802c6030,0x802c6540"
+EGG::IBinary<EGG::LightObject>	EGG::IBinary<EGG	LightObject>	5	5	0	main	"0x802c9830,0x802c9840,0x802c99f0"
+nw4r::g3d::ResTev	nw4r::g3d	ResTev	5	5	0	main	"0x8023c760,0x8023c830,0x8023c950"
+nw4r::g3d::ResMatTexCoordGen	nw4r::g3d	ResMatTexCoordGen	5	5	0	main	"0x8023cac0,0x8023cc20,0x8023ddd0"
+dRes_c::info_c	dRes_c	info_c	5	5	0	main	"0x800de970,0x800de9f0,0x800dead0"
+DynamicModuleControl		DynamicModuleControl	5	5	0	main	"0x80160080,0x80160110,0x80160190"
+fManager_c		fManager_c	5	5	0	main	"0x80162cf0,0x80162d00,0x80162d50"
+m3d::anmMatClr_c::child_c	m3d::anmMatClr_c	child_c	5	5	0	main	"0x80165820,0x801658a0,0x801659c0"
+m3d::anmTexPat_c::child_c	m3d::anmTexPat_c	child_c	5	5	0	main	"0x80166420,0x801664a0,0x801665c0"
+m3d::anmTexSrt_c::child_c	m3d::anmTexSrt_c	child_c	5	5	0	main	"0x80167000,0x80167080,0x801671b0"
+m3d::mdl_c	m3d	mdl_c	5	5	0	main	"0x80169cd0,0x80169d20,0x80169d90"
+nw4r::ut::detail::LinkListImpl	nw4r::ut::detail	LinkListImpl	5	5	0	main	"0x80229030,0x802290c0,0x80229110"
+nw4r::g3d::Fog	nw4r::g3d	Fog	5	5	0	main	"0x8025f330,0x8025f2b0,0x8025f2c0"
+EGG::ExEffect	EGG	ExEffect	5	5	0	main	"0x802da5a0,0x802da600,0x802da6e0"
+BigPileMng_c		BigPileMng_c	5	5	0	main	"0x8001f6c0,0x8001f740,0x8001f800"
+daEnNetNoko_c		daEnNetNoko_c	5	5	0	main	"0x800356d0,0x80035820,0x80035b10"
+nw4hbm::lyt::Window	nw4hbm::lyt	Window	5	5	0	main	"0x801860b0,0x801862c0,0x801868c0"
+nw4hbm::lyt::detail::TexCoordAry	nw4hbm::lyt::detail	TexCoordAry	5	5	0	main	"0x8017e5d0,0x8017e5f0,0x8017e640"
+SndObjctCmnMap		SndObjctCmnMap	4	4	0	main	"0x80198bb0,0x80198c30,0x80199390"
+SndSpeakerMgr		SndSpeakerMgr	4	4	0	main	"0x8019b180,0x8019b1d0,0x8019b1e0"
+nw4r::snd::detail::RemoteSpeakerManager	nw4r::snd::detail	RemoteSpeakerManager	4	4	0	main	"0x80270ad0,0x80270c20,0x80270b70"
+nw4r::snd::SoundActor	nw4r::snd	SoundActor	4	4	0	main	"0x802753f0,0x802754b0,0x80275560"
+nw4r::snd::detail::StrmBufferPool	nw4r::snd::detail	StrmBufferPool	4	4	0	main	"0x8027bbf0,0x8027bc70,0x8027bcc0"
+dPyEffect_c		dPyEffect_c	4	4	0	main	"0x800d29f0,0x800d2a50,0x800d2ac0"
+dPyEffectMng_c		dPyEffectMng_c	4	4	0	main	"0x800d2c20,0x800d2c80,0x800d2cf0"
+dRide_ctr_c		dRide_ctr_c	4	4	0	main	"0x800dadb0,0x800dae00,0x800dae60"
+dRide2Point_c		dRide2Point_c	4	4	0	main	"0x800db450,0x800db590,0x800db5f0"
+dRemoLineLiftFuki::fukidashi_c	dRemoLineLiftFuki	fukidashi_c	4	4	0	main	"0x800dbcc0,0x800dbd10,0x800dbd60"
+dRemoconMng_c		dRemoconMng_c	4	4	0	main	"0x800dbf50,0x800dbfe0,0x800dc430"
+dReplayPlay_c		dReplayPlay_c	4	4	0	main	"0x800dd950,0x800ddc50,0x800de020"
+sStateMethod_c		sStateMethod_c	4	4	0	main	"0x8015fa30,0x8015fb80,0x8015f9a0"
+DynamicModuleControlBase		DynamicModuleControlBase	4	4	0	main	"0x8015fe50,0x8015fef0,0x8015ff40"
+dStageTimer_c		dStageTimer_c	4	4	0	main	"0x800e37f0,0x800e3820,0x800e3910"
+Util		Util	4	4	0	main	"0x800e7880,0x800e79f0,0x800e7a80"
+dWmConnect_c::dPnt_c	dWmConnect_c	dPnt_c	4	4	0	"main,d_basesNP"	"0x800f2af0,0x800f2b60,0x800f33c0"
+GXStateSave_c		GXStateSave_c	4	4	0	main	"0x80014340,0x80014380,0x80014480"
+dCourseClear_c		dCourseClear_c	4	4	0	d_basesNP	"0x8060c000,0x8060c840,0x8060c910"
+dOtehonClear_c		dOtehonClear_c	4	4	0	d_basesNP	"0x806356a0,0x80635b10,0x80635d00"
+daBossKoopaDemo_c		daBossKoopaDemo_c	4	4	0	d_basesNP	"0x8065dd50,0x8065f090,0x8065f910"
+daBossKoopaJrDemo_c		daBossKoopaJrDemo_c	4	4	0	d_basesNP	"0x80662d30,0x80662e10,0x80663180"
+daCannonPipe_c		daCannonPipe_c	4	4	0	d_basesNP	"0x80669f70,0x8066a040,0x8066a0b0"
+daFallFire_c		daFallFire_c	4	4	0	d_basesNP	"0x8067a7e0,0x8067a840,0x8067a8b0"
+daIceAshibaWater_c		daIceAshibaWater_c	4	4	0	d_basesNP	"0x80692030,0x806920b0,0x80692170"
+daKokoopaRing_c		daKokoopaRing_c	4	4	0	d_basesNP	"0x806b7a60,0x806b7ad0,0x806b7cd0"
+daKokoopaSearchFire_c		daKokoopaSearchFire_c	4	4	0	d_basesNP	"0x806b98c0,0x806b9930,0x806b9a30"
+daLiftFall_c		daLiftFall_c	4	4	0	d_basesNP	"0x806ca130,0x806ca240,0x806ca300"
+daLiftLine_c		daLiftLine_c	4	4	0	d_basesNP	"0x806cc870,0x806cc8b0,0x806cc990"
+daLiftRideHMove_c		daLiftRideHMove_c	4	4	0	d_basesNP	"0x806d4af0,0x806d4b50,0x806d4c10"
+daLiftRideMove_c		daLiftRideMove_c	4	4	0	d_basesNP	"0x806d86e0,0x806d89d0,0x806d8a40"
+daLiftSlideKinoko_c		daLiftSlideKinoko_c	4	4	0	d_basesNP	"0x806ddf50,0x806de0b0,0x806de1c0"
+daLiftSpinRotation_c		daLiftSpinRotation_c	4	4	0	d_basesNP	"0x806dfcc0,0x806dfdb0,0x806dff70"
+daLineKinokoBlock_c		daLineKinokoBlock_c	4	4	0	d_basesNP	"0x806ea410,0x806ea4e0,0x806ea550"
+daManta_c		daManta_c	4	4	0	d_basesNP	"0x806f1210,0x806f1340,0x806f1480"
+daMiniGameKinopio_c		daMiniGameKinopio_c	4	4	0	d_basesNP	"0x806fa270,0x806fa310,0x806fa3d0"
+daObjIggySled_c		daObjIggySled_c	4	4	0	d_basesNP	"0x80709ec0,0x8070a740,0x8070a7c0"
+daRemoDoor_c		daRemoDoor_c	4	4	0	d_basesNP	"0x80728550,0x807285d0,0x80728630"
+daRotDokan_c		daRotDokan_c	4	4	0	d_basesNP	"0x807304d0,0x80730570,0x807305d0"
+daRotarionGhostParent_c		daRotarionGhostParent_c	4	4	0	d_basesNP	"0x80732c80,0x80732d00,0x80732da0"
+daWmKinoBalloon_c		daWmKinoBalloon_c	4	4	0	d_basesNP	"0x8076a270,0x8076aee0,0x8076af60"
+daEnBossCastleWendy_c		daEnBossCastleWendy_c	4	4	0	d_en_bossNP	"0x80c169a0,0x80c16b10,0x80c16d00"
+daEnBossKameck_c		daEnBossKameck_c	4	4	0	d_en_bossNP	"0x80c1c740,0x80c1dbc0,0x80c1e420"
+daEnBossKoopa_c		daEnBossKoopa_c	4	4	0	d_en_bossNP	"0x80c24730,0x80c24c00,0x80c27230"
+daEnBirikyu_c		daEnBirikyu_c	4	4	0	d_enemiesNP	"0x80a1a200,0x80a1a290,0x80a1a300"
+daEnBlock_c		daEnBlock_c	4	4	0	d_enemiesNP	"0x80a1c8f0,0x80a1cea0,0x80a1d600"
+daEnItemIvy_c		daEnItemIvy_c	4	4	0	d_enemiesNP	"0x80a8b370,0x80a8b3f0,0x80a8b4d0"
+daEnLiftRotHalf_c		daEnLiftRotHalf_c	4	4	0	d_enemiesNP	"0x80aba290,0x80abaa80,0x80abaad0"
+daEnNetNokoLR_c		daEnNetNokoLR_c	4	4	0	d_enemiesNP	"0x80acdcc0,0x80acde00,0x80acdef0"
+daEnRailPolyChild_c		daEnRailPolyChild_c	4	4	0	d_enemiesNP	"0x80aeba30,0x80aec7b0,0x80aec850"
+daEnRedcoin_c		daEnRedcoin_c	4	4	0	d_enemiesNP	"0x80af15b0,0x80af16a0,0x80af18b0"
+daEnTestman_c		daEnTestman_c	4	4	0	d_enemiesNP	"0x80b0e8c0,0x80b0e970,0x80b0ea10"
+daEnTogeTekkyu_c		daEnTogeTekkyu_c	4	4	0	d_enemiesNP	"0x80b13c30,0x80b13ce0,0x80b13db0"
+daEnWakiIgaPuku_c		daEnWakiIgaPuku_c	4	4	0	d_enemiesNP	"0x80b194b0,0x80b19510,0x80b195b0"
+daEnWrturn_c		daEnWrturn_c	4	4	0	d_enemiesNP	"0x80b27c10,0x80b27ce0,0x80b283b0"
+daObjPipeBase_c		daObjPipeBase_c	4	4	0	main	"0x80045710,0x800459f0,0x80045b10"
+dPyMdlBase_HIO_c		dPyMdlBase_HIO_c	4	4	0	main	"0x8005db00,0x8005dbe0,0x8005dc20"
+dHeapAllocator_c		dHeapAllocator_c	4	4	0	main	"0x80069020,0x80069060,0x800690c0"
+dEffWaterSplash_c		dEffWaterSplash_c	4	4	0	main	"0x80091fb0,0x80092030,0x80092150"
+m3d::anmVis_c	m3d	anmVis_c	4	4	0	main	"0x800a2ea0,0x80167c40,0x80167d60"
+dHanaBodyBase_c		dHanaBodyBase_c	4	4	0	main	"0x800b6830,0x800b6930,0x800b6be0"
+dMarioMdl_c		dMarioMdl_c	4	4	0	main	"0x800ca060,0x800ca120,0x800ca1a0"
+sStateID_c		sStateID_c	4	4	0	main	"0x8015f7c0,0x8015f800,0x8015f850"
+dWmRouteManager_c		dWmRouteManager_c	4	4	0	main	"0x80103b40,0x80103d30,0x80103d90"
+dDvdErrorWideMsg_c		dDvdErrorWideMsg_c	4	4	0	main	"0x80107890,0x80107920,0x801079b0"
+dSmallScoreManager_c		dSmallScoreManager_c	4	4	0	main	"0x8010ca00,0x8010ca90,0x8010cef0"
+dLogoScreen_c		dLogoScreen_c	4	4	0	main	"0x8010efa0,0x8010f0c0,0x8010f340"
+d2d::ResAccMult_c	d2d	ResAccMult_c	4	4	0	main	"0x800068b0,0x800069a0,0x80006a20"
+nw4r::snd::detail::TaskThread	nw4r::snd::detail	TaskThread	4	4	0	main	"0x80280490,0x802804b0,0x80280530"
+nw4r::snd::detail::WaveFileReader	nw4r::snd::detail	WaveFileReader	4	4	0	main	"0x80283ba0,0x80283bc0,0x80283bd0"
+nw4r::snd::detail::WsdFileReader	nw4r::snd::detail	WsdFileReader	4	4	0	main	"0x80284210,0x802842a0,0x802843c0"
+nw4r::ef::CreationQueue	nw4r::ef	CreationQueue	4	4	0	main	"0x80296dc0,0x80296dd0,0x80296f50"
+nw4r::lyt::Window	nw4r::lyt	Window	4	4	0	main	"0x802af6f0,0x802afed0,0x802aff60"
+nw4r::snd::detail::AxfxImpl	nw4r::snd::detail	AxfxImpl	4	4	0	main	"0x802652e0,0x80265330,0x80265390"
+nw4r::snd::detail::PoolImpl	nw4r::snd::detail	PoolImpl	4	4	0	main	"0x8026d860,0x8026d9b0,0x8026daa0"
+nw4r::lyt::res::TexMap	nw4r::lyt::res	TexMap	4	4	0	main	"0x802b2830,0x802b2840,0x802b2870"
+nw4r::lyt::ArcResourceAccessor	nw4r::lyt	ArcResourceAccessor	4	4	0	main	"0x802b6620,0x802b6680,0x802b6700"
+EGG		EGG	4	4	0	main	"0x802b85d0,0x802b8700,0x802b78f0"
+EGG::UnitHeap	EGG	UnitHeap	4	4	0	main	"0x802b9ab0,0x802b9b80,0x802b9de0"
+EGG::AssertHeap	EGG	AssertHeap	4	4	0	main	"0x802b9e70,0x802b9f30,0x802ba000"
+EGG::ColorFader	EGG	ColorFader	4	4	0	main	"0x802bb030,0x802bb0e0,0x802bb0f0"
+EGG::XfbManager	EGG	XfbManager	4	4	0	main	"0x802bc230,0x802bc270,0x802bc350"
+EGG::TBuffer<EGG::CoreController*>	EGG::TBuffer<EGG	CoreController*>	4	4	0	main	"0x802bd3f0,0x802bd7c0,0x802be2f0"
+EGG::Math<float>	EGG	Math<float>	4	4	0	main	"0x802be470,0x802be4a0,0x802be4d0"
+EGG::Matrix34f	EGG	Matrix34f	4	4	0	main	"0x802be530,0x802be540,0x802be580"
+EGG::BaseCamera	EGG	BaseCamera	4	4	0	main	"0x802be880,0x802be8d0,0x802be930"
+EGG::OrthoData	EGG	OrthoData	4	4	0	main	"0x802bf3d0,0x802bf420,0x802bf540"
+EGG::PostEffectBlur	EGG	PostEffectBlur	4	4	0	main	"0x802c35b0,0x802cef70,0x802cf050"
+EGG::Fog	EGG	Fog	4	4	0	main	"0x802c6040,0x802c6080,0x802c60d0"
+EGG::FogManager	EGG	FogManager	4	4	0	main	"0x802c6550,0x802c65d0,0x802c6640"
+EGG::GXUtility	EGG	GXUtility	4	4	0	main	"0x802c7b20,0x802c7b30,0x802c7b70"
+EGG::IBinary<EGG::LightTexture>	EGG::IBinary<EGG	LightTexture>	4	4	0	main	"0x802cb3f0,0x802cb400,0x802cdb60"
+nw4r::g3d::ResTexObj	nw4r::g3d	ResTexObj	4	4	0	main	"0x8023cc90,0x8023cd00,0x8023cc60"
+nw4r::g3d::ResTlutObj	nw4r::g3d	ResTlutObj	4	4	0	main	"0x8023cdc0,0x8023cdf0,0x8023ce30"
+nw4r::g3d::ResVtxPos	nw4r::g3d	ResVtxPos	4	4	0	main	"0x8023e6c0,0x8023e700,0x8023e740"
+nw4r::g3d::ResVtxNrm	nw4r::g3d	ResVtxNrm	4	4	0	main	"0x8023e7a0,0x8023e7e0,0x8023e820"
+nw4r::g3d::ResVtxClr	nw4r::g3d	ResVtxClr	4	4	0	main	"0x8023e880,0x8023e8c0,0x8023e900"
+nw4r::g3d::ResTex	nw4r::g3d	ResTex	4	4	0	main	"0x8023eb30,0x8023ebf0,0x8023ecb0"
+dResMng_c		dResMng_c	4	4	0	main	"0x800df680,0x800df6e0,0x800df7d0"
+cLineMg_c		cLineMg_c	4	4	0	main	"0x80160f10,0x80160f60,0x80160fe0"
+cTreeNd_c		cTreeNd_c	4	4	0	main	"0x80161530,0x80161560,0x801616c0"
+m3d::anmChrBlend_c	m3d	anmChrBlend_c	4	4	0	main	"0x80165520,0x801655e0,0x801656c0"
+mAllocator_c		mAllocator_c	4	4	0	main	"0x8016a5e0,0x8016a630,0x8016a690"
+mDvd_callback_c		mDvd_callback_c	4	4	0	main	"0x8016b800,0x8016b860,0x8016b8d0"
+mDvd_mountMemArchive_c		mDvd_mountMemArchive_c	4	4	0	main	"0x8016ba20,0x8016bcc0,0x8016bd60"
+nw4r::ut::TagProcessorBase<wchar_t>	nw4r::ut	TagProcessorBase<wchar_t>	4	4	0	main	"0x80229810,0x80229820,0x80229860"
+nw4r::ut::RomFont	nw4r::ut	RomFont	4	4	0	main	"0x8022b4c0,0x8022b560,0x8022b5a0"
+nw4r::ut::ResFont	nw4r::ut	ResFont	4	4	0	main	"0x8022c300,0x8022c340,0x8022c3a0"
+EGG::AudioFx	EGG	AudioFx	4	4	0	main	"0x802d4c00,0x802d4c70,0x802d4cd0"
+EGG::EffectCreator	EGG	EffectCreator	4	4	0	main	"0x802d88d0,0x802d8950,0x802d89e0"
+EGG::EffectResource	EGG	EffectResource	4	4	0	main	"0x802da310,0x802da470,0x802da500"
+nw4r::g3d::AnmObjMatClrRes	nw4r::g3d	AnmObjMatClrRes	4	4	0	main	"0x80243d20,0x80243f10,0x80244190"
+nw4r::g3d::AnmObjTexPatRes	nw4r::g3d	AnmObjTexPatRes	4	4	0	main	"0x80245500,0x802456f0,0x80245970"
+nw4r::g3d::AnmObjTexSrtRes	nw4r::g3d	AnmObjTexSrtRes	4	4	0	main	"0x80246b00,0x80246cf0,0x80246f70"
+nw4r::g3d::AnmObjChrRes	nw4r::g3d	AnmObjChrRes	4	4	0	main	"0x80248990,0x80248b80,0x80248e00"
+nw4r::g3d::ScnLeaf	nw4r::g3d	ScnLeaf	4	4	0	main	"0x80257830,0x80257a00,0x80257a40"
+nw4r::g3d::ScnObjGather	nw4r::g3d	ScnObjGather	4	4	0	main	"0x80259680,0x80259f60,0x8025a0e0"
+nw4hbm::lyt::Layout	nw4hbm::lyt	Layout	4	4	0	main	"0x8017f980,0x80180020,0x80180240"
+nw4hbm::lyt::TextBox	nw4hbm::lyt	TextBox	4	4	0	main	"0x80184c60,0x80185cc0,0x80185d40"
+nw4hbm::ut::TagProcessorBase<char>	nw4hbm::ut	TagProcessorBase<char>	4	4	0	main	"0x8018b080,0x8018b090,0x8018b0d0"
+nw4hbm::ut::TagProcessorBase<wchar_t>	nw4hbm::ut	TagProcessorBase<wchar_t>	4	4	0	main	"0x8018b5e0,0x8018b5f0,0x8018b630"
+mTex::base_c	mTex	base_c	4	4	0	main	"0x80170670,0x801706e0,0x80170700"
+NMSndObjectBase		NMSndObjectBase	3	3	0	main	"0x80197300,0x80197380,0x80197400"
+SndObjctEmy		SndObjctEmy	3	3	0	main	"0x80197bf0,0x80197e30,0x800984b0"
+SndObjctCmnEmy		SndObjctCmnEmy	3	3	0	main	"0x80197f00,0x80198660,0x80198ae0"
+nw4r::snd::detail::SeqFileReader	nw4r::snd::detail	SeqFileReader	3	3	0	main	"0x80270d20,0x80270d90,0x80270da0"
+nw4r::snd::Sound3DManager	nw4r::snd	Sound3DManager	3	3	0	main	"0x802750f0,0x80275150,0x802751b0"
+nw4r::snd::detail::SoundArchiveLoader	nw4r::snd::detail	SoundArchiveLoader	3	3	0	main	"0x80277050,0x80277090,0x802770d0"
+nw4r::snd::SoundHandle	nw4r::snd	SoundHandle	3	3	0	main	"0x8027a160,0x8027a1b0,0x8027a200"
+nw4r::snd::SoundStartable	nw4r::snd	SoundStartable	3	3	0	main	"0x8027b160,0x8027b1c0,0x8027b270"
+nw4r::snd::detail::StrmFileReader	nw4r::snd::detail	StrmFileReader	3	3	0	main	"0x8027be30,0x8027be40,0x8027bf50"
+dPoleRope_c		dPoleRope_c	3	3	0	main	"0x800d2510,0x800d2690,0x800d27b0"
+dPlayerOrchestra_c		dPlayerOrchestra_c	3	3	0	main	"0x800d70a0,0x800d70c0,0x800d70e0"
+dTenCoinMng_c		dTenCoinMng_c	3	3	0	main	"0x800e7590,0x800e75f0,0x800e76a0"
+dWaterEntryMng_c		dWaterEntryMng_c	3	3	0	main	"0x800eb640,0x800eb6b0,0x800eb6e0"
+dWipeFader_c		dWipeFader_c	3	3	0	main	"0x800edf20,0x800edf70,0x800ee170"
+dWmMaterial_c		dWmMaterial_c	3	3	0	main	"0x800fd590,0x800fd720,0x800fd750"
+dScRestartCrsin_c		dScRestartCrsin_c	3	3	0	"main,d_basesNP"	"0x801017d0,0x801018c0,0x807b6320"
+dRailScnGroup_c		dRailScnGroup_c	3	3	0	main	"0x8000f460,0x8000f4b0,0x8000f570"
+mVec3_c		mVec3_c	3	3	0	"main,d_basesNP"	"0x8000fbf0,0x80601cd0,0x80170980"
+daFlyDokan_c		daFlyDokan_c	3	3	0	main	"0x80041c00,0x80041d40,0x80042350"
+daIceAshibaBase_c		daIceAshibaBase_c	3	3	0	main	"0x80042970,0x80042480,0x80042650"
+dCharacterChangeSelectContents_c		dCharacterChangeSelectContents_c	3	3	0	d_basesNP	"0x80605400,0x806057b0,0x80605ba0"
+dCollectionCoinDate_c		dCollectionCoinDate_c	3	3	0	d_basesNP	"0x80608f20,0x80609860,0x806098e0"
+dModelPlayDate_c		dModelPlayDate_c	3	3	0	d_basesNP	"0x80626810,0x80627350,0x806273e0"
+dPointResultDateFileFree_c		dPointResultDateFileFree_c	3	3	0	d_basesNP	"0x8063a120,0x8063a960,0x8063abe0"
+daBigHanaMgr_c		daBigHanaMgr_c	3	3	0	d_basesNP	"0x80651910,0x80651990,0x80651a60"
+daBlockWindTag_c		daBlockWindTag_c	3	3	0	d_basesNP	"0x80656570,0x80656610,0x806566f0"
+daFloorJrC_c		daFloorJrC_c	3	3	0	d_basesNP	"0x80684a30,0x80685260,0x806852c0"
+daHammer_c		daHammer_c	3	3	0	d_basesNP	"0x8068fa60,0x8068fb80,0x8068fc40"
+daKeronpaFire_c		daKeronpaFire_c	3	3	0	d_basesNP	"0x806b2bb0,0x806b2d10,0x806b2df0"
+daKoopaShipForAirshipDemo_c		daKoopaShipForAirshipDemo_c	3	3	0	d_basesNP	"0x806beb60,0x806bf2c0,0x806bf340"
+daLiftRemoconSeesaw_c		daLiftRemoconSeesaw_c	3	3	0	d_basesNP	"0x806d15a0,0x806d1e70,0x806d1ed0"
+daLiftRemoconXline_c		daLiftRemoconXline_c	3	3	0	d_basesNP	"0x806d2870,0x806d3b60,0x806d3c20"
+daLiftRideOff_c		daLiftRideOff_c	3	3	0	d_basesNP	"0x806d6e90,0x806d6f20,0x806d6fd0"
+daLineSpinLift_c		daLineSpinLift_c	3	3	0	d_basesNP	"0x806eb540,0x806eb600,0x806eb6b0"
+daMegaHammer_c		daMegaHammer_c	3	3	0	d_basesNP	"0x806f4b10,0x806f4be0,0x806f4c80"
+daObjCenter2_c		daObjCenter2_c	3	3	0	d_basesNP	"0x807074b0,0x80707620,0x80707800"
+daRemoSlideDoor_c		daRemoSlideDoor_c	3	3	0	d_basesNP	"0x8072a270,0x8072a310,0x8072a3e0"
+daRotCannon_c		daRotCannon_c	3	3	0	d_basesNP	"0x8072ebc0,0x8072ec80,0x8072ed30"
+daRotDokanCannon_c		daRotDokanCannon_c	3	3	0	d_basesNP	"0x80732010,0x807320f0,0x80732230"
+daShipCannon_c		daShipCannon_c	3	3	0	d_basesNP	"0x80734170,0x80734240,0x80734340"
+daSpana_c		daSpana_c	3	3	0	d_basesNP	"0x8073bb50,0x8073bc00,0x8073bcc0"
+daWaterXinfinitMove_c		daWaterXinfinitMove_c	3	3	0	d_basesNP	"0x807538e0,0x807539e0,0x80753b20"
+daWaterAllRail_c		daWaterAllRail_c	3	3	0	d_basesNP	"0x80754740,0x807547d0,0x80754870"
+daWmYoganPillar_c		daWmYoganPillar_c	3	3	0	d_basesNP	"0x80786540,0x80786e10,0x80786ea0"
+daEndingMain_c		daEndingMain_c	3	3	0	d_basesNP	"0x807a5b20,0x807a5bc0,0x807a5cc0"
+daEnBossCastleRoy_c		daEnBossCastleRoy_c	3	3	0	d_en_bossNP	"0x80c12fe0,0x80c13730,0x80c14390"
+daEnBossKoopaJrA_c		daEnBossKoopaJrA_c	3	3	0	d_en_bossNP	"0x80c2e4d0,0x80c2efe0,0x80c2f0c0"
+daEnBossLarry_c		daEnBossLarry_c	3	3	0	d_en_bossNP	"0x80c35b70,0x80c35c90,0x80c365a0"
+daEnBigBlock_c		daEnBigBlock_c	3	3	0	d_enemiesNP	"0x80a16410,0x80a16760,0x80a16820"
+daEnBlockAngle_c		daEnBlockAngle_c	3	3	0	d_enemiesNP	"0x80a1edf0,0x80a1ee80,0x80a1ef30"
+daEnBlueCoin_c		daEnBlueCoin_c	3	3	0	d_enemiesNP	"0x80a258a0,0x80a25950,0x80a25a20"
+daEnChikuwa_c		daEnChikuwa_c	3	3	0	d_enemiesNP	"0x80a327c0,0x80a328d0,0x80a329b0"
+daEnCliffChikuwa_c		daEnCliffChikuwa_c	3	3	0	d_enemiesNP	"0x80a39650,0x80a397b0,0x80a398c0"
+daEnCoinAngle_c		daEnCoinAngle_c	3	3	0	d_enemiesNP	"0x80a42bc0,0x80a42c20,0x80a42cc0"
+daEnCoinWind_c		daEnCoinWind_c	3	3	0	d_enemiesNP	"0x80a46cc0,0x80a46d10,0x80a46df0"
+daEnJugemBody_c		daEnJugemBody_c	3	3	0	d_enemiesNP	"0x80a95150,0x80a95280,0x80a952d0"
+daEnKingKiller_c		daEnKingKiller_c	3	3	0	d_enemiesNP	"0x80aaf500,0x80aaf5a0,0x80aaf6f0"
+daEnLineBirikyu_c		daEnLineBirikyu_c	3	3	0	d_enemiesNP	"0x80abca30,0x80abcab0,0x80abcb10"
+daEnObjBlock_c		daEnObjBlock_c	3	3	0	d_enemiesNP	"0x80ad47e0,0x80ad4850,0x80ad48c0"
+daEnOnewayGate_c		daEnOnewayGate_c	3	3	0	d_enemiesNP	"0x80ad9b70,0x80ad9c80,0x80ad9d10"
+daEnPataBlock_c		daEnPataBlock_c	3	3	0	d_enemiesNP	"0x80ade300,0x80ade3a0,0x80ade450"
+daEnPataKuribo_c		daEnPataKuribo_c	3	3	0	d_enemiesNP	"0x80adf4b0,0x80adf620,0x80adf850"
+daEnRotBlock_c		daEnRotBlock_c	3	3	0	d_enemiesNP	"0x80af57a0,0x80af5be0,0x80af5c60"
+daEnSakasaTogezo_c		daEnSakasaTogezo_c	3	3	0	d_enemiesNP	"0x80af9290,0x80af93c0,0x80af95d0"
+daEnWhiteBlock_c		daEnWhiteBlock_c	3	3	0	d_enemiesNP	"0x80b25de0,0x80b265c0,0x80b26a10"
+d3d::rtexKinokoKuki_c	d3d	rtexKinokoKuki_c	3	3	0	main	"0x8000d7e0,0x8000d740,0x8000d820"
+d3d::rtexMovePipe_c	d3d	rtexMovePipe_c	3	3	0	main	"0x8000e030,0x8000e840,0x8000e060"
+daMovePipe_c		daMovePipe_c	3	3	0	main	"0x80044460,0x80044550,0x800448a0"
+dAcPy_HIO_Speed_c		dAcPy_HIO_Speed_c	3	3	0	main	"0x8005d7e0,0x8005d830,0x8005d880"
+dBlockMng_c		dBlockMng_c	3	3	0	main	"0x80087f40,0x80088270,0x80088cf0"
+dEffActor_c		dEffActor_c	3	3	0	main	"0x800908f0,0x80092290,0x800922d0"
+mEf::oneEmitter_c	mEf	oneEmitter_c	3	3	0	main	"0x80094de0,0x8016da50,0x8016d8e0"
+dEnFumiProc_c		dEnFumiProc_c	3	3	0	main	"0x800a29c0,0x800a2a20,0x800a2b20"
+dGameKey_c		dGameKey_c	3	3	0	main	"0x800b58e0,0x800b5930,0x800b5ab0"
+dGraph_c		dGraph_c	3	3	0	main	"0x800b6450,0x800b6460,0x800b64e0"
+dHanaHead_c		dHanaHead_c	3	3	0	main	"0x800b6df0,0x800b6e50,0x800b7db0"
+dKADr_c		dKADr_c	3	3	0	main	"0x800bbd30,0x800bbe10,0x800bbf00"
+dKinokoKasaDraw_c		dKinokoKasaDraw_c	3	3	0	main	"0x800bc4c0,0x800bc5a0,0x800bc6b0"
+dDarkMask_c		dDarkMask_c	3	3	0	main	"0x800cbf60,0x800cbfa0,0x800cc090"
+dDarkSettingMask_c		dDarkSettingMask_c	3	3	0	main	"0x800cc250,0x800cc2a0,0x800cc390"
+MsgRes_c		MsgRes_c	3	3	0	main	"0x800ce700,0x800ce7a0,0x800ce7d0"
+nw4r::ut::Color	nw4r::ut	Color	3	3	0	main	"0x800075d0,0x802b2750,0x802b2910"
+nw4r::math::MTX34	nw4r::math	MTX34	3	3	0	main	"0x8029f630,0x802a0650,0x802a0e00"
+nw4r::ef::DrawSmoothStripeStrategy::Vertex	nw4r::ef::DrawSmoothStripeStrategy	Vertex	3	3	0	main	"0x802a8010,0x802a8990,0x802a89d0"
+nw4r::lyt::GroupContainer	nw4r::lyt	GroupContainer	3	3	0	main	"0x802ac720,0x802ac7f0,0x802ac830"
+nw4r::snd::detail::Bank	nw4r::snd::detail	Bank	3	3	0	main	"0x80265470,0x802654b0,0x802654f0"
+nw4r::snd::detail::Lfo	nw4r::snd::detail	Lfo	3	3	0	main	"0x8026db80,0x8026dba0,0x8026dc40"
+nw4r::lyt::detail::AnimPaneTree	nw4r::lyt::detail	AnimPaneTree	3	3	0	main	"0x802b5e10,0x802b5e50,0x802b60b0"
+EGG::DvdRipper	EGG	DvdRipper	3	3	0	main	"0x802b7ed0,0x802b7f80,0x802b8150"
+EGG::FrmHeap	EGG	FrmHeap	3	3	0	main	"0x802b9780,0x802b9840,0x802b99c0"
+EGG::Display	EGG	Display	3	3	0	main	"0x802bac70,0x802baed0,0x802baf70"
+EGG::Xfb	EGG	Xfb	3	3	0	main	"0x802bc120,0x802bc1a0,0x802bc210"
+EGG::DrawPathBase	EGG	DrawPathBase	3	3	0	main	"0x802c3210,0x802c32b0,0x802c34b0"
+nw4r::math::FRUSTUM	nw4r::math	FRUSTUM	3	3	0	main	"0x80238930,0x802389f0,0x80239780"
+nw4r::g3d::ResMatPix	nw4r::g3d	ResMatPix	3	3	0	main	"0x8023ca60,0x8023cb00,0x8023cb60"
+nw4r::g3d::ResTexSrt	nw4r::g3d	ResTexSrt	3	3	0	main	"0x8023cec0,0x8023cfa0,0x8023d020"
+nw4r::g3d::ResMatChan	nw4r::g3d	ResMatChan	3	3	0	main	"0x8023dc70,0x8023dcb0,0x8023dd70"
+nw4r::g3d::ResAnmTexPat	nw4r::g3d	ResAnmTexPat	3	3	0	main	"0x8023f5a0,0x8023f720,0x8023f890"
+DbMapFile		DbMapFile	3	3	0	main	"0x80160930,0x80160990,0x801609d0"
+cRandom_c		cRandom_c	3	3	0	main	"0x80161460,0x80161490,0x801614e0"
+cUnaryTreeMg_c		cUnaryTreeMg_c	3	3	0	main	"0x80161750,0x80161800,0x801618c0"
+fArcLoad_c		fArcLoad_c	3	3	0	main	"0x80161920,0x801619b0,0x80161a70"
+m2d::ResAccIf_c	m2d	ResAccIf_c	3	3	0	main	"0x80163660,0x80163690,0x801636a0"
+m2d::AnmGroupBase_c	m2d	AnmGroupBase_c	3	3	0	main	"0x801643b0,0x80164460,0x801644d0"
+m3d::smdl_c	m3d	smdl_c	3	3	0	main	"0x8016a2f0,0x8016a340,0x8016a3a0"
+mEf::levelOneEffect_c	mEf	levelOneEffect_c	3	3	0	main	"0x8016d640,0x8016d8a0,0x80032a30"
+mFrustum_c		mFrustum_c	3	3	0	main	"0x8016dec0,0x8016e230,0x8016e3a0"
+nw4r::ut::TagProcessorBase<char>	nw4r::ut	TagProcessorBase<char>	3	3	0	main	"0x80229360,0x80229370,0x802293b0"
+nw4r::ut::FileStream::FilePosition	nw4r::ut::FileStream	FilePosition	3	3	0	main	"0x80229d60,0x80229dd0,0x80229e20"
+nw4r::ut::DvdLockedFileStream	nw4r::ut	DvdLockedFileStream	3	3	0	main	"0x8022a590,0x8022a620,0x8022a6b0"
+nw4r::g3d::AnmObjChrNode	nw4r::g3d	AnmObjChrNode	3	3	0	main	"0x80247a50,0x802477d0,0x80247ab0"
+EGG::ExpAudioMgr	EGG	ExpAudioMgr	3	3	0	main	"0x802d46e0,0x802d4780,0x802d48c0"
+EGG::AudioUtility::HBM	EGG::AudioUtility	HBM	3	3	0	main	"0x802d6cc0,0x802d6cd0,0x802d6e00"
+EGG::AudioSystem	EGG	AudioSystem	3	3	0	main	"0x802d7010,0x802d7030,0x802d7070"
+EGG::ExParticle	EGG	ExParticle	3	3	0	main	"0x802db030,0x802db080,0x802db0e0"
+EGG::ExParticleManager	EGG	ExParticleManager	3	3	0	main	"0x802db0f0,0x802db140,0x802db6b0"
+nw4r::g3d::AnmObjVisRes	nw4r::g3d	AnmObjVisRes	3	3	0	main	"0x80242c30,0x80242d80,0x80243210"
+nw4r::g3d::AnmObjMatClrNode	nw4r::g3d	AnmObjMatClrNode	3	3	0	main	"0x802433b0,0x80243630,0x80243690"
+nw4r::g3d::AnmObjTexPatNode	nw4r::g3d	AnmObjTexPatNode	3	3	0	main	"0x80244b80,0x80244e00,0x80244e60"
+nw4r::g3d::AnmObjTexSrtNode	nw4r::g3d	AnmObjTexSrtNode	3	3	0	main	"0x80246180,0x80246400,0x80246460"
+nw4r::g3d::G3dObj	nw4r::g3d	G3dObj	3	3	0	main	"0x80249a70,0x80249ac0,0x80249b40"
+nw4r::g3d::detail::ScnDependentMtxFunc	nw4r::g3d::detail	ScnDependentMtxFunc	3	3	0	main	"0x8024a6e0,0x8024aac0,0x8024abd0"
+nw4r::g3d::LightSetting	nw4r::g3d	LightSetting	3	3	0	main	"0x8025f6d0,0x8025fad0,0x8025fc30"
+dWipeDokan_c		dWipeDokan_c	3	3	0	main	"0x8001bb90,0x8001bc60,0x8001bf20"
+daEnCarry_c		daEnCarry_c	3	3	0	main	"0x80026bc0,0x80026c00,0x80026ca0"
+daEnCoinMain_c		daEnCoinMain_c	3	3	0	main	"0x800275f0,0x80027a70,0x80027d00"
+daEnSuperBigPile_c		daEnSuperBigPile_c	3	3	0	main	"0x8003ccc0,0x8003ce20,0x8003cf40"
+nw4hbm::lyt::GroupContainer	nw4hbm::lyt	GroupContainer	3	3	0	main	"0x8017f610,0x8017f6e0,0x8017f720"
+nw4hbm::ut::detail::LinkListImpl	nw4hbm::ut::detail	LinkListImpl	3	3	0	main	"0x8018a4b0,0x8018a540,0x8018a590"
+nw4hbm::ut::ResFont	nw4hbm::ut	ResFont	3	3	0	main	"0x8018a730,0x8018a7d0,0x8018a920"
+mTex::edit4b_c	mTex	edit4b_c	3	3	0	main	"0x801707e0,0x80170830,0x80170900"
+homebutton::gui::Component	homebutton::gui	Component	3	3	0	main	"0x80171c30,0x80172180,0x80172330"
+nw4hbm::lyt::AnimTransformBasic	nw4hbm::lyt	AnimTransformBasic	3	3	0	main	"0x8017d700,0x8017da20,0x8017dcc0"
+nw4hbm::lyt::ArcResourceAccessor	nw4hbm::lyt	ArcResourceAccessor	3	3	0	main	"0x8017e210,0x8017e270,0x8017e310"
+SndCalc		SndCalc	2	2	0	main	"0x8019f050,0x8019f090"
+nw4r::snd::SeqSoundHandle	nw4r::snd	SeqSoundHandle	2	2	0	main	"0x80272c40,0x80272d40"
+nw4r::snd::detail::StrmPlayer::StrmHeaderLoadTask	nw4r::snd::detail::StrmPlayer	StrmHeaderLoadTask	2	2	0	main	"0x8027c8b0,0x8027f040"
+nw4r::snd::detail::StrmPlayer::StrmDataLoadTask	nw4r::snd::detail::StrmPlayer	StrmDataLoadTask	2	2	0	main	"0x8027c910,0x8027f270"
+nw4r::snd::StrmSoundHandle	nw4r::snd	StrmSoundHandle	2	2	0	main	"0x8027fc50,0x8027fd50"
+dObjBlockMng_c		dObjBlockMng_c	2	2	0	main	"0x800d0340,0x800d0470"
+dPlayerMdl_c::mdl_inf_c	dPlayerMdl_c	mdl_inf_c	2	2	0	main	"0x800d3030,0x800d3070"
+dPosShake_c		dPosShake_c	2	2	0	main	"0x800d80b0,0x800d80d0"
+dRemoLineLiftFuki::ctrl_c	dRemoLineLiftFuki	ctrl_c	2	2	0	main	"0x800dbe30,0x800dbe80"
+dRotShake_c		dRotShake_c	2	2	0	main	"0x800df860,0x800df890"
+sStateMethodUsr_FI_c		sStateMethodUsr_FI_c	2	2	0	main	"0x8015fc90,0x8000ff10"
+dSwitchFlagMng_c		dSwitchFlagMng_c	2	2	0	main	"0x800e3ba0,0x800e3f20"
+dWmBgmSync_c		dWmBgmSync_c	2	2	0	main	"0x800ee430,0x80102db0"
+dWmActor_c		dWmActor_c	2	2	0	main	"0x800f2710,0x800f2770"
+dProcShareProc_c		dProcShareProc_c	2	2	0	main	"0x8000f270,0x8000f2e0"
+dCharacterChangeIndicator_c		dCharacterChangeIndicator_c	2	2	0	d_basesNP	"0x80600230,0x80600600"
+daBattleGame_c		daBattleGame_c	2	2	0	d_basesNP	"0x8064bcd0,0x8064bd80"
+daBattleItem_c		daBattleItem_c	2	2	0	d_basesNP	"0x8064d0a0,0x8064d150"
+daFloorJrCMgr_c		daFloorJrCMgr_c	2	2	0	d_basesNP	"0x806856e0,0x80686550"
+daIceCube_c		daIceCube_c	2	2	0	d_basesNP	"0x80693080,0x806930f0"
+daIceLump_c		daIceLump_c	2	2	0	d_basesNP	"0x80694110,0x806941a0"
+daItemKey_c		daItemKey_c	2	2	0	d_basesNP	"0x80696ea0,0x80696f70"
+daJrFire_c		daJrFire_c	2	2	0	d_basesNP	"0x806a74a0,0x806a75b0"
+daKameckForAirshipDemo_c		daKameckForAirshipDemo_c	2	2	0	d_basesNP	"0x806a9740,0x806aab90"
+daKazanRock_c		daKazanRock_c	2	2	0	d_basesNP	"0x806b2010,0x806b2230"
+daKokoopaBall_c		daKokoopaBall_c	2	2	0	d_basesNP	"0x806b5ce0,0x806b5e00"
+daLiftBalance_c		daLiftBalance_c	2	2	0	d_basesNP	"0x806c7ba0,0x806c7c20"
+daLiftObjbgVMove_c		daLiftObjbgVMove_c	2	2	0	d_basesNP	"0x806ce430,0x806ce4b0"
+daRemoconBalance_c::nodeCallbackA_c	daRemoconBalance_c	nodeCallbackA_c	2	2	0	d_basesNP	"0x806ceac0,0x806cf400"
+daLiftSeesaw_c		daLiftSeesaw_c	2	2	0	d_basesNP	"0x806dc7e0,0x806dc850"
+daLiftWaterWheel_c		daLiftWaterWheel_c	2	2	0	d_basesNP	"0x806e2fd0,0x806e3090"
+daManhole_c		daManhole_c	2	2	0	d_basesNP	"0x806ef9e0,0x806efa90"
+daMantaMgr2_c		daMantaMgr2_c	2	2	0	d_basesNP	"0x806f2990,0x806f2a30"
+daMiniGameBalloon_c		daMiniGameBalloon_c	2	2	0	d_basesNP	"0x806f68f0,0x806f6990"
+daMiniGameBalloonStick_c		daMiniGameBalloonStick_c	2	2	0	d_basesNP	"0x806f7430,0x806f7bb0"
+daNextGotoBlock_c		daNextGotoBlock_c	2	2	0	d_basesNP	"0x80701390,0x80701530"
+daNut_c		daNut_c	2	2	0	d_basesNP	"0x80706510,0x80706690"
+daObjLarry_c		daObjLarry_c	2	2	0	d_basesNP	"0x80713250,0x80713b00"
+daObjRoy_c		daObjRoy_c	2	2	0	d_basesNP	"0x80719460,0x807195a0"
+daPeachCastleSequenceMgrObj_c		daPeachCastleSequenceMgrObj_c	2	2	0	d_basesNP	"0x80720720,0x80720a90"
+daPeachForCastleDemo_c		daPeachForCastleDemo_c	2	2	0	d_basesNP	"0x80722970,0x80723360"
+daReverseBlock_c		daReverseBlock_c	2	2	0	d_basesNP	"0x8072ac00,0x8072ad60"
+daShipGear_c		daShipGear_c	2	2	0	d_basesNP	"0x80734d00,0x80734e30"
+daWakiAnkoh_c		daWakiAnkoh_c	2	2	0	d_basesNP	"0x80747260,0x80747310"
+daWakiPukuPuku_c		daWakiPukuPuku_c	2	2	0	d_basesNP	"0x8074ca70,0x8074cba0"
+daWaterBubbleCannon_c		daWaterBubbleCannon_c	2	2	0	d_basesNP	"0x80750ea0,0x80750f20"
+daWaterLift_c		daWaterLift_c	2	2	0	d_basesNP	"0x80751bd0,0x80751c90"
+daWaterMove_c		daWaterMove_c	2	2	0	d_basesNP	"0x80752ca0,0x80752d10"
+daWireMove_c		daWireMove_c	2	2	0	d_basesNP	"0x807560d0,0x80756160"
+daWmItem_c		daWmItem_c	2	2	0	d_basesNP	"0x80767240,0x807678c0"
+daWmKoopaShip_c		daWmKoopaShip_c	2	2	0	d_basesNP	"0x8076e6c0,0x80770b20"
+daWmSubPlayer_c::NodeTrail_c	daWmSubPlayer_c	NodeTrail_c	2	2	0	d_basesNP	"0x80782000,0x80782050"
+dScGameOver_c		dScGameOver_c	2	2	0	d_basesNP	"0x807b3c70,0x807b4230"
+daEnBossCastleLarry_c		daEnBossCastleLarry_c	2	2	0	d_en_bossNP	"0x80c05380,0x80c05d80"
+dPreGame_c		dPreGame_c	2	2	0	d_en_bossNP	"0x80c4f3a0,0x80c4ff10"
+daEnBigHanachan_c		daEnBigHanachan_c	2	2	0	d_enemiesNP	"0x80a107b0,0x80a10880"
+daEnBigMet_c		daEnBigMet_c	2	2	0	d_enemiesNP	"0x80a14090,0x80a14140"
+daEnBubble_c		daEnBubble_c	2	2	0	d_enemiesNP	"0x80a2ef70,0x80a2f170"
+daEnChorobon_c		daEnChorobon_c	2	2	0	d_enemiesNP	"0x80a35370,0x80a35470"
+daEnCoinFloor_c		daEnCoinFloor_c	2	2	0	d_enemiesNP	"0x80a439a0,0x80a43a40"
+daEnCoinJump_c		daEnCoinJump_c	2	2	0	d_enemiesNP	"0x80a44ba0,0x80a44ca0"
+daEnGessoChild_c		daEnGessoChild_c	2	2	0	d_enemiesNP	"0x80a65e80,0x80a65f90"
+daEnGreenCoin_c		daEnGreenCoin_c	2	2	0	d_enemiesNP	"0x80a6c2f0,0x80a6c3e0"
+daEnGuraRock_c		daEnGuraRock_c	2	2	0	d_enemiesNP	"0x80a6cf40,0x80a6d050"
+daEnGuru_c		daEnGuru_c	2	2	0	d_enemiesNP	"0x80a6e930,0x80a6e9c0"
+daEnHammerBros_c		daEnHammerBros_c	2	2	0	d_enemiesNP	"0x80a6f8f0,0x80a6fbc0"
+daEnIceBros_c		daEnIceBros_c	2	2	0	d_enemiesNP	"0x80a7d6b0,0x80a7d760"
+daEnJimenFPakkun_c		daEnJimenFPakkun_c	2	2	0	d_enemiesNP	"0x80a90250,0x80a90330"
+daEnMiddleKuribo_c		daEnMiddleKuribo_c	2	2	0	d_enemiesNP	"0x80ac7790,0x80ac7900"
+daEnOP_c		daEnOP_c	2	2	0	d_enemiesNP	"0x80ad5c40,0x80ad5cd0"
+daEnPairObjParent_c		daEnPairObjParent_c	2	2	0	d_enemiesNP	"0x80adb940,0x80adbb30"
+daEnTobiPuku_c		daEnTobiPuku_c	2	2	0	d_enemiesNP	"0x80b0f760,0x80b0f800"
+daEnWaterPaipo_c		daEnWaterPaipo_c	2	2	0	d_enemiesNP	"0x80b22680,0x80b22750"
+daEnWoodBox_c		daEnWoodBox_c	2	2	0	d_enemiesNP	"0x80b29910,0x80b299a0"
+dEf::followEffect_c	dEf	followEffect_c	2	2	0	main	"0x80046410,0x8009aec0"
+NMSndObject<4>		NMSndObject<4>	2	2	0	main	"0x80058b20,0x80058ee0"
+dPyAnm_HIO_c		dPyAnm_HIO_c	2	2	0	main	"0x8005dc80,0x8005dca0"
+dPyAnmMain_HIO_c		dPyAnmMain_HIO_c	2	2	0	main	"0x8005dcd0,0x8005dd30"
+dPyModel_HIO_c		dPyModel_HIO_c	2	2	0	main	"0x8005dd80,0x8005ddc0"
+dYoshiModel_HIO_c		dYoshiModel_HIO_c	2	2	0	main	"0x8005dea0,0x8005ded0"
+dCd_c		dCd_c	2	2	0	main	"0x8005ee70,0x8008ebe0"
+daZoomPipeBase_c		daZoomPipeBase_c	2	2	0	main	"0x80063f80,0x80064030"
+dActorState_c		dActorState_c	2	2	0	main	"0x80066fc0,0x800671b0"
+dBalloonMng_c		dBalloonMng_c	2	2	0	main	"0x8006c0e0,0x8006c120"
+dShareBgTexProc_c		dShareBgTexProc_c	2	2	0	main	"0x800833e0,0x80083440"
+dBgTexMng_c::PanelAnimeObj_c	dBgTexMng_c	PanelAnimeObj_c	2	2	0	main	"0x800879a0,0x80087a40"
+dBoatLog_c		dBoatLog_c	2	2	0	main	"0x80088d90,0x80088e80"
+dCamData_c		dCamData_c	2	2	0	main	"0x8008a230,0x8008a280"
+dCapture_c		dCapture_c	2	2	0	main	"0x8008a2e0,0x8008a380"
+dDrawShadowModel_c		dDrawShadowModel_c	2	2	0	main	"0x8008be60,0x8008bed0"
+dCenterSaveMng_c		dCenterSaveMng_c	2	2	0	main	"0x8008dcf0,0x8008ddb0"
+FumiCcInfo_c		FumiCcInfo_c	2	2	0	main	"0x80096460,0x800b07b0"
+dEnemyCarry_c		dEnemyCarry_c	2	2	0	main	"0x8009ec30,0x8009ed10"
+dHanaBody_c		dHanaBody_c	2	2	0	main	"0x800b7b10,0x800b7c50"
+dKinopioMdl_c		dKinopioMdl_c	2	2	0	main	"0x800bcb80,0x800bd1e0"
+quad_c		quad_c	2	2	0	main	"0x800cafd0,0x800cb080"
+spline_c		spline_c	2	2	0	main	"0x800cb0f0,0x800cb1c0"
+dCaveMask_c		dCaveMask_c	2	2	0	main	"0x800cca70,0x800cd110"
+dHandLightMask_c		dHandLightMask_c	2	2	0	main	"0x800ccd90,0x800cce00"
+dWmEffectManager_c::EffectParam_t	dWmEffectManager_c	EffectParam_t	2	2	0	main	"0x80102f90,0x80103000"
+dRomFontMgr_c		dRomFontMgr_c	2	2	0	main	"0x80106df0,0x80106e60"
+LangLoc		LangLoc	2	2	0	main	"0x80107c70,0x80107c90"
+dSelectCursor_c::Layout_c	dSelectCursor_c	Layout_c	2	2	0	main	"0x8010c0c0,0x8010c110"
+dAcCursor_c		dAcCursor_c	2	2	0	main	"0x8010f600,0x8010f7a0"
+daEnEatCoin_c		daEnEatCoin_c	2	2	0	main	"0x8010f980,0x8010fb50"
+daFarBG_HIO_c		daFarBG_HIO_c	2	2	0	main	"0x80115a90,0x8011a410"
+d3d::rtexQuad_c	d3d	rtexQuad_c	2	2	0	main	"0x8000aa70,0x8000ae50"
+d3d::rtexMagaDeco_c	d3d	rtexMagaDeco_c	2	2	0	main	"0x8000aec0,0x8000b320"
+nw4r::snd::detail::WaveArchiveReader	nw4r::snd::detail	WaveArchiveReader	2	2	0	main	"0x80283a90,0x80283b10"
+nw4r::ef::EmitterForm	nw4r::ef	EmitterForm	2	2	0	main	"0x80296820,0x80296ce0"
+nw4r::ef::EmitterFormCylinder	nw4r::ef	EmitterFormCylinder	2	2	0	main	"0x80298720,0x80298b80"
+nw4r::ef::EmitterFormCube	nw4r::ef	EmitterFormCube	2	2	0	main	"0x80299510,0x80299840"
+nw4r::ef::DrawBillboardStrategy	nw4r::ef	DrawBillboardStrategy	2	2	0	main	"0x8029d2c0,0x8029ed70"
+nw4r::snd::detail::MmlParser	nw4r::snd::detail	MmlParser	2	2	0	main	"0x8026f2d0,0x8026f440"
+nw4r::snd::detail::MmlSeqTrackAllocator	nw4r::snd::detail	MmlSeqTrackAllocator	2	2	0	main	"0x8026f620,0x8026f630"
+nw4r::snd::NandSoundArchive::NandFileStream	nw4r::snd::NandSoundArchive	NandFileStream	2	2	0	main	"0x8026fb20,0x8026fdb0"
+nw4r::lyt::DrawInfo	nw4r::lyt	DrawInfo	2	2	0	main	"0x802b4d30,0x802b4db0"
+nw4r::lyt::AnimTransform	nw4r::lyt	AnimTransform	2	2	0	main	"0x802b50a0,0x802b50b0"
+nw4r::lyt::ResourceAccessor	nw4r::lyt	ResourceAccessor	2	2	0	main	"0x802b63b0,0x802b63f0"
+EGG::StreamDecompLZ	EGG	StreamDecompLZ	2	2	0	main	"0x802b8420,0x802b8450"
+EGG::StreamDecompSZS	EGG	StreamDecompSZS	2	2	0	main	"0x802b8970,0x802b89a0"
+EGG::Allocator	EGG	Allocator	2	2	0	main	"0x802b8a70,0x802b8ad0"
+EGG::GraphicsFifo	EGG	GraphicsFifo	2	2	0	main	"0x802bc560,0x802bc670"
+EGG::CoreStatus	EGG	CoreStatus	2	2	0	main	"0x802bc6e0,0x802bc6f0"
+EGG::BoundBox2f	EGG	BoundBox2f	2	2	0	main	"0x802be420,0x802be450"
+EGG::Graphics	EGG	Graphics	2	2	0	main	"0x802bed10,0x802bef00"
+EGG::ProjectionData	EGG	ProjectionData	2	2	0	main	"0x802bf060,0x802bf080"
+EGG::CapTexture	EGG	CapTexture	2	2	0	main	"0x802c0240,0x802c02c0"
+EGG::PostEffectSimple	EGG	PostEffectSimple	2	2	0	main	"0x802c35f0,0x802d0830"
+EGG::GfxEngine::Configuration	EGG::GfxEngine	Configuration	2	2	0	main	"0x802c78b0,0x802c78f0"
+EGG::GlobalDrawState	EGG	GlobalDrawState	2	2	0	main	"0x802c7a50,0x802c7a90"
+EGG::LightManager::LightData	EGG::LightManager	LightData	2	2	0	main	"0x802c83a0,0x802c8410"
+nw4r::math::AABB	nw4r::math	AABB	2	2	0	main	"0x80238690,0x80238750"
+nw4r::g3d::ResGenMode	nw4r::g3d	ResGenMode	2	2	0	main	"0x8023d0a0,0x8023d0c0"
+nw4r::g3d::ResTexPlttInfo	nw4r::g3d	ResTexPlttInfo	2	2	0	main	"0x8023e390,0x8023e650"
+nw4r::g3d::ResVtxTexCoord	nw4r::g3d	ResVtxTexCoord	2	2	0	main	"0x8023e960,0x8023ea80"
+nw4r::g3d::ResVtxFurPos	nw4r::g3d	ResVtxFurPos	2	2	0	main	"0x8023e9a0,0x8023eac0"
+nw4r::g3d::ResPltt	nw4r::g3d	ResPltt	2	2	0	main	"0x8023eae0,0x8023eb00"
+nw4r::g3d::ResNode	nw4r::g3d	ResNode	2	2	0	main	"0x8023ecf0,0x8023ee90"
+cTreeMg_c		cTreeMg_c	2	2	0	main	"0x80161580,0x80161620"
+fTrMgBa_c		fTrMgBa_c	2	2	0	main	"0x80163090,0x80163100"
+mAllocatorDummyHeap_c		mAllocatorDummyHeap_c	2	2	0	main	"0x8016a480,0x8016a5d0"
+mColorFader_c		mColorFader_c	2	2	0	main	"0x8016ab90,0x8016ad30"
+mDvd_toMainRam_c		mDvd_toMainRam_c	2	2	0	main	"0x8016bef0,0x8016bf70"
+mEf::effectCB_c	mEf	effectCB_c	2	2	0	main	"0x8016c6f0,0x8016d120"
+mFader_c		mFader_c	2	2	0	main	"0x8016daa0,0x8016dae0"
+EGG::Disposer	EGG	Disposer	2	2	0	main	"0x802ba2d0,0x802ba330"
+nw4r::ut::Font	nw4r::ut	Font	2	2	0	main	"0x8022b410,0x8022f910"
+nw4r::g3d::AnmObjMatClr	nw4r::g3d	AnmObjMatClr	2	2	0	main	"0x80243300,0x802432e0"
+nw4r::g3d::AnmObj	nw4r::g3d	AnmObj	2	2	0	main	"0x80249c60,0x80249c90"
+EGG::SoundHeapMgr	EGG	SoundHeapMgr	2	2	0	main	"0x802d6110,0x802d6180"
+nw4r::g3d::AnmObjVis	nw4r::g3d	AnmObjVis	2	2	0	main	"0x80242b50,0x80242bf0"
+nw4r::g3d::AnmObjTexPat	nw4r::g3d	AnmObjTexPat	2	2	0	main	"0x80244ab0,0x80244ad0"
+nw4r::g3d::AnmObjTexSrt	nw4r::g3d	AnmObjTexSrt	2	2	0	main	"0x802460b0,0x802460d0"
+nw4r::g3d::G3DState::@unnamed@g3d_state_cpp@::LightState	nw4r::g3d::G3DState::@unnamed@g3d_state_cpp@	LightState	2	2	0	main	"0x8024b0e0,0x8024b1e0"
+nw4r::g3d::ScnMdl::CopiedVisAccess	nw4r::g3d::ScnMdl	CopiedVisAccess	2	2	0	main	"0x8025c8e0,0x8025c960"
+nw4r::g3d::ScnProc	nw4r::g3d	ScnProc	2	2	0	main	"0x8025efb0,0x8025f0c0"
+nw4r::g3d::LightSet	nw4r::g3d	LightSet	2	2	0	main	"0x8025fd50,0x8025fdc0"
+dWipeKuppa_c		dWipeKuppa_c	2	2	0	main	"0x8001c170,0x8001c240"
+dWipeMario_c		dWipeMario_c	2	2	0	main	"0x8001c690,0x8001c760"
+daEnDpakkun_c		daEnDpakkun_c	2	2	0	main	"0x8002be60,0x8002c370"
+nw4hbm::lyt::Picture	nw4hbm::lyt	Picture	2	2	0	main	"0x801846a0,0x801848a0"
+nw4hbm::lyt::ResourceAccessor	nw4hbm::lyt	ResourceAccessor	2	2	0	main	"0x80184c00,0x80184c40"
+mWipeFader_c		mWipeFader_c	2	2	0	main	"0x80170c50,0x80170cd0"
+homebutton::FrameController	homebutton	FrameController	2	2	0	main	"0x801713c0,0x80171400"
+homebutton::GroupAnmController	homebutton	GroupAnmController	2	2	0	main	"0x80171570,0x801715d0"
+homebutton::gui::Manager	homebutton::gui	Manager	2	2	0	main	"0x80171de0,0x80172000"
+homebutton::gui::PaneManager	homebutton::gui	PaneManager	2	2	0	main	"0x80172370,0x80172e90"
+homebutton::gui::PaneComponent	homebutton::gui	PaneComponent	2	2	0	main	"0x80172660,0x80172910"
+NMSndObjectBase::CountPlayingSndPrio	NMSndObjectBase	CountPlayingSndPrio	1	1	0	main	0x801974a0
+NonPosSndObjctAmb		NonPosSndObjctAmb	1	1	0	main	0x80199e60
+nw4r::snd::Sound3DEngine	nw4r::snd	Sound3DEngine	1	1	0	main	0x80274ce0
+nw4r::snd::SoundArchivePlayer::SeqNoteOnCallback	nw4r::snd::SoundArchivePlayer	SeqNoteOnCallback	1	1	0	main	0x802777d0
+nw4r::snd::SoundArchivePlayer::WsdCallback	nw4r::snd::SoundArchivePlayer	WsdCallback	1	1	0	main	0x80277810
+"nw4r::ut::LinkList<nw4r::snd::detail::SeqSound, 240>"	nw4r::ut::LinkList<nw4r::snd::detail	"SeqSound, 240>"	1	1	0	main	0x80277870
+"nw4r::ut::LinkList<nw4r::snd::detail::StrmSound, 240>"	nw4r::ut::LinkList<nw4r::snd::detail	"StrmSound, 240>"	1	1	0	main	0x802778f0
+"nw4r::ut::LinkList<nw4r::snd::detail::WaveSound, 240>"	nw4r::ut::LinkList<nw4r::snd::detail	"WaveSound, 240>"	1	1	0	main	0x80277970
+"nw4r::ut::LinkList<nw4r::snd::detail::BasicSound, 256>"	nw4r::ut::LinkList<nw4r::snd::detail	"BasicSound, 256>"	1	1	0	main	0x8027a610
+nw4r::snd::detail::Task	nw4r::snd::detail	Task	1	1	0	main	0x8027fd90
+"nw4r::ut::LinkList<nw4r::snd::detail::Task, 4>"	nw4r::ut::LinkList<nw4r::snd::detail	"Task, 4>"	1	1	0	main	0x8027fee0
+dPad::ex_c	dPad	ex_c	1	1	0	main	0x800d0940
+dPlayerMdl_c::nodeCallbackPLH_c	dPlayerMdl_c	nodeCallbackPLH_c	1	1	0	main	0x800d2ff0
+dRandom_c		dRandom_c	1	1	0	main	0x800d9760
+cCounter_c		cCounter_c	1	1	0	main	0x8015fe40
+dWaterManager_c		dWaterManager_c	1	1	0	main	0x800eb930
+dWaterWave_c		dWaterWave_c	1	1	0	main	0x800ec3b0
+dWmMapModel_c::ChrAnm_t	dWmMapModel_c	ChrAnm_t	1	1	0	main	0x800ee3d0
+dWmSVMdl_c		dWmSVMdl_c	1	1	0	main	0x800f24b0
+dWmViewClip_c		dWmViewClip_c	1	1	0	main	0x800fe040
+d3d::texQuad_sparks_c	d3d	texQuad_sparks_c	1	1	0	main	0x80008440
+d3d::texQuad_bubble_c	d3d	texQuad_bubble_c	1	1	0	main	0x800099d0
+dWmLib::ForceInCourseList_t	dWmLib	ForceInCourseList_t	1	1	0	main	0x80014200
+dSimpleCapture_c		dSimpleCapture_c	1	1	0	main	0x80014970
+daKawanagareObj_c		daKawanagareObj_c	1	1	0	main	0x80042a70
+dCollectionCoinBase_c		dCollectionCoinBase_c	1	1	0	d_basesNP	0x80608b00
+dInfoWindow_c		dInfoWindow_c	1	1	0	d_basesNP	0x8061c1c0
+dModelPlayGuide_c		dModelPlayGuide_c	1	1	0	d_basesNP	0x80627940
+dSequenceBG_c		dSequenceBG_c	1	1	0	d_basesNP	0x8063ffa0
+dStockItemShadow_c		dStockItemShadow_c	1	1	0	d_basesNP	0x806449e0
+daAutoScroolSwich_c		daAutoScroolSwich_c	1	1	0	d_basesNP	0x8064ac90
+daBeltNeedle_c		daBeltNeedle_c	1	1	0	d_basesNP	0x8064e1d0
+daBgmInterlockingDummyBlockMgr_c		daBgmInterlockingDummyBlockMgr_c	1	1	0	d_basesNP	0x806501d0
+daCopyRight_c		daCopyRight_c	1	1	0	d_basesNP	0x80652410
+daBrosIceball_c		daBrosIceball_c	1	1	0	d_basesNP	0x80667f60
+daCastleBossDoor_c		daCastleBossDoor_c	1	1	0	d_basesNP	0x8066b010
+daCastleKokoopaDemo2nd_c		daCastleKokoopaDemo2nd_c	1	1	0	d_basesNP	0x8066fc10
+daDokanCannon_c		daDokanCannon_c	1	1	0	d_basesNP	0x80677390
+daFireBlitz_c		daFireBlitz_c	1	1	0	d_basesNP	0x8067b420
+daFloorDokanEight_c		daFloorDokanEight_c	1	1	0	d_basesNP	0x80680fd0
+daFloorHoleDokan_c		daFloorHoleDokan_c	1	1	0	d_basesNP	0x80683200
+daFloorJrA_c		daFloorJrA_c	1	1	0	d_basesNP	0x80683750
+daFreezer_c		daFreezer_c	1	1	0	d_basesNP	0x8068ab60
+daGearGyration_c		daGearGyration_c	1	1	0	d_basesNP	0x8068eb80
+daJrClownA_c		daJrClownA_c	1	1	0	d_basesNP	0x80697840
+daJrClownForJrCDemo_c		daJrClownForJrCDemo_c	1	1	0	d_basesNP	0x806a15f0
+daKameckForCastleDemo_c		daKameckForCastleDemo_c	1	1	0	d_basesNP	0x806ab6e0
+daKameckMagic_c		daKameckMagic_c	1	1	0	d_basesNP	0x806ae9d0
+daKinokoLift_c		daKinokoLift_c	1	1	0	d_basesNP	0x806b42d0
+daKokoopaThreewayBlitz_c		daKokoopaThreewayBlitz_c	1	1	0	d_basesNP	0x806ba660
+daKoopaFire_c		daKoopaFire_c	1	1	0	d_basesNP	0x806bbb90
+daKoopaShipForCastleDemo_c		daKoopaShipForCastleDemo_c	1	1	0	d_basesNP	0x806bf680
+daLarryFire_c		daLarryFire_c	1	1	0	d_basesNP	0x806c2530
+daLiftDokan_c		daLiftDokan_c	1	1	0	d_basesNP	0x806c8ad0
+daLiftObjbgHMove_c		daLiftObjbgHMove_c	1	1	0	d_basesNP	0x806cd950
+daRemoconBalance_c::nodeCallbackB_c	daRemoconBalance_c	nodeCallbackB_c	1	1	0	d_basesNP	0x806ceb00
+daRemoconBalance_c		daRemoconBalance_c	1	1	0	d_basesNP	0x806cfd00
+daLiftSpinRotationSync_c		daLiftSpinRotationSync_c	1	1	0	d_basesNP	0x806e0ea0
+daLiftZenKaihei_c		daLiftZenKaihei_c	1	1	0	d_basesNP	0x806e5680
+daLiftZenShiroYogan_c		daLiftZenShiroYogan_c	1	1	0	d_basesNP	0x806e7450
+daLudwigFire_c		daLudwigFire_c	1	1	0	d_basesNP	0x806eebc0
+daNiceCoin_c		daNiceCoin_c	1	1	0	d_basesNP	0x80705080
+daObjClearBlock_c		daObjClearBlock_c	1	1	0	d_basesNP	0x80708070
+daRotBarnar_c		daRotBarnar_c	1	1	0	d_basesNP	0x8072c330
+daSlipPenguin2Glasses_c		daSlipPenguin2Glasses_c	1	1	0	d_basesNP	0x8073a6e0
+daLightWater_c		daLightWater_c	1	1	0	d_basesNP	0x8073b240
+daTarzanIvy_c::nodeCallback_c	daTarzanIvy_c	nodeCallback_c	1	1	0	d_basesNP	0x80740a60
+daTeamPukuPuku_c		daTeamPukuPuku_c	1	1	0	d_basesNP	0x80742600
+daTopBGForCastleLudwig_c		daTopBGForCastleLudwig_c	1	1	0	d_basesNP	0x807429c0
+daTorchiLight_c		daTorchiLight_c	1	1	0	d_basesNP	0x80743ba0
+daWakiFire_c		daWakiFire_c	1	1	0	d_basesNP	0x80747c30
+daWakiKiller_c		daWakiKiller_c	1	1	0	d_basesNP	0x80748d50
+daWakiKokoopaFire_c		daWakiKokoopaFire_c	1	1	0	d_basesNP	0x80749f60
+daWakiParabom_c		daWakiParabom_c	1	1	0	d_basesNP	0x8074bb00
+daWakiTobiPuku_c		daWakiTobiPuku_c	1	1	0	d_basesNP	0x8074dd30
+daWakiWoodBox_c		daWakiWoodBox_c	1	1	0	d_basesNP	0x8074ea10
+daWireRemocon_c		daWireRemocon_c	1	1	0	d_basesNP	0x80757320
+daWmAnchor_c		daWmAnchor_c	1	1	0	d_basesNP	0x8075a6c0
+daWmAntlion_c		daWmAntlion_c	1	1	0	d_basesNP	0x8075ada0
+daWmAntlionMng_c		daWmAntlionMng_c	1	1	0	d_basesNP	0x8075b6b0
+daWmBoard_c		daWmBoard_c	1	1	0	d_basesNP	0x8075c320
+daWmBubble_c		daWmBubble_c	1	1	0	d_basesNP	0x8075cb90
+daWmCannon_c		daWmCannon_c	1	1	0	d_basesNP	0x8075e900
+daWmCastle_c		daWmCastle_c	1	1	0	d_basesNP	0x8075ede0
+daWmCloud_c		daWmCloud_c	1	1	0	d_basesNP	0x8075fd00
+daWmCourse_c		daWmCourse_c	1	1	0	d_basesNP	0x807605c0
+daWmDancePakkun_c		daWmDancePakkun_c	1	1	0	d_basesNP	0x80761a60
+daWmDokan_c		daWmDokan_c	1	1	0	d_basesNP	0x807623d0
+daWmDokanRoute_c		daWmDokanRoute_c	1	1	0	d_basesNP	0x807626a0
+daWmGhost_c		daWmGhost_c	1	1	0	d_basesNP	0x80763740
+daWmGrid_c		daWmGrid_c	1	1	0	d_basesNP	0x80764350
+daWmHanachan_c		daWmHanachan_c	1	1	0	d_basesNP	0x80764550
+daWmIsland_c		daWmIsland_c	1	1	0	d_basesNP	0x80765d90
+daWmKiller_c		daWmKiller_c	1	1	0	d_basesNP	0x80767a60
+daWmKillerBullet_c		daWmKillerBullet_c	1	1	0	d_basesNP	0x80768800
+daWmKinoko1up_c		daWmKinoko1up_c	1	1	0	d_basesNP	0x8076b210
+daWmKinokoBase_c		daWmKinokoBase_c	1	1	0	d_basesNP	0x8076b3f0
+daWmKinokoRed_c		daWmKinokoRed_c	1	1	0	d_basesNP	0x8076bec0
+daWmKinokoStar_c		daWmKinokoStar_c	1	1	0	d_basesNP	0x8076c090
+daWmKinopio_c		daWmKinopio_c	1	1	0	d_basesNP	0x8076c270
+daWmKoopaJr_c		daWmKoopaJr_c	1	1	0	d_basesNP	0x8076d3b0
+daWmManta_c		daWmManta_c	1	1	0	d_basesNP	0x80770fd0
+daWmNote_c		daWmNote_c	1	1	0	d_basesNP	0x807760b0
+daWmPeach_c		daWmPeach_c	1	1	0	d_basesNP	0x80776750
+daWmPeachCastle_c		daWmPeachCastle_c	1	1	0	d_basesNP	0x80776df0
+daWmSinkShip_c		daWmSinkShip_c	1	1	0	d_basesNP	0x807794a0
+daWmSmallCloud_c		daWmSmallCloud_c	1	1	0	d_basesNP	0x80779900
+daWmStart_c		daWmStart_c	1	1	0	d_basesNP	0x8077a110
+daWmStop_c		daWmStop_c	1	1	0	d_basesNP	0x8077b110
+daWmSubPlayer_c::NodeTrailBase_c	daWmSubPlayer_c	NodeTrailBase_c	1	1	0	d_basesNP	0x80782100
+daWmSwitch_c		daWmSwitch_c	1	1	0	d_basesNP	0x80782280
+daWmTeresa_c		daWmTeresa_c	1	1	0	d_basesNP	0x80782b20
+daWmTogezo_c		daWmTogezo_c	1	1	0	d_basesNP	0x807840f0
+daWmToride_c		daWmToride_c	1	1	0	d_basesNP	0x807848c0
+daWmTower_c		daWmTower_c	1	1	0	d_basesNP	0x80785830
+daWmTreasureShip_c		daWmTreasureShip_c	1	1	0	d_basesNP	0x80785c90
+daWmBossBase_c		daWmBossBase_c	1	1	0	d_basesNP	0x80787990
+daWmBros_c		daWmBros_c	1	1	0	d_basesNP	0x8078c260
+daWmCsW3Palm_c		daWmCsW3Palm_c	1	1	0	d_basesNP	0x8078d290
+daWmDirector_c		daWmDirector_c	1	1	0	d_basesNP	0x8078d8f0
+daWmIbara_c		daWmIbara_c	1	1	0	d_basesNP	0x8078f500
+daWmJugem_c		daWmJugem_c	1	1	0	d_basesNP	0x80790470
+daWmKoopaCastle_c		daWmKoopaCastle_c	1	1	0	d_basesNP	0x807911f0
+daWmKuribo_c		daWmKuribo_c	1	1	0	d_basesNP	0x80791e60
+daWmPakkun_c		daWmPakkun_c	1	1	0	d_basesNP	0x80793030
+daWmPakkunHead_c		daWmPakkunHead_c	1	1	0	d_basesNP	0x80793d60
+daWmPuku_c		daWmPuku_c	1	1	0	d_basesNP	0x8079fbd0
+daWmSurrender_c		daWmSurrender_c	1	1	0	d_basesNP	0x807a13b0
+dScResult_c		dScResult_c	1	1	0	d_basesNP	0x807ae720
+dScMovie_c		dScMovie_c	1	1	0	d_basesNP	0x807b4de0
+dWorldSelectGuide_c		dWorldSelectGuide_c	1	1	0	d_basesNP	0x807bdd90
+daEnBossKoopa_c::nodeCallback_c	daEnBossKoopa_c	nodeCallback_c	1	1	0	d_en_bossNP	0x80c21730
+daEnBossKoopaDemoPeach_c		daEnBossKoopaDemoPeach_c	1	1	0	d_en_bossNP	0x80c2cc60
+daEnBaramakiGesso_c		daEnBaramakiGesso_c	1	1	0	d_enemiesNP	0x80a06b00
+daEnBigTogetekkyu_c		daEnBigTogetekkyu_c	1	1	0	d_enemiesNP	0x80a14e80
+daEnMortonBigPile_c		daEnMortonBigPile_c	1	1	0	d_enemiesNP	0x80a18e30
+daEnBlackPakkun_c		daEnBlackPakkun_c	1	1	0	d_enemiesNP	0x80a1bbd0
+daEnBlockCloud_c		daEnBlockCloud_c	1	1	0	d_enemiesNP	0x80a1fce0
+daEnBlockHatenaPlayer_c		daEnBlockHatenaPlayer_c	1	1	0	d_enemiesNP	0x80a20e70
+daEnBounceBall_c		daEnBounceBall_c	1	1	0	d_enemiesNP	0x80a2c300
+daEnCoinJugem_c		daEnCoinJugem_c	1	1	0	d_enemiesNP	0x80a442d0
+daEnCoinVolt_c		daEnCoinVolt_c	1	1	0	d_enemiesNP	0x80a45780
+daEnFireBar_c		daEnFireBar_c	1	1	0	d_enemiesNP	0x80a56920
+daEnFruit_c		daEnFruit_c	1	1	0	d_enemiesNP	0x80a5c4b0
+daEnGuraYuka_c		daEnGuraYuka_c	1	1	0	d_enemiesNP	0x80a6e080
+daEnLargeBarnar_c		daEnLargeBarnar_c	1	1	0	d_enemiesNP	0x80ab6f30
+daEnLiftHammerBros_c		daEnLiftHammerBros_c	1	1	0	d_enemiesNP	0x80ab9030
+daEnLiftZenToge_c		daEnLiftZenToge_c	1	1	0	d_enemiesNP	0x80abbcc0
+daEnObjRotationBlock_c		daEnObjRotationBlock_c	1	1	0	d_enemiesNP	0x80ad8a60
+daEnPataMet_c		daEnPataMet_c	1	1	0	d_enemiesNP	0x80ae1080
+daEnPukuPukuParent_c		daEnPukuPukuParent_c	1	1	0	d_enemiesNP	0x80aeb450
+daEnRailPolyParent_c		daEnRailPolyParent_c	1	1	0	d_enemiesNP	0x80aedd40
+daEnRailPoly_c		daEnRailPoly_c	1	1	0	d_enemiesNP	0x80aef130
+daEnRotarionGhost_c		daEnRotarionGhost_c	1	1	0	d_enemiesNP	0x80af7330
+daEnSyncroBarnar_c		daEnSyncroBarnar_c	1	1	0	d_enemiesNP	0x80b0af60
+daEnTogezo_c		daEnTogezo_c	1	1	0	d_enemiesNP	0x80b14db0
+daEnWakiJugem_c		daEnWakiJugem_c	1	1	0	d_enemiesNP	0x80b19fa0
+daEnWanPile_c		daEnWanPile_c	1	1	0	d_enemiesNP	0x80b20550
+daEnWaterBubbleBullet_c		daEnWaterBubbleBullet_c	1	1	0	d_enemiesNP	0x80b21df0
+d3d::rtexLine_c	d3d	rtexLine_c	1	1	0	main	0x8000de70
+dScnGroupShareProc_c		dScnGroupShareProc_c	1	1	0	main	0x8000f370
+sStateIDChkIf_c		sStateIDChkIf_c	1	1	0	main	0x8000fe90
+sStateIDChk_c		sStateIDChk_c	1	1	0	main	0x8000fed0
+sStateIf_c		sStateIf_c	1	1	0	main	0x8000ffb0
+dCircleLightMask_c		dCircleLightMask_c	1	1	0	main	0x800414a0
+daLiftMain_c		daLiftMain_c	1	1	0	main	0x800437d0
+daObjSpinChildBase_c		daObjSpinChildBase_c	1	1	0	main	0x80045ef0
+NMSndObject<4>::SoundHandlePrm	NMSndObject<4>	SoundHandlePrm	1	1	0	main	0x80046490
+daRotBlock_c		daRotBlock_c	1	1	0	main	0x800620f0
+dStageActor_c		dStageActor_c	1	1	0	main	0x80064da0
+dActorGroupIdMng_c		dActorGroupIdMng_c	1	1	0	main	0x800661c0
+dActorMng_c::FloorEntryInfo	dActorMng_c	FloorEntryInfo	1	1	0	main	0x800663e0
+dActorMultiState_c		dActorMultiState_c	1	1	0	main	0x80067270
+NMSndObjectCmn<12>::SoundHandlePrm	NMSndObjectCmn<12>	SoundHandlePrm	1	1	0	main	0x80069a00
+NMNonPosSndObject<2>::SoundHandlePrm	NMNonPosSndObject<2>	SoundHandlePrm	1	1	0	main	0x80069b70
+dAudio::SndObjctCmnEmy_c	dAudio	SndObjctCmnEmy_c	1	1	0	main	0x80069cf0
+NMNonPosSndObject<1>::SoundHandlePrm	NMNonPosSndObject<1>	SoundHandlePrm	1	1	0	main	0x80069f30
+dControllerInformation_c		dControllerInformation_c	1	1	0	d_profileNP	0x80500240
+dYesNoWindow_c		dYesNoWindow_c	1	1	0	d_profileNP	0x805005f0
+dBeansKuriboMng_c		dBeansKuriboMng_c	1	1	0	main	0x80076dc0
+dBg_c::dBg_autoScroll_c	dBg_c	dBg_autoScroll_c	1	1	0	main	0x800773a0
+dBgActorManager_c::BgObjName_t	dBgActorManager_c	BgObjName_t	1	1	0	main	0x8007f700
+EGG::IBinary<EGG::DrawPathDOF>	EGG::IBinary<EGG	DrawPathDOF>	1	1	0	main	0x80089ec0
+dSetupGX_c		dSetupGX_c	1	1	0	main	0x8008a5e0
+dDrawScreen_c		dDrawScreen_c	1	1	0	main	0x8008b030
+dMakeShadowTex_c		dMakeShadowTex_c	1	1	0	main	0x8008b2e0
+dDrawShadowProjMap_c		dDrawShadowProjMap_c	1	1	0	main	0x8008b500
+DynamicModuleCallback		DynamicModuleCallback	1	1	0	main	0x8008f640
+dEffBigBlockFrag_c::HahenData_s	dEffBigBlockFrag_c	HahenData_s	1	1	0	main	0x800908b0
+dEffBlockFrag_c::HahenData_s	dEffBlockFrag_c	HahenData_s	1	1	0	main	0x800910c0
+dEffectProcBase_c		dEffectProcBase_c	1	1	0	main	0x80092c00
+dScEffectProc_c		dScEffectProc_c	1	1	0	main	0x80092d50
+dEnFumiCheck_c		dEnFumiCheck_c	1	1	0	main	0x800a2870
+MugenComboFumiCheck_c		MugenComboFumiCheck_c	1	1	0	main	0x800b09e0
+dFlagCtrl_c		dFlagCtrl_c	1	1	0	main	0x800b0fd0
+dHanaBigBody_c::nodeCallback_c	dHanaBigBody_c	nodeCallback_c	1	1	0	main	0x800b7b80
+dKADr_c::nodeCallback_c	dKADr_c	nodeCallback_c	1	1	0	main	0x800bc140
+dKinokoKasaColorDraw_c		dKinokoKasaColorDraw_c	1	1	0	main	0x800bc460
+dKinokoliftDr_c		dKinokoliftDr_c	1	1	0	main	0x800bca40
+dLiftAllhitDraw2_c		dLiftAllhitDraw2_c	1	1	0	main	0x800bfd80
+dLiftAppear_c		dLiftAppear_c	1	1	0	main	0x800bfe90
+m2d::AnmGroup_c	m2d	AnmGroup_c	1	1	0	main	0x800c9230
+texMaskCave_c		texMaskCave_c	1	1	0	main	0x800cb8a0
+texMaskCaveColor_c		texMaskCaveColor_c	1	1	0	main	0x800cbae0
+texMaskDark_c		texMaskDark_c	1	1	0	main	0x800cbd20
+dSwingLightMask_c		dSwingLightMask_c	1	1	0	main	0x800cd0d0
+dMdActor_c		dMdActor_c	1	1	0	main	0x800cd770
+dStartInfo_c		dStartInfo_c	1	1	0	main	0x800e3ab0
+FunctionChain		FunctionChain	1	1	0	main	0x8015f600
+sPhase_c		sPhase_c	1	1	0	main	0x8015f620
+dWmRotater_c		dWmRotater_c	1	1	0	main	0x80103840
+dWmSeManager_c::SeParam_t	dWmSeManager_c	SeParam_t	1	1	0	main	0x80103ed0
+LangLocString		LangLocString	1	1	0	main	0x80107ad0
+mVec2_c		mVec2_c	1	1	0	main	0x80006df0
+d3d::proc_c	d3d	proc_c	1	1	0	main	0x80007510
+d3d::texQuad_snow_c	d3d	texQuad_snow_c	1	1	0	main	0x80007de0
+nw4r::ef::ActivityList	nw4r::ef	ActivityList	1	1	0	main	0x80286750
+nw4r::ef::ParticleParameter	nw4r::ef	ParticleParameter	1	1	0	main	0x80291a10
+nw4r::ef::EmitterFormTorus	nw4r::ef	EmitterFormTorus	1	1	0	main	0x80298ed0
+nw4r::ef::DrawStrategyImpl::AheadContext	nw4r::ef::DrawStrategyImpl	AheadContext	1	1	0	main	0x8029cfc0
+nw4r::ef::EmitterResource	nw4r::ef	EmitterResource	1	1	0	main	0x8029f8f0
+nw4r::ef::DrawInfo	nw4r::ef	DrawInfo	1	1	0	main	0x802a0660
+nw4r::ef::DrawFreeStrategy	nw4r::ef	DrawFreeStrategy	1	1	0	main	0x802a18a0
+nw4r::ef::DrawLineStrategy	nw4r::ef	DrawLineStrategy	1	1	0	main	0x802a22d0
+nw4r::ef::DrawPointStrategy	nw4r::ef	DrawPointStrategy	1	1	0	main	0x802a2900
+nw4r::ef::ResEmitter	nw4r::ef	ResEmitter	1	1	0	main	0x802ab490
+nw4r::ef::ResAnimCurve	nw4r::ef	ResAnimCurve	1	1	0	main	0x802ab4c0
+nw4r::lyt::Group	nw4r::lyt	Group	1	1	0	main	0x802ac550
+nw4r::lyt::Picture	nw4r::lyt	Picture	1	1	0	main	0x802ad920
+"nw4r::ut::LinkList<nw4r::snd::FxBase, 4>"	nw4r::ut::LinkList<nw4r::snd	"FxBase, 4>"	1	1	0	main	0x80260800
+nw4r::snd::detail::PlayerParamSet	nw4r::snd::detail	PlayerParamSet	1	1	0	main	0x80265db0
+nw4r::snd::detail::BiquadFilterHpf	nw4r::snd::detail	BiquadFilterHpf	1	1	0	main	0x80267b40
+nw4r::snd::detail::BiquadFilterBpf512	nw4r::snd::detail	BiquadFilterBpf512	1	1	0	main	0x80267b80
+nw4r::snd::detail::BiquadFilterBpf1024	nw4r::snd::detail	BiquadFilterBpf1024	1	1	0	main	0x80267bc0
+nw4r::snd::detail::BiquadFilterBpf2048	nw4r::snd::detail	BiquadFilterBpf2048	1	1	0	main	0x80267c00
+nw4r::snd::detail::LfoParam	nw4r::snd::detail	LfoParam	1	1	0	main	0x8026db50
+nw4r::snd::detail::MmlSeqTrack	nw4r::snd::detail	MmlSeqTrack	1	1	0	main	0x8026f480
+nw4r::lyt::Bounding	nw4r::lyt	Bounding	1	1	0	main	0x802b1c90
+nw4r::math::VEC2	nw4r::math	VEC2	1	1	0	main	0x802b2070
+"nw4r::ut::LinkList<nw4r::lyt::AnimationLink, 0>"	nw4r::ut::LinkList<nw4r::lyt	"AnimationLink, 0>"	1	1	0	main	0x802b2090
+nw4r::lyt::TexCoordGen	nw4r::lyt	TexCoordGen	1	1	0	main	0x802b28b0
+nw4r::lyt::ChanCtrl	nw4r::lyt	ChanCtrl	1	1	0	main	0x802b28e0
+nw4r::lyt::TevSwapMode	nw4r::lyt	TevSwapMode	1	1	0	main	0x802b2940
+nw4r::lyt::TexSRT	nw4r::lyt	TexSRT	1	1	0	main	0x802b2950
+nw4r::lyt::IndirectStage	nw4r::lyt	IndirectStage	1	1	0	main	0x802b2980
+nw4r::lyt::TevStage	nw4r::lyt	TevStage	1	1	0	main	0x802b29b0
+nw4r::lyt::AlphaCompare	nw4r::lyt	AlphaCompare	1	1	0	main	0x802b2a20
+nw4r::lyt::BlendMode	nw4r::lyt	BlendMode	1	1	0	main	0x802b2a50
+nw4r::lyt::AnimTransformBasic	nw4r::lyt	AnimTransformBasic	1	1	0	main	0x802b50d0
+EGG::StreamDecompRL	EGG	StreamDecompRL	1	1	0	main	0x802b84b0
+EGG::StreamDecompLH	EGG	StreamDecompLH	1	1	0	main	0x802b8510
+EGG::StreamDecompLRC	EGG	StreamDecompLRC	1	1	0	main	0x802b8570
+EGG::ConfigurationData	EGG	ConfigurationData	1	1	0	main	0x802ba870
+EGG::Vector2f	EGG	Vector2f	1	1	0	main	0x802be640
+EGG::Vector3f	EGG	Vector3f	1	1	0	main	0x802be6b0
+EGG::LookAtCamera	EGG	LookAtCamera	1	1	0	main	0x802bea00
+mTexture_c		mTexture_c	1	1	0	main	0x802c0e30
+EGG::DrawPathShadowVolume	EGG	DrawPathShadowVolume	1	1	0	main	0x802c56d0
+EGG::G3DUtility	EGG	G3DUtility	1	1	0	main	0x802c7370
+EGG::PostEffectMask	EGG	PostEffectMask	1	1	0	main	0x802cf6f0
+nw4r::math::PLANE	nw4r::math	PLANE	1	1	0	main	0x802385d0
+nw4r::g3d::ResName	nw4r::g3d	ResName	1	1	0	main	0x80239930
+nw4r::g3d::ResMatFur	nw4r::g3d	ResMatFur	1	1	0	main	0x8023d240
+nw4r::g3d::ResVtxFurVec	nw4r::g3d	ResVtxFurVec	1	1	0	main	0x8023eaa0
+nw4r::g3d::ResAnmClr	nw4r::g3d	ResAnmClr	1	1	0	main	0x8023f370
+nw4r::g3d::ResAnmTexSrt	nw4r::g3d	ResAnmTexSrt	1	1	0	main	0x8023fa30
+fLiMgBaFuPr_c		fLiMgBaFuPr_c	1	1	0	main	0x80162b40
+fLiMgBaFu_c		fLiMgBaFu_c	1	1	0	main	0x80162bb0
+fLiMgBa_c		fLiMgBa_c	1	1	0	main	0x80162c30
+fLiNdBaLink_c		fLiNdBaLink_c	1	1	0	main	0x80162ca0
+fTrMgBaFu_c		fTrMgBaFu_c	1	1	0	main	0x80163000
+m2d::Layout_c	m2d	Layout_c	1	1	0	main	0x80163520
+m2d::Base_c	m2d	Base_c	1	1	0	main	0x80163850
+m3d::proc_c	m3d	proc_c	1	1	0	main	0x80164fd0
+mDvd::TUncompressInfo_c<EGG::StreamDecompLZ>	mDvd::TUncompressInfo_c<EGG	StreamDecompLZ>	1	1	0	main	0x8016af90
+mDvd::TUncompressInfo_c<EGG::StreamDecompLH>	mDvd::TUncompressInfo_c<EGG	StreamDecompLH>	1	1	0	main	0x8016afd0
+mDvd::TUncompressInfo_c<EGG::StreamDecompLRC>	mDvd::TUncompressInfo_c<EGG	StreamDecompLRC>	1	1	0	main	0x8016b010
+mDvd::TUncompressInfo_c<EGG::StreamDecompRL>	mDvd::TUncompressInfo_c<EGG	StreamDecompRL>	1	1	0	main	0x8016b050
+mDvd::MyThread_c	mDvd	MyThread_c	1	1	0	main	0x8016b1c0
+mPad::PadAdditionalData_t	mPad	PadAdditionalData_t	1	1	0	main	0x8016f6e0
+EGG::ScreenEffectBase	EGG	ScreenEffectBase	1	1	0	main	0x802d1d70
+EGG::ExpAudioMgr::ExpAudioMgrArg	EGG::ExpAudioMgr	ExpAudioMgrArg	1	1	0	main	0x802d4830
+EGG::IAudioMgr::Arg	EGG::IAudioMgr	Arg	1	1	0	main	0x802d6190
+EGG::SimpleAudioMgr::SimpleAudioMgrArg	EGG::SimpleAudioMgr	SimpleAudioMgrArg	1	1	0	main	0x802d61c0
+EGG::SoundArchivePlayerEGG	EGG	SoundArchivePlayerEGG	1	1	0	main	0x802d62f0
+EGG::AudioUtility::MoveParamMgr	EGG::AudioUtility	MoveParamMgr	1	1	0	main	0x802d6cb0
+nw4r::g3d::ResAnmChr	nw4r::g3d	ResAnmChr	1	1	0	main	0x80241690
+nw4r::g3d::ResLightSet	nw4r::g3d	ResLightSet	1	1	0	main	0x80241c70
+nw4r::g3d::ResAnmAmbLight	nw4r::g3d	ResAnmAmbLight	1	1	0	main	0x80241de0
+nw4r::g3d::ResAnmLight	nw4r::g3d	ResAnmLight	1	1	0	main	0x80241eb0
+nw4r::g3d::AnmObjMatClrOverride	nw4r::g3d	AnmObjMatClrOverride	1	1	0	main	0x80243b30
+nw4r::g3d::AnmObjTexPatOverride	nw4r::g3d	AnmObjTexPatOverride	1	1	0	main	0x80245300
+nw4r::g3d::AnmObjTexSrtOverride	nw4r::g3d	AnmObjTexSrtOverride	1	1	0	main	0x80246900
+nw4r::g3d::AnmObjChr	nw4r::g3d	AnmObjChr	1	1	0	main	0x80247700
+nw4r::g3d::AnmObjChrBlend	nw4r::g3d	AnmObjChrBlend	1	1	0	main	0x802481b0
+nw4r::g3d::AnmObjShp	nw4r::g3d	AnmObjShp	1	1	0	main	0x80249720
+nw4r::g3d::AnmScn	nw4r::g3d	AnmScn	1	1	0	main	0x80249740
+nw4r::g3d::G3DState::IndTexMtxInfo	nw4r::g3d::G3DState	IndTexMtxInfo	1	1	0	main	0x8024b020
+nw4r::g3d::G3DState::@unnamed@g3d_state_cpp@::CameraMtxState	nw4r::g3d::G3DState::@unnamed@g3d_state_cpp@	CameraMtxState	1	1	0	main	0x8024b610
+nw4r::g3d::WorldMtxManip	nw4r::g3d	WorldMtxManip	1	1	0	main	0x80250df0
+m3d::mdl_c::callback_c	m3d::mdl_c	callback_c	1	1	0	main	0x80026080
+daEnDpakkunBase_c::nodeCallback_c	daEnDpakkunBase_c	nodeCallback_c	1	1	0	main	0x800282a0
+NonUniqueFumiCheck_c		NonUniqueFumiCheck_c	1	1	0	main	0x8003c010
+nw4hbm::lyt::DrawInfo	nw4hbm::lyt	DrawInfo	1	1	0	main	0x8017f390
+nw4hbm::lyt::Group	nw4hbm::lyt	Group	1	1	0	main	0x8017f450
+nw4hbm::ut::Font	nw4hbm::ut	Font	1	1	0	main	0x8018a400
+SndAudioMgr::T__Disposer	SndAudioMgr	T__Disposer	1	1	0	main	0x801948d0
+homebutton::gui::EventHandler	homebutton::gui	EventHandler	1	1	0	main	0x80172e70
+nw4hbm::lyt::AnimTransform	nw4hbm::lyt	AnimTransform	1	1	0	main	0x8017d6f0
+nw4hbm::lyt::Bounding	nw4hbm::lyt	Bounding	1	1	0	main	0x8017e380
+nw4hbm::ut::Color	nw4hbm::ut	Color	1	1	0	main	0x8017e490

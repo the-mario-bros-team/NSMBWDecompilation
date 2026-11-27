@@ -1,0 +1,1865 @@
+{
+  "revision": "SMNE01 rev 1",
+  "inputs": {
+    "ledger": {
+      "file": "C:\\Users\\Wither\\.codex\\worktrees\\rust-guest-memory\\decomp\\ledger\\functions.csv",
+      "sha256": "24cd8fdb5648aee5118cad1b298c6d65f5559bfd8aadc9ece33ee42d17658a21"
+    },
+    "recomp": {
+      "file": "E:/NSMBWRecomp/wiicompiled/projects/nsmbw/MAP.txt",
+      "sha256": "8035c327b48393c4dfe2a2378120523e0423b9b9a6cdbdd86d6d804f28d9e862"
+    },
+    "normalizedE1": {
+      "file": "E:/NSMBWRecomp/maps/nsmbw_e1_symbols.tsv",
+      "sha256": "897087929f673f55c5f46e9fedd13d3ac312ba6a1d05d99b99ff3e06815f10d8"
+    },
+    "reviewedE1": {
+      "file": "E:/NSMBWDecompCodex/analysis/symbols/symbols_E1_merged_v13.tsv",
+      "sha256": "77260fc10b2b97c8fb598b7a84495fb8ea539e74dbad6b9d8057e441bfe3de92"
+    },
+    "dol": {
+      "file": "E:\\Localsend\\mariobroswii\\sys\\main.dol",
+      "sha256": "6d755ec24c395fee600a856a85785e0e99c0b7ecb680d573a6cdd1aa6f7beee7"
+    },
+    "reviewedReadme": {
+      "file": "E:/NSMBWDecompCodex/analysis/symbols/README.md",
+      "sha256": "b738ff5596e407b2e859677e94ba365e3dcd0b6559bed26015f522b71fd66e23"
+    },
+    "capture": {
+      "file": "C:/Users/Wither/Documents/Codex/2026-11-25/rad/work/rust-phase0/1-1-rust-memcpy.wBbOls/rel-ram.bin",
+      "sha256": "042dcb1da354fcd963e6adf38fb9baab199cbc731f0d2945d432b1a50b369dff"
+    },
+    "relTool": {
+      "file": "C:\\Users\\Wither\\.codex\\worktrees\\rust-guest-memory\\decomp\\tools\\rel2elf.mjs",
+      "sha256": "b4161c8ab5b7865b00b4324b594242e8158b2e8ddd9c3b33e6732301636ab65e"
+    }
+  },
+  "mainRanges": [
+    {
+      "module": "main",
+      "section": 0,
+      "start": 2147500032,
+      "end": 2147509952
+    },
+    {
+      "module": "main",
+      "section": 1,
+      "start": 2147510144,
+      "end": 2150554080
+    }
+  ],
+  "relCode": [
+    {
+      "module": "d_basesNP",
+      "id": 2,
+      "section": 1,
+      "start": 2153775344,
+      "end": 2155634932,
+      "liveStart": 2155272048,
+      "raw": {
+        "file": "E:\\Localsend\\mariobroswii\\files\\rels\\d_basesNP.rel.LZ",
+        "sha256": "7d5b1096703a38f64edcd0c093c1c584b1e9f0ceadaa1bf22a24edf0e9fd15cc",
+        "fields": [
+          {
+            "headerOffset": 52,
+            "section": 1,
+            "offset": 0
+          },
+          {
+            "headerOffset": 56,
+            "section": 1,
+            "offset": 48
+          },
+          {
+            "headerOffset": 60,
+            "section": 1,
+            "offset": 96
+          }
+        ]
+      },
+      "mapping": {
+        "mergedBase": 2151970368,
+        "publicBase": 2155272048,
+        "anchors": [
+          {
+            "name": "_prolog",
+            "sectionOffset": 0,
+            "reviewedLine": 32284,
+            "mergedBase": 2151970368,
+            "publicBase": 2155272048
+          },
+          {
+            "name": "_epilog",
+            "sectionOffset": 48,
+            "reviewedLine": 32285,
+            "mergedBase": 2151970368,
+            "publicBase": 2155272048
+          },
+          {
+            "name": "_unresolved",
+            "sectionOffset": 96,
+            "reviewedLine": 32286,
+            "mergedBase": 2151970368,
+            "publicBase": 2155272048
+          }
+        ]
+      }
+    },
+    {
+      "module": "d_en_bossNP",
+      "id": 4,
+      "section": 1,
+      "start": 2160066800,
+      "end": 2160423196,
+      "liveStart": 2159135280,
+      "raw": {
+        "file": "E:\\Localsend\\mariobroswii\\files\\rels\\d_en_bossNP.rel.LZ",
+        "sha256": "6a786afc78c02e24c131c5303f52e01eac7cf1cfb1232cbb66b9e7b8cb92feb6",
+        "fields": [
+          {
+            "headerOffset": 52,
+            "section": 1,
+            "offset": 0
+          },
+          {
+            "headerOffset": 56,
+            "section": 1,
+            "offset": 48
+          },
+          {
+            "headerOffset": 60,
+            "section": 1,
+            "offset": 96
+          }
+        ]
+      },
+      "mapping": {
+        "mergedBase": 2155830112,
+        "publicBase": 2159135280,
+        "anchors": [
+          {
+            "name": "_prolog",
+            "sectionOffset": 0,
+            "reviewedLine": 39699,
+            "mergedBase": 2155830112,
+            "publicBase": 2159135280
+          },
+          {
+            "name": "_epilog",
+            "sectionOffset": 48,
+            "reviewedLine": 39700,
+            "mergedBase": 2155830112,
+            "publicBase": 2159135280
+          },
+          {
+            "name": "_unresolved",
+            "sectionOffset": 96,
+            "reviewedLine": 39701,
+            "mergedBase": 2155830112,
+            "publicBase": 2159135280
+          }
+        ]
+      }
+    },
+    {
+      "module": "d_enemiesNP",
+      "id": 3,
+      "section": 1,
+      "start": 2157969648,
+      "end": 2159191320,
+      "liveStart": 2157587888,
+      "raw": {
+        "file": "E:\\Localsend\\mariobroswii\\files\\rels\\d_enemiesNP.rel.LZ",
+        "sha256": "5802e4771a16d9bae9f73176a79a51ac1ee904b8cf93fe19f1d12f3227019751",
+        "fields": [
+          {
+            "headerOffset": 52,
+            "section": 1,
+            "offset": 0
+          },
+          {
+            "headerOffset": 56,
+            "section": 1,
+            "offset": 48
+          },
+          {
+            "headerOffset": 60,
+            "section": 1,
+            "offset": 96
+          }
+        ]
+      },
+      "mapping": {
+        "mergedBase": 2154283744,
+        "publicBase": 2157587888,
+        "anchors": [
+          {
+            "name": "_prolog",
+            "sectionOffset": 0,
+            "reviewedLine": 36965,
+            "mergedBase": 2154283744,
+            "publicBase": 2157587888
+          },
+          {
+            "name": "_epilog",
+            "sectionOffset": 48,
+            "reviewedLine": 36966,
+            "mergedBase": 2154283744,
+            "publicBase": 2157587888
+          },
+          {
+            "name": "_unresolved",
+            "sectionOffset": 96,
+            "reviewedLine": 36967,
+            "mergedBase": 2154283744,
+            "publicBase": 2157587888
+          }
+        ]
+      }
+    },
+    {
+      "module": "d_profileNP",
+      "id": 1,
+      "section": 1,
+      "start": 2152726752,
+      "end": 2152734872,
+      "liveStart": 2155251104,
+      "raw": {
+        "file": "E:\\Localsend\\mariobroswii\\files\\rels\\d_profileNP.rel.LZ",
+        "sha256": "0da931f05f6ea5e1f195e8eccde450c1b8171d0d39ce141a4f3201f097f7b85e",
+        "fields": [
+          {
+            "headerOffset": 52,
+            "section": 1,
+            "offset": 0
+          },
+          {
+            "headerOffset": 56,
+            "section": 1,
+            "offset": 48
+          },
+          {
+            "headerOffset": 60,
+            "section": 1,
+            "offset": 96
+          }
+        ]
+      },
+      "mapping": {
+        "mergedBase": 2151955520,
+        "publicBase": 2155251104,
+        "anchors": [
+          {
+            "name": "_prolog",
+            "sectionOffset": 0,
+            "reviewedLine": 32251,
+            "mergedBase": 2151955520,
+            "publicBase": 2155251104
+          },
+          {
+            "name": "_epilog",
+            "sectionOffset": 48,
+            "reviewedLine": 32252,
+            "mergedBase": 2151955520,
+            "publicBase": 2155251104
+          },
+          {
+            "name": "_unresolved",
+            "sectionOffset": 96,
+            "reviewedLine": 32253,
+            "mergedBase": 2151955520,
+            "publicBase": 2155251104
+          }
+        ]
+      }
+    }
+  ],
+  "totals": {
+    "rows": 20250,
+    "placement": {
+      "module-and-range": 20124,
+      "range-only": 126
+    },
+    "byModule": {
+      "main": {
+        "rows": 10276,
+        "candidateRows": 10038,
+        "signatureRows": 34,
+        "placeholder": 9184
+      },
+      "d_basesNP": {
+        "rows": 5613,
+        "candidateRows": 1617,
+        "signatureRows": 633,
+        "placeholder": 5613
+      },
+      "d_en_bossNP": {
+        "rows": 770,
+        "candidateRows": 137,
+        "signatureRows": 99,
+        "placeholder": 769
+      },
+      "d_enemiesNP": {
+        "rows": 3555,
+        "candidateRows": 988,
+        "signatureRows": 238,
+        "placeholder": 3484
+      },
+      "d_profileNP": {
+        "rows": 36,
+        "candidateRows": 4,
+        "signatureRows": 3,
+        "placeholder": 11
+      }
+    },
+    "candidateRows": 12784,
+    "signatureRows": 1007,
+    "exportsAvailableRows": 0,
+    "exportCitationRows": 20124,
+    "conflicts": 8,
+    "placeholder": {
+      "agreement": 8910,
+      "singleSource": 2802,
+      "conflicts": 7,
+      "noName": 7342
+    }
+  },
+  "reviewExcluded": {
+    "noExecutableModule": 210,
+    "coordinateMismatch": 8
+  },
+  "rejectedReviewRows": [
+    {
+      "line": 32256,
+      "module": "d_profileNP",
+      "addr": "0x80443DF0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32257,
+      "module": "d_profileNP",
+      "addr": "0x80443E60",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32258,
+      "module": "d_profileNP",
+      "addr": "0x80443F00",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32259,
+      "module": "d_profileNP",
+      "addr": "0x80443FC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32260,
+      "module": "d_profileNP",
+      "addr": "0x804440D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32261,
+      "module": "d_profileNP",
+      "addr": "0x80444110",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32264,
+      "module": "d_profileNP",
+      "addr": "0x80444490",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32265,
+      "module": "d_profileNP",
+      "addr": "0x80444520",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32266,
+      "module": "d_profileNP",
+      "addr": "0x804446B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32267,
+      "module": "d_profileNP",
+      "addr": "0x80444760",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32268,
+      "module": "d_profileNP",
+      "addr": "0x804447C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32269,
+      "module": "d_profileNP",
+      "addr": "0x804447D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32270,
+      "module": "d_profileNP",
+      "addr": "0x80444BB0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32271,
+      "module": "d_profileNP",
+      "addr": "0x80444CC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32272,
+      "module": "d_profileNP",
+      "addr": "0x80444D30",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32273,
+      "module": "d_profileNP",
+      "addr": "0x80444D90",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32274,
+      "module": "d_profileNP",
+      "addr": "0x80444E10",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32275,
+      "module": "d_profileNP",
+      "addr": "0x80444E80",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32276,
+      "module": "d_profileNP",
+      "addr": "0x80444EF0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32277,
+      "module": "d_profileNP",
+      "addr": "0x80444F60",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32278,
+      "module": "d_profileNP",
+      "addr": "0x80445090",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32279,
+      "module": "d_profileNP",
+      "addr": "0x80445120",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32280,
+      "module": "d_profileNP",
+      "addr": "0x804451C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32281,
+      "module": "d_profileNP",
+      "addr": "0x80445260",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32282,
+      "module": "d_profileNP",
+      "addr": "0x804454E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32293,
+      "module": "d_basesNP",
+      "addr": "0x80447B40",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32296,
+      "module": "d_basesNP",
+      "addr": "0x80448490",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32315,
+      "module": "d_basesNP",
+      "addr": "0x80449900",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32387,
+      "module": "d_basesNP",
+      "addr": "0x8044CF60",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32416,
+      "module": "d_basesNP",
+      "addr": "0x80450330",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32419,
+      "module": "d_basesNP",
+      "addr": "0x80450980",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32433,
+      "module": "d_basesNP",
+      "addr": "0x80451AE0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32475,
+      "module": "d_basesNP",
+      "addr": "0x80453C10",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32495,
+      "module": "d_basesNP",
+      "addr": "0x80454C30",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32516,
+      "module": "d_basesNP",
+      "addr": "0x80455F90",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32531,
+      "module": "d_basesNP",
+      "addr": "0x80457090",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32555,
+      "module": "d_basesNP",
+      "addr": "0x80458980",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32570,
+      "module": "d_basesNP",
+      "addr": "0x80459830",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32610,
+      "module": "d_basesNP",
+      "addr": "0x8045BE30",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32629,
+      "module": "d_basesNP",
+      "addr": "0x8045CD50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32630,
+      "module": "d_basesNP",
+      "addr": "0x8045CFC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32631,
+      "module": "d_basesNP",
+      "addr": "0x8045D0A0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32632,
+      "module": "d_basesNP",
+      "addr": "0x8045D120",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32633,
+      "module": "d_basesNP",
+      "addr": "0x8045D210",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32634,
+      "module": "d_basesNP",
+      "addr": "0x8045D240",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32635,
+      "module": "d_basesNP",
+      "addr": "0x8045D270",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32636,
+      "module": "d_basesNP",
+      "addr": "0x8045D2E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32771,
+      "module": "d_basesNP",
+      "addr": "0x80462A70",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32786,
+      "module": "d_basesNP",
+      "addr": "0x80463A70",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32789,
+      "module": "d_basesNP",
+      "addr": "0x80463FD0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32810,
+      "module": "d_basesNP",
+      "addr": "0x80465150",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32869,
+      "module": "d_basesNP",
+      "addr": "0x80467F10",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32924,
+      "module": "d_basesNP",
+      "addr": "0x8046A8E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32945,
+      "module": "d_basesNP",
+      "addr": "0x8046BB30",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32966,
+      "module": "d_basesNP",
+      "addr": "0x8046D000",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32987,
+      "module": "d_basesNP",
+      "addr": "0x8046DF60",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32988,
+      "module": "d_basesNP",
+      "addr": "0x8046DFF0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32989,
+      "module": "d_basesNP",
+      "addr": "0x8046E0D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32990,
+      "module": "d_basesNP",
+      "addr": "0x8046E1E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32991,
+      "module": "d_basesNP",
+      "addr": "0x8046E220",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32992,
+      "module": "d_basesNP",
+      "addr": "0x8046E2B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32993,
+      "module": "d_basesNP",
+      "addr": "0x8046E2F0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32994,
+      "module": "d_basesNP",
+      "addr": "0x8046E5D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32995,
+      "module": "d_basesNP",
+      "addr": "0x8046E6B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 32996,
+      "module": "d_basesNP",
+      "addr": "0x8046E790",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33005,
+      "module": "d_basesNP",
+      "addr": "0x8046EEE0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33006,
+      "module": "d_basesNP",
+      "addr": "0x8046EF50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33007,
+      "module": "d_basesNP",
+      "addr": "0x8046EFD0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33008,
+      "module": "d_basesNP",
+      "addr": "0x8046F090",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33009,
+      "module": "d_basesNP",
+      "addr": "0x8046F0D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33010,
+      "module": "d_basesNP",
+      "addr": "0x8046F110",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33011,
+      "module": "d_basesNP",
+      "addr": "0x8046F150",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33014,
+      "module": "d_basesNP",
+      "addr": "0x8046F3D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33015,
+      "module": "d_basesNP",
+      "addr": "0x8046F460",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33016,
+      "module": "d_basesNP",
+      "addr": "0x8046F840",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33017,
+      "module": "d_basesNP",
+      "addr": "0x8046F900",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33018,
+      "module": "d_basesNP",
+      "addr": "0x8046F970",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33019,
+      "module": "d_basesNP",
+      "addr": "0x8046FC90",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33020,
+      "module": "d_basesNP",
+      "addr": "0x8046FCC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33021,
+      "module": "d_basesNP",
+      "addr": "0x8046FCE0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33022,
+      "module": "d_basesNP",
+      "addr": "0x8046FD60",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33023,
+      "module": "d_basesNP",
+      "addr": "0x8046FE00",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33024,
+      "module": "d_basesNP",
+      "addr": "0x8046FE90",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33145,
+      "module": "d_basesNP",
+      "addr": "0x80477AA0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33247,
+      "module": "d_basesNP",
+      "addr": "0x8047E470",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33298,
+      "module": "d_basesNP",
+      "addr": "0x80481BC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33313,
+      "module": "d_basesNP",
+      "addr": "0x80482E10",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33377,
+      "module": "d_basesNP",
+      "addr": "0x80486280",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33404,
+      "module": "d_basesNP",
+      "addr": "0x80487920",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33408,
+      "module": "d_basesNP",
+      "addr": "0x80488000",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33440,
+      "module": "d_basesNP",
+      "addr": "0x804899B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33477,
+      "module": "d_basesNP",
+      "addr": "0x8048C230",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33481,
+      "module": "d_basesNP",
+      "addr": "0x8048C920",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33496,
+      "module": "d_basesNP",
+      "addr": "0x8048D6B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33552,
+      "module": "d_basesNP",
+      "addr": "0x80490D20",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33553,
+      "module": "d_basesNP",
+      "addr": "0x80490D30",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33554,
+      "module": "d_basesNP",
+      "addr": "0x80490D40",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33555,
+      "module": "d_basesNP",
+      "addr": "0x80490D50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33753,
+      "module": "d_basesNP",
+      "addr": "0x804ACDA0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33775,
+      "module": "d_basesNP",
+      "addr": "0x804AF240",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33812,
+      "module": "d_basesNP",
+      "addr": "0x804B19A0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33813,
+      "module": "d_basesNP",
+      "addr": "0x804B19B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33858,
+      "module": "d_basesNP",
+      "addr": "0x804B5D80",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 33982,
+      "module": "d_basesNP",
+      "addr": "0x804C3620",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34058,
+      "module": "d_basesNP",
+      "addr": "0x804CF1C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34060,
+      "module": "d_basesNP",
+      "addr": "0x804CF3D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34092,
+      "module": "d_basesNP",
+      "addr": "0x804D1D70",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34163,
+      "module": "d_basesNP",
+      "addr": "0x804DA390",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34208,
+      "module": "d_basesNP",
+      "addr": "0x804DED70",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34279,
+      "module": "d_basesNP",
+      "addr": "0x804EAA50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34310,
+      "module": "d_basesNP",
+      "addr": "0x804F0310",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34311,
+      "module": "d_basesNP",
+      "addr": "0x804F0570",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34332,
+      "module": "d_basesNP",
+      "addr": "0x804F3DE0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34333,
+      "module": "d_basesNP",
+      "addr": "0x804F3DF0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34409,
+      "module": "d_basesNP",
+      "addr": "0x804FB870",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34410,
+      "module": "d_basesNP",
+      "addr": "0x804FB880",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34452,
+      "module": "d_basesNP",
+      "addr": "0x80501B80",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34593,
+      "module": "d_basesNP",
+      "addr": "0x80510AE0",
+      "runtime": "0x80836C10",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 34633,
+      "module": "d_basesNP",
+      "addr": "0x80515050",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34634,
+      "module": "d_basesNP",
+      "addr": "0x80515060",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34666,
+      "module": "d_basesNP",
+      "addr": "0x8051BEF0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34698,
+      "module": "d_basesNP",
+      "addr": "0x8051FE60",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 34854,
+      "module": "d_basesNP",
+      "addr": "0x80531640",
+      "runtime": "0x80857770",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 35108,
+      "module": "d_basesNP",
+      "addr": "0x80550550",
+      "runtime": "0x80876680",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 35109,
+      "module": "d_basesNP",
+      "addr": "0x805512B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35110,
+      "module": "d_basesNP",
+      "addr": "0x805512C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35145,
+      "module": "d_basesNP",
+      "addr": "0x805575E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35146,
+      "module": "d_basesNP",
+      "addr": "0x805575F0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35165,
+      "module": "d_basesNP",
+      "addr": "0x8055A6B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35252,
+      "module": "d_basesNP",
+      "addr": "0x805608F0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35264,
+      "module": "d_basesNP",
+      "addr": "0x80562330",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35265,
+      "module": "d_basesNP",
+      "addr": "0x80562340",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35267,
+      "module": "d_basesNP",
+      "addr": "0x80562CD0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35268,
+      "module": "d_basesNP",
+      "addr": "0x80562CE0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35601,
+      "module": "d_basesNP",
+      "addr": "0x8058C5A0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35602,
+      "module": "d_basesNP",
+      "addr": "0x8058C7C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35603,
+      "module": "d_basesNP",
+      "addr": "0x8058C7F0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35604,
+      "module": "d_basesNP",
+      "addr": "0x8058C8D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35605,
+      "module": "d_basesNP",
+      "addr": "0x8058C960",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35606,
+      "module": "d_basesNP",
+      "addr": "0x8058C9E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35607,
+      "module": "d_basesNP",
+      "addr": "0x8058CAA0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35608,
+      "module": "d_basesNP",
+      "addr": "0x8058CBE0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35815,
+      "module": "d_basesNP",
+      "addr": "0x805A0FB0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35816,
+      "module": "d_basesNP",
+      "addr": "0x805A0FD0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35828,
+      "module": "d_basesNP",
+      "addr": "0x805A29E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35894,
+      "module": "d_basesNP",
+      "addr": "0x805BA2D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 35942,
+      "module": "d_basesNP",
+      "addr": "0x805C4F30",
+      "runtime": "0x808EB060",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 35962,
+      "module": "d_basesNP",
+      "addr": "0x805C96D0",
+      "runtime": "0x808EF800",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 35995,
+      "module": "d_basesNP",
+      "addr": "0x805D4300",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36000,
+      "module": "d_basesNP",
+      "addr": "0x805D4F70",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36001,
+      "module": "d_basesNP",
+      "addr": "0x805D5010",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36002,
+      "module": "d_basesNP",
+      "addr": "0x805D50D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36003,
+      "module": "d_basesNP",
+      "addr": "0x805D51C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36004,
+      "module": "d_basesNP",
+      "addr": "0x805D5C20",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36005,
+      "module": "d_basesNP",
+      "addr": "0x805D5E20",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36006,
+      "module": "d_basesNP",
+      "addr": "0x805D5E50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36007,
+      "module": "d_basesNP",
+      "addr": "0x805D5E60",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36012,
+      "module": "d_basesNP",
+      "addr": "0x805D8190",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36013,
+      "module": "d_basesNP",
+      "addr": "0x805D85C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36018,
+      "module": "d_basesNP",
+      "addr": "0x805D9F50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36019,
+      "module": "d_basesNP",
+      "addr": "0x805DA430",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36022,
+      "module": "d_basesNP",
+      "addr": "0x805DAF10",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36060,
+      "module": "d_basesNP",
+      "addr": "0x805E8550",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36133,
+      "module": "d_basesNP",
+      "addr": "0x805F0540",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36267,
+      "module": "d_basesNP",
+      "addr": "0x805F8B10",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36346,
+      "module": "d_basesNP",
+      "addr": "0x80602C50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36391,
+      "module": "d_basesNP",
+      "addr": "0x80605670",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 36392,
+      "module": "d_basesNP",
+      "addr": "0x80608EF0",
+      "runtime": "0x8092F020",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 37130,
+      "module": "d_enemiesNP",
+      "addr": "0x8068E300",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37228,
+      "module": "d_enemiesNP",
+      "addr": "0x80698350",
+      "runtime": "0x809BEE20",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 37231,
+      "module": "d_enemiesNP",
+      "addr": "0x80699320",
+      "runtime": "0x809BFDF0",
+      "reason": "reviewed section is not text"
+    },
+    {
+      "line": 37361,
+      "module": "d_enemiesNP",
+      "addr": "0x806AD050",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37362,
+      "module": "d_enemiesNP",
+      "addr": "0x806AD060",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37444,
+      "module": "d_enemiesNP",
+      "addr": "0x806B8D90",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37445,
+      "module": "d_enemiesNP",
+      "addr": "0x806B8DA0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37448,
+      "module": "d_enemiesNP",
+      "addr": "0x806B9EF0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37449,
+      "module": "d_enemiesNP",
+      "addr": "0x806B9F00",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37596,
+      "module": "d_enemiesNP",
+      "addr": "0x806C9440",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37626,
+      "module": "d_enemiesNP",
+      "addr": "0x806CEE50",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37734,
+      "module": "d_enemiesNP",
+      "addr": "0x806D8670",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37738,
+      "module": "d_enemiesNP",
+      "addr": "0x806D8A10",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 37992,
+      "module": "d_enemiesNP",
+      "addr": "0x806F3380",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38038,
+      "module": "d_enemiesNP",
+      "addr": "0x806FA820",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38101,
+      "module": "d_enemiesNP",
+      "addr": "0x806FF6E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38315,
+      "module": "d_enemiesNP",
+      "addr": "0x8071A540",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38316,
+      "module": "d_enemiesNP",
+      "addr": "0x8071A550",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38319,
+      "module": "d_enemiesNP",
+      "addr": "0x8071B890",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38396,
+      "module": "d_enemiesNP",
+      "addr": "0x807237F0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38448,
+      "module": "d_enemiesNP",
+      "addr": "0x8072DBF0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38489,
+      "module": "d_enemiesNP",
+      "addr": "0x80730A40",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38756,
+      "module": "d_enemiesNP",
+      "addr": "0x80751CC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38772,
+      "module": "d_enemiesNP",
+      "addr": "0x80753870",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38773,
+      "module": "d_enemiesNP",
+      "addr": "0x807538D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38774,
+      "module": "d_enemiesNP",
+      "addr": "0x807539C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38775,
+      "module": "d_enemiesNP",
+      "addr": "0x80753A20",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38801,
+      "module": "d_enemiesNP",
+      "addr": "0x807568D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38807,
+      "module": "d_enemiesNP",
+      "addr": "0x80757030",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 38874,
+      "module": "d_enemiesNP",
+      "addr": "0x8075F170",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39041,
+      "module": "d_enemiesNP",
+      "addr": "0x807714D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39042,
+      "module": "d_enemiesNP",
+      "addr": "0x807714E0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39075,
+      "module": "d_enemiesNP",
+      "addr": "0x807759A0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39121,
+      "module": "d_enemiesNP",
+      "addr": "0x8077B540",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39425,
+      "module": "d_enemiesNP",
+      "addr": "0x807A54B0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39760,
+      "module": "d_en_bossNP",
+      "addr": "0x807F89C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39764,
+      "module": "d_en_bossNP",
+      "addr": "0x807FAAC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39865,
+      "module": "d_en_bossNP",
+      "addr": "0x808041F0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 39912,
+      "module": "d_en_bossNP",
+      "addr": "0x80807CC0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40055,
+      "module": "d_en_bossNP",
+      "addr": "0x80812740",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40056,
+      "module": "d_en_bossNP",
+      "addr": "0x80812950",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40131,
+      "module": "d_en_bossNP",
+      "addr": "0x80818160",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40192,
+      "module": "d_en_bossNP",
+      "addr": "0x80820530",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40225,
+      "module": "d_en_bossNP",
+      "addr": "0x80823F30",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40227,
+      "module": "d_en_bossNP",
+      "addr": "0x80824220",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40268,
+      "module": "d_en_bossNP",
+      "addr": "0x80829160",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40269,
+      "module": "d_en_bossNP",
+      "addr": "0x808296C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40543,
+      "module": "d_en_bossNP",
+      "addr": "0x808413C0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40550,
+      "module": "d_en_bossNP",
+      "addr": "0x80841790",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    },
+    {
+      "line": 40598,
+      "module": "d_en_bossNP",
+      "addr": "0x808456D0",
+      "runtime": "",
+      "reason": "missing reviewed coordinates"
+    }
+  ],
+  "notes": [
+    "Executable range placement alone does not establish a function boundary or implementation.",
+    "REL names are joined by module, executable section and offset, using three header anchors and the exact module digest.",
+    "The captured runtime addresses apply to the recorded RAM capture only. Reviewed public runtime addresses use a separate layout.",
+    "Candidate agreement can reflect shared upstream provenance. Existing source signatures are quoted as metadata and no new ABI types or layouts are inferred."
+  ]
+}

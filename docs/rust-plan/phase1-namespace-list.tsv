@@ -1,0 +1,276 @@
+owner	methodCount	resolvedNames	unresolvedNames	modules	sampleAddresses
+dWmLib	82	82	0	main	"0x800f9270,0x800f92c0,0x800f9310"
+nw4r::ef	50	50	0	main	"0x80286d30,0x80288390,0x802892d0"
+dGameCom	49	48	1	main	"0x800b2e70,0x800b2eb0,0x800b2ec0"
+nw4r::db	39	39	0	main	"0x802331a0,0x80233260,0x80233290"
+dAudio	36	35	1	main	"0x80069510,0x80069520,0x80069530"
+nw4r::math	27	27	0	main	"0x8029f5f0,0x802a0830,0x802a0910"
+m3d	21	21	0	main	"0x801644f0,0x80164500,0x801645f0"
+mHeap	21	21	0	main	"0x8016e4f0,0x8016e500,0x8016e630"
+nw4r::g3d	19	19	0	main	"0x80243000,0x802430c0,0x80244360"
+dNitro	15	15	0	main	"0x8010a2c0,0x8010a350,0x8010a6c0"
+d3d	14	14	0	main	"0x8000d190,0x8000d260,0x8000d3b0"
+nw4r::g3d::detail	13	13	0	main	"0x8023f000,0x8023f140,0x80239980"
+mDvd	13	13	0	main	"0x8016b0b0,0x8016b0f0,0x8016b130"
+nw4hbm::lyt::detail	13	13	0	main	"0x8017f250,0x801835a0,0x8017dfa0"
+dsChrLib	11	11	0	main	"0x800df990,0x800dfa40,0x800dfb70"
+mEf	11	11	0	main	"0x8016c400,0x8016c4a0,0x8016c5a0"
+dEf	10	10	0	main	"0x8008f920,0x8008f9f0,0x8008fa60"
+dMaskMng	10	10	0	main	"0x800cd220,0x800cd230,0x800cd240"
+nw4r::lyt::detail	10	10	0	main	"0x802b4ae0,0x802b6320,0x802b67b0"
+homebutton	10	10	0	main	"0x801747a0,0x801748e0,0x80174ae0"
+mPad	9	9	0	main	"0x8016f1f0,0x8016f220,0x8016f410"
+sLib	7	7	0	main	"0x8015f140,0x8015f3b0,0x8015f410"
+@unnamed@d_hbm_cpp@	7	7	0	main	"0x80108f10,0x80109260,0x80108f30"
+nw4r::ut	7	7	0	main	"0x80228dd0,0x80228df0,0x80228e60"
+nw4r::g3d::fifo	7	7	0	main	"0x80249cb0,0x80249d30,0x80249d60"
+nw4r::g3d::detail::dcc	7	7	0	main	"0x80254910,0x80254a70,0x802556b0"
+dSystem	6	6	0	main	"0x800e45f0,0x800e5060,0x800e5110"
+nw4r::g3d::@unnamed@g3d_draw_cpp@	6	6	0	main	"0x80251e50,0x80252020,0x80252160"
+nw4hbm::ut	6	6	0	main	"0x80188860,0x8018a5c0,0x8018a5e0"
+dDyl	5	5	0	main	"0x8008f460,0x8008f610,0x8008f620"
+cM	5	5	0	main	"0x801611c0,0x80161380,0x80161390"
+m2d	5	5	0	main	"0x80163170,0x80163180,0x80163220"
+nw4r::g3d::detail::workmem	5	5	0	main	"0x80250da0,0x80250db0,0x80250dc0"
+sFStateID_c<dRemoconMng_c::dConnect_c>	4	4	0	main	"0x800dd220,0x800dd250,0x800dd280"
+sFStateID_c<daYoshi_c>	4	4	0	main	"0x801533a0,0x801533d0,0x80154300"
+dScreen	4	4	0	main	"0x800e2580,0x800e26f0,0x800e27c0"
+sFStateID_c<daEnTogezoBase_c>	4	4	0	main	"0x800408f0,0x80040540,0x80040800"
+sFStateID_c<daLiftDownOnBase_c>	4	4	0	main	"0x80043430,0x800436b0,0x80043770"
+sFStateID_c<daNetEnemy_c>	4	4	0	main	"0x80044e50,0x800450d0,0x80045190"
+int sLib	4	4	0	main	"0x80052ed0,0x8015f3c0,0x8015f420"
+sFStateID_c<daLightBase_c>	4	4	0	main	"0x80061d50,0x80061fd0,0x80062090"
+sFStateID_c<daRotObjsBase_c>	4	4	0	main	"0x80062b60,0x80062de0,0x80062ea0"
+sFStateID_c<dActorMultiState_c>	4	4	0	main	"0x800677a0,0x800677d0,0x80067800"
+sFStateID_c<dEnemyCarry_c>	4	4	0	main	"0x8009f250,0x8009f4d0,0x8009f590"
+sFStateID_c<dAcPy_c>	4	4	0	main	"0x8014a260,0x8014a5d0,0x8014a690"
+@unnamed@eggLightTexture_cpp@	4	4	0	main	"0x802cb410,0x802cb4b0,0x802cb5f0"
+cLib	4	4	0	main	"0x80160ad0,0x80160d10,0x80160e80"
+sFStateID_c<daEnBlockMain_c>	4	4	0	main	"0x800238c0,0x80023b40,0x80023c00"
+sFStateID_c<daEnDfpakkun_c>	4	4	0	main	"0x8002a740,0x8002aa20,0x8002aae0"
+sFStateID_c<daEnLkuriboBase_c>	4	4	0	main	"0x80035320,0x800355b0,0x80035670"
+sFStateID_c<daEnNetNoko_c>	4	4	0	main	"0x80036570,0x80036810,0x800368d0"
+sFStateID_c<dPosGoAndComeExeFrm_c>	3	3	0	main	"0x800d7c20,0x800d7c50,0x800d7fc0"
+EGG::TBuffer<EGG::eCoreDevType>	3	3	0	main	"0x800dc800,0x802be210,0x802be260"
+sFStateID_c<dRemoconMng_c::dConnect_c::dExtension_c>	3	3	0	main	"0x800dd1c0,0x800dd1f0,0x800dd7d0"
+sFStateID_c<dReplayPlay_c>	3	3	0	main	"0x800de4b0,0x800de4e0,0x800de850"
+sFStateID_c<dGameDisplay_c>	3	3	0	main	"0x80159eb0,0x80159ee0,0x8015a250"
+sFStateID_c<Pausewindow_c>	3	3	0	main	"0x8015b2c0,0x8015b2f0,0x8015b840"
+@unnamed@d_s_boot_cpp@	3	3	0	main	"0x8015bb90,0x8015bbc0,0x8015bb60"
+sFStateID_c<dScBoot_c>	3	3	0	main	"0x8015dd70,0x8015dda0,0x8015f040"
+sFStateID_c<dWanKusari_c>	3	3	0	main	"0x800ea000,0x800ea030,0x800ea540"
+dMain	3	3	0	main	"0x800c9f10,0x800c9f40,0x800c9f60"
+sFStateID_c<dCourseSelectGuide_c>	3	3	0	main	"0x80014240,0x80012940,0x80012970"
+sFStateID_c<dWarningErrorInfo_c>	3	3	0	main	"0x80018bb0,0x800182d0,0x80018300"
+sFStateID_c<daFireBall_Base_c>	3	3	0	main	"0x80041ae0,0x80041ba0,0x80041bd0"
+sFStateID_c<daPlBase_c>	3	3	0	main	"0x80059260,0x80059290,0x8005b310"
+sFStateID_c<daSpinChildBase_c>	3	3	0	main	"0x80063e00,0x80063f20,0x80063f50"
+sFStateVirtualID_c<dActorState_c>	3	3	0	main	"0x80067a80,0x80067d60,0x80067e40"
+dBgTexMng	3	3	0	main	"0x800872e0,0x80087340,0x80087360"
+sFStateID_c<dEnBoss_c>	3	3	0	main	"0x8009ab80,0x8009ac40,0x8009ac70"
+sFStateID_c<dEnBossKoopaJrBase_c>	3	3	0	main	"0x8009e910,0x8009e9d0,0x8009ea00"
+sFStateID_c<dEn_c>	3	3	0	main	"0x800a2750,0x800a2810,0x800a2840"
+sFStateID_c<dEnJrClownBase_c>	3	3	0	main	"0x800a7330,0x800a73f0,0x800a7420"
+sFStateID_c<dEnTorideKokoopa_c>	3	3	0	main	"0x800b0690,0x800b0750,0x800b0780"
+sFStateID_c<dfukidashiInfo_c>	3	3	0	main	"0x800b2890,0x800b28c0,0x800b2c30"
+sFStateID_c<dIggyWanKusari_c>	3	3	0	main	"0x800ba580,0x800ba5b0,0x800baac0"
+dLight	3	3	0	main	"0x800c0ae0,0x800c0bf0,0x800c0cf0"
+sFStateID_c<dLineMng_c>	3	3	0	main	"0x800c7550,0x800c7580,0x800c8860"
+sFStateID_c<dGoalManager_c>	3	3	0	main	"0x8010b830,0x8010b860,0x8010bf30"
+sFStateID_c<dWarningManager_c>	3	3	0	main	"0x8010e7d0,0x8010e800,0x8010ee80"
+sFStateID_c<daEnEatCoin_c>	3	3	0	main	"0x80110050,0x80110110,0x80110140"
+sFStateID_c<daEnHatenaBalloon_c>	3	3	0	main	"0x80114940,0x80114a60,0x80114a90"
+sFStateID_c<daEnemyIce_c>	3	3	0	main	"0x80115910,0x80115a30,0x80115a60"
+sFStateID_c<daFireBall_Player_c>	3	3	0	main	"0x8011b3e0,0x8011b4a0,0x8011b4d0"
+sFStateID_c<daIce_c>	3	3	0	main	"0x80123130,0x80123250,0x80123280"
+sFStateID_c<daIceBall_c>	3	3	0	main	"0x80124a80,0x80124ba0,0x80124bd0"
+d2d	3	3	0	main	"0x80006790,0x800067a0,0x80006870"
+@unnamed@eggDrawGX_cpp@	3	3	0	main	"0x802c1340,0x802c1370,0x802c13f0"
+nw4r::g3d::@unnamed@g3d_resanmchr_cpp@	3	3	0	main	"0x8023fe50,0x802405b0,0x80241020"
+float nw4r::g3d::@unnamed@g3d_resanmchr_cpp@::CalcAnimationFVS<nw4r::g3d::@unnamed@g3d_resanmchr_cpp@::CAnmFmtTraits<nw4r::g3d	3	3	0	main	"0x80240100,0x80240240,0x802403c0"
+nw4r::g3d::@unnamed@g3d_calcview_cpp@	3	3	0	main	"0x8024ea30,0x8024eaf0,0x8024ee30"
+sFStateID_c<dWarningBattery_c>	3	3	0	main	"0x80016a20,0x80016a50,0x80016e80"
+sFStateID_c<dWarningNunchuk_c>	3	3	0	main	"0x80019500,0x80019530,0x800198a0"
+sFStateID_c<dWarningOther_c>	3	3	0	main	"0x8001a220,0x8001a250,0x8001a5c0"
+sFStateID_c<dWarningYoKo_c>	3	3	0	main	"0x8001af10,0x8001af40,0x8001b2b0"
+sFStateID_c<daBossDemo_c>	3	3	0	main	"0x8001d930,0x8001d9f0,0x8001da20"
+sFStateID_c<daBullet_c>	3	3	0	main	"0x8001f5a0,0x8001f660,0x8001f690"
+sFStateID_c<daEnBrosBase_c>	3	3	0	main	"0x80026a90,0x80026b50,0x80026b80"
+sFStateID_c<daEnCarry_c>	3	3	0	main	"0x800271d0,0x80027290,0x800272c0"
+sFStateID_c<daEnDoor_c>	3	3	0	main	"0x8002bcc0,0x8002bde0,0x8002be10"
+sFStateID_c<daEnDpakkun_c>	3	3	0	main	"0x8002ca50,0x8002cb10,0x8002cb40"
+sFStateID_c<daEnDpakkunBase_c>	3	3	0	main	"0x8002ee30,0x8002eef0,0x8002ef20"
+sFStateID_c<daEnJimenPakkunBase_c>	3	3	0	main	"0x800310c0,0x80031180,0x800311b0"
+sFStateID_c<daEnKuriboBase_c>	3	3	0	main	"0x800330c0,0x80033180,0x800331b0"
+sFStateID_c<daEnObjCoinBlock_c>	3	3	0	main	"0x80037d20,0x80037e40,0x80037e70"
+sFStateID_c<daEnShell_c>	3	3	0	main	"0x8003c8d0,0x8003c990,0x8003c9c0"
+sFStateID_c<daEnSuperBigPile_c>	3	3	0	main	"0x8003dab0,0x8003db70,0x8003dba0"
+nw4hbm::math	3	3	0	main	"0x801885b0,0x80188630,0x801886a0"
+@unnamed@HBMAxSound_cpp@	3	3	0	main	"0x80174350,0x801744f0,0x80174560"
+dPad	2	2	0	main	"0x800d0610,0x800d08a0"
+sFStateVirtualID_c<daYoshi_c>	2	2	0	main	"0x80154360,0x80154550"
+@unnamed@d_dvd_error_cpp@	2	2	0	main	"0x801072f0,0x80107340"
+sFStateFct_c<dWarningNunchuk_c>	2	2	0	main	"0x80019390,0x80018d90"
+dIceInfo	2	2	0	"d_enemiesNP,main"	"0x80a0b5a0,0x80024c20"
+sFStateVirtualID_c<daFireBall_Base_c>	2	2	0	main	"0x800418c0,0x80041a00"
+sFStateVirtualID_c<daLiftDownOnBase_c>	2	2	0	main	"0x80043490,0x800435d0"
+sFStateVirtualID_c<daNetEnemy_c>	2	2	0	main	"0x80044eb0,0x80044ff0"
+sFStateVirtualID_c<daPlBase_c>	2	2	0	main	"0x8005b0f0,0x8005b230"
+sFStateVirtualID_c<daLightBase_c>	2	2	0	main	"0x80061db0,0x80061ef0"
+sFStateVirtualID_c<daRotObjsBase_c>	2	2	0	main	"0x80062bc0,0x80062d00"
+sFStateID_c<dActorState_c>	2	2	0	main	"0x80067740,0x80067770"
+sFStateVirtualID_c<dActorMultiState_c>	2	2	0	main	"0x80067b40,0x80067c80"
+dDynamicModuleControl	2	2	0	main	"0x8008f810,0x8008f870"
+sFStateVirtualID_c<dEnBoss_c>	2	2	0	main	"0x8009a960,0x8009aaa0"
+sFStateVirtualID_c<dEnBossKoopaJrBase_c>	2	2	0	main	"0x8009e6d0,0x8009e830"
+sFStateVirtualID_c<dEnemyCarry_c>	2	2	0	main	"0x8009f2b0,0x8009f3f0"
+sFStateVirtualID_c<dEn_c>	2	2	0	main	"0x800a2530,0x800a2670"
+sFStateVirtualID_c<dEnJrClownBase_c>	2	2	0	main	"0x800a7110,0x800a7250"
+sFStateVirtualID_c<dEnTorideKokoopa_c>	2	2	0	main	"0x800b0440,0x800b05b0"
+dStage	2	2	0	main	"0x800e3640,0x800e3660"
+sPrintf	2	2	0	main	"0x8015f6d0,0x8015f6e0"
+sFStateFct_c<dWarningManager_c>	2	2	0	main	"0x8010d2d0,0x8010e670"
+sFStateVirtualID_c<daEnEatCoin_c>	2	2	0	main	"0x8010fe20,0x8010ff70"
+daFarBG_c::mdlData_t	2	2	0	main	"0x80119180,0x801191e0"
+sFStateVirtualID_c<daFireBall_Player_c>	2	2	0	main	"0x8011b1b0,0x8011b300"
+sFStateVirtualID_c<dAcPy_c>	2	2	0	main	"0x8014a2c0,0x8014a4f0"
+nw4r::lyt	2	2	0	main	"0x802ab4f0,0x802b7310"
+nw4r::lyt::@unnamed@lyt_layout_cpp@	2	2	0	main	"0x802ac8b0,0x802aca70"
+nw4r::lyt::@unnamed@lyt_material_cpp@	2	2	0	main	"0x802b1d60,0x802b1e70"
+nw4r::lyt::@unnamed@lyt_animation_cpp@	2	2	0	main	"0x802b4df0,0x802b4ee0"
+@unnamed@lyt_arcResourceAccessor_cpp@	2	2	0	main	"0x802b6410,0x8017dfe0"
+nw4r::math::detail	2	2	0	main	"0x80237a60,0x80237b00"
+sFStateVirtualID_c<daEnTogezoBase_c>	2	2	0	main	"0x800405a0,0x80040720"
+void std::sort<nw4r::g3d::detail::workmem	2	2	0	main	"0x802529f0,0x80252fb0"
+void std	2	2	0	main	"0x80253570,0x80259e60"
+nw4r::g3d::detail::dcc::@unnamed@g3d_xsi_cpp@	2	2	0	main	"0x80255aa0,0x80255bc0"
+void std::sort<nw4r::g3d	2	2	0	main	"0x80259760,0x80259ae0"
+nw4r::g3d::@unnamed@g3d_scnroot_cpp@	2	2	0	main	"0x80259fc0,0x8025a050"
+sFStateFct_c<dWarningOther_c>	2	2	0	main	"0x80019a80,0x8001a0b0"
+sFStateFct_c<dWarningYoKo_c>	2	2	0	main	"0x8001a7a0,0x8001ada0"
+sFStateVirtualID_c<daBossDemo_c>	2	2	0	main	"0x8001d710,0x8001d850"
+sFStateVirtualID_c<daBullet_c>	2	2	0	main	"0x8001f380,0x8001f4c0"
+sFStateVirtualID_c<daEnBlockMain_c>	2	2	0	main	"0x80023920,0x80023a60"
+sFStateVirtualID_c<daEnBrosBase_c>	2	2	0	main	"0x80026850,0x800269b0"
+sFStateVirtualID_c<daEnCarry_c>	2	2	0	main	"0x80026fb0,0x800270f0"
+sFStateVirtualID_c<daEnDfpakkun_c>	2	2	0	main	"0x8002a7a0,0x8002a940"
+sFStateVirtualID_c<daEnDpakkun_c>	2	2	0	main	"0x8002c7f0,0x8002c970"
+sFStateVirtualID_c<daEnDpakkunBase_c>	2	2	0	main	"0x8002ec10,0x8002ed50"
+sFStateVirtualID_c<daEnJimenPakkunBase_c>	2	2	0	main	"0x80030e90,0x80030fe0"
+sFStateVirtualID_c<daEnKuriboBase_c>	2	2	0	main	"0x80032e90,0x80032fe0"
+sFStateVirtualID_c<daEnLkuriboBase_c>	2	2	0	main	"0x80035380,0x800354d0"
+sFStateVirtualID_c<daEnNetNoko_c>	2	2	0	main	"0x800365d0,0x80036730"
+sFStateVirtualID_c<daEnShell_c>	2	2	0	main	"0x8003c690,0x8003c7f0"
+sFStateVirtualID_c<daEnSuperBigPile_c>	2	2	0	main	"0x8003d890,0x8003d9d0"
+@unnamed@lyt_material_cpp@	2	2	0	main	"0x80180440,0x80180560"
+homebutton::gui	2	2	0	main	"0x80171680,0x80172be0"
+@unnamed@lyt_animation_cpp@	2	2	0	main	"0x8017d430,0x8017d520"
+"sFStateMgr_c<dRemoconMng_c::dConnect_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x800dc120
+sFStateFct_c<dRemoconMng_c::dConnect_c>	1	1	0	main	0x800dc1f0
+sFState_c<dRemoconMng_c::dConnect_c>	1	1	0	main	0x800dc230
+sFStateFct_c<dRemoconMng_c::dConnect_c::dExtension_c>	1	1	0	main	0x800dc3b0
+sFState_c<dRemoconMng_c::dConnect_c::dExtension_c>	1	1	0	main	0x800dc3f0
+sFStateFct_c<dReplayPlay_c>	1	1	0	main	0x800ddab0
+"sStateMgr_c<dReplayPlay_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x800ddaf0
+"sFStateMgr_c<dReplayPlay_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x800ddb50
+sFStateFct_c<dGameDisplay_c>	1	1	0	main	0x80157850
+"sStateMgr_c<dGameDisplay_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x80157890
+"sFStateMgr_c<dGameDisplay_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x801578f0
+sFStateFct_c<Pausewindow_c>	1	1	0	main	0x8015a470
+"sStateMgr_c<Pausewindow_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x8015a4b0
+"sFStateMgr_c<Pausewindow_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x8015a510
+sFStateFct_c<dScBoot_c>	1	1	0	main	0x8015c260
+"sStateMgr_c<dScBoot_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x8015c2a0
+"sFStateMgr_c<dScBoot_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x8015c300
+sCrc	1	1	0	main	0x8015f130
+mVideo	1	1	0	main	0x800e8ab0
+dWmEnemy	1	1	0	main	0x800f7400
+dWorld	1	1	0	main	0x800fe050
+sFStateFct_c<dWarningErrorInfo_c>	1	1	0	main	0x80017060
+"sStateMgr_c<dWarningErrorInfo_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x800170a0
+sFState_c<dWarningNunchuk_c>	1	1	0	main	0x80018d50
+"sStateMgr_c<dWarningNunchuk_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x80018dd0
+sFState_c<dCourseSelectGuide_c>	1	1	0	main	0x8000fff0
+sFStateFct_c<dCourseSelectGuide_c>	1	1	0	main	0x80010030
+"sStateMgr_c<dCourseSelectGuide_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x80010070
+"sFStateMgr_c<dCourseSelectGuide_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x800100d0
+sFState_c<daPlBase_c>	1	1	0	main	0x80046670
+sFStateFct_c<daPlBase_c>	1	1	0	main	0x800466b0
+"sStateMgr_c<daPlBase_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x800466f0
+"sFStateMgr_c<daPlBase_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x80046750
+daRotObjsBase_c::obj_bg_data_t	1	1	0	main	0x80062260
+sFStateFct_c<dActorState_c>	1	1	0	main	0x800670a0
+"sStateMgr_c<dActorState_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x800670e0
+"sFStateMgr_c<dActorState_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x80067140
+sFStateFct_c<dActorMultiState_c>	1	1	0	main	0x80067510
+sFState_c<dActorMultiState_c>	1	1	0	main	0x80067550
+mMutex	1	1	0	main	0x800ced70
+dDvd	1	1	0	main	0x8008f110
+"sStateStateMgr_c<dActorMultiState_c, sFStateMgr_c, sStateMethodUsr_FI_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x800980b0
+sFStateFct_c<dfukidashiInfo_c>	1	1	0	main	0x800b15d0
+"sStateMgr_c<dfukidashiInfo_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x800b1610
+"sFStateMgr_c<dfukidashiInfo_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x800b1670
+sFStateFct_c<dLineMng_c>	1	1	0	main	0x800c1070
+sFState_c<dLineMng_c>	1	1	0	main	0x800c10b0
+dMask	1	1	0	main	0x800cab10
+dWmSpline_c::tagSegmentInfo	1	1	0	main	0x80106190
+sFState_c<dGoalManager_c>	1	1	0	main	0x8010b010
+sFStateFct_c<dGoalManager_c>	1	1	0	main	0x8010b050
+"sStateMgr_c<dGoalManager_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x8010b090
+"sFStateMgr_c<dGoalManager_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x8010b0f0
+"sStateMgr_c<dWarningManager_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x8010d310
+"sFStateMgr_c<dWarningManager_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x8010d370
+daFarBG_c::bgData_t	1	1	0	main	0x80117c10
+short sLib	1	1	0	main	0x8012cad0
+unsigned char sLib	1	1	0	main	0x80143880
+sFStateFct_c<daYoshi_c>	1	1	0	main	0x8014b470
+"sStateMgr_c<daYoshi_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x8014b4b0
+"sFStateMgr_c<daYoshi_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x8014b510
+nw4r::snd::detail	1	1	0	main	0x80285660
+int nw4r::lyt::@unnamed@lyt_textBox_cpp@	1	1	0	main	0x802ae9c0
+void nw4r::lyt::@unnamed@lyt_textBox_cpp@	1	1	0	main	0x802af4f0
+_GXColorS10	1	1	0	main	0x802b2720
+const nw4r::lyt::BlendMode* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2a80
+const nw4r::lyt::AlphaCompare* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2a90
+const nw4r::lyt::TevStage* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2aa0
+const nw4r::lyt::IndirectStage* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2ab0
+const nw4r::lyt::TevSwapMode* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2ac0
+const nw4r::ut::Color* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::ut	1	1	0	main	0x802b2ad0
+const nw4r::lyt::ChanCtrl* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2ae0
+const char* nw4r::lyt::detail	1	1	0	main	0x802b2af0
+const nw4r::lyt::res::Texture* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt::res	1	1	0	main	0x802b2b00
+unsigned char nw4r::ut::@unnamed@lyt_material_cpp@	1	1	0	main	0x802b2b10
+const nw4r::lyt::TexCoordGen* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2b20
+const nw4r::lyt::TexSRT* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt	1	1	0	main	0x802b2b30
+const nw4r::lyt::res::TexMap* nw4r::lyt::detail::ConvertOffsToPtr<nw4r::lyt::res	1	1	0	main	0x802b2b40
+EGG::@unnamed@eggController_cpp@	1	1	0	main	0x802bd420
+@unnamed@eggCpuTexture_cpp@	1	1	0	main	0x802c0450
+nw4r::db::detail	1	1	0	main	0x80233a70
+nw4r::g3d::@unnamed@g3d_resanmtexpat_cpp@	1	1	0	main	0x8023f4e0
+signed char sLib	1	1	0	main	0x800483f0
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxDelayDpl2, nw4r::snd::detail"	1	1	0	main	0x802d50b0
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxDelay, nw4r::snd::detail"	1	1	0	main	0x802d5290
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxChorusDpl2, nw4r::snd::detail"	1	1	0	main	0x802d5470
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxChorus, nw4r::snd::detail"	1	1	0	main	0x802d5650
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxReverbStdDpl2, nw4r::snd::detail"	1	1	0	main	0x802d5830
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxReverbStd, nw4r::snd::detail"	1	1	0	main	0x802d5a10
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxReverbHiDpl2, nw4r::snd::detail"	1	1	0	main	0x802d5bf0
+"bool EGG::AudioFx::createFxBase<nw4r::snd::FxReverbHi, nw4r::snd::detail"	1	1	0	main	0x802d5dd0
+__partial_array_destructor	1	1	0	main	0x802dc8e4
+nw4r::g3d::tmem	1	1	0	main	0x8024a1d0
+nw4r::g3d::detail::dcc::@unnamed@g3d_maya_cpp@	1	1	0	main	0x80254ec0
+nw4r::g3d::detail::dcc::@unnamed@g3d_3dsmax_cpp@	1	1	0	main	0x80256990
+sFStateFct_c<dWarningBattery_c>	1	1	0	main	0x80015e80
+"sStateMgr_c<dWarningBattery_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x80015ec0
+"sFStateMgr_c<dWarningBattery_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x80015f20
+"sFStateMgr_c<dWarningErrorInfo_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x80017100
+"sFStateMgr_c<dWarningNunchuk_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x80018e30
+sFState_c<dWarningOther_c>	1	1	0	main	0x80019a40
+"sStateMgr_c<dWarningOther_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x80019ac0
+"sFStateMgr_c<dWarningOther_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x80019b20
+sFState_c<dWarningYoKo_c>	1	1	0	main	0x8001a760
+"sStateMgr_c<dWarningYoKo_c, sStateMethodUsr_FI_c, sFStateFct_c, sStateIDChk_c>"	1	1	0	main	0x8001a7e0
+"sFStateMgr_c<dWarningYoKo_c, sStateMethodUsr_FI_c>"	1	1	0	main	0x8001a840
+int @unnamed@lyt_textBox_cpp@	1	1	0	main	0x80185870
+void @unnamed@lyt_textBox_cpp@	1	1	0	main	0x80185f10
+@unnamed@lyt_layout_cpp@	1	1	0	main	0x8017f7a0

@@ -1,0 +1,1238 @@
+{
+  "chain": "fBase_c -> dBase_c -> dBaseActor_c -> dActor_c; dActor_c -> dActorState_c (single-state); dActor_c -> dActorMultiState_c -> dEn_c",
+  "revision": "SMNE01 rev 1",
+  "dol": "E:/Localsend/mariobroswii/sys/main.dol",
+  "note": "Offsets are byte offsets inside the object. evidence.kind: store = the constructor writes this offset directly; vec = consecutive 4-byte stores; vec16 = consecutive 2-byte stores; subobject = the constructor calls a known constructor on this+callOffset; zero = not written by the constructor (object zero-initialized by fBase_c::operator new), size from the next field; documented = from the retail header, not proven in this slice.",
+  "classes": [
+    {
+      "name": "fBase_c",
+      "ctor": "0x80161AD0",
+      "thisReg": "r31",
+      "size": 100,
+      "vptrOffset": 96,
+      "fields": [
+        {
+          "offset": 0,
+          "size": 4,
+          "type": "u32",
+          "name": "mUniqueID",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 4,
+          "size": 4,
+          "type": "u32",
+          "name": "mParam",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 8,
+          "size": 2,
+          "type": "u16",
+          "name": "mProfName",
+          "evidence": {
+            "kind": "store",
+            "width": 2
+          }
+        },
+        {
+          "offset": 10,
+          "size": 1,
+          "type": "u8",
+          "name": "mLifecycleState",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 11,
+          "size": 1,
+          "type": "bool",
+          "name": "mDeleteRequested",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 12,
+          "size": 1,
+          "type": "bool",
+          "name": "mDeferExecute",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 13,
+          "size": 1,
+          "type": "bool",
+          "name": "mDeferRetryCreate",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 14,
+          "size": 1,
+          "type": "u8",
+          "name": "mGroupType",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 15,
+          "size": 1,
+          "type": "u8",
+          "name": "mProcControl",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 16,
+          "size": 76,
+          "type": "fManager_c",
+          "name": "mMng",
+          "evidence": {
+            "kind": "subobject",
+            "call": "0x80161530"
+          }
+        },
+        {
+          "offset": 92,
+          "size": 4,
+          "type": "EGG::FrmHeap *",
+          "name": "mHeap",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 96,
+          "size": 4,
+          "type": "vptr",
+          "name": "vtable",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        }
+      ],
+      "unresolved": "The 76-byte mManager_c interior (16..91) is one embedded object; its own fields are not split out in this slice."
+    },
+    {
+      "name": "dBase_c",
+      "ctor": "0x8006C420",
+      "thisReg": "r31",
+      "size": 112,
+      "vptrOffset": 96,
+      "fields": [
+        {
+          "offset": 96,
+          "size": 4,
+          "type": "vptr",
+          "name": "vtable",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 100,
+          "size": 4,
+          "type": "cOwnerSetMg_c",
+          "name": "mOwnerSet",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 104,
+          "size": 4,
+          "type": "const char *",
+          "name": "mpKindString",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 108,
+          "size": 4,
+          "type": "const char *",
+          "name": "mpNameString",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        }
+      ],
+      "unresolved": "cOwnerSetMg_c at 100 is a second base subobject; only its 4-byte head is observed here (the store of 0)."
+    },
+    {
+      "name": "dBaseActor_c",
+      "ctor": "0x8006C6D0",
+      "thisReg": "r31",
+      "size": 296,
+      "vptrOffset": 96,
+      "fields": [
+        {
+          "offset": 96,
+          "size": 4,
+          "type": "vptr",
+          "name": "vtable",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 112,
+          "size": 12,
+          "type": "fLiNdBaLink_c",
+          "name": "mLinkActor",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 124,
+          "size": 48,
+          "type": "mMtx_c",
+          "name": "mMatrix",
+          "evidence": {
+            "kind": "zero",
+            "width": 48
+          }
+        },
+        {
+          "offset": 172,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mPos",
+          "evidence": {
+            "kind": "vec",
+            "width": 12
+          }
+        },
+        {
+          "offset": 184,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mLastPos",
+          "evidence": {
+            "kind": "vec",
+            "width": 12
+          }
+        },
+        {
+          "offset": 196,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mPosDelta",
+          "evidence": {
+            "kind": "zero",
+            "width": 12
+          }
+        },
+        {
+          "offset": 208,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mCenterOffs",
+          "evidence": {
+            "kind": "vec",
+            "width": 12
+          }
+        },
+        {
+          "offset": 220,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mScale",
+          "evidence": {
+            "kind": "vec",
+            "width": 12
+          }
+        },
+        {
+          "offset": 232,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mSpeed",
+          "evidence": {
+            "kind": "zero",
+            "width": 12
+          }
+        },
+        {
+          "offset": 244,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mSpeedMax",
+          "evidence": {
+            "kind": "zero",
+            "width": 12
+          }
+        },
+        {
+          "offset": 256,
+          "size": 6,
+          "type": "mAng3_c",
+          "name": "mAngle",
+          "evidence": {
+            "kind": "vec16",
+            "width": 6
+          }
+        },
+        {
+          "offset": 262,
+          "size": 6,
+          "type": "mAng3_c",
+          "name": "mAngle3D",
+          "evidence": {
+            "kind": "vec16",
+            "width": 6
+          }
+        },
+        {
+          "offset": 268,
+          "size": 4,
+          "type": "f32",
+          "name": "mSpeedF",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 272,
+          "size": 4,
+          "type": "f32",
+          "name": "mMaxSpeedF",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 276,
+          "size": 4,
+          "type": "f32",
+          "name": "mAccelY",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 280,
+          "size": 4,
+          "type": "f32",
+          "name": "mMaxFallSpeed",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 284,
+          "size": 4,
+          "type": "f32",
+          "name": "mAccelF",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 288,
+          "size": 4,
+          "type": "u32",
+          "name": "mActorProperties",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 292,
+          "size": 1,
+          "type": "bool",
+          "name": "mVisible",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 293,
+          "size": 1,
+          "type": "u8",
+          "name": "m_125",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 294,
+          "size": 2,
+          "type": "pad",
+          "name": "padding",
+          "evidence": {
+            "kind": "zero",
+            "width": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "dActor_c",
+      "ctor": "0x80064110",
+      "thisReg": "r29",
+      "size": 916,
+      "vptrOffset": 96,
+      "fields": [
+        {
+          "offset": 296,
+          "size": 4,
+          "type": "int",
+          "name": "mCarryingPlayerID",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 300,
+          "size": 4,
+          "type": "u32",
+          "name": "mCarryingFlags",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 304,
+          "size": 1,
+          "type": "u8",
+          "name": "mCarryingDirection",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 305,
+          "size": 3,
+          "type": "pad",
+          "name": "padding",
+          "evidence": {
+            "kind": "zero",
+            "width": 3
+          }
+        },
+        {
+          "offset": 308,
+          "size": 4,
+          "type": "u32",
+          "name": "mComboCount",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 312,
+          "size": 4,
+          "type": "u32",
+          "name": "m_138",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 316,
+          "size": 4,
+          "type": "u32",
+          "name": "m_13C",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 320,
+          "size": 4,
+          "type": "f32",
+          "name": "m_140",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 324,
+          "size": 4,
+          "type": "u32",
+          "name": "m_144",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 328,
+          "size": 164,
+          "type": "dCc_c",
+          "name": "mCollisionCheck",
+          "evidence": {
+            "kind": "subobject",
+            "call": "0x8008C200"
+          }
+        },
+        {
+          "offset": 492,
+          "size": 240,
+          "type": "dBc_c",
+          "name": "mBgCheck",
+          "evidence": {
+            "kind": "subobject",
+            "call": "0x8006CF40"
+          }
+        },
+        {
+          "offset": 732,
+          "size": 52,
+          "type": "dRc_c",
+          "name": "mRideCheck",
+          "evidence": {
+            "kind": "subobject",
+            "call": "0x800D9860"
+          }
+        },
+        {
+          "offset": 784,
+          "size": 8,
+          "type": "mVec2_c",
+          "name": "m_310",
+          "evidence": {
+            "kind": "zero",
+            "width": 8
+          }
+        },
+        {
+          "offset": 792,
+          "size": 8,
+          "type": "mVec2_c",
+          "name": "mVisibleAreaSize",
+          "evidence": {
+            "kind": "vec",
+            "width": 8
+          }
+        },
+        {
+          "offset": 800,
+          "size": 8,
+          "type": "mVec2_c",
+          "name": "mVisibleAreaOffset",
+          "evidence": {
+            "kind": "vec",
+            "width": 8
+          }
+        },
+        {
+          "offset": 808,
+          "size": 8,
+          "type": "mVec2_c",
+          "name": "m_328",
+          "evidence": {
+            "kind": "vec",
+            "width": 8
+          }
+        },
+        {
+          "offset": 816,
+          "size": 8,
+          "type": "mVec2_c",
+          "name": "mMaxBoundDistance",
+          "evidence": {
+            "kind": "vec",
+            "width": 8
+          }
+        },
+        {
+          "offset": 824,
+          "size": 4,
+          "type": "f32",
+          "name": "mDestroyBoundDistanceTop",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 828,
+          "size": 4,
+          "type": "f32",
+          "name": "mDestroyBoundDistanceBottom",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 832,
+          "size": 4,
+          "type": "f32",
+          "name": "mDestroyBoundDistanceLeft",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 836,
+          "size": 4,
+          "type": "f32",
+          "name": "mDestroyBoundDistanceRight",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 840,
+          "size": 1,
+          "type": "u8",
+          "name": "mDirection",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 841,
+          "size": 1,
+          "type": "u8",
+          "name": "mZoneID",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 842,
+          "size": 1,
+          "type": "u8",
+          "name": "m_34A",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 843,
+          "size": 1,
+          "type": "pad",
+          "name": "padding",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 844,
+          "size": 4,
+          "type": "u8 *",
+          "name": "mpByteStorage",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 848,
+          "size": 4,
+          "type": "u16 *",
+          "name": "mpShortStorage",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 852,
+          "size": 2,
+          "type": "u8[2]",
+          "name": "mEventNums",
+          "evidence": {
+            "kind": "zero",
+            "width": 2
+          }
+        },
+        {
+          "offset": 854,
+          "size": 2,
+          "type": "pad",
+          "name": "padding",
+          "evidence": {
+            "kind": "zero",
+            "width": 2
+          }
+        },
+        {
+          "offset": 856,
+          "size": 8,
+          "type": "u64",
+          "name": "mEventMask",
+          "evidence": {
+            "kind": "zero",
+            "width": 8
+          }
+        },
+        {
+          "offset": 864,
+          "size": 4,
+          "type": "u32",
+          "name": "m_360",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 868,
+          "size": 2,
+          "type": "u16",
+          "name": "mSpawnInfoFlags",
+          "evidence": {
+            "kind": "zero",
+            "width": 2
+          }
+        },
+        {
+          "offset": 870,
+          "size": 1,
+          "type": "bool",
+          "name": "mKillIfDisabled",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 871,
+          "size": 1,
+          "type": "pad",
+          "name": "padding",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 872,
+          "size": 4,
+          "type": "u32",
+          "name": "mEaterActorID",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 876,
+          "size": 1,
+          "type": "u8",
+          "name": "mEatState",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 877,
+          "size": 1,
+          "type": "u8",
+          "name": "mEatSpitType",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 878,
+          "size": 2,
+          "type": "pad",
+          "name": "padding",
+          "evidence": {
+            "kind": "zero",
+            "width": 2
+          }
+        },
+        {
+          "offset": 880,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mScaleBeforeBeingEaten",
+          "evidence": {
+            "kind": "zero",
+            "width": 12
+          }
+        },
+        {
+          "offset": 892,
+          "size": 4,
+          "type": "u32",
+          "name": "mScoreType",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 896,
+          "size": 4,
+          "type": "u32",
+          "name": "mLookAtMode",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 900,
+          "size": 4,
+          "type": "u32",
+          "name": "m_384",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 904,
+          "size": 4,
+          "type": "dPropelParts_c *",
+          "name": "mpCarryPropelActor",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 908,
+          "size": 1,
+          "type": "u8",
+          "name": "mKind",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 909,
+          "size": 1,
+          "type": "s8",
+          "name": "mPlayerNo",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 910,
+          "size": 1,
+          "type": "u8",
+          "name": "mDisableMask",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 911,
+          "size": 1,
+          "type": "u8",
+          "name": "mLayerID",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 912,
+          "size": 1,
+          "type": "bool",
+          "name": "mDeleteForever",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 913,
+          "size": 1,
+          "type": "bool",
+          "name": "mAppearsOnBackfence",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 914,
+          "size": 2,
+          "type": "u8[2]",
+          "name": "m_392",
+          "evidence": {
+            "kind": "zero",
+            "width": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "dActorState_c",
+      "ctor": "0x80066FC0",
+      "thisReg": "r31",
+      "size": 980,
+      "vptrOffset": 96,
+      "fields": [
+        {
+          "offset": 96,
+          "size": 4,
+          "type": "vptr",
+          "name": "vtable",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 916,
+          "size": 64,
+          "type": "sFStateMgr_c<dActorState_c, sStateMethodUsr_FI_c>",
+          "name": "mStateMgr",
+          "evidence": {
+            "kind": "subobject",
+            "call": "0x8015FC90",
+            "callOffset": 940
+          }
+        }
+      ],
+      "unresolved": "Own field starts at 916 (0x394). The constructor writes vtable words at 916,920,924,928,932,936 and constructs a sub-object at 940 (0x3AC). The state manager is 64 bytes: in dActorMultiState_c the second manager's vtable block starts exactly 64 bytes after the first (980 vs 916), proving the stride. Class size 0x3D4 follows."
+    },
+    {
+      "name": "dActorMultiState_c",
+      "ctor": null,
+      "thisReg": null,
+      "size": 1044,
+      "vptrOffset": 96,
+      "fields": [
+        {
+          "offset": 916,
+          "size": 128,
+          "type": "sFStateStateMgr_c<dActorMultiState_c, sStateMethodUsr_FI_c, sStateMethodUsr_FI_c>",
+          "name": "mStateMgr",
+          "evidence": {
+            "kind": "subobject",
+            "call": "0x8015FC90",
+            "callOffset": 940
+          }
+        }
+      ],
+      "unresolved": "No out-of-line constructor is present; its state manager is constructed inline by dEn_c. Its own part is 128 bytes (two 64-byte state managers, vtable blocks at 916 and 980). Full object size is 0x414: dEn_c's first own field starts at 1044 (0x414)."
+    },
+    {
+      "name": "dEn_c",
+      "ctor": "0x80094E80",
+      "tailUnresolvedFrom": 1148,
+      "thisReg": "r31",
+      "size": null,
+      "vptrOffset": 96,
+      "fields": [
+        {
+          "offset": 96,
+          "size": 4,
+          "type": "vptr",
+          "name": "vtable",
+          "evidence": {
+            "kind": "store",
+            "width": 4
+          }
+        },
+        {
+          "offset": 1044,
+          "size": 32,
+          "type": "dDeathInfo_c",
+          "name": "mDeathInfo",
+          "evidence": {
+            "kind": "zero",
+            "width": 32
+          }
+        },
+        {
+          "offset": 1076,
+          "size": 4,
+          "type": "u32",
+          "name": "mCcValue",
+          "evidence": {
+            "kind": "zero",
+            "width": 4
+          }
+        },
+        {
+          "offset": 1080,
+          "size": 2,
+          "type": "u16",
+          "name": "m_24",
+          "evidence": {
+            "kind": "store",
+            "width": 2
+          }
+        },
+        {
+          "offset": 1082,
+          "size": 6,
+          "type": "u8[6]",
+          "name": "mPad1",
+          "evidence": {
+            "kind": "zero",
+            "width": 6
+          }
+        },
+        {
+          "offset": 1088,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mFootPush",
+          "evidence": {
+            "kind": "vec",
+            "width": 12
+          }
+        },
+        {
+          "offset": 1100,
+          "size": 12,
+          "type": "mVec3_c",
+          "name": "mFootPush2",
+          "evidence": {
+            "kind": "zero",
+            "width": 12
+          }
+        },
+        {
+          "offset": 1112,
+          "size": 1,
+          "type": "u8",
+          "name": "mDeathFallDirection",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 1113,
+          "size": 1,
+          "type": "u8",
+          "name": "mIceDeathDirection",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 1114,
+          "size": 1,
+          "type": "bool",
+          "name": "mKilled",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 1115,
+          "size": 1,
+          "type": "u8",
+          "name": "mPad2",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 1116,
+          "size": 1,
+          "type": "bool",
+          "name": "mFootAttr3",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 1117,
+          "size": 1,
+          "type": "bool",
+          "name": "mInLiquid",
+          "evidence": {
+            "kind": "zero",
+            "width": 1
+          }
+        },
+        {
+          "offset": 1118,
+          "size": 1,
+          "type": "bool",
+          "name": "mFootAttr1",
+          "evidence": {
+            "kind": "store",
+            "width": 1
+          }
+        },
+        {
+          "offset": 1119,
+          "size": 5,
+          "type": "u8[5]",
+          "name": "mPad3",
+          "evidence": {
+            "kind": "zero",
+            "width": 5
+          }
+        },
+        {
+          "offset": 1124,
+          "size": 24,
+          "type": "dEnBoyoMng_c",
+          "name": "mBoyoMng",
+          "evidence": {
+            "kind": "vec",
+            "width": 12
+          }
+        },
+        {
+          "offset": 1148,
+          "size": null,
+          "type": "dIceMng_c",
+          "name": "mIceMng",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": 4,
+          "type": "f32",
+          "name": "mAirAccelY",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": 4,
+          "type": "f32",
+          "name": "mAirSpeedMaxY",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": 4,
+          "type": "f32",
+          "name": "mAirMaxFallSpeed",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": 4,
+          "type": "u32",
+          "name": "mFlags",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": 2,
+          "type": "u16",
+          "name": "mTimer1",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": 2,
+          "type": "u16",
+          "name": "mTimer2",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": null,
+          "type": "dPlayerDownTimer_c",
+          "name": "mNoHitPlayer",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": 1,
+          "type": "u8",
+          "name": "mTimer3",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": null,
+          "type": "dEnCombo_c",
+          "name": "mCombo",
+          "evidence": {
+            "kind": "documented"
+          }
+        },
+        {
+          "offset": null,
+          "size": null,
+          "type": "dEnFumiProc_c",
+          "name": "mFumiProc",
+          "evidence": {
+            "kind": "documented"
+          }
+        }
+      ],
+      "unresolved": "Fields from 1148 (0x47C) on follow the retail d_enemy.hpp order but were not reached by this slice's constructor dump; they are marked documented, not verified."
+    }
+  ]
+}

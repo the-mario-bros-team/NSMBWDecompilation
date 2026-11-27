@@ -1,0 +1,47 @@
+{
+  "revision": "SMNE01 rev 1",
+  "ranges": [
+    {
+      "start": "0x80004000",
+      "end": "0x800066c0"
+    },
+    {
+      "start": "0x80006780",
+      "end": "0x802ed9e0"
+    }
+  ],
+  "inputs": {
+    "ledger": {
+      "file": "C:\\Users\\Wither\\.codex\\worktrees\\rust-guest-memory\\decomp\\ledger\\functions.csv",
+      "sha256": "24cd8fdb5648aee5118cad1b298c6d65f5559bfd8aadc9ece33ee42d17658a21"
+    },
+    "recomp": {
+      "file": "E:/NSMBWRecomp/wiicompiled/projects/nsmbw/MAP.txt",
+      "sha256": "8035c327b48393c4dfe2a2378120523e0423b9b9a6cdbdd86d6d804f28d9e862"
+    },
+    "normalizedE1": {
+      "file": "E:/NSMBWRecomp/maps/nsmbw_e1_symbols.tsv",
+      "sha256": "897087929f673f55c5f46e9fedd13d3ac312ba6a1d05d99b99ff3e06815f10d8"
+    },
+    "reviewedE1": {
+      "file": "E:/NSMBWDecompCodex/analysis/symbols/symbols_E1_merged_v13.tsv",
+      "sha256": "77260fc10b2b97c8fb598b7a84495fb8ea539e74dbad6b9d8057e441bfe3de92"
+    }
+  },
+  "tally": {
+    "rows": 10259,
+    "placeholders": 9168,
+    "agreement": 8894,
+    "singleSource": 88,
+    "conflicts": 7,
+    "noName": 179,
+    "availableExports": 0,
+    "outsideText": 0
+  },
+  "notes": [
+    "Agreement means exact spelling at the same address across input files. These sources can share provenance.",
+    "Disagreements are preserved as candidates. No source names were applied.",
+    "Inventory targets cite main-program exports in the existing ledger and fall inside the local executable text ranges.",
+    "Unversioned raw symbol listings are omitted."
+  ]
+}

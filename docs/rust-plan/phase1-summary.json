@@ -1,0 +1,230 @@
+{
+  "generated": "2026-11-26T09:22:55.643Z",
+  "inputs": {
+    "evidence": "C:\\Users\\Wither\\Documents\\Codex\\2026-11-25\\rad\\outputs\\phase1-ledger-evidence.jsonl",
+    "crossCheck": "E:/NSMBWDecompCodex/analysis/symbols/symbols_E1_merged_v13.tsv"
+  },
+  "tally": {
+    "rows": 20250,
+    "chosen": 12772,
+    "agreement": 9926,
+    "singleSource": 2846,
+    "conflicts": 8,
+    "noName": 7470,
+    "structuralOnly": 241,
+    "withDisplay": 12986,
+    "withClass": 9663,
+    "classes": 1246,
+    "mainAddressMatches": 10243,
+    "mainAddressChecked": 10243,
+    "nameMatchesV13": 10000,
+    "nameDiffersV13": 0,
+    "namespaces": 275
+  },
+  "conflicts": [
+    {
+      "ledgerLine": 12160,
+      "address": "0x80057e70",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=startSoundPlayer__10daPlBase_cFUlQ210daPlBase_c15SoundOffCheck_e",
+        "recomp=PlayPlayerSound"
+      ]
+    },
+    {
+      "ledgerLine": 12740,
+      "address": "0x80071dc0",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=checkVine__5dBc_cFP7sBcMany",
+        "normalizedE1=checkVine__5dBc_cFP7sBcMany",
+        "recomp=checkVineCollision__5dBc_cFP12sBcPointData"
+      ]
+    },
+    {
+      "ledgerLine": 12741,
+      "address": "0x80072180",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=checkPole__5dBc_cFP7sBcMany",
+        "normalizedE1=checkPole__5dBc_cFP7sBcMany",
+        "recomp=checkPoleCollision__5dBc_cFP12sBcPointData"
+      ]
+    },
+    {
+      "ledgerLine": 12978,
+      "address": "0x80087b60",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=setupAnimTile__11dBgTexMng_cFiUsPcPUcb",
+        "recomp=_Z22BgTexMng__LoadAnimTilePvisPcS0_c"
+      ]
+    },
+    {
+      "ledgerLine": 13770,
+      "address": "0x800c8cb0",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=ReadResource__9LytBase_cFPCcb",
+        "recomp=loadArc__Q23m2d13EmbedLayout_cFPCcb"
+      ]
+    },
+    {
+      "ledgerLine": 16355,
+      "address": "0x802b7a40",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=searchInside__Q23EGG7ArchiveFPFPvPvUlPC11ARCDirEntryPCc_vPv",
+        "normalizedE1=searchInside__Q23EGG7ArchiveFPFPvPvUlPC11ARCDirEntryPCc_vPv",
+        "recomp=searchInside__Q23EGG7ArchiveFPFPvPvPC11ARCDirEntryPCc_vPv"
+      ]
+    },
+    {
+      "ledgerLine": 17771,
+      "address": "0x802dcd40",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=__save_gpr",
+        "normalizedE1=__save_gpr",
+        "recomp=_save_gpr_14"
+      ]
+    },
+    {
+      "ledgerLine": 17785,
+      "address": "0x802dcd8c",
+      "module": "main",
+      "spellings": [
+        "reviewedE1=__restore_gpr",
+        "normalizedE1=__restore_gpr",
+        "recomp=_rest_gpr_14"
+      ]
+    }
+  ],
+  "topClasses": [
+    {
+      "class": "dAcPy_c",
+      "methods": 397,
+      "resolved": 397
+    },
+    {
+      "class": "daPlBase_c",
+      "methods": 260,
+      "resolved": 259
+    },
+    {
+      "class": "dBc_c",
+      "methods": 108,
+      "resolved": 106
+    },
+    {
+      "class": "daYoshi_c",
+      "methods": 99,
+      "resolved": 97
+    },
+    {
+      "class": "dLineMng_c",
+      "methods": 92,
+      "resolved": 92
+    },
+    {
+      "class": "daIce_c",
+      "methods": 82,
+      "resolved": 82
+    },
+    {
+      "class": "dBg_c",
+      "methods": 66,
+      "resolved": 66
+    },
+    {
+      "class": "SndAudioMgr",
+      "methods": 64,
+      "resolved": 64
+    },
+    {
+      "class": "dFileSelect_c",
+      "methods": 59,
+      "resolved": 59
+    },
+    {
+      "class": "daPyMng_c",
+      "methods": 57,
+      "resolved": 57
+    },
+    {
+      "class": "dEn_c",
+      "methods": 55,
+      "resolved": 55
+    },
+    {
+      "class": "dWmMapModel_c",
+      "methods": 47,
+      "resolved": 47
+    },
+    {
+      "class": "daPyDemoMng_c",
+      "methods": 46,
+      "resolved": 46
+    },
+    {
+      "class": "dCourseSelectGuide_c",
+      "methods": 44,
+      "resolved": 44
+    },
+    {
+      "class": "dAcPyKey_c",
+      "methods": 44,
+      "resolved": 44
+    },
+    {
+      "class": "daEnHatenaBalloon_c",
+      "methods": 43,
+      "resolved": 43
+    },
+    {
+      "class": "nw4r::snd::detail::Voice",
+      "methods": 43,
+      "resolved": 43
+    },
+    {
+      "class": "dReset::Manage_c",
+      "methods": 42,
+      "resolved": 42
+    },
+    {
+      "class": "daEnItem_c",
+      "methods": 41,
+      "resolved": 41
+    },
+    {
+      "class": "nw4r::snd::detail::BasicSound",
+      "methods": 41,
+      "resolved": 41
+    },
+    {
+      "class": "dActor_c",
+      "methods": 38,
+      "resolved": 38
+    },
+    {
+      "class": "dMj2dGame_c",
+      "methods": 37,
+      "resolved": 37
+    },
+    {
+      "class": "dScBoot_c",
+      "methods": 37,
+      "resolved": 37
+    },
+    {
+      "class": "EGG::ExEffectParam",
+      "methods": 37,
+      "resolved": 37
+    },
+    {
+      "class": "SndSceneMgr",
+      "methods": 36,
+      "resolved": 35
+    }
+  ]
+}
