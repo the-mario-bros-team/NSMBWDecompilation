@@ -1144,9 +1144,13 @@ fn run(game: PathBuf, opts: EmuOptions, frames: SyncSender<Result<GameFrame, Str
     if sys.native_count() > 0 {
         let (validated, failed) = sys.native_report();
         say!(
-            "native bodies: {} switched, lockstep validated={validated} failed={failed}",
-            sys.native_count()
+            "native bodies: {} switched, lockstep validated={validated} failed={failed} inconclusive={}",
+            sys.native_count(),
+            sys.native_inconclusive()
         );
+        for (addr, validated, failed, inconclusive) in sys.native_per_body() {
+            say!("native body {addr:#010x}: validated={validated} failed={failed} inconclusive={inconclusive}");
+        }
     }
     totals
 }

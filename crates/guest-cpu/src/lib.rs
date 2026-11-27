@@ -156,6 +156,11 @@ pub struct Cpu {
     /// The decrementer exception for the current DEC value was already raised.
     dec_signalled: bool,
     reservation: Option<u32>,
+    /// Exceptions taken so far (interrupts, decrementer, FP unavailable,
+    /// `sc`). Diagnostic only: it isn't in save states and never reaches the
+    /// guest. The body checker uses it to tell a call that an exception
+    /// interrupted from one the body got wrong.
+    pub exceptions: u64,
 }
 
 impl Default for Cpu {
@@ -186,6 +191,7 @@ impl Cpu {
             dec_set_at: 0,
             dec_signalled: false,
             reservation: None,
+            exceptions: 0,
         }
     }
 
@@ -296,6 +302,7 @@ impl Cpu {
     /// Takes an exception: SRR0 = `srr0`, SRR1 = MSR, MSR enters supervisor
     /// real mode, PC = `vector` (physical; exception code runs untranslated).
     pub fn exception(&mut self, vector: u32, srr0: u32) {
+        self.exceptions += 1;
         self.spr[SPR_SRR0] = srr0;
         self.spr[SPR_SRR1] = self.msr & 0x87C0_FFFF;
         self.msr &= !0x0004_EF36;
