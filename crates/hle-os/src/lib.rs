@@ -811,6 +811,11 @@ impl System {
         self.native_bodies.sort_unstable_by_key(|(a, _)| *a);
     }
 
+    /// Keeps only the registered bodies whose address satisfies `keep`.
+    pub fn retain_native(&mut self, keep: impl Fn(u32) -> bool) {
+        self.native_bodies.retain(|(a, _)| keep(*a));
+    }
+
     /// Lockstep mode: run the original, validate the body against it on the
     /// first `budget` switched calls, and keep the original's state.
     pub fn set_native_lockstep(&mut self, on: bool, budget: u32) {
@@ -1300,7 +1305,7 @@ impl System {
 
     /// Runs the same synchronous guest call as [`Self::call_guest`] with
     /// register arguments for a fixed-prototype call. Integer words go to
-    /// r3ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“r10 and scalar floating-point values go to f1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“f8. The caller lays
+    /// r3ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œr10 and scalar floating-point values go to f1ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œf8. The caller lays
     /// out register pairs. Stack arguments are unsupported.
     pub fn call_guest_with_registers(
         &mut self,

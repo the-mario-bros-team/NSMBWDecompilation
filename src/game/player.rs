@@ -655,6 +655,7 @@ use crate::game::bases::{
     Descriptor,
 };
 use crate::platform::{self, call4, call5, call6, call7, call_u64};
+use crate::game::layouts::DActor;
 
 // ===========================================================================
 // Absolute addresses and field offsets used by the player table.
@@ -35509,20 +35510,21 @@ pub unsafe fn fn_80064380(param_1: u32, param_2: u32) {
 /// the clear and the `+0x64` vtable slot are literal. Prologue 16 bytes, `blr`
 /// at `0x8006448C` (real body 156 bytes; 160 in `functions.tsv` with the pad).
 pub unsafe fn fn_800643f0(this: usize) -> u32 {
+    let actor = DActor { addr: this as u32 };
     if platform::call1(FN_8006C8F0_B, this as u32) == 0 {
         return 0;
     }
     if crate::game::stage::fn_800b3b50(0xFFFF_FFFF) != 0 {
         return 0;
     }
-    if platform::read_u8(U8_80429CFA_B) & platform::read_u8(this + 0x38E) != 0 {
+    if platform::read_u8(U8_80429CFA_B) & actor.disable_mask() != 0 {
         return 0;
     }
 
-    crate::engine::display::fn_800d9ac0(this + 0x2DC);
+    crate::engine::display::fn_800d9ac0(actor.ride_check_addr() as usize);
 
-    if platform::read_u8(this + 0x366) == 1 {
-        platform::write_u8(this + 0x366, 0);
+    if actor.kill_if_disabled() {
+        actor.set_kill_if_disabled(false);
         let vtable = platform::read_u32(this + 0x60) as usize;
         let method = platform::read_u32(vtable + 0x64) as usize;
         platform::call1(method, this as u32);
