@@ -81,6 +81,27 @@ unsafe fn d_base_actor_pos_move_by(
     0
 }
 
+/// `dBaseActor_c::postExecute(MAIN_STATE_e)` (`0x8006C980`): `this` and the state.
+unsafe fn d_base_actor_post_execute(
+    runtime: &mut (dyn GuestRuntime + 'static),
+    gprs: &[u32; 32],
+    _fprs: &[[f64; 2]; 32],
+) -> u32 {
+    let (this, state) = (gprs[3] as usize, gprs[4]);
+    nsmbw::platform::with_guest_runtime(runtime, || nsmbw::game::player::fn_8006c980(this, state));
+    0
+}
+
+/// `dBaseActor_c::preDraw` (`0x8006C9F0`): whether to draw this frame.
+unsafe fn d_base_actor_pre_draw(
+    runtime: &mut (dyn GuestRuntime + 'static),
+    gprs: &[u32; 32],
+    _fprs: &[[f64; 2]; 32],
+) -> u32 {
+    let this = gprs[3] as usize;
+    nsmbw::platform::with_guest_runtime(runtime, || nsmbw::game::player::fn_8006c9f0(this))
+}
+
 /// `dBaseActor_c::getCenterPos() const` (`0x8006CED0`): returns a `mVec3_c`
 /// by value, so `r3` is the result's address and `r4` is `this`.
 unsafe fn d_base_actor_get_center_pos(
@@ -115,6 +136,8 @@ pub fn install(system: &mut System) {
     system.register_native(0x8016_1AD0, f_base_ctor);
     system.register_native(0x8006_43F0, d_actor_pre_execute);
     system.register_native(0x8006_4540, d_actor_pre_draw);
+    system.register_native(0x8006_C9F0, d_base_actor_pre_draw);
+    system.register_native_void(0x8006_C980, d_base_actor_post_execute);
     // Functions that return nothing: their checks compare RAM, not r3.
     system.register_native_void(0x8006_CC00, d_base_actor_calc_speed);
     system.register_native_void(0x8006_CD00, d_base_actor_pos_move_by);

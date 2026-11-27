@@ -43,6 +43,19 @@ pub fn fadds(a: f64, b: f64) -> f32 {
     (a + b) as f32
 }
 
+/// Broadway's single-precision subtract (`fsubs`): the double difference,
+/// rounded once to single, as the interpreter does it.
+///
+/// # Original
+/// Host-side helper; no binary address.
+///
+/// # Confidence
+/// high - same arithmetic as the interpreter's `fp_single`.
+#[inline]
+pub fn fsubs(a: f64, b: f64) -> f32 {
+    (a - b) as f32
+}
+
 #[cfg(feature = "guest-memory")]
 extern crate std;
 

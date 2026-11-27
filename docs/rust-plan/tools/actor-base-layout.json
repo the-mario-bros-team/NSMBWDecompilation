@@ -235,7 +235,7 @@
           "offset": 184,
           "size": 12,
           "type": "mVec3_c",
-          "name": "unk_b8",
+          "name": "prev_pos",
           "evidence": {
             "kind": "vec",
             "width": 12
@@ -245,7 +245,7 @@
           "offset": 196,
           "size": 12,
           "type": "mVec3_c",
-          "name": "unk_c4",
+          "name": "pos_change",
           "evidence": {
             "kind": "zero",
             "width": 12
@@ -375,7 +375,7 @@
           "offset": 292,
           "size": 1,
           "type": "bool",
-          "name": "unk_124",
+          "name": "draw_enabled",
           "evidence": {
             "kind": "store",
             "width": 1

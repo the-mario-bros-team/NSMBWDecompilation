@@ -62,8 +62,8 @@ dActor_c -> dActorMultiState_c -> dEn_c   (multi-state branch)
 | 0x70 | 0x0C | `fLiNdBaLink_c` | actor_link | ctor store (4B) |
 | 0x7C | 0x30 | `mMtx_c` | matrix | zero-init (no ctor store) |
 | 0xAC | 0x0C | `mVec3_c` | pos | ctor stores (12B) |
-| 0xB8 | 0x0C | `mVec3_c` | unk_b8 | ctor stores (12B) |
-| 0xC4 | 0x0C | `mVec3_c` | unk_c4 | zero-init (no ctor store) |
+| 0xB8 | 0x0C | `mVec3_c` | prev_pos | ctor stores (12B) |
+| 0xC4 | 0x0C | `mVec3_c` | pos_change | zero-init (no ctor store) |
 | 0xD0 | 0x0C | `mVec3_c` | center_offset | ctor stores (12B) |
 | 0xDC | 0x0C | `mVec3_c` | unk_dc | ctor stores (12B) |
 | 0xE8 | 0x0C | `mVec3_c` | speed | zero-init (no ctor store) |
@@ -76,7 +76,7 @@ dActor_c -> dActorMultiState_c -> dEn_c   (multi-state branch)
 | 0x118 | 0x04 | `f32` | fall_speed_limit | zero-init (no ctor store) |
 | 0x11C | 0x04 | `f32` | accel | zero-init (no ctor store) |
 | 0x120 | 0x04 | `u32` | flags_120 | ctor store (4B) |
-| 0x124 | 0x01 | `bool` | unk_124 | ctor store (1B) |
+| 0x124 | 0x01 | `bool` | draw_enabled | ctor store (1B) |
 | 0x125 | 0x01 | `u8` | unk_125 | zero-init (no ctor store) |
 | 0x126 | 0x02 | `pad` | padding | zero-init (no ctor store) |
 

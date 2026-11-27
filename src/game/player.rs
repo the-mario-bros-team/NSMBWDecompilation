@@ -1592,8 +1592,17 @@ pub unsafe fn fn_80270b80(timer: usize) {
 /// # Safety
 /// `addr` must be the entry point of a function taking no arguments.
 unsafe fn call0_u32(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
-    f()
+    // With guest memory, the guest function runs on the guest CPU; a host
+    // call to a guest address would crash.
+    #[cfg(feature = "guest-memory")]
+    {
+        platform::call_registers(addr, &[], &[]).expect("guest call (no arguments)").r3
+    }
+    #[cfg(not(feature = "guest-memory"))]
+    {
+        let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+        f()
+    }
 }
 
 // ===========================================================================
@@ -46951,19 +46960,17 @@ pub unsafe fn fn_8006c8f0(this: usize) -> u32 {
 /// `+0x28` is the empty hook [`fn_8006c600`], which this override still runs.
 pub unsafe fn fn_8006c980(this: usize, stage: u32) {
     if stage == 2 {
-        let x = read_f32(this + 0xAC);
-        let y = read_f32(this + 0xB0);
-        let z = read_f32(this + 0xB4);
-        let previous_x = read_f32(this + 0xB8);
-        let previous_y = read_f32(this + 0xBC);
-        let previous_z = read_f32(this + 0xC0);
+        let actor = DBaseActor { addr: this as u32 };
+        let (pos, prev, change) = (actor.pos(), actor.prev_pos(), actor.pos_change());
+        let (x, y, z) = (pos.x(), pos.y(), pos.z());
+        let (previous_x, previous_y, previous_z) = (prev.x(), prev.y(), prev.z());
 
-        write_f32(this + 0xC4, x - previous_x);
-        write_f32(this + 0xC8, y - previous_y);
-        write_f32(this + 0xCC, z - previous_z);
-        write_f32(this + 0xB8, x);
-        write_f32(this + 0xBC, y);
-        write_f32(this + 0xC0, z);
+        change.set_x(platform::fsubs(x.into(), previous_x.into()));
+        change.set_y(platform::fsubs(y.into(), previous_y.into()));
+        change.set_z(platform::fsubs(z.into(), previous_z.into()));
+        prev.set_x(x);
+        prev.set_y(y);
+        prev.set_z(z);
     }
     fn_8006c600();
 }
@@ -47015,7 +47022,7 @@ pub unsafe fn fn_8006c9f0(this: usize) -> u32 {
         return 0;
     }
 
-    let flag = platform::read_u8(this + 0x124) as u32;
+    let flag = DBaseActor { addr: this as u32 }.draw_enabled() as u32;
     (flag.wrapping_neg() | flag) >> 31
 }
 

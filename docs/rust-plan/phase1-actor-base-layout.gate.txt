@@ -25,13 +25,13 @@
   PASS vtable @96 (store)
   PASS actor_link @112 (store)
   PASS pos @172 (vec)
-  PASS unk_b8 @184 (vec)
+  PASS prev_pos @184 (vec)
   PASS center_offset @208 (vec)
   PASS unk_dc @220 (vec)
   PASS angle @256 (vec16)
   PASS move_angle @262 (vec16)
   PASS flags_120 @288 (store)
-  PASS unk_124 @292 (store)
+  PASS draw_enabled @292 (store)
 
 == dActor_c  ctor 0x80064110  this=r29 ==
   observed stores: 96(w4) 293(w1) 296(w4) 316(w4) 320(w4) 792(w4) 796(w4) 800(w4) 804(w4) 808(w4) 812(w4) 816(w4) 820(w4) 844(w4) 848(w4) 872(w4) 877(w1) 896(w4) 909(w1) 912(w1) 910(w1) 808(w4) 812(w4) 816(w4) 820(w4) 824(w4) 828(w4) 832(w4) 836(w4) 841(w1) 572(w4) 756(w4) 842(w1) 308(w4) 911(w1) 488(w1) 728(w1) 782(w1) 892(w4) 870(w1)

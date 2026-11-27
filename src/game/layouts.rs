@@ -204,10 +204,10 @@ impl DBaseActor {
     #[inline] pub fn matrix_addr(&self) -> u32 { self.addr + Self::OFFSET_MATRIX as u32 }
     pub const OFFSET_POS: usize = 0xac;
     #[inline] pub fn pos(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_POS as u32 } }
-    pub const OFFSET_UNK_B8: usize = 0xb8;
-    #[inline] pub fn unk_b8(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_B8 as u32 } }
-    pub const OFFSET_UNK_C4: usize = 0xc4;
-    #[inline] pub fn unk_c4(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_C4 as u32 } }
+    pub const OFFSET_PREV_POS: usize = 0xb8;
+    #[inline] pub fn prev_pos(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_PREV_POS as u32 } }
+    pub const OFFSET_POS_CHANGE: usize = 0xc4;
+    #[inline] pub fn pos_change(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_POS_CHANGE as u32 } }
     pub const OFFSET_CENTER_OFFSET: usize = 0xd0;
     #[inline] pub fn center_offset(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_CENTER_OFFSET as u32 } }
     pub const OFFSET_UNK_DC: usize = 0xdc;
@@ -238,9 +238,9 @@ impl DBaseActor {
     pub const OFFSET_FLAGS_120: usize = 0x120;
     #[inline] pub unsafe fn flags_120(&self) -> u32 { platform::read_u32(self.addr as usize + Self::OFFSET_FLAGS_120) }
     #[inline] pub unsafe fn set_flags_120(&self, v: u32) { platform::write_u32(self.addr as usize + Self::OFFSET_FLAGS_120, v) }
-    pub const OFFSET_UNK_124: usize = 0x124;
-    #[inline] pub unsafe fn unk_124(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_124) != 0 }
-    #[inline] pub unsafe fn set_unk_124(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_124, if v { 1 } else { 0 }) }
+    pub const OFFSET_DRAW_ENABLED: usize = 0x124;
+    #[inline] pub unsafe fn draw_enabled(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_DRAW_ENABLED) != 0 }
+    #[inline] pub unsafe fn set_draw_enabled(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_DRAW_ENABLED, if v { 1 } else { 0 }) }
     pub const OFFSET_UNK_125: usize = 0x125;
     #[inline] pub unsafe fn unk_125(&self) -> u8 { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_125) }
     #[inline] pub unsafe fn set_unk_125(&self, v: u8) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_125, v) }
@@ -424,8 +424,8 @@ mod tests {
         assert_eq!(DBaseActor::OFFSET_ACTOR_LINK, 0x70);
         assert_eq!(DBaseActor::OFFSET_MATRIX, 0x7c);
         assert_eq!(DBaseActor::OFFSET_POS, 0xac);
-        assert_eq!(DBaseActor::OFFSET_UNK_B8, 0xb8);
-        assert_eq!(DBaseActor::OFFSET_UNK_C4, 0xc4);
+        assert_eq!(DBaseActor::OFFSET_PREV_POS, 0xb8);
+        assert_eq!(DBaseActor::OFFSET_POS_CHANGE, 0xc4);
         assert_eq!(DBaseActor::OFFSET_CENTER_OFFSET, 0xd0);
         assert_eq!(DBaseActor::OFFSET_UNK_DC, 0xdc);
         assert_eq!(DBaseActor::OFFSET_SPEED, 0xe8);
@@ -438,7 +438,7 @@ mod tests {
         assert_eq!(DBaseActor::OFFSET_FALL_SPEED_LIMIT, 0x118);
         assert_eq!(DBaseActor::OFFSET_ACCEL, 0x11c);
         assert_eq!(DBaseActor::OFFSET_FLAGS_120, 0x120);
-        assert_eq!(DBaseActor::OFFSET_UNK_124, 0x124);
+        assert_eq!(DBaseActor::OFFSET_DRAW_ENABLED, 0x124);
         assert_eq!(DBaseActor::OFFSET_UNK_125, 0x125);
     }
 
