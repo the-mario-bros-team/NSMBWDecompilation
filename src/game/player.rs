@@ -35636,20 +35636,21 @@ pub unsafe fn fn_80064490(this: usize, mode: u32) {
 /// two `+0x60` vtable reads are literal. Prologue 16 bytes, `blr` at
 /// `0x800645DC` (real body 156 bytes; 160 in `functions.tsv` with the pad).
 pub unsafe fn fn_80064540(this: usize) -> u32 {
+    let actor = DActor { addr: this as u32 };
     if platform::call1(FN_8006C9F0_B, this as u32) == 0 {
         return 0;
     }
 
-    let mask = w211b_shift_one(platform::read_u8(this + 0x38C)) & 0xFF;
+    let mask = w211b_shift_one(actor.kind()) & 0xFF;
     if mask & platform::read_u8(U8_80429CFB_B) as u32 != 0 {
         return 0;
     }
 
-    if platform::read_u8(this + 0x36C) == 2 {
+    if actor.eat_state() == 2 {
         return 0;
     }
 
-    if platform::read_u32(this + 0x120) & 2 == 0 {
+    if actor.as_d_base_actor().actor_properties() & 2 == 0 {
         return 1;
     }
 

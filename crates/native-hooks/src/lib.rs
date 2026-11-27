@@ -35,6 +35,16 @@ unsafe fn d_actor_pre_execute(
     nsmbw::platform::with_guest_runtime(runtime, || nsmbw::game::player::fn_800643f0(this))
 }
 
+/// `dActor_c::preDraw` (`0x80064540`): the "may step" predicate.
+unsafe fn d_actor_pre_draw(
+    runtime: &mut (dyn GuestRuntime + 'static),
+    gprs: &[u32; 32],
+    _fprs: &[[f64; 2]; 32],
+) -> u32 {
+    let this = gprs[3] as usize;
+    nsmbw::platform::with_guest_runtime(runtime, || nsmbw::game::player::fn_80064540(this))
+}
+
 /// Registers the switched bodies when `NSMBW_RUST_BODIES` is `1` (lockstep:
 /// the original runs, the body is validated against it), `accounted` (the body
 /// runs, cycles come from the shadow original) or `direct` (the body runs with
@@ -55,6 +65,7 @@ pub fn install(system: &mut System) {
     }
     system.register_native(0x8016_1AD0, f_base_ctor);
     system.register_native(0x8006_43F0, d_actor_pre_execute);
+    system.register_native(0x8006_4540, d_actor_pre_draw);
     let set = std::env::var("NSMBW_RUST_BODIES_SET").unwrap_or_default();
     if !set.is_empty() {
         let wanted = |addr: u32| {
