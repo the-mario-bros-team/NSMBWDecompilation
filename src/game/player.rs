@@ -657,6 +657,10 @@ use crate::game::bases::{
 use crate::platform::{self, call4, call5, call6, call7, call_u64};
 use crate::game::layouts::{DActor, DBaseActor, Vec3};
 
+/// `fBase_c::MAIN_STATE_e::SUCCESS` (the CC0 Skyward Sword decomp's
+/// `f_base.h`: `CANCELED`, `ERROR`, `SUCCESS`, `WAITING`).
+pub(crate) const MAIN_STATE_SUCCESS: u32 = 2;
+
 // ===========================================================================
 // Absolute addresses and field offsets used by the player table.
 //
@@ -35545,13 +35549,14 @@ pub unsafe fn fn_800643f0(this: usize) -> u32 {
 // 0x80064490 - mode-2 per-frame hook
 // ---------------------------------------------------------------------------
 
-/// Per-frame work for mode `2`, then the shared `0x8006C980(this, mode)` tail.
+/// `dActor_c::postExecute(fBase_c::MAIN_STATE_e)`: on `SUCCESS`, the actor's
+/// per-frame tail, then `dBaseActor_c::postExecute`.
 ///
-/// Mode `2` rounds the `+0xAC` float through `0x80101AA0` unless bit 10
-/// (`0x400`) of the `+0x120` flag word is set, resets the `+0x148` effect
-/// record, ticks `+0x1EC`/`+0x2DC` while the `+0x0B` byte is clear, posts the
-/// `0x80069240` notification when bit 3 (`0x8`) of `+0x120` is set, and clears
-/// `+0x310`/`+0x314`.
+/// On `SUCCESS` it wraps `pos.x` through `dScStage_c::getLoopPosX` unless bit
+/// `0x400` of `flags_120` is set, clears the collider (`dCc_c::clear` on
+/// `cc`), relinks `bc` and `rc` (`dBc_c::checkLink`, `dRc_c::chkLink`) unless
+/// a delete is requested, enters the actor's id in `dAttention_c` when bit `8`
+/// of `flags_120` is set, and zeroes the `+0x310` pair.
 ///
 /// # Original
 /// - Ghidra: `FUN_80064490` at `0x80064490` (168 bytes)
@@ -35559,7 +35564,7 @@ pub unsafe fn fn_800643f0(this: usize) -> u32 {
 ///
 /// # Arguments
 /// - `this`: actor object.
-/// - `mode`: frame mode; only `2` enables the block.
+/// - `mode`: the `fBase_c::MAIN_STATE_e`; only `SUCCESS` (2) runs the block.
 ///
 /// # Returns
 /// Nothing.
@@ -35578,33 +35583,37 @@ pub unsafe fn fn_800643f0(this: usize) -> u32 {
 /// literal. Prologue 16 bytes, `blr` at `0x80064534` (real body 164 bytes; 168
 /// in `functions.tsv` with the pad).
 pub unsafe fn fn_80064490(this: usize, mode: u32) {
-    if mode == 2 {
-        if platform::read_u32(this + 0x120) & 0x400 == 0 {
-            // observed 0x800644C0: `lfs f1,0xAC(r3)` -> `bl 0x80101AA0` ->
-            // `stfs f1,0xAC(r30)`, i.e. a single-precision in/out call.
-            let value = read_f32(this + 0xAC) as f64;
-            let rounded = crate::game::worldmap::fn_80101aa0(value);
-            write_f32(this + 0xAC, rounded as f32);
+    let actor = DActor { addr: this as u32 };
+    let base = actor.as_d_base_actor();
+    if mode == MAIN_STATE_SUCCESS {
+        if base.flags_120() & 0x400 == 0 {
+            // observed 0x800644C0: `lfs f1,0xAC(r3)` -> `bl getLoopPosX` ->
+            // `stfs f1,0xAC(r30)`, a single-precision in/out call.
+            let pos = base.pos();
+            pos.set_x(crate::game::worldmap::fn_80101aa0(pos.x() as f64) as f32);
         }
 
-        platform::call1(FN_8008C2C0_B, (this + 0x148) as u32);
+        platform::call1(FN_8008C2C0_B, actor.cc_addr()); // dCc_c::clear
 
-        if platform::read_u8(this + 0x0B) == 0 {
-            crate::game::stage::fn_80075090(this + 0x1EC);
-            let _ = crate::engine::display::fn_800d9ad0(this + 0x2DC);
+        if !base.as_d_base().as_f_base().delete_request() {
+            crate::game::stage::fn_80075090(actor.bc_addr() as usize); // dBc_c::checkLink
+            let _ = crate::engine::display::fn_800d9ad0(actor.rc_addr() as usize); // dRc_c::chkLink
         }
 
-        if platform::read_u32(this + 0x120) & 8 != 0 {
-            let manager = platform::read_u32(PTR_80429D50_B);
-            platform::call2(FN_80069240_B, manager, platform::read_u32(this));
+        if base.flags_120() & 8 != 0 {
+            let attention = platform::read_u32(PTR_80429D50_B);
+            let id = base.as_d_base().as_f_base().id();
+            platform::call2(FN_80069240_B, attention, id); // dAttention_c::entry
         }
 
-        let zero = platform::read_u32(F32_ZERO_8042BB2C_B);
-        platform::write_u32(this + 0x310, zero);
-        platform::write_u32(this + 0x314, zero);
+        // The word is copied as is (`lwz`/`stw`), so keep its bits.
+        let zero = f32::from_bits(platform::read_u32(F32_ZERO_8042BB2C_B));
+        actor.unk_310().set_x(zero);
+        actor.unk_310().set_y(zero);
     }
 
-    platform::call2(FN_8006C980_B, this as u32, mode);
+    // dBaseActor_c::postExecute, whose Rust body the gate checks.
+    fn_8006c980(this, mode);
 }
 
 // ---------------------------------------------------------------------------
@@ -35695,7 +35704,7 @@ pub unsafe fn fn_80064540(this: usize) -> u32 {
 //
 // `r13 = 0x8042F680` and `r2 = 0x80433080` are the module's documented bases,
 // so `r13 - 0x5970`/`- 0x5984`/`- 0x5980` are `0x80429D10`/`0x80429CFC`/
-// `0x80429D00` and `r2 - 0x8AB8` is `0x8042A5C8`. The three SDA words sit in
+// `0x80429D00`, and `lfs f31,0xffff8ab8(r2)` is `r2 - 0x7548` = `0x8042BB38`. The three SDA words sit in
 // the same record as the already-defined flag byte `0x80429CF8`
 // ([`BYTE_FLAGS_80429CF8`]): byte at `+0`, word at `+4`, word at `+8`.
 // ===========================================================================
@@ -35729,12 +35738,12 @@ const FIND_POLICY_TABLE_802EF328: usize = 0x802E_F328;
 /// `0x80064A40`, `0x80064A50`, `0x80064A50`.
 const COMPARE_POLICY_TABLE_802EF334: usize = 0x802E_F334;
 
-/// `f32` in BSS at `0x8042A5C8` (`r2 - 0x8AB8`): read once by
+/// `f32` at `0x8042BB38` (`r2 - 0x7548`; the 16-bit offset 0x8AB8 is signed): read once by
 /// [`fn_800647a0`] as the seed for its nearest-actor search.
 ///
-/// It is zero at boot (BSS), so the caller that wants a hit must arm it first;
-/// the finder only ever lowers it. `// inferred:` a search radius.
-const SEARCH_RADIUS_8042A5C8: usize = 0x8042_A5C8;
+/// A `.sdata2` constant; the finder only ever lowers its copy.
+/// `// inferred:` a search radius.
+const SEARCH_RADIUS_8042A5C8: usize = 0x8042_BB38;
 
 /// `0x8006CA80(arg1..arg4) -> actor` - the four-argument spawn. Its export is
 /// `0x8006CA70(arg3, arg4)`, `0x8006C500(sda u16, 0)`, then
@@ -42353,9 +42362,9 @@ const W213A_TABLE_802EF3E0_A: usize = 0x802E_F3E0;
 /// `+8`). Kinds `5`/`7` of [`fn_80069610`] and its kind-`6` arm both read it.
 const W213A_MODE_80315B98_A: usize = 0x8031_5B98;
 
-/// `0x80424D80` (`r13 - 0xA900`): SDA word whose bit `4` picks `0x14` over
+/// `0x80429F80` (`r13 - 0x5700`; the 16-bit offset 0xA900 is signed): SDA word whose bit `4` picks `0x14` over
 /// `0x12` for kind `9` of [`fn_80069610`].
-const W213A_FLAGS_80424D80_A: usize = 0x8042_4D80;
+const W213A_FLAGS_80424D80_A: usize = 0x8042_9F80;
 
 /// `0x8019CE70` - sound-manager entry behind [`fn_80069580`].
 const W213A_SOUND_8019CE70_A: usize = 0x8019_CE70;
@@ -48575,7 +48584,11 @@ unsafe fn w214d_walk_D(addr: usize, node: u32, mode: u32, x: f64, y: f64) -> u32
 #[inline]
 unsafe fn w214d_cursor_step_D(addr: usize, target: f64, cursor: &mut f32) -> u32 {
     let function = crate::platform::guest_fn!(addr, fn(f64, *mut f32) -> u32);
-    function(target, cursor)
+    // The callee steps the cursor through its address: a guest copy.
+    let slot = crate::platform::GuestLocal::new(*cursor);
+    let result = function(target, slot.as_mut_ptr());
+    *cursor = *slot;
+    result
 }
 
 /// `(u32, u32) -> u32` - the animation-state update `0x8006E720`.
@@ -49835,8 +49848,9 @@ pub unsafe fn fn_8006dfc0(dx: f32, dy: f32, this: usize, flags: u32) -> u32 {
         class,
         flags,
         point.as_mut_ptr() as u32,
-    ) == 0
+    ) != 0
     {
+        // observed 0x8006E0C0: `beq` continues on 0; non-zero returns 0.
         return 0;
     }
     if call_2f3_E(FN_8006D6D0_E, x, y, this as u32, flags, 3) != 0 {
@@ -49907,8 +49921,11 @@ pub unsafe fn fn_8006dfc0(dx: f32, dy: f32, this: usize, flags: u32) -> u32 {
     let solid_bound = solid & bound;
     if solid_bound != 0 && ((class >> 16) & 0xFF) != 3 {
         let side = platform::read_u32(this + 0x18) as usize;
-        let grid_y = ((((-y) as i32) & 0xFFE0) as f32) + 1.0;
-        if grid_y > -(platform::read_f32(side + 4) + dy) {
+        // observed 0x8006E29C..0x8006E2BC: `rlwinm 16,27` (0xFFF0), `extsh`, a
+        // signed conversion, plus the r2-0x7418 one; the block runs when
+        // `-(side.y + dy)` is the greater.
+        let grid_y = ((((-y) as i32) & 0xFFF0) as i16 as f32) + read_f32(F32_ONE_8042BC68_E);
+        if -(platform::read_f32(side + 4) + dy) > grid_y {
             let state = platform::read_u32(this + 0x88);
             if !((state & 0x0020_0000) != 0
                 && (state & 0x4000) != 0
@@ -49924,7 +49941,8 @@ pub unsafe fn fn_8006dfc0(dx: f32, dy: f32, this: usize, flags: u32) -> u32 {
 
     if (solid & 0x0200_0000) != 0 && platform::read_u8(this + 0xE4) == 0 {
         let tile_x = ((x as i32) & 0xFFF0) as u32;
-        let shifted = (((-y) as i32) & !0x0F) as f32 - platform::read_f32(F32_TENTH_8042BC78_E);
+        // observed 0x8006E330: the word is converted unsigned (no `xoris`).
+        let shifted = (((-y) as i32 as u32) & !0x0F) as f32 - platform::read_f32(F32_TENTH_8042BC78_E);
         let tile_y = ((shifted as i32) & 0xFFF0) as u32;
         let classes = platform::call3(FN_80070C40_E, tile_x, tile_y, layer);
         let kinds = platform::call3(FN_80070C60_E, tile_x, tile_y, layer);
@@ -51470,10 +51488,12 @@ pub unsafe fn fn_8006faa0(this: usize, index: u32, mask: u32) -> u32 {
     }
 
     if flags & 4 == 0 {
-        // observed: r3 = this, r4 = flags, r5 = index, f1 = 0.0f, r12 = the
-        // descriptor; `crate::platform` cannot set `r12`.
-        let extra = call_f32_u32x3_F(FN_802D_CBFC_F, 0.0, this as u32, flags, index);
-        let _ = PMF_80355F20_F;
+        // observed: r3 = this, r4 = flags, r5 = index, f1 = 0.0f and r12 = the
+        // descriptor for `__ptmf_scall` (`0x802DCBFC`). The call helpers cannot
+        // set r12, so resolve the member pointer here and call its target.
+        let pmf = crate::runtime::cpp::Descriptor::new(PMF_80355F20_F as usize);
+        let (target, receiver) = crate::runtime::cpp::fn_802dcbfc_target(this, pmf);
+        let extra = call_f32_u32x3_F(target, 0.0, receiver as u32, flags, index);
         if extra != 0 {
             result = extra;
         }

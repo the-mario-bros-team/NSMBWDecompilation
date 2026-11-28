@@ -866,6 +866,8 @@
 //! dequantisation, an `extraout_f1` return half or a vararg GX packet, is in
 //! `docs/COVERAGE_WAVE102_STAGE.md`.
 use crate::engine::startup::SDA_BASE;
+use crate::game::layouts::DEn;
+use crate::game::player::MAIN_STATE_SUCCESS;
 use crate::game::bases::{interface_call3, interface_call_desc3, Descriptor};
 use crate::platform::{self, read_i32, read_u16, read_u32, read_u8, write_u16, write_u32, write_u8
 };
@@ -31570,8 +31572,9 @@ pub unsafe fn fn_80095240(this: usize) -> u32 {
 // 0x80095480
 // ---------------------------------------------------------------------------
 
-/// Clears the `+0x34A` mode byte when the game is not paused, then forwards the
-/// call to `0x80064490`.
+/// `dEn_c::postExecute(fBase_c::MAIN_STATE_e)`: on `SUCCESS`, clears the actor's
+/// `+0x34A` byte unless bit `8` of the `r13-0x5986` byte is set, then runs
+/// `dActor_c::postExecute`.
 ///
 /// # Original
 /// - Ghidra: `FUN_80095480` at `0x80095480` (32 bytes)
@@ -31594,17 +31597,19 @@ pub unsafe fn fn_80095240(this: usize) -> u32 {
 /// prints `FUN_80064490()` without arguments although its own export declares
 /// `(undefined4 *param_1, int param_2)`, so the two registers are restored here.
 pub unsafe fn fn_80095480(this: usize, mode: u32) {
-    if mode == 2 && read_u8(W69_G_PAUSE_FLAGS) & 8 == 0 {
-        write_u8(this + 0x34A, 0);
+    let actor = DEn { addr: this as u32 }.as_d_actor_multi_state().as_d_actor();
+    if mode == MAIN_STATE_SUCCESS && read_u8(W69_G_PAUSE_FLAGS) & 8 == 0 {
+        actor.set_unk_34a(0);
     }
-    platform::call2(0x8006_4490, this as u32, mode);
+    // dActor_c::postExecute, whose Rust body the gate checks.
+    crate::game::player::fn_80064490(this, mode);
 }
 
 // ---------------------------------------------------------------------------
 // 0x800954A0
 // ---------------------------------------------------------------------------
 
-/// Reports whether `0x80064540` returned a non-zero status.
+/// `dEn_c::preDraw`: whether `dActor_c::preDraw` allows drawing (0 or 1).
 ///
 /// # Original
 /// - Ghidra: `FUN_800954a0` at `0x800954A0` (44 bytes)
@@ -31628,7 +31633,8 @@ pub unsafe fn fn_80095480(this: usize, mode: u32) {
 /// restored because the export declares `FUN_800954a0(void)` while its callee
 /// `0x80064540` is declared `(int param_1)`.
 pub unsafe fn fn_800954a0(this: usize) -> u32 {
-    u32::from(platform::call1(0x8006_4540, this as u32) != 0)
+    // dActor_c::preDraw, whose Rust body the gate checks.
+    u32::from(crate::game::player::fn_80064540(this) != 0)
 }
 
 // ---------------------------------------------------------------------------
@@ -33057,7 +33063,8 @@ pub unsafe fn fn_80077020() {
         return;
     }
     let vtable = read_u32(heap) as usize;
-    platform::call0(read_u32(vtable + 0x1c) as usize);
+    // observed 0x80077038: a virtual call on the heap, `this` in r3.
+    platform::call1(read_u32(vtable + 0x1c) as usize, heap as u32);
     write_u32(W70_G_ACTOR_HEAP, 0);
 }
 
@@ -37456,7 +37463,8 @@ pub unsafe fn fn_80070ca0(this: usize) -> u32 {
 /// medium - every call, constant and OR is literal, but `0x8006DB30` is printed
 /// without arguments, so its inputs are unknown.
 pub unsafe fn fn_80070e70(param_1: u32, param_2: u32) -> u32 {
-    let seed = platform::call_u64(W83_CALL_8006DB30) as u32;
+    // dBc_c::checkFoot(this): r3 in, r3 out (`call_u64` passed no `this` and kept r4).
+    let seed = platform::call1(W83_CALL_8006DB30, param_1);
     let status = platform::call3(W83_CALL_80070CD0, param_1, param_2, seed);
     let mut flags = seed | status;
     if platform::call2(W61_CALL_80056CF0, param_2, 0x14) != 0 {
@@ -50182,6 +50190,11 @@ pub unsafe fn fn_8007bef0(this: usize) {
             }
         }
     }
+    // observed 0x8007C388: two words cleared ahead of the first table.
+    write_u32(this + 0x8f478, 0);
+    write_u32(this + 0x8f47c, 0);
+    // Each table is 100 cells of 12 bytes: 96 in the unrolled loop, then the
+    // last 4 at `base + 96 * 12` (observed 0x8007C46C: `mulli r5,r8,12`).
     for block in 0..6usize {
         let row = this + block * 0xc0;
         for cell in 0..16usize {
@@ -50192,7 +50205,7 @@ pub unsafe fn fn_8007bef0(this: usize) {
         }
     }
     for group in 0..4usize {
-        let base = this + 0x8f4e0 + group * 0xc;
+        let base = this + 0x8f900 + group * 0xc;
         write_u32(base, zero);
         write_u32(base + 4, zero);
         write_u8(base + 8, 0xff);
@@ -50207,7 +50220,7 @@ pub unsafe fn fn_8007bef0(this: usize) {
         }
     }
     for group in 0..4usize {
-        let base = this + 0x8f990 + group * 0xc;
+        let base = this + 0x8fdb0 + group * 0xc;
         write_u32(base, zero);
         write_u32(base + 4, zero);
         write_u8(base + 8, 0xff);
@@ -61354,41 +61367,43 @@ pub unsafe fn fn_80093a50() {
 /// medium - every offset, guard and call is literal; the field roles
 /// ("velocity", "orbit") are inferred from the arithmetic, not from a symbol.
 pub unsafe fn fn_800955f0(this: usize) {
-    let angle = platform::call2(
-        0x8007_0920,
-        (this + 0x1EC) as u32,
-        u32::from(read_f32(this + 0xE8) < read_f32(W69_F_ZERO)),
-    ) as i16;
-    let mut x_step;
-    let y_step;
-    if read_u8(this + 0x45C) == 0 {
-        let magnitude = (read_f32(this + 0xE8) as f64).abs();
-        let radians = (read_f32(W105_F_ANGLE_SCALE) as f64 * angle as f64) as f32 as f64;
-        let sin_term = call1_f64(0x8023_7C40, radians);
-        let cos_term = call1_f64(0x8023_7BD0, radians);
-        x_step = (magnitude * sin_term) as f32;
-        let z_step = read_f32(this + 0xF0);
-        y_step = read_f32(this + 0xEC) + (magnitude * cos_term) as f32;
-        if read_u8(this + 0x45D) != 0 {
-            // inferred: the freeze flag replaces the step with the frozen value.
+    let enemy = DEn { addr: this as u32 };
+    let actor = enemy.as_d_actor_multi_state().as_d_actor();
+    let base = actor.as_d_base_actor();
+    let (pos, speed, offset) = (base.pos(), base.speed(), enemy.move_offset());
+    let zero = read_f32(W69_F_ZERO);
+    // dBc_c::getSakaMoveAngle(bc, moving left): the slope under the actor.
+    let angle = platform::call2(0x8007_0920, actor.bc_addr(), u32::from(speed.x() < zero)) as i16;
+    if !enemy.unk_45c() {
+        let magnitude = (speed.x() as f64).abs();
+        let index = (read_f32(W105_F_ANGLE_SCALE) as f64 * angle as f64) as f32 as f64;
+        let cos = call1_f64(0x8023_7C40, index); // nw4r::math::CosFIdx
+        let sin = call1_f64(0x8023_7BD0, index); // nw4r::math::SinFIdx
+        // The speed runs along the slope: x by its cosine, y gains its sine.
+        let mut x_step = (magnitude * cos) as f32;
+        let z_step = speed.z();
+        let y_step = speed.y() + (magnitude * sin) as f32;
+        let push = enemy.unk_44c();
+        if enemy.in_water() {
+            // In water the x step is scaled down and the push is dropped.
             x_step *= read_f32(W105_F_FREEZE_SCALE);
-            write_f32(this + 0x44C, read_f32(W69_F_ZERO));
-            write_f32(this + 0x450, read_f32(W69_F_ZERO));
-            write_f32(this + 0x454, read_f32(W69_F_ZERO));
+            push.set_x(zero);
+            push.set_y(zero);
+            push.set_z(zero);
         } else {
-            let exploding =
-                read_u8(this + 0x432) != 0 || read_u8(this + 0x390) != 0;
-            if !exploding && read_f32(this + 0xEC) <= read_f32(W69_F_ZERO) {
-                x_step += read_f32(this + 0x44C);
+            // `death_info`'s byte at +0x1E (0x432), and `dActor_c`'s +0x390.
+            let busy = read_u8(enemy.death_info_addr() as usize + 0x1E) != 0 || actor.unk_390();
+            if !busy && speed.y() <= zero {
+                x_step += push.x();
             }
         }
-        write_f32(this + 0xAC, read_f32(this + 0xAC) + x_step + read_f32(this + 0x440));
-        write_f32(this + 0xB0, read_f32(this + 0xB0) + y_step + read_f32(this + 0x444));
-        write_f32(this + 0xB4, read_f32(this + 0xB4) + z_step + read_f32(this + 0x448));
+        pos.set_x(pos.x() + x_step + offset.x());
+        pos.set_y(pos.y() + y_step + offset.y());
+        pos.set_z(pos.z() + z_step + offset.z());
     } else {
-        write_f32(this + 0xAC, read_f32(this + 0xAC) + read_f32(W69_F_ZERO) + read_f32(this + 0x440));
-        write_f32(this + 0xB0, read_f32(this + 0xB0) + read_f32(W69_F_ZERO) + read_f32(this + 0x444));
-        write_f32(this + 0xB4, read_f32(this + 0xB4) + read_f32(W69_F_ZERO) + read_f32(this + 0x448));
+        pos.set_x(pos.x() + zero + offset.x());
+        pos.set_y(pos.y() + zero + offset.y());
+        pos.set_z(pos.z() + zero + offset.z());
     }
 }
 
@@ -69942,9 +69957,10 @@ pub unsafe fn fn_80097250(scale: f64, this: usize, point: usize) -> i32 {
     let mut target = crate::platform::GuestLocal::new( [read_f32(this + 0xAC), *height, read_f32(W113_F_6E7C)]);
     let record = target.as_mut_ptr() as usize;
 
+    let enemy = DEn { addr: this as u32 };
     if (code as u32).wrapping_sub(1) < 2 {
-        if read_u8(this + 0x45D) == 0 {
-            write_u8(this + 0x45D, 1);
+        if !enemy.in_water() {
+            enemy.set_in_water(true);
             write_u32(this + 0x4F0, read_u32(this + 0x114));
             write_u32(this + 0x4F4, read_u32(this + 0xF8));
             write_u32(this + 0x4F8, read_u32(this + 0x118));
@@ -69952,22 +69968,22 @@ pub unsafe fn fn_80097250(scale: f64, this: usize, point: usize) -> i32 {
             w113_vcall_f64_ptr2(read_u32(vtable + 0xC8) as usize, scale, this, record);
         }
     } else if code == 3 {
-        if read_u8(this + 0x45D) == 0 {
-            write_u8(this + 0x45D, 1);
+        if !enemy.in_water() {
+            enemy.set_in_water(true);
             w113_vcall_f64_ptr2(read_u32(vtable + 0xCC) as usize, scale, this, record);
         }
     } else if code == 4 {
-        if read_u8(this + 0x45D) == 0 {
-            write_u8(this + 0x45D, 1);
+        if !enemy.in_water() {
+            enemy.set_in_water(true);
             w113_vcall_f64_ptr2(read_u32(vtable + 0xD0) as usize, scale, this, record);
         }
     } else {
-        if read_u8(this + 0x45D) != 0 {
+        if enemy.in_water() {
             write_u32(this + 0x114, read_u32(this + 0x4F0));
             write_u32(this + 0xF8, read_u32(this + 0x4F4));
             write_u32(this + 0x118, read_u32(this + 0x4F8));
         }
-        write_u8(this + 0x45D, 0);
+        enemy.set_in_water(false);
     }
     code
 }

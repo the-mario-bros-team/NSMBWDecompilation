@@ -21783,13 +21783,13 @@ const S_DEAD_A: usize = SDA_BASE - 0x7DF8; // 0x80427888
 /// observed: ELF bytes at `0x80304480` are `64 65 61 64 5F 69 63 65 00`.
 const S_DEAD_ICE_A: usize = 0x8030_4480;
 
-/// `r13 - 0xA6DC` (`0x80424FA4`): sound-manager word passed to `0x80197F00`
+/// `r13 - 0x5924` (`0x80429D5C`): sound-manager word passed to `0x80197F00`
 /// by [`fn_80030540`]. In BSS, so zero at boot.
-const G_SDA_A6DC_A: usize = SDA_BASE - 0xA6DC; // 0x80424FA4
+const G_SDA_A6DC_A: usize = SDA_BASE - 0x5924; // 0x80429D5C (the 16-bit offset 0xA6DC is signed)
 
-/// `r13 - 0xA9D0` (`0x80424CB0`): effect-manager word passed to `0x800E20A0`
+/// `r13 - 0x5630` (`0x8042A050`): effect-manager word passed to `0x800E20A0`
 /// and `0x800E23C0` by [`fn_80030440`] and [`fn_80030680`]. In BSS.
-const G_SDA_A9D0_A: usize = SDA_BASE - 0xA9D0; // 0x80424CB0
+const G_SDA_A9D0_A: usize = SDA_BASE - 0x5630; // 0x8042A050 (the 16-bit offset 0xA9D0 is signed)
 
 /// `0x802EE5E8`: static parameter block stamped onto the actor by
 /// [`fn_80030310`]: `0.0f, 0.0f, 0.0f, 0.0f`, the `0x80357D74` pointer,
@@ -37827,13 +37827,13 @@ const C262_DESC_80352C74: usize = 0x8035_2C74;
 /// `0x80352CB4`: state record handed to virtual `+0xD4` by [`fn_800256e0`].
 const C262_DESC_80352CB4: usize = 0x8035_2CB4;
 
-/// `r13 - 0x81C8` (`0x804274B8`): writable `.sbss` animation-name cell bound
+/// `r13 - 0x7E38` (`0x80427848`): writable `.sbss` animation-name cell bound
 /// by [`fn_80025b80`] and [`fn_80025c40`]. File words are zero; the name is
 /// filled at run time, so only the address is claimed.
-const C262_S_SDA_81C8: usize = SDA_BASE - 0x81C8;
-/// `r13 - 0x81B0` (`0x804274D0`): second `.sbss` animation-name cell, bound at
+const C262_S_SDA_81C8: usize = SDA_BASE - 0x7E38; // 0x80427848 (the 16-bit offset 0x81C8 is signed)
+/// `r13 - 0x7E50` (`0x80427830`): second `.sbss` animation-name cell, bound at
 /// scale `4.0` by [`fn_80025550`].
-const C262_S_SDA_81B0: usize = SDA_BASE - 0x81B0;
+const C262_S_SDA_81B0: usize = SDA_BASE - 0x7E50; // 0x80427830 (the 16-bit offset 0x81B0 is signed)
 
 /// `r2 - 0x7D80` (`0x8042B300`): `f32 0.0`.
 const C262_F32_ZERO_7D80: usize = SDA2_BASE - 0x7D80;
@@ -37858,7 +37858,7 @@ const C262_F32_7_7D3C: usize = SDA2_BASE - 0x7D3C;
 /// Binds an SDA animation name at scale zero, then runs the shared actor
 /// prologue.
 ///
-/// The body is four instructions of work: `0x80024E80(this, r13 - 0x81C8, 0,
+/// The body is four instructions of work: `0x80024E80(this, r13 - 0x7E38, 0,
 /// 0.0f)` resolves and binds the name cell, and `0x800A16A0(this)` then runs
 /// the common actor prologue (re-parent, class slot, two effect checks). The
 /// `r5` flag is `0`.
@@ -37953,7 +37953,7 @@ pub unsafe fn fn_80025bd0(this: usize) {
 /// - Extent: 64 bytes, `0x80025C40..0x80025C80`; the next start is
 ///   `0x80025C80`, so there is no padding.
 /// - Table: slot 92 of `0x8030241C` (word `0x8030258C`, offset `+0x178`).
-/// - observed: the same `0.0f` / `r13 - 0x81C8` / `0` operands and the same
+/// - observed: the same `0.0f` / `r13 - 0x7E38` / `0` operands and the same
 ///   `0x80024E80` + `0x800A16A0` pair as slot 89.
 ///
 /// # Arguments
@@ -39976,7 +39976,7 @@ const S_SPLIT_E262: usize = SDA_BASE - 0x7DC0;
 
 /// `0x8042F680 - 0xA9D0` = `0x80424CB0`: the global word (`lwz r29,r13+...`)
 /// passed as the third argument of the two impact scripts.
-const G_SDA_A9D0_E262: usize = SDA_BASE - 0xA9D0;
+const G_SDA_A9D0_E262: usize = SDA_BASE - 0x5630; // 0x8042A050 (the 16-bit offset 0xA9D0 is signed)
 
 /// `0x8042C1A4`: per-side `i16` angle limits, indexed by the facing byte.
 const TABLE_ANGLE_LIMITS_E262: usize = 0x8042_C1A4;
@@ -40373,7 +40373,7 @@ pub unsafe fn fn_80033970(this: usize, contact: usize, object: u32) {
 /// Sequence (observed): the contact object is `*(contact + 4)`; its class
 /// byte is the first byte returned by virtual `+0x6C`; `0x8009F5F0` returns
 /// the interaction handle. The impact script `0x800E20A0` then runs with
-/// `(0.0, 24.0, *(r13 - 0xA9D0), this, handle, class)`. Finally virtual
+/// `(0.0, 24.0, *(r13 - 0x5630), this, handle, class)`. Finally virtual
 /// `+0x24C(this, contact)`, `+0x2D8`, `+0x2DC` and `+0xD4(this, 0x8035366C)`
 /// run. The body answers `1`.
 ///
@@ -40443,7 +40443,7 @@ pub unsafe fn fn_80033da0(this: usize, _unused: u32, contact: usize) -> u32 {
 /// Sequence (observed): `+0x73C` receives the contact object's `+0xAC`
 /// float; its class byte (`extsb` of the `+0x6C` result) is stored as a word
 /// at `+0x744`; a second `+0x6C` probe supplies the class operand of the
-/// `0x800E20A0` impact script `(0.0, 24.0, *(r13 - 0xA9D0), this, handle,
+/// `0x800E20A0` impact script `(0.0, 24.0, *(r13 - 0x5630), this, handle,
 /// class)`. Finally virtual `+0x2E0`, `+0x2E4` and `+0xD4(this, 0x803536EC)`
 /// run. The body answers `1`.
 ///

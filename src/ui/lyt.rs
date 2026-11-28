@@ -15101,10 +15101,11 @@ pub unsafe fn fn_80180780(object: usize, resource: usize, block: usize) -> usize
 /// `// inferred:` the encoding table is chosen by the caller in `r12` and is
 /// not modelled here.
 unsafe fn next_text_char(cursor: &mut u32) -> u16 {
-    platform::call1(
-        FN_802DCBFC_NEXT_CHAR,
-        cursor as *mut u32 as usize as u32,
-    ) as u16
+    // The thunk advances the cursor through its address: a guest copy.
+    let slot = crate::platform::GuestLocal::new(*cursor);
+    let ch = platform::call1(FN_802DCBFC_NEXT_CHAR, slot.as_mut_ptr() as usize as u32) as u16;
+    *cursor = *slot;
+    ch
 }
 
 /// Measures one line of a `u16` string and reports whether it overflows.

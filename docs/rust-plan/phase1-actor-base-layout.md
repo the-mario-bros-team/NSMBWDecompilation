@@ -179,14 +179,14 @@ dActor_c -> dActorMultiState_c -> dEn_c   (multi-state branch)
 | 0x434 | 0x04 | `u32` | unk_434 | zero-init (no ctor store) |
 | 0x438 | 0x02 | `u16` | unk_438 | ctor store (2B) |
 | 0x43A | 0x06 | `u8[6]` | unk_43a | zero-init (no ctor store) |
-| 0x440 | 0x0C | `mVec3_c` | unk_440 | ctor stores (12B) |
+| 0x440 | 0x0C | `mVec3_c` | move_offset | ctor stores (12B); `dEn_c::posMove` adds it to `pos` every frame, on both paths |
 | 0x44C | 0x0C | `mVec3_c` | unk_44c | zero-init (no ctor store) |
 | 0x458 | 0x01 | `u8` | unk_458 | zero-init (no ctor store) |
 | 0x459 | 0x01 | `u8` | unk_459 | zero-init (no ctor store) |
 | 0x45A | 0x01 | `bool` | unk_45a | ctor store (1B) |
 | 0x45B | 0x01 | `u8` | unk_45b | zero-init (no ctor store) |
 | 0x45C | 0x01 | `bool` | unk_45c | ctor store (1B) |
-| 0x45D | 0x01 | `bool` | unk_45d | zero-init (no ctor store) |
+| 0x45D | 0x01 | `bool` | in_water | zero-init (no ctor store); `dEn_c::WaterLineProc` sets it when the water probe reports water (saving gravity 0x114, 0xF8 and fall_speed_limit 0x118 at 0x4F0..0x4F8) and clears it, restoring them, when not; `posMove` scales the x step down and drops the 0x44C push while it is set |
 | 0x45E | 0x01 | `bool` | unk_45e | ctor store (1B) |
 | 0x45F | 0x05 | `u8[5]` | unk_45f | zero-init (no ctor store) |
 | 0x464 | 0x18 | `dEnBoyoMng_c` | boyo_mng | ctor stores (12B) |

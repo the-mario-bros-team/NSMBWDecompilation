@@ -73,7 +73,7 @@
   PASS vptr @96
   PASS vtable @96 (store)
   PASS unk_438 @1080 (store)
-  PASS unk_440 @1088 (vec)
+  PASS move_offset @1088 (vec)
   PASS unk_45a @1114 (store)
   PASS unk_45c @1116 (store)
   PASS unk_45e @1118 (store)

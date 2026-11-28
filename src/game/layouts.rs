@@ -279,8 +279,8 @@ impl DEn {
     #[inline] pub unsafe fn set_unk_438(&self, v: u16) { platform::write_u16(self.addr as usize + Self::OFFSET_UNK_438, v) }
     pub const OFFSET_UNK_43A: usize = 0x43a;
     #[inline] pub fn unk_43a_addr(&self) -> u32 { self.addr + Self::OFFSET_UNK_43A as u32 }
-    pub const OFFSET_UNK_440: usize = 0x440;
-    #[inline] pub fn unk_440(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_440 as u32 } }
+    pub const OFFSET_MOVE_OFFSET: usize = 0x440;
+    #[inline] pub fn move_offset(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_MOVE_OFFSET as u32 } }
     pub const OFFSET_UNK_44C: usize = 0x44c;
     #[inline] pub fn unk_44c(&self) -> Vec3 { Vec3 { addr: self.addr + Self::OFFSET_UNK_44C as u32 } }
     pub const OFFSET_UNK_458: usize = 0x458;
@@ -298,9 +298,9 @@ impl DEn {
     pub const OFFSET_UNK_45C: usize = 0x45c;
     #[inline] pub unsafe fn unk_45c(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45C) != 0 }
     #[inline] pub unsafe fn set_unk_45c(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45C, if v { 1 } else { 0 }) }
-    pub const OFFSET_UNK_45D: usize = 0x45d;
-    #[inline] pub unsafe fn unk_45d(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45D) != 0 }
-    #[inline] pub unsafe fn set_unk_45d(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45D, if v { 1 } else { 0 }) }
+    pub const OFFSET_IN_WATER: usize = 0x45d;
+    #[inline] pub unsafe fn in_water(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_IN_WATER) != 0 }
+    #[inline] pub unsafe fn set_in_water(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_IN_WATER, if v { 1 } else { 0 }) }
     pub const OFFSET_UNK_45E: usize = 0x45e;
     #[inline] pub unsafe fn unk_45e(&self) -> bool { platform::read_u8(self.addr as usize + Self::OFFSET_UNK_45E) != 0 }
     #[inline] pub unsafe fn set_unk_45e(&self, v: bool) { platform::write_u8(self.addr as usize + Self::OFFSET_UNK_45E, if v { 1 } else { 0 }) }
@@ -456,14 +456,14 @@ mod tests {
         assert_eq!(DEn::OFFSET_UNK_434, 0x434);
         assert_eq!(DEn::OFFSET_UNK_438, 0x438);
         assert_eq!(DEn::OFFSET_UNK_43A, 0x43a);
-        assert_eq!(DEn::OFFSET_UNK_440, 0x440);
+        assert_eq!(DEn::OFFSET_MOVE_OFFSET, 0x440);
         assert_eq!(DEn::OFFSET_UNK_44C, 0x44c);
         assert_eq!(DEn::OFFSET_UNK_458, 0x458);
         assert_eq!(DEn::OFFSET_UNK_459, 0x459);
         assert_eq!(DEn::OFFSET_UNK_45A, 0x45a);
         assert_eq!(DEn::OFFSET_UNK_45B, 0x45b);
         assert_eq!(DEn::OFFSET_UNK_45C, 0x45c);
-        assert_eq!(DEn::OFFSET_UNK_45D, 0x45d);
+        assert_eq!(DEn::OFFSET_IN_WATER, 0x45d);
         assert_eq!(DEn::OFFSET_UNK_45E, 0x45e);
         assert_eq!(DEn::OFFSET_UNK_45F, 0x45f);
         assert_eq!(DEn::OFFSET_BOYO_MNG, 0x464);

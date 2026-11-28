@@ -10453,7 +10453,7 @@ pub unsafe fn fn_8027ae20(slot: usize, request: u32) {
     while platform::read_u32(slot + 0x24) < platform::read_u32(slot) {
         let node = platform::read_u32(slot + 0x10) as usize;
         let vtable = platform::read_u32(node.wrapping_sub(0x100)) as usize;
-        platform::call0(platform::read_u32(vtable + 0x10) as usize);
+        platform::call1(platform::read_u32(vtable + 0x10) as usize, (node.wrapping_sub(0x100)) as u32);
     }
 
     unlock_seq_manager();
@@ -12670,7 +12670,7 @@ pub unsafe fn fn_8027b1c0(object: usize, holder: usize, id: u32, extra: u32) -> 
 /// value are visible, so none are claimed.
 pub unsafe fn fn_8027b270(object: usize) {
     let vtable = platform::read_u32(object) as usize;
-    platform::call0(platform::read_u32(vtable + 0x0c) as usize);
+    platform::call1(platform::read_u32(vtable + 0x0c) as usize, (object) as u32);
 }
 
 // ===========================================================================
@@ -14769,7 +14769,7 @@ pub unsafe fn fn_80279510(
         let required = call0_r(platform::read_u32(vtable + 0x40) as usize);
         let available = fn_802700f0(file) as u32;
         if available < required {
-            platform::call0(platform::read_u32(vtable + 0x10) as usize);
+            platform::call1(platform::read_u32(vtable + 0x10) as usize, (stream) as u32);
             return 5;
         }
     }
@@ -16822,7 +16822,7 @@ pub unsafe fn fn_8027fc50(out: usize, source: usize) -> u32 {
                 if call0_r(platform::read_u32(vtable + 0x18) as usize) != 0 {
                     let target = platform::read_u32(out) as usize;
                     let target_vtable = platform::read_u32(target) as usize;
-                    platform::call0(platform::read_u32(target_vtable + 0x1c) as usize);
+                    platform::call1(platform::read_u32(target_vtable + 0x1c) as usize, (target) as u32);
                 }
                 platform::write_u32(object + 0xe28, out as u32);
             }

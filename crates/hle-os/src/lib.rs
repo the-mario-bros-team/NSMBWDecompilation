@@ -375,6 +375,18 @@ pub type NativeBody =
 std::thread_local! {
     /// The switched function whose Rust body is running, for the panic message.
     static RUNNING_BODY: std::cell::Cell<u32> = const { std::cell::Cell::new(0) };
+    /// The `f1` a body returns (see [`set_native_f1`]).
+    static NATIVE_F1: std::cell::Cell<Option<f64>> = const { std::cell::Cell::new(None) };
+}
+
+/// Called by a body registered with [`System::register_native_float`]: the
+/// value it returns in `f1`.
+pub fn set_native_f1(value: f64) {
+    NATIVE_F1.with(|f| f.set(Some(value)));
+}
+
+fn take_native_f1() -> Option<f64> {
+    NATIVE_F1.with(|f| f.take())
 }
 
 /// Runs a switched body, naming its address if the body panics (release
@@ -386,8 +398,26 @@ unsafe fn run_native(
     gprs: &[u32; 32],
     fprs: &[[f64; 2]; 32],
 ) -> u32 {
+    use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
+    // The body now running and when it started, for a watchdog thread that
+    // names one that runs for 30 s (a loop with no guest access never ends).
+    static BODY: AtomicU32 = AtomicU32::new(0);
+    static SINCE: AtomicU64 = AtomicU64::new(0);
     static HOOK: std::sync::Once = std::sync::Once::new();
+    let now = || std::time::UNIX_EPOCH.elapsed().map_or(0, |d| d.as_secs());
     HOOK.call_once(|| {
+        std::thread::spawn(move || {
+            let mut named = 0;
+            loop {
+                std::thread::sleep(std::time::Duration::from_secs(10));
+                let body = BODY.load(Ordering::Relaxed);
+                let secs = now().saturating_sub(SINCE.load(Ordering::Relaxed));
+                if body != 0 && body != named && secs >= 30 {
+                    eprintln!("the Rust body for {body:#010x} has run for {secs} s");
+                    named = body;
+                }
+            }
+        });
         let previous = std::panic::take_hook();
         std::panic::set_hook(Box::new(move |info| {
             let running = RUNNING_BODY.with(|b| b.get());
@@ -398,7 +428,11 @@ unsafe fn run_native(
         }));
     });
     let outer = RUNNING_BODY.with(|b| b.replace(addr));
+    let _ = take_native_f1();
+    SINCE.store(now(), Ordering::Relaxed);
+    BODY.store(addr, Ordering::Relaxed);
     let r3 = body(runtime, gprs, fprs);
+    BODY.store(outer, Ordering::Relaxed);
     RUNNING_BODY.with(|b| b.set(outer));
     r3
 }
@@ -477,7 +511,8 @@ impl ShadowRuntime {
                 .cpu
                 .run_block(&mut self.mem, &mut self.blocks)
                 .map_err(|e| format!("shadow call fault: {e:?}"))?;
-            steps += u64::from(n);
+            // At least one per block, so a block that runs nothing cannot spin.
+            steps += u64::from(n).max(1);
             if steps > 1_000_000 {
                 return Err("shadow call did not return".into());
             }
@@ -498,7 +533,7 @@ impl ShadowRuntime {
         let mut steps = 0u64;
         while self.cpu.pc != return_to {
             let (n, _) = self.cpu.run_block(&mut self.mem, &mut self.blocks).ok()?;
-            steps += u64::from(n);
+            steps += u64::from(n).max(1);
             if steps > max_steps {
                 return None;
             }
@@ -586,6 +621,15 @@ fn first_ram_difference(a: &Mem, b: &Mem, ignore: &[(u32, u32)], entry_sp: Optio
         };
         let mut i = 0;
         while i < len {
+            // Equal 4 KiB blocks are skipped with one slice compare: a byte
+            // loop over 88 MB on every check made big gates take hours.
+            if i % 0x1000 == 0 {
+                let end = (i + 0x1000).min(len);
+                if x[i..end] == y[i..end] {
+                    i = end;
+                    continue;
+                }
+            }
             let addr = base.wrapping_add(i as u32);
             if x[i] != y[i] && !ignored(addr) {
                 let w = i & !3;
@@ -644,6 +688,8 @@ pub struct System {
     native_bodies: Vec<(u32, NativeBody)>,
     /// Bodies registered with [`System::register_native_void`]: `r3` isn't compared.
     native_void: Vec<u32>,
+    /// Bodies of functions that return a float: checked on `f1`, not `r3`.
+    native_float: Vec<u32>,
     /// Run the original guest function first and validate the body against it
     /// (lockstep), instead of replacing it directly.
     native_lockstep: bool,
@@ -914,7 +960,7 @@ impl System {
         }
         let native_memcpy = (addrs.memcpy != 0)
             .then(|| native_memcpy::NativeCopy::new(addrs.memcpy..MEMCPY_END));
-        Ok(Self { memcpy_validator, native_memcpy, native_bodies: Vec::new(), native_void: Vec::new(), native_lockstep: false, native_accounted: false, in_native: false, native_budget: 0, native_per_body: Vec::new(), native_pending: None, native_shadow: None, native_validated: 0, native_failed: 0, native_inconclusive: 0, cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
+        Ok(Self { memcpy_validator, native_memcpy, native_bodies: Vec::new(), native_void: Vec::new(), native_float: Vec::new(), native_lockstep: false, native_accounted: false, in_native: false, native_budget: 0, native_per_body: Vec::new(), native_pending: None, native_shadow: None, native_validated: 0, native_failed: 0, native_inconclusive: 0, cpu, mem, hw, ios_version, linked: Vec::new(), link_calls: Vec::new(), steps: 0, slices, idle_cycles: 0, blocks: Blocks::new(&addrs.special), light_textures: Default::default(), aux_effects: true, recomp: None, recomp_steps: 0, recomp_entries: 0, menu, p1: Default::default(), display: Default::default(), camera: Default::default(), joins: Default::default(), version, addrs })
     }
 
     /// Registers a Rust body that replaces the guest function at `addr`.
@@ -936,6 +982,15 @@ impl System {
         self.register_native(addr, body);
         if !self.native_void.contains(&addr) {
             self.native_void.push(addr);
+        }
+    }
+
+    /// Registers a body for a function that returns a float in `f1` (the body
+    /// reports it with [`set_native_f1`]). Its checks compare RAM and `f1`.
+    pub fn register_native_float(&mut self, addr: u32, body: NativeBody) {
+        self.register_native_void(addr, body);
+        if !self.native_float.contains(&addr) {
+            self.native_float.push(addr);
         }
     }
 
@@ -1035,6 +1090,9 @@ impl System {
         let fprs = self.cpu.fpr;
         let ret = unsafe { run_native(pc, body, self, &gprs, &fprs) };
         self.cpu.gpr[3] = ret;
+        if let Some(f1) = take_native_f1().filter(|_| self.native_float.contains(&pc)) {
+            self.cpu.fpr[1][0] = f1;
+        }
         self.cpu.pc = self.cpu.lr;
         true
     }
@@ -1103,7 +1161,10 @@ impl System {
             let read = |m: &Mem| m.ram(at, 8).map(|b| b.iter().map(|x| format!("{x:02x}")).collect::<String>());
             (at, read(&shadow.mem), read(&self.mem))
         });
-        let r3_ok = self.native_void.contains(&pending.addr) || r3 == self.cpu.gpr[3];
+        let f1 = take_native_f1();
+        let f1_ok = !self.native_float.contains(&pending.addr)
+            || f1.map(f64::to_bits) == Some(self.cpu.fpr[1][0].to_bits());
+        let r3_ok = (self.native_void.contains(&pending.addr) || r3 == self.cpu.gpr[3]) && f1_ok;
         if diff.is_none() && r3_ok {
             self.native_validated += 1;
             self.body_stats(pending.addr)[1] += 1;
@@ -1111,9 +1172,10 @@ impl System {
             self.native_failed += 1;
             self.body_stats(pending.addr)[2] += 1;
             // The first mismatch of each body.
+            let orig_f1 = self.cpu.fpr[1][0];
             if self.body_stats(pending.addr)[2] == 1 {
                 eprintln!(
-                    "native lockstep mismatch at {:#010x}: first_diff={diff:?} r3 body={r3:#010x} orig={:#010x} (call r3={:#010x} r4={:#010x} sp={:#010x}; bytes at {:?} body={:?} orig={:?})",
+                    "native lockstep mismatch at {:#010x}: first_diff={diff:?} r3 body={r3:#010x} orig={:#010x} f1 body={f1:?} orig={orig_f1} (call r3={:#010x} r4={:#010x} sp={:#010x}; bytes at {:?} body={:?} orig={:?})",
                     pending.addr, self.cpu.gpr[3], pending.cpu.gpr[3], pending.cpu.gpr[4], pending.sp,
                     around.as_ref().map(|t| format!("{:#010x}", t.0)), around.as_ref().and_then(|t| t.1.clone()), around.as_ref().and_then(|t| t.2.clone()),
                 );
@@ -1145,9 +1207,12 @@ impl System {
         let saved_steps = self.steps;
         self.in_native = true;
         let r3 = unsafe { run_native(pc, body, self, &pre_cpu.gpr, &pre_cpu.fpr) };
+        let f1 = take_native_f1();
         self.in_native = false;
         let diff = first_ram_difference(&self.mem, &shadow.mem, &ignore, Some(pre_cpu.gpr[1]));
-        if diff.is_none() && (self.native_void.contains(&pc) || r3 == shadow_cpu.gpr[3]) {
+        let f1_ok = !self.native_float.contains(&pc)
+            || f1.map(f64::to_bits) == Some(shadow_cpu.fpr[1][0].to_bits());
+        if diff.is_none() && f1_ok && (self.native_void.contains(&pc) || r3 == shadow_cpu.gpr[3]) {
             // The body's RAM is byte-identical; take the original's stack and
             // scratch so the full-RAM hash is exactly the original's.
             copy_ranges(&shadow.mem, &mut self.mem, &ignore);

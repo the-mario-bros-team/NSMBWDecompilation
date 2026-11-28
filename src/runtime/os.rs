@@ -21010,7 +21010,7 @@ pub unsafe fn fn_8025a380(_param_1: u32, _param_2: u32, record: u32, instances: 
 pub unsafe fn fn_80259190(this: usize) {
     let child = read_u32(this + 0xe8);
     let child_vtable = read_u32(child as usize);
-    call0(read_u32(child_vtable as usize + 0x10) as usize);
+    call1(read_u32(child_vtable as usize + 0x10) as usize, (child as usize) as u32);
     let slot = this + 0xf8 + read_u8(this + 0xf4) as usize * 0x10c;
     let mut node = crate::platform::GuestLocal::<u32>::new( 0u32);
     let holder = call2(0x8025_37d0, ((node.as_mut_ptr() as *mut u32)) as u32, slot as u32, );

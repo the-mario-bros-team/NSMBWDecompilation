@@ -77,6 +77,25 @@ enum GuestContext {
 #[cfg(feature = "guest-memory")]
 std::thread_local! {
     static GUEST_CONTEXT: RefCell<Option<GuestContext>> = const { RefCell::new(None) };
+    /// Guest accesses since the runtime scope began (see [`RUNAWAY_LIMIT`]).
+    static ACCESSES: core::cell::Cell<u64> = const { core::cell::Cell::new(0) };
+}
+
+/// A body that makes more guest accesses than this in one call is stuck in a
+/// loop (a wrong exit test): it panics, so the checker fails the call instead
+/// of hanging. The longest checked bodies make a few thousand.
+#[cfg(feature = "guest-memory")]
+const RUNAWAY_LIMIT: u64 = 20_000_000;
+
+#[cfg(feature = "guest-memory")]
+#[inline]
+fn count_access() {
+    let n = ACCESSES.with(|a| {
+        let n = a.get() + 1;
+        a.set(n);
+        n
+    });
+    assert!(n <= RUNAWAY_LIMIT, "Rust body ran away: more than {RUNAWAY_LIMIT} guest accesses in one call");
 }
 
 /// Runs a synchronous call with `mem` backing the platform memory helpers.
@@ -111,6 +130,7 @@ pub fn with_guest_runtime<T>(
     runtime: &mut (dyn GuestRuntime + 'static),
     f: impl FnOnce() -> T,
 ) -> T {
+    ACCESSES.with(|a| a.set(0));
     with_guest_context(GuestContext::Runtime(NonNull::from(runtime)), f)
 }
 
@@ -143,6 +163,7 @@ fn access_guest_memory<T>(
     access: impl FnOnce(&mut Mem, u32) -> Result<T, Fault>,
 ) -> T {
     let addr = u32::try_from(addr).expect("guest address is wider than 32 bits");
+    count_access();
     flush_guest_locals();
     GUEST_CONTEXT.with(|slot| {
         let mut active = slot.borrow_mut();
@@ -262,6 +283,7 @@ pub fn call_rel_registers(
 fn access_guest_runtime<T>(
     run: impl FnOnce(&mut dyn GuestRuntime) -> Result<T, String>,
 ) -> Result<T, String> {
+    count_access();
     flush_guest_locals();
     let result = GUEST_CONTEXT.with(|slot| {
         let mut active = slot

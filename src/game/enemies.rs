@@ -120970,7 +120970,7 @@ pub unsafe fn fn_80a263c0(this: usize) {
 /// modelled.
 pub unsafe fn fn_80a26740(this: usize) -> u32 {
     let vtable = platform::read_u32(this + 0x548) as usize;
-    call0(platform::read_u32(vtable + 0x14) as usize);
+    call1(platform::read_u32(vtable + 0x14) as usize, (this + 0x548) as u32);
     1
 }
 

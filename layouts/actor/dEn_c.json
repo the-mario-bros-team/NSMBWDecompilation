@@ -38,7 +38,7 @@
       "offset": 1088,
       "size": 12,
       "type": "mVec3_c",
-      "name": "unk_440"
+      "name": "move_offset"
     },
     {
       "offset": 1100,
@@ -80,7 +80,7 @@
       "offset": 1117,
       "size": 1,
       "type": "bool",
-      "name": "unk_45d"
+      "name": "in_water"
     },
     {
       "offset": 1118,

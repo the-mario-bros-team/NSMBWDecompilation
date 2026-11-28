@@ -5544,7 +5544,7 @@ pub unsafe fn fn_800ea6d0(param_1: usize) {
         return;
     }
     let vtable = platform::read_u32(param_1 + 4) as usize;
-    platform::call0(platform::read_u32(vtable + 0x14) as usize);
+    platform::call1(platform::read_u32(vtable + 0x14) as usize, (param_1 + 4) as u32);
 }
 
 /// Rebuilds the node's draw frame from its position and three `u16` angles.
@@ -6048,7 +6048,7 @@ pub unsafe fn fn_800eb410(param_1: usize) {
     let mode = platform::read_u8(param_1 + 0x141) as i8;
     if mode == 2 {
         let vtable = platform::read_u32(param_1 + 0xA0) as usize;
-        platform::call0(platform::read_u32(vtable + 0x14) as usize);
+        platform::call1(platform::read_u32(vtable + 0x14) as usize, (param_1 + 0xA0) as u32);
     } else {
         let counter = platform::read_u32(G_COUNTER_5480);
         let stride = platform::read_u32(param_1 + 0x13C);
@@ -6113,7 +6113,7 @@ pub unsafe fn fn_800efb50(param_1: usize) {
     let controller = platform::read_u32(param_1 + 0xBF4) as usize;
     let vtable = platform::read_u32(controller) as usize;
     // observed: the slot is printed with no arguments.
-    platform::call0(platform::read_u32(vtable + 0xC) as usize);
+    platform::call1(platform::read_u32(vtable + 0xC) as usize, (controller) as u32);
 
     if platform::read_u8(platform::read_u32(param_1 + 0xBF4) as usize + 0xC) != 0 {
         let first = platform::read_i32(param_1 + 0xBE8);
@@ -33486,12 +33486,12 @@ pub unsafe fn fn_800f77a0(this: usize) -> u32 {
     let child = platform::read_u32(this + 0x6D0);
     if child != 0 {
         let vtable = platform::read_u32(child as usize) as usize;
-        platform::call0(platform::read_u32(vtable + 0x0C) as usize);
+        platform::call1(platform::read_u32(vtable + 0x0C) as usize, (child as usize) as u32);
 
         let child = platform::read_u32(this + 0x6D0) as usize;
         if platform::read_u8(child + 0x0C) != 0 {
             let vtable = platform::read_u32(this + 0x60) as usize;
-            platform::call0(platform::read_u32(vtable + 0xF0) as usize);
+            platform::call1(platform::read_u32(vtable + 0xF0) as usize, this as u32);
         }
     }
 
@@ -33512,8 +33512,8 @@ pub unsafe fn fn_800f77a0(this: usize) -> u32 {
     }
 
     let vtable = platform::read_u32(this + 0x60) as usize;
-    platform::call0(platform::read_u32(vtable + 0xCC) as usize);
-    platform::call0(platform::read_u32(vtable + 0xC8) as usize);
+    platform::call1(platform::read_u32(vtable + 0xCC) as usize, this as u32);
+    platform::call1(platform::read_u32(vtable + 0xC8) as usize, this as u32);
     1
 }
 

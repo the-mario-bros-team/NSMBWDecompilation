@@ -7,10 +7,10 @@
 //
 // An adapter reads integer and pointer arguments from r3.. and float ones
 // from f1.., in order (the EABI for these signatures), runs the body under the
-// guest runtime and returns its value for r3. Bodies returning a float are
-// left out: the checker compares r3 and RAM, not f1. So are bodies whose
-// signature has a type the adapter cannot read, and the addresses listed in
-// HAND below, which lib.rs registers itself.
+// guest runtime and returns its value for r3; a float result is reported as
+// f1 (`hle_os::set_native_f1`), which the checker then compares. Bodies whose
+// signature has a type the adapter cannot read are left out, and so are the
+// addresses listed in HAND below, which lib.rs registers itself.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -53,8 +53,7 @@ for (const r of rows) {
     return { name: p.slice(0, i).trim(), ty: p.slice(i + 1).trim() };
   });
   const ret = (m[3] || '()').trim();
-  if (FLOAT.has(ret)) { skipped.push(`${address} ${display}: returns ${ret}`); continue; }
-  if (ret !== '()' && !INT.has(ret)) { skipped.push(`${address} ${display}: returns ${ret}`); continue; }
+  if (ret !== '()' && !INT.has(ret) && !FLOAT.has(ret)) { skipped.push(`${address} ${display}: returns ${ret}`); continue; }
   let g = 3, f = 1, ok = true;
   const args = params.map((p) => {
     if (INT.has(p.ty)) return p.ty === 'bool' ? `gprs[${g++}] & 0xFF != 0` : `gprs[${g++}] as ${p.ty}`;
@@ -66,14 +65,17 @@ for (const r of rows) {
   if (!ok || g > 11 || f > 9) { skipped.push(`${address} ${display}: arguments (${m[1].replace(/\s+/g, ' ')})`); continue; }
   const mod = rustFile.replace(/^src\//, '').replace(/\.rs$/, '').replace(/\//g, '::');
   const call = `nsmbw::${mod}::${currentName}(${args.join(', ')})`;
-  const body = ret === '()' ? `${call};\n        0` : ret === 'bool' ? `u32::from(${call})` : `${call} as u32`;
+  const body = ret === '()' ? `${call};\n        0`
+    : FLOAT.has(ret) ? `hle_os::set_native_f1(${call} as f64);\n        0`
+    : ret === 'bool' ? `u32::from(${call})` : `${call} as u32`;
+  const kind = ret === '()' ? 'Kind::Void' : FLOAT.has(ret) ? 'Kind::Float' : 'Kind::Word';
   const fname = `n_${addr}`;
   out.push(
     `/// \`${display}\` (\`${address}\`).\n` +
     `unsafe fn ${fname}(\n    runtime: &mut (dyn GuestRuntime + 'static),\n    gprs: &[u32; 32],\n    fprs: &[[f64; 2]; 32],\n) -> u32 {\n` +
     `    let _ = (gprs, fprs);\n    nsmbw::platform::with_guest_runtime(runtime, || {\n        ${body}\n    })\n}\n`,
   );
-  regs.push(`    (0x${addr.slice(0, 4).toUpperCase()}_${addr.slice(4).toUpperCase()}, ${fname}, ${ret === '()'}),`);
+  regs.push(`    (0x${addr.slice(0, 4).toUpperCase()}_${addr.slice(4).toUpperCase()}, ${fname}, ${kind}),`);
 }
 
 const text =
@@ -82,8 +84,10 @@ const text =
   `#![allow(clippy::unnecessary_cast)]\n\n` +
   `use guest_cpu::GuestRuntime;\nuse hle_os::NativeBody;\n\n` +
   out.join('\n') +
-  `\n/// Address, adapter, and whether the function returns nothing.\n` +
-  `pub const BODIES: &[(u32, NativeBody, bool)] = &[\n${regs.join('\n')}\n];\n`;
+  `\n/// What a function returns, so the checker compares the right register.\n` +
+  `#[derive(Clone, Copy)]\npub enum Kind {\n    /// A word in r3.\n    Word,\n    /// Nothing.\n    Void,\n    /// A float in f1.\n    Float,\n}\n\n` +
+  `/// Address, adapter, and what the function returns.\n` +
+  `pub const BODIES: &[(u32, NativeBody, Kind)] = &[\n${regs.join('\n')}\n];\n`;
 fs.writeFileSync(OUT, text);
 console.log(`${regs.length} adapters, ${skipped.length} left out`);
 for (const s of skipped) console.log('  left out: ' + s);

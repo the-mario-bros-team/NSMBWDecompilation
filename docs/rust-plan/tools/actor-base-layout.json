@@ -1026,7 +1026,7 @@
           "offset": 1088,
           "size": 12,
           "type": "mVec3_c",
-          "name": "unk_440",
+          "name": "move_offset",
           "evidence": {
             "kind": "vec",
             "width": 12
@@ -1096,7 +1096,7 @@
           "offset": 1117,
           "size": 1,
           "type": "bool",
-          "name": "unk_45d",
+          "name": "in_water",
           "evidence": {
             "kind": "zero",
             "width": 1
