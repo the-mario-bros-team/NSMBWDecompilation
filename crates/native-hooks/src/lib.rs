@@ -20,10 +20,12 @@ mod generated;
 /// never calls it. `NSMBW_RUST_BODIES_ALL=1` registers every generated body
 /// instead, to find out which ones a run calls and which ones differ.
 /// Left out: they differ from the original in 1-1 (docs/RUST_PLAN.md):
-/// 0x80077B00, 0x8007CA90, 0x80070650, 0x800773E0, 0x8007A6C0, 0x8006D170,
-/// 0x80075CA0, and with more than 16 calls checked 0x80075820, 0x8007CD70,
-/// 0x8016EF50, 0x800DAA10.
+/// 0x8007CA90, 0x800773E0, 0x8007A6C0, 0x8006D170, 0x80075CA0, and with more
+/// than 16 calls checked 0x80075820, 0x8007CD70, 0x800DAA10.
 const GATED: &[u32] = &[
+    0x8007_7B00,
+    0x8016_EF50,
+    0x8007_0650,
     0x8006_47A0,
     0x800D_9860,
     0x800D_9880,

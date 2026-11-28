@@ -2137,13 +2137,14 @@ pub unsafe fn fn_8016ef50(
     second: usize,
     third: usize,
 ) {
-    let mut c = crate::platform::GuestLocal::new( platform::read_u16(third));
+    // observed 0x8016EF78: YrotM gets `*second` (r5), XrotM `*first` (r4), ZrotM `*third` (r6).
+    let mut c = crate::platform::GuestLocal::new( platform::read_u16(second));
     platform::call2(W3_ROT_APPLY_B, p32(transform), (c.as_ptr() as *const u16) as u32);
 
     let mut a = crate::platform::GuestLocal::new( platform::read_u16(first));
     platform::call2(W3_ROT_APPLY_A, p32(transform), (a.as_ptr() as *const u16) as u32);
 
-    let mut b = crate::platform::GuestLocal::new( platform::read_u16(second));
+    let mut b = crate::platform::GuestLocal::new( platform::read_u16(third));
     platform::call2(W3_ROT_APPLY_C, p32(transform), (b.as_ptr() as *const u16) as u32);
 }
 

@@ -28371,7 +28371,9 @@ pub unsafe fn fn_80070630(this: usize, candidate: u32) {
 pub unsafe fn fn_80070650(this: usize, candidate: u32) -> u32 {
     let new_weight = read_i32(W61_WEIGHT_TABLE + ((candidate >> 14) & 0x3fc) as usize);
     let current_weight = read_i32(W61_WEIGHT_TABLE + (read_u8(this + 0xa4) as usize) * 4);
-    if current_weight < new_weight {
+    // observed 0x80070670: `cmp r5,r0` / `ble` past the store, so it stores when the
+    // current entry's table value is the greater (a smaller value ranks higher).
+    if current_weight > new_weight {
         write_u8(this + 0xa4, (candidate >> 16) as u8);
         write_u32(this + 0xa0, candidate);
     }
@@ -43667,7 +43669,8 @@ pub unsafe fn fn_80077b00(this: usize) {
     if read_f32(W91_F_ZERO_ALT) == zoom {
         zoom = read_f32(W91_F_ONE_ALT);
     }
-    let scene = read_u32(G_CAMERA_OWNER) as usize;
+    // observed 0x80077B1C: `lwz r3,-0x5880(r13)`, the bg scene (not `r13 - 0x58B0`).
+    let scene = read_u32(G_BG_SCENE) as usize;
     write_f32(scene + 0x40, read_f32(G_BG_COL_A) / zoom);
     write_f32(scene + 0x44, read_f32(G_BG_COL_B) / zoom);
 }
