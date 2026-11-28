@@ -18986,8 +18986,10 @@ pub unsafe fn fn_80162a70(id: u32, arg_b: u32, arg_c: u32, flag: u32) -> u32 {
         return 0;
     }
     fn_80162a50(id as u16, arg_b, arg_c, flag as u8);
-    let vtable = platform::read_u32(entry) as usize;
-    let result = platform::call1(platform::read_u32(vtable) as usize, entry as u32);
+    // observed 0x80162AA8: `lwz r12,0(r3)`, `bctrl`: the entry's first word is the
+    // create function itself (one load, not a vtable).
+    let create = platform::read_u32(entry) as usize;
+    let result = platform::call1(create, entry as u32);
     fn_80162a50(0, 0, 0, 0);
     if result != 0 {
         fn_80162930(result as usize);

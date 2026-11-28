@@ -36643,7 +36643,8 @@ pub unsafe fn fn_80064da0(object: usize, position: usize, region: usize, owner: 
     let record = platform::read_u32(W18_STAGE_TABLE_80429E98) as usize
         + index * W211_STAGE_RECORD_STRIDE_D;
     let record = if platform::read_u32(record + 0x2C) == 0 { 0 } else { record };
-    let shape = platform::call2(FN_HIT_SHAPE_8008E410_D, record as u32, owner);
+    // observed 0x80064E04: `li r5,0`, no out-region (a non-null r5 gets four floats).
+    let shape = platform::call3(FN_HIT_SHAPE_8008E410_D, record as u32, owner, 0);
     if shape == 0 {
         return 1;
     }

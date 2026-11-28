@@ -17768,7 +17768,7 @@ pub unsafe fn fn_80075270(x: f64, mut y: f64, param_3: u32, out: usize) -> u8 {
                 return 4;
             }
         }
-        let flags = w33_call2_f64_u32(W33_GROUND_SCAN, x, y);
+        let flags = w33_call2_f64_u32_arg(W33_GROUND_SCAN, x, y, param_3);
         if (flags & 0x200) == 0 {
             return 0;
         }
@@ -17780,7 +17780,7 @@ pub unsafe fn fn_80075270(x: f64, mut y: f64, param_3: u32, out: usize) -> u8 {
                     break;
                 }
                 y = (y + step) as f32 as f64;
-                let again = w33_call2_f64_u32(W33_GROUND_SCAN, x, y);
+                let again = w33_call2_f64_u32_arg(W33_GROUND_SCAN, x, y, param_3);
                 if (again & 0x200) == 0 {
                     break;
                 }
@@ -18071,7 +18071,7 @@ pub unsafe fn fn_80076630(x: f64, y: f64, mask: u8, group: u32) -> u32 {
 /// scan's `0x400` bit is inferred.
 pub unsafe fn fn_800767f0(x: f64, y: f64, group: u32) -> u32 {
     let mut point = crate::platform::GuestLocal::new( [x as f32, y as f32, read_f32(W33_F_PROBE_FLOOR)]);
-    let flags = w33_call2_f64_u32(W33_GROUND_SCAN, point[0] as f64, point[1] as f64);
+    let flags = w33_call2_f64_u32_arg(W33_GROUND_SCAN, point[0] as f64, point[1] as f64, group);
     let depth = w33_call2_f64_u32_arg(
         W33_GROUND_SCAN_DEPTH,
         point[0] as f64,

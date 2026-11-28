@@ -40,6 +40,9 @@ debug = false
 [profile.quick]
 inherits = "release"
 lto = false
+# The Rust-body checker catches a panicking body and counts the call as
+# failed, so one gate run reports every bad body (release aborts instead).
+panic = "unwind"
 
 # Release plus debug info, for sampling profilers: `cargo build --profile profiling -p frontend`.
 [profile.profiling]

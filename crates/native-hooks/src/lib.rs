@@ -14,6 +14,114 @@
 use guest_cpu::GuestRuntime;
 use hle_os::System;
 
+mod generated;
+
+/// Generated bodies (`generated.rs`) the gate runs: each passed it, or 1-1
+/// never calls it. `NSMBW_RUST_BODIES_ALL=1` registers every generated body
+/// instead, to find out which ones a run calls and which ones differ.
+/// `0x8006CAE0` (`draw2DActorOnLyt1`) is left out: it differs in 1-1.
+const GATED: &[u32] = &[
+    0x8006_4110,
+    0x8006_42B0,
+    0x8006_4380,
+    0x8006_4490,
+    0x8006_4600,
+    0x8006_4610,
+    0x8006_4680,
+    0x8006_46E0,
+    0x8006_4720,
+    0x8006_4790,
+    0x8006_47A0,
+    0x8006_4A10,
+    0x8006_4A30,
+    0x8006_4A50,
+    0x8006_4AF0,
+    0x8006_4B00,
+    0x8006_4BD0,
+    0x8006_4BE0,
+    0x8006_4BF0,
+    0x8006_4C00,
+    0x8006_4C10,
+    0x8006_4D10,
+    0x8006_4F50,
+    0x8006_5110,
+    0x8006_51C0,
+    0x8006_5480,
+    0x8006_5520,
+    0x8006_5A40,
+    0x8006_5B80,
+    0x8006_5CB0,
+    0x8006_5FC0,
+    0x8006_6FC0,
+    0x8006_71B0,
+    0x8006_7270,
+    0x8006_C6D0,
+    0x8006_C7F0,
+    0x8006_C870,
+    0x8006_C8A0,
+    0x8006_C8B0,
+    0x8006_C8F0,
+    0x8006_CA70,
+    0x8006_CA80,
+    0x8006_CBA0,
+    0x8009_4E80,
+    0x8009_5130,
+    0x8009_51D0,
+    0x8009_5240,
+    0x8009_5480,
+    0x8009_54A0,
+    0x8009_54D0,
+    0x8009_55F0,
+    0x8009_57B0,
+    0x8009_5C20,
+    0x8009_5C80,
+    0x8009_6240,
+    0x8009_6300,
+    0x8009_6330,
+    0x8009_64A0,
+    0x8009_6700,
+    0x8009_6780,
+    0x8009_6790,
+    0x8009_67A0,
+    0x8009_67F0,
+    0x8009_6CA0,
+    0x8009_6D00,
+    0x8009_6E60,
+    0x8009_6F60,
+    0x8009_7050,
+    0x8009_71F0,
+    0x8009_7250,
+    0x8009_76B0,
+    0x8009_7700,
+    0x8009_78C0,
+    0x8009_79B0,
+    0x8009_7A20,
+    0x8009_7C40,
+    0x8009_7DF0,
+    0x8009_7E30,
+    0x8009_7E50,
+    0x8009_7EA0,
+    0x8009_7F40,
+    0x8009_7F70,
+    0x800A_02D0,
+    0x800A_0550,
+    0x800A_0700,
+    0x800A_0A30,
+    0x800A_0C70,
+    0x800A_0DC0,
+    0x800A_0EA0,
+    0x800A_0FB0,
+    0x800A_1190,
+    0x800A_12A0,
+    0x800A_1370,
+    0x800A_16A0,
+    0x800A_1830,
+    0x800A_1980,
+    0x800A_1C80,
+    0x800A_8170,
+    0x800B_56E0,
+];
+
 /// `fBase_c::__ct` (`0x80161AD0`): constructs the node every base derives from.
 unsafe fn f_base_ctor(
     runtime: &mut (dyn GuestRuntime + 'static),
@@ -191,6 +299,16 @@ pub fn install(system: &mut System) {
     system.register_native_void(0x8006_CE10, d_base_actor_calc_speed_f);
     system.register_native_void(0x8006_CE70, d_base_actor_calc_fall_speed);
     system.register_native_void(0x8006_CED0, d_base_actor_get_center_pos);
+    let all = std::env::var_os("NSMBW_RUST_BODIES_ALL").is_some();
+    for &(addr, body, void) in generated::BODIES {
+        if all || GATED.contains(&addr) {
+            if void {
+                system.register_native_void(addr, body);
+            } else {
+                system.register_native(addr, body);
+            }
+        }
+    }
     let set = std::env::var("NSMBW_RUST_BODIES_SET").unwrap_or_default();
     if !set.is_empty() {
         let wanted = |addr: u32| {

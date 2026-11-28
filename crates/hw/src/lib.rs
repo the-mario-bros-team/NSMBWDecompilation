@@ -407,6 +407,14 @@ impl Hw {
         self.update_ipc_irq();
     }
 
+    /// The CPU FIFO in RAM (PI's base and end), as cached virtual addresses.
+    /// Gather-pipe bursts reach it only when `advance` runs, so a check made
+    /// right after a call must not compare it.
+    pub fn cpu_fifo(&self) -> (u32, u32) {
+        let (base, end) = (self.pi_regs[0x0C / 4] & 0x1FFF_FFE0, self.pi_regs[0x10 / 4] & 0x1FFF_FFE0);
+        (base | 0x8000_0000, end.max(base) | 0x8000_0000)
+    }
+
     /// A gather-pipe write: every 32 bytes form a burst to the CPU FIFO in
     /// RAM at PI's write pointer, which advances (and wraps) right away so the
     /// guest sees consistent pointers; the copy happens in `advance`.

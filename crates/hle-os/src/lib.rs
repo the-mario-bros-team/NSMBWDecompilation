@@ -372,6 +372,37 @@ pub use guest_cpu::{GuestCallResult, RelAddress};
 pub type NativeBody =
     unsafe fn(&mut (dyn GuestRuntime + 'static), &[u32; 32], &[[f64; 2]; 32]) -> u32;
 
+std::thread_local! {
+    /// The switched function whose Rust body is running, for the panic message.
+    static RUNNING_BODY: std::cell::Cell<u32> = const { std::cell::Cell::new(0) };
+}
+
+/// Runs a switched body, naming its address if the body panics (release
+/// builds abort on panic, so the hook is the only place to say which one).
+unsafe fn run_native(
+    addr: u32,
+    body: NativeBody,
+    runtime: &mut (dyn GuestRuntime + 'static),
+    gprs: &[u32; 32],
+    fprs: &[[f64; 2]; 32],
+) -> u32 {
+    static HOOK: std::sync::Once = std::sync::Once::new();
+    HOOK.call_once(|| {
+        let previous = std::panic::take_hook();
+        std::panic::set_hook(Box::new(move |info| {
+            let running = RUNNING_BODY.with(|b| b.get());
+            if running != 0 {
+                eprintln!("panic in the Rust body for {running:#010x}:");
+            }
+            previous(info);
+        }));
+    });
+    let outer = RUNNING_BODY.with(|b| b.replace(addr));
+    let r3 = body(runtime, gprs, fprs);
+    RUNNING_BODY.with(|b| b.set(outer));
+    r3
+}
+
 /// Pre-call state of a switched function, held until it returns so the body
 /// can be run on a shadow machine and compared.
 struct PendingNative {
@@ -381,6 +412,10 @@ struct PendingNative {
     sp: u32,
     /// `cpu.exceptions` when the call began.
     exceptions: u64,
+    /// The OS thread that made the call, and whether another one ran before
+    /// it returned (the RAM it left then includes that thread's work).
+    thread: u32,
+    switched: bool,
 }
 
 /// The shadow's stack for the body's guest calls (inside the ignored
@@ -531,17 +566,39 @@ const RAM_REGIONS: [(u32, usize); 3] = [
 ];
 
 /// First differing guest address outside `ignore`, or `None` if equal.
-fn first_ram_difference(a: &Mem, b: &Mem, ignore: &[(u32, u32)]) -> Option<u32> {
+///
+/// With `entry_sp`, a word where one side holds an address in the guest-call
+/// stack and the other an address near `entry_sp` is not a difference: game
+/// code that stores a pointer to its own stack slot gets the body's call
+/// stack on one side and the original's stack on the other.
+fn first_ram_difference(a: &Mem, b: &Mem, ignore: &[(u32, u32)], entry_sp: Option<u32>) -> Option<u32> {
     let ignored = |addr: u32| ignore.iter().any(|&(lo, hi)| addr >= lo && addr < hi);
+    let call_stack = |w: u32| (CALL_STACK_TOP.saturating_sub(0x10000)..=CALL_STACK_TOP + 0x10).contains(&w);
+    let stack_twins = |wa: u32, wb: u32| {
+        entry_sp.is_some_and(|sp| {
+            let near = |w: u32| (sp.saturating_sub(0x10000)..sp.saturating_add(0x1000)).contains(&w);
+            (call_stack(wa) && near(wb)) || (call_stack(wb) && near(wa))
+        })
+    };
     for (base, len) in RAM_REGIONS {
         let (Some(x), Some(y)) = (a.ram(base, len), b.ram(base, len)) else {
             return Some(base);
         };
-        for i in 0..len {
+        let mut i = 0;
+        while i < len {
             let addr = base.wrapping_add(i as u32);
             if x[i] != y[i] && !ignored(addr) {
+                let w = i & !3;
+                if w + 4 <= len {
+                    let word = |m: &[u8]| u32::from_be_bytes(m[w..w + 4].try_into().unwrap());
+                    if stack_twins(word(x), word(y)) {
+                        i = w + 4;
+                        continue;
+                    }
+                }
                 return Some(addr);
             }
+            i += 1;
         }
     }
     None
@@ -956,7 +1013,9 @@ impl System {
         }
         if self.native_lockstep {
             // The original always runs; the body is checked on a shadow.
-            if let Some(pending) = self.native_pending.as_ref() {
+            let thread = self.mem.read_u32(CURRENT_THREAD).unwrap_or(0);
+            if let Some(pending) = self.native_pending.as_mut() {
+                pending.switched |= thread != pending.thread;
                 if pending.return_to == pc {
                     self.finish_lockstep();
                     return true;
@@ -974,7 +1033,7 @@ impl System {
         let Some(body) = self.native_body(pc) else { return false };
         let gprs = self.cpu.gpr;
         let fprs = self.cpu.fpr;
-        let ret = unsafe { body(self, &gprs, &fprs) };
+        let ret = unsafe { run_native(pc, body, self, &gprs, &fprs) };
         self.cpu.gpr[3] = ret;
         self.cpu.pc = self.cpu.lr;
         true
@@ -997,6 +1056,8 @@ impl System {
             cpu: self.cpu.clone(),
             sp: self.cpu.gpr[1],
             exceptions: self.cpu.exceptions,
+            thread: self.mem.read_u32(CURRENT_THREAD).unwrap_or(0),
+            switched: false,
         });
         self.body_stats(pc)[0] += 1;
     }
@@ -1005,14 +1066,26 @@ impl System {
     /// r3 with what the original left in the live machine.
     fn finish_lockstep(&mut self) {
         let Some(pending) = self.native_pending.take() else { return };
-        if self.cpu.exceptions != pending.exceptions {
+        if self.cpu.exceptions != pending.exceptions || pending.switched {
             self.native_inconclusive += 1;
             self.body_stats(pending.addr)[3] += 1;
             return;
         }
         let Some(body) = self.native_body(pending.addr) else { return };
+        let fifo = self.hw.borrow().cpu_fifo();
         let Some(shadow) = self.native_shadow.as_mut() else { return };
-        let r3 = unsafe { body(shadow, &pending.cpu.gpr, &pending.cpu.fpr) };
+        // A panicking body fails the call (builds that unwind; release aborts).
+        let run = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
+            run_native(pending.addr, body, shadow, &pending.cpu.gpr, &pending.cpu.fpr)
+        }));
+        let Ok(r3) = run else {
+            RUNNING_BODY.with(|b| b.set(0));
+            self.native_failed += 1;
+            self.body_stats(pending.addr)[2] += 1;
+            // Its later calls would panic too: stop checking it.
+            self.body_stats(pending.addr)[0] = u64::from(self.native_budget);
+            return;
+        };
         let ignore = [
             (pending.sp.saturating_sub(0x4000), pending.sp.saturating_add(0x1000)),
             (self.cpu.gpr[1].saturating_sub(0x4000), self.cpu.gpr[1].saturating_add(0x1000)),
@@ -1020,8 +1093,10 @@ impl System {
             (CALL_SCRATCH.saturating_sub(0x1000), CALL_SCRATCH.saturating_add(0x1000)),
             (CURRENT_THREAD, CURRENT_THREAD.saturating_add(0x10)),
             GUEST_LOCALS,
+            // Gather-pipe bursts reach the FIFO only at the end of the slice.
+            fifo,
         ];
-        let diff = first_ram_difference(&shadow.mem, &self.mem, &ignore);
+        let diff = first_ram_difference(&shadow.mem, &self.mem, &ignore, Some(pending.sp));
         // The 8 bytes around the first difference, body's then original's.
         let around = diff.map(|a| {
             let at = a & !3;
@@ -1035,7 +1110,8 @@ impl System {
         } else {
             self.native_failed += 1;
             self.body_stats(pending.addr)[2] += 1;
-            if self.native_failed <= 3 {
+            // The first mismatch of each body.
+            if self.body_stats(pending.addr)[2] == 1 {
                 eprintln!(
                     "native lockstep mismatch at {:#010x}: first_diff={diff:?} r3 body={r3:#010x} orig={:#010x} (call r3={:#010x} r4={:#010x} sp={:#010x}; bytes at {:?} body={:?} orig={:?})",
                     pending.addr, self.cpu.gpr[3], pending.cpu.gpr[3], pending.cpu.gpr[4], pending.sp,
@@ -1068,9 +1144,9 @@ impl System {
         let ignore = ignore_ranges(pre_cpu.gpr[1], shadow_cpu.gpr[1]);
         let saved_steps = self.steps;
         self.in_native = true;
-        let r3 = unsafe { body(self, &pre_cpu.gpr, &pre_cpu.fpr) };
+        let r3 = unsafe { run_native(pc, body, self, &pre_cpu.gpr, &pre_cpu.fpr) };
         self.in_native = false;
-        let diff = first_ram_difference(&self.mem, &shadow.mem, &ignore);
+        let diff = first_ram_difference(&self.mem, &shadow.mem, &ignore, Some(pre_cpu.gpr[1]));
         if diff.is_none() && (self.native_void.contains(&pc) || r3 == shadow_cpu.gpr[3]) {
             // The body's RAM is byte-identical; take the original's stack and
             // scratch so the full-RAM hash is exactly the original's.
@@ -1292,7 +1368,7 @@ impl System {
             if VALIDATE_MEMCPY && pc == MEMCPY.0 {
                 self.memcpy_validator.as_mut().unwrap().begin(&self.cpu, &self.mem);
             }
-            if (!self.link_calls.is_empty() || self.display.watching() || self.addrs.may_be_special(pc) || self.native_body(pc).is_some() || self.native_pending.as_ref().is_some_and(|p| p.return_to == pc)) && self.before(pc) {
+            if (!self.link_calls.is_empty() || self.display.watching() || self.addrs.may_be_special(pc) || self.native_body(pc).is_some() || self.native_pending.is_some()) && self.before(pc) {
                 // Idle: the clock jumped; end the slice here.
                 if self.finish_slice(&mut end) {
                     return Ok(());
