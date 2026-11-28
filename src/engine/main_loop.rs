@@ -578,7 +578,7 @@ const FN_801B4BB0: usize = 0x801B_4BB0;
 /// `addr` must point at a PowerPC function returning a word in `r3`.
 #[inline]
 unsafe fn call0_ret(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -604,8 +604,7 @@ unsafe fn call8_u32(
     g: u32,
     h: u32,
 ) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g, h)
 }
 
@@ -12598,7 +12597,7 @@ unsafe fn convert_integer(
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f64_2(addr: usize, x: f64, a: u32, b: u32) -> u32 {
-    let f: extern "C" fn(f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32) -> u32);
     f(x, a, b)
 }
 

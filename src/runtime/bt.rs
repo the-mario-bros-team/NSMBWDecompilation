@@ -681,8 +681,7 @@ unsafe fn call8(
     g: u32,
     h: u32,
 ) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g, h)
 }
 
@@ -6308,7 +6307,7 @@ const CONSOLE_MODE: usize = 0x803D_A8B8;
 /// # Safety
 /// `addr` must point to a function with this ABI.
 unsafe fn call0_ret(addr: usize) -> u32 {
-    let func: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn() -> u32);
     func()
 }
 
@@ -6878,7 +6877,7 @@ pub unsafe fn fn_80247a50(table: usize) {
     // observed: `for (iVar1 = 0; iVar1 < param_1[6]; iVar1++)`
     while index < platform::read_i32(table + 0x18) {
         let entry = platform::read_u32(vtable + 0x40) as usize;
-        let method: extern "C" fn(u32, u32) = core::mem::transmute(entry);
+        let method = crate::platform::guest_fn!(entry, fn(u32, u32));
         method(table as u32, index as u32);
         index += 1;
     }
@@ -24923,8 +24922,7 @@ pub unsafe fn fn_802243c0(frame: u32, restore: u32) {
         platform::call1(CALLBACK_GUARD_801ACF80, frame_ptr as u32);
         platform::call1(CALLBACK_GUARD_801ACD40, frame_ptr as u32);
         // observed: `(**(code **)(&DAT_80000020 + bus))(block[4], block[0x24]);`
-        let completion: extern "C" fn(u32, u32) =
-            core::mem::transmute(callback as usize);
+        let completion = crate::platform::guest_fn!(callback as usize, fn(u32, u32));
         completion(
             platform::read_u32(block + 4),
             platform::read_u32(block + 0x24),
@@ -26216,7 +26214,7 @@ pub unsafe fn fn_802265c0(status: i32, block: usize) -> i32 {
 
     let callback = platform::read_u32(block + 0x100);
     if callback != 0 {
-        let completion: extern "C" fn(i32, u32) = core::mem::transmute(callback as usize);
+        let completion = crate::platform::guest_fn!(callback as usize, fn(i32, u32));
         completion(status, platform::read_u32(block + 0x104));
     }
 
@@ -28401,7 +28399,7 @@ pub unsafe fn fn_8020ca18(event: u32) {
         platform::write_u32(GAP_NAME_RESULT, 0x111);
         // observed: `DAT_803d4370 = FUN_80204c2c();` - a no-argument call that
         // returns the first inquiry record.
-        let fetch: extern "C" fn() -> u32 = core::mem::transmute(0x8020_4C2Cusize);
+        let fetch = crate::platform::guest_fn!(0x8020_4C2Cusize, fn() -> u32);
         let record = fetch();
         platform::write_u32(GAP_NAME_RECORD, record);
         if record == 0 {
@@ -30333,7 +30331,7 @@ pub unsafe fn fn_80217cd8(owner: usize) -> usize {
 /// medium - every value is literal; the feature byte's meaning is inferred from
 /// its single bit use.
 pub unsafe fn fn_80218554(channel: usize) -> u32 {
-    let fetch: extern "C" fn() -> u32 = core::mem::transmute(0x8020_37A4usize);
+    let fetch = crate::platform::guest_fn!(0x8020_37A4usize, fn() -> u32);
     let features = fetch() as usize;
     let feature_byte = platform::read_u8(features);
 
@@ -37540,7 +37538,7 @@ unsafe fn read_f64(addr: usize) -> f64 {
 /// # Safety
 /// `addr` must point to a function with this ABI.
 unsafe fn call_f32x4_two(addr: usize, a: f32, b: f32, c: f32, d: f32, e: u32, f: usize) {
-    let func: extern "C" fn(f32, f32, f32, f32, u32, usize) = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f32, f32, f32, f32, u32, usize));
     func(a, b, c, d, e, f);
 }
 
@@ -44690,7 +44688,7 @@ pub unsafe fn fn_80228640() {}
 /// # Safety
 /// `addr` must point to a function with this ABI.
 unsafe fn call_f64_1(addr: usize, arg: u32) -> f64 {
-    let func: extern "C" fn(u32) -> f64 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32) -> f64);
     func(arg)
 }
 
@@ -44703,7 +44701,7 @@ unsafe fn call_f64_1(addr: usize, arg: u32) -> f64 {
 /// # Safety
 /// `addr` must point to a function with this ABI.
 unsafe fn call_f64x3_two(addr: usize, a: f64, b: f64, c: f64, d: u32, e: usize) {
-    let func: extern "C" fn(f64, f64, f64, u32, usize) = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32, usize));
     func(a, b, c, d, e);
 }
 
@@ -45861,7 +45859,7 @@ pub unsafe fn fn_8022b3e0(address: u32, second: u32, length: u32) -> u32 {
 /// # Safety
 /// `addr` must point to a function with this ABI.
 unsafe fn call0_u32(addr: usize) -> u32 {
-    let func: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn() -> u32);
     func()
 }
 
@@ -50453,8 +50451,7 @@ unsafe fn call_f32x3_six(
     h: u32,
     i: u32,
 ) {
-    let func: extern "C" fn(f32, f32, f32, u32, u32, u32, u32, u32, u32) =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f32, f32, f32, u32, u32, u32, u32, u32, u32));
     func(a, b, c, d, e, f, g, h, i);
 }
 
@@ -52190,7 +52187,7 @@ pub unsafe fn fn_80215cec(conn: usize, data: usize, length: u32) {
 /// # Safety
 /// `addr` must point to a function with this ABI.
 unsafe fn call_f32_5(addr: usize, a: u32, b: u32, c: u32, d: u32, e: u32) -> f32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32) -> f32 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32) -> f32);
     func(a, b, c, d, e)
 }
 

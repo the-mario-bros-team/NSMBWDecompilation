@@ -1483,7 +1483,7 @@ unsafe fn write_i16(addr: usize, value: i16) {
 /// # Safety
 /// `addr` must have the matching ABI and return a double.
 unsafe fn call_f64_f64(addr: usize, a: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(a)
 }
 
@@ -1495,7 +1495,7 @@ unsafe fn call_f64_f64(addr: usize, a: f64) -> f64 {
 /// # Safety
 /// `addr` must have the matching ABI and accept the pointer value in `r3`.
 unsafe fn call_f64_f64_u32(addr: usize, a: f64, b: f64, c: u32) {
-    let f: extern "C" fn(f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32));
     f(a, b, c)
 }
 
@@ -3563,7 +3563,7 @@ const FUN_80046490: usize = 0x8004_6490;
 /// PowerPC EABI agree on the register assignment.
 #[inline]
 unsafe fn call_f64_u32_u32_u32(addr: usize, value: f64, a: u32, b: u32, c: u32) {
-    let f: extern "C" fn(f64, u32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32, u32));
     f(value, a, b, c)
 }
 
@@ -3582,7 +3582,7 @@ unsafe fn call_f64_u32_u32_u32(addr: usize, value: f64, a: u32, b: u32, c: u32) 
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call0_u32(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -5243,7 +5243,7 @@ unsafe fn vcall2(object: usize, slot: usize, a: u32, b: u32) -> u32 {
 unsafe fn vcall_f64(object: usize, slot: usize, a: f64) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64) -> u32);
     f(object, a)
 }
 
@@ -5255,7 +5255,7 @@ unsafe fn vcall_f64(object: usize, slot: usize, a: f64) -> u32 {
 unsafe fn vcall_f64_f64_u32(object: usize, slot: usize, a: f64, b: f64, c: u32) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64, f64, u32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64, f64, u32) -> u32);
     f(object, a, b, c)
 }
 
@@ -5275,7 +5275,7 @@ unsafe fn vcall_f64_f64_f64_u32(
 ) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64, f64, f64, u32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64, f64, f64, u32) -> u32);
     f(object, a, b, c, d)
 }
 
@@ -5296,7 +5296,7 @@ unsafe fn vcall_f64_f64_u32_u32_u32(
 ) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64, f64, u32, u32, u32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64, f64, u32, u32, u32) -> u32);
     f(object, a, b, c, d, e)
 }
 
@@ -5306,7 +5306,7 @@ unsafe fn vcall_f64_f64_u32_u32_u32(
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn call_f64_f64_f64_u32(addr: usize, a: f64, b: f64, c: f64, d: u32) {
-    let f: extern "C" fn(f64, f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32));
     f(a, b, c, d)
 }
 
@@ -5316,7 +5316,7 @@ unsafe fn call_f64_f64_f64_u32(addr: usize, a: f64, b: f64, c: f64, d: u32) {
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn call_f64_u32(addr: usize, a: f64, b: u32) -> u32 {
-    let f: extern "C" fn(f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32) -> u32);
     f(a, b)
 }
 
@@ -6590,7 +6590,7 @@ const R2_6028_70: usize = SDA2_BASE - 0x6028;
 /// float-to-double promotion.
 #[inline]
 unsafe fn call_u32_f32(addr: usize, a: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(a)
 }
 
@@ -6665,7 +6665,7 @@ unsafe fn vcall60_2(object: usize, slot: usize, a: u32, b: u32) -> u32 {
 unsafe fn vcall60_f64(object: usize, slot: usize, a: f64) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64) -> u32);
     f(object, a)
 }
 
@@ -6990,18 +6990,7 @@ pub unsafe fn wm_map_object_refresh(object: usize) -> u32 {
     write_f32(object + 0xD4, values[1]);
     // 0x8007FAD0 reads param_3[0..1] and param_4[0..1]; the original passes
     // &local_38 (values[2]) and &local_40 (values[0]).
-    let bind: extern "C" fn(
-        usize,
-        usize,
-        usize,
-        usize,
-        usize,
-        usize,
-        usize,
-        u32,
-        u8,
-        u32,
-    ) = core::mem::transmute(FUN_8007FAD0);
+    let bind = crate::platform::guest_fn!(FUN_8007FAD0, fn(usize, usize, usize, usize, usize, usize, usize, u32, u8, u32));
     bind(
         object + 0x424,
         object,
@@ -7017,7 +7006,7 @@ pub unsafe fn wm_map_object_refresh(object: usize) -> u32 {
     platform::write_u32(object + 0x4F4, 0x568);
     platform::call1(FUN_8007F900, (object + 0x424) as u32);
     platform::call3(FUN_80167B60, (object + 0x3F8) as u32, 0, 0);
-    let model: extern "C" fn(f64, usize, usize) = core::mem::transmute(FUN_80169F80);
+    let model = crate::platform::guest_fn!(FUN_80169F80, fn(f64, usize, usize));
     model(
         read_f32(R2_568C_ONE) as f64,
         object + 0x3B4,
@@ -8218,7 +8207,7 @@ unsafe fn call_f64_u32_u32_u32_u32(
     d: u32,
     e: u32,
 ) {
-    let f: extern "C" fn(f64, u32, u32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32, u32, u32));
     f(a, b, c, d, e)
 }
 
@@ -8230,7 +8219,7 @@ unsafe fn call_f64_u32_u32_u32_u32(
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn call_f64_f64_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32) {
-    let f: extern "C" fn(f64, f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32));
     f(a, b, c, d)
 }
 
@@ -8243,7 +8232,7 @@ unsafe fn call_f64_f64_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32) {
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn call_u32_f64(addr: usize, a: u32) -> f64 {
-    let f: extern "C" fn(u32) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f64);
     f(a)
 }
 
@@ -10963,7 +10952,7 @@ const FUN_8019BD20: usize = 0x8019_BD20;
 /// # Safety
 /// `addr` must accept a double in `f1` and a word in `r3`, and return a float.
 unsafe fn call_f64_u32_f32(addr: usize, a: f64, b: u32) -> f32 {
-    let f: extern "C" fn(f64, u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32) -> f32);
     f(a, b)
 }
 
@@ -17134,7 +17123,7 @@ const FUN_8011F130: usize = 0x8011_F130;
 /// # Safety
 /// `addr` must have the matching ABI.
 unsafe fn call_f64_f64_u32_u32_ret(addr: usize, a: f64, b: f64, c: u32, d: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32) -> u32);
     f(a, b, c, d)
 }
 
@@ -17151,7 +17140,7 @@ unsafe fn call_f64_f64_u32_u32_u32_u32(
     e: u32,
     f: u32,
 ) {
-    let g: extern "C" fn(f64, f64, u32, u32, u32, u32) = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32));
     g(a, b, c, d, e, f)
 }
 
@@ -19111,7 +19100,7 @@ pub unsafe fn fn_80123b70(object: usize) {
     let layer = platform::read_u8(object + 0x38F);
     if layer == 0 {
         // observed: Ghidra prints a void call; the caller consumes r3.
-        let ground: extern "C" fn(f64, f64, u32) -> u32 = core::mem::transmute(FUN_800767F0);
+        let ground = crate::platform::guest_fn!(FUN_800767F0, fn(f64, f64, u32) -> u32);
         let hit = ground(
             read_f32(object + 0xAC) as f64,
             read_f32(object + 0xB0) as f64,
@@ -19982,8 +19971,7 @@ unsafe fn call_f64x4_u32_u32_u32(
     f: u32,
     g: u32,
 ) -> u32 {
-    let call: extern "C" fn(f64, f64, f64, f64, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, u32, u32, u32) -> u32);
     call(a, b, c, d, e, f, g)
 }
 
@@ -22248,7 +22236,7 @@ pub unsafe fn fn_8013ce00(actor: usize) {
     let mut buffer = [0u8; 52];
     let vtable = platform::read_u32(controller) as usize;
     let entry = platform::read_u32(vtable + 0x54) as usize;
-    let fill: extern "C" fn(usize, *mut u8) = core::mem::transmute(entry);
+    let fill = crate::platform::guest_fn!(entry, fn(usize, *mut u8));
     fill(controller, buffer.as_mut_ptr());
     let record = platform::read_u32(actor + 0x388);
     platform::call2(FUN_800D82A0, record, buffer.as_ptr() as u32);
@@ -22536,7 +22524,7 @@ pub unsafe fn fn_8013fbb0(actor: usize) {
 /// identified only as the thunk target Ghidra prints, and its return value is
 /// used as a boolean.
 pub unsafe fn fn_8013fbf0(actor: usize) {
-    let step: extern "C" fn(f64, f64, u32) -> u32 = core::mem::transmute(FUN_8015F480);
+    let step = crate::platform::guest_fn!(FUN_8015F480, fn(f64, f64, u32) -> u32);
     let state = platform::read_u32(actor + 0x1458);
     if state == 0 {
         step(
@@ -22775,7 +22763,7 @@ const R2_5C60_NEG0_8: usize = SDA2_BASE - 0x5C60;
 /// # Safety
 /// `addr` must have this prototype.
 unsafe fn call_f64_u32_u32(addr: usize, a: f64, b: u32, c: u32) -> u32 {
-    let f: extern "C" fn(f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32) -> u32);
     f(a, b, c)
 }
 
@@ -23378,7 +23366,7 @@ pub unsafe fn fn_80111d80(object: usize, index: usize) {
         id.as_mut_ptr() as u32,
         0,
     );
-    let model: extern "C" fn(f64, usize, usize) = core::mem::transmute(FUN_80169F80);
+    let model = crate::platform::guest_fn!(FUN_80169F80, fn(f64, usize, usize));
     model(
         read_f32(R2_5D0C_ONE) as f64,
         object + 0x544,
@@ -26895,7 +26883,7 @@ unsafe fn signed_to_double(value: i32, bias: usize) -> f64 {
 /// `addr` must point at a function with this EABI prototype.
 #[inline]
 unsafe fn call_f64_f64_u32_ret(addr: usize, a: f64, b: f64, c: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32) -> u32);
     f(a, b, c)
 }
 
@@ -28392,7 +28380,7 @@ const W89_FUN_8016A9B0: usize = 0x8016_A9B0;
 pub unsafe fn fn_80114ba0(object: usize) -> u32 {
     platform::call0(W89_FUN_80114C40);
     platform::call3(W89_FUN_80167B60, (object + 0x434) as u32, 0, 0);
-    let place: extern "C" fn(f64, u32, u32) = core::mem::transmute(W89_FUN_80169F80);
+    let place = crate::platform::guest_fn!(W89_FUN_80169F80, fn(f64, u32, u32));
     place(
         read_f32(W89_R2_5C50_ONE) as f64,
         (object + 0x3F0) as u32,
@@ -29597,7 +29585,7 @@ pub unsafe fn fn_80140670(object: usize) {
     let controller = platform::read_u32(object + 0x2A64) as usize;
     let vtable = platform::read_u32(controller) as usize;
     let slot = platform::read_u32(vtable + 0x5C) as usize;
-    let apply: extern "C" fn(f64, f64, f64, usize, u32) = core::mem::transmute(slot);
+    let apply = crate::platform::guest_fn!(slot, fn(f64, f64, f64, usize, u32));
     apply(
         read_f32(W90_DATA_803713C0) as f64,
         read_f32(W90_DATA_803713C4) as f64,
@@ -29702,7 +29690,7 @@ pub unsafe fn fn_80140af0(object: usize, mode: i32) -> u32 {
 pub unsafe fn fn_80140cd0(object: usize) {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let slot = platform::read_u32(vtable + 0x294) as usize;
-    let post: extern "C" fn(usize, u32, u32) = core::mem::transmute(slot);
+    let post = crate::platform::guest_fn!(slot, fn(usize, u32, u32));
     post(object, W90_DATA_80375E6C as u32, 0);
     platform::call3(FUN_8004E290, object as u32, W90_DATA_8035476C as u32, 0);
     platform::call1(W90_FUN_8004DE50, object as u32);
@@ -29736,7 +29724,7 @@ pub unsafe fn fn_80140db0(object: usize) {
     platform::call0(FUN_8004E100);
     let vtable = platform::read_u32(object + 0x60) as usize;
     let slot = platform::read_u32(vtable + 0x294) as usize;
-    let post: extern "C" fn(usize, u32, u32) = core::mem::transmute(slot);
+    let post = crate::platform::guest_fn!(slot, fn(usize, u32, u32));
     post(object, W90_DATA_803765B0 as u32, 1);
     platform::call3(FUN_8004E290, object as u32, W90_DATA_80354BEC as u32, 0);
 }
@@ -29855,7 +29843,7 @@ pub unsafe fn fn_80141140(object: usize) {
     platform::write_u8(object + 0x153E, 0x1E);
     let vtable = platform::read_u32(object + 0x60) as usize;
     let slot = platform::read_u32(vtable + 0xE8) as usize;
-    let select: extern "C" fn(usize, i32) -> u32 = core::mem::transmute(slot);
+    let select = crate::platform::guest_fn!(slot, fn(usize, i32) -> u32);
     let first = select(object, platform::read_u32(object + 0x14DC) as u8 as i8 as i32);
     let second = select(object, -1);
     if platform::call2(FUN_80056CF0, object as u32, 0x34) != 0 {
@@ -30018,7 +30006,7 @@ pub unsafe fn fn_80141580(object: usize, value: u32) {
     platform::write_u32(object + 0x14E0, value);
     let vtable = platform::read_u32(object + 0x60) as usize;
     let slot = platform::read_u32(vtable + 0xE4) as usize;
-    let f: extern "C" fn(usize, u32, u32) = core::mem::transmute(slot);
+    let f = crate::platform::guest_fn!(slot, fn(usize, u32, u32));
     f(object, value, 0);
 }
 
@@ -30048,7 +30036,7 @@ pub unsafe fn fn_80141580(object: usize, value: u32) {
 pub unsafe fn fn_80141640(object: usize, mode: i32) {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let slot = platform::read_u32(vtable + 0x434) as usize;
-    let post: extern "C" fn(usize, u32, u32) = core::mem::transmute(slot);
+    let post = crate::platform::guest_fn!(slot, fn(usize, u32, u32));
     let event = if mode == 1 {
         0x2D
     } else if mode == 2 {
@@ -30159,12 +30147,10 @@ pub unsafe fn fn_801416f0(second: usize, first: usize) -> u32 {
         let move_id = platform::read_u8(first + 0x2D) as u32;
         if move_id.wrapping_sub(0x13) < 3 {
             let object_vtable = platform::read_u32(object + 0x60) as usize;
-            let get_object_char: extern "C" fn(usize) -> usize =
-                core::mem::transmute(platform::read_u32(object_vtable + 0x6C) as usize);
+            let get_object_char = crate::platform::guest_fn!(platform::read_u32(object_vtable + 0x6C) as usize, fn(usize) -> usize);
             let object_char = platform::read_u8(get_object_char(object)) as i8;
             let partner_vtable = platform::read_u32(partner + 0x60) as usize;
-            let get_partner_char: extern "C" fn(usize) -> usize =
-                core::mem::transmute(platform::read_u32(partner_vtable + 0x6C) as usize);
+            let get_partner_char = crate::platform::guest_fn!(platform::read_u32(partner_vtable + 0x6C) as usize, fn(usize) -> usize);
             let partner_char = platform::read_u8(get_partner_char(partner)) as i8;
             if partner_char != object_char
                 && platform::call2(FUN_80056CF0, partner as u32, 0x2C) == 0
@@ -30173,8 +30159,7 @@ pub unsafe fn fn_801416f0(second: usize, first: usize) -> u32 {
                     platform::write_u16(partner + 0x2A84, 0x1E);
                     let current_vtable = platform::read_u32(partner + 0x60) as usize;
                     let slot = platform::read_u32(current_vtable + 0x3F4) as usize;
-                    let start: extern "C" fn(usize, u32, u32) -> u32 =
-                        core::mem::transmute(slot);
+                    let start = crate::platform::guest_fn!(slot, fn(usize, u32, u32) -> u32);
                     if start(partner, platform::read_u32(first + 4), 6) == 0 {
                         break 'done 0;
                     }
@@ -30195,12 +30180,10 @@ pub unsafe fn fn_801416f0(second: usize, first: usize) -> u32 {
         }
         if move_id.wrapping_sub(1) < 2 {
             let object_vtable = platform::read_u32(object + 0x60) as usize;
-            let get_object_char: extern "C" fn(usize) -> usize =
-                core::mem::transmute(platform::read_u32(object_vtable + 0x6C) as usize);
+            let get_object_char = crate::platform::guest_fn!(platform::read_u32(object_vtable + 0x6C) as usize, fn(usize) -> usize);
             let object_char = platform::read_u8(get_object_char(object)) as i8;
             let partner_vtable = platform::read_u32(partner + 0x60) as usize;
-            let get_partner_char: extern "C" fn(usize) -> usize =
-                core::mem::transmute(platform::read_u32(partner_vtable + 0x6C) as usize);
+            let get_partner_char = crate::platform::guest_fn!(platform::read_u32(partner_vtable + 0x6C) as usize, fn(usize) -> usize);
             let partner_char = platform::read_u8(get_partner_char(partner)) as i8;
             if partner_char != object_char
                 && platform::call2(FUN_80056CF0, partner as u32, 0x2C) == 0
@@ -30220,8 +30203,7 @@ pub unsafe fn fn_801416f0(second: usize, first: usize) -> u32 {
                 || platform::call2(FUN_80056CF0, partner as u32, 0x35) != 0;
             let level = if boosted { 5 } else { 3 };
             let vtable = platform::read_u32(partner + 0x60) as usize;
-            let start: extern "C" fn(usize, usize, u32) -> u32 =
-                core::mem::transmute(platform::read_u32(vtable + 0x3F4) as usize);
+            let start = crate::platform::guest_fn!(platform::read_u32(vtable + 0x3F4) as usize, fn(usize, usize, u32) -> u32);
             if start(partner, object, level) != 0 {
                 if platform::read_u8(first + 0x2D) == 7 {
                     platform::call1(W90_FUN_80048C40, object as u32);
@@ -30232,8 +30214,7 @@ pub unsafe fn fn_801416f0(second: usize, first: usize) -> u32 {
         }
         if move_id == 8 {
             let vtable = platform::read_u32(partner + 0x60) as usize;
-            let start: extern "C" fn(usize, u32, u32) -> u32 =
-                core::mem::transmute(platform::read_u32(vtable + 0x3F4) as usize);
+            let start = crate::platform::guest_fn!(platform::read_u32(vtable + 0x3F4) as usize, fn(usize, u32, u32) -> u32);
             start(partner, platform::read_u32(first + 4), 5);
             break 'done 1;
         }
@@ -30274,18 +30255,13 @@ pub unsafe fn fn_801416f0(second: usize, first: usize) -> u32 {
 pub unsafe fn fn_80141bf0(second: usize, first: usize) -> u32 {
     let object = platform::read_u32(first + 4) as usize;
     let partner = platform::read_u32(second + 4) as usize;
-    let submit: extern "C" fn(f64, u32, u32, u32, u32) =
-        core::mem::transmute(W90_FUN_80053940);
+    let submit = crate::platform::guest_fn!(W90_FUN_80053940, fn(f64, u32, u32, u32, u32));
     if platform::call1(FUN_8004DD00, object as u32) == 0 {
         let partner_vtable = platform::read_u32(partner + 0x60) as usize;
-        let partner_slot: extern "C" fn(usize, u32) -> u32 = core::mem::transmute(
-            platform::read_u32(partner_vtable + 0xE8) as usize,
-        );
+        let partner_slot = crate::platform::guest_fn!(platform::read_u32(partner_vtable + 0xE8) as usize, fn(usize, u32) -> u32);
         let partner_side = partner_slot(partner, (-1i32) as u32);
         let object_vtable = platform::read_u32(object + 0x60) as usize;
-        let object_slot: extern "C" fn(usize, u32) -> u32 = core::mem::transmute(
-            platform::read_u32(object_vtable + 0xE8) as usize,
-        );
+        let object_slot = crate::platform::guest_fn!(platform::read_u32(object_vtable + 0xE8) as usize, fn(usize, u32) -> u32);
         let object_side = object_slot(object, (-1i32) as u32);
         let height = read_f32(
             W90_TBL_802F510C
@@ -30581,8 +30557,7 @@ pub unsafe fn fn_80142f20(
             platform::write_u32(bounds + 0xC, limit as u32);
         }
         let player_vtable = platform::read_u32(player + 0x60) as usize;
-        let player_slot: extern "C" fn(usize, u32) -> u32 =
-            core::mem::transmute(platform::read_u32(player_vtable + 0xE8) as usize);
+        let player_slot = crate::platform::guest_fn!(platform::read_u32(player_vtable + 0xE8) as usize, fn(usize, u32) -> u32);
         let side = player_slot(player, (-1i32) as u32);
         let mut x = platform::read_u32(entry + 0x1C) as i32
             + platform::read_u32(W90_TBL_802F4FE8 + (side & 0xFF) as usize * 4) as i32;
@@ -30655,8 +30630,7 @@ pub unsafe fn fn_801432f0(object: usize, second: u32, layout: usize) {
     let partner = platform::call1(FUN_8012DBE0, object as u32) as usize;
     if partner != 0 {
         let vtable = platform::read_u32(partner + 0x60) as usize;
-        let get_char: extern "C" fn() -> usize =
-            core::mem::transmute(platform::read_u32(vtable + 0x6C) as usize);
+        let get_char = crate::platform::guest_fn!(platform::read_u32(vtable + 0x6C) as usize, fn() -> usize);
         let face = platform::read_u8(get_char()) as u8;
         platform::write_u8(object + 0x285, face);
         if platform::call2(FUN_80056CF0, object as u32, 10) == 0
@@ -30953,8 +30927,7 @@ pub unsafe fn fn_801436f0(object: usize) {
     let receiver = object + 0x2A94;
     let vtable = platform::read_u32(receiver) as usize;
     let slot = platform::read_u32(vtable + 0xB0) as usize;
-    let update: extern "C" fn(usize, usize, u32, usize) -> u32 =
-        core::mem::transmute(slot);
+    let update = crate::platform::guest_fn!(slot, fn(usize, usize, u32, usize) -> u32);
     if update(
         receiver,
         frame.as_mut_ptr() as usize,
@@ -30996,11 +30969,9 @@ pub unsafe fn fn_801461d0(object: usize, arg2: u32, arg3: u32) -> u32 {
         && platform::read_u32(object + PLAYER_INDEX) == platform::read_u32(object + 0x14E0)
     {
         let vtable = platform::read_u32(object + 0x60) as usize;
-        let test: extern "C" fn(usize) -> u32 =
-            core::mem::transmute(platform::read_u32(vtable + 0x120) as usize);
+        let test = crate::platform::guest_fn!(platform::read_u32(vtable + 0x120) as usize, fn(usize) -> u32);
         if test(object) == 0 {
-            let perform: extern "C" fn(usize, u32, u32) -> u32 =
-                core::mem::transmute(platform::read_u32(vtable + 0x450) as usize);
+            let perform = crate::platform::guest_fn!(platform::read_u32(vtable + 0x450) as usize, fn(usize, u32, u32) -> u32);
             if perform(object, arg2, arg3) != 0 {
                 platform::call5(
                     FUN_800D8BB0,
@@ -31066,7 +31037,7 @@ pub unsafe fn fn_801465d0(object: usize) {
     } else {
         read_f32(R2_584C_16)
     };
-    let interpolate: extern "C" fn(f64, f64, u32) = core::mem::transmute(FUN_8015F480);
+    let interpolate = crate::platform::guest_fn!(FUN_8015F480, fn(f64, f64, u32));
     interpolate(
         base as f64,
         read_f32(R2_5920_0_1) as f64,
@@ -31204,8 +31175,7 @@ unsafe fn w91_vcall_f64_u32_u32(
     b: u32,
 ) -> u32 {
     let vtable = platform::read_u32(object) as usize;
-    let call: extern "C" fn(f64, u32, u32) -> u32 =
-        core::mem::transmute(platform::read_u32(vtable + slot) as usize);
+    let call = crate::platform::guest_fn!(platform::read_u32(vtable + slot) as usize, fn(f64, u32, u32) -> u32);
     call(value, a, b)
 }
 
@@ -31224,8 +31194,7 @@ unsafe fn w91_vcall_f64x3_u32_u32(
     e: u32,
 ) {
     let vtable = platform::read_u32(object) as usize;
-    let call: extern "C" fn(f64, f64, f64, u32, u32) =
-        core::mem::transmute(platform::read_u32(vtable + slot) as usize);
+    let call = crate::platform::guest_fn!(platform::read_u32(vtable + slot) as usize, fn(f64, f64, f64, u32, u32));
     call(a, b, c, d, e);
 }
 
@@ -34258,7 +34227,7 @@ unsafe fn vcall60_f64_f64_u32_u32_u32(
 ) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(f64, f64, usize, u32, u32, u32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(f64, f64, usize, u32, u32, u32) -> u32);
     f(a, b, object, c, d, e)
 }
 
@@ -34275,7 +34244,7 @@ unsafe fn vcall60_f64_f64_u32_u32_u32(
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_u32_ptr_u32_f64(addr: usize, a: u32, values: *const u32, index: u32) -> f64 {
-    let f: extern "C" fn(u32, *const u32, u32) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, *const u32, u32) -> f64);
     f(a, values, index)
 }
 
@@ -36985,7 +36954,7 @@ pub unsafe fn fn_8011b770(object: usize) -> u32 {
     }
     platform::write_u32(object + 0xF8, platform::read_u32(W94_R2_5B64_NEG6));
     platform::call3(W89_FUN_80167B60, (object + 0x434) as u32, 0, 0);
-    let place: extern "C" fn(f64, u32, u32) = core::mem::transmute(W89_FUN_80169F80);
+    let place = crate::platform::guest_fn!(W89_FUN_80169F80, fn(f64, u32, u32));
     place(
         read_f32(R2_5B68_ONE) as f64,
         (object + 0x3F0) as u32,
@@ -37240,7 +37209,7 @@ pub unsafe fn fn_8011be70(object: usize) {
 /// `addr` must have the matching EABI prototype.
 #[inline]
 unsafe fn call_f64_f64_u32_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32, e: u32) {
-    let f: extern "C" fn(f64, f64, u32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32));
     f(a, b, c, d, e)
 }
 
@@ -37271,8 +37240,7 @@ unsafe fn call_f64_f64_u32_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32, 
 /// medium - the two name gates and the arithmetic are literal; `0x8011CA90` is
 /// a GQR-reconstruction record skipped in wave 89, called here by address.
 pub unsafe fn fn_8011c190(object: usize) {
-    let probe: extern "C" fn(usize, *mut f32) -> u32 =
-        core::mem::transmute(W94_FUN_8011CA90);
+    let probe = crate::platform::guest_fn!(W94_FUN_8011CA90, fn(usize, *mut f32) -> u32);
     let component = vcall0(object + 0x394, 0x28) as usize;
     if vcall1(component, 0x14, DATA_803758F8 as u32) != 0 {
         let mut value = read_f32(W89_R2_5B54_ZERO);
@@ -37448,9 +37416,7 @@ pub unsafe fn fn_8011d050(object: usize) {
 pub unsafe fn fn_8011d100(owner: u32, low: u32, event: usize) {
     let player = platform::call1(FUN_80162590, owner) as usize;
     let vtable = platform::read_u32(event + 0x60) as usize;
-    let get_name: extern "C" fn(usize) -> usize = core::mem::transmute(
-        platform::read_u32(vtable + 0x6C) as usize,
-    );
+    let get_name = crate::platform::guest_fn!(platform::read_u32(vtable + 0x6C) as usize, fn(usize) -> usize);
     let name = platform::read_u8(get_name(event)) as i8;
     let mut slot = -1i32;
     if (name as i32 as u32) < 4 {
@@ -37512,9 +37478,7 @@ pub unsafe fn fn_8011d100(owner: u32, low: u32, event: usize) {
 pub unsafe fn fn_8011d1e0(owner: u32, low: u32, event: usize) {
     let player = platform::call1(FUN_80162590, owner) as usize;
     let vtable = platform::read_u32(event + 0x60) as usize;
-    let get_name: extern "C" fn(usize) -> usize = core::mem::transmute(
-        platform::read_u32(vtable + 0x6C) as usize,
-    );
+    let get_name = crate::platform::guest_fn!(platform::read_u32(vtable + 0x6C) as usize, fn(usize) -> usize);
     let name = platform::read_u8(get_name(event)) as i8;
     let mut slot = -1i32;
     if (name as i32 as u32) < 4 {
@@ -37577,9 +37541,7 @@ pub unsafe fn fn_8011d2b0(owner: u32, low: u32, event: usize) {
     }
     let bank = platform::read_u32(SDA_5630_SOUND_BANK);
     let vtable = platform::read_u32(event + 0x60) as usize;
-    let get_name: extern "C" fn(usize) -> usize = core::mem::transmute(
-        platform::read_u32(vtable + 0x6C) as usize,
-    );
+    let get_name = crate::platform::guest_fn!(platform::read_u32(vtable + 0x6C) as usize, fn(usize) -> usize);
     let name = platform::read_u8(get_name(event)) as i8;
     call_f64_f64_u32_u32_u32_u32(
         FUN_800E20A0,
@@ -37592,9 +37554,7 @@ pub unsafe fn fn_8011d2b0(owner: u32, low: u32, event: usize) {
     );
     fn_8011eb00(owner as usize, low as u8, 0xFFFF_FFFF);
     let vtable = platform::read_u32(event + 0x60) as usize;
-    let get_name: extern "C" fn(usize) -> usize = core::mem::transmute(
-        platform::read_u32(vtable + 0x6C) as usize,
-    );
+    let get_name = crate::platform::guest_fn!(platform::read_u32(vtable + 0x6C) as usize, fn(usize) -> usize);
     platform::write_u8(player + 0x38D, platform::read_u8(get_name(event)));
 }
 
@@ -37635,9 +37595,7 @@ pub unsafe fn fn_8011d380(owner: u32, low: u32, event: usize) {
     }
     let bank = platform::read_u32(SDA_5630_SOUND_BANK);
     let vtable = platform::read_u32(event + 0x60) as usize;
-    let get_name: extern "C" fn(usize) -> usize = core::mem::transmute(
-        platform::read_u32(vtable + 0x6C) as usize,
-    );
+    let get_name = crate::platform::guest_fn!(platform::read_u32(vtable + 0x6C) as usize, fn(usize) -> usize);
     let name = platform::read_u8(get_name(event)) as i8;
     call_f64_f64_u32_u32_u32_u32(
         FUN_800E20A0,
@@ -37650,9 +37608,7 @@ pub unsafe fn fn_8011d380(owner: u32, low: u32, event: usize) {
     );
     fn_8011eb00(owner as usize, low as u8, 0xFFFF_FFFF);
     let vtable = platform::read_u32(event + 0x60) as usize;
-    let get_name: extern "C" fn(usize) -> usize = core::mem::transmute(
-        platform::read_u32(vtable + 0x6C) as usize,
-    );
+    let get_name = crate::platform::guest_fn!(platform::read_u32(vtable + 0x6C) as usize, fn(usize) -> usize);
     platform::write_u8(player + 0x38D, platform::read_u8(get_name(event)));
 }
 
@@ -41091,8 +41047,7 @@ unsafe fn call8(
     g: u32,
     h: u32,
 ) {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32));
     func(a, b, c, d, e, f, g, h);
 }
 
@@ -42458,7 +42413,7 @@ const W98_FUN_800A7690: usize = 0x800A_7690;
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn w98_call_f64_f64_u32(addr: usize, a: f64, b: f64) -> u32 {
-    let f: extern "C" fn(f64, f64) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> u32);
     f(a, b)
 }
 
@@ -42471,7 +42426,7 @@ unsafe fn w98_call_f64_f64_u32(addr: usize, a: f64, b: f64) -> u32 {
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn w98_call_f64_f64_i16(addr: usize, a: f64, b: f64) -> i16 {
-    let f: extern "C" fn(f64, f64) -> i16 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> i16);
     f(a, b)
 }
 
@@ -42481,7 +42436,7 @@ unsafe fn w98_call_f64_f64_i16(addr: usize, a: f64, b: f64) -> i16 {
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn w98_call_f64_f64_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32) -> u32);
     f(a, b, c, d)
 }
 
@@ -42496,7 +42451,7 @@ unsafe fn w98_call_f64_f64_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32) 
 unsafe fn w98_vcall_f64x3(object: usize, slot: usize, a: f64, b: f64, c: f64) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64, f64, f64) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64, f64, f64) -> u32);
     f(object, a, b, c)
 }
 
@@ -42517,7 +42472,7 @@ unsafe fn w98_s32_to_f64(value: u32) -> f64 {
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn w98_call_f64x2_u32x3(addr: usize, a: f64, b: f64, c: u32, d: u32, e: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32) -> u32);
     f(a, b, c, d, e)
 }
 
@@ -44470,7 +44425,7 @@ const W100_FUN_8011E420: usize = 0x8011_E420;
 /// # Safety
 /// `0x800B2F00` must leave a readable `f64` in `f1`.
 unsafe fn w100_float_probe() -> f64 {
-    let f: extern "C" fn() -> f64 = core::mem::transmute(0x800B_2F00usize);
+    let f = crate::platform::guest_fn!(0x800B_2F00usize, fn() -> f64);
     f()
 }
 
@@ -44495,7 +44450,7 @@ unsafe fn w100_read_position(out: *mut u32, actor: usize) {
 /// # Safety
 /// `addr` must take its only argument in `f1`.
 unsafe fn w100_call_f64(addr: usize, a: f64) -> u32 {
-    let f: extern "C" fn(f64) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> u32);
     f(a)
 }
 
@@ -45582,7 +45537,7 @@ pub unsafe fn fn_80114050(this: usize) {
             (this + 0xAC) as u32,
         );
         let delta = {
-            let f: extern "C" fn() -> f64 = core::mem::transmute(W100_FUN_802BE470);
+            let f = crate::platform::guest_fn!(W100_FUN_802BE470, fn() -> f64);
             f()
         };
         if delta < read_f32(R2_5C64_0_02) as f64 {
@@ -46175,8 +46130,7 @@ pub unsafe fn fn_80118dc0(this: usize) {
                                 }
                             } else {
                                 let end = {
-                                    let f: extern "C" fn(usize, u32) -> f64 =
-                                        core::mem::transmute(W100_FUN_80167B80);
+                                    let f = crate::platform::guest_fn!(W100_FUN_80167B80, fn(usize, u32) -> f64);
                                     f(clip, 0)
                                 };
                                 let next = time + speed;
@@ -46184,8 +46138,7 @@ pub unsafe fn fn_80118dc0(this: usize) {
                                     time = next;
                                 } else {
                                     let end = {
-                                        let f: extern "C" fn(usize, u32) -> f64 =
-                                            core::mem::transmute(W100_FUN_80167B80);
+                                        let f = crate::platform::guest_fn!(W100_FUN_80167B80, fn(usize, u32) -> f64);
                                         f(clip, 0)
                                     };
                                     time = end as f32;
@@ -46318,20 +46271,7 @@ pub unsafe fn fn_8011c310(this: usize) {
     let depth = (half * read_f32(this + 0x5B4)) as f64;
     let width = (half * read_f32(this + 0x5B8)) as f64;
     {
-        let f: extern "C" fn(
-            f64,
-            f64,
-            f64,
-            f64,
-            u32,
-            u32,
-            u32,
-            u32,
-            u32,
-            u32,
-            u32,
-            u32,
-        ) -> u32 = core::mem::transmute(W100_FUN_8007FA40);
+        let f = crate::platform::guest_fn!(W100_FUN_8007FA40, fn(f64, f64, f64, f64, u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
         f(
             guard,
             guard,
@@ -48126,8 +48066,7 @@ const W102_R2_7834: usize = SDA2_BASE - 0x7834;
 /// `target`.
 #[inline]
 unsafe fn w102_ease(target: f64, rate: f64, limit: f64, deadband: f64, value: usize) -> f64 {
-    let f: extern "C" fn(f64, f64, f64, f64, *mut f32) -> f64 =
-        core::mem::transmute(W102_FUN_8015F140);
+    let f = crate::platform::guest_fn!(W102_FUN_8015F140, fn(f64, f64, f64, f64, *mut f32) -> f64);
     f(target, rate, limit, deadband, value as *mut f32)
 }
 
@@ -48138,7 +48077,7 @@ unsafe fn w102_ease(target: f64, rate: f64, limit: f64, deadband: f64, value: us
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn w102_call_f64_f64_i16(addr: usize, a: f64, b: f64) -> i16 {
-    let f: extern "C" fn(f64, f64) -> i16 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> i16);
     f(a, b)
 }
 
@@ -48149,7 +48088,7 @@ unsafe fn w102_call_f64_f64_i16(addr: usize, a: f64, b: f64) -> i16 {
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn w102_call_f64_f64_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32) -> u32);
     f(a, b, c, d)
 }
 
@@ -48162,7 +48101,7 @@ unsafe fn w102_call_f64_f64_u32_u32(addr: usize, a: f64, b: f64, c: u32, d: u32)
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn w102_call_f64_0(addr: usize) -> f64 {
-    let f: extern "C" fn() -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> f64);
     f()
 }
 
@@ -48178,7 +48117,7 @@ unsafe fn w102_call_f64_0(addr: usize) -> f64 {
 unsafe fn vcall60_f64_u32(object: usize, slot: usize, a: f64, b: u32) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64, u32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64, u32) -> u32);
     f(object, a, b)
 }
 
@@ -48195,8 +48134,7 @@ unsafe fn w102_vcall60_stage(
 ) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let call: extern "C" fn(usize, f64, f64, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(entry);
+    let call = crate::platform::guest_fn!(entry, fn(usize, f64, f64, u32, u32, u32, u32) -> u32);
     call(object, a, b, c, d, e, f)
 }
 
@@ -51025,7 +50963,7 @@ const W103_R2_5E4C: usize = SDA2_BASE - 0x5E4C;
 /// `addr` must have the matching EABI prototype.
 #[inline]
 unsafe fn w103_call_f64_f64_f64(addr: usize, a: f64, b: f64) -> f64 {
-    let f: extern "C" fn(f64, f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> f64);
     f(a, b)
 }
 
@@ -51035,7 +50973,7 @@ unsafe fn w103_call_f64_f64_f64(addr: usize, a: f64, b: f64) -> f64 {
 /// `addr` must have the matching EABI prototype.
 #[inline]
 unsafe fn w103_call_f64x3_u32(addr: usize, a: f64, b: f64, c: f64, d: u32) {
-    let f: extern "C" fn(f64, f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32));
     f(a, b, c, d)
 }
 
@@ -51045,7 +50983,7 @@ unsafe fn w103_call_f64x3_u32(addr: usize, a: f64, b: f64, c: f64, d: u32) {
 /// `addr` must have the matching EABI prototype.
 #[inline]
 unsafe fn w103_call_f64x4_u32_u32(addr: usize, a: f64, b: f64, c: f64, d: f64, e: u32, f: u32) {
-    let g: extern "C" fn(f64, f64, f64, f64, u32, u32) = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, u32, u32));
     g(a, b, c, d, e, f)
 }
 
@@ -51063,7 +51001,7 @@ unsafe fn w103_call_f64x6(
     e: f64,
     f: f64,
 ) {
-    let g: extern "C" fn(f64, f64, f64, f64, f64, f64) = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, f64, f64));
     g(a, b, c, d, e, f)
 }
 
@@ -51082,7 +51020,7 @@ unsafe fn w103_call_f64x6_u32(
     f: f64,
     g: u32,
 ) {
-    let h: extern "C" fn(f64, f64, f64, f64, f64, f64, u32) = core::mem::transmute(addr);
+    let h = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, f64, f64, u32));
     h(a, b, c, d, e, f, g)
 }
 
@@ -51103,8 +51041,7 @@ unsafe fn w103_call_f64x3_u32x6(
     h: u32,
     i: u32,
 ) {
-    let call: extern "C" fn(f64, f64, f64, u32, u32, u32, u32, u32, u32) =
-        core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32, u32, u32, u32, u32, u32));
     call(a, b, c, d, e, f, g, h, i)
 }
 
@@ -51124,7 +51061,7 @@ unsafe fn w103_call_u32x8(
     g: u32,
     h: u32,
 ) {
-    let call: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32));
     call(a, b, c, d, e, f, g, h)
 }
 
@@ -52718,7 +52655,7 @@ unsafe fn w104_call_f64x4_u32_ret(
     d: f64,
     e: u32,
 ) -> u32 {
-    let f: extern "C" fn(f64, f64, f64, f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, u32) -> u32);
     f(a, b, c, d, e)
 }
 
@@ -52741,8 +52678,7 @@ unsafe fn w104_call_u32x8_f64x3(
     j: f64,
     k: f64,
 ) {
-    let call: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32, f64, f64, f64) =
-        core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32, f64, f64, f64));
     call(a, b, c, d, e, f, g, h, i, j, k);
 }
 
@@ -52752,7 +52688,7 @@ unsafe fn w104_call_u32x8_f64x3(
 /// `addr` must have the matching EABI prototype.
 #[inline]
 unsafe fn w104_call_f64_ret(addr: usize, a: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(a)
 }
 
@@ -52850,7 +52786,7 @@ unsafe fn w104_record_test(object: usize) -> u32 {
 /// `target` must point at a writable float.
 #[inline]
 unsafe fn w104_ease(value: f64, speed: f64, target: usize) -> u32 {
-    let f: extern "C" fn(f64, f64, u32) -> u32 = core::mem::transmute(FUN_8015F480);
+    let f = crate::platform::guest_fn!(FUN_8015F480, fn(f64, f64, u32) -> u32);
     f(value, speed, target as u32)
 }
 
@@ -53215,8 +53151,7 @@ pub unsafe fn fn_80131f20(object: usize) {
 pub unsafe fn fn_80132340(object: usize) {
     let ride = platform::read_u32(object + 0x2A64) as usize;
     let vtable = platform::read_u32(ride) as usize;
-    let bind: extern "C" fn(usize, usize, u32) =
-        core::mem::transmute(platform::read_u32(vtable + 0x50) as usize);
+    let bind = crate::platform::guest_fn!(platform::read_u32(vtable + 0x50) as usize, fn(usize, usize, u32));
     let mut matrix = [0u32; 13];
     let mut first = [0f32; 3];
     let mut second = [0f32; 3];
@@ -53521,7 +53456,7 @@ pub unsafe fn fn_80133e10(object: usize) {
     let slot = platform::read_u32(platform::read_u32(controller) as usize + 0x5C) as usize;
     // inferred: the printed operand list carries no receiver, so the controller
     // is forwarded in `r3`.
-    let apply: extern "C" fn(usize, f64, f64, f64) = core::mem::transmute(slot);
+    let apply = crate::platform::guest_fn!(slot, fn(usize, f64, f64, f64));
     apply(
         controller,
         read_f32(base) as f64,
@@ -53745,7 +53680,7 @@ pub unsafe fn fn_801359c0(object: usize) {
             if platform::call1(FUN_80169020, (model + 0x28) as u32) != 0 {
                 // inferred: the receiver sits in `r3` and is not printed.
                 let slot = platform::read_u32(platform::read_u32(model) as usize + 0x5C) as usize;
-                let apply: extern "C" fn(f64, f64, f64, usize, u32) = core::mem::transmute(slot);
+                let apply = crate::platform::guest_fn!(slot, fn(f64, f64, f64, usize, u32));
                 apply(
                     read_f32(G_803710CC) as f64,
                     read_f32(G_803710D0) as f64,
@@ -53756,7 +53691,7 @@ pub unsafe fn fn_801359c0(object: usize) {
             }
         } else if variant != 0x40 {
             let slot = platform::read_u32(platform::read_u32(model) as usize + 0x5C) as usize;
-            let apply: extern "C" fn(f64, f64, usize, u32) = core::mem::transmute(slot);
+            let apply = crate::platform::guest_fn!(slot, fn(f64, f64, usize, u32));
             apply(
                 read_f32(G_803710CC) as f64,
                 read_f32(G_803710D0) as f64,
@@ -53776,7 +53711,7 @@ pub unsafe fn fn_801359c0(object: usize) {
         let facing = platform::read_u8(object + 0x348) as usize;
         if platform::read_i32(model + 0x154) != platform::read_i32(W104_R2_5770 + facing * 4) {
             let slot = platform::read_u32(platform::read_u32(model) as usize + 0x5C) as usize;
-            let apply: extern "C" fn(usize, f64, f64, f64) = core::mem::transmute(slot);
+            let apply = crate::platform::guest_fn!(slot, fn(usize, f64, f64, f64));
             apply(
                 model,
                 turn,
@@ -53785,7 +53720,7 @@ pub unsafe fn fn_801359c0(object: usize) {
             );
         }
         let slot = platform::read_u32(model + 0x8C) as usize;
-        let apply: extern "C" fn(usize, f64) = core::mem::transmute(slot);
+        let apply = crate::platform::guest_fn!(slot, fn(usize, f64));
         apply(model, turn);
         if call_f64_u32(
             FUN_801690E0,
@@ -54104,7 +54039,7 @@ pub unsafe fn fn_801396c0(height: f64, speed: f64, object: u32) -> u32 {
     {
         let vtable = platform::read_u32(object + 0x60) as usize;
         let entry = platform::read_u32(vtable + 0xF8) as usize;
-        let height_of: extern "C" fn(usize) -> f64 = core::mem::transmute(entry);
+        let height_of = crate::platform::guest_fn!(entry, fn(usize) -> f64);
         let drop = height_of(object);
         surface -= (read_f32(W98_R2_58FC_ONE) as f64 + drop) as f32;
         if surface < read_f32(object + 0xB0) {
@@ -54195,8 +54130,7 @@ pub unsafe fn fn_8013a880(value: f64, object: usize) {
 pub unsafe fn fn_8013bb90(object: usize, variant: u32) {
     let ride = platform::read_u32(object + 0x2A64) as usize;
     let vtable = platform::read_u32(ride) as usize;
-    let bind: extern "C" fn(usize, usize, u32) =
-        core::mem::transmute(platform::read_u32(vtable + 0x50) as usize);
+    let bind = crate::platform::guest_fn!(platform::read_u32(vtable + 0x50) as usize, fn(usize, usize, u32));
     let mut matrix = [0u8; 0x30];
     let mut tilt = [0u8; 0x30];
     let mut first = [0f32; 3];
@@ -54550,8 +54484,7 @@ unsafe fn w106_call_f64x6_u32_u32_u32(
     h: u32,
     i: u32,
 ) {
-    let call: extern "C" fn(f64, f64, f64, f64, f64, f64, u32, u32, u32) =
-        core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, f64, f64, u32, u32, u32));
     call(a, b, c, d, e, f, g, h, i)
 }
 
@@ -54567,7 +54500,7 @@ unsafe fn w106_call_f64_f64_u32_u32_u32_ret(
     d: u32,
     e: u32,
 ) -> u32 {
-    let call: extern "C" fn(f64, f64, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32) -> u32);
     call(a, b, c, d, e)
 }
 
@@ -54576,7 +54509,7 @@ unsafe fn w106_call_f64_f64_u32_u32_u32_ret(
 /// # Safety
 /// `addr` must point at a function with this EABI prototype.
 unsafe fn w106_call_f64_u32_u32(addr: usize, a: f64, b: u32, c: u32) {
-    let call: extern "C" fn(f64, u32, u32) = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, u32, u32));
     call(a, b, c)
 }
 
@@ -54771,7 +54704,7 @@ pub unsafe fn fn_80111850(this: usize) {
         W106_STR_G3D_BALLOON as u32,
     );
     platform::write_u32(this + 0x540, archive);
-    let place: extern "C" fn(f64, usize, usize) = core::mem::transmute(FUN_80169F80);
+    let place = crate::platform::guest_fn!(FUN_80169F80, fn(f64, usize, usize));
     let commit = read_f32(R2_5D10_ZERO) as f64;
     // --- `balloon` / `float` into `+0x544` / `+0x5C4` / `+0x634` -------------
     let model = platform::call2(
@@ -56825,8 +56758,7 @@ pub unsafe fn fn_801468d0(
     }
     let vtable = platform::read_u32(actor + 0x60) as usize;
     let entry = platform::read_u32(vtable + 0x400) as usize;
-    let forward: extern "C" fn(usize, u32, u32, u32, f64, f64) -> u32 =
-        core::mem::transmute(entry);
+    let forward = crate::platform::guest_fn!(entry, fn(usize, u32, u32, u32, f64, f64) -> u32);
     forward(actor, a, b, c, f1, f2)
 }
 
@@ -56850,7 +56782,7 @@ const W107_TBL_80325260: usize = 0x8032_5260;
 unsafe fn w107_vcall_f64(object: usize, slot: usize, a: f64) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(f64) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(f64) -> u32);
     f(a)
 }
 
@@ -56861,7 +56793,7 @@ unsafe fn w107_vcall_f64(object: usize, slot: usize, a: f64) -> u32 {
 unsafe fn w107_vcall_noargs(object: usize, slot: usize) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn() -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn() -> u32);
     f()
 }
 
@@ -56880,7 +56812,7 @@ unsafe fn w107_vcall_f64x3_ptr_u32(
 ) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(f64, f64, f64, u32, u32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(f64, f64, f64, u32, u32) -> u32);
     f(a, b, c, receiver, id)
 }
 
@@ -57575,9 +57507,7 @@ const W107_TBL_80371628: usize = 0x8037_1628;
 /// interpolation helper.
 pub unsafe fn fn_80145650(this: usize) {
     let controller = platform::read_u32(this + 0x2A64) as usize;
-    let setter: extern "C" fn(usize, u32) = core::mem::transmute(
-        platform::read_u32(platform::read_u32(controller) as usize + 0x38) as usize,
-    );
+    let setter = crate::platform::guest_fn!(platform::read_u32(platform::read_u32(controller) as usize + 0x38) as usize, fn(usize, u32));
     setter(controller, platform::read_u32(this + 0x154C));
 
     let flags = platform::read_u32(controller + 0x17C);
@@ -57830,13 +57760,9 @@ pub unsafe fn fn_80142660(this: usize, immediate: u32) {
         first[0] |= 0xD0_0000;
     } else {
         let node_owner = platform::read_u32(this + 0x1464) as usize;
-        let get: extern "C" fn(usize) -> usize = core::mem::transmute(
-            platform::read_u32(platform::read_u32(node_owner) as usize + 0x28) as usize,
-        );
+        let get = crate::platform::guest_fn!(platform::read_u32(platform::read_u32(node_owner) as usize + 0x28) as usize, fn(usize) -> usize);
         let node = get(node_owner + 0x1464);
-        let test: extern "C" fn(usize, u32) -> u32 = core::mem::transmute(
-            platform::read_u32(platform::read_u32(node) as usize + 0x10) as usize,
-        );
+        let test = crate::platform::guest_fn!(platform::read_u32(platform::read_u32(node) as usize + 0x10) as usize, fn(usize, u32) -> u32);
         if test(node, W107_STR_80375E2C as u32) == 0 {
             if platform::call2(FUN_80056CF0, this as u32, 0x52) != 0 {
                 second[0] |= 0x400_0000;
@@ -57845,9 +57771,7 @@ pub unsafe fn fn_80142660(this: usize, immediate: u32) {
                 third[1] = platform::read_u32(record + 0x24);
                 third[2] = platform::read_u32(record + 0x28);
                 third[3] = platform::read_u32(record + 0x2C);
-                let height: extern "C" fn(usize) -> f64 = core::mem::transmute(
-                    platform::read_u32(platform::read_u32(this + 0x60) as usize + 0xF8) as usize,
-                );
+                let height = crate::platform::guest_fn!(platform::read_u32(platform::read_u32(this + 0x60) as usize + 0xF8) as usize, fn(usize) -> f64);
                 let reach = height(this);
                 let mut probe = [0f32; 3];
                 probe[2] = read_f32(this + 0xB4);
@@ -59605,10 +59529,8 @@ pub unsafe fn fn_80107170(rect: usize, text: usize, format: u32, gpr: [u32; 5], 
         descriptor.as_mut_ptr() as u32,
     );
 
-    let measure_width: extern "C" fn(usize, u32) -> f64 =
-        core::mem::transmute(W111_FUN_8022DFB0);
-    let measure_height: extern "C" fn(usize, u32) -> f64 =
-        core::mem::transmute(W111_FUN_8022E1C0);
+    let measure_width = crate::platform::guest_fn!(W111_FUN_8022DFB0, fn(usize, u32) -> f64);
+    let measure_height = crate::platform::guest_fn!(W111_FUN_8022E1C0, fn(usize, u32) -> f64);
     let width = measure_width(text + 0x1C, buffer.as_mut_ptr() as u32);
     let height = measure_height(text + 0x1C, buffer.as_mut_ptr() as u32);
 
@@ -59976,7 +59898,7 @@ const W113_R2_5810_NEG: usize = SDA2_BASE - 0x5810;
 unsafe fn w113_vcall60_f64_f64(object: usize, slot: usize, a: f64, b: f64) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f64, f64) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f64, f64) -> u32);
     f(object, a, b)
 }
 
@@ -61057,7 +60979,7 @@ const W116_R2_5928_ZERO: usize = SDA2_BASE - 0x5928;
 unsafe fn w116_vcall60_f32_f32(object: usize, slot: usize, a: f32, b: f32) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f32, f32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f32, f32) -> u32);
     f(object, a, b)
 }
 
@@ -63624,7 +63546,7 @@ unsafe fn a233_call_f32_f32_u32_u32_u32(
     d: u32,
     e: u32,
 ) -> u32 {
-    let f: extern "C" fn(f32, f32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, f32, u32, u32, u32) -> u32);
     f(a, b, c, d, e)
 }
 
@@ -67378,7 +67300,7 @@ unsafe fn e236_vcall60_f32_u32_u32(
 ) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, u32, u32, f32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, u32, u32, f32) -> u32);
     f(object, a, b, scale)
 }
 
@@ -67395,7 +67317,7 @@ unsafe fn e236_vcall60_f32_u32_u32(
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn e236_call_f32_u32_u32(addr: usize, object: usize, a: u32, b: u32, scale: f32) -> u32 {
-    let f: extern "C" fn(usize, u32, u32, f32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(usize, u32, u32, f32) -> u32);
     f(object, a, b, scale)
 }
 
@@ -69346,7 +69268,7 @@ const C237_GLOBAL_80429E00: usize = SDA_BASE - 0x5880;
 unsafe fn c237_emit_effect(object: usize, id: u32, a: f32, b: f32, c: f32) {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + 0x5C) as usize;
-    let f: extern "C" fn(usize, u32, f32, f32, f32) = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, u32, f32, f32, f32));
     f(object, id, a, b, c);
 }
 
@@ -69366,7 +69288,7 @@ unsafe fn c237_emit_effect(object: usize, id: u32, a: f32, b: f32, c: f32) {
 unsafe fn c237_vcall60_f32(object: usize, slot: usize, value: f32) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f32) -> u32);
     f(object, value)
 }
 
@@ -69385,7 +69307,7 @@ unsafe fn c237_vcall60_f32(object: usize, slot: usize, value: f32) -> u32 {
 /// high - the three arguments are the ones every caller sets.
 #[inline]
 unsafe fn c237_move(value: usize, target: f32, step: f32) -> u32 {
-    let f: extern "C" fn(u32, f32, f32) -> u32 = core::mem::transmute(0x8015_F470usize);
+    let f = crate::platform::guest_fn!(0x8015_F470usize, fn(u32, f32, f32) -> u32);
     f(value as u32, target, step)
 }
 
@@ -71979,7 +71901,7 @@ unsafe fn d240_vcall_u32_f32x3(
 ) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, u32, f64, f64, f64) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, u32, f64, f64, f64) -> u32);
     f(object, arg, a as f64, b as f64, c as f64)
 }
 
@@ -72000,8 +71922,7 @@ unsafe fn d240_call8(
     g: u32,
     h: u32,
 ) -> u32 {
-    let call: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     call(a, b, c, d, e, f, g, h)
 }
 
@@ -75450,7 +75371,7 @@ unsafe fn b244_vcall_u32_f32_f32_f32(
 ) {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, u32, f32, f32, f32) = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, u32, f32, f32, f32));
     f(object, a, b, c, d);
 }
 
@@ -75472,7 +75393,7 @@ unsafe fn b244_element_slot_f32(element: usize, slot: usize) -> f32 {
     let object = platform::read_u32(element + 4) as usize;
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize) -> f32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize) -> f32);
     f(object)
 }
 
@@ -76709,8 +76630,7 @@ unsafe fn b246_vcall60_u32x3_f32x2(
 ) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, u32, u32, u32, f32, f32) -> u32 =
-        core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, u32, u32, u32, f32, f32) -> u32);
     f(object, a, b, c, first, second)
 }
 
@@ -76731,7 +76651,7 @@ unsafe fn b246_vcall60_u32x3_f32x2(
 unsafe fn b246_vcall60_f32(object: usize, slot: usize, angle: f32) -> u32 {
     let vtable = platform::read_u32(object + 0x60) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f32) -> u32);
     f(object, angle)
 }
 
@@ -79737,7 +79657,7 @@ const D244_FN_80070900: usize = 0x8007_0900;
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn d244_call_f64_u32(addr: usize, value: f64, arg: u32) -> u32 {
-    let call: extern "C" fn(f64, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, u32) -> u32);
     call(value, arg)
 }
 
@@ -79761,8 +79681,7 @@ unsafe fn d244_vcall_u32_u32_f32x3(
 ) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let call: extern "C" fn(usize, u32, u32, f64, f64, f64) -> u32 =
-        core::mem::transmute(entry);
+    let call = crate::platform::guest_fn!(entry, fn(usize, u32, u32, f64, f64, f64) -> u32);
     call(object, a, b, x as f64, y as f64, z as f64)
 }
 
@@ -83744,8 +83663,7 @@ const E268_F_5B74_ONE: usize = 0x8042_D50C;
 /// # Safety
 /// The callee reads the global terrain tables, so they must be initialised.
 unsafe fn e268_terrain_probe(plane: u32, x: f32, y: f32) -> u32 {
-    let function: extern "C" fn(u32, f32, f32) -> u32 =
-        core::mem::transmute(E268_FN_800767F0);
+    let function = crate::platform::guest_fn!(E268_FN_800767F0, fn(u32, f32, f32) -> u32);
     function(plane, x, y)
 }
 
@@ -83754,8 +83672,7 @@ unsafe fn e268_terrain_probe(plane: u32, x: f32, y: f32) -> u32 {
 /// # Safety
 /// `object` must be the sound manager the caller loaded from `0x80429DD0`.
 unsafe fn e268_sound(object: u32, id: u32, x: f32, y: f32) {
-    let function: extern "C" fn(u32, u32, f32, f32) -> u32 =
-        core::mem::transmute(FUN_80078410);
+    let function = crate::platform::guest_fn!(FUN_80078410, fn(u32, u32, f32, f32) -> u32);
     let _ = function(object, id, x, y);
 }
 
@@ -84454,7 +84371,7 @@ unsafe fn c270_vcall_f32_f32_f32(
 ) -> u32 {
     let vtable = platform::read_u32(object) as usize;
     let entry = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(usize, f32, f32, f32) -> u32 = core::mem::transmute(entry);
+    let f = crate::platform::guest_fn!(entry, fn(usize, f32, f32, f32) -> u32);
     f(object, a, b, c)
 }
 
@@ -88684,7 +88601,7 @@ unsafe fn w287_step(value: usize, target: f32, rate: f32, limit: f32, deadband: 
 /// `addr` must point to that ABI.
 #[inline]
 unsafe fn w287_call0(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -88694,7 +88611,7 @@ unsafe fn w287_call0(addr: usize) -> u32 {
 /// `addr` must point to that ABI.
 #[inline]
 unsafe fn w287_f32_1(addr: usize, a: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(a)
 }
 
@@ -88704,7 +88621,7 @@ unsafe fn w287_f32_1(addr: usize, a: u32) -> f32 {
 /// `this` must be a live scene object.
 #[inline]
 unsafe fn w287_zone(this: usize, near: f32, far: f32) -> u32 {
-    let f: extern "C" fn(u32, f32, f32) -> u32 = core::mem::transmute(W287_FUN_80154E50);
+    let f = crate::platform::guest_fn!(W287_FUN_80154E50, fn(u32, f32, f32) -> u32);
     f(this as u32, near, far)
 }
 

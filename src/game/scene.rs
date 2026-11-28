@@ -300,7 +300,7 @@ const STR_SAVE_BANNER_BTI: u32 = 0x8031_79D0; // "save_banner_US.bti"
 /// high - mechanical wrapper, same pattern as `crate::platform::call0`.
 #[inline]
 unsafe fn call0_ret(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 

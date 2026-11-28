@@ -145,7 +145,7 @@ unsafe fn write_f32(addr: usize, value: f32) {
 /// # Safety
 /// `addr` must be a function with this exact ABI.
 unsafe fn call4(addr: usize, a: u32, b: u32, c: u32, d: u32) -> u32 {
-    let f: extern "C" fn(u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32) -> u32);
     f(a, b, c, d)
 }
 
@@ -154,7 +154,7 @@ unsafe fn call4(addr: usize, a: u32, b: u32, c: u32, d: u32) -> u32 {
 /// # Safety
 /// `addr` must be a function with this exact ABI.
 unsafe fn call5(addr: usize, a: u32, b: u32, c: u32, d: u32, e: u32) -> u32 {
-    let f: extern "C" fn(u32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32) -> u32);
     f(a, b, c, d, e)
 }
 
@@ -163,7 +163,7 @@ unsafe fn call5(addr: usize, a: u32, b: u32, c: u32, d: u32, e: u32) -> u32 {
 /// # Safety
 /// `addr` must be a function with this exact ABI.
 unsafe fn call6(addr: usize, a: u32, b: u32, c: u32, d: u32, e: u32, f6: u32) -> u32 {
-    let f: extern "C" fn(u32, u32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32) -> u32);
     f(a, b, c, d, e, f6)
 }
 
@@ -676,7 +676,7 @@ unsafe fn a292_read_f32(addr: usize) -> f32 {
 /// `addr` must be a function with this ABI.
 #[inline]
 unsafe fn a292_call_f32(addr: usize, value: f32) -> f32 {
-    let f: extern "C" fn(f32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32) -> f32);
     f(value)
 }
 

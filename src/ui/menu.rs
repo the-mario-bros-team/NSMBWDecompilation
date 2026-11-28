@@ -1586,7 +1586,7 @@ const S_DAT_8032B07C: u32 = 0x8032_B07C;
 /// Calls a no-argument function that returns `u32`.
 #[inline]
 unsafe fn call0_r(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -5064,7 +5064,7 @@ const S_HBM_RELEASE_BUILD: usize = 0x8032_A300;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f64_f64(addr: usize, value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(value)
 }
 
@@ -6519,7 +6519,7 @@ const MARKER_80378020: usize = 0x8037_8020;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f64x3_u32(addr: usize, a: f64, b: f64, c: f64, dst: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32) -> u32);
     f(a, b, c, dst)
 }
 
@@ -6758,7 +6758,7 @@ const SDA2_MODE_OTHER_VALUE: usize = SDA2_BASE - 0x531C;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_ptr_ret(addr: usize, argument: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(argument)
 }
 
@@ -7640,7 +7640,7 @@ unsafe fn call_f64x2_u32x6(
     r7: u32,
     r8: u32,
 ) {
-    let f: extern "C" fn(f64, f64, u32, u32, u32, u32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32, u32, u32));
     f(a, b, r3, r4, r5, r6, r7, r8);
 }
 
@@ -8652,7 +8652,7 @@ unsafe fn scroll_progress(menu: usize, value: u32) {
 /// high - the export passes both `f1`/`f2` operands and uses `f1` as result.
 #[inline]
 unsafe fn call_f64x2(addr: usize, a: f64, b: f64) -> f64 {
-    let f: extern "C" fn(f64, f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> f64);
     f(a, b)
 }
 
@@ -10522,7 +10522,7 @@ const SDA2_SHIFT_SCALE: usize = SDA2_BASE - 0x5344;
 /// the next argument slot; the returned word is unused.
 #[inline]
 unsafe fn call_f64_u32(addr: usize, value: f64, second: u32) -> u32 {
-    let f: extern "C" fn(f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32) -> u32);
     f(value, second)
 }
 
@@ -10742,8 +10742,7 @@ unsafe fn call_f32x2_u32x6(
     r7: u32,
     r8: u32,
 ) -> u32 {
-    let f: extern "C" fn(f32, f32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, f32, u32, u32, u32, u32, u32, u32) -> u32);
     f(a, b, r3, r4, r5, r6, r7, r8)
 }
 
@@ -11629,8 +11628,7 @@ const FN_80171680_A274: usize = 0x8017_1680;
 /// high - the register/float setup is literal at `0x80172AE0..0x80172B0C`.
 #[inline]
 unsafe fn draw_quad_a274(colour: u32, f1: f32, f2: f32, f3: f32, f4: f32, f5: f32) {
-    let emit: extern "C" fn(u32, *const u32, f32, f32, f32, f32, f32) =
-        core::mem::transmute(FN_80171680_A274);
+    let emit = crate::platform::guest_fn!(FN_80171680_A274, fn(u32, *const u32, f32, f32, f32, f32, f32));
     let packed = colour;
     emit(8, &packed, f1, f2, f3, f4, f5);
 }
@@ -11892,7 +11890,7 @@ pub unsafe fn fn_80172e10(this: usize, value: u32) {
 /// high - the register trace is literal.
 #[inline]
 unsafe fn call_f32x2_a274(addr: usize, this: usize, f1: f32, f2: f32) -> u32 {
-    let call: extern "C" fn(u32, f32, f32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(u32, f32, f32) -> u32);
     call(p32(this), f1, f2)
 }
 

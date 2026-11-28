@@ -262,7 +262,7 @@ unsafe fn call7(
     a6: u32,
     a7: u32,
 ) -> u32 {
-    let f: extern "C" fn(u32, u32, u32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32) -> u32);
     f(a1, a2, a3, a4, a5, a6, a7)
 }
 
@@ -291,7 +291,7 @@ unsafe fn call7(
 /// high - `0x801B5F80` ends with `r3 = TBU`, `r4 = TBL`, and the two stores at
 /// `0x800C9FD0`/`0x800C9FD4` treat the pair as one big-endian 64-bit value.
 unsafe fn call_u64(addr: usize) -> u64 {
-    let f: extern "C" fn() -> u64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u64);
     f()
 }
 

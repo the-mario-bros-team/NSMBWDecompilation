@@ -403,14 +403,14 @@ unsafe fn read_f32_abs(addr: usize) -> f32 {
 /// `addr` must point at a function with this prototype.
 #[inline]
 unsafe fn call_f64_u32(addr: usize, a: f64, b: u32) {
-    let f: extern "C" fn(f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32));
     f(a, b)
 }
 
 /// Calls a no-argument function that returns `u32`.
 #[inline]
 unsafe fn call0_r(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 

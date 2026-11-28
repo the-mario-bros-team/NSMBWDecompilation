@@ -1128,7 +1128,7 @@ const FN_801D5880: usize = 0x801D_5880;
 /// `addr` must be a PowerPC function with this ABI.
 #[inline]
 unsafe fn call0_u32(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -10286,7 +10286,7 @@ const FN_801B6020: usize = 0x801B_6020;
 /// `addr` must be a PowerPC function with this ABI.
 #[inline]
 unsafe fn call2_u64(addr: usize, a: u32, b: u32) -> u64 {
-    let f: extern "C" fn(u32, u32) -> u64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32) -> u64);
     f(a, b)
 }
 
@@ -13155,7 +13155,7 @@ unsafe fn wave90_clear_words(base: usize, words: u32) {
 /// high - the helper signatures are explicit in their own exports.
 #[inline]
 unsafe fn wave90_call_f64(addr: usize, value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(value)
 }
 
@@ -13171,7 +13171,7 @@ unsafe fn wave90_call_f64(addr: usize, value: f64) -> f64 {
 /// high - the two-operand signature is explicit in the export.
 #[inline]
 unsafe fn wave90_call_f64x2(addr: usize, a: f64, b: f64) -> f64 {
-    let f: extern "C" fn(f64, f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> f64);
     f(a, b)
 }
 
@@ -14153,7 +14153,7 @@ const FN_802E55A4: usize = 0x802E_55A4;
 /// high - the signature is explicit in `802dcc4c_FUN_802dcc4c.c`.
 #[inline]
 unsafe fn wave90_call_f64_i32(addr: usize, value: f64) -> i32 {
-    let f: extern "C" fn(f64) -> i32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> i32);
     f(value)
 }
 
@@ -16512,7 +16512,7 @@ const FN_8019EC90: usize = 0x8019_EC90;
 /// `addr` must be a PowerPC routine with an `(f32, u32, u32)` argument shape.
 #[inline]
 unsafe fn call_f32_2(addr: usize, value: f32, first: u32, second: u32) {
-    let f: extern "C" fn(f32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32));
     f(value, first, second);
 }
 
@@ -16523,7 +16523,7 @@ unsafe fn call_f32_2(addr: usize, value: f32, first: u32, second: u32) {
 /// `addr` must be a PowerPC routine with an `(f32, u32)` argument shape.
 #[inline]
 unsafe fn call_f32_1(addr: usize, value: f32, first: u32) {
-    let f: extern "C" fn(f32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32));
     f(value, first);
 }
 
@@ -18532,7 +18532,7 @@ unsafe fn read_f64(addr: usize) -> f64 {
 /// # Confidence
 /// high - mechanical wrapper, same shape as [`call_f32_1`].
 unsafe fn call_f64_1(addr: usize, value: f64) -> u32 {
-    let f: extern "C" fn(f64) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> u32);
     f(value)
 }
 
@@ -19321,7 +19321,7 @@ const FN_802DCA98: usize = 0x802D_CA98;
 /// `addr` must be a PowerPC routine with an `(f32, u32, u32, u32)` shape.
 #[inline]
 unsafe fn call_f32_3(addr: usize, value: f32, first: u32, second: u32, third: u32) {
-    let f: extern "C" fn(f32, u32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32, u32));
     f(value, first, second, third);
 }
 
@@ -19331,7 +19331,7 @@ unsafe fn call_f32_3(addr: usize, value: f32, first: u32, second: u32, third: u3
 /// `addr` must be a PowerPC routine with an `(f64, u32, u32)` shape.
 #[inline]
 unsafe fn call_f64_2(addr: usize, value: f64, first: u32, second: u32) {
-    let f: extern "C" fn(f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32));
     f(value, first, second);
 }
 
@@ -19354,8 +19354,7 @@ unsafe fn call_f64x2_6(
     r8: u32,
     r9: u32,
 ) {
-    let f: extern "C" fn(f64, f64, u32, u32, u32, u32, u32, u32) =
-        core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32, u32, u32));
     f(a, b, r4, r5, r6, r7, r8, r9);
 }
 
@@ -20178,10 +20177,8 @@ pub unsafe fn fn_8019a970(param_1: u32, param_2: u32, param_3: u32) -> u32 {
     let arg = read_u32(CUE_TABLE_5FA0 + param_2 as usize * 4 + bank * 0x11C);
     let busy = platform::call2(FN_80275560, param_1, 1) as i32;
     let vtable = read_u32(p) as usize;
-    let may_reuse: extern "C" fn(u32, u32, u32) -> u32 =
-        core::mem::transmute(read_u32(vtable + 0x1C) as usize);
-    let start_row: extern "C" fn(u32, u32, u32) -> u32 =
-        core::mem::transmute(read_u32(vtable + 0x24) as usize);
+    let may_reuse = crate::platform::guest_fn!(read_u32(vtable + 0x1C) as usize, fn(u32, u32, u32) -> u32);
+    let start_row = crate::platform::guest_fn!(read_u32(vtable + 0x24) as usize, fn(u32, u32, u32) -> u32);
 
     let accepted = busy >= 1 && (may_reuse(param_1, arg, 1) as u8) != 0;
     if accepted {
@@ -20232,8 +20229,7 @@ pub unsafe fn fn_8019aa70(param_1: u32, param_2: u32) -> u32 {
     }
     let arg = read_u32(CUE_TABLE_5FA0 + param_2 as usize * 4 + bank * 0x11C);
     let vtable = read_u32(p) as usize;
-    let start_row: extern "C" fn(u32, u32) -> u32 =
-        core::mem::transmute(read_u32(vtable + 0x28) as usize);
+    let start_row = crate::platform::guest_fn!(read_u32(vtable + 0x28) as usize, fn(u32, u32) -> u32);
     let row = start_row(param_1, arg);
     let level = if read_u32(p + 0xB0) == 3 {
         read_f32(SDA2_LEVEL_529C)
@@ -22566,7 +22562,7 @@ const BOOT_ALT_STACK: usize = 0x8042_A4EC;
 /// `addr` must be a PowerPC routine with a `(u32, u32, u32, u32) -> u64` shape.
 #[inline]
 unsafe fn call_u64_4(addr: usize, a: u32, b: u32, c: u32, d: u32) -> u64 {
-    let f: extern "C" fn(u32, u32, u32, u32) -> u64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32) -> u64);
     f(a, b, c, d)
 }
 
@@ -23333,7 +23329,7 @@ pub unsafe fn fn_80198c30(param_1: u32, param_2: u32, param_3: u32, param_4: u32
 /// `addr` must be a PowerPC routine with a `(u32) -> f32` shape.
 #[inline]
 unsafe fn call_f32_word(addr: usize, arg: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(arg)
 }
 
@@ -26406,7 +26402,7 @@ pub unsafe fn fn_8019f490() {
 #[inline]
 unsafe fn d274_call_slot_1c(this: usize, id: u32) -> u32 {
     let method = read_u32(read_u32(this) as usize + 0x1C) as usize;
-    let call: extern "C" fn(u32, u32, u32) -> u32 = core::mem::transmute(method);
+    let call = crate::platform::guest_fn!(method, fn(u32, u32, u32) -> u32);
     call(this as u32, id, 1)
 }
 

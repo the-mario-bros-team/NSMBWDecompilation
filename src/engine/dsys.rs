@@ -648,7 +648,7 @@ const STATE_ENTRY_COUNT: u32 = 3;
 /// `addr` must point at a PowerPC function returning `u32` and the caller must
 /// be running on a PowerPC target.
 unsafe fn call0_ret(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -662,7 +662,7 @@ unsafe fn call0_ret(addr: usize) -> u32 {
 /// # Safety
 /// `addr` must accept two doubles in floating-point registers.
 unsafe fn call_f64x2(addr: usize, a: f64, b: f64) {
-    let f: extern "C" fn(f64, f64) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64));
     f(a, b);
 }
 
@@ -691,7 +691,7 @@ unsafe fn read_f64(addr: usize) -> f64 {
 /// # Safety
 /// `addr` must accept two doubles and return a word.
 unsafe fn call_f64x2_ret(addr: usize, a: f64, b: f64) -> u32 {
-    let f: extern "C" fn(f64, f64) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> u32);
     f(a, b)
 }
 
@@ -705,7 +705,7 @@ unsafe fn call_f64x2_ret(addr: usize, a: f64, b: f64) -> u32 {
 /// # Safety
 /// `addr` must accept one float and return one.
 unsafe fn call_f32_arg_ret(addr: usize, a: f32) -> f32 {
-    let f: extern "C" fn(f32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32) -> f32);
     f(a)
 }
 
@@ -717,7 +717,7 @@ unsafe fn call_f32_arg_ret(addr: usize, a: f32) -> f32 {
 /// # Safety
 /// `a` must point at three readable floats.
 unsafe fn call_ptr_f32_ret(addr: usize, a: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(a)
 }
 
@@ -729,7 +729,7 @@ unsafe fn call_ptr_f32_ret(addr: usize, a: u32) -> f32 {
 /// # Safety
 /// `addr` must accept three doubles plus one integer argument.
 unsafe fn call_f64x3_ptr(addr: usize, a: f64, b: f64, c: f64, p: u32) {
-    let f: extern "C" fn(f64, f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32));
     f(a, b, c, p);
 }
 
@@ -741,7 +741,7 @@ unsafe fn call_f64x3_ptr(addr: usize, a: f64, b: f64, c: f64, p: u32) {
 /// # Safety
 /// `addr` must accept four doubles plus two integer arguments.
 unsafe fn call_f64x4_u32x2(addr: usize, a: f64, b: f64, c: f64, d: f64, x: u32, y: u32) {
-    let f: extern "C" fn(f64, f64, f64, f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, u32, u32));
     f(a, b, c, d, x, y);
 }
 
@@ -753,7 +753,7 @@ unsafe fn call_f64x4_u32x2(addr: usize, a: f64, b: f64, c: f64, d: f64, x: u32, 
 /// # Safety
 /// `addr` must accept one double plus two integer arguments.
 unsafe fn call_f64_u32x2(addr: usize, a: f64, p: u32, q: u32) {
-    let f: extern "C" fn(f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32));
     f(a, p, q);
 }
 
@@ -764,7 +764,7 @@ unsafe fn call_f64_u32x2(addr: usize, a: f64, p: u32, q: u32) {
 /// # Safety
 /// `addr` must accept one double argument.
 unsafe fn call_f64_void(addr: usize, a: f64) {
-    let f: extern "C" fn(f64) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64));
     f(a);
 }
 
@@ -777,7 +777,7 @@ unsafe fn call_f64_void(addr: usize, a: f64) {
 /// # Safety
 /// `addr` must accept three words and return a 64-bit value.
 unsafe fn call3_u64(addr: usize, a: u32, b: u32, c: u32) -> u64 {
-    let f: extern "C" fn(u32, u32, u32) -> u64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32) -> u64);
     f(a, b, c)
 }
 
@@ -6544,7 +6544,7 @@ const THUNK_801DD1D0: usize = 0x801D_D1D0;
 /// # Safety
 /// `addr` must accept a 64-bit first argument plus two words.
 unsafe fn call_u64_u32x2(addr: usize, a: u64, b: u32, c: u32) {
-    let f: extern "C" fn(u64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u64, u32, u32));
     f(a, b, c);
 }
 
@@ -6556,7 +6556,7 @@ unsafe fn call_u64_u32x2(addr: usize, a: u64, b: u32, c: u32) {
 /// # Safety
 /// `addr` must accept the mixed argument list shown in the export.
 unsafe fn call_f64x2_u32x4(addr: usize, a: f64, b: f64, c: u32, d: u32, e: u32, f: u32) {
-    let g: extern "C" fn(f64, f64, u32, u32, u32, u32) = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32));
     g(a, b, c, d, e, f);
 }
 
@@ -6575,7 +6575,7 @@ unsafe fn call_f64x2_u32x4_ret(
     e: u32,
     f: u32,
 ) -> u32 {
-    let g: extern "C" fn(f64, f64, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32) -> u32);
     g(a, b, c, d, e, f)
 }
 
@@ -6584,7 +6584,7 @@ unsafe fn call_f64x2_u32x4_ret(
 /// # Safety
 /// `addr` must accept two doubles plus two words.
 unsafe fn call_f64x2_u32x2(addr: usize, a: f64, b: f64, c: u32, d: u32) {
-    let f: extern "C" fn(f64, f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32));
     f(a, b, c, d);
 }
 
@@ -6596,7 +6596,7 @@ unsafe fn call_f64x2_u32x2(addr: usize, a: f64, b: f64, c: u32, d: u32) {
 /// # Safety
 /// `addr` must accept four doubles plus one word.
 unsafe fn call_f64x4_ptr(addr: usize, a: f64, b: f64, c: f64, d: f64, p: u32) {
-    let f: extern "C" fn(f64, f64, f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, u32));
     f(a, b, c, d, p);
 }
 
@@ -6605,7 +6605,7 @@ unsafe fn call_f64x4_ptr(addr: usize, a: f64, b: f64, c: f64, d: f64, p: u32) {
 /// # Safety
 /// `addr` must accept one word and return a float in `f1`.
 unsafe fn call_u32_f32_ret(addr: usize, a: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(a)
 }
 
@@ -6614,7 +6614,7 @@ unsafe fn call_u32_f32_ret(addr: usize, a: u32) -> f32 {
 /// # Safety
 /// `addr` must accept two words and return a float in `f1`.
 unsafe fn call_u32x2_f32_ret(addr: usize, a: u32, b: u32) -> f32 {
-    let f: extern "C" fn(u32, u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32) -> f32);
     f(a, b)
 }
 
@@ -6623,7 +6623,7 @@ unsafe fn call_u32x2_f32_ret(addr: usize, a: u32, b: u32) -> f32 {
 /// # Safety
 /// `addr` must accept one double and return one.
 unsafe fn call_f64_arg_ret(addr: usize, a: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(a)
 }
 
@@ -8797,7 +8797,7 @@ const FN_800E2D90: usize = 0x800E_2D90;
 /// # Safety
 /// `addr` must accept one double plus three integer arguments.
 unsafe fn call_f64_u32x3(addr: usize, a: f64, b: u32, c: u32, d: u32) {
-    let f: extern "C" fn(f64, u32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32, u32));
     f(a, b, c, d);
 }
 
@@ -8806,7 +8806,7 @@ unsafe fn call_f64_u32x3(addr: usize, a: f64, b: u32, c: u32, d: u32) {
 /// # Safety
 /// `addr` must accept one double and one integer argument.
 unsafe fn call_f64_u32(addr: usize, a: f64, b: u32) {
-    let f: extern "C" fn(f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32));
     f(a, b);
 }
 
@@ -8815,7 +8815,7 @@ unsafe fn call_f64_u32(addr: usize, a: f64, b: u32) {
 /// # Safety
 /// `addr` must accept two doubles plus two words and return a word.
 unsafe fn call_f64x2_u32x2_ret(addr: usize, a: f64, b: f64, c: u32, d: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32) -> u32);
     f(a, b, c, d)
 }
 
@@ -8824,7 +8824,7 @@ unsafe fn call_f64x2_u32x2_ret(addr: usize, a: f64, b: f64, c: u32, d: u32) -> u
 /// # Safety
 /// `addr` must accept one double plus one integer argument.
 unsafe fn call_f64_ptr(addr: usize, a: f64, p: u32) {
-    let f: extern "C" fn(f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32));
     f(a, p);
 }
 
@@ -8838,7 +8838,7 @@ unsafe fn call_f64_ptr(addr: usize, a: f64, p: u32) {
 /// # Safety
 /// `addr` must accept the mixed argument list shown above.
 unsafe fn call_u64_f64_u32x2(addr: usize, a: u64, b: f64, c: u32, d: u32) {
-    let f: extern "C" fn(u64, f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u64, f64, u32, u32));
     f(a, b, c, d);
 }
 
@@ -10415,7 +10415,7 @@ const FN_801C9CD0: usize = 0x801C_9CD0;
 /// # Safety
 /// `addr` must accept one double in `f1` and return a word in `r3`.
 unsafe fn call_f64_ret_u32(addr: usize, a: f64) -> u32 {
-    let f: extern "C" fn(f64) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> u32);
     f(a)
 }
 
@@ -10427,7 +10427,7 @@ unsafe fn call_f64_ret_u32(addr: usize, a: f64) -> u32 {
 /// # Safety
 /// `addr` must accept three integer arguments and return one float.
 unsafe fn call_u32x3_f32_ret(addr: usize, a: u32, b: u32, c: u32) -> f32 {
-    let f: extern "C" fn(u32, u32, u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32) -> f32);
     f(a, b, c)
 }
 
@@ -14261,7 +14261,7 @@ const G_ANIM_NAME_E: usize = SDA_BASE - 0x6DC0;
 /// # Safety
 /// `addr` must accept two words plus two doubles.
 unsafe fn call_u32x2_f64x2_e(addr: usize, a: u32, b: u32, x: f64, y: f64) {
-    let f: extern "C" fn(u32, u32, f64, f64) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, f64, f64));
     f(a, b, x, y);
 }
 
@@ -18563,7 +18563,7 @@ const CSV_RECORD_SIZE_D: u32 = 0x1C0;
 /// # Safety
 /// `addr` must point at a PowerPC function returning one float.
 unsafe fn call0_f32_ret_d(addr: usize) -> f32 {
-    let f: extern "C" fn() -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> f32);
     f()
 }
 
@@ -18575,7 +18575,7 @@ unsafe fn call0_f32_ret_d(addr: usize) -> f32 {
 /// # Safety
 /// `addr` must accept one float plus four integer arguments.
 unsafe fn call_f32_u32x4_d(addr: usize, f: f32, a: u32, b: u32, c: u32, d: u32) {
-    let g: extern "C" fn(f32, u32, u32, u32, u32) = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f32, u32, u32, u32, u32));
     g(f, a, b, c, d);
 }
 
@@ -20066,7 +20066,7 @@ const G_STR_C_F: usize = SDA_BASE - 0x6BEC; // 0x80428A94
 /// # Safety
 /// `addr` must accept four integer arguments and return one float.
 unsafe fn call_u32x4_f32_ret_f(addr: usize, a: u32, b: u32, c: u32, d: u32) -> f32 {
-    let f: extern "C" fn(u32, u32, u32, u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32) -> f32);
     f(a, b, c, d)
 }
 
@@ -20079,7 +20079,7 @@ unsafe fn call_u32x4_f32_ret_f(addr: usize, a: u32, b: u32, c: u32, d: u32) -> f
 /// # Safety
 /// `addr` must accept one float in `f1` plus two integer arguments.
 unsafe fn call_f32_u32x2_f(addr: usize, a: f32, b: u32, c: u32) {
-    let f: extern "C" fn(f32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32));
     f(a, b, c);
 }
 
@@ -20824,7 +20824,7 @@ unsafe fn vt_slot_g(object: u32, slot: usize) -> usize {
 /// # Safety
 /// `addr` must accept one float in `f1` and one integer argument.
 unsafe fn call_f32_u32_g(addr: usize, a: f32, b: u32) {
-    let f: extern "C" fn(f32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32));
     f(a, b);
 }
 
@@ -28483,7 +28483,7 @@ unsafe fn vt_method_w218e(object: u32, slot: usize) -> usize {
 /// # Safety
 /// `addr` must accept one float plus one integer argument.
 unsafe fn call_f32_u32_w218e(addr: usize, a: f32, b: u32) {
-    let f: extern "C" fn(f32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32));
     f(a, b);
 }
 
@@ -28494,7 +28494,7 @@ unsafe fn call_f32_u32_w218e(addr: usize, a: f32, b: u32) {
 /// # Safety
 /// `addr` must accept one float plus two integer arguments.
 unsafe fn call_f32_u32x2_w218e(addr: usize, a: f32, b: u32, c: u32) {
-    let f: extern "C" fn(f32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32));
     f(a, b, c);
 }
 
@@ -28507,7 +28507,7 @@ unsafe fn call_f32_u32x2_w218e(addr: usize, a: f32, b: u32, c: u32) {
 /// # Safety
 /// `addr` must accept three doubles plus two integer arguments.
 unsafe fn call_f64x3_u32x2_w218e(addr: usize, a: f64, b: f64, c: f64, x: u32, y: u32) {
-    let f: extern "C" fn(f64, f64, f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32, u32));
     f(a, b, c, x, y);
 }
 
@@ -30348,21 +30348,21 @@ const F_6008_E267: usize = R2_BASE - 0x6008;
 /// Calls `func(f32) -> f32`; used for the sine helper `0x800B2F10`.
 #[inline]
 unsafe fn call_f32x1_e267(addr: usize, a: f32) -> f32 {
-    let f: extern "C" fn(f32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32) -> f32);
     f(a)
 }
 
 /// Calls `func(u32, f32) -> u32`; `r3` plus `f1`.
 #[inline]
 unsafe fn call_u32_f32_e267(addr: usize, a: u32, b: f32) -> u32 {
-    let f: extern "C" fn(u32, f32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, f32) -> u32);
     f(a, b)
 }
 
 /// Calls `func(f32, u32, u32) -> u32`; `f1` plus `r3`/`r4`.
 #[inline]
 unsafe fn call_f32_u32x2_e267(addr: usize, a: f32, b: u32, c: u32) -> u32 {
-    let f: extern "C" fn(f32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32) -> u32);
     f(a, b, c)
 }
 
@@ -30377,7 +30377,7 @@ unsafe fn call_f64x3_u32x3_e267(
     e: u32,
     f: u32,
 ) -> u32 {
-    let g: extern "C" fn(f64, f64, f64, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32, u32, u32) -> u32);
     g(a, b, c, d, e, f)
 }
 
@@ -33326,7 +33326,7 @@ const W273_FN_800FE040: usize = 0x800F_E040;
 /// # Safety
 /// `addr` must accept one integer in `r3` and return one float.
 unsafe fn w273_call_f32_u32(addr: usize, this: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(this)
 }
 

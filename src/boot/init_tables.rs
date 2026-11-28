@@ -805,7 +805,7 @@ const W229_STATE_PERMUTATION: [usize; 9] = [6, 7, 8, 3, 4, 5, 0, 1, 2];
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn w229_call0_u32(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 

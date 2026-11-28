@@ -400,7 +400,7 @@ unsafe fn write_f32(addr: usize, value: f32) {
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call_f64(addr: usize, value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(value)
 }
 
@@ -420,8 +420,7 @@ unsafe fn call_f64x6_ptr(
     e: f64,
     f: f64,
 ) {
-    let func: extern "C" fn(u32, f64, f64, f64, f64, f64, f64) =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, f64, f64, f64, f64, f64, f64));
     func(ptr, a, b, c, d, e, f)
 }
 
@@ -432,7 +431,7 @@ unsafe fn call_f64x6_ptr(
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call_f64x4_ptr(addr: usize, ptr: u32, a: f64, b: f64, c: f64, d: f64) {
-    let func: extern "C" fn(u32, f64, f64, f64, f64) = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, f64, f64, f64, f64));
     func(ptr, a, b, c, d)
 }
 
@@ -444,8 +443,7 @@ unsafe fn call_f64x4_ptr(addr: usize, ptr: u32, a: f64, b: f64, c: f64, d: f64) 
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call9(addr: usize, a: u32, b: u32, c: u32, d: u32, e: u32, f: u32, g: u32, h: u32, i: u32) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g, h, i)
 }
 
@@ -458,7 +456,7 @@ unsafe fn call9(addr: usize, a: u32, b: u32, c: u32, d: u32, e: u32, f: u32, g: 
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call0_u32(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -2394,7 +2392,7 @@ const GLOBAL_FILL_BLOCK: usize = 0x8035_1690;
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call_f32(addr: usize, value: f32) -> f32 {
-    let f: extern "C" fn(f32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32) -> f32);
     f(value)
 }
 
@@ -2404,7 +2402,7 @@ unsafe fn call_f32(addr: usize, value: f32) -> f32 {
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call_f64_to_i32(addr: usize, value: f64) -> i32 {
-    let f: extern "C" fn(f64) -> i32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> i32);
     f(value)
 }
 
@@ -2414,7 +2412,7 @@ unsafe fn call_f64_to_i32(addr: usize, value: f64) -> i32 {
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call_f64x3_ptr(addr: usize, a: f64, b: f64, c: f64, ptr: usize) {
-    let f: extern "C" fn(f64, f64, f64, usize) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, usize));
     f(a, b, c, ptr);
 }
 
@@ -2424,7 +2422,7 @@ unsafe fn call_f64x3_ptr(addr: usize, a: f64, b: f64, c: f64, ptr: usize) {
 /// `addr` must be a PowerPC function with this exact ABI.
 #[inline]
 unsafe fn call_f64x3_ptr2(addr: usize, a: f64, b: f64, c: f64, p1: usize, p2: usize) {
-    let f: extern "C" fn(f64, f64, f64, usize, usize) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, usize, usize));
     f(a, b, c, p1, p2);
 }
 
@@ -2442,8 +2440,7 @@ unsafe fn call_f32_5u32(
     d: u32,
     e: u32,
 ) -> u32 {
-    let f: extern "C" fn(f32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32, u32, u32, u32) -> u32);
     f(f1, a, b, c, d, e)
 }
 
@@ -3258,7 +3255,7 @@ unsafe fn call_f32x4_ptr(
     d: f32,
     ptr: usize,
 ) {
-    let f: extern "C" fn(f32, f32, f32, f32, u32, usize) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, f32, f32, f32, u32, usize));
     f(a, b, c, d, arg3, ptr);
 }
 
@@ -4225,7 +4222,7 @@ pub unsafe fn fn_8000e060(this: usize) {
 unsafe fn host_sincos(angle: f64) -> (f32, f32) {
     let mut sin = 0.0f32;
     let mut cos = 0.0f32;
-    let f: extern "C" fn(f64, *mut f32, *mut f32) = core::mem::transmute(0x8023_7ca0usize);
+    let f = crate::platform::guest_fn!(0x8023_7ca0usize, fn(f64, *mut f32, *mut f32));
     f(angle, &mut sin as *mut f32, &mut cos as *mut f32);
     (sin, cos)
 }

@@ -1928,7 +1928,7 @@ const DAT_80377FE8: usize = 0x8037_7FE8;
 /// high - the call site shows a `double` first argument and an integer second.
 #[inline]
 unsafe fn call_f64_u32(addr: usize, a: f64, b: u32) -> u32 {
-    let f: extern "C" fn(f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32) -> u32);
     f(a, b)
 }
 
@@ -8700,7 +8700,7 @@ const FN_800108C0: usize = 0x8001_08C0;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_0(addr: usize) -> f32 {
-    let f: extern "C" fn() -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> f32);
     f()
 }
 
@@ -9941,7 +9941,7 @@ const FN_8016A1A0: usize = 0x8016_A1A0;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_2u(addr: usize, f: f32, a: u32, b: u32) -> u32 {
-    let call: extern "C" fn(f32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, u32, u32) -> u32);
     call(f, a, b)
 }
 
@@ -9959,7 +9959,7 @@ unsafe fn call_f32_2u(addr: usize, f: f32, a: u32, b: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_2f_2u(addr: usize, f: f32, g: f32, a: u32, b: u32) -> u32 {
-    let call: extern "C" fn(f32, f32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32, u32, u32) -> u32);
     call(f, g, a, b)
 }
 
@@ -9977,7 +9977,7 @@ unsafe fn call_2f_2u(addr: usize, f: f32, g: f32, a: u32, b: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_2f_u8_u32(addr: usize, f: f32, g: f32, b: u8, p: u32) -> u32 {
-    let call: extern "C" fn(f32, f32, u8, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32, u8, u32) -> u32);
     call(f, g, b, p)
 }
 
@@ -9995,7 +9995,7 @@ unsafe fn call_2f_u8_u32(addr: usize, f: f32, g: f32, b: u8, p: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_3f_1u(addr: usize, f: f32, g: f32, h: f32, a: u32) -> u32 {
-    let call: extern "C" fn(f32, f32, f32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32, f32, u32) -> u32);
     call(f, g, h, a)
 }
 
@@ -10973,11 +10973,10 @@ pub unsafe fn fn_80020100(this: usize) -> u32 {
 
     fn_800203c0(this, core::ptr::addr_of_mut!(speed) as usize);
 
-    let set_speed: extern "C" fn(f32, usize) -> u32 =
-        core::mem::transmute(vtable_method(this, 0x60, 0x288));
+    let set_speed = crate::platform::guest_fn!(vtable_method(this, 0x60, 0x288), fn(f32, usize) -> u32);
     set_speed(speed, this);
 
-    let query: extern "C" fn(usize) -> f32 = core::mem::transmute(vtable_method(this, 0x60, 0x29C));
+    let query = crate::platform::guest_fn!(vtable_method(this, 0x60, 0x29C), fn(usize) -> f32);
     // observed: `fctiwz` truncates toward zero, then `extsh` keeps the low
     // halfword before the signed `0x800` clamp.
     let mut amount = (read_f32(F32_SDA2_7E0C) * query(this).abs()) as i32 as i16;
@@ -12057,8 +12056,7 @@ pub unsafe fn fn_80021470(this: usize, player: u8) {
         return;
     }
 
-    let set_position: extern "C" fn(f32, f32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(vtable_method(record, 0x60, 0x3FC));
+    let set_position = crate::platform::guest_fn!(vtable_method(record, 0x60, 0x3FC), fn(f32, f32, u32, u32, u32, u32) -> u32);
     set_position(
         read_f32(SDA2_BASE - 0x7DE4) + read_f32(SDA_BASE - 0x5370),
         read_f32(record + 0x10C),
@@ -12141,8 +12139,7 @@ pub unsafe fn fn_80021580(this: usize, player: u8) {
         return;
     }
 
-    let set_position: extern "C" fn(f32, f32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(vtable_method(record, 0x60, 0x3FC));
+    let set_position = crate::platform::guest_fn!(vtable_method(record, 0x60, 0x3FC), fn(f32, f32, u32, u32, u32, u32) -> u32);
     set_position(
         read_f32(SDA2_BASE - 0x7DE4) + read_f32(SDA_BASE - 0x5370),
         read_f32(record + 0x10C),
@@ -13820,8 +13817,7 @@ pub unsafe fn fn_80022b10(this: usize, info: usize, count: i32, arg: u32) {
 
     // observed: `r3..r10` are all used; `crate::platform` stops at seven
     // arguments, so the eighth is passed through a direct function pointer.
-    let emit: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(W203_FN_800A77A0);
+    let emit = crate::platform::guest_fn!(W203_FN_800A77A0, fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     emit(
         platform::read_u32(W203_ACTOR_MANAGER),
         p32(position_ptr),
@@ -14419,7 +14415,7 @@ const FN_801C0540: usize = 0x801C_0540;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_u32(addr: usize, f: f32, a: u32) -> u32 {
-    let call: extern "C" fn(f32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, u32) -> u32);
     call(f, a)
 }
 
@@ -15037,7 +15033,7 @@ const F32_SDA2_7D80: usize = SDA2_BASE - 0x7D80;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_arg_u32(addr: usize, f: f32, a: u32) -> u32 {
-    let call: extern "C" fn(f32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, u32) -> u32);
     call(f, a)
 }
 
@@ -15057,7 +15053,7 @@ unsafe fn call_f32_arg_u32(addr: usize, f: f32, a: u32) -> u32 {
 /// `fcmpo`/`fmr f31` in the original.
 #[inline]
 unsafe fn call_u32_f32(addr: usize, a: u32) -> f32 {
-    let call: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     call(a)
 }
 
@@ -15953,7 +15949,7 @@ pub unsafe fn fn_800272c0(a: u32, b: u32) {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_2f_1u(addr: usize, x: f32, y: f32, a: u32) -> u32 {
-    let call: extern "C" fn(f32, f32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32, u32) -> u32);
     call(x, y, a)
 }
 
@@ -15970,7 +15966,7 @@ unsafe fn call_2f_1u(addr: usize, x: f32, y: f32, a: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_1u(addr: usize, f: f32, a: u32) -> u32 {
-    let call: extern "C" fn(f32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, u32) -> u32);
     call(f, a)
 }
 
@@ -15989,7 +15985,7 @@ unsafe fn call_f32_1u(addr: usize, f: f32, a: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_3u(addr: usize, f: f32, a: u32, b: u32, c: u32) -> u32 {
-    let call: extern "C" fn(f32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, u32, u32, u32) -> u32);
     call(f, a, b, c)
 }
 
@@ -16917,7 +16913,7 @@ const W204_RECORD_532CC: u32 = 0x8035_32CC;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn w204_call_f32_1u(addr: usize, f: f32, a: u32) -> u32 {
-    let call: extern "C" fn(f32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, u32) -> u32);
     call(f, a)
 }
 
@@ -16935,7 +16931,7 @@ unsafe fn w204_call_f32_1u(addr: usize, f: f32, a: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn w204_call_f32_3u(addr: usize, f: f32, a: u32, b: u32, c: u32) -> u32 {
-    let call: extern "C" fn(f32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, u32, u32, u32) -> u32);
     call(f, a, b, c)
 }
 
@@ -16956,7 +16952,7 @@ unsafe fn w204_call_f32_3u(addr: usize, f: f32, a: u32, b: u32, c: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn w204_call_2f_1u(addr: usize, f: f32, g: f32, c: u32) -> u32 {
-    let call: extern "C" fn(f32, f32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32, u32) -> u32);
     call(f, g, c)
 }
 
@@ -17962,7 +17958,7 @@ const S_WM_EN_OBAKEDOOR_A: usize = 0x8030_3648;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn call_f32_f32_a(addr: usize, value: f32) -> f32 {
-    let call: extern "C" fn(f32) -> f32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32) -> f32);
     call(value)
 }
 
@@ -19498,7 +19494,7 @@ const FN_8002DE80_D: usize = 0x8002_DE80;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn w205d_call_2f_4u(addr: usize, f: f64, g: f64, a: u32, b: u32, c: u32, d: u32) -> u32 {
-    let call: extern "C" fn(f64, f64, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32) -> u32);
     call(f, g, a, b, c, d)
 }
 
@@ -20869,7 +20865,7 @@ struct W205fMatrix52([u8; 0x34]);
 /// `addr` must be the entry point of a routine with this ABI.
 #[inline]
 unsafe fn w205f_call_f32_u32x2(addr: usize, a: f32, b: u32, c: u32) {
-    let f: extern "C" fn(f32, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32));
     f(a, b, c)
 }
 
@@ -20880,7 +20876,7 @@ unsafe fn w205f_call_f32_u32x2(addr: usize, a: f32, b: u32, c: u32) {
 /// `addr` must be the entry point of a routine with this ABI.
 #[inline]
 unsafe fn w205f_call_f64_u32x2(addr: usize, a: f64, b: u32, c: u32) {
-    let f: extern "C" fn(f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32));
     f(a, b, c)
 }
 
@@ -20892,7 +20888,7 @@ unsafe fn w205f_call_f64_u32x2(addr: usize, a: f64, b: u32, c: u32) {
 /// address at least 0x30 writable bytes.
 #[inline]
 unsafe fn w205f_call_f64x3_u32(addr: usize, a: f64, b: f64, c: f64, out: u32) {
-    let f: extern "C" fn(f64, f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32));
     f(a, b, c, out)
 }
 
@@ -20903,7 +20899,7 @@ unsafe fn w205f_call_f64x3_u32(addr: usize, a: f64, b: f64, c: f64, out: u32) {
 /// `addr` must be the entry point of a routine with this ABI.
 #[inline]
 unsafe fn w205f_call_f64x2_u32x4(addr: usize, a: f64, b: f64, c: u32, d: u32, e: u32, f: u32) {
-    let g: extern "C" fn(f64, f64, u32, u32, u32, u32) = core::mem::transmute(addr);
+    let g = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32));
     g(a, b, c, d, e, f)
 }
 
@@ -21858,7 +21854,7 @@ const FN_800E23C0_A: usize = 0x800E_23C0;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn w206a_call_f64x2_u32x2(addr: usize, a: f64, b: f64, c: u32, d: u32) {
-    let f: extern "C" fn(f64, f64, u32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32));
     f(a, b, c, d)
 }
 
@@ -31437,8 +31433,7 @@ pub unsafe fn fn_8003ce20(this: usize) {
 /// versus Rust's saturating `as i32`, which can differ only for products
 /// outside the `i32` range.
 pub unsafe fn fn_8003cf40(this: usize) {
-    let query: extern "C" fn(u32) -> f32 =
-        core::mem::transmute(vtable_method(this, 0x60, 0x2C8));
+    let query = crate::platform::guest_fn!(vtable_method(this, 0x60, 0x2C8), fn(u32) -> f32);
     let rate = query(p32(this));
 
     let count_method = vtable_method(this, 0x60, 0x2E4);
@@ -33944,7 +33939,7 @@ unsafe fn b261_call_2f_4u(
     c: u32,
     d: u32,
 ) -> u32 {
-    let call: extern "C" fn(f32, f32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32, u32, u32, u32, u32) -> u32);
     call(x, y, a, b, c, d)
 }
 
@@ -37049,7 +37044,7 @@ const D261_FN_80065B80: usize = 0x8006_5B80;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn d261_call_f64_1u(addr: usize, f: f64, a: u32) -> u32 {
-    let call: extern "C" fn(f64, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, u32) -> u32);
     call(f, a)
 }
 
@@ -37066,7 +37061,7 @@ unsafe fn d261_call_f64_1u(addr: usize, f: f64, a: u32) -> u32 {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn d261_call_f64_2u(addr: usize, f: f64, a: u32, b: u32) -> u32 {
-    let call: extern "C" fn(f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, u32, u32) -> u32);
     call(f, a, b)
 }
 
@@ -38726,8 +38721,7 @@ unsafe fn d262_call_2f_4u(
     c: u32,
     d: u32,
 ) -> u32 {
-    let call: extern "C" fn(f64, f64, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32) -> u32);
     call(f, g, a, b, c, d)
 }
 
@@ -40799,7 +40793,7 @@ unsafe fn a262_owner_names(this: usize, descriptor: usize) -> bool {
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn a262_call_2f(addr: usize, x: f32, z: f32) -> u32 {
-    let call: extern "C" fn(f32, f32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32) -> u32);
     call(x, z)
 }
 
@@ -40819,7 +40813,7 @@ unsafe fn a262_call_2f(addr: usize, x: f32, z: f32) -> u32 {
 /// integer arguments are literal.
 #[inline]
 unsafe fn a262_call_2f_4u(addr: usize, x: f32, z: f32, a: u32, b: u32, c: u32, d: u32) -> u32 {
-    let call: extern "C" fn(f32, f32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(f32, f32, u32, u32, u32, u32) -> u32);
     call(x, z, a, b, c, d)
 }
 
@@ -52469,7 +52463,7 @@ const F32_SDA2_7BE4_B267: usize = SDA2_BASE - 0x7BE4;
 /// high - mechanical wrapper.
 #[inline]
 unsafe fn b267_call_2u_f32(addr: usize, a: u32, b: u32, f: f32) -> u32 {
-    let call: extern "C" fn(u32, u32, f32) -> u32 = core::mem::transmute(addr);
+    let call = crate::platform::guest_fn!(addr, fn(u32, u32, f32) -> u32);
     call(a, b, f)
 }
 
@@ -55092,8 +55086,7 @@ pub unsafe fn fn_80036120(this: usize) {
 /// `0x8042B564` (`0.8125f`) multiplier, the `(1, 0, 2)` integer triple and the
 /// scene store are literal; the twin is [`fn_80021470`].
 pub unsafe fn fn_80035d60(_owner: usize, actor: usize) {
-    let set_position: extern "C" fn(f32, f32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(vtable_method(actor, 0x60, 0x400));
+    let set_position = crate::platform::guest_fn!(vtable_method(actor, 0x60, 0x400), fn(f32, f32, u32, u32, u32, u32) -> u32);
     set_position(
         (read_f32(F32_0P2815_7B20_F269) + read_f32(F32_G_STAGE_8042A310_F269))
             * read_f32(F32_0P8125_7B24_F269),
@@ -61147,7 +61140,7 @@ pub unsafe fn fn_8002b760() {}
 /// `addr` must be the real virtual slot and accept the word in `r3`.
 #[inline]
 unsafe fn call_void_1u(addr: usize, a: u32) {
-    let target: extern "C" fn(u32) = core::mem::transmute(addr);
+    let target = crate::platform::guest_fn!(addr, fn(u32));
     target(a);
 }
 

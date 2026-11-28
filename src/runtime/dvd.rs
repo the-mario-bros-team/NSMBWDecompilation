@@ -1644,8 +1644,7 @@ unsafe fn dvd_call8(
     g: u32,
     h: u32,
 ) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g, h)
 }
 
@@ -5930,7 +5929,7 @@ const MSG_DVD_ERROR_LOG_DIR: u32 = 0x8034_1B14;
 /// # Confidence
 /// high - mechanical wrapper, same shape as [`dvd_call8`].
 unsafe fn dvd_call4_u64(addr: usize, a: u32, b: u32, c: u32, d: u32) -> u64 {
-    let func: extern "C" fn(u32, u32, u32, u32) -> u64 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32) -> u64);
     func(a, b, c, d)
 }
 
@@ -19223,7 +19222,7 @@ pub unsafe fn fn_801daaf0(out: usize) -> u32 {
 pub unsafe fn fn_801dab50(result: u32, context: usize) {
     let mapped = fn_801da570(result);
     let callback = platform::read_u32(context + 0x04) as usize;
-    let func: extern "C" fn(u32, u32) = core::mem::transmute(callback);
+    let func = crate::platform::guest_fn!(callback, fn(u32, u32));
     func(mapped, context as u32);
 }
 
@@ -19634,7 +19633,7 @@ const MTX_SQRT_F64: usize = 0x802E_8620;
 /// `0x802E8620` must be the entry point of an `f64(f64)` routine.
 #[inline]
 unsafe fn mtx_sqrt(value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(MTX_SQRT_F64);
+    let f = crate::platform::guest_fn!(MTX_SQRT_F64, fn(f64) -> f64);
     f(value)
 }
 
@@ -21324,7 +21323,7 @@ pub unsafe fn fn_801d9320(result: u32, context: usize) {
     }
     let mapped = fn_801da570(result);
     let callback = platform::read_u32(context + 0x04) as usize;
-    let func: extern "C" fn(u32, u32) = core::mem::transmute(callback);
+    let func = crate::platform::guest_fn!(callback, fn(u32, u32));
     func(mapped, context as u32);
 }
 
@@ -21502,7 +21501,7 @@ pub unsafe fn fn_801d9f00(result: u32, context: usize) {
     }
     let mapped = fn_801da570(result);
     let callback = platform::read_u32(context + 0x04) as usize;
-    let func: extern "C" fn(u32, u32) = core::mem::transmute(callback);
+    let func = crate::platform::guest_fn!(callback, fn(u32, u32));
     func(mapped, context as u32);
 }
 
@@ -21682,7 +21681,7 @@ pub unsafe fn fn_801daf10(result: u32, context: usize) {
     }
     let mapped = fn_801da570(code);
     let callback = platform::read_u32(context + 0x04) as usize;
-    let func: extern "C" fn(u32, u32) = core::mem::transmute(callback);
+    let func = crate::platform::guest_fn!(callback, fn(u32, u32));
     func(mapped, context as u32);
 }
 
@@ -22282,7 +22281,7 @@ pub unsafe fn fn_801dbd70() {
             let callback = platform::read_u32(SYSCONF_COMPLETION);
             if callback != 0 {
                 platform::write_u32(SYSCONF_COMPLETION, 0);
-                let func: extern "C" fn(u32) = core::mem::transmute(callback as usize);
+                let func = crate::platform::guest_fn!(callback as usize, fn(u32));
                 func(platform::read_u32(SYSCONF_RESULT));
             }
             platform::write_u8(SDA_SYSCONF_STATE, 3);
@@ -22410,7 +22409,7 @@ unsafe fn sda_table_byte(offset: isize, index: u32) -> u8 {
 /// `0x802E8590` must be the entry point of an `f64(f64)` routine.
 #[inline]
 unsafe fn fp_tan(value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(FP_TAN_F64);
+    let f = crate::platform::guest_fn!(FP_TAN_F64, fn(f64) -> f64);
     f(value)
 }
 
@@ -22420,7 +22419,7 @@ unsafe fn fp_tan(value: f64) -> f64 {
 /// `0x802DCC4C` must be the entry point of a `u32(f64)` routine.
 #[inline]
 unsafe fn fp_to_u32(value: f64) -> u32 {
-    let f: extern "C" fn(f64) -> u32 = core::mem::transmute(FP_TO_U32);
+    let f = crate::platform::guest_fn!(FP_TO_U32, fn(f64) -> u32);
     f(value)
 }
 
@@ -24048,8 +24047,7 @@ unsafe fn dvd_call9(
     h: u32,
     i: u32,
 ) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g, h, i)
 }
 
@@ -25316,14 +25314,14 @@ pub unsafe fn fn_801d97d0(result: i32, context: usize) {
     let callback = platform::read_u32(context + 0x04) as usize;
     if result < 0 {
         let mapped = fn_801da570(result as u32);
-        let func: extern "C" fn(u32, u32) = core::mem::transmute(callback);
+        let func = crate::platform::guest_fn!(callback, fn(u32, u32));
         func(mapped, context as u32);
     } else {
         let file = platform::read_u32(context + 0x08) as usize;
         platform::write_u32(file, result as u32);
         platform::write_u8(file + 0x89, 2);
         platform::write_u8(file + 0x8A, 1);
-        let func: extern "C" fn(u32) = core::mem::transmute(callback);
+        let func = crate::platform::guest_fn!(callback, fn(u32));
         func(0);
     }
 }
@@ -25896,7 +25894,7 @@ const MTXQ_DOT_LIMIT: isize = -0x4EFC;
 /// `0x802E84C4` must be the entry point of an `f32(f32)` routine.
 #[inline]
 unsafe fn fp_sin(value: f32) -> f32 {
-    let f: extern "C" fn(f32) -> f32 = core::mem::transmute(FP_SIN_F32);
+    let f = crate::platform::guest_fn!(FP_SIN_F32, fn(f32) -> f32);
     f(value)
 }
 
@@ -25906,7 +25904,7 @@ unsafe fn fp_sin(value: f32) -> f32 {
 /// `0x802E7FBC` must be the entry point of an `f32(f32)` routine.
 #[inline]
 unsafe fn fp_cos(value: f32) -> f32 {
-    let f: extern "C" fn(f32) -> f32 = core::mem::transmute(FP_COS_F32);
+    let f = crate::platform::guest_fn!(FP_COS_F32, fn(f32) -> f32);
     f(value)
 }
 
@@ -25916,7 +25914,7 @@ unsafe fn fp_cos(value: f32) -> f32 {
 /// `0x802E46A0` must be the entry point of an `f32(f32)` routine.
 #[inline]
 unsafe fn fp_acos(value: f32) -> f32 {
-    let f: extern "C" fn(f32) -> f32 = core::mem::transmute(FP_ACOS_F32);
+    let f = crate::platform::guest_fn!(FP_ACOS_F32, fn(f32) -> f32);
     f(value)
 }
 
@@ -29940,7 +29938,7 @@ pub unsafe fn fn_801dfb30() -> u32 {
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f64x4(addr: usize, f1: f64, f2: f64, f3: f64, f4: f64, a: u32, b: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, f64, f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, u32, u32) -> u32);
     f(f1, f2, f3, f4, a, b)
 }
 
@@ -30536,7 +30534,7 @@ unsafe fn gx_bp_write(word: u32) {
 /// `0x802E84C4` must be the entry point of an `f64(f64)` routine.
 #[inline]
 unsafe fn fp_sin_f64(value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(FP_SIN_F32);
+    let f = crate::platform::guest_fn!(FP_SIN_F32, fn(f64) -> f64);
     f(value)
 }
 
@@ -30550,7 +30548,7 @@ unsafe fn fp_sin_f64(value: f64) -> f64 {
 /// `0x802E7FBC` must be the entry point of an `f64(f64)` routine.
 #[inline]
 unsafe fn fp_cos_f64(value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(FP_COS_F32);
+    let f = crate::platform::guest_fn!(FP_COS_F32, fn(f64) -> f64);
     f(value)
 }
 
@@ -31206,8 +31204,7 @@ unsafe fn dvd_call12(
     a10: u32,
     a11: u32,
 ) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11)
 }
 

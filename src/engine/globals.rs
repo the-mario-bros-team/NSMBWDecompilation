@@ -402,8 +402,7 @@ unsafe fn call6(
     a5: u32,
     a6: u32,
 ) -> u32 {
-    let f: extern "C" fn(u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32) -> u32);
     f(a1, a2, a3, a4, a5, a6)
 }
 
@@ -415,7 +414,7 @@ unsafe fn call6(
 /// # Safety
 /// `addr` must point at a PowerPC function returning `u32`.
 unsafe fn call0_ret(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -429,7 +428,7 @@ unsafe fn call0_ret(addr: usize) -> u32 {
 /// `addr` must point at a PowerPC function with the EABI signature
 /// `void(f32, u32, i32, u8)`.
 unsafe fn call_f32_3(addr: usize, value: f32, a: u32, b: i32, c: u8) {
-    let f: extern "C" fn(f32, u32, i32, u8) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, i32, u8));
     f(value, a, b, c)
 }
 

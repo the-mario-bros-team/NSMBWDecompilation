@@ -406,7 +406,7 @@ unsafe fn is_instance_of(obj: u32, type_descriptor: u32) -> u32 {
 /// `addr` must point to a function with this ABI.
 #[inline]
 unsafe fn call0_r(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 

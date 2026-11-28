@@ -699,6 +699,354 @@ pub unsafe fn call_u64(addr: usize) -> u64 {
     }
 }
 
+/// One argument as the PowerPC EABI passes it: a word in the next GPR, a
+/// 64-bit value in an aligned GPR pair, or a float widened into the next FPR.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum GuestSlot {
+    Word(u32),
+    Pair(u64),
+    Float(f64),
+}
+
+/// A Rust argument type that a guest function receives in registers.
+///
+/// # Original
+/// Host-side adapter with no guest address.
+///
+/// # Confidence
+/// high - the EABI's integer, pair and float classes.
+pub trait GuestArg {
+    fn slot(self) -> GuestSlot;
+}
+
+macro_rules! guest_word_arg {
+    ($($t:ty => |$v:ident| $e:expr),* $(,)?) => {$(
+        impl GuestArg for $t {
+            #[inline]
+            fn slot(self) -> GuestSlot {
+                let $v = self;
+                GuestSlot::Word($e)
+            }
+        }
+    )*};
+}
+
+guest_word_arg! {
+    u32 => |v| v,
+    i32 => |v| v as u32,
+    u16 => |v| u32::from(v),
+    i16 => |v| v as i32 as u32,
+    u8 => |v| u32::from(v),
+    i8 => |v| v as i32 as u32,
+    bool => |v| u32::from(v),
+    usize => |v| u32::try_from(v).expect("guest call argument is wider than 32 bits"),
+}
+
+impl GuestArg for u64 {
+    #[inline]
+    fn slot(self) -> GuestSlot {
+        GuestSlot::Pair(self)
+    }
+}
+
+impl GuestArg for f32 {
+    #[inline]
+    fn slot(self) -> GuestSlot {
+        GuestSlot::Float(f64::from(self))
+    }
+}
+
+impl GuestArg for f64 {
+    #[inline]
+    fn slot(self) -> GuestSlot {
+        GuestSlot::Float(self)
+    }
+}
+
+/// Whether `addr` is null or inside guest RAM (MEM1, MEM2, their uncached
+/// mirrors, or the locked cache), so it can be handed to the guest as is.
+///
+/// # Original
+/// Host-side adapter with no guest address.
+///
+/// # Confidence
+/// high - the Wii's RAM map.
+pub fn is_guest_pointer(addr: usize) -> bool {
+    const RANGES: [(usize, usize); 5] = [
+        (0x8000_0000, 0x8180_0000),
+        (0x9000_0000, 0x9400_0000),
+        (0xC000_0000, 0xC180_0000),
+        (0xD000_0000, 0xD400_0000),
+        (0xE000_0000, 0xE000_4000),
+    ];
+    addr == 0 || RANGES.iter().any(|&(lo, hi)| (lo..hi).contains(&addr))
+}
+
+fn pointer_slot(addr: usize) -> GuestSlot {
+    // A host pointer (usually `&mut local`) means nothing to the guest. Such a
+    // call needs `call_registers_with_scratch`; stop here instead of letting
+    // the guest write through a truncated host address.
+    assert!(
+        is_guest_pointer(addr),
+        "host pointer {addr:#x} passed to a guest call (needs call_registers_with_scratch)"
+    );
+    GuestSlot::Word(addr as u32)
+}
+
+impl<T> GuestArg for *mut T {
+    #[inline]
+    fn slot(self) -> GuestSlot {
+        pointer_slot(self as usize)
+    }
+}
+
+impl<T> GuestArg for *const T {
+    #[inline]
+    fn slot(self) -> GuestSlot {
+        pointer_slot(self as usize)
+    }
+}
+
+/// A Rust return type read back from `r3`, `r3:r4` or `f1`.
+///
+/// # Original
+/// Host-side adapter with no guest address.
+///
+/// # Confidence
+/// high - the EABI's return registers.
+pub trait GuestRet {
+    fn from_registers(r3: u32, r4: u32, f1: f64) -> Self;
+}
+
+macro_rules! guest_ret {
+    ($($t:ty => |$r3:ident, $r4:ident, $f1:ident| $e:expr),* $(,)?) => {$(
+        impl GuestRet for $t {
+            #[inline]
+            fn from_registers($r3: u32, $r4: u32, $f1: f64) -> Self {
+                let _ = ($r3, $r4, $f1);
+                $e
+            }
+        }
+    )*};
+}
+
+guest_ret! {
+    () => |r3, r4, f1| (),
+    u32 => |r3, r4, f1| r3,
+    i32 => |r3, r4, f1| r3 as i32,
+    u16 => |r3, r4, f1| r3 as u16,
+    i16 => |r3, r4, f1| r3 as i16,
+    u8 => |r3, r4, f1| r3 as u8,
+    i8 => |r3, r4, f1| r3 as i8,
+    bool => |r3, r4, f1| r3 as u8 != 0,
+    usize => |r3, r4, f1| r3 as usize,
+    u64 => |r3, r4, f1| (u64::from(r3) << 32) | u64::from(r4),
+    f32 => |r3, r4, f1| f1 as f32,
+    f64 => |r3, r4, f1| f1,
+}
+
+/// Bytes of outgoing stack arguments a [`guest_call`] can lay out.
+pub const GUEST_CALL_STACK_BYTES: usize = 64;
+
+/// The registers and stack words for one call, laid out per the EABI.
+#[derive(Debug, PartialEq)]
+pub struct GuestArgs {
+    pub gprs: [u32; 8],
+    pub gpr_count: usize,
+    pub fprs: [f64; 8],
+    pub fpr_count: usize,
+    /// Big-endian bytes from `r1 + 8`.
+    pub stack: [u8; GUEST_CALL_STACK_BYTES],
+    pub stack_len: usize,
+}
+
+impl GuestArgs {
+    /// Lays out `slots` in order. Integers past `r10` go to the stack (pairs
+    /// 8-aligned, and a pair never splits across `r10`); more than eight
+    /// floats panics, since no caller needs them.
+    ///
+    /// # Original
+    /// Host-side adapter with no guest address.
+    ///
+    /// # Confidence
+    /// high - the EABI's argument rules; see the tests below.
+    pub fn layout(slots: &[GuestSlot]) -> Self {
+        let mut args = GuestArgs {
+            gprs: [0; 8],
+            gpr_count: 0,
+            fprs: [0.0; 8],
+            fpr_count: 0,
+            stack: [0; GUEST_CALL_STACK_BYTES],
+            stack_len: 0,
+        };
+        for slot in slots {
+            match *slot {
+                GuestSlot::Word(word) if args.gpr_count < 8 => {
+                    args.gprs[args.gpr_count] = word;
+                    args.gpr_count += 1;
+                }
+                GuestSlot::Word(word) => args.push_stack(&word.to_be_bytes(), 4),
+                GuestSlot::Pair(pair) => {
+                    args.gpr_count += args.gpr_count & 1;
+                    if args.gpr_count < 8 {
+                        args.gprs[args.gpr_count] = (pair >> 32) as u32;
+                        args.gprs[args.gpr_count + 1] = pair as u32;
+                        args.gpr_count += 2;
+                    } else {
+                        args.gpr_count = 8;
+                        args.push_stack(&pair.to_be_bytes(), 8);
+                    }
+                }
+                GuestSlot::Float(value) => {
+                    assert!(args.fpr_count < 8, "guest call has more than eight float arguments");
+                    args.fprs[args.fpr_count] = value;
+                    args.fpr_count += 1;
+                }
+            }
+        }
+        args
+    }
+
+    fn push_stack(&mut self, bytes: &[u8], align: usize) {
+        let at = self.stack_len.next_multiple_of(align);
+        let end = at + bytes.len();
+        assert!(end <= GUEST_CALL_STACK_BYTES, "guest call stack arguments overflow");
+        self.stack[at..end].copy_from_slice(bytes);
+        self.stack_len = end;
+    }
+}
+
+/// Calls the guest function at `addr` with typed arguments, for
+/// [`guest_fn!`]. Panics if the call fails, like the legacy helpers.
+///
+/// # Original
+/// Host-side adapter with no guest address.
+///
+/// # Confidence
+/// high - forwards to [`call_registers`] or, with stack arguments,
+/// [`call_frame_with_scratch`].
+#[cfg(feature = "guest-memory")]
+pub fn guest_call<R: GuestRet>(addr: usize, slots: &[GuestSlot]) -> R {
+    let args = GuestArgs::layout(slots);
+    let gprs = &args.gprs[..args.gpr_count];
+    let fprs = &args.fprs[..args.fpr_count];
+    let result = if args.stack_len == 0 {
+        call_registers(addr, gprs, fprs)
+    } else {
+        let mut words = [GuestWord::Immediate(0); 8];
+        for (word, &value) in words.iter_mut().zip(gprs) {
+            *word = GuestWord::Immediate(value);
+        }
+        let stack = &args.stack[..args.stack_len.next_multiple_of(4)];
+        call_frame_with_scratch(addr, &words[..args.gpr_count], fprs, stack, &mut [])
+    };
+    let result = result.unwrap_or_else(|error| panic!("guest call to {addr:#010x} failed: {error}"));
+    R::from_registers(result.r3, result.r4, result.f1)
+}
+
+/// A callable for the guest function at `addr` with the given `fn` type:
+/// `let f = platform::guest_fn!(addr, fn(u32, f32) -> u32); f(this, x)`.
+///
+/// With `guest-memory` it is a closure that runs the function on the guest
+/// CPU through [`guest_call`]. Without it, it is the legacy host function
+/// pointer (a transmute of `addr`), unchanged.
+///
+/// # Original
+/// Host-side adapter with no guest address.
+///
+/// # Confidence
+/// high - mechanical; [`GuestArgs::layout`] carries the ABI.
+macro_rules! guest_fn {
+    ($addr:expr, fn($($t:ty),* $(,)?) $(-> $r:ty)?) => {
+        $crate::platform::guest_fn!(
+            @build $addr; [$($t),*]; []; [p0 p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15]; $($r)?
+        )
+    };
+    (@build $addr:expr; [$t:ty $(, $rest:ty)*]; [$($done:tt)*]; [$n:ident $($names:ident)*]; $($r:ty)?) => {
+        $crate::platform::guest_fn!(
+            @build $addr; [$($rest),*]; [$($done)* ($n: $t)]; [$($names)*]; $($r)?
+        )
+    };
+    (@build $addr:expr; []; [$(($n:ident: $t:ty))*]; [$($unused:ident)*]; $($r:ty)?) => {{
+        let addr: usize = ($addr) as usize;
+        #[cfg(feature = "guest-memory")]
+        let function = move |$($n: $t),*| -> $crate::platform::guest_fn!(@ret $($r)?) {
+            $crate::platform::guest_call(
+                addr,
+                &[$($crate::platform::GuestArg::slot($n)),*],
+            )
+        };
+        #[cfg(not(feature = "guest-memory"))]
+        #[allow(unused_unsafe)]
+        let function = unsafe {
+            core::mem::transmute::<usize, extern "C" fn($($t),*) $(-> $r)?>(addr)
+        };
+        function
+    }};
+    (@ret) => { () };
+    (@ret $r:ty) => { $r };
+}
+pub(crate) use guest_fn;
+
+#[cfg(test)]
+mod guest_args_tests {
+    use super::*;
+
+    #[test]
+    fn words_pairs_and_floats_take_their_own_registers() {
+        let args = GuestArgs::layout(&[
+            1u32.slot(),
+            0x1122_3344_5566_7788u64.slot(),
+            2.5f32.slot(),
+            (-1i16).slot(),
+            7.0f64.slot(),
+        ]);
+        // r3 = 1, r4 skipped so the pair is r5:r6, then r7.
+        assert_eq!(&args.gprs[..args.gpr_count], &[1, 0, 0x1122_3344, 0x5566_7788, 0xFFFF_FFFF]);
+        assert_eq!(&args.fprs[..args.fpr_count], &[2.5, 7.0]);
+        assert_eq!(args.stack_len, 0);
+    }
+
+    #[test]
+    fn words_past_r10_go_to_the_stack_in_order() {
+        let slots: [GuestSlot; 10] = core::array::from_fn(|i| (i as u32 + 1).slot());
+        let args = GuestArgs::layout(&slots);
+        assert_eq!(args.gprs, [1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(&args.stack[..args.stack_len], &[0, 0, 0, 9, 0, 0, 0, 10]);
+    }
+
+    #[test]
+    fn a_pair_never_splits_across_r10() {
+        let mut slots = [GuestSlot::Word(0); 8];
+        for (i, slot) in slots.iter_mut().enumerate().take(7) {
+            *slot = (i as u32).slot();
+        }
+        slots[7] = 0x0102_0304_0506_0708u64.slot();
+        let args = GuestArgs::layout(&slots);
+        assert_eq!(args.gpr_count, 8);
+        assert_eq!(&args.stack[..args.stack_len], &[1, 2, 3, 4, 5, 6, 7, 8]);
+    }
+
+    #[test]
+    fn host_pointers_are_refused() {
+        assert_eq!((0x8040_0000usize as *mut u32).slot(), GuestSlot::Word(0x8040_0000));
+        assert_eq!(core::ptr::null::<u8>().slot(), GuestSlot::Word(0));
+        let mut local = 0u32;
+        let host = &mut local as *mut u32;
+        if !is_guest_pointer(host as usize) {
+            extern crate std;
+            assert!(std::panic::catch_unwind(|| host.slot()).is_err());
+        }
+    }
+
+    #[test]
+    fn returns_come_from_r3_r4_and_f1() {
+        assert_eq!(u64::from_registers(1, 2, 0.0), 0x1_0000_0002);
+        assert_eq!(i16::from_registers(0xFFFF, 0, 0.0), -1);
+        assert_eq!(f32::from_registers(0, 0, 0.5), 0.5);
+    }
+}
+
 #[cfg(all(test, feature = "guest-memory"))]
 mod tests {
     use super::*;
@@ -751,13 +1099,48 @@ mod tests {
         fn call_frame_with_scratch(
             &mut self,
             _addr: u32,
-            _gprs: &[GuestWord],
+            gprs: &[GuestWord],
             _fprs: &[f64],
-            _stack: &[u8],
-            _scratch: &mut [u8],
+            stack: &[u8],
+            scratch: &mut [u8],
         ) -> Result<GuestCallResult, String> {
-            Err("scratch is unavailable in this fixture".into())
+            if !scratch.is_empty() || gprs.len() != 8 {
+                return Err("scratch is unavailable in this fixture".into());
+            }
+            // Stack-argument calls report the stack words they were given.
+            let words = stack.chunks(4).map(|w| u32::from_be_bytes(w.try_into().unwrap()));
+            Ok(GuestCallResult {
+                r3: words.fold(0, |sum, word| sum * 100 + word),
+                r4: stack.len() as u32,
+                f1: 0.0,
+            })
         }
+    }
+
+    #[test]
+    fn guest_fn_passes_typed_arguments_and_returns() {
+        let mut runtime = TestRuntime(Mem::new(Box::new(NullMmio)));
+        with_guest_runtime(&mut runtime, || {
+            let entry = 0x8000_2000usize;
+            // Words take r3, r4 in order; the float goes to f1.
+            let words = guest_fn!(entry, fn(u32, f32, usize) -> u32);
+            assert_eq!(words(1, 0.5, 2), 0x8000_0005);
+            let floats = guest_fn!(entry, fn(f32, f64) -> f32);
+            assert_eq!(floats(0.5, 0.25), 0.75);
+            let pair = guest_fn!(entry, fn() -> u64);
+            assert_eq!(pair(), 0x8000_0000_1234_5678);
+            let signed = guest_fn!(entry, fn(i16) -> i32);
+            // -1 is sign-extended to 0xFFFF_FFFF in r3.
+            assert_eq!(signed(-1), -1);
+            let nothing = guest_fn!(entry, fn(u32));
+            nothing(3);
+            let ten = guest_fn!(
+                entry,
+                fn(u32, u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u64
+            );
+            assert_eq!(ten(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), (910 << 32) | 8);
+            assert_eq!(unsafe { read_u8(0x8000_0100) }, 5);
+        });
     }
 
     #[test]

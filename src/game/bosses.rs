@@ -644,7 +644,7 @@ const STATE_NAME_CTOR: usize = 0x8015_F7C0;
 /// # Confidence
 /// high - mechanical ABI shim; the same pattern appears in other lanes.
 unsafe fn call0_ret(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -2212,7 +2212,7 @@ unsafe fn read_f64(addr: usize) -> f64 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f32_1(addr: usize, a: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(a)
 }
 
@@ -2221,7 +2221,7 @@ unsafe fn call_f32_1(addr: usize, a: u32) -> f32 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f64_ret(addr: usize, value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(value)
 }
 
@@ -2230,7 +2230,7 @@ unsafe fn call_f64_ret(addr: usize, value: f64) -> f64 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f64_1(addr: usize, value: f64, a: u32) -> u32 {
-    let f: extern "C" fn(f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32) -> u32);
     f(value, a)
 }
 
@@ -2239,7 +2239,7 @@ unsafe fn call_f64_1(addr: usize, value: f64, a: u32) -> u32 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f64_2(addr: usize, value: f64, a: u32, b: u32) -> u32 {
-    let f: extern "C" fn(f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32, u32) -> u32);
     f(value, a, b)
 }
 
@@ -2251,8 +2251,7 @@ unsafe fn call_f64_2(addr: usize, value: f64, a: u32, b: u32) -> u32 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_fff_uuu(addr: usize, a: f64, b: f64, c: f64, d: u32, e: u32, f: u32) -> u32 {
-    let func: extern "C" fn(f64, f64, f64, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f)
 }
 
@@ -4676,7 +4675,7 @@ pub unsafe fn fn_80c4ff10(manager: usize) {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f64_f64_u32(addr: usize, value: f64, a: u32) -> f64 {
-    let f: extern "C" fn(f64, u32) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32) -> f64);
     f(value, a)
 }
 
@@ -4688,7 +4687,7 @@ unsafe fn call_f64_f64_u32(addr: usize, value: f64, a: u32) -> f64 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_fff_u(addr: usize, a: f64, b: f64, c: f64, d: u32) {
-    let f: extern "C" fn(f64, f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32));
     f(a, b, c, d);
 }
 
@@ -6448,7 +6447,7 @@ pub unsafe fn fn_80c23fd0(actor: usize) {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f32_0(addr: usize) -> f32 {
-    let f: extern "C" fn() -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> f32);
     f()
 }
 
@@ -6457,7 +6456,7 @@ unsafe fn call_f32_0(addr: usize) -> f32 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_i16_ff(addr: usize, a: f64, b: f64) -> i16 {
-    let f: extern "C" fn(f64, f64) -> i16 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> i16);
     f(a, b)
 }
 
@@ -6469,7 +6468,7 @@ unsafe fn call_i16_ff(addr: usize, a: f64, b: f64) -> i16 {
 unsafe fn vcall_f64_ret(vtable_object: usize, slot: usize) -> f64 {
     let vtable = platform::read_u32(vtable_object) as usize;
     let function = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn() -> f64 = core::mem::transmute(function);
+    let f = crate::platform::guest_fn!(function, fn() -> f64);
     f()
 }
 
@@ -7844,7 +7843,7 @@ pub unsafe fn fn_80c4d1c0(actor: usize) {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_ff_uuuu(addr: usize, a: f64, b: f64, c: u32, d: u32, e: u32, f: u32) -> u32 {
-    let func: extern "C" fn(f64, f64, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f)
 }
 
@@ -7862,8 +7861,7 @@ unsafe fn call_ff_uuuuu(
     f: u32,
     g: u32,
 ) -> u32 {
-    let func: extern "C" fn(f64, f64, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g)
 }
 
@@ -7886,7 +7884,7 @@ unsafe fn vcall4(vtable_object: usize, slot: usize, a: u32, b: u32, c: u32, d: u
 unsafe fn vcall_f64_arg1(vtable_object: usize, slot: usize, a: u32) -> f64 {
     let vtable = platform::read_u32(vtable_object) as usize;
     let function = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(u32) -> f64 = core::mem::transmute(function);
+    let f = crate::platform::guest_fn!(function, fn(u32) -> f64);
     f(a)
 }
 
@@ -11238,7 +11236,7 @@ pub unsafe fn fn_80c0e4c0(actor: usize) -> u32 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_ff_uu(addr: usize, a: f64, b: f64, c: u32, d: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32) -> u32);
     f(a, b, c, d)
 }
 
@@ -12491,7 +12489,7 @@ unsafe fn class_call2(actor: usize, slot: usize, a: u32, b: u32) -> u32 {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_fff_uu(addr: usize, a: f64, b: f64, c: f64, d: u32, e: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, u32, u32) -> u32);
     f(a, b, c, d, e)
 }
 
@@ -14279,7 +14277,7 @@ pub unsafe fn fn_80c30c30(actor: usize) {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_ff_uuu(addr: usize, a: f64, b: f64, c: u32, d: u32, e: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32, u32, u32) -> u32);
     f(a, b, c, d, e)
 }
 
@@ -15802,7 +15800,7 @@ pub unsafe fn fn_80c3d5a0() -> usize {
 /// # Confidence
 /// high - mechanical ABI shim; the prototype is read from the export.
 unsafe fn call_ffff_u(addr: usize, a: f64, b: f64, c: f64, d: f64, e: u32) {
-    let f: extern "C" fn(f64, f64, f64, f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, f64, f64, u32));
     f(a, b, c, d, e);
 }
 
@@ -16856,7 +16854,7 @@ pub unsafe fn fn_80c33880(point: usize, actor: usize) {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f32_2(addr: usize, a: u32, b: u32) -> f32 {
-    let f: extern "C" fn(u32, u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32) -> f32);
     f(a, b)
 }
 
@@ -16868,7 +16866,7 @@ unsafe fn call_f32_2(addr: usize, a: u32, b: u32) -> f32 {
 unsafe fn vcall_f32_arg1(vtable_object: usize, slot: usize, a: u32) -> f32 {
     let vtable = platform::read_u32(vtable_object) as usize;
     let function = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(function);
+    let f = crate::platform::guest_fn!(function, fn(u32) -> f32);
     f(a)
 }
 
@@ -20813,7 +20811,7 @@ pub unsafe fn fn_80c56390(actor: usize) -> f64 {
 unsafe fn vcall_f32_0(vtable_object: usize, slot: usize) -> f32 {
     let vtable = platform::read_u32(vtable_object) as usize;
     let function = platform::read_u32(vtable + slot) as usize;
-    let f: extern "C" fn() -> f32 = core::mem::transmute(function);
+    let f = crate::platform::guest_fn!(function, fn() -> f32);
     f()
 }
 
@@ -20828,7 +20826,7 @@ unsafe fn vcall_f32_0(vtable_object: usize, slot: usize) -> f32 {
 /// # Confidence
 /// high - mechanical ABI shim.
 unsafe fn call_ff_u(addr: usize, a: f64, b: f64, c: u32) -> u32 {
-    let f: extern "C" fn(f64, f64, u32) -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64, u32) -> u32);
     f(a, b, c)
 }
 
@@ -26023,7 +26021,7 @@ unsafe fn follow_relative(node: usize, field: usize) -> usize {
 /// # Safety
 /// `addr` must point to a PowerPC EABI function with that prototype.
 unsafe fn call_f64_3(addr: usize, value: f64, a: u32, b: u32, c: u32) -> u32 {
-    let func: extern "C" fn(f64, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f64, u32, u32, u32) -> u32);
     func(value, a, b, c)
 }
 

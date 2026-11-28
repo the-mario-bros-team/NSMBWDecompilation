@@ -2432,7 +2432,7 @@ unsafe fn kpad_ring_count(ring: usize) -> u32 {
 /// `addr` must be a function with the `f64`-in/`f64`-out ABI, and the caller
 /// must run on the target (or an ABI-compatible host).
 unsafe fn call_f64_1(addr: usize, value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(value)
 }
 
@@ -12642,8 +12642,7 @@ unsafe fn call9(
     h: u32,
     i: u32,
 ) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g, h, i)
 }
 
@@ -20136,8 +20135,7 @@ unsafe fn call8(
     g: u32,
     h: u32,
 ) -> u32 {
-    let func: extern "C" fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32, u32, u32, u32, u32) -> u32);
     func(a, b, c, d, e, f, g, h)
 }
 
@@ -26501,7 +26499,7 @@ unsafe fn kpad_axis_ratio(value: i32, low: i32, high: i32) -> f32 {
 /// # Safety
 /// `addr` must accept the `(f64, u32, u32)` ABI and return a word.
 unsafe fn call_f64_2ptr(addr: usize, value: f64, a: u32, b: u32) -> u32 {
-    let func: extern "C" fn(f64, u32, u32) -> u32 = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f64, u32, u32) -> u32);
     func(value, a, b)
 }
 
@@ -28104,7 +28102,7 @@ const MSG_VOLUME: u32 = 0x8034_40D0;
 /// # Safety
 /// `addr` must be `0x801EA8F0`-shaped and `format` must take one `%lf`.
 unsafe fn report_f64_1(addr: usize, format: u32, a: f64) {
-    let f: extern "C" fn(u32, f64) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, f64));
     f(format, a);
 }
 
@@ -28113,7 +28111,7 @@ unsafe fn report_f64_1(addr: usize, format: u32, a: f64) {
 /// # Safety
 /// `addr` must be `0x801EA8F0`-shaped and `format` must take two `%lf`.
 unsafe fn report_f64_2(addr: usize, format: u32, a: f64, b: f64) {
-    let f: extern "C" fn(u32, f64, f64) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, f64, f64));
     f(format, a, b);
 }
 

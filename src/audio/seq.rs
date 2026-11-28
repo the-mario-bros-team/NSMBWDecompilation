@@ -1374,7 +1374,7 @@ const FUN_800046B4: usize = 0x8000_46B4;
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call0_r(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -14146,7 +14146,7 @@ const SEQ_STREAM_BUFFER: usize = 0x8041_2FA0;
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f64_u32(addr: usize, first: f64, second: u32) {
-    let f: extern "C" fn(f64, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, u32));
     f(first, second);
 }
 
@@ -14156,7 +14156,7 @@ unsafe fn call_f64_u32(addr: usize, first: f64, second: u32) {
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call4_u64(addr: usize, a: u32, b: u32, c: u32, d: u32) -> u64 {
-    let f: extern "C" fn(u32, u32, u32, u32) -> u64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32, u32, u32) -> u64);
     f(a, b, c, d)
 }
 
@@ -17037,7 +17037,7 @@ unsafe fn int_to_f64(value: u32) -> f64 {
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f64_f64(addr: usize, first: f64, second: f64) -> f64 {
-    let f: extern "C" fn(f64, f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64, f64) -> f64);
     f(first, second)
 }
 
@@ -17047,7 +17047,7 @@ unsafe fn call_f64_f64(addr: usize, first: f64, second: f64) -> f64 {
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f64(addr: usize, value: f64) -> f64 {
-    let f: extern "C" fn(f64) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f64) -> f64);
     f(value)
 }
 
@@ -17058,7 +17058,7 @@ unsafe fn call_f64(addr: usize, value: f64) -> f64 {
 /// whatever the callee reads.
 #[inline]
 unsafe fn call_ptr_f64(addr: usize, ptr: u32) -> f64 {
-    let f: extern "C" fn(u32) -> f64 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f64);
     f(ptr)
 }
 
@@ -18512,7 +18512,7 @@ const SEQ_VOICE_REQUEST_TEMPLATE: usize = 0x802F_A788;
 /// whatever the callee reads.
 #[inline]
 unsafe fn call_ptr_f32(addr: usize, ptr: u32) -> f32 {
-    let f: extern "C" fn(u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32) -> f32);
     f(ptr)
 }
 
@@ -18522,7 +18522,7 @@ unsafe fn call_ptr_f32(addr: usize, ptr: u32) -> f32 {
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f32_f32(addr: usize, first: f32, second: f32) -> f32 {
-    let f: extern "C" fn(f32, f32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, f32) -> f32);
     f(first, second)
 }
 
@@ -18532,7 +18532,7 @@ unsafe fn call_f32_f32(addr: usize, first: f32, second: f32) -> f32 {
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f32_u32(addr: usize, value: f32, word: u32) {
-    let f: extern "C" fn(f32, u32) = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32));
     f(value, word);
 }
 
@@ -18543,7 +18543,7 @@ unsafe fn call_f32_u32(addr: usize, value: f32, word: u32) {
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_f32_u32_u32(addr: usize, value: f32, first: u32, second: u32) -> f32 {
-    let f: extern "C" fn(f32, u32, u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(f32, u32, u32) -> f32);
     f(value, first, second)
 }
 
@@ -18553,7 +18553,7 @@ unsafe fn call_f32_u32_u32(addr: usize, value: f32, first: u32, second: u32) -> 
 /// `addr` must point at a function with this ABI.
 #[inline]
 unsafe fn call_u32_u32_f32(addr: usize, first: u32, second: u32) -> f32 {
-    let f: extern "C" fn(u32, u32) -> f32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn(u32, u32) -> f32);
     f(first, second)
 }
 
@@ -19667,7 +19667,7 @@ pub unsafe fn fn_802755b0(this: usize, a: u32, b: u32, c: u32, d: u32, e: usize)
 pub unsafe fn fn_802755d0(this: usize, a: u32, b: u32, c: u8, d: u32) {
     let mut flag = c;
     let method = platform::read_u32(platform::read_u32(this) as usize + 0x14) as usize;
-    let call: extern "C" fn(u32, u32, u32, u32, *mut u8) = core::mem::transmute(method);
+    let call = crate::platform::guest_fn!(method, fn(u32, u32, u32, u32, *mut u8));
     call(this as u32, a, b, d, &mut flag);
 }
 
@@ -19702,6 +19702,6 @@ pub unsafe fn fn_802755d0(this: usize, a: u32, b: u32, c: u8, d: u32) {
 pub unsafe fn fn_80275610(this: usize, a: u32, b: u32) -> u32 {
     let object = platform::read_u32(this + 4) as usize;
     let method = platform::read_u32(platform::read_u32(object + 8) as usize + 0x28) as usize;
-    let call: extern "C" fn(u32, u32, u32) -> u32 = core::mem::transmute(method);
+    let call = crate::platform::guest_fn!(method, fn(u32, u32, u32) -> u32);
     call(object as u32, a, b)
 }

@@ -113,7 +113,7 @@ unsafe fn write_f32(addr: usize, value: f32) {
 /// `addr` must accept one float plus four integer arguments.
 #[inline]
 unsafe fn call_f32_u32x4(addr: usize, f: f32, a: u32, b: u32, c: u32, d: u32) -> u32 {
-    let function: extern "C" fn(f32, u32, u32, u32, u32) -> u32 = core::mem::transmute(addr);
+    let function = crate::platform::guest_fn!(addr, fn(f32, u32, u32, u32, u32) -> u32);
     function(f, a, b, c, d)
 }
 

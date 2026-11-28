@@ -887,7 +887,7 @@ pub unsafe fn fn_8000f4b0(owner: usize, size_out: u32, index: i32, label: u32) -
 /// Calls a no-argument function that returns `u32`.
 #[inline]
 unsafe fn call0_r(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -906,7 +906,7 @@ unsafe fn call6_f32(
     e: f32,
     f: f32,
 ) {
-    let func: extern "C" fn(f32, f32, f32, f32, f32, f32) = core::mem::transmute(addr);
+    let func = crate::platform::guest_fn!(addr, fn(f32, f32, f32, f32, f32, f32));
     func(a, b, c, d, e, f)
 }
 

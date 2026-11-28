@@ -405,7 +405,7 @@ const FN_8016F410: usize = 0x8016_F410;
 /// `addr` must point at a PowerPC function returning `u32` with the Metrowerks
 /// EABI, and the caller must be running on a PowerPC target.
 unsafe fn call0_ret(addr: usize) -> u32 {
-    let f: extern "C" fn() -> u32 = core::mem::transmute(addr);
+    let f = crate::platform::guest_fn!(addr, fn() -> u32);
     f()
 }
 
@@ -991,8 +991,7 @@ unsafe fn call_f64_u32x5(
     e: u32,
     f: u32,
 ) -> u32 {
-    let function: extern "C" fn(f64, u32, u32, u32, u32, u32) -> u32 =
-        core::mem::transmute(addr);
+    let function = crate::platform::guest_fn!(addr, fn(f64, u32, u32, u32, u32, u32) -> u32);
     function(a, b, c, d, e, f)
 }
 
