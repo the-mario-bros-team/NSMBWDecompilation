@@ -64173,13 +64173,15 @@ pub unsafe fn fn_80075ca0(
     }
     let mut probe = crate::platform::GuestLocal::new( [pos_x, pos_y, 0.0f32, pos_x, start, 0.0f32]);
     let mut floor = start;
+    let mut result = 0u32;
     if fn_800766f0(probe.as_mut_ptr() as usize, 0, mask, layer) != 0 {
+        // observed 0x80075D9C: a probe hit already counts as found (`li r31,1`).
         floor = probe[4];
+        result = 1;
     }
     let step = read_f32(W96_F_STEP_TIER);
     let scale = read_f32(W91_F_FIXED_ONE);
     let mut y = pos_y;
-    let mut result = 0u32;
     loop {
         if floor < y {
             break;
@@ -64211,7 +64213,12 @@ pub unsafe fn fn_80075ca0(
                 break;
             }
         }
-        y -= step;
+        // observed 0x80075F3C: found ends the search; otherwise it steps up
+        // (`fadds f27,f27,f31`, +8).
+        if result != 0 {
+            break;
+        }
+        y += step;
     }
     if result != 0 {
         if floor < pos_y {
