@@ -841,7 +841,7 @@ pub unsafe fn fn_801dfc40(channel: u32, connected: u32) {
             restore_interrupts(token);
 
             let key_src = platform::call1(BT_GET_LINK_KEY, id as u32) as usize;
-            let mut key = [0u8; 6];
+            let mut key = crate::platform::GuestLocal::new( [0u8; 6]);
             if key_src == 0 {
                 platform::call3(MEMSET, key.as_mut_ptr() as u32, 0, 6);
             } else {
@@ -900,7 +900,7 @@ pub unsafe fn fn_801dfd10(channel: u32, reset: u32) {
             restore_interrupts(token);
 
             let key_src = platform::call1(BT_GET_LINK_KEY, id as u32) as usize;
-            let mut key = [0u8; 6];
+            let mut key = crate::platform::GuestLocal::new( [0u8; 6]);
             if key_src == 0 {
                 platform::call3(MEMSET, key.as_mut_ptr() as u32, 0, 6);
             } else {
@@ -1637,6 +1637,8 @@ unsafe fn kpad_report_block(control: usize) -> usize {
 /// high - the count arithmetic, clear, copy and wrap are identical in both
 /// callers.
 unsafe fn kpad_ring_push(control: usize, block: &[u8; 0x30]) -> bool {
+    // The game reads these through their addresses: guest copies.
+    let block = crate::platform::GuestLocal::new(*block);
     let token = disable_interrupts();
     let base = platform::read_u32(control + 0x164) as usize;
     let capacity = platform::read_u32(control + 0x168);
@@ -2506,7 +2508,7 @@ pub unsafe fn fn_801de9d0(channel: u32) {
                     let device = platform::read_u8(control + 0x8C3);
                     restore_interrupts(token);
                     let key_src = platform::call1(BT_GET_LINK_KEY, device as u32) as usize;
-                    let mut key = [0u8; 6];
+                    let mut key = crate::platform::GuestLocal::new( [0u8; 6]);
                     if key_src == 0 {
                         platform::call3(MEMSET, key.as_mut_ptr() as u32, 0, 6);
                     } else {
@@ -2728,7 +2730,7 @@ pub unsafe fn fn_801e0820(device: usize, connected: u32) {
             let token = disable_interrupts();
             let base = platform::read_u32(control + 0x164) as usize;
             let tail = platform::read_u8(control + 0x160);
-            let mut block = [0u8; 0x30];
+            let mut block = crate::platform::GuestLocal::new( [0u8; 0x30]);
             platform::call3(
                 MEMCPY,
                 block.as_mut_ptr() as u32,
@@ -3177,7 +3179,7 @@ pub unsafe fn fn_801e3920(channel: u32) -> u8 {
 /// # Confidence
 /// high - the count test, slot clear/copy and wrap are exact.
 pub unsafe fn fn_801e4c50(ring: usize, command: u32, flag: u32, callback: u32) -> bool {
-    let mut block = kpad_cmd_block(0x12);
+    let mut block = crate::platform::GuestLocal::new( kpad_cmd_block(0x12));
     block[4] = if flag == 0 { 0x04 } else { 0 };
     block[5] = match command {
         0 => 0x30,
@@ -3269,7 +3271,7 @@ pub unsafe fn fn_801e4a40(channel: u32, value: u32, callback: u32) -> i32 {
         if connected == 0 || call0_ret(KPAD_BALANCE_BOARD_ALLOWED) == 0 {
             result = -2;
         } else {
-            let mut block = [0u8; 7];
+            let mut block = crate::platform::GuestLocal::new( [0u8; 7]);
             block[0] = 0xAA;
             block[1] = 0xAA;
             block[2] = 0xAA;
@@ -5323,7 +5325,7 @@ pub unsafe fn fn_801f6480(event: u32, data: usize) {
 /// observed but not named by a string.
 pub unsafe fn fn_801fe174(status: u32, result: u16, event: usize) {
     let control = platform::read_u32(BTA_HH_SDP_CB) as usize;
-    let mut message = [0u8; 12];
+    let mut message = crate::platform::GuestLocal::new( [0u8; 12]);
     message[0] = 0x10;
 
     if status == 0 {
@@ -5353,7 +5355,7 @@ pub unsafe fn fn_801fe174(status: u32, result: u16, event: usize) {
                 0x8020_FF70,
                 (control + 8) as u32,
                 result as u32,
-                message[1..].as_mut_ptr() as u32,
+                message.elem_ptr(1) as u32,
             ) as u8;
             if message[0] == 0 {
                 let handle = message[1];
@@ -5411,7 +5413,7 @@ pub unsafe fn fn_801fe174(status: u32, result: u16, event: usize) {
 /// medium - the SDP call and buffer size are exact; the control fields are
 /// named by their observed use.
 pub unsafe fn fn_801fe2a8(control: usize, event: usize) {
-    let mut message = [0u8; 11];
+    let mut message = crate::platform::GuestLocal::new( [0u8; 11]);
     message[0] = 0x10;
     platform::write_u8(control + 0x14, platform::read_u8(event + 0x0E));
     platform::write_u8(control + 0x1B, platform::read_u8(event + 0x0F));
@@ -5428,7 +5430,7 @@ pub unsafe fn fn_801fe2a8(control: usize, event: usize) {
                 (event + 8) as u32,
                 buffer,
                 size,
-                fn_801fe174 as usize as u32,
+                0x801F_E174u32 /* the original `fn_801fe174` */,
             ) as u8;
             if message[0] != 0 {
                 if bta_trace_level() > 4 {
@@ -5455,25 +5457,25 @@ pub unsafe fn fn_801fe2a8(control: usize, event: usize) {
             );
         }
         if platform::read_u8(control + 0x16) == 0xFF {
-            let mut handle = 0u8;
+            let mut handle = crate::platform::GuestLocal::<u8>::new( 0u8);
             message[0] = platform::call3(
                 0x8020_FF70,
                 (control + 8) as u32,
                 platform::read_u16(control + 0x0E) as u32,
-                &mut handle as *mut u8 as u32,
+                (handle.as_mut_ptr() as *mut u8) as u32,
             ) as u8;
             if message[0] == 0 {
                 platform::call6(
                     0x8020_0080,
                     control as u32,
-                    handle as u32,
+                    *handle as u32,
                     platform::read_u16(control + 0x0E) as u32,
                     0,
                     platform::read_u8(control + 0x13) as u32,
                     platform::read_u8(control + 0x15) as u32,
                 );
                 platform::write_u8(
-                    BTA_HH_DEVICE_BY_HANDLE + handle as usize,
+                    BTA_HH_DEVICE_BY_HANDLE + *handle as usize,
                     platform::read_u8(control + 0x12),
                 );
             }
@@ -5523,7 +5525,7 @@ pub unsafe fn fn_801fe43c(control: usize, status: usize) {
         );
     }
 
-    let mut payload = [0u8; 8];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 8]);
     platform::call3(MEMSET, payload.as_mut_ptr() as u32, 0, 8);
     payload[7] = platform::read_u8(control + 0x16);
     platform::call2(
@@ -5612,7 +5614,7 @@ pub unsafe fn fn_801fe5a4(control: usize, event: usize) {
     } else {
         platform::read_u16(event + 6) as u8
     };
-    let mut payload = [6u8, handle];
+    let mut payload = crate::platform::GuestLocal::new( [6u8, handle]);
     // inferred: `0x8021036C` takes the handle; the decompiler lost the
     // argument while keeping the computed `handle` in a local.
     let opened = platform::call1(0x8021_036C, handle as u32) as u8;
@@ -5654,7 +5656,7 @@ pub unsafe fn fn_801fe60c(control: usize, event: usize) {
         platform::read_u16(event + 6) & 0xFF
     };
 
-    let mut payload = [0u8; 8];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 8]);
     platform::call3(MEMSET, payload.as_mut_ptr() as u32, 0, 8);
     payload[7] = handle as u8;
     platform::call2(
@@ -5747,11 +5749,11 @@ pub unsafe fn fn_801fe734(control: usize, event: usize) {
     }
     if platform::read_u8(control + 0x15) == 0 {
         platform::write_u8(control + 0x19, 1);
-        let mut payload = [0u8; 0x10];
+        let mut payload = crate::platform::GuestLocal::new( [0u8; 0x10]);
         platform::call3(MEMSET, payload.as_mut_ptr() as u32, 0, 0x10);
         platform::call2(
             BTA_HH_COPY_BDA,
-            payload[8..].as_mut_ptr() as u32,
+            payload.elem_ptr(8) as u32,
             (control + 8) as u32,
         );
         fn_801fe2a8(control, payload.as_ptr() as usize);
@@ -5784,20 +5786,20 @@ pub unsafe fn fn_801fe734(control: usize, event: usize) {
 /// medium - the record pointer and its `+2`/`+4` words are observed; their
 /// official names are not recovered.
 pub unsafe fn fn_801fe7ec(control: usize, event: usize) {
-    let mut record = platform::read_u32(event + 0x0C);
+    let mut record = crate::platform::GuestLocal::new( platform::read_u32(event + 0x0C));
     let payload = record
-        .wrapping_add(platform::read_u16(record as usize + 4) as u32)
+        .wrapping_add(platform::read_u16(*record as usize + 4) as u32)
         .wrapping_add(8);
     platform::call6(
         0x801F_6A00,
         platform::read_u16(event + 6) as u32 & 0xFF,
         payload,
-        platform::read_u16(record as usize + 2) as u32,
+        platform::read_u16(*record as usize + 2) as u32,
         platform::read_u8(control + 0x1B) as u32,
         platform::read_u8(control + 0x13) as u32,
         platform::read_u8(control + 0x15) as u32,
     );
-    platform::call1(BTA_HH_FREEBUF, &mut record as *mut u32 as u32);
+    platform::call1(BTA_HH_FREEBUF, (record.as_mut_ptr() as *mut u32) as u32);
 }
 
 /// Reports a HID handshake result and clears the pending transaction.
@@ -5847,7 +5849,7 @@ pub unsafe fn fn_801fe844(control: usize, event: usize) {
     let transaction = platform::read_u16(control + 0x10);
     match transaction {
         2 => {
-            let mut payload = [0u8; 8];
+            let mut payload = crate::platform::GuestLocal::new( [0u8; 8]);
             payload[6] = if platform::read_i32(event + 8) != 0 {
                 8
             } else {
@@ -5870,7 +5872,7 @@ pub unsafe fn fn_801fe844(control: usize, event: usize) {
             }
         }
         4 | 6 | 8 => {
-            let mut payload = [0u8; 10];
+            let mut payload = crate::platform::GuestLocal::new( [0u8; 10]);
             payload[9] = platform::read_u8(control + 0x16);
             let value = platform::read_i32(event + 8);
             payload[8] = if value < 0 {
@@ -5887,7 +5889,7 @@ pub unsafe fn fn_801fe844(control: usize, event: usize) {
             platform::write_u16(control + 0x10, 0);
         }
         5 | 7 | 9 => {
-            let mut payload = [0u8; 2];
+            let mut payload = crate::platform::GuestLocal::new( [0u8; 2]);
             payload[1] = platform::read_u8(control + 0x16);
             let value = platform::read_i32(event + 8);
             payload[0] = if value < 0 {
@@ -5970,7 +5972,7 @@ pub unsafe fn fn_801feaac(control: usize, event: usize) {
 
     // unknown: the original leaves bytes after the copied payload
     // uninitialised; they are modelled as zero.
-    let mut payload = [0u8; 0x1A];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x1A]);
     payload[0] = 0;
     payload[1] = platform::read_u8(control + 0x16);
 
@@ -5985,7 +5987,7 @@ pub unsafe fn fn_801feaac(control: usize, event: usize) {
                 } else if transaction > 3 {
                     platform::call3(
                         MEMCPY,
-                        payload[2..].as_mut_ptr() as u32,
+                        payload.elem_ptr(2) as u32,
                         record as u32,
                         8,
                     );
@@ -6034,8 +6036,8 @@ pub unsafe fn fn_801feaac(control: usize, event: usize) {
         platform::call2(callback as usize, transaction as u32, payload.as_ptr() as u32);
     }
     platform::write_u16(control + 0x10, 0);
-    let mut record = platform::read_u32(event + 0x0C);
-    platform::call1(BTA_HH_FREEBUF, &mut record as *mut u32 as u32);
+    let mut record = crate::platform::GuestLocal::new( platform::read_u32(event + 0x0C));
+    platform::call1(BTA_HH_FREEBUF, (record.as_mut_ptr() as *mut u32) as u32);
 }
 
 /// Handles a HID close/disconnect event for one control block.
@@ -6088,7 +6090,7 @@ pub unsafe fn fn_801feca4(control: usize, event: usize) {
         platform::write_u8(BTA_HH_OPEN_COUNT, open_count);
         platform::write_u8(control + 0x1A, 0);
 
-        let mut status = [0u8; 1];
+        let mut status = crate::platform::GuestLocal::new( [0u8; 1]);
         status[0] = if reason as u8 != 0 { 6 } else { 0 };
         let callback = platform::read_u32(BTA_HH_APP_CALLBACK);
         if callback != 0 {
@@ -6109,7 +6111,7 @@ pub unsafe fn fn_801feca4(control: usize, event: usize) {
         if platform::read_u8(BTA_HH_OPEN_COUNT) == 0
             && platform::read_u8(BTA_HH_SHUTDOWN_FLAG) != 0
         {
-            let mut close_status = [0u8; 1];
+            let mut close_status = crate::platform::GuestLocal::new( [0u8; 1]);
             if call0_ret(0x8020_FE8C) as u8 != 0 {
                 close_status[0] = 6;
             }
@@ -6126,7 +6128,7 @@ pub unsafe fn fn_801feca4(control: usize, event: usize) {
             platform::call3(MEMSET, BTA_HH_CLEAR_BASE as u32, 0, 0x230);
         }
     } else {
-        let mut payload = [0u8; 8];
+        let mut payload = crate::platform::GuestLocal::new( [0u8; 8]);
         platform::call2(
             BTA_HH_COPY_BDA,
             payload.as_mut_ptr() as u32,
@@ -6167,7 +6169,7 @@ pub unsafe fn fn_801feca4(control: usize, event: usize) {
 /// medium - the record shape is exact; `0x80217F88` and the name fields are
 /// called by address and their official meanings are not recovered.
 pub unsafe fn fn_801ff024() {
-    let mut payload = [0u8; 0x1E];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x1E]);
     let mut count = 0u32;
 
     for index in 0..16usize {
@@ -6235,7 +6237,7 @@ pub unsafe fn fn_801ff024() {
 /// named by strings.
 pub unsafe fn fn_801ff140(control: usize, event: usize) {
     let handle = platform::read_u8(control + 0x16);
-    let mut payload = [0u8; 2];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 2]);
     payload[1] = handle;
 
     let failed = platform::call6(
@@ -6413,6 +6415,8 @@ const MSG_WBC_GET_TGC_WEIGHT_DUMMY: u32 = 0x8034_3AD8;
 /// high - the count test, clear/copy and head wrap are identical in all three
 /// bodies and match [`fn_801e4c50`].
 unsafe fn kpad_ring_insert_block(ring: usize, block: &[u8; 0x30]) -> bool {
+    // The game reads these through their addresses: guest copies.
+    let block = crate::platform::GuestLocal::new(*block);
     // observed: the original takes the outer lock, then the count helper takes
     // the same lock again; the inner token is restored before the insert.
     let token = disable_interrupts();
@@ -6759,7 +6763,7 @@ pub unsafe fn fn_801e5080(
     register: u32,
     callback: u32,
 ) -> bool {
-    let mut block = kpad_cmd_block(0x16);
+    let mut block = crate::platform::GuestLocal::new( kpad_cmd_block(0x16));
     kpad_block_set_u32(&mut block, 4, register);
     block[8] = (len & 0x1F) as u8;
     platform::call3(
@@ -10597,7 +10601,7 @@ pub unsafe fn fn_801fbe98(src: usize) {
 /// registration sites.
 pub unsafe fn fn_801fbee4(_arg0: u32, _arg1: u32, name: usize) {
     platform::call3(BTA_STRNCPY, BTA_DM_LOCAL_NAME as u32, name as u32, 0x1F);
-    platform::call1(BTA_CALLBACK_REMOVE, fn_801fbee4 as usize as u32);
+    platform::call1(BTA_CALLBACK_REMOVE, 0x801F_BEE4u32 /* the original `fn_801fbee4` */);
 }
 
 /// Stops the DM timer and posts a `0x204` event with the inquiry record.
@@ -10720,11 +10724,11 @@ pub unsafe fn fn_801fc03c(
     _arg3: u32,
     service: u32,
 ) -> u32 {
-    let mut record = [0u8; 0x26];
+    let mut record = crate::platform::GuestLocal::new( [0u8; 0x26]);
     platform::call2(BTA_HH_COPY_BDA, record.as_mut_ptr() as u32, addr as u32);
     platform::call3(
         BTA_STRNCPY,
-        record[6..].as_mut_ptr() as u32,
+        record.elem_ptr(6) as u32,
         name as u32,
         0x20,
     );
@@ -12883,7 +12887,7 @@ pub unsafe fn fn_801f32b0(alloc: u32, free: u32) {
 pub unsafe fn fn_801f35c0(handle: u32, count: i32) {
     // 12 bytes are reserved so the halfword stores below stay 4-byte aligned;
     // the callee only reads the first nine.
-    let mut record = [0u32; 3];
+    let mut record = crate::platform::GuestLocal::new( [0u32; 3]);
     let base = record.as_mut_ptr() as usize;
     platform::write_u16(base, count as u16);
     platform::write_u16(base + 2, count as u16);
@@ -13364,7 +13368,7 @@ pub unsafe fn fn_801f3ce0(status: u32) {
         batch = 0x13;
     }
     // One count byte followed by the largest batch the table can hold.
-    let mut body = [0u8; 1 + 0x13 * 0xD];
+    let mut body = crate::platform::GuestLocal::new( [0u8; 1 + 0x13 * 0xD]);
     body[0] = batch;
     let mut offset = 0usize;
     while offset < batch as usize * 0xD {
@@ -13435,7 +13439,7 @@ pub unsafe fn fn_801f3dd0(status: u32) {
         if batch > 0x13 {
             batch = 0x13;
         }
-        let mut body = [0u8; 1 + 0x13 * 0xD];
+        let mut body = crate::platform::GuestLocal::new( [0u8; 1 + 0x13 * 0xD]);
         body[0] = batch;
         let mut offset = 0usize;
         while offset < batch as usize * 0xD {
@@ -13463,7 +13467,7 @@ pub unsafe fn fn_801f3dd0(status: u32) {
     }
     let chunk = chunk as u8;
     // Four address bytes (low byte first) followed by the payload chunk.
-    let mut body = [0u8; 4 + 0xFB];
+    let mut body = crate::platform::GuestLocal::new( [0u8; 4 + 0xFB]);
     let address = platform::read_u32(SDA_WUD_PATCH_ADDR).wrapping_add(position);
     body[0] = address as u8;
     body[1] = (address >> 8) as u8;
@@ -13529,7 +13533,7 @@ pub unsafe fn fn_801f4030(status: u32) {
         chunk = 0xFB;
     }
     let chunk = (chunk & 0xFF) as u8;
-    let mut body = [0u8; 4 + 0xFB];
+    let mut body = crate::platform::GuestLocal::new( [0u8; 4 + 0xFB]);
     let address = platform::read_u32(SDA_WUD_PATCH_ADDR);
     body[0] = address as u8;
     body[1] = (address >> 8) as u8;
@@ -13688,7 +13692,7 @@ pub unsafe fn fn_801f4350() {
     // Ghidra splits the block into a halfword, a byte and a word; the offsets
     // below keep the original relative layout so both callees see the same
     // bytes.
-    let mut boot = [0u8; 8];
+    let mut boot = crate::platform::GuestLocal::new( [0u8; 8]);
     let base = boot.as_mut_ptr() as usize;
     platform::write_u16(base, platform::read_u16(SDA2_WUD_BOOT_CLASS));
     platform::write_u8(base + 2, platform::read_u8(SDA2_WUD_BOOT_SUB));
@@ -13846,7 +13850,7 @@ pub unsafe fn fn_801f44c0(bd_addr: u32) {
     if is_remote || (is_board && platform::read_u32(SDA_WUD_4B38) != 0) {
         // observed: a two-word parameter block: a class halfword `0x00D9`
         // (the low half is never written) followed by `0x80345FB8`.
-        let mut params = [0u8; 8];
+        let mut params = crate::platform::GuestLocal::new( [0u8; 8]);
         let base = params.as_mut_ptr() as usize;
         platform::write_u16(base, 0x00D9);
         platform::write_u32(base + 4, WUD_DEVICE_PARAMS as u32);
@@ -14861,7 +14865,7 @@ const SDA2_BTA_STATE_4C70: usize = SDA2_BASE - 0x4C70;
 pub unsafe fn fn_801fc880(record: u32) {
     let record = record as usize;
     if platform::read_u8(record) == 0 {
-        let mut payload = [0u8; 8];
+        let mut payload = crate::platform::GuestLocal::new( [0u8; 8]);
         let base = payload.as_mut_ptr() as usize;
         fn_801fa3a4(base, record + 3);
         platform::write_u8(base + 6, 1);
@@ -14898,7 +14902,7 @@ pub unsafe fn fn_801fc880(record: u32) {
 pub unsafe fn fn_801fc8ec(record: u32) {
     let record = record as usize;
     if platform::read_u8(record) == 0 {
-        let mut payload = [0u8; 9];
+        let mut payload = crate::platform::GuestLocal::new( [0u8; 9]);
         let base = payload.as_mut_ptr() as usize;
         fn_801fa3a4(base, record + 3);
         platform::write_u8(base + 6, 2);
@@ -15069,7 +15073,7 @@ pub unsafe fn fn_801fdd2c(record: usize) {
 /// same sixteen records (`+0x12`, `+0x16`, `+0x1C`) in the same order.
 pub unsafe fn fn_801fde58(record: u32) {
     let record = record as usize;
-    let mut payload = [0u8; 12];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 12]);
     let base = payload.as_mut_ptr() as usize;
     platform::write_u8(base, 6);
     platform::call0(BTA_HH_RESET);
@@ -15131,7 +15135,7 @@ pub unsafe fn fn_801fdfcc() {
     if platform::read_u32(BTA_HH_APP_CALLBACK) == 0 {
         return;
     }
-    let mut payload = [0u8; 16];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 16]);
     let base = payload.as_mut_ptr() as usize;
     if platform::read_u8(BTA_HH_OPEN_COUNT) == 0 {
         platform::write_u8(base, 0);
@@ -15186,7 +15190,7 @@ pub unsafe fn fn_801fdfcc() {
 /// # Confidence
 /// high - the loop bound, the frees and the payload byte are literal.
 pub unsafe fn fn_801fe0d0() {
-    let mut payload = [0u8; 16];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 16]);
     let base = payload.as_mut_ptr() as usize;
     platform::write_u8(base, 0);
     if call0_ret(BTA_HH_CONNECTED) != 0 {
@@ -15520,7 +15524,7 @@ pub unsafe fn fn_801fab34(config: usize) {
     platform::call3(MEMSET, BTA_DM_HID_AREA as u32, 0, 0x2E);
 
     // 16 bytes of frame, of which only the first three are filled.
-    let mut device_class = [0u8; 16];
+    let mut device_class = crate::platform::GuestLocal::new( [0u8; 16]);
     platform::call3(
         MEMCPY,
         device_class.as_mut_ptr() as u32,
@@ -15617,7 +15621,7 @@ pub unsafe fn fn_801fadb8(event: usize) {
 /// medium - the key buffer is exactly the eight bytes copied in the export;
 /// the roles of the two bytes are not named by the image.
 pub unsafe fn fn_801fae00(event: usize) {
-    let mut key = [0u32; 2];
+    let mut key = crate::platform::GuestLocal::new( [0u32; 2]);
     let stored = platform::call1(BTM_PEER_KEY, (event + 8) as u32) as usize;
     if stored == 0 {
         platform::call3(MEMSET, key.as_mut_ptr() as u32, 0, 8);
@@ -15660,7 +15664,7 @@ pub unsafe fn fn_801fae00(event: usize) {
 /// medium - both call forms and the `0x0B` opcode are literal; the selector
 /// meaning is inferred from the branch.
 pub unsafe fn fn_801fae70(event: usize) {
-    let mut key = [0u32; 2];
+    let mut key = crate::platform::GuestLocal::new( [0u32; 2]);
     let stored = platform::call1(BTM_PEER_KEY, (event + 8) as u32) as usize;
     if stored == 0 {
         platform::call3(MEMSET, key.as_mut_ptr() as u32, 0, 8);
@@ -15718,7 +15722,7 @@ pub unsafe fn fn_801fae70(event: usize) {
 /// offset of word `bit >> 5`, and `bit - (bit & 0x1FE0)` is `bit & 31`); the
 /// index table's contents are not visible here.
 pub unsafe fn fn_801faf0c(event: usize) {
-    let mut key = [0u32; 2];
+    let mut key = crate::platform::GuestLocal::new( [0u32; 2]);
     let stored = platform::call1(BTM_PEER_KEY, (event + 8) as u32) as usize;
     if stored == 0 {
         platform::call3(MEMSET, key.as_mut_ptr() as u32, 0, 8);
@@ -16072,7 +16076,7 @@ pub unsafe fn fn_801fb1d8(record: usize) {
         finished = false;
         if platform::read_u32(BTA_DM_QUERY_COUNT) == 0 {
             finished = true;
-            let mut payload = [0u8; 0x104];
+            let mut payload = crate::platform::GuestLocal::new( [0u8; 0x104]);
             let base = payload.as_mut_ptr() as usize;
             loop {
                 cur = platform::read_u32(BTA_DM_INQUIRY_RECORD) as usize;
@@ -16139,7 +16143,7 @@ pub unsafe fn fn_801fb1d8(record: usize) {
             fn_801fa850(buffer);
         }
     }
-    let mut payload = [0u8; 0x120];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x120]);
     payload[0] = platform::read_u8(record + 8);
     platform::call2(
         bta_dm_app_callback(),
@@ -16180,7 +16184,7 @@ pub unsafe fn fn_801fb1d8(record: usize) {
 /// `+0x10` role is inferred as in [fn_801fb1d8].
 pub unsafe fn fn_801fb3fc(record: usize) {
     let mut finished = true;
-    let mut payload = [0u8; 0x104];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x104]);
     let base = payload.as_mut_ptr() as usize;
 
     loop {
@@ -16477,7 +16481,7 @@ pub unsafe fn fn_801fb89c(report: usize) {
 /// inferred from the HCI call sites in [fn_801fb5cc].
 pub unsafe fn fn_801fbb40(bd_addr: usize) {
     let handle = bd_addr;
-    let mut descriptor = [0u8; 4];
+    let mut descriptor = crate::platform::GuestLocal::new( [0u8; 4]);
     let descriptor_base = descriptor.as_mut_ptr() as usize;
     platform::write_u16(
         descriptor_base,
@@ -16504,7 +16508,7 @@ pub unsafe fn fn_801fbb40(bd_addr: usize) {
                     platform::read_u32(BTA_DM_PENDING_MASK) & !(1u32 << index),
                 );
                 // observed: a four-byte parameter whose first halfword is `2`.
-                let mut parameter = [0u8; 4];
+                let mut parameter = crate::platform::GuestLocal::new( [0u8; 4]);
                 let parameter_base = parameter.as_mut_ptr() as usize;
                 platform::write_u16(parameter_base, 2);
                 let kind = if clock == 0x1200 { 2 } else { 1 };
@@ -16643,7 +16647,7 @@ pub unsafe fn fn_801fbce0() {
 /// never written when the lookup fails (the original leaves it undefined), so
 /// this body writes the `0` the found path uses and says so here.
 pub unsafe fn fn_801fbe08(record: usize) {
-    let mut payload = [0u8; 0x0C];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x0C]);
     let base = payload.as_mut_ptr() as usize;
     fn_801fa3a4(base, record + 2);
     platform::call3(MEMCPY, (base + 6) as u32, (record + 8) as u32, 3);
@@ -16690,7 +16694,7 @@ pub unsafe fn fn_801fbe08(record: usize) {
 /// payload offsets `+0x26` and `+0xFE` come from the two overlapping stack
 /// locals, whose roles are inferred as name terminator and stored PIN.
 pub unsafe fn fn_801fc104(reply: usize) {
-    let mut payload = [0u8; 0x101];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x101]);
     let base = payload.as_mut_ptr() as usize;
     fn_801fa3a4(base, BTA_DM_PIN_BDADDR);
     platform::write_u8(base + 0xFE, platform::read_u8(BTA_DM_PIN_CODE));
@@ -16764,7 +16768,7 @@ pub unsafe fn fn_801fc1c4(addr: u32, code: usize, name: usize) -> u32 {
         }
     }
 
-    let mut payload = [0u8; 0x101];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x101]);
     let base = payload.as_mut_ptr() as usize;
     fn_801fa3a4(base, addr as usize);
     platform::write_u8(base + 0xFE, platform::read_u8(code));
@@ -16811,7 +16815,7 @@ pub unsafe fn fn_801fc1c4(addr: u32, code: usize, name: usize) -> u32 {
 /// overlapping stack locals, and the meaning of the `0x10`-byte block is
 /// unknown.
 pub unsafe fn fn_801fc2fc(addr: u32, _arg1: u32, key: u32, extra: u32) -> u32 {
-    let mut payload = [0u8; 0x110];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x110]);
     let base = payload.as_mut_ptr() as usize;
     fn_801fa3a4(base, addr as usize);
     platform::call3(MEMCPY, (base + 6) as u32, key, 0x1F);
@@ -16855,7 +16859,7 @@ pub unsafe fn fn_801fc2fc(addr: u32, _arg1: u32, key: u32, extra: u32) -> u32 {
 /// high - the guard, the copy and the three cleared flags are literal.
 pub unsafe fn fn_801fc398(addr: u32, _arg1: u32, key: u32, report: u32) -> u32 {
     if report != 0 {
-        let mut payload = [0u8; 0x110];
+        let mut payload = crate::platform::GuestLocal::new( [0u8; 0x110]);
         let base = payload.as_mut_ptr() as usize;
         fn_801fa3a4(base, addr as usize);
         platform::call3(MEMCPY, (base + 6) as u32, key, 0x1F);
@@ -17014,7 +17018,7 @@ pub unsafe fn fn_801fc5e4(report: usize) {
         let slot = BTA_DM_STATE_AREA + index * 0xB;
         platform::write_u8(slot + 6, 1);
         platform::write_u8(slot + 7, 0);
-        let mut payload = [0u8; 8];
+        let mut payload = crate::platform::GuestLocal::new( [0u8; 8]);
         fn_801fa3a4(payload.as_mut_ptr() as usize, addr);
         platform::call2(
             platform::read_u32(BTA_DM_SEARCH_CALLBACK) as usize,
@@ -17066,7 +17070,7 @@ pub unsafe fn fn_801fc5e4(report: usize) {
         fn_801fa86c(BTA_DM_DISABLE_TIMER, 0, 1000);
     }
 
-    let mut payload = [0u8; 8];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 8]);
     fn_801fa3a4(payload.as_mut_ptr() as usize, addr);
     platform::write_u8(payload.as_mut_ptr() as usize + 6, call0_ret(BTM_PENDING_STATE) as u8);
     platform::call2(
@@ -17503,7 +17507,7 @@ pub unsafe fn fn_801f1720() -> u32 {
         return 5;
     }
 
-    let mut zeros = [0u8; 0x10];
+    let mut zeros = crate::platform::GuestLocal::new( [0u8; 0x10]);
     platform::call3(
         MEMCPY,
         (WUD_SEARCH_CLASS + 6) as u32,
@@ -17641,7 +17645,7 @@ pub unsafe fn fn_801f1db0() {
     } else if state == 3 {
         if platform::read_u8(BTA_HH_SEARCH_STATE_312E) == 0 {
             platform::call1(WPAD_ALARM_STOP, WUD_ALARM_OBJECT as u32);
-            let mut version = [0u8; 10];
+            let mut version = crate::platform::GuestLocal::new( [0u8; 10]);
             let base = version.as_mut_ptr() as usize;
             platform::call1(BTM_LOCAL_VERSION_INFO, base as u32);
             // observed: the five version traces, in this order.
@@ -17833,7 +17837,7 @@ pub unsafe fn fn_801ff308(handle: u32, event: u32, word0: u32, word1: u32) {
         1 => request = 0x1703,
         3 => request = 0x1704,
         4 | 6 => {
-            let mut word = [0u8; 4];
+            let mut word = crate::platform::GuestLocal::new( [0u8; 4]);
             platform::write_u32(word.as_mut_ptr() as usize, word1);
             fn_801faaf0(word.as_mut_ptr() as usize);
         }
@@ -18157,7 +18161,7 @@ pub unsafe fn fn_801f0020() -> u32 {
             let mut posted = false;
             if platform::read_u8(WUD_LINK_MODE_3807) != 0 {
                 // observed: `{0, 0, 1, 0, 0}` laid out as the five stack locals.
-                let record = channel_request_record(0, 0, 1, 0, 0);
+                let record = crate::platform::GuestLocal::new( channel_request_record(0, 0, 1, 0, 0));
                 for index in 0..0x10usize {
                     let slot = if index < 10 {
                         BTA_HH_DEVICE_TABLE + index * 0x60
@@ -18407,7 +18411,7 @@ pub unsafe fn fn_801f0670() -> u32 {
 pub unsafe fn fn_801f09a0() -> u32 {
     if platform::read_u8(WUD_LINK_MODE_3807) != 0 {
         // observed: `{8, 8, 1, 0, 2}` laid out as the five stack locals.
-        let record = channel_request_record(8, 8, 1, 0, 2);
+        let record = crate::platform::GuestLocal::new( channel_request_record(8, 8, 1, 0, 2));
         for index in 0..0x10usize {
             let slot = if index < 10 {
                 BTA_HH_DEVICE_TABLE + index * 0x60
@@ -19916,7 +19920,7 @@ pub unsafe fn fn_801f5260(event: u32, data: usize) {
             }
             platform::write_u8(BTA_DM_STATE_39D2, 1);
             let token = disable_interrupts();
-            let mut reversed = [0u8; 6];
+            let mut reversed = crate::platform::GuestLocal::new( [0u8; 6]);
             for index in 0..6 {
                 reversed[index] = platform::read_u8(address + 5 - index);
             }
@@ -20802,20 +20806,20 @@ pub unsafe fn fn_801eb160(block: usize, report: usize) {
     }
 
     let clamp_2 = platform::read_f32(SDA_KPAD_5DF8);
-    let mut stick_0 = -(platform::read_u16(report + 0x2A) as i16 as i32) as f32
-        * platform::read_f32(block + 0x51C);
+    let mut stick_0 = crate::platform::GuestLocal::new( -(platform::read_u16(report + 0x2A) as i16 as i32) as f32
+        * platform::read_f32(block + 0x51C));
     value = clamp_2;
-    if zero <= stick_0 {
-        if stick_0 <= value {
-            value = stick_0;
+    if zero <= *stick_0 {
+        if *stick_0 <= value {
+            value = *stick_0;
         }
     } else {
         value = -value;
-        if value <= stick_0 {
-            value = stick_0;
+        if value <= *stick_0 {
+            value = *stick_0;
         }
     }
-    stick_0 = value;
+    *stick_0 = value;
 
     let mut stick_1 = -(platform::read_u16(report + 0x2E) as i16 as i32) as f32
         * platform::read_f32(block + 0x524);
@@ -20850,15 +20854,15 @@ pub unsafe fn fn_801eb160(block: usize, report: usize) {
         platform::call3(
             KPAD_ROTATE_2D,
             0x803A_30A8,
-            &stick_0 as *const f32 as usize as u32,
-            &stick_0 as *const f32 as usize as u32,
+            (stick_0.as_ptr() as *const f32) as usize as u32,
+            (stick_0.as_ptr() as *const f32) as usize as u32,
         );
     }
 
     let old_stick_x = platform::read_f32(block + 0x68);
     let old_stick_y = platform::read_f32(block + 0x6C);
     let old_stick_z = platform::read_f32(block + 0x70);
-    fn_801eadd0(stick_0 as f64, block, block + 0x68);
+    fn_801eadd0(*stick_0 as f64, block, block + 0x68);
     fn_801eadd0(stick_1 as f64, block, block + 0x6C);
     fn_801eadd0(stick_2 as f64, block, block + 0x70);
 
@@ -23247,7 +23251,7 @@ pub unsafe fn fn_801fcc74(arg0: u32, handle: u32, requested: u32, bd_addr: usize
 /// the two arguments are recovered from the `0x802DCD74` split return, which
 /// is the established artifact for this prologue shape.
 pub unsafe fn fn_801fd16c(arg0: u32, arg1: u32, mask: u32, flag: u32) -> u32 {
-    let mut map = [0u8; 8];
+    let mut map = crate::platform::GuestLocal::new( [0u8; 8]);
     let mut remaining = mask;
     let mut bit = 0u32;
 
@@ -23374,17 +23378,17 @@ const MSG_NO_MORE_TIMERS: usize = 0x8034_7754;
 /// the stride and the sibling handlers, and the two split-return halves are
 /// mapped by the mode check (`4`/`5`) and the handle comparisons.
 pub unsafe fn fn_801fd4bc(mode: u32, handle: u32, value: u32, bd_addr: u32) {
-    let mut info = [0u8; 8];
+    let mut info = crate::platform::GuestLocal::new( [0u8; 8]);
     let version_ok = platform::call1(BTM_LOCAL_VERSION_INFO, info.as_mut_ptr() as u32) as u8;
     let extra = u16::from_be_bytes([info[6], info[7]]);
 
     if version_ok == 0 && extra == 0x0F && info[0] < 3 {
         if mode == 4 {
-            let mut setting = [0u8; 2];
+            let mut setting = crate::platform::GuestLocal::new( [0u8; 2]);
             setting[0] = platform::read_u8(BTA_DM_CONFIG_6D4C) & 0x0B;
             platform::call2(BTM_SETTING_WRITE, bd_addr, setting.as_ptr() as u32);
         } else if mode == 5 {
-            let mut setting = [0u8; 2];
+            let mut setting = crate::platform::GuestLocal::new( [0u8; 2]);
             setting[0] = platform::read_u8(BTA_DM_CONFIG_6D4C);
             platform::call2(BTM_SETTING_WRITE, bd_addr, setting.as_ptr() as u32);
         }
@@ -23524,7 +23528,7 @@ pub unsafe fn fn_801fd4bc(mode: u32, handle: u32, value: u32, bd_addr: u32) {
 /// 13-byte scratch frame (`local_48`..`local_3c`) is modelled as one buffer and
 /// the mask bits `1`/`2`/`4` are named by their effect only.
 pub unsafe fn fn_801fd83c(bd_addr: u32, flag: u32) {
-    let mut scratch = [0u8; 16];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 16]);
     let mut best_quality = 0u8;
     let mut best_delay: i16 = 0;
     let mut link_mask = 0u8;
@@ -23717,7 +23721,7 @@ pub unsafe fn fn_801fd83c(bd_addr: u32, flag: u32) {
 /// shapes are literal; the seven `0x803D16xx` action ids are passed by address
 /// and the notification byte roles are inferred from their offsets.
 pub unsafe fn fn_801ff970(control: usize, event: u32, data: usize) {
-    let mut payload = [0u8; 0x20];
+    let mut payload = crate::platform::GuestLocal::new( [0u8; 0x20]);
     let mut notification: u16 = 0;
 
     if control != 0 {
@@ -23947,7 +23951,7 @@ unsafe fn wud_alloc_device_record() -> usize {
 pub unsafe fn fn_801f1f70() {
     platform::call3(MEMSET, WUD_LINK_OBJECT_A as u32, 0, 0x461);
     platform::call3(MEMSET, WUD_LINK_OBJECT_B as u32, 0, 0x205);
-    let zero_addr = [0u8; 6];
+    let zero_addr = crate::platform::GuestLocal::new( [0u8; 6]);
     platform::call1(WUD_LINK_INIT_A, WUD_LINK_OBJECT_A as u32);
     platform::call1(WUD_LINK_INIT_B, WUD_LINK_OBJECT_B as u32);
     platform::write_u8(WUD_KEY_REUSE_TAIL, 0);
@@ -24203,7 +24207,7 @@ unsafe fn wud_save_finish(value: u32) -> u32 {
 /// as `sum << 16 | folded`, and the WiiFit adoption test keeps Ghidra's
 /// "first key equal OR 16-byte key different" polarity.
 pub unsafe fn fn_801f2650() {
-    let mut header = [0u8; 16];
+    let mut header = crate::platform::GuestLocal::new( [0u8; 16]);
 
     if platform::read_u8(SDA_WUD_4B2C) != 0 {
         wud_save_finish(2);
@@ -24600,7 +24604,7 @@ pub unsafe fn fn_801f0b10() {
                         next = 8;
                     }
                 } else if state == 2 {
-                    let mut record = [0u8; 10];
+                    let mut record = crate::platform::GuestLocal::new( [0u8; 10]);
                     record[0] = 1;
                     record[2] = 1;
                     record[3] = 0;
@@ -26938,7 +26942,7 @@ pub unsafe fn fn_801ed3c0(
     let buffer = buffer as usize;
     let mut status: i32 = 0;
     let mut copied: i32 = 0;
-    let mut image = [0u8; 0xB0];
+    let mut image = crate::platform::GuestLocal::new( [0u8; 0xB0]);
 
     if platform::read_u8(SDA_KPAD_4B84) == 0 {
         status = -5;
@@ -27324,7 +27328,7 @@ unsafe fn kpad_trace_forward(
 
     // The save area is `r3..r10` (eight words) followed by `f1..f8` (eight
     // doubles); the descriptor's register word starts at GPR index 1.
-    let mut save_area = [0u8; 0x60];
+    let mut save_area = crate::platform::GuestLocal::new( [0u8; 0x60]);
     let save = save_area.as_mut_ptr() as usize;
     platform::write_u32(save, fmt);
     for (i, word) in gpr.iter().enumerate() {
@@ -27334,12 +27338,12 @@ unsafe fn kpad_trace_forward(
         kpad_write_f64(save + 0x20 + i * 8, *value);
     }
 
-    let mut overflow = stack;
-    let mut descriptor = [
+    let mut overflow = crate::platform::GuestLocal::new( stack);
+    let mut descriptor = crate::platform::GuestLocal::new( [
         0x0100_0000u32,
         overflow.as_mut_ptr() as u32,
         save as u32,
-    ];
+    ]);
     crate::engine::main_loop::fn_802e1560(fmt, descriptor.as_mut_ptr() as u32);
 }
 
@@ -27522,6 +27526,8 @@ pub unsafe fn fn_801e9730(channel: u32) {
         key0 as u8, key1 as u8, key2 as u8, key3 as u8, key4 as u8, key5 as u8,
     ];
     let (ft, sb) = kpad_self_test_frames(KPAD_SELFTEST_T0_80344430, &rnd, &keys, selector);
+    // MEMCPY reads both through their addresses: guest copies.
+    let (ft, sb) = (crate::platform::GuestLocal::new(ft), crate::platform::GuestLocal::new(sb));
 
     let mut index = 0;
     while index < 10 {
@@ -27624,6 +27630,8 @@ pub unsafe fn fn_801e9e20(channel: u32) {
         key0 as u8, key1 as u8, key2 as u8, key3 as u8, key4 as u8, key5 as u8,
     ];
     let (ft, sb) = kpad_self_test_frames(KPAD_SELFTEST_T0_80344D60, &rnd, &keys, selector);
+    // MEMCPY reads both through their addresses: guest copies.
+    let (ft, sb) = (crate::platform::GuestLocal::new(ft), crate::platform::GuestLocal::new(sb));
 
     let mut index = 0;
     while index < 10 {
@@ -27798,9 +27806,9 @@ pub unsafe fn fn_801ee230(channel: u32) {
     let head_addr = KPAD_STATUS_HEAD + channel as usize * KPAD_CHANNEL_STRIDE;
     let count_addr = KPAD_STATUS_COUNT + channel as usize * KPAD_CHANNEL_STRIDE;
 
-    let mut kind: u32 = 0;
-    let link = fn_801e0f40(channel, &mut kind as *mut u32 as usize);
-    let kind = kind as i32;
+    let mut kind = crate::platform::GuestLocal::<u32>::new( 0);
+    let link = fn_801e0f40(channel, (kind.as_mut_ptr() as *mut u32) as usize);
+    let kind = *kind as i32;
 
     if link != -1 {
         // --- 1. file the newest report in the status ring -------------------
@@ -27831,7 +27839,7 @@ pub unsafe fn fn_801ee230(channel: u32) {
             platform::write_u8(block + 0x68, 1);
         }
         if platform::read_u8(block + 0x68) != 0 {
-            let mut sample = [0u16; 3];
+            let mut sample = crate::platform::GuestLocal::new( [0u16; 3]);
             fn_801e0d30(channel, 0, sample.as_mut_ptr() as usize);
             kpad_accel_scale(block + 0x04, &sample);
             fn_801e0d30(channel, 1, sample.as_mut_ptr() as usize);
@@ -29042,14 +29050,14 @@ pub unsafe fn fn_801f8820(index: u32, control: usize) -> u32 {
     let count_slot = control + slot * 2 + 0x0C;
     let fields = control + index as usize;
 
-    let mut byte = 0u8;
+    let mut byte = crate::platform::GuestLocal::<u8>::new( 0u8);
     let mut processed = 0u32;
 
     loop {
         let read = platform::call3(
             HID_BYTE_READ,
             index.wrapping_add(1) & 0xFF,
-            &mut byte as *mut u8 as u32,
+            (byte.as_mut_ptr() as *mut u8) as u32,
             1,
         ) as i16;
         if read == 0 {
@@ -29107,19 +29115,19 @@ pub unsafe fn fn_801f8820(index: u32, control: usize) -> u32 {
                 // State 0 falls through here: append the byte just read.
                 let buffer = platform::read_u32(buffer_slot) as usize;
                 let offset = platform::read_u16(buffer + 2) as usize;
-                platform::write_u8(buffer + offset + 8, byte);
+                platform::write_u8(buffer + offset + 8, *byte);
                 platform::write_u16(buffer + 2, (offset + 1) as u16);
 
                 let remaining = platform::read_u16(count_slot).wrapping_sub(1);
                 platform::write_u16(count_slot, remaining);
 
                 if remaining != 0 {
-                    platform::write_u8(fields + 0x17, byte);
+                    platform::write_u8(fields + 0x17, *byte);
                 } else {
-                    let mut length = byte as u32;
+                    let mut length = *byte as u32;
                     if platform::read_u8(fields + 0x14) == 2 {
                         length =
-                            byte as u32 * 0x100 + platform::read_u8(fields + 0x17) as u32;
+                            *byte as u32 * 0x100 + platform::read_u8(fields + 0x17) as u32;
                         let opened = platform::call1(HID_PARSER_OPEN, buffer as u32) as usize;
                         platform::write_u32(buffer_slot, opened as u32);
                         if opened == 0 {
@@ -29150,20 +29158,20 @@ pub unsafe fn fn_801f8820(index: u32, control: usize) -> u32 {
                 let remaining = platform::read_u16(count_slot).wrapping_sub(1);
                 platform::write_u16(count_slot, remaining);
                 if remaining == 0 {
-                    let mut length = byte as u16;
+                    let mut length = *byte as u16;
                     if platform::read_u8(fields + 0x14) == 2 {
                         length =
-                            (byte as u16) * 0x100 + platform::read_u8(fields + 0x17) as u16;
+                            (*byte as u16) * 0x100 + platform::read_u8(fields + 0x17) as u16;
                     }
                     platform::write_u16(count_slot, length);
                     platform::write_u8(fields + 0x1A, 4);
                 } else {
-                    platform::write_u8(fields + 0x17, byte);
+                    platform::write_u8(fields + 0x17, *byte);
                 }
             } else if state == 3 {
                 let buffer = platform::read_u32(buffer_slot) as usize;
                 let offset = platform::read_u16(buffer + 2) as usize;
-                platform::write_u8(buffer + offset + 8, byte);
+                platform::write_u8(buffer + offset + 8, *byte);
                 platform::write_u16(buffer + 2, (offset + 1) as u16);
 
                 let remaining = platform::read_u16(count_slot).wrapping_sub(1);
@@ -29262,7 +29270,7 @@ pub unsafe fn fn_801f8820(index: u32, control: usize) -> u32 {
 pub unsafe fn fn_801f9c50(gpr: [u32; 8], fpr: [f64; 8], stack: [u32; 8]) {
     // The save area is `r3..r10` followed after 0x20 bytes by `f1..f8`; the
     // descriptor's register word points at the GPR half.
-    let mut save_area = [0u8; 0x60];
+    let mut save_area = crate::platform::GuestLocal::new( [0u8; 0x60]);
     let save = save_area.as_mut_ptr() as usize;
     for (i, word) in gpr.iter().enumerate() {
         platform::write_u32(save + i * 4, *word);
@@ -29271,12 +29279,12 @@ pub unsafe fn fn_801f9c50(gpr: [u32; 8], fpr: [f64; 8], stack: [u32; 8]) {
         kpad_write_f64(save + 0x20 + i * 8, *value);
     }
 
-    let mut overflow = stack;
-    let mut va_list = [
+    let mut overflow = crate::platform::GuestLocal::new( stack);
+    let mut va_list = crate::platform::GuestLocal::new( [
         (save as u32) | 0x0200_0000,
         overflow.as_mut_ptr() as u32,
         save as u32,
-    ];
+    ]);
 
     platform::call3(
         HID_TRACE_FORMAT,
@@ -29446,7 +29454,7 @@ pub unsafe fn fn_801f8d70(queue_id: u8, extra: u8, bias: u16) {
 /// that the descriptor is a transport configuration and the callback is the
 /// receive-entry thunk is inferred from the callee stores.
 pub unsafe fn fn_801f8da0(context: usize) -> u32 {
-    let mut descriptor = [0u8; 12];
+    let mut descriptor = crate::platform::GuestLocal::new( [0u8; 12]);
     let base = descriptor.as_mut_ptr() as usize;
     platform::write_u16(base + 4, platform::read_u16(context));
     platform::write_u16(base + 6, platform::read_u16(context + 2));
@@ -30665,8 +30673,8 @@ pub unsafe fn fn_801e93b0(channel: u32, report: usize, out: usize) {
             | ((b1 & 0x60) as u16) << 1,
     );
 
-    let mut out_slot = out as u32;
-    let slot = &mut out_slot as *mut u32 as usize;
+    let mut out_slot = crate::platform::GuestLocal::new( out as u32);
+    let slot = (out_slot.as_mut_ptr() as *mut u32) as usize;
     fn_801e7960(channel, slot, 0, report + 4);
     fn_801e7960(channel, slot, 1, report + 0x0D);
 
@@ -30746,8 +30754,8 @@ pub unsafe fn fn_801e9570(channel: u32, report: usize, out: usize) {
     let low = ((b2 & 0x60) as u16) >> 1 | ((b1 & 0x60) as u16) >> 3;
     platform::write_u16(out + 6, platform::read_u16(out + 6) | low);
 
-    let mut out_slot = out as u32;
-    let slot = &mut out_slot as *mut u32 as usize;
+    let mut out_slot = crate::platform::GuestLocal::new( out as u32);
+    let slot = (out_slot.as_mut_ptr() as *mut u32) as usize;
     fn_801e7960(channel, slot, 2, report + 4);
     fn_801e7960(channel, slot, 3, report + 0x0D);
 

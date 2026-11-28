@@ -68,6 +68,8 @@ this_only! {
     d_base_actor_calc_speed_y => nsmbw::game::player::fn_8006cde0,
     d_base_actor_calc_speed_f => nsmbw::game::player::fn_8006ce10,
     d_base_actor_calc_fall_speed => nsmbw::game::player::fn_8006ce70,
+    // `makeMtx`: hands `YrotM` the address of its angle copy (a GuestLocal).
+    d_base_actor_make_mtx => nsmbw::game::player::fn_8006ccb0,
 }
 
 /// `dBaseActor_c::posMove(mVec3_c&)` (`0x8006CD00`): `this` and the step.
@@ -114,6 +116,40 @@ unsafe fn d_base_actor_get_center_pos(
     0
 }
 
+/// Bodies that hand the game the address of one of their locals (a
+/// `GuestLocal`): two words in, one word out. Their gate lines prove the
+/// locals mechanism on live calls.
+macro_rules! two_words {
+    ($($name:ident, |$a:ident, $b:ident| $call:expr;)*) => {$(
+        unsafe fn $name(
+            runtime: &mut (dyn GuestRuntime + 'static),
+            gprs: &[u32; 32],
+            _fprs: &[[f64; 2]; 32],
+        ) -> u32 {
+            let ($a, $b) = (gprs[3], gprs[4]);
+            nsmbw::platform::with_guest_runtime(runtime, || $call)
+        }
+    )*};
+}
+
+two_words! {
+    // `0x800669B0`: is the actor's position outside the scene rectangle?
+    d_actor_outside_scene,
+        |a, b| nsmbw::game::player::fn_800669b0(a, b as usize);
+    // `0x80065080`: the sprite position and rectangle cull test.
+    d_actor_sprite_cull,
+        |a, _b| nsmbw::game::player::fn_80065080(a as usize);
+    // `0x80064740`: probes the actor's centre for the find policy.
+    d_actor_probe_centre,
+        |a, b| nsmbw::game::player::fn_80064740(a as usize, b as usize as *mut f32);
+    // `0x80065AC0`: fills a stack matrix and stores its translation.
+    d_actor_matrix_translation,
+        |a, b| { nsmbw::game::player::fn_80065ac0(a as usize, b); 0 };
+    // `0x8006A5E0`: passes a float pair and its swap.
+    d_actor_float_pair,
+        |a, b| { nsmbw::game::player::fn_8006a5e0(a, b); 0 };
+}
+
 /// Registers the switched bodies when `NSMBW_RUST_BODIES` is `1` (lockstep:
 /// the original runs, the body is validated against it), `accounted` (the body
 /// runs, cycles come from the shadow original) or `direct` (the body runs with
@@ -140,6 +176,13 @@ pub fn install(system: &mut System) {
     system.register_native_void(0x8006_C980, d_base_actor_post_execute);
     // Functions that return nothing: their checks compare RAM, not r3.
     system.register_native_void(0x8006_CC00, d_base_actor_calc_speed);
+    system.register_native_void(0x8006_CCB0, d_base_actor_make_mtx);
+    // Candidates that hand the game a local's address (see `two_words!`).
+    system.register_native(0x8006_69B0, d_actor_outside_scene);
+    system.register_native(0x8006_5080, d_actor_sprite_cull);
+    system.register_native(0x8006_4740, d_actor_probe_centre);
+    system.register_native_void(0x8006_5AC0, d_actor_matrix_translation);
+    system.register_native_void(0x8006_A5E0, d_actor_float_pair);
     system.register_native_void(0x8006_CD00, d_base_actor_pos_move_by);
     system.register_native_void(0x8006_CD40, d_base_actor_pos_move);
     system.register_native_void(0x8006_CD50, d_base_actor_calc_speed_xy);

@@ -204,7 +204,7 @@ unsafe fn member_vcall1(object: usize, field: usize, slot: usize, arg: u32) -> u
 /// high - the buffer size and the word copy are explicit.
 pub unsafe fn fn_80152480(this: usize, out: usize) -> u32 {
     // observed: the local block is 12 words (0x30 bytes).
-    let mut block = [0u8; 48];
+    let mut block = crate::platform::GuestLocal::new( [0u8; 48]);
     let owner = read_word(this, 0x14D8);
     let _ = call2(FN_800FF680, block.as_mut_ptr() as u32, owner);
 
@@ -373,7 +373,7 @@ pub unsafe fn fn_80152880(this: usize, param_2: u32) {
     // observed: three `u16` on the stack, all zero except the middle one.
     // The original passes big-endian halfwords; keep byte-level stores so the
     // host endianness cannot change the payload.
-    let mut position = [0u8; 6];
+    let mut position = crate::platform::GuestLocal::new( [0u8; 6]);
     if read_byte(this, 0x348) == 1 {
         platform::write_u16(position.as_mut_ptr() as usize + 2, 0x8000);
     }

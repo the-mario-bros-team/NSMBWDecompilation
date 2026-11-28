@@ -578,7 +578,7 @@ pub unsafe fn os_init() {
         // inferred: the two words and the date form one contiguous 16-byte
         // stack record; only the first two words are passed as pointers to
         // 0x801af5d0.
-        let mut record = [0u8; 16];
+        let mut record = crate::platform::GuestLocal::new( [0u8; 16]);
         record[0..4].copy_from_slice(&read_u32(sda2(-0x4fb8)).to_be_bytes());
         record[4..8].copy_from_slice(&read_u32(sda2(-0x4fb4)).to_be_bytes());
         record[8] = (date_word >> 24) as u8;

@@ -143,6 +143,7 @@ fn access_guest_memory<T>(
     access: impl FnOnce(&mut Mem, u32) -> Result<T, Fault>,
 ) -> T {
     let addr = u32::try_from(addr).expect("guest address is wider than 32 bits");
+    flush_guest_locals();
     GUEST_CONTEXT.with(|slot| {
         let mut active = slot.borrow_mut();
         let context = active.as_mut().expect("guest memory is not in scope");
@@ -261,7 +262,8 @@ pub fn call_rel_registers(
 fn access_guest_runtime<T>(
     run: impl FnOnce(&mut dyn GuestRuntime) -> Result<T, String>,
 ) -> Result<T, String> {
-    GUEST_CONTEXT.with(|slot| {
+    flush_guest_locals();
+    let result = GUEST_CONTEXT.with(|slot| {
         let mut active = slot
             .try_borrow_mut()
             .map_err(|_| "guest runtime is already in use")?;
@@ -271,7 +273,10 @@ fn access_guest_runtime<T>(
         // SAFETY: the scope owns the exclusive reference and the slot
         // remains borrowed until the operation returns.
         run(unsafe { runtime.as_mut() })
-    })
+    });
+    // The guest ran: any local it can see may have changed.
+    bump_guest_epoch();
+    result
 }
 
 #[cfg(feature = "guest-memory")]
@@ -411,6 +416,7 @@ pub unsafe fn write_u8(addr: usize, value: u8) {
     #[cfg(feature = "guest-memory")]
     {
         access_guest_memory(addr, |mem, addr| mem.write_u8(addr, value));
+        bump_guest_epoch();
     }
     #[cfg(not(feature = "guest-memory"))]
     {
@@ -433,6 +439,7 @@ pub unsafe fn write_u16(addr: usize, value: u16) {
     #[cfg(feature = "guest-memory")]
     {
         access_guest_memory(addr, |mem, addr| mem.write_u16(addr, value));
+        bump_guest_epoch();
     }
     #[cfg(not(feature = "guest-memory"))]
     {
@@ -458,6 +465,7 @@ pub unsafe fn write_u32(addr: usize, value: u32) {
     #[cfg(feature = "guest-memory")]
     {
         access_guest_memory(addr, |mem, addr| mem.write_u32(addr, value));
+        bump_guest_epoch();
     }
     #[cfg(not(feature = "guest-memory"))]
     {
@@ -696,6 +704,347 @@ pub unsafe fn call_u64(addr: usize) -> u64 {
     {
         let f: extern "C" fn() -> u64 = core::mem::transmute(addr);
         f()
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Locals whose address the game sees
+// ---------------------------------------------------------------------------
+//
+// The original functions keep these on the guest stack and pass their
+// address to other guest code. The transcription made them Rust locals, whose
+// address means nothing to the guest. A `GuestLocal` gives such a local a
+// guest address and keeps the two copies in step.
+
+/// Where `GuestLocal`s live with `guest-memory`: 1 MiB of MEM2 above the
+/// game's memory (which ends at 0x93400000), clear of `System::call_guest`'s
+/// stack and the portrait at 0x93420000. The body checker ignores it, as it
+/// ignores the stacks. Keep in step with `GUEST_LOCALS` in `hle-os`.
+pub const GUEST_LOCALS: (u32, u32) = (0x9380_0000, 0x9390_0000);
+
+/// A value that can be stored in guest memory in the guest's byte order.
+///
+/// `Elem` is what `as_ptr` points to: the element for an array, the value
+/// itself for a scalar, so pointer arithmetic keeps its meaning.
+///
+/// # Original
+/// Host-side adapter with no guest address.
+///
+/// # Confidence
+/// high - big-endian scalars, arrays element by element.
+pub trait GuestPod: Copy + 'static {
+    type Elem;
+    /// Bytes the value takes in guest memory.
+    const SIZE: usize;
+    /// # Safety
+    /// `addr..addr + SIZE` must be writable guest memory.
+    unsafe fn store(&self, addr: usize);
+    /// # Safety
+    /// `addr..addr + SIZE` must be readable guest memory.
+    unsafe fn load(&mut self, addr: usize);
+}
+
+macro_rules! guest_pod_scalar {
+    ($($t:ty: $size:expr, |$s:ident, $a:ident| $store:expr, |$b:ident| $load:expr;)*) => {$(
+        impl GuestPod for $t {
+            type Elem = $t;
+            const SIZE: usize = $size;
+            #[inline]
+            unsafe fn store(&self, $a: usize) {
+                let $s = *self;
+                $store
+            }
+            #[inline]
+            unsafe fn load(&mut self, $b: usize) {
+                *self = $load;
+            }
+        }
+    )*};
+}
+
+guest_pod_scalar! {
+    u8: 1, |v, a| write_u8(a, v), |a| read_u8(a);
+    i8: 1, |v, a| write_u8(a, v as u8), |a| read_u8(a) as i8;
+    bool: 1, |v, a| write_u8(a, u8::from(v)), |a| read_u8(a) != 0;
+    u16: 2, |v, a| write_u16(a, v), |a| read_u16(a);
+    i16: 2, |v, a| write_u16(a, v as u16), |a| read_u16(a) as i16;
+    u32: 4, |v, a| write_u32(a, v), |a| read_u32(a);
+    i32: 4, |v, a| write_u32(a, v as u32), |a| read_u32(a) as i32;
+    // Guest words: the transcription keeps addresses in `usize`.
+    usize: 4, |v, a| write_u32(a, v as u32), |a| read_u32(a) as usize;
+    isize: 4, |v, a| write_u32(a, v as u32), |a| read_u32(a) as i32 as isize;
+    f32: 4, |v, a| write_u32(a, v.to_bits()), |a| f32::from_bits(read_u32(a));
+    u64: 8, |v, a| { write_u32(a, (v >> 32) as u32); write_u32(a + 4, v as u32) },
+        |a| (u64::from(read_u32(a)) << 32) | u64::from(read_u32(a + 4));
+    i64: 8, |v, a| { write_u32(a, (v >> 32) as u32); write_u32(a + 4, v as u32) },
+        |a| ((u64::from(read_u32(a)) << 32) | u64::from(read_u32(a + 4))) as i64;
+    f64: 8, |v, a| { let b = v.to_bits(); write_u32(a, (b >> 32) as u32); write_u32(a + 4, b as u32) },
+        |a| f64::from_bits((u64::from(read_u32(a)) << 32) | u64::from(read_u32(a + 4)));
+}
+
+impl<E: GuestPod, const N: usize> GuestPod for [E; N] {
+    type Elem = E;
+    const SIZE: usize = E::SIZE * N;
+    #[inline]
+    unsafe fn store(&self, addr: usize) {
+        for (i, e) in self.iter().enumerate() {
+            e.store(addr + i * E::SIZE);
+        }
+    }
+    #[inline]
+    unsafe fn load(&mut self, addr: usize) {
+        for (i, e) in self.iter_mut().enumerate() {
+            e.load(addr + i * E::SIZE);
+        }
+    }
+}
+
+#[cfg(feature = "guest-memory")]
+const LOCAL_HOST: u8 = 0; // the Rust copy is current
+#[cfg(feature = "guest-memory")]
+const LOCAL_GUEST: u8 = 1; // the guest copy is current (the Rust one may lag)
+
+#[cfg(feature = "guest-memory")]
+trait DirtyLocal {
+    /// # Safety
+    /// The local must still be alive and where it was registered.
+    unsafe fn flush(&self);
+}
+
+#[cfg(feature = "guest-memory")]
+struct LocalArena {
+    top: u32,
+    live: u32,
+}
+
+#[cfg(feature = "guest-memory")]
+std::thread_local! {
+    /// Bumped whenever the guest may have written memory (a guest call or a
+    /// platform store), so a `GuestLocal` re-reads only when it must.
+    static GUEST_EPOCH: core::cell::Cell<u64> = const { core::cell::Cell::new(0) };
+    /// Locals the Rust code changed after handing out their address: they
+    /// are written back before the guest next sees memory.
+    static DIRTY_LOCALS: RefCell<std::vec::Vec<(*const (), *const dyn DirtyLocal)>> =
+        const { RefCell::new(std::vec::Vec::new()) };
+    static LOCAL_ARENA: RefCell<LocalArena> =
+        const { RefCell::new(LocalArena { top: GUEST_LOCALS.0, live: 0 }) };
+}
+
+#[cfg(feature = "guest-memory")]
+fn bump_guest_epoch() {
+    GUEST_EPOCH.with(|e| e.set(e.get().wrapping_add(1)));
+}
+
+#[cfg(feature = "guest-memory")]
+fn guest_epoch() -> u64 {
+    GUEST_EPOCH.with(|e| e.get())
+}
+
+#[cfg(feature = "guest-memory")]
+#[inline]
+fn flush_guest_locals() {
+    let dirty = DIRTY_LOCALS.with(|d| {
+        let mut d = d.borrow_mut();
+        if d.is_empty() {
+            None
+        } else {
+            Some(core::mem::take(&mut *d))
+        }
+    });
+    for (_, local) in dirty.into_iter().flatten() {
+        // SAFETY: a local leaves the list when it is dropped.
+        unsafe { (*local).flush() };
+    }
+}
+
+/// A local of an original function whose address the game is given.
+///
+/// It derefs to the value. `as_ptr`/`as_mut_ptr` return its address: with
+/// `guest-memory` a guest address in [`GUEST_LOCALS`], where the value is
+/// written in the guest's byte order; without it the host address, as
+/// before. Reads through the deref pick up what the guest wrote since; a
+/// write through the deref reaches guest memory before the guest next
+/// runs or the platform helpers next touch memory.
+///
+/// Do not move a `GuestLocal` after handing out its address (the rewrite
+/// never does: values are copied out with `*`).
+///
+/// # Original
+/// Host-side adapter: the original's stack slots.
+///
+/// # Confidence
+/// high - every access syncs through the platform helpers.
+pub struct GuestLocal<T: GuestPod> {
+    value: core::cell::UnsafeCell<T>,
+    #[cfg(feature = "guest-memory")]
+    addr: core::cell::Cell<u32>,
+    #[cfg(feature = "guest-memory")]
+    state: core::cell::Cell<u8>,
+    #[cfg(feature = "guest-memory")]
+    epoch: core::cell::Cell<u64>,
+}
+
+impl<T: GuestPod> GuestLocal<T> {
+    /// Wraps `value`; no guest memory is taken until its address is.
+    #[inline]
+    pub const fn new(value: T) -> Self {
+        GuestLocal {
+            value: core::cell::UnsafeCell::new(value),
+            #[cfg(feature = "guest-memory")]
+            addr: core::cell::Cell::new(0),
+            #[cfg(feature = "guest-memory")]
+            state: core::cell::Cell::new(LOCAL_HOST),
+            #[cfg(feature = "guest-memory")]
+            epoch: core::cell::Cell::new(0),
+        }
+    }
+
+    /// The address the game is given (see the type's docs).
+    ///
+    /// # Original
+    /// Host-side adapter: the address of the original's stack slot.
+    ///
+    /// # Confidence
+    /// high - see [`GuestLocal`].
+    #[inline]
+    pub fn as_ptr(&self) -> *const T::Elem {
+        self.as_mut_ptr()
+    }
+
+    /// The address the game is given (see the type's docs).
+    ///
+    /// # Original
+    /// Host-side adapter: the address of the original's stack slot.
+    ///
+    /// # Confidence
+    /// high - see [`GuestLocal`].
+    #[inline]
+    pub fn as_mut_ptr(&self) -> *mut T::Elem {
+        #[cfg(feature = "guest-memory")]
+        {
+            self.export() as *mut T::Elem
+        }
+        #[cfg(not(feature = "guest-memory"))]
+        {
+            self.value.get() as *mut T::Elem
+        }
+    }
+
+    /// The address of element `index`'s first item: what `a[index].as_ptr()`
+    /// (a row of a 2-D array) or `a[index..].as_ptr()` gave on the host array.
+    ///
+    /// # Original
+    /// Host-side adapter: an address inside the original's stack slot.
+    ///
+    /// # Confidence
+    /// high - element size from [`GuestPod::SIZE`].
+    #[inline]
+    pub fn elem_ptr(&self, index: usize) -> *mut <T::Elem as GuestPod>::Elem
+    where
+        T::Elem: GuestPod,
+    {
+        #[cfg(feature = "guest-memory")]
+        {
+            (self.export() + index * <T::Elem as GuestPod>::SIZE) as *mut _
+        }
+        #[cfg(not(feature = "guest-memory"))]
+        {
+            // SAFETY: pointer arithmetic only; callers index within the array.
+            unsafe { (self.value.get() as *mut T::Elem).add(index) as *mut _ }
+        }
+    }
+
+    #[cfg(feature = "guest-memory")]
+    fn export(&self) -> usize {
+        if self.addr.get() == 0 {
+            let addr = LOCAL_ARENA.with(|arena| {
+                let mut arena = arena.borrow_mut();
+                let at = arena.top.next_multiple_of(16);
+                let end = at as usize + T::SIZE.max(1);
+                assert!(end <= GUEST_LOCALS.1 as usize, "guest locals area is full");
+                arena.top = end as u32;
+                arena.live += 1;
+                at
+            });
+            self.addr.set(addr);
+        }
+        if self.state.get() == LOCAL_HOST {
+            self.forget_dirty();
+            // SAFETY: the slot is ours and inside guest RAM.
+            unsafe { (*self.value.get()).store(self.addr.get() as usize) };
+            self.state.set(LOCAL_GUEST);
+            self.epoch.set(guest_epoch());
+        }
+        self.addr.get() as usize
+    }
+
+    #[cfg(feature = "guest-memory")]
+    fn pull(&self) {
+        if self.state.get() == LOCAL_GUEST && self.epoch.get() != guest_epoch() {
+            // SAFETY: no reference into the value outlives a deref.
+            unsafe { (*self.value.get()).load(self.addr.get() as usize) };
+            self.epoch.set(guest_epoch());
+        }
+    }
+
+    #[cfg(feature = "guest-memory")]
+    fn forget_dirty(&self) {
+        let me = self as *const Self as *const ();
+        DIRTY_LOCALS.with(|d| d.borrow_mut().retain(|&(id, _)| id != me));
+    }
+}
+
+#[cfg(feature = "guest-memory")]
+impl<T: GuestPod> DirtyLocal for GuestLocal<T> {
+    unsafe fn flush(&self) {
+        (*self.value.get()).store(self.addr.get() as usize);
+        self.state.set(LOCAL_GUEST);
+        self.epoch.set(guest_epoch());
+    }
+}
+
+impl<T: GuestPod> core::ops::Deref for GuestLocal<T> {
+    type Target = T;
+    #[inline]
+    fn deref(&self) -> &T {
+        #[cfg(feature = "guest-memory")]
+        self.pull();
+        // SAFETY: syncs happen only inside these methods.
+        unsafe { &*self.value.get() }
+    }
+}
+
+impl<T: GuestPod> core::ops::DerefMut for GuestLocal<T> {
+    #[inline]
+    fn deref_mut(&mut self) -> &mut T {
+        #[cfg(feature = "guest-memory")]
+        {
+            self.pull();
+            if self.addr.get() != 0 && self.state.get() == LOCAL_GUEST {
+                self.state.set(LOCAL_HOST);
+                let me = self as *const Self;
+                DIRTY_LOCALS.with(|d| {
+                    d.borrow_mut().push((me as *const (), me as *const dyn DirtyLocal));
+                });
+            }
+        }
+        self.value.get_mut()
+    }
+}
+
+impl<T: GuestPod> Drop for GuestLocal<T> {
+    fn drop(&mut self) {
+        #[cfg(feature = "guest-memory")]
+        if self.addr.get() != 0 {
+            self.forget_dirty();
+            LOCAL_ARENA.with(|arena| {
+                let mut arena = arena.borrow_mut();
+                arena.live -= 1;
+                if arena.live == 0 {
+                    arena.top = GUEST_LOCALS.0;
+                }
+            });
+        }
     }
 }
 
@@ -1115,6 +1464,40 @@ mod tests {
                 f1: 0.0,
             })
         }
+    }
+
+    #[test]
+    fn guest_locals_share_their_bytes_with_the_guest() {
+        let mut mem = Mem::new(Box::new(NullMmio));
+        with_guest_memory(&mut mem, || unsafe {
+            let mut pos = GuestLocal::new([1.5f32, -2.0, 0.25]);
+            let at = pos.as_mut_ptr() as usize;
+            assert_eq!(at, GUEST_LOCALS.0 as usize);
+            // Exported in the guest's byte order.
+            assert_eq!(read_u32(at), 1.5f32.to_bits());
+            // A guest write is seen by the next Rust read...
+            write_f32(at + 4, 9.0);
+            assert_eq!(pos[1], 9.0);
+            // ...and a Rust write by the next guest read.
+            pos[2] = 4.0;
+            assert_eq!(read_f32(at + 8), 4.0);
+            assert_eq!(*pos, [1.5, 9.0, 4.0]);
+
+            let mut word = GuestLocal::new(0u32);
+            let w = word.as_mut_ptr() as usize;
+            assert_eq!(w, at + 16);
+            write_u32(w, 7);
+            assert_eq!(*word, 7);
+            *word += 1;
+            assert_eq!(read_u32(w), 8);
+            // Pointer arithmetic keeps the element size.
+            assert_eq!(pos.as_ptr().add(2) as usize, at + 8);
+            drop(word);
+            drop(pos);
+            // The area is reused once every local is gone.
+            let again = GuestLocal::new(0u16);
+            assert_eq!(again.as_ptr() as usize, GUEST_LOCALS.0 as usize);
+        });
     }
 
     #[test]

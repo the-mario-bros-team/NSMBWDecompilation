@@ -163,7 +163,7 @@ pub unsafe fn step_angle_toward(
     max_step: i16,
     snap_threshold: i16,
 ) -> i32 {
-    let current = *value;
+    let current = platform::read_u16(value as usize) as i16;
     if current != target {
         // observed: `(short)(target - current) / divisor`, truncated to i16.
         let delta = target.wrapping_sub(current);
@@ -180,23 +180,23 @@ pub unsafe fn step_angle_toward(
                     advance = max_step.wrapping_neg();
                 }
             }
-            *value = current.wrapping_add(advance);
+            platform::write_u16(value as usize, (current.wrapping_add(advance)) as u16);
         } else if target.wrapping_sub(current) < 0 {
             let next = current.wrapping_sub(snap_threshold);
-            *value = next;
+            platform::write_u16(value as usize, (next) as u16);
             if target.wrapping_sub(next) >= 0 {
-                *value = target;
+                platform::write_u16(value as usize, (target) as u16);
             }
         } else {
             let next = current.wrapping_add(snap_threshold);
-            *value = next;
+            platform::write_u16(value as usize, (next) as u16);
             if target.wrapping_sub(next) < 1 {
-                *value = target;
+                platform::write_u16(value as usize, (target) as u16);
             }
         }
     }
-    // observed: return `(int)(short)(target - *value)`.
-    target.wrapping_sub(*value) as i32
+    // observed: return `(int)(short)(target - platform::read_u16(value as usize) as i16)`.
+    target.wrapping_sub(platform::read_u16(value as usize) as i16) as i32
 }
 
 /// Runs a table of task functions until one of them returns something other
@@ -334,7 +334,7 @@ const FLOAT_ZERO: usize = 0x8042_DBF8;
 /// # Confidence
 /// high - every branch and the two truncations are reproduced.
 pub unsafe fn step_short_clamped(value: *mut i16, target: i16, step: i16) -> u32 {
-    let current = *value;
+    let current = platform::read_u16(value as usize) as i16;
     let target_wide = target as i32;
     if current as i32 == target_wide {
         return 1;
@@ -347,9 +347,9 @@ pub unsafe fn step_short_clamped(value: *mut i16, target: i16, step: i16) -> u32
         }
         // observed: `short` add, then `short` step sign-extended again.
         let next = current.wrapping_add(delta as i16);
-        *value = next;
+        platform::write_u16(value as usize, (next) as u16);
         if delta.wrapping_mul((next as i32).wrapping_sub(target_wide)) >= 0 {
-            *value = target;
+            platform::write_u16(value as usize, (target) as u16);
             return 1;
         }
     }
@@ -380,7 +380,7 @@ pub unsafe fn step_short_clamped(value: *mut i16, target: i16, step: i16) -> u32
 /// # Confidence
 /// high - straightforward integer loop; wrapping arithmetic matches PPC.
 pub unsafe fn step_int_clamped(value: *mut i32, target: i32, step: i32) -> u32 {
-    let current = *value;
+    let current = platform::read_u32(value as usize) as i32;
     if current == target {
         return 1;
     }
@@ -391,9 +391,9 @@ pub unsafe fn step_int_clamped(value: *mut i32, target: i32, step: i32) -> u32 {
             delta = delta.wrapping_neg();
         }
         let next = current.wrapping_add(delta);
-        *value = next;
+        platform::write_u32(value as usize, (next) as u32);
         if delta.wrapping_mul(next.wrapping_sub(target)) >= 0 {
-            *value = target;
+            platform::write_u32(value as usize, (target) as u32);
             return 1;
         }
     }
@@ -428,7 +428,7 @@ pub unsafe fn step_int_clamped(value: *mut i32, target: i32, step: i32) -> u32 {
 /// # Confidence
 /// high - identical to the previous body.
 pub unsafe fn step_int_clamped_b(value: *mut i32, target: i32, step: i32) -> u32 {
-    let current = *value;
+    let current = platform::read_u32(value as usize) as i32;
     if current == target {
         return 1;
     }
@@ -439,9 +439,9 @@ pub unsafe fn step_int_clamped_b(value: *mut i32, target: i32, step: i32) -> u32
             delta = delta.wrapping_neg();
         }
         let next = current.wrapping_add(delta);
-        *value = next;
+        platform::write_u32(value as usize, (next) as u32);
         if delta.wrapping_mul(next.wrapping_sub(target)) >= 0 {
-            *value = target;
+            platform::write_u32(value as usize, (target) as u32);
             return 1;
         }
     }
@@ -483,7 +483,7 @@ pub unsafe fn step_int_clamped_b(value: *mut i32, target: i32, step: i32) -> u32
 pub unsafe fn step_float_clamped(target: f64, step: f64, value: *mut f32) -> u32 {
     let zero = platform::read_f32(FLOAT_ZERO);
 
-    let current = *value;
+    let current = platform::read_f32(value as usize);
     if current as f64 == target {
         return 1;
     }
@@ -496,13 +496,13 @@ pub unsafe fn step_float_clamped(target: f64, step: f64, value: *mut f32) -> u32
 
         // observed: `(float)((double)current + step)` is stored first.
         let next = ((current as f64) + delta) as f32;
-        *value = next;
+        platform::write_f32(value as usize, next);
 
         // observed: `(float)(step * (double)(float)((double)next - target))`.
         let overshoot = ((next as f64) - target) as f32;
         let product = (delta * (overshoot as f64)) as f32;
         if zero <= product {
-            *value = target as f32;
+            platform::write_f32(value as usize, target as f32);
             return 1;
         }
     }
@@ -544,14 +544,14 @@ pub unsafe fn step_short_clamped_wrap(value: *mut i16, target: i32, step: i32) -
     let mut delta = step;
     if delta != 0 {
         let target_short = target as i16;
-        if ((*value as i32).wrapping_sub(target_short as i32) as i16) > 0 {
+        if ((platform::read_u16(value as usize) as i16 as i32).wrapping_sub(target_short as i32) as i16) > 0 {
             delta = -((delta as i16) as i32);
         }
-        let next = (*value).wrapping_add(delta as i16);
-        *value = next;
+        let next = (platform::read_u16(value as usize) as i16).wrapping_add(delta as i16);
+        platform::write_u16(value as usize, (next) as u16);
         let diff = (next as i32).wrapping_sub(target_short as i32) as i16;
         if delta.wrapping_mul(diff as i32) >= 0 {
-            *value = target_short;
+            platform::write_u16(value as usize, (target_short) as u16);
             return 1;
         }
     }
@@ -983,5 +983,3 @@ pub unsafe fn fn_8015f8d0(this: usize, other: usize) -> u32 {
 pub unsafe fn fn_8015f920(this: usize) -> u32 {
     platform::read_u32(this + 4)
 }
-
-

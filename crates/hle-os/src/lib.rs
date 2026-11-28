@@ -87,6 +87,10 @@ const CALL_SCRATCH_CAPACITY: usize = 0x400;
 const CALL_STACK_ARG_CAPACITY: usize = 0x400;
 const CALL_STACK_LINKAGE: usize = 8;
 const CALL_STACK_TOP: u32 = 0x9341_0000 - 0x10;
+/// The Rust bodies' copies of the original functions' stack locals
+/// (`nsmbw::platform::GUEST_LOCALS`): ignored by the body checker like the
+/// stacks, since the original keeps them on its own stack instead.
+const GUEST_LOCALS: (u32, u32) = (0x9380_0000, 0x9390_0000);
 /// The OS's current thread (`OSGetCurrentThread`), and `OSThread`'s size.
 const CURRENT_THREAD: u32 = 0x8000_00E4;
 const OS_THREAD_SIZE: usize = 0x318;
@@ -379,6 +383,10 @@ struct PendingNative {
     exceptions: u64,
 }
 
+/// The shadow's stack for the body's guest calls (inside the ignored
+/// [`CALL_STACK_TOP`] area).
+const SHADOW_STACK_TOP: u32 = 0x9340_FFE0;
+
 /// A CPU and RAM that run the body for validation without touching the live
 /// machine. Guest calls the body makes run here too.
 struct ShadowRuntime {
@@ -405,12 +413,22 @@ impl ShadowRuntime {
     }
 
     fn call_guest(&mut self, addr: u32, gprs: &[u32], fprs: &[f64]) -> Result<GuestCallResult, String> {
+        self.call_guest_at(addr, gprs, fprs, SHADOW_STACK_TOP)
+    }
+
+    fn call_guest_at(
+        &mut self,
+        addr: u32,
+        gprs: &[u32],
+        fprs: &[f64],
+        stack_top: u32,
+    ) -> Result<GuestCallResult, String> {
         const RETURN: u32 = 0x8000_1800; // never executed: the call stops here
         if gprs.len() > 8 || fprs.len() > 8 {
             return Err("shadow call exceeds the argument registers".into());
         }
         let saved = self.cpu.clone();
-        self.cpu.gpr[1] = 0x9340_FFE0;
+        self.cpu.gpr[1] = stack_top;
         self.cpu.gpr[3..3 + gprs.len()].copy_from_slice(gprs);
         for (register, &value) in self.cpu.fpr[1..].iter_mut().zip(fprs) {
             register[0] = value;
@@ -467,15 +485,42 @@ impl GuestRuntime for ShadowRuntime {
         self.call_guest(addr, gprs, fprs)
     }
 
+    /// As the live machine's: scratch at [`CALL_SCRATCH`], stack words from
+    /// `r1 + 8`. Both areas are in the checker's ignore ranges, and the shadow
+    /// is reloaded for every check, so nothing is restored.
     fn call_frame_with_scratch(
         &mut self,
-        _addr: u32,
-        _gprs: &[GuestWord],
-        _fprs: &[f64],
-        _stack: &[u8],
-        _scratch: &mut [u8],
+        addr: u32,
+        gprs: &[GuestWord],
+        fprs: &[f64],
+        stack: &[u8],
+        scratch: &mut [u8],
     ) -> Result<GuestCallResult, String> {
-        Err("shadow calls do not support stack arguments".into())
+        let len = scratch.len();
+        if gprs.len() > 8 || fprs.len() > 8 || len > CALL_SCRATCH_CAPACITY || stack.len() > CALL_STACK_ARG_CAPACITY {
+            return Err("shadow call exceeds the argument registers, scratch or stack area".into());
+        }
+        let mut words = [0; 8];
+        for (word, arg) in words.iter_mut().zip(gprs) {
+            *word = match *arg {
+                GuestWord::Immediate(value) => value,
+                GuestWord::ScratchOffset(offset) if offset < len => CALL_SCRATCH + offset as u32,
+                GuestWord::ScratchOffset(_) => return Err("guest scratch offset is outside the buffer".into()),
+            };
+        }
+        self.mem.ram_mut(CALL_SCRATCH, len).ok_or("scratch memory")?.copy_from_slice(scratch);
+        let stack_top = SHADOW_STACK_TOP - stack.len().next_multiple_of(16) as u32;
+        if !stack.is_empty() {
+            self.mem
+                .ram_mut(stack_top + CALL_STACK_LINKAGE as u32, stack.len())
+                .ok_or("guest call stack")?
+                .copy_from_slice(stack);
+        }
+        let result = self.call_guest_at(addr, &words[..gprs.len()], fprs, stack_top);
+        if result.is_ok() {
+            scratch.copy_from_slice(self.mem.ram(CALL_SCRATCH, len).ok_or("scratch memory")?);
+        }
+        result
     }
 }
 
@@ -502,13 +547,14 @@ fn first_ram_difference(a: &Mem, b: &Mem, ignore: &[(u32, u32)]) -> Option<u32> 
     None
 }
 
-fn ignore_ranges(entry_sp: u32, return_sp: u32) -> [(u32, u32); 5] {
+fn ignore_ranges(entry_sp: u32, return_sp: u32) -> [(u32, u32); 6] {
     [
         (entry_sp.saturating_sub(0x4000), entry_sp.saturating_add(0x1000)),
         (return_sp.saturating_sub(0x4000), return_sp.saturating_add(0x1000)),
         (CALL_STACK_TOP.saturating_sub(0x8000), CALL_STACK_TOP.saturating_add(0x1000)),
         (CALL_SCRATCH.saturating_sub(0x1000), CALL_SCRATCH.saturating_add(0x1000)),
         (CURRENT_THREAD, CURRENT_THREAD.saturating_add(0x10)),
+        GUEST_LOCALS,
     ]
 }
 
@@ -973,6 +1019,7 @@ impl System {
             (CALL_STACK_TOP.saturating_sub(0x8000), CALL_STACK_TOP.saturating_add(0x1000)),
             (CALL_SCRATCH.saturating_sub(0x1000), CALL_SCRATCH.saturating_add(0x1000)),
             (CURRENT_THREAD, CURRENT_THREAD.saturating_add(0x10)),
+            GUEST_LOCALS,
         ];
         let diff = first_ram_difference(&shadow.mem, &self.mem, &ignore);
         // The 8 bytes around the first difference, body's then original's.

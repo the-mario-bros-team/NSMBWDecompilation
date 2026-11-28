@@ -264,7 +264,7 @@ pub unsafe fn fn_80041c00(actor: usize) -> u32 {
 
     // observed 0x80041CD0..0x80041CEC: project the world position to screen
     // space and start sound 0x70E at that position.
-    let mut screen = [0.0f32; 4]; // 16-byte stack slot in the original
+    let mut screen = crate::platform::GuestLocal::new( [0.0f32; 4]); // 16-byte stack slot in the original
     platform::call2(
         0x8006_A4B0,
         screen.as_mut_ptr() as u32,
@@ -371,13 +371,13 @@ pub unsafe fn fn_80041d40(actor: usize) {
 
     // observed 0x80041DB8/0x80041DC0: resolve the model and store it in the
     // temporary that 0x8016A3A0 consumes by pointer.
-    let mut resolved = platform::call2(0x8023_9E30, (actor + 0x3B0) as u32, main_model as u32);
+    let mut resolved = crate::platform::GuestLocal::new( platform::call2(0x8023_9E30, (actor + 0x3B0) as u32, main_model as u32));
 
     // observed 0x80041DE0..0x80041DFC: create the main model at +0x3B4.
     call6(
         0x8016_A3A0,
         (actor + 0x3B4) as u32,
-        &mut resolved as *mut u32 as u32,
+        (resolved.as_mut_ptr() as *mut u32) as u32,
         (actor + 0x394) as u32,
         0x20,
         1,
@@ -391,15 +391,15 @@ pub unsafe fn fn_80041d40(actor: usize) {
     let mut part = actor + 0x3C0;
     let mut index = 0u32;
     while index < 0x20 {
-        let mut part_name = platform::call2(
+        let mut part_name = crate::platform::GuestLocal::new( platform::call2(
             0x8023_9E30,
             (actor + 0x3B0) as u32,
             b"obj_dokan_B\0".as_ptr() as u32,
-        );
+        ));
         call6(
             0x8016_A3A0,
             part as u32,
-            &mut part_name as *mut u32 as u32,
+            (part_name.as_mut_ptr() as *mut u32) as u32,
             (actor + 0x394) as u32,
             0x20,
             1,
@@ -413,12 +413,12 @@ pub unsafe fn fn_80041d40(actor: usize) {
 
     // observed 0x80041E54..0x80041E90: CD cap model from table[mode].
     let cd_model = platform::read_u32(0x8030_6D18 + mode * 4) as usize as *const u8;
-    let mut cd_resolved =
-        platform::call2(0x8023_9E30, (actor + 0x3B0) as u32, cd_model as u32);
+    let mut cd_resolved = crate::platform::GuestLocal::new(
+        platform::call2(0x8023_9E30, (actor + 0x3B0) as u32, cd_model as u32));
     call6(
         0x8016_A3A0,
         (actor + 0x540) as u32,
-        &mut cd_resolved as *mut u32 as u32,
+        (cd_resolved.as_mut_ptr() as *mut u32) as u32,
         (actor + 0x394) as u32,
         0x20,
         1,
@@ -703,12 +703,12 @@ unsafe fn a292_place_part(
     let y = a292_read_f32(owner + 0xB0);
     let z = a292_read_f32(owner + 0xB4);
 
-    let mut position = [0.0f32; 3];
+    let mut position = crate::platform::GuestLocal::new( [0.0f32; 3]);
     position[0] = x + x * cosine;
     position[1] = y + x * sine;
     position[2] = z;
 
-    let mut angles = [0u16; 3];
+    let mut angles = crate::platform::GuestLocal::new( [0u16; 3]);
     angles[0] = platform::read_u16(owner + 0x100);
     angles[1] = platform::read_u16(owner + 0x102);
     angles[2] = angle;

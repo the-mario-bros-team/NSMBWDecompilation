@@ -377,7 +377,7 @@ pub unsafe fn save_task_construct(memory: usize, priority: u32, arg: u32) -> usi
     //   +0x3FC0 end
     // Only the first 0x3FA0 bytes are copied to the global buffer (the last
     // 0x20 bytes are stack padding).
-    let mut image = [0u8; 0x3FC0];
+    let mut image = crate::platform::GuestLocal::new( [0u8; 0x3FC0]);
 
     // 0x800CEC4C: header from save manager + 0x20.
     platform::call3(
@@ -825,7 +825,7 @@ pub unsafe fn save_result_to_state(task: usize, result: u32) {
 /// # Confidence
 /// high - both path strings and the two-result count are explicit.
 pub unsafe fn save_check_files(task: usize) {
-    let mut status = [0u8; 12];
+    let mut status = crate::platform::GuestLocal::new( [0u8; 12]);
     let mut found = 0u32;
 
     let mut result = platform::call2(
@@ -882,7 +882,7 @@ pub unsafe fn save_check_files(task: usize) {
 /// bit pairs is `// unknown:`.
 pub unsafe fn save_check_nand_space(task: usize) {
     // Original local is `uint local_18[4]`, first word preset to -1.
-    let mut info = [0xFFFF_FFFFu32; 4];
+    let mut info = crate::platform::GuestLocal::new( [0xFFFF_FFFFu32; 4]);
     let result = platform::call3(
         0x801D_B140,
         3,
@@ -930,7 +930,7 @@ pub unsafe fn save_check_nand_space(task: usize) {
 /// high for the control flow; the `// unknown:` `0x801D9950` mode `2` is the
 /// SDK's read mode.
 pub unsafe fn save_read(task: usize) -> u32 {
-    let mut buffer = [0u8; 0x90]; // original local auStack_98[144]
+    let mut buffer = crate::platform::GuestLocal::new( [0u8; 0x90]); // original local auStack_98[144]
 
     // unknown: 0x3C is the SDK open-mode/argument passed to 0x801D84E0.
     let mut result = platform::call3(0x801D_84E0, STR_SAVE_FILE, 0x3C, 0);
@@ -1018,7 +1018,7 @@ pub unsafe fn save_read(task: usize) -> u32 {
 /// (`FUN_800cfb30(param_1)`), so the error code is inferred as
 /// the just-computed `0x72A0` mismatch value.
 pub unsafe fn save_read_banner(task: usize) -> u32 {
-    let mut buffer = [0u8; 0x90];
+    let mut buffer = crate::platform::GuestLocal::new( [0u8; 0x90]);
 
     // unknown: same SDK open mode 0x3C as save_read.
     let mut result = platform::call3(0x801D_84E0, STR_BANNER_TMP, 0x3C, 0);
@@ -1053,7 +1053,7 @@ pub unsafe fn save_read_banner(task: usize) -> u32 {
     }
 
     // 16-word banner header, all zero.
-    let mut header = [0u32; 16];
+    let mut header = crate::platform::GuestLocal::new( [0u32; 16]);
     result = platform::call1(0x801D_AAF0, header.as_mut_ptr() as u32);
     save_result_to_state(task, result);
     if platform::read_u32(task + 0x78) != 0 {
@@ -1176,8 +1176,8 @@ pub unsafe fn save_build_banner_buffer(_task: usize, scratch: usize) -> u32 {
 /// high for the control flow; `medium` for the stamp/checksum meaning
 /// (`// inferred:` format stamp).
 pub unsafe fn save_verify(task: usize) -> u32 {
-    let mut buffer = [0u8; 0x90];
-    let mut size: i32 = 0;
+    let mut buffer = crate::platform::GuestLocal::new( [0u8; 0x90]);
+    let mut size = crate::platform::GuestLocal::<i32>::new( 0);
 
     let mut result = platform::call5(
         0x801D_9950,
@@ -1200,7 +1200,7 @@ pub unsafe fn save_verify(task: usize) -> u32 {
     result = platform::call2(
         0x801D_9040,
         buffer.as_mut_ptr() as u32,
-        &mut size as *mut i32 as u32,
+        (size.as_mut_ptr() as *mut i32) as u32,
     );
     save_result_to_state(task, result);
 
@@ -1212,7 +1212,7 @@ pub unsafe fn save_verify(task: usize) -> u32 {
         return 1;
     }
 
-    if size == 0x3FA0 {
+    if *size == 0x3FA0 {
         let compared = platform::call3(
             0x801D_89F0,
             buffer.as_mut_ptr() as u32,
@@ -2331,4 +2331,3 @@ pub unsafe fn fn_800e1b80(this: usize, mode: i32) -> u32 {
 pub unsafe fn fn_800e1da0(value: u32) -> u32 {
     value
 }
-

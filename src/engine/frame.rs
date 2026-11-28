@@ -1022,7 +1022,7 @@ unsafe fn call_f64_u32x5(
 /// # Confidence
 /// high - both additions, the constant word and the call order are literal.
 pub unsafe fn scene_transition_position_a(x: f64, y: f64, sink: u32, object: usize) {
-    let mut position = [0u32; 3];
+    let mut position = crate::platform::GuestLocal::new( [0u32; 3]);
     position[0] = ((x + read_float(object, 0xAC) as f64) as f32).to_bits();
     position[1] = ((y + read_float(object, 0xB0) as f64) as f32).to_bits();
     position[2] = read_global_word(F32_SDA2_63F0);
@@ -1055,7 +1055,7 @@ pub unsafe fn scene_transition_position_a(x: f64, y: f64, sink: u32, object: usi
 /// # Confidence
 /// high - the body differs from the first wrapper only in its sink address.
 pub unsafe fn scene_transition_position_b(x: f64, y: f64, sink: u32, object: usize) {
-    let mut position = [0u32; 3];
+    let mut position = crate::platform::GuestLocal::new( [0u32; 3]);
     position[0] = ((x + read_float(object, 0xAC) as f64) as f32).to_bits();
     position[1] = ((y + read_float(object, 0xB0) as f64) as f32).to_bits();
     position[2] = read_global_word(F32_SDA2_63F0);

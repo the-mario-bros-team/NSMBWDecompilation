@@ -370,7 +370,7 @@ pub unsafe fn start_main_thread(_module_count: u32, _module_list: u32) {
     //   stwux  r0,r1,-0xF020    open the big frame: 0xF020 = 0xF000 + 0x20
     // The 60 KiB stack is that big frame. Its top is `r31 + 0x20`, which is what
     // the call below passes; the 0x20 is the pad between the array and the top.
-    let mut stack = [0u8; MAIN_STACK_SIZE];
+    let mut stack = crate::platform::GuestLocal::new( [0u8; MAIN_STACK_SIZE]);
     let frame_top = (stack.as_mut_ptr() as usize + MAIN_STACK_SIZE) & !0x1F; // ~ r31, 32-byte aligned
     let stack_top = frame_top + 0x20; // observed: r6 = r31 + 0x20
 

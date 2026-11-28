@@ -8817,7 +8817,7 @@ pub unsafe fn fn_8024da70() {
 
     platform::write_u32(base + 0xA40, 0);
     platform::write_u32(base + 0xA44, 0xFFFF_FFFF);
-    let mut scratch = [0u32; 2];
+    let mut scratch = crate::platform::GuestLocal::new( [0u32; 2]);
     let mut element = 0usize;
     while element < 32 {
         platform::call2(

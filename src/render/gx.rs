@@ -223,8 +223,8 @@ pub unsafe fn fn_8000eeb0(
     bottom_left: usize,
     top_left: usize,
 ) {
-    let mut a = [0u32; 2];
-    let mut b = [0u32; 2];
+    let mut a = crate::platform::GuestLocal::new( [0u32; 2]);
+    let mut b = crate::platform::GuestLocal::new( [0u32; 2]);
     b[0] = platform::read_u32(top_left);
     b[1] = platform::read_u32(top_left + 4);
     a[0] = platform::read_u32(bottom_left);
@@ -278,8 +278,8 @@ pub unsafe fn fn_8000ef20(
     bottom_left: usize,
     top_left: usize,
 ) {
-    let mut a = [0u32; 2];
-    let mut b = [0u32; 2];
+    let mut a = crate::platform::GuestLocal::new( [0u32; 2]);
+    let mut b = crate::platform::GuestLocal::new( [0u32; 2]);
     b[0] = platform::read_u32(top_left);
     b[1] = platform::read_u32(top_left + 4);
     a[0] = platform::read_u32(bottom_left);

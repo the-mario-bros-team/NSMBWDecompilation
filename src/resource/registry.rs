@@ -1355,7 +1355,7 @@ pub unsafe fn res_info_set(
     alloc_dir: u32,
     heap: usize,
 ) -> u32 {
-    let mut path = [0u8; 0x50];
+    let mut path = crate::platform::GuestLocal::new( [0u8; 0x50]);
     let path_addr = path.as_mut_ptr() as u32;
     platform::call5(
         SNPRINTF,
@@ -1539,7 +1539,7 @@ pub unsafe fn res_info_load_res(this: usize, callback: usize) -> i32 {
         );
         // `searchCallback_c`: mpCallback, mpFiles, mNumFiles, mFileIdx,
         // mFolderSig (four spaces).
-        let mut search = [callback as u32, files, count, 0, 0x2020_2020];
+        let mut search = crate::platform::GuestLocal::new( [callback as u32, files, count, 0, 0x2020_2020]);
         platform::call3(
             ARCHIVE_SEARCH_INSIDE,
             archive,
@@ -1922,7 +1922,7 @@ pub unsafe fn dres_get_res(
     res_path: usize,
     size_out: usize,
 ) -> u32 {
-    let mut info = [0u32; 2];
+    let mut info = crate::platform::GuestLocal::new( [0u32; 2]);
     let mut data = 0u32;
     let slot = bres::fn_800df640(this, arc_name);
     if slot != 0 {
@@ -1989,7 +1989,7 @@ pub unsafe fn dres_get_res_compressed(
         if archive != 0 {
             let mut entry = bres::fn_802b7760(archive as usize, res_path);
             if entry < 0 {
-                let mut compressed_path = [0u8; 0x100];
+                let mut compressed_path = crate::platform::GuestLocal::new( [0u8; 0x100]);
                 platform::call4(
                     SNPRINTF,
                     compressed_path.as_mut_ptr() as u32,
@@ -2016,7 +2016,7 @@ pub unsafe fn dres_get_res_compressed(
                     }
                 }
             } else {
-                let mut info = [0u32; 2];
+                let mut info = crate::platform::GuestLocal::new( [0u32; 2]);
                 data = bres::fn_802b7770(
                     archive as usize,
                     entry as u32,
@@ -2122,7 +2122,7 @@ pub unsafe fn dres_get_res_silently_size(
         if archive != 0 {
             let entry = bres::fn_802b7760(archive as usize, res_path);
             if entry >= 0 {
-                let mut info = [0u32; 2];
+                let mut info = crate::platform::GuestLocal::new( [0u32; 2]);
                 data = bres::fn_802b7770(
                     archive as usize,
                     entry as u32,
@@ -2338,11 +2338,11 @@ pub unsafe fn dres_mng_destroy(this: usize, deleting: i32) -> usize {
 /// the `dResMng_c` vtable slot that names it.
 pub unsafe fn fn_800df760(_manager: usize, image: u32, kind: u32) -> u32 {
     if kind == 0x6733_6420 {
-        let mut slot = [image];
+        let mut slot = crate::platform::GuestLocal::new( [image]);
         let slot_addr = slot.as_mut_ptr() as usize;
         if bres::brres_check_revision(slot_addr) {
             bres::brres_bind_all(slot_addr);
-            let copy = [platform::read_u32(slot_addr)];
+            let copy = crate::platform::GuestLocal::new( [platform::read_u32(slot_addr)]);
             bres::brres_bind_check(slot_addr, copy.as_ptr() as usize);
         }
     }
@@ -2852,8 +2852,8 @@ pub unsafe fn mount_queue_drain(this: usize) {
                 break;
             }
             mount_queue_remove(this, node as usize);
-            let mut slot = node;
-            mount_cmd_run(&mut slot as *mut u32 as usize);
+            let mut slot = crate::platform::GuestLocal::new( node);
+            mount_cmd_run((slot.as_mut_ptr() as *mut u32) as usize);
         }
     }
 }
@@ -3428,7 +3428,7 @@ pub unsafe fn fn_8016b410(path: usize) -> u32 {
 /// high - the two passes and both `strrchr` calls are explicit; only the save
 /// stub's register pair needs the ABI reading above.
 pub unsafe fn mount_probe_path_variants(path: usize, tag_out: usize) -> i32 {
-    let mut buffer = [0u8; 0x100];
+    let mut buffer = crate::platform::GuestLocal::new( [0u8; 0x100]);
     let base = buffer.as_mut_ptr() as usize;
     platform::call3(STRNCPY, base as u32, path as u32, 0x100);
 
@@ -3850,7 +3850,7 @@ pub unsafe fn mount_mem_cmd_construct(this: usize, flags: u32) -> usize {
 /// # Confidence
 /// high - the probe, allocation, field stores and submit are explicit.
 pub unsafe fn mount_mem_cmd_create(path: usize, flags: u32, heap: u32) -> u32 {
-    let mut tag = [0u8; 8];
+    let mut tag = crate::platform::GuestLocal::new( [0u8; 8]);
     let entry = platform::call2(
         MOUNT_PROBE,
         path as u32,
@@ -4060,7 +4060,7 @@ pub unsafe fn mount_arc_cmd_construct(this: usize, flags: u32) -> usize {
 /// # Confidence
 /// high - the probe, allocation, field stores and submit are explicit.
 pub unsafe fn mount_arc_cmd_create(path: usize, flags: u32, extra: u32) -> u32 {
-    let mut tag = [0u8; 8];
+    let mut tag = crate::platform::GuestLocal::new( [0u8; 8]);
     let entry = platform::call2(
         MOUNT_PROBE,
         path as u32,
@@ -7605,7 +7605,7 @@ pub unsafe fn fn_80164c50(key: u32, descriptor: usize, index: i32) -> u32 {
     if slots == 0 {
         return 0;
     }
-    let mut local_key = [0u32; 4];
+    let mut local_key = crate::platform::GuestLocal::new( [0u32; 4]);
     let key_ptr = local_key.as_mut_ptr() as u32;
     platform::call2(FN_CTX_KEY_INIT, key_ptr, platform::read_u32(descriptor + 4));
     let object = platform::read_u32(slots + index as usize * 4) as usize;
@@ -9097,14 +9097,14 @@ pub unsafe fn fn_801695c0(this: usize, count: i32) -> usize {
 pub unsafe fn fn_80169ac0(this: usize, a: u32, src: usize) {
     let object = platform::read_u32(this + 0x2C) as usize;
     if object != 0 {
-        let local = platform::read_u32(src);
+        let local = crate::platform::GuestLocal::new( platform::read_u32(src));
         let vtable = platform::read_u32(object) as usize;
         let method = platform::read_u32(vtable + 0x14) as usize;
         platform::call3(
             method,
             object as u32,
             a,
-            &local as *const u32 as usize as u32,
+            (local.as_ptr() as *const u32) as usize as u32,
         );
     }
     platform::call1(0x8016_8BB0, (this + 4) as u32);
@@ -9361,30 +9361,30 @@ pub unsafe fn fn_8016a3a0(
     } else {
         group
     };
-    let mut scratch = [0u8; 12];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 12]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
 
-    let descriptor: u32;
+    let mut descriptor = crate::platform::GuestLocal::<u32>::new(unsafe { core::mem::zeroed() });
     let handle = if mode == 0 {
-        descriptor = platform::read_u32(src);
+        *descriptor = platform::read_u32(src);
         platform::call4(
             0x8025_A380,
             group,
             out as u32,
-            &descriptor as *const u32 as usize as u32,
+            (descriptor.as_ptr() as *const u32) as usize as u32,
             arg4,
         )
     } else {
-        descriptor = platform::read_u32(src);
+        *descriptor = platform::read_u32(src);
         platform::call3(
             0x8025_CA20,
             group,
             out as u32,
-            &descriptor as *const u32 as usize as u32,
+            (descriptor.as_ptr() as *const u32) as usize as u32,
         )
     };
 
@@ -10062,7 +10062,7 @@ pub unsafe fn fn_80163a60(this: usize) {
 /// layout is inferred from the four returned words.
 pub unsafe fn fn_80163a90(this: usize) {
     let object = this + 0x10;
-    let mut transform = [0u32; 4];
+    let mut transform = crate::platform::GuestLocal::new( [0u32; 4]);
     platform::call2(
         FN_TRANSFORM_QUERY,
         transform.as_mut_ptr() as u32,
@@ -10495,7 +10495,7 @@ pub unsafe fn fn_80168180(this: usize, arg: u32, out: u32) -> u32 {
     let object = platform::read_u32(this + 4) as usize;
     let mut cast = 0usize;
     if object != 0 {
-        let mut typeinfo = [DESCRIPTOR_802F8FD8 as u32, 0u32];
+        let mut typeinfo = crate::platform::GuestLocal::new( [DESCRIPTOR_802F8FD8 as u32, 0u32]);
         let vtable = platform::read_u32(object) as usize;
         let matched = platform::call2(
             platform::read_u32(vtable + 8) as usize,
@@ -10535,7 +10535,7 @@ pub unsafe fn fn_80168180(this: usize, arg: u32, out: u32) -> u32 {
 /// medium - the local buffer and both calls are literal; the callee's return
 /// value is inferred from the test.
 pub unsafe fn fn_80168230(this: usize, arg: u32, value: usize) -> bool {
-    let mut out = [0u32; 13];
+    let mut out = crate::platform::GuestLocal::new( [0u32; 13]);
     let ok = fn_80168180(this, arg, out.as_mut_ptr() as u32);
     if ok != 0 {
         fn_8016f130(out.as_ptr() as usize, value);
@@ -11321,12 +11321,12 @@ pub unsafe fn fn_801651f0(this: usize, arg2: u32, arg3: usize, arg4: u32) {
     let slot = platform::read_u32(vtable + 0x0C) as usize;
     let value = platform::call1(slot, this as u32);
     platform::call2(W64_FN_80168520, arg2, value);
-    let descriptor = platform::read_u32(arg3);
+    let descriptor = crate::platform::GuestLocal::new( platform::read_u32(arg3));
     platform::call4(
         W64_FN_80165280,
         this as u32,
         arg2,
-        &descriptor as *const u32 as usize as u32,
+        (descriptor.as_ptr() as *const u32) as usize as u32,
         arg4,
     );
 }
@@ -11360,22 +11360,22 @@ pub unsafe fn fn_801651f0(this: usize, arg2: u32, arg3: usize, arg4: u32) {
 /// # Confidence
 /// high - the five call arguments and the alignment arithmetic are literal.
 pub unsafe fn fn_80165820(a: usize, b: usize, align: i32) -> u32 {
-    let mut size: u32 = 0;
-    let first = platform::read_u32(a);
-    let mut second = platform::read_u32(b);
+    let mut size = crate::platform::GuestLocal::<u32>::new( 0);
+    let first = crate::platform::GuestLocal::new( platform::read_u32(a));
+    let mut second = crate::platform::GuestLocal::new( platform::read_u32(b));
     platform::call5(
         W64_FN_80243D20,
         0,
-        &mut size as *mut u32 as usize as u32,
-        &mut second as *mut u32 as usize as u32,
-        &first as *const u32 as usize as u32,
+        (size.as_mut_ptr() as *mut u32) as usize as u32,
+        (second.as_mut_ptr() as *mut u32) as usize as u32,
+        (first.as_ptr() as *const u32) as usize as u32,
         0,
     );
     if align != 0 {
-        let advanced = crate::ui::lyt::fn_8016e7d0(size as i32, 0x20);
-        size = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
+        let advanced = crate::ui::lyt::fn_8016e7d0(*size as i32, 0x20);
+        *size = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
     }
-    size
+    *size
 }
 
 /// Releases the element's `+0x04` child and returns its buffer to heap class 3.
@@ -11444,31 +11444,31 @@ pub unsafe fn fn_80165a80(this: usize) {
 /// # Confidence
 /// high - every term of the size formula is literal.
 pub unsafe fn fn_80165b50(a: usize, b: usize, count: u32, align: i32) -> u32 {
-    let mut total: u32 = 0;
-    let mut first = platform::read_u32(a);
+    let mut total = crate::platform::GuestLocal::<u32>::new( 0);
+    let mut first = crate::platform::GuestLocal::new( platform::read_u32(a));
     platform::call4(
         W64_FN_80243B30,
         0,
-        &mut total as *mut u32 as usize as u32,
-        &mut first as *mut u32 as usize as u32,
+        (total.as_mut_ptr() as *mut u32) as usize as u32,
+        (first.as_mut_ptr() as *mut u32) as usize as u32,
         count,
     );
-    total = total.wrapping_add(count.wrapping_mul(0x38).wrapping_add(0x1F) & 0xFFFF_FFE0);
-    let element_a = platform::read_u32(a);
-    let element_b = platform::read_u32(b);
+    *total = total.wrapping_add(count.wrapping_mul(0x38).wrapping_add(0x1F) & 0xFFFF_FFE0);
+    let element_a = crate::platform::GuestLocal::new( platform::read_u32(a));
+    let element_b = crate::platform::GuestLocal::new( platform::read_u32(b));
     let element_size = fn_80165820(
-        &element_a as *const u32 as usize,
-        &element_b as *const u32 as usize,
+        (element_a.as_ptr() as *const u32) as usize,
+        (element_b.as_ptr() as *const u32) as usize,
         1,
     );
-    total = total.wrapping_add(
+    *total = total.wrapping_add(
         count.wrapping_mul(element_size.wrapping_add(0x1F) & 0xFFFF_FFE0),
     );
     if align != 0 {
-        let advanced = crate::ui::lyt::fn_8016e7d0(total as i32, 0x20);
-        total = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
+        let advanced = crate::ui::lyt::fn_8016e7d0(*total as i32, 0x20);
+        *total = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
     }
-    total
+    *total
 }
 
 /// Deleting destructor for the class-A element.
@@ -11575,22 +11575,22 @@ pub unsafe fn fn_80166280(this: usize, index: u32) {
 /// # Confidence
 /// high - the five call arguments and the alignment arithmetic are literal.
 pub unsafe fn fn_80166420(a: usize, b: usize, align: i32) -> u32 {
-    let mut size: u32 = 0;
-    let first = platform::read_u32(a);
-    let mut second = platform::read_u32(b);
+    let mut size = crate::platform::GuestLocal::<u32>::new( 0);
+    let first = crate::platform::GuestLocal::new( platform::read_u32(a));
+    let mut second = crate::platform::GuestLocal::new( platform::read_u32(b));
     platform::call5(
         W64_FN_80245500,
         0,
-        &mut size as *mut u32 as usize as u32,
-        &mut second as *mut u32 as usize as u32,
-        &first as *const u32 as usize as u32,
+        (size.as_mut_ptr() as *mut u32) as usize as u32,
+        (second.as_mut_ptr() as *mut u32) as usize as u32,
+        (first.as_ptr() as *const u32) as usize as u32,
         0,
     );
     if align != 0 {
-        let advanced = crate::ui::lyt::fn_8016e7d0(size as i32, 0x20);
-        size = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
+        let advanced = crate::ui::lyt::fn_8016e7d0(*size as i32, 0x20);
+        *size = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
     }
-    size
+    *size
 }
 
 /// Releases the class-B element's `+0x04` child and returns its buffer to heap
@@ -11657,31 +11657,31 @@ pub unsafe fn fn_80166680(this: usize) {
 /// # Confidence
 /// high - every term of the size formula is literal.
 pub unsafe fn fn_80166750(a: usize, b: usize, count: u32, align: i32) -> u32 {
-    let mut total: u32 = 0;
-    let mut first = platform::read_u32(a);
+    let mut total = crate::platform::GuestLocal::<u32>::new( 0);
+    let mut first = crate::platform::GuestLocal::new( platform::read_u32(a));
     platform::call4(
         W64_FN_80245300,
         0,
-        &mut total as *mut u32 as usize as u32,
-        &mut first as *mut u32 as usize as u32,
+        (total.as_mut_ptr() as *mut u32) as usize as u32,
+        (first.as_mut_ptr() as *mut u32) as usize as u32,
         count,
     );
-    total = total.wrapping_add(count.wrapping_mul(0x38).wrapping_add(0x1F) & 0xFFFF_FFE0);
-    let element_a = platform::read_u32(a);
-    let element_b = platform::read_u32(b);
+    *total = total.wrapping_add(count.wrapping_mul(0x38).wrapping_add(0x1F) & 0xFFFF_FFE0);
+    let element_a = crate::platform::GuestLocal::new( platform::read_u32(a));
+    let element_b = crate::platform::GuestLocal::new( platform::read_u32(b));
     let element_size = fn_80166420(
-        &element_a as *const u32 as usize,
-        &element_b as *const u32 as usize,
+        (element_a.as_ptr() as *const u32) as usize,
+        (element_b.as_ptr() as *const u32) as usize,
         1,
     );
-    total = total.wrapping_add(
+    *total = total.wrapping_add(
         count.wrapping_mul(element_size.wrapping_add(0x1F) & 0xFFFF_FFE0),
     );
     if align != 0 {
-        let advanced = crate::ui::lyt::fn_8016e7d0(total as i32, 0x20);
-        total = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
+        let advanced = crate::ui::lyt::fn_8016e7d0(*total as i32, 0x20);
+        *total = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
     }
-    total
+    *total
 }
 
 /// Deleting destructor for the class-B element.
@@ -11784,22 +11784,22 @@ pub unsafe fn fn_80166e80(this: usize, index: u32) {
 /// # Confidence
 /// high - the five call arguments and the alignment arithmetic are literal.
 pub unsafe fn fn_80167000(a: usize, b: usize, align: i32) -> u32 {
-    let mut size: u32 = 0;
-    let first = platform::read_u32(a);
-    let mut second = platform::read_u32(b);
+    let mut size = crate::platform::GuestLocal::<u32>::new( 0);
+    let first = crate::platform::GuestLocal::new( platform::read_u32(a));
+    let mut second = crate::platform::GuestLocal::new( platform::read_u32(b));
     platform::call5(
         W64_FN_80246B00,
         0,
-        &mut size as *mut u32 as usize as u32,
-        &mut second as *mut u32 as usize as u32,
-        &first as *const u32 as usize as u32,
+        (size.as_mut_ptr() as *mut u32) as usize as u32,
+        (second.as_mut_ptr() as *mut u32) as usize as u32,
+        (first.as_ptr() as *const u32) as usize as u32,
         0,
     );
     if align != 0 {
-        let advanced = crate::ui::lyt::fn_8016e7d0(size as i32, 0x20);
-        size = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
+        let advanced = crate::ui::lyt::fn_8016e7d0(*size as i32, 0x20);
+        *size = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
     }
-    size
+    *size
 }
 
 /// Releases the class-C element's `+0x04` child and returns its buffer to heap
@@ -11866,31 +11866,31 @@ pub unsafe fn fn_80167270(this: usize) {
 /// # Confidence
 /// high - every term of the size formula is literal.
 pub unsafe fn fn_80167340(a: usize, b: usize, count: u32, align: i32) -> u32 {
-    let mut total: u32 = 0;
-    let mut first = platform::read_u32(a);
+    let mut total = crate::platform::GuestLocal::<u32>::new( 0);
+    let mut first = crate::platform::GuestLocal::new( platform::read_u32(a));
     platform::call4(
         W64_FN_80246900,
         0,
-        &mut total as *mut u32 as usize as u32,
-        &mut first as *mut u32 as usize as u32,
+        (total.as_mut_ptr() as *mut u32) as usize as u32,
+        (first.as_mut_ptr() as *mut u32) as usize as u32,
         count,
     );
-    total = total.wrapping_add(count.wrapping_mul(0x38).wrapping_add(0x1F) & 0xFFFF_FFE0);
-    let element_a = platform::read_u32(a);
-    let element_b = platform::read_u32(b);
+    *total = total.wrapping_add(count.wrapping_mul(0x38).wrapping_add(0x1F) & 0xFFFF_FFE0);
+    let element_a = crate::platform::GuestLocal::new( platform::read_u32(a));
+    let element_b = crate::platform::GuestLocal::new( platform::read_u32(b));
     let element_size = fn_80167000(
-        &element_a as *const u32 as usize,
-        &element_b as *const u32 as usize,
+        (element_a.as_ptr() as *const u32) as usize,
+        (element_b.as_ptr() as *const u32) as usize,
         1,
     );
-    total = total.wrapping_add(
+    *total = total.wrapping_add(
         count.wrapping_mul(element_size.wrapping_add(0x1F) & 0xFFFF_FFE0),
     );
     if align != 0 {
-        let advanced = crate::ui::lyt::fn_8016e7d0(total as i32, 0x20);
-        total = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
+        let advanced = crate::ui::lyt::fn_8016e7d0(*total as i32, 0x20);
+        *total = (advanced as u32).wrapping_add(0x1F) & 0xFFFF_FFE0;
     }
-    total
+    *total
 }
 
 /// Deleting destructor for the class-C element.
@@ -12323,10 +12323,10 @@ unsafe fn w78_cast_to(object: usize, type_info: usize) -> usize {
     if object == 0 {
         return 0;
     }
-    let mut info = type_info as u32;
+    let mut info = crate::platform::GuestLocal::new( type_info as u32);
     let vtable = platform::read_u32(object) as usize;
     let slot = platform::read_u32(vtable + 0x08) as usize;
-    if platform::call2(slot, object as u32, &mut info as *mut u32 as usize as u32) != 0 {
+    if platform::call2(slot, object as u32, (info.as_mut_ptr() as *mut u32) as usize as u32) != 0 {
         object
     } else {
         0
@@ -12418,9 +12418,9 @@ pub unsafe fn fn_80161da0(this: usize, stage: u32) {
 /// medium - the nine loads and the three pointers are literal; the identity of
 /// `0x80161CC0` is inferred from its four sibling wrappers.
 pub unsafe fn fn_80161e40(context: u32) {
-    let mut low = [0u32; 3];
-    let mut middle = [0u32; 3];
-    let mut high = [0u32; 3];
+    let mut low = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut middle = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut high = crate::platform::GuestLocal::new( [0u32; 3]);
     w78_read_row3(&mut low, 0x8032_9350);
     w78_read_row3(&mut middle, 0x8032_935C);
     w78_read_row3(&mut high, 0x8032_9368);
@@ -12454,9 +12454,9 @@ pub unsafe fn fn_80161e40(context: u32) {
 /// # Confidence
 /// medium - the loads and pointers are literal; the callee is inferred.
 pub unsafe fn fn_80162020(context: u32) {
-    let mut low = [0u32; 3];
-    let mut middle = [0u32; 3];
-    let mut high = [0u32; 3];
+    let mut low = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut middle = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut high = crate::platform::GuestLocal::new( [0u32; 3]);
     w78_read_row3(&mut low, 0x8032_9374);
     w78_read_row3(&mut middle, 0x8032_9380);
     w78_read_row3(&mut high, 0x8032_938C);
@@ -12489,9 +12489,9 @@ pub unsafe fn fn_80162020(context: u32) {
 /// # Confidence
 /// medium - the loads and pointers are literal; the callee is inferred.
 pub unsafe fn fn_80162120(context: u32) {
-    let mut low = [0u32; 3];
-    let mut middle = [0u32; 3];
-    let mut high = [0u32; 3];
+    let mut low = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut middle = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut high = crate::platform::GuestLocal::new( [0u32; 3]);
     w78_read_row3(&mut low, 0x8032_9398);
     w78_read_row3(&mut middle, 0x8032_93A4);
     w78_read_row3(&mut high, 0x8032_93B0);
@@ -12524,9 +12524,9 @@ pub unsafe fn fn_80162120(context: u32) {
 /// # Confidence
 /// medium - the loads and pointers are literal; the callee is inferred.
 pub unsafe fn fn_80162220(context: u32) {
-    let mut low = [0u32; 3];
-    let mut middle = [0u32; 3];
-    let mut high = [0u32; 3];
+    let mut low = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut middle = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut high = crate::platform::GuestLocal::new( [0u32; 3]);
     w78_read_row3(&mut low, 0x8032_93BC);
     w78_read_row3(&mut middle, 0x8032_93C8);
     w78_read_row3(&mut high, 0x8032_93D4);
@@ -12719,29 +12719,29 @@ pub unsafe fn fn_80165520(
     } else {
         heap
     };
-    let mut scratch = [0u8; 0x20];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 0x20]);
     let out = if slot == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         slot
     };
-    let mut value = platform::read_u32(key);
+    let mut value = crate::platform::GuestLocal::new( platform::read_u32(key));
     platform::call4(
         W78_FN_802481B0,
         0,
         out as u32,
-        &mut value as *mut u32 as usize as u32,
+        (value.as_mut_ptr() as *mut u32) as usize as u32,
         mode,
     );
     if fn_80167fa0(this, heap, out) == 0 {
         return false;
     }
-    let mut value = platform::read_u32(key);
+    let mut value = crate::platform::GuestLocal::new( platform::read_u32(key));
     let child = platform::call4(
         W78_FN_802481B0,
         (this + 0x0C) as u32,
         out as u32,
-        &mut value as *mut u32 as usize as u32,
+        (value.as_mut_ptr() as *mut u32) as usize as u32,
         mode,
     );
     platform::write_u32(this + 0x04, child);
@@ -13404,7 +13404,7 @@ pub unsafe fn fn_8016cea0(this: usize, arg2: u32, arg3: u32, arg4: u32) -> bool 
     if platform::call1(W64_FN_802967B0, (this + 0x74) as u32) == 0 {
         return false;
     }
-    let mut packet = [0u8; 0x38];
+    let mut packet = crate::platform::GuestLocal::new( [0u8; 0x38]);
     platform::call4(
         W78_FN_8016C9E0,
         arg2,
@@ -13453,12 +13453,12 @@ pub unsafe fn fn_8016edd0(this: u32, id: usize) {
     if raw == 0 {
         return;
     }
-    let mut value = raw;
-    let mut packet = [0u8; 0x3C];
+    let mut value = crate::platform::GuestLocal::new( raw);
+    let mut packet = crate::platform::GuestLocal::new( [0u8; 0x3C]);
     platform::call2(
         W78_FN_8016ED10,
         packet.as_mut_ptr() as usize as u32,
-        &mut value as *mut u16 as usize as u32,
+        (value.as_mut_ptr() as *mut u16) as usize as u32,
     );
     platform::call3(
         W78_FN_801C0540,
@@ -13494,12 +13494,12 @@ pub unsafe fn fn_8016eef0(this: u32, id: usize) {
     if raw == 0 {
         return;
     }
-    let mut value = raw;
-    let mut packet = [0u8; 0x3C];
+    let mut value = crate::platform::GuestLocal::new( raw);
+    let mut packet = crate::platform::GuestLocal::new( [0u8; 0x3C]);
     platform::call2(
         W78_FN_8016EE30,
         packet.as_mut_ptr() as usize as u32,
-        &mut value as *mut u16 as usize as u32,
+        (value.as_mut_ptr() as *mut u16) as usize as u32,
     );
     platform::call3(
         W78_FN_801C0540,
@@ -13749,7 +13749,7 @@ unsafe fn w89_call0_ret(addr: usize) -> u32 {
 /// medium - both calls and the buffer size are literal, but the three words are
 /// untyped in the export, so only their routing is claimed.
 pub unsafe fn fn_80161060(a: u32, b: u32, c: u32) {
-    let mut context = [0u8; 0x10];
+    let mut context = crate::platform::GuestLocal::new( [0u8; 0x10]);
     platform::call2(W89_FN_801C1450, b, context.as_mut_ptr() as usize as u32);
     platform::call3(
         W89_FN_801C13F0,
@@ -13786,7 +13786,7 @@ pub unsafe fn fn_80161060(a: u32, b: u32, c: u32) {
 /// medium - the routing of `r3:r4` follows the wave-78 prologue-fragment rule;
 /// the fourth word is provably unused by the nested three-argument call.
 pub unsafe fn fn_801610b0(tag: u64, a: u32, b: u32, _c: u32) {
-    let mut context = [0u8; 0x18];
+    let mut context = crate::platform::GuestLocal::new( [0u8; 0x18]);
     platform::call3(
         W89_FN_801C1420,
         b,
@@ -14276,7 +14276,7 @@ pub unsafe fn fn_80164fd0(this: usize, heap: usize, desc: usize) -> u32 {
     } else {
         heap
     };
-    let mut empty = [0u8; 8];
+    let mut empty = crate::platform::GuestLocal::new( [0u8; 8]);
     let desc = if desc == 0 {
         empty.as_mut_ptr() as usize
     } else {
@@ -14331,10 +14331,10 @@ pub unsafe fn fn_80164fd0(this: usize, heap: usize, desc: usize) -> u32 {
 /// array semantics come from the already-translated `0x8023B860`.
 pub unsafe fn fn_80168480(this: usize, index: u32) -> u32 {
     let element = w78_cast_to(platform::read_u32(this + 0x04) as usize, W78_TYPE_ELEMENT);
-    let mut header = platform::read_u32(element + 0xE8);
+    let mut header = crate::platform::GuestLocal::new( platform::read_u32(element + 0xE8));
     platform::call2(
         W89_FN_8023B860,
-        &mut header as *mut u32 as usize as u32,
+        (header.as_mut_ptr() as *mut u32) as usize as u32,
         index,
     )
 }
@@ -14375,42 +14375,42 @@ pub unsafe fn fn_801685e0(this: usize, index: u32, arg3: u32, color: usize, arg5
         let element = fn_80168480(this, index) as usize;
         let bias = platform::read_u32(element + 0x3C) as usize;
         let base = if bias == 0 { 0usize } else { element + bias };
-        let mut target = (base + 0x20) as u32;
-        let mut tint = platform::read_u32(color);
+        let mut target = crate::platform::GuestLocal::new( (base + 0x20) as u32);
+        let mut tint = crate::platform::GuestLocal::new( platform::read_u32(color));
         platform::call3(
             W89_FN_8023D3C0,
-            &mut target as *mut u32 as usize as u32,
+            (target.as_mut_ptr() as *mut u32) as usize as u32,
             arg3,
-            &mut tint as *mut u32 as usize as u32,
+            (tint.as_mut_ptr() as *mut u32) as usize as u32,
         );
         platform::call2(
             W89_FN_8023CA80,
-            &mut target as *mut u32 as usize as u32,
+            (target.as_mut_ptr() as *mut u32) as usize as u32,
             0,
         );
     } else {
-        let mut entry = [0u8; 0x54];
+        let mut entry = crate::platform::GuestLocal::new( [0u8; 0x54]);
         platform::call3(
             W89_FN_8025C660,
             entry.as_mut_ptr() as usize as u32,
             child as u32,
             index,
         );
-        let mut packed = platform::call2(
+        let mut packed = crate::platform::GuestLocal::new( platform::call2(
             W89_FN_8025C560,
             entry.as_mut_ptr() as usize as u32,
             arg5,
-        );
-        let mut tint = platform::read_u32(color);
+        ));
+        let mut tint = crate::platform::GuestLocal::new( platform::read_u32(color));
         platform::call3(
             W89_FN_8023D3C0,
-            &mut packed as *mut u32 as usize as u32,
+            (packed.as_mut_ptr() as *mut u32) as usize as u32,
             arg3,
-            &mut tint as *mut u32 as usize as u32,
+            (tint.as_mut_ptr() as *mut u32) as usize as u32,
         );
         platform::call2(
             W89_FN_8023CA80,
-            &mut packed as *mut u32 as usize as u32,
+            (packed.as_mut_ptr() as *mut u32) as usize as u32,
             0,
         );
     }
@@ -14444,54 +14444,54 @@ pub unsafe fn fn_801685e0(this: usize, index: u32, arg3: u32, color: usize, arg5
 /// medium - the loop, both call chains and the `+0x3C` bias are literal; the
 /// argument roles are inferred from [`fn_801685e0`]'s call sites.
 pub unsafe fn fn_80168710(this: usize, color: u32, pos: usize, arg4: u32) {
-    let mut header = fn_80168400(this);
+    let mut header = crate::platform::GuestLocal::new( fn_80168400(this));
     let child = w78_cast_to(platform::read_u32(this + 0x04) as usize, W78_TYPE_OBJECT);
     let mut index = 0u32;
-    while index < platform::call1(W89_FN_8023B8C0, &mut header as *mut u32 as usize as u32) {
+    while index < platform::call1(W89_FN_8023B8C0, (header.as_mut_ptr() as *mut u32) as usize as u32) {
         if child == 0 {
             let element = platform::call2(
                 W89_FN_8023B860,
-                &mut header as *mut u32 as usize as u32,
+                (header.as_mut_ptr() as *mut u32) as usize as u32,
                 index,
             ) as usize;
             let bias = platform::read_u32(element + 0x3C) as usize;
             let base = if bias == 0 { 0usize } else { element + bias };
-            let mut target = (base + 0x20) as u32;
-            let mut tint = platform::read_u32(pos);
+            let mut target = crate::platform::GuestLocal::new( (base + 0x20) as u32);
+            let mut tint = crate::platform::GuestLocal::new( platform::read_u32(pos));
             platform::call3(
                 W89_FN_8023D3C0,
-                &mut target as *mut u32 as usize as u32,
+                (target.as_mut_ptr() as *mut u32) as usize as u32,
                 color,
-                &mut tint as *mut u32 as usize as u32,
+                (tint.as_mut_ptr() as *mut u32) as usize as u32,
             );
             platform::call2(
                 W89_FN_8023CA80,
-                &mut target as *mut u32 as usize as u32,
+                (target.as_mut_ptr() as *mut u32) as usize as u32,
                 0,
             );
         } else {
-            let mut entry = [0u8; 0x50];
+            let mut entry = crate::platform::GuestLocal::new( [0u8; 0x50]);
             platform::call3(
                 W89_FN_8025C660,
                 entry.as_mut_ptr() as usize as u32,
                 child as u32,
                 index,
             );
-            let mut packed = platform::call2(
+            let mut packed = crate::platform::GuestLocal::new( platform::call2(
                 W89_FN_8025C560,
                 entry.as_mut_ptr() as usize as u32,
                 arg4,
-            );
-            let mut tint = platform::read_u32(pos);
+            ));
+            let mut tint = crate::platform::GuestLocal::new( platform::read_u32(pos));
             platform::call3(
                 W89_FN_8023D3C0,
-                &mut packed as *mut u32 as usize as u32,
+                (packed.as_mut_ptr() as *mut u32) as usize as u32,
                 color,
-                &mut tint as *mut u32 as usize as u32,
+                (tint.as_mut_ptr() as *mut u32) as usize as u32,
             );
             platform::call2(
                 W89_FN_8023CA80,
-                &mut packed as *mut u32 as usize as u32,
+                (packed.as_mut_ptr() as *mut u32) as usize as u32,
                 0,
             );
         }
@@ -14531,42 +14531,42 @@ pub unsafe fn fn_80168880(this: usize, index: u32, arg3: u32, color: usize, arg5
         let element = fn_80168480(this, index) as usize;
         let bias = platform::read_u32(element + 0x3C) as usize;
         let base = if bias == 0 { 0usize } else { element + bias };
-        let mut target = (base + 0x20) as u32;
-        let mut tint = platform::read_u32(color);
+        let mut target = crate::platform::GuestLocal::new( (base + 0x20) as u32);
+        let mut tint = crate::platform::GuestLocal::new( platform::read_u32(color));
         platform::call3(
             W89_FN_8023D520,
-            &mut target as *mut u32 as usize as u32,
+            (target.as_mut_ptr() as *mut u32) as usize as u32,
             arg3,
-            &mut tint as *mut u32 as usize as u32,
+            (tint.as_mut_ptr() as *mut u32) as usize as u32,
         );
         platform::call2(
             W89_FN_8023CA80,
-            &mut target as *mut u32 as usize as u32,
+            (target.as_mut_ptr() as *mut u32) as usize as u32,
             0,
         );
     } else {
-        let mut entry = [0u8; 0x54];
+        let mut entry = crate::platform::GuestLocal::new( [0u8; 0x54]);
         platform::call3(
             W89_FN_8025C660,
             entry.as_mut_ptr() as usize as u32,
             child as u32,
             index,
         );
-        let mut packed = platform::call2(
+        let mut packed = crate::platform::GuestLocal::new( platform::call2(
             W89_FN_8025C560,
             entry.as_mut_ptr() as usize as u32,
             arg5,
-        );
-        let mut tint = platform::read_u32(color);
+        ));
+        let mut tint = crate::platform::GuestLocal::new( platform::read_u32(color));
         platform::call3(
             W89_FN_8023D520,
-            &mut packed as *mut u32 as usize as u32,
+            (packed.as_mut_ptr() as *mut u32) as usize as u32,
             arg3,
-            &mut tint as *mut u32 as usize as u32,
+            (tint.as_mut_ptr() as *mut u32) as usize as u32,
         );
         platform::call2(
             W89_FN_8023CA80,
-            &mut packed as *mut u32 as usize as u32,
+            (packed.as_mut_ptr() as *mut u32) as usize as u32,
             0,
         );
     }
@@ -14597,54 +14597,54 @@ pub unsafe fn fn_80168880(this: usize, index: u32, arg3: u32, color: usize, arg5
 /// # Confidence
 /// medium - the twin of [`fn_80168710`] with one different callee.
 pub unsafe fn fn_801689b0(this: usize, color: u32, pos: usize, arg4: u32) {
-    let mut header = fn_80168400(this);
+    let mut header = crate::platform::GuestLocal::new( fn_80168400(this));
     let child = w78_cast_to(platform::read_u32(this + 0x04) as usize, W78_TYPE_OBJECT);
     let mut index = 0u32;
-    while index < platform::call1(W89_FN_8023B8C0, &mut header as *mut u32 as usize as u32) {
+    while index < platform::call1(W89_FN_8023B8C0, (header.as_mut_ptr() as *mut u32) as usize as u32) {
         if child == 0 {
             let element = platform::call2(
                 W89_FN_8023B860,
-                &mut header as *mut u32 as usize as u32,
+                (header.as_mut_ptr() as *mut u32) as usize as u32,
                 index,
             ) as usize;
             let bias = platform::read_u32(element + 0x3C) as usize;
             let base = if bias == 0 { 0usize } else { element + bias };
-            let mut target = (base + 0x20) as u32;
-            let mut tint = platform::read_u32(pos);
+            let mut target = crate::platform::GuestLocal::new( (base + 0x20) as u32);
+            let mut tint = crate::platform::GuestLocal::new( platform::read_u32(pos));
             platform::call3(
                 W89_FN_8023D520,
-                &mut target as *mut u32 as usize as u32,
+                (target.as_mut_ptr() as *mut u32) as usize as u32,
                 color,
-                &mut tint as *mut u32 as usize as u32,
+                (tint.as_mut_ptr() as *mut u32) as usize as u32,
             );
             platform::call2(
                 W89_FN_8023CA80,
-                &mut target as *mut u32 as usize as u32,
+                (target.as_mut_ptr() as *mut u32) as usize as u32,
                 0,
             );
         } else {
-            let mut entry = [0u8; 0x50];
+            let mut entry = crate::platform::GuestLocal::new( [0u8; 0x50]);
             platform::call3(
                 W89_FN_8025C660,
                 entry.as_mut_ptr() as usize as u32,
                 child as u32,
                 index,
             );
-            let mut packed = platform::call2(
+            let mut packed = crate::platform::GuestLocal::new( platform::call2(
                 W89_FN_8025C560,
                 entry.as_mut_ptr() as usize as u32,
                 arg4,
-            );
-            let mut tint = platform::read_u32(pos);
+            ));
+            let mut tint = crate::platform::GuestLocal::new( platform::read_u32(pos));
             platform::call3(
                 W89_FN_8023D520,
-                &mut packed as *mut u32 as usize as u32,
+                (packed.as_mut_ptr() as *mut u32) as usize as u32,
                 color,
-                &mut tint as *mut u32 as usize as u32,
+                (tint.as_mut_ptr() as *mut u32) as usize as u32,
             );
             platform::call2(
                 W89_FN_8023CA80,
-                &mut packed as *mut u32 as usize as u32,
+                (packed.as_mut_ptr() as *mut u32) as usize as u32,
                 0,
             );
         }
@@ -14815,7 +14815,7 @@ pub unsafe fn fn_8016c400(
     arg7: u32,
 ) {
     platform::call3(W89_FN_802D8DE0, arg6, arg7, heap);
-    let mut block = [heap, tag, arg3, arg4, arg5];
+    let mut block = crate::platform::GuestLocal::new( [heap, tag, arg3, arg4, arg5]);
     platform::call2(
         W89_FN_802D8E70,
         platform::read_u32(SDA_BASE - 0x46B0),
@@ -14931,7 +14931,7 @@ pub unsafe fn fn_8016c5c0() {
 /// medium - the constructor, the vtable store, the six-argument dispatch and
 /// the destructor are literal; the request words are untyped in the export.
 pub unsafe fn fn_8016c890(a: u32, b: u32, c: u32, d: u32, e: u32) {
-    let mut object = [0u32; 0x138 / 4];
+    let mut object = crate::platform::GuestLocal::new( [0u32; 0x138 / 4]);
     platform::call1(W89_FN_802D7AA0, object.as_mut_ptr() as usize as u32);
     object[0] = W89_VT_STACK_REQUEST as u32;
     platform::call6(
@@ -14994,7 +14994,7 @@ pub unsafe fn fn_8016cab0(
     if accepted == 0 {
         return false;
     }
-    let mut packet = [0u8; 0x38];
+    let mut packet = crate::platform::GuestLocal::new( [0u8; 0x38]);
     platform::call4(
         W78_FN_8016C9E0,
         arg4,
@@ -15706,7 +15706,7 @@ pub unsafe fn fn_80164500(
     platform::call1(W93_FN_8025EEB0, 1);
     let context = platform::read_u32(W93_G_TEXT_CONTEXT) as usize;
     platform::call1(W93_FN_8024D4F0, platform::read_u32(context));
-    let mut block = [0u8; 0x28];
+    let mut block = crate::platform::GuestLocal::new( [0u8; 0x28]);
     let reader = platform::call6(
         W93_FN_802589E0,
         platform::read_u32(W78_DEFAULT_HEAP),
@@ -15770,39 +15770,39 @@ pub unsafe fn fn_801650d0(
     } else {
         heap
     };
-    let mut scratch = [0u8; 0x24];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 0x24]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     platform::call5(
         W93_FN_80248990,
         0,
         out as u32,
-        &mut spec_word as *mut u32 as usize as u32,
-        &mut source_word as *mut u32 as usize as u32,
+        (spec_word.as_mut_ptr() as *mut u32) as usize as u32,
+        (source_word.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     );
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut pair_source = platform::read_u32(source);
-    let mut pair_spec = platform::read_u32(spec);
+    let mut pair_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut pair_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call5(
         W93_FN_80248990,
         (this + 0x0C) as u32,
         scratch.as_mut_ptr() as usize as u32,
-        &mut pair_spec as *mut u32 as usize as u32,
-        &mut pair_source as *mut u32 as usize as u32,
+        (pair_spec.as_mut_ptr() as *mut u32) as usize as u32,
+        (pair_source.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
-    let mut tail = platform::read_u32(source);
+    let mut tail = crate::platform::GuestLocal::new( platform::read_u32(source));
     let accept = platform::read_u32(platform::read_u32(object) as usize + 0x30) as usize;
-    if platform::call2(accept, object as u32, &mut tail as *mut u32 as usize as u32) == 0 {
+    if platform::call2(accept, object as u32, (tail.as_mut_ptr() as *mut u32) as usize as u32) == 0 {
         let discard = platform::read_u32(platform::read_u32(this) as usize + 0x10) as usize;
         platform::call1(discard, this as u32);
         return 0;
@@ -15849,37 +15849,37 @@ pub unsafe fn fn_801658a0(
     } else {
         heap
     };
-    let mut scratch = [0u8; 0x24];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 0x24]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let value = fn_80165820(
-        &mut source_word as *mut u32 as usize,
-        &mut spec_word as *mut u32 as usize,
+        (source_word.as_mut_ptr() as *mut u32) as usize,
+        (spec_word.as_mut_ptr() as *mut u32) as usize,
         0,
     );
     platform::write_u32(out, value);
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut pair_source = platform::read_u32(source);
-    let mut pair_spec = platform::read_u32(spec);
+    let mut pair_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut pair_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call5(
         W93_FN_80243D20,
         (this + 0x0C) as u32,
         0,
-        &mut pair_spec as *mut u32 as usize as u32,
-        &mut pair_source as *mut u32 as usize as u32,
+        (pair_spec.as_mut_ptr() as *mut u32) as usize as u32,
+        (pair_source.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
-    let mut tail = platform::read_u32(source);
+    let mut tail = crate::platform::GuestLocal::new( platform::read_u32(source));
     let accept = platform::read_u32(platform::read_u32(object) as usize + 0x30) as usize;
-    if platform::call2(accept, object as u32, &mut tail as *mut u32 as usize as u32) == 0 {
+    if platform::call2(accept, object as u32, (tail.as_mut_ptr() as *mut u32) as usize as u32) == 0 {
         let discard = platform::read_u32(platform::read_u32(this) as usize + 0x10) as usize;
         platform::call1(discard, this as u32);
         return 0;
@@ -15939,17 +15939,17 @@ pub unsafe fn fn_80165c30(
     } else {
         heap
     };
-    let mut scratch = [0u32; 1];
+    let mut scratch = crate::platform::GuestLocal::new( [0u32; 1]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let value = fn_80165b50(
-        &mut source_word as *mut u32 as usize,
-        &mut spec_word as *mut u32 as usize,
+        (source_word.as_mut_ptr() as *mut u32) as usize,
+        (spec_word.as_mut_ptr() as *mut u32) as usize,
         count,
         0,
     );
@@ -15957,12 +15957,12 @@ pub unsafe fn fn_80165c30(
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut key = platform::read_u32(source);
+    let mut key = crate::platform::GuestLocal::new( platform::read_u32(source));
     let object = platform::call4(
         W93_FN_80243B30,
         (this + 0x0C) as u32,
         0,
-        &mut key as *mut u32 as usize as u32,
+        (key.as_mut_ptr() as *mut u32) as usize as u32,
         count,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
@@ -15979,12 +15979,12 @@ pub unsafe fn fn_80165c30(
             fn_80168d10(element);
             platform::write_u32(element, W93_VT_80329530 as u32);
         }
-        let mut child_source = platform::read_u32(source);
-        let mut child_spec = platform::read_u32(spec);
+        let mut child_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+        let mut child_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
         let ok = fn_801658a0(
             cursor,
-            &mut child_source as *mut u32 as usize,
-            &mut child_spec as *mut u32 as usize,
+            (child_source.as_mut_ptr() as *mut u32) as usize,
+            (child_spec.as_mut_ptr() as *mut u32) as usize,
             this + 0x0C,
             0,
         );
@@ -16041,7 +16041,7 @@ pub unsafe fn fn_80165fd0(
     let group = w78_cast_to(platform::read_u32(this + 4) as usize, W93_TYPE_802F8588);
     let prepare = platform::read_u32(platform::read_u32(group) as usize + 0x40) as usize;
     platform::call2(prepare, group as u32, index);
-    let mut header = [platform::read_u32(spec)];
+    let mut header = crate::platform::GuestLocal::new( [platform::read_u32(spec)]);
     let element = platform::read_u32(this + 0x28) as usize + index as usize * 0x38;
     fn_801659c0(
         element,
@@ -16091,37 +16091,37 @@ pub unsafe fn fn_801664a0(
     } else {
         heap
     };
-    let mut scratch = [0u8; 0x24];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 0x24]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let value = fn_80166420(
-        &mut source_word as *mut u32 as usize,
-        &mut spec_word as *mut u32 as usize,
+        (source_word.as_mut_ptr() as *mut u32) as usize,
+        (spec_word.as_mut_ptr() as *mut u32) as usize,
         0,
     );
     platform::write_u32(out, value);
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut pair_source = platform::read_u32(source);
-    let mut pair_spec = platform::read_u32(spec);
+    let mut pair_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut pair_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call5(
         W93_FN_80245500,
         (this + 0x0C) as u32,
         0,
-        &mut pair_spec as *mut u32 as usize as u32,
-        &mut pair_source as *mut u32 as usize as u32,
+        (pair_spec.as_mut_ptr() as *mut u32) as usize as u32,
+        (pair_source.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
-    let mut tail = platform::read_u32(source);
+    let mut tail = crate::platform::GuestLocal::new( platform::read_u32(source));
     let accept = platform::read_u32(platform::read_u32(object) as usize + 0x30) as usize;
-    if platform::call2(accept, object as u32, &mut tail as *mut u32 as usize as u32) == 0 {
+    if platform::call2(accept, object as u32, (tail.as_mut_ptr() as *mut u32) as usize as u32) == 0 {
         let discard = platform::read_u32(platform::read_u32(this) as usize + 0x10) as usize;
         platform::call1(discard, this as u32);
         return 0;
@@ -16171,17 +16171,17 @@ pub unsafe fn fn_80166830(
     } else {
         heap
     };
-    let mut scratch = [0u32; 1];
+    let mut scratch = crate::platform::GuestLocal::new( [0u32; 1]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let value = fn_80166750(
-        &mut source_word as *mut u32 as usize,
-        &mut spec_word as *mut u32 as usize,
+        (source_word.as_mut_ptr() as *mut u32) as usize,
+        (spec_word.as_mut_ptr() as *mut u32) as usize,
         count,
         0,
     );
@@ -16189,12 +16189,12 @@ pub unsafe fn fn_80166830(
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut key = platform::read_u32(source);
+    let mut key = crate::platform::GuestLocal::new( platform::read_u32(source));
     let object = platform::call4(
         W93_FN_80245300,
         (this + 0x0C) as u32,
         0,
-        &mut key as *mut u32 as usize as u32,
+        (key.as_mut_ptr() as *mut u32) as usize as u32,
         count,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
@@ -16210,12 +16210,12 @@ pub unsafe fn fn_80166830(
             fn_80168d10(element);
             platform::write_u32(element, W93_VT_80329560 as u32);
         }
-        let mut child_source = platform::read_u32(source);
-        let mut child_spec = platform::read_u32(spec);
+        let mut child_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+        let mut child_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
         let ok = fn_801664a0(
             cursor,
-            &mut child_source as *mut u32 as usize,
-            &mut child_spec as *mut u32 as usize,
+            (child_source.as_mut_ptr() as *mut u32) as usize,
+            (child_spec.as_mut_ptr() as *mut u32) as usize,
             this + 0x0C,
             0,
         );
@@ -16265,7 +16265,7 @@ pub unsafe fn fn_80166bd0(
     let group = w78_cast_to(platform::read_u32(this + 4) as usize, W93_TYPE_802F85F0);
     let prepare = platform::read_u32(platform::read_u32(group) as usize + 0x40) as usize;
     platform::call2(prepare, group as u32, index);
-    let mut header = [platform::read_u32(spec)];
+    let mut header = crate::platform::GuestLocal::new( [platform::read_u32(spec)]);
     let element = platform::read_u32(this + 0x28) as usize + index as usize * 0x38;
     fn_801665c0(
         element,
@@ -16317,40 +16317,40 @@ pub unsafe fn fn_80167080(
     } else {
         heap
     };
-    let mut scratch = [0u8; 0x24];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 0x24]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let value = fn_80167000(
-        &mut source_word as *mut u32 as usize,
-        &mut spec_word as *mut u32 as usize,
+        (source_word.as_mut_ptr() as *mut u32) as usize,
+        (spec_word.as_mut_ptr() as *mut u32) as usize,
         0,
     );
     platform::write_u32(out, value);
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut pair_source = platform::read_u32(source);
-    let mut pair_spec = platform::read_u32(spec);
+    let mut pair_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut pair_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call5(
         W93_FN_80246B00,
         (this + 0x0C) as u32,
         0,
-        &mut pair_spec as *mut u32 as usize as u32,
-        &mut pair_source as *mut u32 as usize as u32,
+        (pair_spec.as_mut_ptr() as *mut u32) as usize as u32,
+        (pair_source.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
     if object == 0 {
         return 0;
     }
-    let mut tail = platform::read_u32(source);
+    let mut tail = crate::platform::GuestLocal::new( platform::read_u32(source));
     let accept = platform::read_u32(platform::read_u32(object) as usize + 0x30) as usize;
-    if platform::call2(accept, object as u32, &mut tail as *mut u32 as usize as u32) == 0 {
+    if platform::call2(accept, object as u32, (tail.as_mut_ptr() as *mut u32) as usize as u32) == 0 {
         let discard = platform::read_u32(platform::read_u32(this) as usize + 0x10) as usize;
         platform::call1(discard, this as u32);
         return 0;
@@ -16403,17 +16403,17 @@ pub unsafe fn fn_80167420(
     } else {
         heap
     };
-    let mut scratch = [0u32; 1];
+    let mut scratch = crate::platform::GuestLocal::new( [0u32; 1]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let value = fn_80167340(
-        &mut source_word as *mut u32 as usize,
-        &mut spec_word as *mut u32 as usize,
+        (source_word.as_mut_ptr() as *mut u32) as usize,
+        (spec_word.as_mut_ptr() as *mut u32) as usize,
         count,
         0,
     );
@@ -16421,12 +16421,12 @@ pub unsafe fn fn_80167420(
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut key = platform::read_u32(source);
+    let mut key = crate::platform::GuestLocal::new( platform::read_u32(source));
     let object = platform::call4(
         W93_FN_80246900,
         (this + 0x0C) as u32,
         0,
-        &mut key as *mut u32 as usize as u32,
+        (key.as_mut_ptr() as *mut u32) as usize as u32,
         count,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
@@ -16450,12 +16450,12 @@ pub unsafe fn fn_80167420(
             fn_80168d10(element);
             platform::write_u32(element, W93_VT_80329590 as u32);
         }
-        let mut child_source = platform::read_u32(source);
-        let mut child_spec = platform::read_u32(spec);
+        let mut child_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+        let mut child_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
         let ok = fn_80167080(
             cursor,
-            &mut child_source as *mut u32 as usize,
-            &mut child_spec as *mut u32 as usize,
+            (child_source.as_mut_ptr() as *mut u32) as usize,
+            (child_spec.as_mut_ptr() as *mut u32) as usize,
             this + 0x0C,
             0,
         );
@@ -16507,7 +16507,7 @@ pub unsafe fn fn_80167800(
     let group = w78_cast_to(platform::read_u32(this + 4) as usize, W93_TYPE_802F8658);
     let prepare = platform::read_u32(platform::read_u32(group) as usize + 0x40) as usize;
     platform::call2(prepare, group as u32, index);
-    let mut header = [platform::read_u32(spec)];
+    let mut header = crate::platform::GuestLocal::new( [platform::read_u32(spec)]);
     let element = platform::read_u32(this + 0x28) as usize + index as usize * 0x38;
     fn_801671b0(
         element,
@@ -16559,37 +16559,37 @@ pub unsafe fn fn_80167c40(
     } else {
         heap
     };
-    let mut scratch = [0u8; 0x24];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 0x24]);
     let out = if out == 0 {
         scratch.as_mut_ptr() as usize
     } else {
         out
     };
-    let mut source_word = platform::read_u32(source);
-    let mut spec_word = platform::read_u32(spec);
+    let mut source_word = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     platform::call4(
         W93_FN_80242C30,
         0,
         out as u32,
-        &mut spec_word as *mut u32 as usize as u32,
-        &mut source_word as *mut u32 as usize as u32,
+        (spec_word.as_mut_ptr() as *mut u32) as usize as u32,
+        (source_word.as_mut_ptr() as *mut u32) as usize as u32,
     );
     if fn_80167fa0(this, heap, out) == 0 {
         return 0;
     }
-    let mut pair_source = platform::read_u32(source);
-    let mut pair_spec = platform::read_u32(spec);
+    let mut pair_source = crate::platform::GuestLocal::new( platform::read_u32(source));
+    let mut pair_spec = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call4(
         W93_FN_80242C30,
         (this + 0x0C) as u32,
         scratch.as_mut_ptr() as usize as u32,
-        &mut pair_spec as *mut u32 as usize as u32,
-        &mut pair_source as *mut u32 as usize as u32,
+        (pair_spec.as_mut_ptr() as *mut u32) as usize as u32,
+        (pair_source.as_mut_ptr() as *mut u32) as usize as u32,
     ) as usize;
     platform::write_u32(this + 4, object as u32);
-    let mut tail = platform::read_u32(source);
+    let mut tail = crate::platform::GuestLocal::new( platform::read_u32(source));
     let accept = platform::read_u32(platform::read_u32(object) as usize + 0x30) as usize;
-    if platform::call2(accept, object as u32, &mut tail as *mut u32 as usize as u32) == 0 {
+    if platform::call2(accept, object as u32, (tail.as_mut_ptr() as *mut u32) as usize as u32) == 0 {
         let discard = platform::read_u32(platform::read_u32(this) as usize + 0x10) as usize;
         platform::call1(discard, this as u32);
         return 0;
@@ -16628,20 +16628,20 @@ pub unsafe fn fn_80167c40(
 pub unsafe fn fn_801659c0(this: usize, param_2: u32, spec: usize, param_4: u32) {
     // inferred: receiver - the export shows `FUN_80165a80()` with no argument.
     fn_80165a80(this);
-    let mut key = fn_80168400(param_2 as usize);
-    let mut word = platform::read_u32(spec);
+    let mut key = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
+    let mut word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call5(
         W93_FN_80243D20,
         (this + 0x0C) as u32,
         0,
-        &mut word as *mut u32 as usize as u32,
-        &mut key as *mut u32 as usize as u32,
+        (word.as_mut_ptr() as *mut u32) as usize as u32,
+        (key.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     );
     platform::write_u32(this + 4, object);
-    let mut tail = fn_80168400(param_2 as usize);
+    let mut tail = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
     let accept = platform::read_u32(platform::read_u32(object as usize) as usize + 0x30) as usize;
-    platform::call2(accept, object, &mut tail as *mut u32 as usize as u32);
+    platform::call2(accept, object, (tail.as_mut_ptr() as *mut u32) as usize as u32);
     platform::call3(W93_FN_80165AE0, this as u32, spec as u32, param_4);
 }
 
@@ -16665,20 +16665,20 @@ pub unsafe fn fn_801659c0(this: usize, param_2: u32, spec: usize, param_4: u32) 
 pub unsafe fn fn_801665c0(this: usize, param_2: u32, spec: usize, param_4: u32) {
     // inferred: receiver - the export shows `FUN_80166680()` with no argument.
     fn_80166680(this);
-    let mut key = fn_80168400(param_2 as usize);
-    let mut word = platform::read_u32(spec);
+    let mut key = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
+    let mut word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call5(
         W93_FN_80245500,
         (this + 0x0C) as u32,
         0,
-        &mut word as *mut u32 as usize as u32,
-        &mut key as *mut u32 as usize as u32,
+        (word.as_mut_ptr() as *mut u32) as usize as u32,
+        (key.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     );
     platform::write_u32(this + 4, object);
-    let mut tail = fn_80168400(param_2 as usize);
+    let mut tail = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
     let accept = platform::read_u32(platform::read_u32(object as usize) as usize + 0x30) as usize;
-    platform::call2(accept, object, &mut tail as *mut u32 as usize as u32);
+    platform::call2(accept, object, (tail.as_mut_ptr() as *mut u32) as usize as u32);
     platform::call3(W93_FN_801666E0, this as u32, spec as u32, param_4);
 }
 
@@ -16702,20 +16702,20 @@ pub unsafe fn fn_801665c0(this: usize, param_2: u32, spec: usize, param_4: u32) 
 pub unsafe fn fn_801671b0(this: usize, param_2: u32, spec: usize, param_4: u32) {
     // inferred: receiver - the export shows `FUN_80167270()` with no argument.
     fn_80167270(this);
-    let mut key = fn_80168400(param_2 as usize);
-    let mut word = platform::read_u32(spec);
+    let mut key = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
+    let mut word = crate::platform::GuestLocal::new( platform::read_u32(spec));
     let object = platform::call5(
         W93_FN_80246B00,
         (this + 0x0C) as u32,
         0,
-        &mut word as *mut u32 as usize as u32,
-        &mut key as *mut u32 as usize as u32,
+        (word.as_mut_ptr() as *mut u32) as usize as u32,
+        (key.as_mut_ptr() as *mut u32) as usize as u32,
         0,
     );
     platform::write_u32(this + 4, object);
-    let mut tail = fn_80168400(param_2 as usize);
+    let mut tail = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
     let accept = platform::read_u32(platform::read_u32(object as usize) as usize + 0x30) as usize;
-    platform::call2(accept, object, &mut tail as *mut u32 as usize as u32);
+    platform::call2(accept, object, (tail.as_mut_ptr() as *mut u32) as usize as u32);
     platform::call3(W93_FN_801672D0, this as u32, spec as u32, param_4);
 }
 
@@ -16864,21 +16864,21 @@ pub unsafe fn fn_80167d60(this: usize, param_2: u32, spec: usize, param_4: u32) 
     // inferred: receiver - the `+0x04` header.
     platform::call1(reset, header as u32);
     platform::call2(W93_FN_802B99C0, platform::read_u32(this + 8), 3);
-    let mut key_word = fn_80168400(param_2 as usize);
-    let mut spec_word = platform::read_u32(spec);
-    let mut scratch = [0u8; 12];
+    let mut key_word = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
+    let mut spec_word = crate::platform::GuestLocal::new( platform::read_u32(spec));
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 12]);
     let object = platform::call4(
         W93_FN_80242C30,
         (this + 0x0C) as u32,
         scratch.as_mut_ptr() as usize as u32,
-        &mut spec_word as *mut u32 as usize as u32,
-        &mut key_word as *mut u32 as usize as u32,
+        (spec_word.as_mut_ptr() as *mut u32) as usize as u32,
+        (key_word.as_mut_ptr() as *mut u32) as usize as u32,
     );
     platform::write_u32(this + 4, object);
-    let mut tail = fn_80168400(param_2 as usize);
+    let mut tail = crate::platform::GuestLocal::new( fn_80168400(param_2 as usize));
     let installed = platform::read_u32(this + 4) as usize;
     let accept = platform::read_u32(platform::read_u32(installed) as usize + 0x30) as usize;
-    platform::call2(accept, installed as u32, &mut tail as *mut u32 as usize as u32);
+    platform::call2(accept, installed as u32, (tail.as_mut_ptr() as *mut u32) as usize as u32);
     platform::call3(W93_FN_80167E50, this as u32, spec as u32, param_4);
 }
 
@@ -16985,11 +16985,11 @@ pub unsafe fn fn_8016d640(
                 if platform::read_f32(W93_F32_RECORD_THRESHOLD)
                     <= platform::read_f32(this + 0x128)
                 {
-                    let mut packet = [
+                    let mut packet = crate::platform::GuestLocal::new( [
                         platform::read_u32(spec),
                         platform::read_u32(spec + 4),
                         platform::read_u32(spec + 8),
-                    ];
+                    ]);
                     platform::call6(
                         W93_FN_80287C10,
                         record as u32,
@@ -17029,7 +17029,7 @@ pub unsafe fn fn_8016d640(
         platform::write_u8(this + 0x11C, 1);
     }
     platform::write_u8(this + 0x11D, 1);
-    let mut block = [0u8; 0x48];
+    let mut block = crate::platform::GuestLocal::new( [0u8; 0x48]);
     platform::call4(
         W93_FN_8016C9E0,
         spec as u32,
@@ -17334,7 +17334,7 @@ pub unsafe fn fn_80160d10(step: f32, current: usize, target: usize) -> u32 {
             && platform::read_f32(current + 8) == platform::read_f32(target + 8);
         return same as u32;
     }
-    let mut delta = [0.0f32; 3];
+    let mut delta = crate::platform::GuestLocal::new( [0.0f32; 3]);
     let mut axis = 0usize;
     while axis < 3 {
         delta[axis] =
@@ -17524,7 +17524,7 @@ pub unsafe fn fn_80163220() {
     platform::call1(W97_FN_801C5860, 0);
     platform::call3(W97_FN_801C8E70, 0, 7, 0);
     let grey = platform::read_f32(W89_F32_ZERO);
-    let mut colour = platform::read_u32(W97_WORD_COLOUR_3470);
+    let mut colour = crate::platform::GuestLocal::new( platform::read_u32(W97_WORD_COLOUR_3470));
     w97_call_f32x4_u32_ptr(
         W97_FN_801C8920,
         grey,
@@ -17532,7 +17532,7 @@ pub unsafe fn fn_80163220() {
         grey,
         grey,
         0,
-        &mut colour as *mut u32 as usize as u32,
+        (colour.as_mut_ptr() as *mut u32) as usize as u32,
     );
 }
 
@@ -18208,10 +18208,10 @@ const G_EXTENT_RECORD_80424798: usize = 0x8042_4798;
 /// [`crate::resource::archive::fn_802c5760`], which read the same two words.
 pub unsafe fn fn_80169220(state: u32, object: usize) {
     let node = fn_80164b20(state);
-    let mut holder = node;
-    let mut matrix = [0u32; 12];
+    let mut holder = crate::platform::GuestLocal::new( node);
+    let mut matrix = crate::platform::GuestLocal::new( [0u32; 12]);
     crate::runtime::os::fn_802540b0(
-        &holder as *const u32 as usize,
+        (holder.as_ptr() as *const u32) as usize,
         matrix.as_mut_ptr() as usize,
     );
     platform::write_u32(G_RENDER_STATE_8042AED8, 5);
@@ -19066,10 +19066,10 @@ pub unsafe fn fn_801645f0(
     if platform::read_u32(W97_GLOBAL_TEXT_TABLE_A) == 0
         || platform::read_u32(W97_GLOBAL_TEXT_TABLE_B) == 0
     {
-        let mut mode = [0u32; 8];
-        let mut pair_a = [0u16; 2];
-        let mut pair_b = [0u16; 2];
-        let mut word = [0u32; 1];
+        let mut mode = crate::platform::GuestLocal::new( [0u32; 8]);
+        let mut pair_a = crate::platform::GuestLocal::new( [0u16; 2]);
+        let mut pair_b = crate::platform::GuestLocal::new( [0u16; 2]);
+        let mut word = crate::platform::GuestLocal::new( [0u32; 1]);
         platform::call1(W103_FN_802C78F0, mode.as_mut_ptr() as u32);
         let mode_base = mode.as_ptr() as usize;
         pair_a[0] = platform::read_u16(mode_base + 0x14);
@@ -19213,9 +19213,9 @@ pub unsafe fn fn_80165280(param_1: u32, owner: usize, source: usize, mode: u32) 
     let node_vtable = platform::read_u32(node) as usize;
     platform::call1(platform::read_u32(node_vtable + 0x34) as usize, node as u32);
     platform::call2(W103_FN_802B99C0, platform::read_u32(owner + 8), 3);
-    let mut scratch = [0u8; 52];
-    let mut first = [platform::read_u32(source)];
-    let mut word = [fn_80168400(param_1 as usize)];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 52]);
+    let mut first = crate::platform::GuestLocal::new( [platform::read_u32(source)]);
+    let mut word = crate::platform::GuestLocal::new( [fn_80168400(param_1 as usize)]);
     let rebuilt = platform::call5(
         W103_FN_80248990,
         (owner + 0x0C) as u32,
@@ -19225,7 +19225,7 @@ pub unsafe fn fn_80165280(param_1: u32, owner: usize, source: usize, mode: u32) 
         0,
     );
     platform::write_u32(owner + 4, rebuilt);
-    let mut second = [fn_80168400(param_1 as usize)];
+    let mut second = crate::platform::GuestLocal::new( [fn_80168400(param_1 as usize)]);
     let new_node = platform::read_u32(owner + 4) as usize;
     let new_vtable = platform::read_u32(new_node) as usize;
     platform::call2(
@@ -19334,13 +19334,13 @@ pub unsafe fn fn_80169600(source: usize, state: usize, param_3: usize, param_4: 
             };
             platform::write_f32(source + i * 4, blended);
         }
-        let mut stack = [0f32; 12];
+        let mut stack = crate::platform::GuestLocal::new( [0f32; 12]);
         platform::call2(
             W103_FN_801C1680,
             stack.as_mut_ptr() as u32,
             (entry + 0x1C) as u32,
         );
-        let mut vector = [0u32; 4];
+        let mut vector = crate::platform::GuestLocal::new( [0u32; 4]);
         if flags & 0x20 == 0 {
             platform::call2(
                 W103_FN_801C1680,
@@ -19395,7 +19395,7 @@ pub unsafe fn fn_80169600(source: usize, state: usize, param_3: usize, param_4: 
     }
     let callback = platform::read_u32(state + 0x2C) as usize;
     if callback != 0 {
-        let mut word = [platform::read_u32(param_3)];
+        let mut word = crate::platform::GuestLocal::new( [platform::read_u32(param_3)]);
         let vtable = platform::read_u32(callback) as usize;
         platform::call4(
             platform::read_u32(vtable + 0x0C) as usize,
@@ -19446,7 +19446,7 @@ pub unsafe fn fn_80169600(source: usize, state: usize, param_3: usize, param_4: 
 pub unsafe fn fn_80169b20(this: usize, header: usize, heap: usize, out_size: usize) -> u32 {
     let mut heap = heap;
     let mut out = out_size;
-    let mut fallback = [0u32; 1];
+    let mut fallback = crate::platform::GuestLocal::new( [0u32; 1]);
     if heap == 0 {
         heap = platform::read_u32(W103_DEFAULT_HEAP_52B8) as usize;
     }
@@ -19531,8 +19531,8 @@ pub unsafe fn fn_80169d90(
 ) -> u32 {
     let mut heap = heap;
     let out = out_size;
-    let mut info = [0u32; 3];
-    let mut total = [0u32; 1];
+    let mut info = crate::platform::GuestLocal::new( [0u32; 3]);
+    let mut total = crate::platform::GuestLocal::new( [0u32; 1]);
     if heap == 0 {
         heap = platform::read_u32(W103_DEFAULT_HEAP_52B8) as usize;
     }
@@ -19542,7 +19542,7 @@ pub unsafe fn fn_80169d90(
         info.as_mut_ptr() as u32
     };
     let word = platform::read_u32(source);
-    let mut first = [word];
+    let mut first = crate::platform::GuestLocal::new( [word]);
     let loaded = platform::call6(
         W103_FN_8016A3A0,
         this as u32,
@@ -19555,7 +19555,7 @@ pub unsafe fn fn_80169d90(
     if loaded == 0 {
         return 0;
     }
-    let mut second = [word];
+    let mut second = crate::platform::GuestLocal::new( [word]);
     let out_ptr = if out == 0 {
         0
     } else {
@@ -19634,7 +19634,7 @@ pub unsafe fn fn_8016ad30(mode: usize) {
     if flag == 0 {
         return;
     }
-    let mut projection = [0f32; 16];
+    let mut projection = crate::platform::GuestLocal::new( [0f32; 16]);
     w103_call_f32x6_u32(
         W103_FN_801C1350,
         platform::read_f32(W103_F32_TOP_5388),
@@ -19646,7 +19646,7 @@ pub unsafe fn fn_8016ad30(mode: usize) {
         projection.as_mut_ptr() as u32,
     );
     platform::call2(W103_FN_801C9840, projection.as_ptr() as u32, 1);
-    let mut identity = [0f32; 12];
+    let mut identity = crate::platform::GuestLocal::new( [0f32; 12]);
     platform::call1(W103_FN_801C04D0, identity.as_mut_ptr() as u32);
     platform::call2(W103_FN_801C9940, identity.as_ptr() as u32, 0);
     platform::call1(W103_FN_801C9A60, 0);
@@ -19655,7 +19655,7 @@ pub unsafe fn fn_8016ad30(mode: usize) {
     platform::call2(W103_FN_801C37C0, 9, 1);
     platform::call5(W103_FN_801C40B0, 0, 9, 1, 4, 0);
     platform::call1(W103_FN_801C6AC0, 1);
-    let mut texcoord = [platform::read_u32(mode + 0x10)];
+    let mut texcoord = crate::platform::GuestLocal::new( [platform::read_u32(mode + 0x10)]);
     platform::call2(W103_FN_801C69E0, 4, texcoord.as_mut_ptr() as u32);
     platform::call7(W103_FN_801C6AF0, 4, 0, 0, 0, 0, 0, 2);
     platform::call1(W103_FN_801C4A20, 0);
@@ -20244,11 +20244,11 @@ pub unsafe fn fn_8016dec0(
     context: usize,
     flag: i32,
 ) {
-    let mut matrix = [0.0f32; 12];
-    let mut one = [0.0f32; 3];
+    let mut matrix = crate::platform::GuestLocal::new( [0.0f32; 12]);
+    let mut one = crate::platform::GuestLocal::new( [0.0f32; 3]);
     // Eight corners x three floats, laid out as the original's two
     // twelve-float blocks back to back.
-    let mut corner = [0.0f32; 24];
+    let mut corner = crate::platform::GuestLocal::new( [0.0f32; 24]);
 
     let near = -param_5;
     let far = -param_6;
@@ -20384,7 +20384,7 @@ unsafe fn w110_plane(dst: usize, a: u32, b: u32, c: u32) {
 ///
 /// # Safety
 /// `index` must be inside `corner`.
-unsafe fn corner_ptr(corner: &mut [f32; 24], index: usize) -> u32 {
+unsafe fn corner_ptr(corner: &mut crate::platform::GuestLocal<[f32; 24]>, index: usize) -> u32 {
     corner.as_mut_ptr().add(index) as usize as u32
 }
 
@@ -20393,7 +20393,7 @@ unsafe fn corner_ptr(corner: &mut [f32; 24], index: usize) -> u32 {
 /// # Safety
 /// `matrix` must hold a readable 3x4 transform and `corner` the eight
 /// three-float points the loop rewrites.
-unsafe fn w110_transform_corners(matrix: &mut [f32; 12], corner: &mut [f32; 24]) {
+unsafe fn w110_transform_corners(matrix: &mut crate::platform::GuestLocal<[f32; 12]>, corner: &mut crate::platform::GuestLocal<[f32; 24]>) {
     let dst = matrix.as_mut_ptr() as usize as u32;
     let mut index = 0usize;
     while index < 8 {
@@ -20585,7 +20585,7 @@ pub unsafe fn fn_8016f220() {
 pub unsafe fn fn_8016fa10(page: usize) {
     // The 2D context is opaque: its callees write as far as `+0x60`, so 0x100
     // bytes cover the whole object with room to spare.
-    let mut context = [0u32; 64];
+    let mut context = crate::platform::GuestLocal::new( [0u32; 64]);
     let ctx = context.as_mut_ptr() as usize;
 
     platform::call1(W110_FN_8022DDE0, ctx as u32);
@@ -21364,7 +21364,7 @@ pub unsafe fn fn_80160300(this: usize) -> u32 {
             platform::call2(release, owner as u32, platform::read_u32(this + 0x14));
             platform::write_u32(this + 0x14, 0);
         }
-        let mut path = [0u8; 64];
+        let mut path = crate::platform::GuestLocal::new( [0u8; 64]);
         crate::engine::main_loop::fn_802e16e8(
             path.as_mut_ptr() as usize,
             64,
@@ -21662,7 +21662,7 @@ pub unsafe fn fn_801605b0(this: usize) -> u32 {
         platform::read_u32(G_HANDLE_REMAIN).wrapping_add(count),
     );
 
-    let mut path = [0u8; 64];
+    let mut path = crate::platform::GuestLocal::new( [0u8; 64]);
     crate::engine::main_loop::fn_802e16e8(
         path.as_mut_ptr() as usize,
         64,

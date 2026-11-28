@@ -632,7 +632,7 @@ pub unsafe fn init_150_node_array(
     arg_b: u32,
 ) -> u32 {
     // observed 0x80008474: `bl 0x80007510`, a 4-byte thunk to 0x80164FD0.
-    let mut local = [0u32; 2];
+    let mut local = crate::platform::GuestLocal::new( [0u32; 2]);
     if call3(FN_80164FD0, this as u32, arg_b, 0) == 0 {
         return 0;
     }
@@ -724,7 +724,7 @@ pub unsafe fn init_500_node_array(
     arg_b: u32,
 ) -> u32 {
     // observed 0x800099FC: `bl 0x80007510` (thunk to 0x80164FD0).
-    let mut local = [0u32; 2];
+    let mut local = crate::platform::GuestLocal::new( [0u32; 2]);
     if call3(FN_80164FD0, this as u32, arg_b, 0) == 0 {
         return 0;
     }
@@ -1036,7 +1036,7 @@ pub unsafe fn fn_8000f570(
         return;
     }
 
-    let mut local_44: u32 = 0;
+    let mut local_44 = crate::platform::GuestLocal::<u32>::new( 0);
 
     if kind == 5 {
         // observed: `(**(code **)(*param_4 + 0x0C))(param_4, this,
@@ -1059,11 +1059,11 @@ pub unsafe fn fn_8000f570(
 
     // observed: flush, capture the current context, then build the block.
     let _ = platform::call1(FN_8024D5E0, 0x7FF);
-    let mut context = call0_r(FN_80164B30);
+    let mut context = crate::platform::GuestLocal::new( call0_r(FN_80164B30));
     let mut block = Scratch48::new();
     let _ = platform::call2(
         FN_802540B0,
-        &mut context as *mut u32 as u32,
+        (context.as_mut_ptr() as *mut u32) as u32,
         block.addr(),
     );
 
@@ -1076,7 +1076,7 @@ pub unsafe fn fn_8000f570(
         // observed: `piVar2 = *(int **)(*(int *)(this + 0xDC) + iVar4)`.
         let entry_object = platform::read_u32(array + offset as usize) as usize;
 
-        if (local_44 & 4) == 0 {
+        if (*local_44 & 4) == 0 {
             let vtable = platform::read_u32(entry_object) as usize;
             let call = platform::read_u32(vtable + 0x0C) as usize;
             platform::call4(call, entry_object as u32, 2, 0, 0);
@@ -1097,11 +1097,11 @@ pub unsafe fn fn_8000f570(
             entry_object as u32,
             6,
             0,
-            &mut local_44 as *mut u32 as u32,
+            (local_44.as_mut_ptr() as *mut u32) as u32,
         );
 
         offset = offset.wrapping_add(4);
-        local_44 |= 4;
+        *local_44 |= 4;
         index += 1;
     }
 }
@@ -2000,7 +2000,7 @@ pub unsafe fn fn_80015c10(this: usize) {
     }
 
     // observed 0x80015C60..0x80015C80: build the 2-float point.
-    let mut point = [0.0f32; 2];
+    let mut point = crate::platform::GuestLocal::new( [0.0f32; 2]);
     point[0] = read_f32(this + 0x19C);
     point[1] = read_f32(this + 0x1A0) + read_f32(this + 0x1B8);
     let maximum = read_f32(this + 0x1F4);
@@ -3101,7 +3101,7 @@ unsafe fn actor_hit_state_step(
     platform::write_u32(this + 0x3F0, flag);
 
     // observed: `fabs f2`/`frsp f5` for |height|, `lfsx` from the ±1 table.
-    let mut scale = [0.0f32; 3];
+    let mut scale = crate::platform::GuestLocal::new( [0.0f32; 3]);
     scale[0] = (read_f32(SDA_ACTOR_SCALE_X)
         + read_f32(SDA_ACTOR_HEIGHT_FACTOR)
             * DActor { addr: other as u32 }.as_d_base_actor().speed().x().abs())
@@ -3119,7 +3119,7 @@ unsafe fn actor_hit_state_step(
     );
 
     // observed: the effect position is +0x1D8/+0x1DC with 5504.0 as Z.
-    let mut effect_position = [0.0f32; 3];
+    let mut effect_position = crate::platform::GuestLocal::new( [0.0f32; 3]);
     effect_position[0] = read_f32(this + 0x1D8);
     effect_position[1] = read_f32(this + 0x1DC);
     effect_position[2] = read_f32(SDA_ACTOR_EFFECT_Y);
@@ -3133,7 +3133,7 @@ unsafe fn actor_hit_state_step(
     );
 
     // observed: 0x20-byte stack block filled from the actor position.
-    let mut position = [0u8; 0x20];
+    let mut position = crate::platform::GuestLocal::new( [0u8; 0x20]);
     let pos_ptr = DActor { addr: this as u32 }.as_d_base_actor().pos().addr;
     let _ = call2(FN_8006A4B0, position.as_mut_ptr() as u32, pos_ptr);
     let _ = call4(
@@ -3359,7 +3359,7 @@ pub unsafe fn fn_8001e520(this: usize) -> u32 {
     let flag = (platform::read_u8(this + 0x348) ^ 1) as u32;
     platform::write_u32(this + 0x3F0, flag);
 
-    let mut scale = [0.0f32; 3];
+    let mut scale = crate::platform::GuestLocal::new( [0.0f32; 3]);
     scale[0] = read_f32(SDA_ACTOR_SCALE_X) * read_f32(SDA_SIGN_TABLE + flag as usize * 4);
     scale[1] = read_f32(SDA_ACTOR_SCALE_Y_ALT);
     scale[2] = read_f32(SDA_ZERO_F32_B);

@@ -472,18 +472,16 @@ unsafe fn vtable_entry(object: usize, slot: usize) -> usize {
 
 /// Builds the two-word temporary that the original copies one point into.
 ///
-/// Only the first word is written; the second stays uninitialised, exactly as
-/// on the original stack frame. The 2-float writer `0x802C7C70` therefore sees
+/// Only the first word is written; on the original stack frame the second is
+/// whatever was there before. The 2-float writer `0x802C7C70` therefore sees
 /// an unspecified second component, which the attachment wrappers pass through
-/// unchanged.
+/// unchanged; here it is 0 (reading uninitialised memory would be undefined).
 ///
 /// # Safety
 /// `src` must be readable for 4 bytes.
 #[inline]
-unsafe fn point_temp(src: usize) -> core::mem::MaybeUninit<[u32; 2]> {
-    let mut temp = core::mem::MaybeUninit::<[u32; 2]>::uninit();
-    core::ptr::write(temp.as_mut_ptr() as *mut u32, platform::read_u32(src));
-    temp
+unsafe fn point_temp(src: usize) -> [u32; 2] {
+    [platform::read_u32(src), 0]
 }
 
 // ===========================================================================
@@ -555,7 +553,7 @@ pub unsafe fn vec2_sub(out: usize, a: usize, b: usize) {
 /// `fcmpo` + `cror` (see `0x8000D8C4..0x8000D914`), so a NaN input takes the
 /// "differs" branch; the comparisons below reproduce the C pseudocode.
 pub unsafe fn vec2_differs_from(a: usize, b: usize) -> bool {
-    let mut delta = [0u32; 2];
+    let mut delta = crate::platform::GuestLocal::new( [0u32; 2]);
     vec2_sub(delta.as_mut_ptr() as usize, a, b);
     let dx = f32::from_bits(delta[0]);
     let dy = f32::from_bits(delta[1]);
@@ -725,7 +723,7 @@ pub unsafe fn copy_12_floats(dst: usize, src: usize) {
 /// point into the same sub-object layout that `copy_12_floats` fills; it has no
 /// path/rail behaviour of its own.
 pub unsafe fn fn_8000b320(object: usize, index: u32, point: usize) {
-    let mut value = [0u32; 2];
+    let mut value = crate::platform::GuestLocal::new( [0u32; 2]);
     value[0] = platform::read_u32(point);
     call6(
         FN_802C7C70,
@@ -792,7 +790,7 @@ pub unsafe fn fn_8000aa70(owner: u32, point: usize, state: i32, state_value: u32
         return 0;
     }
 
-    let mut value = point_temp(point);
+    let mut value = crate::platform::GuestLocal::new( point_temp(point));
     call6(
         FN_802C7C70,
         owner + 8,
@@ -844,7 +842,7 @@ pub unsafe fn fn_8000aec0(owner: u32, point: usize, state: i32, state_value: u32
         return 0;
     }
 
-    let mut value = point_temp(point);
+    let mut value = crate::platform::GuestLocal::new( point_temp(point));
     call6(
         FN_802C7C70,
         owner + 8,
@@ -926,8 +924,8 @@ pub unsafe fn fn_8000b370(
         return 0;
     }
 
-    let mut a = point_temp(point_a);
-    let mut b = point_temp(point_b);
+    let mut a = crate::platform::GuestLocal::new( point_temp(point_a));
+    let mut b = crate::platform::GuestLocal::new( point_temp(point_b));
 
     if mode == 0 {
         call6(
@@ -1047,7 +1045,7 @@ pub unsafe fn fn_8000b370(
 pub unsafe fn fn_80007520(arg: u32) -> u32 {
     // observed 0x80007538: r5 points at a stack word initialised to zero; the
     // callee may replace it with an output value.
-    let mut open_word = [0u32; 1];
+    let mut open_word = crate::platform::GuestLocal::new( [0u32; 1]);
 
     let status = call9(
         FN_801645F0,
@@ -1068,7 +1066,7 @@ pub unsafe fn fn_80007520(arg: u32) -> u32 {
     // observed 0x80007570/0x80007580: the 0x1F lookup result goes into a
     // *second* stack word (r1+0x14) that is then passed as the surface pointer.
     // The original never reuses the open-call word.
-    let mut surface_word = [0u32; 1];
+    let mut surface_word = crate::platform::GuestLocal::new( [0u32; 1]);
     surface_word[0] = platform::call1(FN_80164B20, 0x1F);
 
     call_f64x6_ptr(
@@ -1221,9 +1219,8 @@ pub unsafe fn fn_80007610(
 /// `0x80006880..0x80006890`, and the handler's body was read at `0x80006850`.
 pub unsafe fn fn_80006870(this: u32, value: u8) {
     // observed 0x80006884: `stb r4,8(r1)`; the remaining 7 bytes of the
-    // 8-byte slot stay uninitialised, as in the original frame.
-    let mut message = core::mem::MaybeUninit::<[u8; 8]>::uninit();
-    core::ptr::write(message.as_mut_ptr() as *mut u8, value);
+    // 8-byte slot are whatever the frame held (0 here).
+    let message = crate::platform::GuestLocal::new([value, 0, 0, 0, 0, 0, 0, 0]);
     platform::call4(
         FN_80163E10,
         this,
@@ -1743,7 +1740,7 @@ pub unsafe fn fn_80006f70(this: usize) -> u32 {
 /// high - the four `lfs`/`stfs` pairs at `0x80006FC0..0x80006FE4` and the
 /// `lwz r12,48(r12)` dispatch at `0x80006FE8` are explicit.
 pub unsafe fn fn_80006fa0(this: usize) {
-    let mut values = [0u32; 4];
+    let mut values = crate::platform::GuestLocal::new( [0u32; 4]);
     platform::call2(FN_802AD520, values.as_mut_ptr() as u32, (this + 0x10) as u32);
 
     write_f32(this + 0x64, f32::from_bits(values[0]));
@@ -2673,7 +2670,7 @@ pub unsafe fn fn_8000e910(
     }
 
     // observed 0x8000E9F0: `addi r3,r1,0x40`; `0x802D0E50(&desc, global)`.
-    let mut desc = [0u32; 14];
+    let mut desc = crate::platform::GuestLocal::new( [0u32; 14]);
     let desc_ptr = desc.as_mut_ptr() as usize;
     platform::call2(FN_802D0E50, desc_ptr as u32, global as u32);
 
@@ -2708,7 +2705,7 @@ pub unsafe fn fn_8000e910(
     let y = read_f32(scale + 4)
         * ((read_f32(global + 0x0C) as i32) as u16 as f32);
 
-    let mut matrix = [0u32; 12];
+    let mut matrix = crate::platform::GuestLocal::new( [0u32; 12]);
     let matrix_ptr = matrix.as_mut_ptr() as usize;
 
     // observed 0x8000EAFC..0x8000EB10.
@@ -2811,10 +2808,10 @@ pub unsafe fn fn_8000edf0(a: usize, b: usize, translate: f32) {
     }
 
     // observed 0x8000EE54..0x8000EE80: `local_10` = pair A, `local_18` = pair B.
-    let mut pair_a = [0u32; 2];
+    let mut pair_a = crate::platform::GuestLocal::new( [0u32; 2]);
     pair_a[0] = platform::read_u32(sda1(SDA_EDF0_FIRST));
     pair_a[1] = platform::read_u32(sda1(SDA_EDF0_FIRST) + 4);
-    let mut pair_b = [0u32; 2];
+    let mut pair_b = crate::platform::GuestLocal::new( [0u32; 2]);
     pair_b[0] = platform::read_u32(sda1(SDA_EDF0_PAIR));
     pair_b[1] = platform::read_u32(sda1(SDA_EDF0_PAIR) + 4);
 
@@ -3413,7 +3410,7 @@ pub unsafe fn fn_80007de0(this: usize) {
 
     // observed 0x80007FC8..0x80008004: four copies of 0.0 as the fog colour,
     // then the fixed-function block.
-    let mut zero_word = 0u32;
+    let mut zero_word = crate::platform::GuestLocal::<u32>::new( 0u32);
     call_f32x4_ptr(
         FN_801C8920,
         0,
@@ -3421,23 +3418,23 @@ pub unsafe fn fn_80007de0(this: usize) {
         zero,
         zero,
         zero,
-        &mut zero_word as *mut u32 as usize,
+        (zero_word.as_mut_ptr() as *mut u32) as usize,
     );
     platform::call3(FN_801C8CB0, 0, 0, 0);
     platform::call1(FN_801C5860, 0);
     platform::call1(FN_801C8F90, 1);
 
     // observed 0x8000800C..0x80008030: the object's two packed colours.
-    let color0 = platform::read_u32(this + 0x70);
-    platform::call2(FN_801C8430, 1, &color0 as *const u32 as u32);
-    let color1 = platform::read_u32(this + 0x74);
-    platform::call2(FN_801C8430, 2, &color1 as *const u32 as u32);
+    let color0 = crate::platform::GuestLocal::new( platform::read_u32(this + 0x70));
+    platform::call2(FN_801C8430, 1, (color0.as_ptr() as *const u32) as u32);
+    let color1 = crate::platform::GuestLocal::new( platform::read_u32(this + 0x74));
+    platform::call2(FN_801C8430, 2, (color1.as_ptr() as *const u32) as u32);
 
     // observed 0x80008034..0x80008090: view matrix -> scratch, normalise it,
     // then concatenate the object matrix and load the result.
     let view = call0_u32(FN_80164B30);
-    let mut base = [0u32; 12];
-    let mut model = [0u32; 12];
+    let mut base = crate::platform::GuestLocal::new( [0u32; 12]);
+    let mut model = crate::platform::GuestLocal::new( [0u32; 12]);
     let base_ptr = base.as_mut_ptr() as usize;
     let model_ptr = model.as_mut_ptr() as usize;
     platform::call2(FN_802540B0, view, base_ptr as u32);
@@ -3459,22 +3456,22 @@ pub unsafe fn fn_80007de0(this: usize) {
         let mut radius = read_f32(record + 8)
             * (read_f32(this + 0x68) + read_f32(F32_TENTH_B0B0) * step);
 
-        let mut color0 = platform::read_u32(this + 0x70);
-        let mut color1 = platform::read_u32(this + 0x74);
+        let mut color0 = crate::platform::GuestLocal::new( platform::read_u32(this + 0x70));
+        let mut color1 = crate::platform::GuestLocal::new( platform::read_u32(this + 0x74));
 
         if mode == 0 {
             if index <= 10 {
                 // observed 0x8000812C..0x80008160: fixed radius, alpha 30.
                 radius = read_f32(F32_150_B0B4);
-                color0 = (color0 & 0xFFFF_FF00) | 0x1E;
-                color1 = (color1 & 0xFFFF_FF00) | 0x1E;
-                platform::call2(FN_801C8430, 1, &color0 as *const u32 as u32);
-                platform::call2(FN_801C8430, 2, &color1 as *const u32 as u32);
+                *color0 = (*color0 & 0xFFFF_FF00) | 0x1E;
+                *color1 = (*color1 & 0xFFFF_FF00) | 0x1E;
+                platform::call2(FN_801C8430, 1, (color0.as_ptr() as *const u32) as u32);
+                platform::call2(FN_801C8430, 2, (color1.as_ptr() as *const u32) as u32);
             } else if index >= 12 {
                 // observed 0x80008164..0x80008198: records 12.. reset +0x28.
                 platform::call2(FN_801C74C0, (this + 0x28) as u32, 0);
-                platform::call2(FN_801C8430, 1, &color0 as *const u32 as u32);
-                platform::call2(FN_801C8430, 2, &color1 as *const u32 as u32);
+                platform::call2(FN_801C8430, 1, (color0.as_ptr() as *const u32) as u32);
+                platform::call2(FN_801C8430, 2, (color1.as_ptr() as *const u32) as u32);
             }
         } else {
             // observed 0x800081B8..0x80008210: the remainder selects the
@@ -3612,7 +3609,7 @@ pub unsafe fn fn_8000c5c0(this: usize) {
     platform::call1(FN_801C9D60, 1);
 
     // observed 0x8000C820..0x8000C860.
-    let mut zero_word = 0u32;
+    let mut zero_word = crate::platform::GuestLocal::<u32>::new( 0u32);
     call_f32x4_ptr(
         FN_801C8920,
         0,
@@ -3620,22 +3617,22 @@ pub unsafe fn fn_8000c5c0(this: usize) {
         zero,
         zero,
         zero,
-        &mut zero_word as *mut u32 as usize,
+        (zero_word.as_mut_ptr() as *mut u32) as usize,
     );
     platform::call3(FN_801C8CB0, 0, 0, 0);
     platform::call1(FN_801C5860, 0);
     platform::call1(FN_801C8F90, 1);
 
     // observed 0x8000C864..0x8000C890: colours at +0xCE88/+0xCE8C.
-    let color0 = platform::read_u32(this + 0xCE88);
-    platform::call2(FN_801C8430, 1, &color0 as *const u32 as u32);
-    let color1 = platform::read_u32(this + 0xCE8C);
-    platform::call2(FN_801C8430, 2, &color1 as *const u32 as u32);
+    let color0 = crate::platform::GuestLocal::new( platform::read_u32(this + 0xCE88));
+    platform::call2(FN_801C8430, 1, (color0.as_ptr() as *const u32) as u32);
+    let color1 = crate::platform::GuestLocal::new( platform::read_u32(this + 0xCE8C));
+    platform::call2(FN_801C8430, 2, (color1.as_ptr() as *const u32) as u32);
 
     // observed 0x8000C894..0x8000C8E4: view matrix and model-matrix concat.
     let view = call0_u32(FN_80164B30);
-    let mut base = [0u32; 12];
-    let mut model = [0u32; 12];
+    let mut base = crate::platform::GuestLocal::new( [0u32; 12]);
+    let mut model = crate::platform::GuestLocal::new( [0u32; 12]);
     let base_ptr = base.as_mut_ptr() as usize;
     let model_ptr = model.as_mut_ptr() as usize;
     platform::call2(FN_802540B0, view, base_ptr as u32);
@@ -3801,7 +3798,7 @@ pub unsafe fn fn_8000ca50(this: usize) {
     platform::call1(FN_801C9D60, 1);
 
     // observed 0x8000CCF4..0x8000CD34.
-    let mut zero_word = 0u32;
+    let mut zero_word = crate::platform::GuestLocal::<u32>::new( 0u32);
     call_f32x4_ptr(
         FN_801C8920,
         0,
@@ -3809,22 +3806,22 @@ pub unsafe fn fn_8000ca50(this: usize) {
         zero,
         zero,
         zero,
-        &mut zero_word as *mut u32 as usize,
+        (zero_word.as_mut_ptr() as *mut u32) as usize,
     );
     platform::call3(FN_801C8CB0, 0, 0, 0);
     platform::call1(FN_801C5860, 0);
     platform::call1(FN_801C8F90, 1);
 
     // observed 0x8000CD38..0x8000CD64: colours at +0xCE88/+0xCE8C.
-    let color0 = platform::read_u32(this + 0xCE88);
-    platform::call2(FN_801C8430, 1, &color0 as *const u32 as u32);
-    let color1 = platform::read_u32(this + 0xCE8C);
-    platform::call2(FN_801C8430, 2, &color1 as *const u32 as u32);
+    let color0 = crate::platform::GuestLocal::new( platform::read_u32(this + 0xCE88));
+    platform::call2(FN_801C8430, 1, (color0.as_ptr() as *const u32) as u32);
+    let color1 = crate::platform::GuestLocal::new( platform::read_u32(this + 0xCE8C));
+    platform::call2(FN_801C8430, 2, (color1.as_ptr() as *const u32) as u32);
 
     // observed 0x8000CD68..0x8000CDB8: view matrix and model-matrix concat.
     let view = call0_u32(FN_80164B30);
-    let mut base = [0u32; 12];
-    let mut model = [0u32; 12];
+    let mut base = crate::platform::GuestLocal::new( [0u32; 12]);
+    let mut model = crate::platform::GuestLocal::new( [0u32; 12]);
     let base_ptr = base.as_mut_ptr() as usize;
     let model_ptr = model.as_mut_ptr() as usize;
     platform::call2(FN_802540B0, view, base_ptr as u32);
@@ -4028,7 +4025,7 @@ pub unsafe fn fn_8000e060(this: usize) {
     platform::call5(FN_801C86C0, 4, 0, 1, 4, 0);
 
     // observed 0x8000E24C..0x8000E288.
-    let mut zero_word = 0u32;
+    let mut zero_word = crate::platform::GuestLocal::<u32>::new( 0u32);
     call_f32x4_ptr(
         FN_801C8920,
         0,
@@ -4036,22 +4033,22 @@ pub unsafe fn fn_8000e060(this: usize) {
         zero,
         zero,
         zero,
-        &mut zero_word as *mut u32 as usize,
+        (zero_word.as_mut_ptr() as *mut u32) as usize,
     );
     platform::call3(FN_801C8CB0, 0, 0, 0);
     platform::call1(FN_801C5860, 2);
     platform::call1(FN_801C8F90, 1);
 
     // observed 0x8000E290..0x8000E2B4: colours at +0x28/+0x2C.
-    let color0 = platform::read_u32(this + 0x28);
-    platform::call2(FN_801C8430, 1, &color0 as *const u32 as u32);
-    let color1 = platform::read_u32(this + 0x2C);
-    platform::call2(FN_801C8430, 2, &color1 as *const u32 as u32);
+    let color0 = crate::platform::GuestLocal::new( platform::read_u32(this + 0x28));
+    platform::call2(FN_801C8430, 1, (color0.as_ptr() as *const u32) as u32);
+    let color1 = crate::platform::GuestLocal::new( platform::read_u32(this + 0x2C));
+    platform::call2(FN_801C8430, 2, (color1.as_ptr() as *const u32) as u32);
 
     // observed 0x8000E2B8..0x8000E308: view matrix and model-matrix concat.
     let view = call0_u32(FN_80164B30);
-    let mut base = [0u32; 12];
-    let mut model = [0u32; 12];
+    let mut base = crate::platform::GuestLocal::new( [0u32; 12]);
+    let mut model = crate::platform::GuestLocal::new( [0u32; 12]);
     let base_ptr = base.as_mut_ptr() as usize;
     let model_ptr = model.as_mut_ptr() as usize;
     platform::call2(FN_802540B0, view, base_ptr as u32);
@@ -4220,11 +4217,11 @@ pub unsafe fn fn_8000e060(this: usize) {
 /// Must be the real `0x80237CA0` entry point.
 #[inline]
 unsafe fn host_sincos(angle: f64) -> (f32, f32) {
-    let mut sin = 0.0f32;
-    let mut cos = 0.0f32;
+    let mut sin = crate::platform::GuestLocal::<f32>::new( 0.0f32);
+    let mut cos = crate::platform::GuestLocal::<f32>::new( 0.0f32);
     let f = crate::platform::guest_fn!(0x8023_7ca0usize, fn(f64, *mut f32, *mut f32));
-    f(angle, &mut sin as *mut f32, &mut cos as *mut f32);
-    (sin, cos)
+    f(angle, sin.as_mut_ptr() as *mut f32, cos.as_mut_ptr() as *mut f32);
+    (*sin, *cos)
 }
 
 // The three small-data constant blocks the kernels read through `r2`

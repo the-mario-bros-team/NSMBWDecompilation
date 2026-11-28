@@ -1666,7 +1666,7 @@ pub unsafe fn fn_80102a80() {
             let first_byte = platform::call3(FUN_800CE490, record, i, j) & 0xFF;
             let signed = (platform::call3(FUN_800CE4D0, record, i, j) as u8 as i8) as i32;
             let third_byte = platform::call3(FUN_800CE510, record, i, j) & 0xFF;
-            let mut cell = [first_byte, signed as u32, third_byte];
+            let mut cell = crate::platform::GuestLocal::new( [first_byte, signed as u32, third_byte]);
             platform::call4(
                 FUN_800BBB70,
                 course,
@@ -1788,7 +1788,7 @@ pub unsafe fn fn_80100200(dst: u32, scene: u32, key: u32) {
 /// # Confidence
 /// high - the instruction stream matches the decompiled body.
 pub unsafe fn fn_80100270(dst: u32, a: u32, b: u32) {
-    let mut record = [0u32; 3];
+    let mut record = crate::platform::GuestLocal::new( [0u32; 3]);
     platform::call3(
         FUN_801006E0,
         a,
@@ -1956,7 +1956,7 @@ pub unsafe fn fn_80100530(scene: u32, a: u32, b: u32) -> u32 {
 /// stream.
 pub unsafe fn fn_801005c0(scene: u32, a: u32, index: i32, context: u32) -> u32 {
     let record = (scene as isize + (index as isize) * 0xBF8 + 0x1A8) as u32;
-    let mut handle = platform::call1(FUN_80168400, record);
+    let mut handle = crate::platform::GuestLocal::new( platform::call1(FUN_80168400, record));
     let length = platform::call1(FUN_802DC69C, a);
 
     let mut start: u32 = 0;
@@ -1972,7 +1972,7 @@ pub unsafe fn fn_801005c0(scene: u32, a: u32, index: i32, context: u32) -> u32 {
     let mut element: u32 = 0;
     let mut matched = false;
     loop {
-        let handle_ptr = &mut handle as *mut u32 as u32;
+        let handle_ptr = (handle.as_mut_ptr() as *mut u32) as u32;
         let count = platform::call1(FUN_8023B360, handle_ptr);
         if count <= start {
             break;
@@ -2063,7 +2063,7 @@ pub unsafe fn fn_801006e0(scene: u32, a: u32, b: u32) {
 /// # Confidence
 /// high - the three buffer paths and the loop exit condition are exact.
 pub unsafe fn fn_80100720(scene: u32, mode: i32) -> i32 {
-    let mut scratch = [0u8; 8];
+    let mut scratch = crate::platform::GuestLocal::new( [0u8; 8]);
     let mut i: i32 = 0;
 
     loop {
